@@ -55,7 +55,7 @@ set(CONFIG
     -DAUDIOPLUGINS_CRASHREPORT_URL=${AUDIOPLUGINS_CRASHREPORT_URL}
     -DENABLE_CRASHPAD_CLIENT=${ENABLE_CRASHPAD_CLIENT}
     # Developer/QA test VST3 plugin (Linux-only today); built so QA can pick it up from CI.
-    -DBUILD_TEST_VST3_GATE_PLUGIN=ON
+    -DBUILD_VST3_TEST_PLUGIN=ON
 )
 
 execute_process(

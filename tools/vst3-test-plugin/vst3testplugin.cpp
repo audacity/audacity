@@ -2,7 +2,7 @@
  * Audacity: A Digital Audio Editor
  *
  * Audacity test VST3 plugin: a VST3 effect whose *module load* is controlled by a
- * gate file, so plugin validation / loading can be held, released, or made to fail
+ * validation gate file, so plugin validation / loading can be held, released, or made to fail
  * on purpose while testing the non-blocking plugin validation (#11746).
  *
  * When processing it applies an amplitude tremolo (~5 Hz) whose depth is set by an
@@ -10,7 +10,7 @@
  * saved parameter value survived a reload - is immediately audible. Handy for
  * checking that a plugin can be re-validated while a track using it is playing.
  *
- * Gate file: $AU_TEST_VST3_GATE_FILE, or <temp dir>/au_test_vst3_gate.
+ * Validation gate file: $AU_VST3_TEST_PLUGIN_VALIDATION_GATE_FILE, or <temp dir>/au_vst3_test_plugin_validation_gate.
  * Contents: `<code> [delaySeconds]` - the code is applied after waiting the optional
  * delay (default 0), counted from when this load started. The file keeps being
  * polled meanwhile, so writing a new value overrides a pending one.
@@ -44,34 +44,34 @@ using namespace Steinberg;
 using namespace Steinberg::Vst;
 
 namespace {
-constexpr int GATE_LOAD = 1;
-constexpr int GATE_WAIT = 0;
-constexpr int GATE_CRASH = -1;
-constexpr int GATE_REFUSE = 2;
+constexpr int VALIDATION_GATE_LOAD = 1;
+constexpr int VALIDATION_GATE_WAIT = 0;
+constexpr int VALIDATION_GATE_CRASH = -1;
+constexpr int VALIDATION_GATE_REFUSE = 2;
 
-std::filesystem::path gateFilePath()
+std::filesystem::path validationGateFilePath()
 {
-    if (const char* env = std::getenv("AU_TEST_VST3_GATE_FILE"); env && *env) {
+    if (const char* env = std::getenv("AU_VST3_TEST_PLUGIN_VALIDATION_GATE_FILE"); env && *env) {
         return env;
     }
-    return std::filesystem::temp_directory_path() / "au_test_vst3_gate";
+    return std::filesystem::temp_directory_path() / "au_vst3_test_plugin_validation_gate";
 }
 
-struct Gate {
-    int code = GATE_LOAD;
+struct ValidationGate {
+    int code = VALIDATION_GATE_LOAD;
     int delaySeconds = 0;
-    bool operator==(const Gate& other) const { return code == other.code && delaySeconds == other.delaySeconds; }
-    bool operator!=(const Gate& other) const { return !(*this == other); }
+    bool operator==(const ValidationGate& other) const { return code == other.code && delaySeconds == other.delaySeconds; }
+    bool operator!=(const ValidationGate& other) const { return !(*this == other); }
 };
 
-// `<code> [delaySeconds]`. A missing or malformed file opens the gate, so a forgotten
+// `<code> [delaySeconds]`. A missing or malformed file opens the validation gate, so a forgotten
 // file never hangs a host; a malformed/negative delay means "no delay".
-Gate readGate(const std::filesystem::path& path)
+ValidationGate readValidationGate(const std::filesystem::path& path)
 {
     std::ifstream in(path);
-    Gate gate;
+    ValidationGate gate;
     if (!in || !(in >> gate.code)) {
-        return Gate {};
+        return ValidationGate {};
     }
     if (!(in >> gate.delaySeconds) || gate.delaySeconds < 0) {
         gate.delaySeconds = 0;
@@ -79,9 +79,9 @@ Gate readGate(const std::filesystem::path& path)
     return gate;
 }
 
-void say(const char* message, const std::filesystem::path& path, const Gate& gate)
+void say(const char* message, const std::filesystem::path& path, const ValidationGate& gate)
 {
-    std::fprintf(stderr, "[AuTestGate] %s (gate file %s = %d %d)\n",
+    std::fprintf(stderr, "[AuVst3TestPlugin] %s (validation gate file %s = %d %d)\n",
                  message, path.string().c_str(), gate.code, gate.delaySeconds);
     std::fflush(stderr);
 }
@@ -91,17 +91,17 @@ void say(const char* message, const std::filesystem::path& path, const Gate& gat
 bool InitModule()
 {
     using Clock = std::chrono::steady_clock;
-    const std::filesystem::path path = gateFilePath();
+    const std::filesystem::path path = validationGateFilePath();
     auto lastHeartbeat = Clock::now() - std::chrono::hours(1);
 
-    // A timed gate counts from when this exact value was first seen, i.e. from the
+    // A timed validation gate counts from when this exact value was first seen, i.e. from the
     // start of this load - unless the file changes meanwhile, which restarts it.
-    Gate lastGate;
+    ValidationGate lastGate;
     bool haveLastGate = false;
     Clock::time_point gateSeenAt;
 
     for (;;) {
-        const Gate gate = readGate(path);
+        const ValidationGate gate = readValidationGate(path);
         const auto now = Clock::now();
         if (!haveLastGate || gate != lastGate) {
             lastGate = gate;
@@ -110,9 +110,9 @@ bool InitModule()
         }
         const bool heartbeatDue = now - lastHeartbeat >= std::chrono::seconds(1);
 
-        if (gate.code == GATE_WAIT) {
+        if (gate.code == VALIDATION_GATE_WAIT) {
             if (heartbeatDue) {
-                say("gate closed, waiting", path, gate);
+                say("validation gate closed, waiting", path, gate);
                 lastHeartbeat = now;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(250));
@@ -124,7 +124,7 @@ bool InitModule()
             if (elapsed < gate.delaySeconds) {
                 if (heartbeatDue) {
                     char message[96];
-                    std::snprintf(message, sizeof message, "timed gate, %lld s left",
+                    std::snprintf(message, sizeof message, "timed validation gate, %lld s left",
                                   static_cast<long long>(gate.delaySeconds - elapsed));
                     say(message, path, gate);
                     lastHeartbeat = now;
@@ -135,20 +135,20 @@ bool InitModule()
         }
 
         switch (gate.code) {
-        case GATE_CRASH: {
-            say("gate says crash", path, gate);
+        case VALIDATION_GATE_CRASH: {
+            say("validation gate says crash", path, gate);
             volatile int* nowhere = nullptr;
             *nowhere = 1;
             return false;
         }
-        case GATE_REFUSE:
-            say("gate says refuse to load", path, gate);
+        case VALIDATION_GATE_REFUSE:
+            say("validation gate says refuse to load", path, gate);
             return false;
-        case GATE_LOAD:
-            say("gate open, loading", path, gate);
+        case VALIDATION_GATE_LOAD:
+            say("validation gate open, loading", path, gate);
             return true;
         default:
-            say("unknown gate value, loading anyway", path, gate);
+            say("unknown validation gate value, loading anyway", path, gate);
             return true;
         }
     }
@@ -162,12 +162,12 @@ bool DeinitModule()
 namespace {
 constexpr ParamID kDepthParamId = 0;
 
-class AuTestGateEffect : public SingleComponentEffect
+class AuVst3TestPluginEffect : public SingleComponentEffect
 {
 public:
     static FUnknown* createInstance(void*)
     {
-        return static_cast<IAudioProcessor*>(new AuTestGateEffect());
+        return static_cast<IAudioProcessor*>(new AuVst3TestPluginEffect());
     }
 
     tresult PLUGIN_API initialize(FUnknown* context) override
@@ -291,11 +291,11 @@ private:
     double m_depth = 1.0;
 };
 
-const FUID kAuTestGateUID(0x7A3E9C41, 0x2B6D4F58, 0x9E1C3A7F, 0x5D2B8E64);
+const FUID kAuVst3TestPluginUID(0x7A3E9C41, 0x2B6D4F58, 0x9E1C3A7F, 0x5D2B8E64);
 }
 
 BEGIN_FACTORY_DEF("Audacity Test", "https://www.audacityteam.org", "mailto:noreply@audacityteam.org")
-DEF_CLASS2(INLINE_UID_FROM_FUID(kAuTestGateUID),
+DEF_CLASS2(INLINE_UID_FROM_FUID(kAuVst3TestPluginUID),
            PClassInfo::kManyInstances,
            kVstAudioEffectClass,
            "Audacity test VST3 plugin",
@@ -303,5 +303,5 @@ DEF_CLASS2(INLINE_UID_FROM_FUID(kAuTestGateUID),
            Vst::PlugType::kFx,
            "1.0.0",
            kVstVersionString,
-           AuTestGateEffect::createInstance)
+           AuVst3TestPluginEffect::createInstance)
 END_FACTORY
