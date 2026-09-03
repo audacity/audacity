@@ -131,3 +131,69 @@ So the bug is real but narrower than the raw code reading suggests: it needs a
 non-zero positive `start_time` in a time base finer than microseconds. MPEG-TS
 is the common case, and it is a common delivery format for camera and broadcast
 material — exactly the kind of thing this feature attracts.
+
+## videoprobe
+
+`videoprobe.cpp` exercises the seek path the video backend will use — keyframe
+seek backwards, flush the decoder, decode forward to the frame whose
+presentation interval contains the target — and converts the result with the
+same integer YUV to RGB routine that the backend will use.
+
+It is self-checking against the fixture: the flash patch is lit on exactly one
+frame per second, so "did the seek land where it claimed" is a measurement.
+Targets are visited out of order so every one forces a real seek rather than
+being served by decoding forward.
+
+```
+g++ -O2 -o videoprobe videoprobe.cpp \
+    $(pkg-config --cflags --libs libavformat libavcodec libavutil libswscale)
+./videoprobe fixtures/sync25.mkv 25 1.0
+```
+
+It links swscale, which the feature itself never will. That is the point: it is
+the only place the hand-written colour conversion can be diffed against a
+reference implementation, and it is worth keeping for exactly that reason.
+
+### What it establishes
+
+| Fixture | Seek accuracy | Converter vs swscale |
+|---|---|---|
+| `sync25.mkv` (AV1) | 10/10 exact | mean 0.14, max 1 |
+| `sync25.webm` (AV1) | 10/10 exact | mean 0.14, max 1 |
+| `sync25.mp4` (H.264) | 10/10 exact | mean 0.14, max 1 |
+| `sync25-offset.mp4` | 10/10 exact once anchored | mean 0.00, max 1 |
+| `sync25.ts` | fails, see below | mean 0.14, max 1 |
+
+Converter figures are mean and maximum absolute per-channel difference against
+`sws_scale`, at native size so the colour matrix is isolated from the scaler.
+Downscaled to 640x360 against `SWS_AREA` the maximum is 2. No pixel in any
+fixture differs by more than 2, which is rounding.
+
+### Two findings worth carrying into the implementation
+
+**Anchoring to the stream start time is required, not a refinement.**
+`sync25-offset.mp4` fails on every target without it and passes on every target
+with it. The conversion from content-relative time to a frame timestamp has to
+add the stream's `start_time`, because frame timestamps live on the container
+timeline and that timeline does not begin at zero.
+
+**Audio and video start at different times within one file.** In `sync25.ts`:
+
+```
+video  start_pts 133200 @ 1/90000 = 1.480000 s
+audio  start_pts 131280 @ 1/90000 = 1.458667 s
+                           difference 21.33 ms
+```
+
+21.33 ms is 1024 samples at 48 kHz, which is the AAC encoder priming. So the
+video stream's own start time is the wrong anchor: what has to line up is the
+frame and the sample that Audacity actually imported, and the importer works
+from the audio stream. Anchor to the audio start time and let the video
+timestamps sit where they fall.
+
+**MPEG-TS still fails after both corrections**, landing exactly one GOP late on
+every target. MPEG-TS carries no index, so libavformat seeks it by estimating
+byte positions, and `AVSEEK_FLAG_BACKWARD` does not reliably land on or before
+the requested time. This is what the keyframe index is for, and it means the
+index is a requirement for TS rather than a later optimisation — worth knowing
+when scheduling, since TS is a common camera and broadcast delivery format.
