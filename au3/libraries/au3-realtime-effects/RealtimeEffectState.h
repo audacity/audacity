@@ -67,6 +67,35 @@ public:
     //! const accessor will not initialize the effect on demand
     const EffectInstanceFactory* GetEffect() const { return mPlugin; }
 
+    //! Whether EnsureInstance has integrated this state into the current processing
+    //! scope (reset by Finalize). Main thread.
+    bool IsInitialized() const noexcept { return mInitialized.load(std::memory_order_acquire); }
+
+    //! Brackets an in-place (re)integration of an already-listed state into a running
+    //! processing scope (RealtimeEffectManager::ReloadState). While alive, the worker
+    //! thread skips the state entirely: EnsureInstance sets mInitialized before
+    //! AddGroup has populated mGroups, so mInitialized alone would let the worker in
+    //! too early. The destructor publishes completion (release).
+    class ReintegrationGuard
+    {
+    public:
+        explicit ReintegrationGuard(RealtimeEffectState& state) noexcept
+            : mState{state}
+        {
+            mState.mReintegrating.store(true, std::memory_order_release);
+        }
+
+        ~ReintegrationGuard()
+        {
+            mState.mReintegrating.store(false, std::memory_order_release);
+        }
+
+        ReintegrationGuard(const ReintegrationGuard&) = delete;
+        ReintegrationGuard& operator=(const ReintegrationGuard&) = delete;
+    private:
+        RealtimeEffectState& mState;
+    };
+
     //! Expose a pointer to the state's instance (making one as needed).
     /*!
      @post `true` (no promise result is not null)
@@ -207,7 +236,18 @@ private:
 
     wxString mParameters; // Used only during deserialization
     size_t mCurrentProcessor{ 0 };
-    bool mInitialized{ false };
+    //! Set by EnsureInstance once mWorkerSettings and the instance are ready, cleared by Finalize.
+    std::atomic<bool> mInitialized{ false };
+    //! See ReintegrationGuard.
+    std::atomic<bool> mReintegrating{ false };
+
+    //! Worker thread: may this state be processed at all? False until it has been
+    //! integrated into the scope, and during an in-place reintegration.
+    bool ReadyForAudio() const noexcept
+    {
+        return mInitialized.load(std::memory_order_acquire)
+               && !mReintegrating.load(std::memory_order_acquire);
+    }
 
     //! @}
 };

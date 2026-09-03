@@ -573,7 +573,9 @@ RealtimeEffectState::AddGroup(
 
 bool RealtimeEffectState::ProcessStart(bool running)
 {
-    if (!mInitialized) {
+    // Not (yet) integrated into this scope - e.g. its plugin only became loadable after
+    // InitializationScope - or being reintegrated in place: nothing to sync or process.
+    if (!ReadyForAudio()) {
         return false;
     }
 
@@ -628,6 +630,15 @@ size_t RealtimeEffectState::Process(
     const float* const* inbuf, float* const* outbuf, float* const dummybuf,
     size_t numSamples)
 {
+    // Not (yet) integrated, or being reintegrated in place: pass the audio through and
+    // stay away from mGroups, which the main thread may be populating right now.
+    if (!ReadyForAudio()) {
+        for (size_t ii = 0; ii < chans; ++ii) {
+            memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
+        }
+        return 0;
+    }
+
     const auto pInstance = mwInstance.lock();
     const auto& pair = mGroups[group];
     const float** const clientIn
@@ -740,6 +751,10 @@ size_t RealtimeEffectState::Process(
 
 bool RealtimeEffectState::ProcessEnd()
 {
+    if (!ReadyForAudio()) {
+        return false;
+    }
+
     auto pInstance = mwInstance.lock();
     bool result = pInstance
                   &&// Assuming we are in a processing scope, use the worker settings
