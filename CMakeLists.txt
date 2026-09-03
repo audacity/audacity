@@ -205,7 +205,7 @@ endif()
 add_subdirectory(${MUSE_FRAMEWORK_SRC_PATH})
 add_subdirectory(src)
 add_subdirectory(share)
-add_subdirectory(tools/test-vst3-gate)
+add_subdirectory(tools/vst3-test-plugin)
 
 if (MSVC)
     # Now that the `audacity` target is defined, we can set it as the startup project in Visual Studio.

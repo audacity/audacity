@@ -20,7 +20,7 @@
  *    2                                 refuse to load (ModuleEntry returns false)
  * e.g. `1 180` loads after 3 minutes, `-1 180` crashes after 3 minutes.
  * While waiting, a heartbeat line is written to stderr about once a second.
- * tools/test-vst3-gate/controller is a small Qt app that writes this file for you.
+ * tools/vst3-test-plugin/controller is a small Qt app that writes this file for you.
  */
 
 #include <algorithm>

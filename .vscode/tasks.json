@@ -9,7 +9,7 @@
             "problemMatcher": []
         },
         {
-            // Deploy the test VST3 into the user's VST3 folder (see tools/test-vst3-gate).
+            // Deploy the test VST3 into the user's VST3 folder (see tools/vst3-test-plugin).
             // A no-op when AU_BUILD_TEST_VST3_GATE_PLUGIN is OFF, so always safe to run.
             "label": "CMake: deploy test VST3",
             "type": "cmake",

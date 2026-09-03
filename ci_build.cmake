@@ -26,7 +26,7 @@ set(CRASH_REPORT_URL "" CACHE STRING "Crash report url")
 
 option(SKIP_RPATH "Skip rpath" OFF)
 option(ENABLE_CRASHPAD_CLIENT "Enable crashpad client" ON)
-option(BUILD_TEST_VST3_GATE_PLUGIN "Build the test VST3 plugin and its controller (tools/test-vst3-gate)" OFF)
+option(BUILD_TEST_VST3_GATE_PLUGIN "Build the test VST3 plugin and its controller (tools/vst3-test-plugin)" OFF)
 
 # CPUS
 cmake_host_system_information(RESULT CPUS QUERY NUMBER_OF_LOGICAL_CORES)
