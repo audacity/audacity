@@ -13,6 +13,7 @@
 #include "au3-effects/Effect.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-realtime-effects/RealtimeEffectManager.h"
 
 #include "project/iaudacityproject.h"
 
@@ -59,12 +60,17 @@ void RealtimeEffectService::init()
 }
 
 namespace {
-void buildList(RealtimeEffectList& list)
+void buildList(::AudacityProject& project, ChannelGroup* group, RealtimeEffectList& list)
 {
     for (auto i = 0u; i < list.GetStatesCount(); ++i) {
+        const auto state = list.GetStateAt(i);
         // No-op once the plugin is built; when it has just become validated
         // this builds mPlugin and its (VST3) settings.
-        list.GetStateAt(i)->GetEffect();
+        state->GetEffect();
+        // If playback is running, the state was skipped at InitializationScope while
+        // its plugin wasn't loadable: integrate it into the live scope in place now.
+        // No-op when not playing or already integrated.
+        AudioIO::Get()->ReloadState(project, group, state);
     }
 }
 }
@@ -79,9 +85,9 @@ void RealtimeEffectService::buildNewlyValidatedRealtimeEffects()
 
     auto& trackList = TrackList::Get(*au3Project);
     for (WaveTrack* track : trackList.Any<WaveTrack>()) {
-        buildList(RealtimeEffectList::Get(*track));
+        buildList(*au3Project, track, RealtimeEffectList::Get(*track));
     }
-    buildList(RealtimeEffectList::Get(*au3Project));
+    buildList(*au3Project, RealtimeEffectManager::MasterGroup, RealtimeEffectList::Get(*au3Project));
 }
 
 void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProjectPtr& project)

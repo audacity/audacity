@@ -201,31 +201,55 @@ RealtimeEffectManager::MakeNewState(
         return nullptr;
     }
     auto pNewState = RealtimeEffectState::make_shared(id);
-    auto& state = *pNewState;
     if (pScope && mActive) {
         // Adding a state while playback is in-flight
-        auto pInstance = state.Initialize(pScope->mSampleRate, pScope->mAudioThreadBufferSize);
-        pScope->mInstances.push_back(pInstance);
+        IntegrateStateInFlight(*pScope, pGroup, *pNewState);
+    }
+    return pNewState;
+}
 
-        if (pGroup == MasterGroup) {
-            auto pInstance2 = state.AddGroup(MasterGroup, pScope->mNumPlaybackChannels, pScope->mSampleRate, pScope->mAudioThreadBufferSize);
-            if (pInstance2 != pInstance) {
-                pScope->mInstances.push_back(pInstance2);
+void RealtimeEffectManager::IntegrateStateInFlight(
+    RealtimeEffects::InitializationScope& scope, ChannelGroup* pGroup, RealtimeEffectState& state)
+{
+    auto pInstance = state.Initialize(scope.mSampleRate, scope.mAudioThreadBufferSize);
+    scope.mInstances.push_back(pInstance);
+
+    if (pGroup == MasterGroup) {
+        auto pInstance2 = state.AddGroup(MasterGroup, scope.mNumPlaybackChannels, scope.mSampleRate, scope.mAudioThreadBufferSize);
+        if (pInstance2 != pInstance) {
+            scope.mInstances.push_back(pInstance2);
+        }
+    } else {
+        for (const auto group : mGroups) {
+            if (pGroup != group) {
+                continue;
             }
-        } else {
-            for (const auto group : mGroups) {
-                if (pGroup != group) {
-                    continue;
-                }
-                auto pInstance2
-                    =state.AddGroup(group, pScope->mNumPlaybackChannels, mRates[group], pScope->mAudioThreadBufferSize);
-                if (pInstance2 != pInstance) {
-                    pScope->mInstances.push_back(pInstance2);
-                }
+            auto pInstance2
+                =state.AddGroup(group, scope.mNumPlaybackChannels, mRates[group], scope.mAudioThreadBufferSize);
+            if (pInstance2 != pInstance) {
+                scope.mInstances.push_back(pInstance2);
             }
         }
     }
-    return pNewState;
+}
+
+void RealtimeEffectManager::ReloadState(
+    RealtimeEffects::InitializationScope* pScope,
+    ChannelGroup* pGroup, const std::shared_ptr<RealtimeEffectState>& pState)
+{
+    if (!pState || !pScope || !mActive) {
+        return;
+    }
+    // Already part of this scope, or the plugin still isn't loadable
+    if (pState->IsInitialized() || !pState->GetEffect()) {
+        return;
+    }
+
+    // Unlike a state added in-flight, this one is already in the list and visited by
+    // the worker every block; the guard keeps the worker off it until AddGroup has
+    // finished populating mGroups.
+    RealtimeEffectState::ReintegrationGuard guard { *pState };
+    IntegrateStateInFlight(*pScope, pGroup, *pState);
 }
 
 namespace {
