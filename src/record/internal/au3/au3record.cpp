@@ -73,7 +73,7 @@ PropertiesOfSelected GetPropertiesOfSelected(const Au3Project& proj)
 }
 
 WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const bool selectedOnly, const double targetRate,
-                                                       const size_t recordingChannels)
+                                                       const int recordingChannels)
 {
     auto p = &proj;
     bool strictRules = (recordingChannels <= 2);
@@ -101,8 +101,8 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const b
 
     auto& trackList = Au3TrackList::Get(*p);
     WritableSampleTrackArray candidates;
-    std::vector<unsigned> channelCounts;
-    size_t totalChannels = 0;
+    std::vector<int> channelCounts;
+    int totalChannels = 0;
     const auto range = trackList.Any<Au3WaveTrack>();
     for (auto candidate : selectedOnly ? range + &Au3Track::IsSelected : range) {
         if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate) {
@@ -110,7 +110,7 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const b
         }
 
         // count channels in this track
-        const auto nChannels = candidate->NChannels();
+        const int nChannels = static_cast<int>(candidate->NChannels());
         if (strictRules && nChannels > recordingChannels) {
             const bool stereoTrackMonoInput
                 =(recordingChannels == 1 && nChannels == 2 && candidates.empty());
@@ -385,7 +385,7 @@ muse::Ret Au3Record::start()
     }
 
     if (appendRecord) {
-        const size_t recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+        const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
 
         // Try to find wave tracks to record into.  (If any are selected,
         // try to choose only from them; else if wave tracks exist, may record into any.)
@@ -512,7 +512,7 @@ muse::Ret Au3Record::leadInRecording()
     }
 
     // Find tracks to record into (must be selected)
-    const size_t recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
     auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
     if (tracks.empty()) {
         return make_ret(Err::LeadInRecordingNoTracksSelected);
@@ -838,7 +838,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                                        : defaultTrackName;
 
         std::vector<WaveTrack::Holder> newTracks;
-        if (recordingChannels == 2u) {
+        if (recordingChannels == 2) {
             newTracks.push_back(WaveTrackFactory::Get(*p).Create(2));
         } else {
             for (int i = 0; i < recordingChannels; ++i) {
