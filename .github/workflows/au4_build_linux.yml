@@ -203,7 +203,7 @@ jobs:
       if: env.DO_BUILD == 'true'
       run: |
         bash ${CI_DIR}/linux/make_controller_appimage.sh \
-          build.release/test-plugins/au_test_vst3_gate_controller \
+          build.release/test-plugins/au_vst3_test_plugin_validation_controller \
           ${{ matrix.arch }} \
           share/icons/AppIcon/AU4_AppIcon_64x64.png
 
@@ -213,8 +213,8 @@ jobs:
       with:
         name: test-vst3-plugin-linux-${{ matrix.arch }}
         path: |
-          ./build.release/test-plugins/AuTestGate.vst3/
-          ./build.release/test-plugins/au_test_vst3_gate_controller-*.AppImage
+          ./build.release/test-plugins/AuVst3TestPlugin.vst3/
+          ./build.release/test-plugins/au_vst3_test_plugin_validation_controller-*.AppImage
           ./tools/vst3-test-plugin/README.md
         if-no-files-found: warn
 
