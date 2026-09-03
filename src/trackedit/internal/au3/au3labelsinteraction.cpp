@@ -13,7 +13,10 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "au3interactionutils.h"
 #include "au3trackdata.h"
+
+#include "containers.h"
 
 #include "trackediterrors.h"
 
@@ -64,31 +67,66 @@ bool Au3LabelsInteraction::addLabelToSelection()
 {
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
+    const auto prj = globalContext()->currentTrackeditProject();
 
     Au3LabelTrack* labelTrack = nullptr;
 
-    const auto focusedTrackId = trackNavigationController()->focusedTrack();
-    if (focusedTrackId > 0) {
-        Au3Track* focusedAu3Track = DomAccessor::findTrack(project, Au3TrackId(focusedTrackId));
-        if (focusedAu3Track) {
+    // The label goes to the label track immediately below the selection,
+    // unless the selection itself includes a label track.
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    Au3Track* bottommostSelectedTrack = nullptr;
+    Au3LabelTrack* bottommostSelectedLabelTrack = nullptr;
+    for (Au3Track* track : tracks) {
+        if (!muse::contains(selectedTracks, static_cast<TrackId>(track->GetId()))) {
+            continue;
+        }
+        bottommostSelectedTrack = track;
+        if (const auto lt = dynamic_cast<Au3LabelTrack*>(track)) {
+            bottommostSelectedLabelTrack = lt;
+        }
+    }
+
+    if (bottommostSelectedLabelTrack) {
+        labelTrack = bottommostSelectedLabelTrack;
+    } else if (bottommostSelectedTrack) {
+        auto it = tracks.Find(bottommostSelectedTrack);
+        ++it;
+        Au3Track* trackBelowSelection = *it; // nullptr if the selection is at the bottom
+        labelTrack = dynamic_cast<Au3LabelTrack*>(trackBelowSelection);
+
+        // If there is no label track immediately below the selection, create one there
+        if (!labelTrack) {
+            const auto newTrack = ::LabelTrack::CreatePtr(tracks);
+            tracks.Insert(trackBelowSelection, newTrack, true /* assignIds */);
+            labelTrack = newTrack.get();
+            if (prj) {
+                prj->notifyAboutTrackInserted(DomConverter::labelTrack(labelTrack),
+                                              static_cast<int>(utils::getTrackIndex(tracks, *labelTrack)));
+            }
+        }
+    } else {
+        // No track selection (e.g. during playback or recording): use the focused label track...
+        const auto focusedTrackId = trackNavigationController()->focusedTrack();
+        if (focusedTrackId > 0) {
+            Au3Track* focusedAu3Track = DomAccessor::findTrack(project, Au3TrackId(focusedTrackId));
             labelTrack = dynamic_cast<Au3LabelTrack*>(focusedAu3Track);
         }
-    }
 
-    // If the focused track is not a label track, search for any existing label track
-    if (!labelTrack) {
-        for (auto lt : tracks.Any<Au3LabelTrack>()) {
-            labelTrack = lt;
-            break;
+        // ...or any existing label track...
+        if (!labelTrack) {
+            for (auto lt : tracks.Any<Au3LabelTrack>()) {
+                labelTrack = lt;
+                break;
+            }
         }
-    }
 
-    // If no label track exists, create a new one
-    if (!labelTrack) {
-        labelTrack = ::LabelTrack::Create(tracks);
-
-        const auto prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
+        // ...or create one at the bottom of the project
+        if (!labelTrack) {
+            labelTrack = ::LabelTrack::Create(tracks);
+            if (prj) {
+                prj->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
+            }
+        }
     }
 
     wxString title = wxEmptyString;
@@ -109,7 +147,6 @@ bool Au3LabelsInteraction::addLabelToSelection()
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
     const auto& newLabel = DomAccessor::findLabel(labelTrack, newLabelId);
 
-    const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
         prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, newLabel));
     }
