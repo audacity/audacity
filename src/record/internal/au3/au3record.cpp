@@ -3,13 +3,15 @@
 */
 
 #include "au3record.h"
+
+#include <cfloat>
+
 #include "au3-strings/TranslatableString.h"
 
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
 #include "au3-audio-io/ProjectAudioIO.h"
-#include "au3-audio-devices/AudioIOBase.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track/Track.h"
 #include "au3-track/PendingTracks.h"
@@ -70,10 +72,10 @@ PropertiesOfSelected GetPropertiesOfSelected(const Au3Project& proj)
     return result;
 }
 
-WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const bool selectedOnly, const double targetRate)
+WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const bool selectedOnly, const double targetRate,
+                                                       const int recordingChannels)
 {
     auto p = &proj;
-    size_t recordingChannels = std::max(0, AudioIORecordChannels.Read());
     bool strictRules = (recordingChannels <= 2);
 
     // Iterate over all wave tracks, or over selected wave tracks only.
@@ -99,8 +101,8 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const b
 
     auto& trackList = Au3TrackList::Get(*p);
     WritableSampleTrackArray candidates;
-    std::vector<unsigned> channelCounts;
-    size_t totalChannels = 0;
+    std::vector<int> channelCounts;
+    int totalChannels = 0;
     const auto range = trackList.Any<Au3WaveTrack>();
     for (auto candidate : selectedOnly ? range + &Au3Track::IsSelected : range) {
         if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate) {
@@ -108,7 +110,7 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const b
         }
 
         // count channels in this track
-        const auto nChannels = candidate->NChannels();
+        const int nChannels = static_cast<int>(candidate->NChannels());
         if (strictRules && nChannels > recordingChannels) {
             const bool stereoTrackMonoInput
                 =(recordingChannels == 1 && nChannels == 2 && candidates.empty());
@@ -383,9 +385,11 @@ muse::Ret Au3Record::start()
     }
 
     if (appendRecord) {
+        const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+
         // Try to find wave tracks to record into.  (If any are selected,
         // try to choose only from them; else if wave tracks exist, may record into any.)
-        existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
+        existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
         if (!existingTracks.empty()) {
             projectRate = rateOfSelected;
         } else {
@@ -393,7 +397,7 @@ muse::Ret Au3Record::start()
                 return make_ret(Err::TooFewCompatibleTracksSelected);
             }
 
-            existingTracks = ChooseExistingRecordingTracks(project, false, projectRate);
+            existingTracks = ChooseExistingRecordingTracks(project, false, projectRate, recordingChannels);
         }
     }
 
@@ -508,7 +512,8 @@ muse::Ret Au3Record::leadInRecording()
     }
 
     // Find tracks to record into (must be selected)
-    auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
+    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+    auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
     if (tracks.empty()) {
         return make_ret(Err::LeadInRecordingNoTracksSelected);
     }
@@ -821,25 +826,19 @@ Ret Au3Record::doRecord(Au3Project& project,
 
     if (transportSequences.captureSequences.empty()) {
         // recording to NEW track(s).
-        bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
-        wxString defaultTrackName, defaultRecordingTrackName;
-
         // Count the tracks.
         auto numTracks = trackList.Any<const Au3WaveTrack>().size();
 
-        auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
+        const auto recordingChannels = std::max(1, audioDriverController()->configuration().inputChannels);
 
-        gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
-        gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
-        gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
-        gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
-        defaultTrackName = trackList.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference());
-        gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
-
-        wxString baseTrackName = recordingNameCustom ? defaultRecordingTrackName : defaultTrackName;
+        const RecordingTrackNameOptions nameOptions = recordConfiguration()->recordingTrackNameOptions();
+        const wxString defaultTrackName = trackList.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference());
+        const wxString baseTrackName = nameOptions.useCustomName && !nameOptions.customName.empty()
+                                       ? wxFromStdString(nameOptions.customName)
+                                       : defaultTrackName;
 
         std::vector<WaveTrack::Holder> newTracks;
-        if (recordingChannels == 2u) {
+        if (recordingChannels == 2) {
             newTracks.push_back(WaveTrackFactory::Get(*p).Create(2));
         } else {
             for (int i = 0; i < recordingChannels; ++i) {
@@ -862,18 +861,18 @@ Ret Au3Record::doRecord(Au3Project& project,
             newTrack->MoveTo(t0);
             wxString nameSuffix = wxString(wxT(""));
 
-            if (useTrackNumber) {
+            if (nameOptions.addTrackNumber) {
                 nameSuffix += wxString::Format(wxT("%d"), 1 + (int)numTracks + trackCounter++);
             }
 
-            if (useDateStamp) {
+            if (nameOptions.addDateStamp) {
                 if (!nameSuffix.empty()) {
                     nameSuffix += wxT("_");
                 }
                 nameSuffix += wxDateTime::Now().FormatISODate();
             }
 
-            if (useTimeStamp) {
+            if (nameOptions.addTimeStamp) {
                 if (!nameSuffix.empty()) {
                     nameSuffix += wxT("_");
                 }
