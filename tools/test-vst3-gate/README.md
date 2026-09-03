@@ -15,7 +15,16 @@ immediately audible.
 
     cmake -DAU_BUILD_TEST_VST3_GATE_PLUGIN=ON <build dir>
     ninja -C <build dir> au_test_vst3_gate au_test_vst3_gate_controller
-    ln -s <build dir>/test-plugins/AuTestGate.vst3 ~/.vst3/AuTestGate.vst3   # or use the controller
+    ninja -C <build dir> deploy_test_vst3     # symlink/copy the bundle into your VST3 folder
+
+Deploying is deliberately _not_ part of `install` (that option is meant to be ON
+on CI so QA can find the built plugin, and `install` must not touch the agent's
+VST3 folder). For the edit-then-F5 workflow, `.vscode/tasks.json` defines
+`CMake: install + deploy test VST3`, which the Linux launch configs use as their
+`preLaunchTask`: edit the plugin, press F5, Audacity picks up the rebuilt plugin.
+The target is a harmless no-op when the plugin isn't built, so it never breaks
+F5 for anyone else. (On Linux/macOS the deploy is a symlink into the build
+output, so it's idempotent and rebuilds are live; on Windows it's a copy.)
 
 ## Controller app
 

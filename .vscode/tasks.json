@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // The CMake Tools install step, made explicit so it can be sequenced below.
+            "label": "CMake: install",
+            "type": "cmake",
+            "command": "install",
+            "problemMatcher": []
+        },
+        {
+            // Deploy the test VST3 into the user's VST3 folder (see tools/test-vst3-gate).
+            // A no-op when AU_BUILD_TEST_VST3_GATE_PLUGIN is OFF, so always safe to run.
+            "label": "CMake: deploy test VST3",
+            "type": "cmake",
+            "command": "build",
+            "targets": ["deploy_test_vst3"],
+            "problemMatcher": []
+        },
+        {
+            // Pre-launch for the Linux configs: install as before, then deploy the rebuilt
+            // test plugin so editing it and pressing F5 shows the change in Audacity.
+            "label": "CMake: install + deploy test VST3",
+            "dependsOrder": "sequence",
+            "dependsOn": ["CMake: install", "CMake: deploy test VST3"],
+            "problemMatcher": []
+        }
+    ]
+}

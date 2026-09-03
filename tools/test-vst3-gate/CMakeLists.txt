@@ -6,6 +6,24 @@
 # app. Opt in with -DAU_BUILD_TEST_VST3_GATE_PLUGIN=ON.
 #
 
+option(AU_BUILD_TEST_VST3_GATE_PLUGIN
+       "Build the gated test VST3 plugin and its controller (developer tool, see tools/test-vst3-gate)" OFF)
+
+# The deploy target must always exist so a pre-launch task (.vscode/tasks.json) can
+# invoke it without breaking F5 for anyone not building the plugin. The real deploy
+# target further down replaces this no-op when the plugin is actually built.
+function(au_test_vst3_noop_deploy_target reason)
+    add_custom_target(deploy_test_vst3
+        COMMAND ${CMAKE_COMMAND} -E echo "[test-vst3-gate] ${reason}, nothing to deploy"
+        VERBATIM
+    )
+endfunction()
+
+if (NOT AU_BUILD_TEST_VST3_GATE_PLUGIN)
+    au_test_vst3_noop_deploy_target("not built (AU_BUILD_TEST_VST3_GATE_PLUGIN=OFF)")
+    return()
+endif()
+
 set(AU_TEST_VST3_GATE_NAME AuTestGate)
 # VST3 bundle root: <Name>.vst3 (the per-platform binary lives under Contents/)
 set(AU_TEST_VST3_GATE_BUNDLE ${CMAKE_BINARY_DIR}/test-plugins/${AU_TEST_VST3_GATE_NAME}.vst3)
@@ -26,6 +44,7 @@ set_target_properties(au_test_vst3_gate_controller PROPERTIES
 # ---- The plugin itself (Linux only for now) ----
 if (NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(WARNING "[test-vst3-gate] plugin only implemented for Linux, skipping it (controller still built)")
+    au_test_vst3_noop_deploy_target("plugin not built on this platform")
     return()
 endif()
 
@@ -84,4 +103,13 @@ set_target_properties(au_test_vst3_gate PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${AU_TEST_VST3_GATE_BUNDLE}/Contents/${CMAKE_SYSTEM_PROCESSOR}-linux
 )
 
-message(STATUS "[test-vst3-gate] bundle: ${AU_TEST_VST3_GATE_BUNDLE} (symlink it into ~/.vst3)")
+# Deploy into the user's VST3 folder as an explicit, opt-in target.
+configure_file(deploy.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/deploy_test_vst3.cmake @ONLY)
+add_custom_target(deploy_test_vst3
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/deploy_test_vst3.cmake
+    COMMENT "[test-vst3-gate] deploying the test VST3 to the user's VST3 folder"
+    VERBATIM
+)
+add_dependencies(deploy_test_vst3 au_test_vst3_gate)
+
+message(STATUS "[test-vst3-gate] bundle: ${AU_TEST_VST3_GATE_BUNDLE} (deploy with the `deploy_test_vst3` target)")
