@@ -11,12 +11,16 @@
  * checking that a plugin can be re-validated while a track using it is playing.
  *
  * Gate file: $AU_TEST_VST3_GATE_FILE, or <temp dir>/au_test_vst3_gate.
- * Contents (first integer):
+ * Contents: `<code> [delaySeconds]` - the code is applied after waiting the optional
+ * delay (default 0), counted from when this load started. The file keeps being
+ * polled meanwhile, so writing a new value overrides a pending one.
  *    1  (or missing/unreadable file)  load normally
  *    0                                 wait, polling the file, until it changes
  *   -1                                 crash (null dereference) while loading
  *    2                                 refuse to load (ModuleEntry returns false)
+ * e.g. `1 180` loads after 3 minutes, `-1 180` crashes after 3 minutes.
  * While waiting, a heartbeat line is written to stderr about once a second.
+ * tools/test-vst3-gate/controller is a small Qt app that writes this file for you.
  */
 
 #include <algorithm>
@@ -53,20 +57,32 @@ std::filesystem::path gateFilePath()
     return std::filesystem::temp_directory_path() / "au_test_vst3_gate";
 }
 
-// a missing or malformed file opens the gate, so a forgotten file never hangs a host
-int readGate(const std::filesystem::path& path)
+struct Gate {
+    int code = GATE_LOAD;
+    int delaySeconds = 0;
+    bool operator==(const Gate& other) const { return code == other.code && delaySeconds == other.delaySeconds; }
+    bool operator!=(const Gate& other) const { return !(*this == other); }
+};
+
+// `<code> [delaySeconds]`. A missing or malformed file opens the gate, so a forgotten
+// file never hangs a host; a malformed/negative delay means "no delay".
+Gate readGate(const std::filesystem::path& path)
 {
     std::ifstream in(path);
-    int value = GATE_LOAD;
-    if (!in || !(in >> value)) {
-        return GATE_LOAD;
+    Gate gate;
+    if (!in || !(in >> gate.code)) {
+        return Gate {};
     }
-    return value;
+    if (!(in >> gate.delaySeconds) || gate.delaySeconds < 0) {
+        gate.delaySeconds = 0;
+    }
+    return gate;
 }
 
-void say(const char* message, const std::filesystem::path& path, int gate)
+void say(const char* message, const std::filesystem::path& path, const Gate& gate)
 {
-    std::fprintf(stderr, "[AuTestGate] %s (gate file %s = %d)\n", message, path.string().c_str(), gate);
+    std::fprintf(stderr, "[AuTestGate] %s (gate file %s = %d %d)\n",
+                 message, path.string().c_str(), gate.code, gate.delaySeconds);
     std::fflush(stderr);
 }
 }
@@ -74,21 +90,51 @@ void say(const char* message, const std::filesystem::path& path, int gate)
 // Called from ModuleEntry (linuxmain.cpp) right after the host dlopen'ed us.
 bool InitModule()
 {
+    using Clock = std::chrono::steady_clock;
     const std::filesystem::path path = gateFilePath();
-    auto lastHeartbeat = std::chrono::steady_clock::now() - std::chrono::hours(1);
+    auto lastHeartbeat = Clock::now() - std::chrono::hours(1);
+
+    // A timed gate counts from when this exact value was first seen, i.e. from the
+    // start of this load - unless the file changes meanwhile, which restarts it.
+    Gate lastGate;
+    bool haveLastGate = false;
+    Clock::time_point gateSeenAt;
 
     for (;;) {
-        const int gate = readGate(path);
-        switch (gate) {
-        case GATE_WAIT: {
-            const auto now = std::chrono::steady_clock::now();
-            if (now - lastHeartbeat >= std::chrono::seconds(1)) {
+        const Gate gate = readGate(path);
+        const auto now = Clock::now();
+        if (!haveLastGate || gate != lastGate) {
+            lastGate = gate;
+            haveLastGate = true;
+            gateSeenAt = now;
+        }
+        const bool heartbeatDue = now - lastHeartbeat >= std::chrono::seconds(1);
+
+        if (gate.code == GATE_WAIT) {
+            if (heartbeatDue) {
                 say("gate closed, waiting", path, gate);
                 lastHeartbeat = now;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(250));
             continue;
         }
+
+        if (gate.delaySeconds > 0) {
+            const auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - gateSeenAt).count();
+            if (elapsed < gate.delaySeconds) {
+                if (heartbeatDue) {
+                    char message[96];
+                    std::snprintf(message, sizeof message, "timed gate, %lld s left",
+                                  static_cast<long long>(gate.delaySeconds - elapsed));
+                    say(message, path, gate);
+                    lastHeartbeat = now;
+                }
+                std::this_thread::sleep_for(std::chrono::milliseconds(250));
+                continue;
+            }
+        }
+
+        switch (gate.code) {
         case GATE_CRASH: {
             say("gate says crash", path, gate);
             volatile int* nowhere = nullptr;
