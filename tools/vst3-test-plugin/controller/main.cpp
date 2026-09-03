@@ -3,7 +3,7 @@
  *
  * Controller for the Audacity test VST3 plugin: installs the built bundle into the
  * platform's VST3 folder and drives the plugin's load behaviour by writing its gate
- * file (see ../autestgate.cpp and ../README.md) - no more editing the file by hand.
+ * file (see ../vst3testplugin.cpp and ../README.md) - no more editing the file by hand.
  * Changes are written as you make them; there is no separate "apply" step.
  *
  * The gate path is resolved exactly as the plugin does, so the two always agree.
@@ -24,7 +24,7 @@ constexpr int GATE_CRASH = -1;
 constexpr int GATE_REFUSE = 2;
 constexpr int DEFAULT_DELAY_SECONDS = 180; // the 3 min plugin-load timeout
 
-// Must mirror autestgate.cpp gateFilePath().
+// Must mirror vst3testplugin.cpp gateFilePath().
 fs::path gateFilePath()
 {
     if (const char* env = std::getenv("AU_TEST_VST3_GATE_FILE"); env && *env) {

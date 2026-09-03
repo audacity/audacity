@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Packages the test-VST3 controller (tools/test-vst3-gate/controller, a Qt Widgets app)
+# Packages the test-VST3 controller (tools/vst3-test-plugin/controller, a Qt Widgets app)
 # as a self-contained AppImage, so QA can run it without a Qt install.
 #
 # Reuses the linuxdeploy / linuxdeploy-plugin-qt / appimagetool that make_appimage.sh
