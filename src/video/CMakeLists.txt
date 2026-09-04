@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/videomodule.h
     ${CMAKE_CURRENT_LIST_DIR}/videotypes.h
     ${CMAKE_CURRENT_LIST_DIR}/ivideoservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/videoattachpolicy.h
     ${CMAKE_CURRENT_LIST_DIR}/ivideodecodebackend.h
 
     #internal

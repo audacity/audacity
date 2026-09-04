@@ -1,5 +1,7 @@
 #include "projectactionscontroller.h"
 
+#include "video/videoattachpolicy.h"
+
 #include <QFileDialog>
 
 #include <variant>
@@ -466,6 +468,33 @@ void ProjectActionsController::importFiles(const muse::actions::ActionData& args
     }
 
     project->import(filePaths);
+
+    attachImportedVideo(filePaths);
+}
+
+void ProjectActionsController::attachImportedVideo(const muse::io::paths_t& filePaths)
+{
+    // Importing a video already puts its sound on the timeline; showing the
+    // picture at the same time is what was meant, and Detach undoes it in one
+    // click. Deliberately conservative - see videoToAttachAfterImport.
+    if (!videoService()) {
+        return;   // the video module can be compiled out
+    }
+
+    std::vector<std::string> paths;
+    paths.reserve(filePaths.size());
+    for (const muse::io::path_t& path : filePaths) {
+        paths.push_back(path.toStdString());
+    }
+
+    const auto candidate =
+        video::videoToAttachAfterImport(paths, videoService()->isAttached());
+
+    if (candidate.has_value()) {
+        // Failure is not reported: the audio import succeeded, which is what
+        // was asked for, and the panel states its own reason.
+        videoService()->attach(*candidate);
+    }
 }
 
 void ProjectActionsController::importStartupMedia(const muse::actions::ActionData& args)
@@ -818,8 +847,8 @@ muse::io::paths_t ProjectActionsController::selectImportFiles()
 {
     std::string audioFileExt
         = "*.aac *.ac3 *.mp2 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf";
-    std::string videoFileExt
-        = "*.avi *.mp4 *.mkv *.mov *.flv *.wmv *.asf *.webm *.mpg *.mpeg *.m4v *.ts *.gxf *.mxf *.nut *.dv *.3gp *.3g2 *.mj2";
+    // Shared with the video panel's own dialog, so the two cannot drift.
+    std::string videoFileExt = video::videoFileFilter();
     std::string gameMediaFileExt
         =
             "*.roq *.bethsoftvid *.c93 *.dsicin *.dxa *.ea *.cdata *.film_cpk *.idcin *.ipmovie *.psxstr *.rl2 *.siff *.smk *.thp *.tiertexseq *.vmd *.wc3movie *.wsaud *.wsvqa *.txd";
