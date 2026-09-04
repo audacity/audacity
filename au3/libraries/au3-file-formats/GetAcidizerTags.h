@@ -22,7 +22,7 @@ namespace LibFileFormats {
 struct AcidizerTags;
 }
 
-namespace LibImportExport {
+namespace LibFileFormats {
 /*!
  * @brief Get the Acidizer tags from a file if from a trusted
  * distributor.
@@ -33,6 +33,6 @@ namespace LibImportExport {
  * only if the distributor is trusted. The distributor is looked for as the
  * "DistributedBy" RIFF info tag (https://exiftool.org/TagNames/RIFF.html#Info).
  */
-std::optional<LibFileFormats::AcidizerTags> IMPORT_EXPORT_API GetAcidizerTags(
+std::optional<AcidizerTags> FILE_FORMATS_API GetAcidizerTags(
     SNDFILE& file, const std::vector<std::string>& trustedDistributors);
-} // namespace LibImportExport
+} // namespace LibFileFormats
