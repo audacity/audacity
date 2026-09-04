@@ -56,6 +56,8 @@ signals:
     void timeSignatureChanged();
 
 private:
+    void listenTimeSignatureChanges();
+
     context::IPlaybackStatePtr playbackState() const;
 };
 }

@@ -26,16 +26,27 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
     });
 
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
-        auto project = globalContext()->currentTrackeditProject();
-        if (!project) {
-            return;
-        }
-
-        emit timeSignatureChanged();
+        listenTimeSignatureChanges();
     });
+
+    listenTimeSignatureChanges();
 
     configuration()->playbackTimeItemFormatChanged().onNotify(this, [this](){
         emit currentFormatChanged();
+    });
+}
+
+void PlaybackToolBarTimeItem::listenTimeSignatureChanges()
+{
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
+    }
+
+    emit timeSignatureChanged();
+
+    project->timeSignatureChanged().onReceive(this, [this](const trackedit::TimeSignature&) {
+        emit timeSignatureChanged();
     });
 }
 

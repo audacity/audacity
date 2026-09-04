@@ -75,6 +75,7 @@ signals:
     void isEnabledChanged();
 
 private:
+    void listenTimeSignatureChanges();
 
     double m_startTime = 0.0;
     double m_endTime = 0.0;
