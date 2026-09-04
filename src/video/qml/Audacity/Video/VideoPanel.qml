@@ -15,6 +15,27 @@ Item {
     property alias navigationSection: navPanel.section
     property alias navigationOrderStart: navPanel.order
 
+    //! Every readout in the bottom row is a number that changes many times a
+    //! second, and in a proportional face each digit is a different width, so
+    //! the row twitches continuously. A fixed-pitch face fixes that.
+    //!
+    //! QML's font type takes one family name and offers no fallback list, and
+    //! no single monospace family exists on all three platforms, so the first
+    //! one actually installed is picked here. The bare "monospace" at the end
+    //! is the fontconfig alias, which resolves on Linux and costs nothing
+    //! where it does not.
+    readonly property string monoFamily: {
+        var candidates = ["Menlo", "Consolas", "DejaVu Sans Mono",
+                          "Liberation Mono", "Courier New"]
+        var available = Qt.fontFamilies()
+        for (var i = 0; i < candidates.length; ++i) {
+            if (available.indexOf(candidates[i]) !== -1) {
+                return candidates[i]
+            }
+        }
+        return "monospace"
+    }
+
     NavigationPanel {
         id: navPanel
         name: "VideoPanel"
@@ -25,6 +46,7 @@ Item {
     VideoPanelModel {
         id: model
     }
+
 
     Component.onCompleted: {
         model.init()
@@ -84,8 +106,7 @@ Item {
                     id: timecodeLabel
 
                     text: surface.frameTimecode
-                    font.family: "Monospace"
-                    font.styleHint: Font.TypeWriter
+                    font.family: root.monoFamily
                     font.pixelSize: ui.theme.bodyFont.pixelSize + 2
                     font.bold: true
                     horizontalAlignment: Text.AlignLeft
@@ -93,8 +114,7 @@ Item {
 
                 StyledTextLabel {
                     text: qsTrc("video", "frame %1").arg(surface.frameNumber)
-                    font.family: "Monospace"
-                    font.styleHint: Font.TypeWriter
+                    font.family: root.monoFamily
                     opacity: 0.6
                     horizontalAlignment: Text.AlignLeft
                 }
@@ -102,8 +122,7 @@ Item {
                 StyledTextLabel {
                     visible: Math.abs(surface.driftMs) >= 1
                     text: qsTrc("video", "%1 ms").arg(surface.driftMs > 0 ? "+" + surface.driftMs : surface.driftMs)
-                    font.family: "Monospace"
-                    font.styleHint: Font.TypeWriter
+                    font.family: root.monoFamily
                     opacity: 0.6
                     horizontalAlignment: Text.AlignLeft
                 }
@@ -113,8 +132,7 @@ Item {
                 StyledTextLabel {
                     visible: model.offsetText.length > 0
                     text: qsTrc("video", "offset %1").arg(model.offsetText)
-                    font.family: "Monospace"
-                    font.styleHint: Font.TypeWriter
+                    font.family: root.monoFamily
                     opacity: 0.6
                     horizontalAlignment: Text.AlignLeft
                 }
