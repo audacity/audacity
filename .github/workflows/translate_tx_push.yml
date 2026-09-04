@@ -25,7 +25,7 @@ jobs:
           fi
 
       - name: Clone repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Push source strings to Transifex (tx push)
         uses: transifex/cli-action@v2
