@@ -158,21 +158,14 @@ Item {
                 elide: Text.ElideMiddle
             }
 
-            FlatButton {
-                text: qsTrc("video", "Attach video…")
-                visible: !model.hasVideo
-                navigation.panel: navPanel
-                navigation.order: 1
-                onClicked: model.attachVideo()
-            }
-
-            // Stays alongside "Attach video…" rather than replacing it, so
-            // that installing FFmpeg and trying again is one panel visit.
+            //! Attaching lives in the title bar's "..." menu, not here. The
+            //! only button left is the one for a condition the user cannot be
+            //! expected to guess their way out of.
             FlatButton {
                 text: qsTrc("video", "Get FFmpeg…")
                 visible: model.needsFFmpeg
                 navigation.panel: navPanel
-                navigation.order: 2
+                navigation.order: 1
                 onClicked: model.openFFmpegPreferences()
             }
         }

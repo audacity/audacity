@@ -9,7 +9,6 @@
 
 #include "translation.h"
 
-#include "../videoattachpolicy.h"
 
 using namespace au::video;
 
@@ -34,26 +33,6 @@ void VideoPanelModel::init()
 
     emit stateChanged();
     emit offsetChanged();
-}
-
-void VideoPanelModel::attachVideo()
-{
-    if (videoService() == nullptr || interactive() == nullptr) {
-        return;
-    }
-
-    const std::vector<std::string> filter {
-        muse::trc("video", "Video files") + " (" + videoFileFilter() + ")"
-    };
-
-    const muse::io::path_t path = interactive()->selectOpeningFileSync(
-        muse::trc("video", "Attach video"), muse::io::path_t(), filter);
-
-    if (path.empty()) {
-        return;
-    }
-
-    videoService()->attach(path.toStdString());
 }
 
 void VideoPanelModel::detachVideo()

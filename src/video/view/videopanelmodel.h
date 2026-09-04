@@ -33,7 +33,6 @@ public:
     explicit VideoPanelModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
-    Q_INVOKABLE void attachVideo();
     Q_INVOKABLE void detachVideo();
 
     //! Opens the preferences page carrying the FFmpeg download and locate
