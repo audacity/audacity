@@ -193,13 +193,6 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 {
     TRACEFUNC;
 
-    if (appUpdateScenario() && appUpdateScenario()->checkInProgress()) {
-        appUpdateScenario()->checkInProgressChanged().onNotify(this, [this, modeType]() {
-            appUpdateScenario()->checkInProgressChanged().disconnect(this);
-            showStartupDialogsIfNeed(modeType);
-        }, muse::async::Asyncable::Mode::SetReplace);
-    }
-
     showStartupDialogsIfNeed(modeType);
 
     if (!m_startupMediaFiles.empty()) {
@@ -248,11 +241,6 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
         return;
     }
 
-    // Delay popups until update check finished
-    if (appUpdateScenario() && appUpdateScenario()->checkInProgress()) {
-        return;
-    }
-
     const auto showWelcomeDialogIfNeed = [this]() {
         const auto showWelcomePage = [this]() {
             const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
@@ -276,7 +264,7 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
         };
 
         if (!configuration()->hasCompletedFirstLaunchSetup()) {
-            interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
+            interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [](const muse::Val&, auto resolve) {
                 return resolve();
             });
         } else {
@@ -284,19 +272,7 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
         }
     };
 
-    if (!appUpdateScenario() || !appUpdateScenario()->hasUpdate()) {
-        showWelcomeDialogIfNeed();
-        return;
-    }
-
-    auto promise = appUpdateScenario()->showUpdate();
-    promise.onResolve(this, [showWelcomeDialogIfNeed](const muse::Ret& ret) {
-        // Ok means close the app and install the update
-        if (ret.code() == static_cast<int>(muse::Ret::Code::Ok)) {
-            return;
-        }
-        showWelcomeDialogIfNeed();
-    });
+    showWelcomeDialogIfNeed();
 }
 
 muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
