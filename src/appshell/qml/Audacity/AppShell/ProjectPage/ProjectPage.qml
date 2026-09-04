@@ -469,10 +469,14 @@ DockPage {
             width: root.verticalPanelDefaultWidth
             minimumWidth: 160
 
-            //! Usable heights for when it is docked as a horizontal strip
-            //! rather than down one side.
+            //! A floor so it stays usable when docked as a horizontal strip.
+            //! Deliberately no maximumHeight: no other panel sets one, and a
+            //! cap applies in every orientation - dropped beside the timeline
+            //! it stopped the panel filling the column, so it landed short and
+            //! had to be dragged to fit. The declared "location" cannot be used
+            //! to apply it only when horizontal: nothing updates that property
+            //! when the user moves the dock.
             minimumHeight: 120
-            maximumHeight: root.horizontalPanelMaxHeight
 
             contextMenuModel: videoPanelMenuModel
 
