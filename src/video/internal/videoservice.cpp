@@ -34,7 +34,14 @@ VideoService::VideoService(const muse::modularity::ContextPtr& ctx)
 
 VideoService::~VideoService()
 {
-    detach();
+    // Only the decoder is stopped here. detach() reaches the project through
+    // globalContext(), and by the time the service itself is being destroyed
+    // the context that owns it is already going away - dereferencing it there
+    // segfaulted on exit. It also notifies, and the subscribers are gone too.
+    //
+    // Nothing is lost by not detaching: VideoContext::onDeinit has already
+    // released the attachment while everything was still alive.
+    stopDecoding();
 }
 
 void VideoService::init()

@@ -84,6 +84,9 @@ void VideoContext::onInit(const IApplication::RunMode& mode)
 void VideoContext::onDeinit()
 {
     if (m_service) {
-        m_service->detach();
+        // Not detach(): that clears the project's recorded video and commits
+        // the change, so quitting with a video attached would erase it. The
+        // application closing is not the user detaching anything.
+        m_service->detachWithoutClearingProject();
     }
 }

@@ -69,22 +69,14 @@ Item {
 
     //! Nothing attached is an ordinary state here, so it says so quietly
     //! rather than showing an unexplained black rectangle.
-    Rectangle {
-        anchors.fill: parent
+    StyledTextLabel {
+        anchors.centerIn: parent
+        width: parent.width - 4
         visible: !surface.hasFrame
-        color: "transparent"
-        border.width: 1
-        border.color: ui.theme.strokeColor
-        radius: 2
-
-        StyledTextLabel {
-            anchors.centerIn: parent
-            width: parent.width - 4
-            text: qsTrc("video", "No video")
-            font.pixelSize: ui.theme.bodyFont.pixelSize - 2
-            opacity: 0.5
-            elide: Text.ElideRight
-            horizontalAlignment: Text.AlignHCenter
-        }
+        text: qsTrc("video", "No video")
+        font.pixelSize: ui.theme.bodyFont.pixelSize - 2
+        opacity: 0.5
+        elide: Text.ElideRight
+        horizontalAlignment: Text.AlignHCenter
     }
 }

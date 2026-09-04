@@ -35,6 +35,12 @@ public:
     //! Subscribes to the project changing, so an attachment saved with a
     //! project is restored when it is opened again.
     void init();
+
+    //! Tears down the decoder without touching the project's record. Used when
+    //! switching projects, where the old project's attachment must stay
+    //! recorded against the old one, and when the application quits, which is
+    //! not the user detaching anything.
+    void detachWithoutClearingProject();
     ~VideoService() override;
 
     VideoError attach(const std::string& path) override;
@@ -72,10 +78,7 @@ private:
     //! Commits an attach or detach into the project so it survives a close.
     void commitProjectChange();
 
-    //! Tears down the decoder without touching the project's record. Used when
-    //! switching projects, where the old project's attachment must stay
-    //! recorded against the old project.
-    void detachWithoutClearingProject();
+
 
     void stopDecoding();
 
