@@ -6,11 +6,14 @@
 
 #include <QImage>
 #include <QQuickPaintedItem>
+#include <QTimer>
 
 #include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
 #include "modularity/ioc.h"
+#include "playback/playbacktypes.h"
 
+#include "../internal/videosyncclock.h"
 #include "../ivideoservice.h"
 
 namespace au::video {
@@ -20,6 +23,11 @@ namespace au::video {
 //! QuickPaintedView. That base class pins the texture size to the item's
 //! logical size to keep one-pixel UI rules crisp, which is right for chrome
 //! and wrong here: it would render video at half resolution on any 2x display.
+//!
+//! Repaints are driven by this item's own timer rather than by the player's
+//! position reports, so the picture updates smoothly between them. The reports
+//! re-anchor the clock; the clock interpolates; the decoder runs on its own
+//! thread and leaves frames in the cache.
 class VideoSurfaceItem : public QQuickPaintedItem, public muse::async::Asyncable,
     public muse::Contextable
 {
@@ -28,11 +36,17 @@ class VideoSurfaceItem : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(bool hasFrame READ hasFrame NOTIFY frameChanged FINAL)
     Q_PROPERTY(bool outOfRange READ outOfRange NOTIFY frameChanged FINAL)
 
+    //! How far the shown frame is from where the playhead says it should be,
+    //! in milliseconds. Published so a sync complaint can be a number.
+    Q_PROPERTY(int driftMs READ driftMs NOTIFY driftChanged FINAL)
+
 public:
     explicit VideoSurfaceItem(QQuickItem* parent = nullptr);
+    ~VideoSurfaceItem() override;
 
     bool hasFrame() const;
     bool outOfRange() const;
+    int driftMs() const;
 
     void paint(QPainter* painter) override;
 
@@ -44,23 +58,41 @@ public:
 
 signals:
     void frameChanged();
+    void driftChanged();
 
 private:
-    void onPositionChanged(muse::secs_t position);
-    void requestFrame(muse::secs_t position);
+    void onPositionReport(muse::secs_t position);
+    void onStatusChanged(playback::PlaybackStatus status);
+    void onRecordingChanged();
+    void onTick();
+
+    void refreshNow();
+    void showFrameFor(muse::secs_t time, bool requestDecode);
+    void setOutOfRange(bool outOfRange);
 
     //! Target size in device pixels. Decoding at logical size would render at
     //! half resolution on a 2x display, and tearing the panel to a 1x screen
     //! silently changes the answer, so this is re-read every request.
     QSize targetPixelSize() const;
 
+    void applyClockConfig();
+    bool shouldAdvance() const;
+
     muse::ContextInject<context::IGlobalContext> globalContext { this };
     muse::ContextInject<IVideoService> videoService { this };
 
+    VideoSyncClock m_clock;
+    QTimer m_tick;
+
     QImage m_image;
-    muse::secs_t m_lastPosition = -1.0;
-    bool m_subscribed = false;
+    int64_t m_shownPts = 0;
+    bool m_haveShown = false;
     bool m_outOfRange = false;
+    int m_driftMs = 0;
+
+    playback::PlaybackStatus m_lastStatus = playback::PlaybackStatus::Stopped;
+    bool m_haveStatus = false;
+    bool m_subscribed = false;
 };
 }
 

@@ -36,11 +36,20 @@ public:
 
     virtual const VideoStreamInfo& streamInfo() const = 0;
 
-    //! Frame covering the given project time, at the requested size in device
-    //! pixels. Returns an invalid frame when nothing is attached or the time
-    //! falls outside the video.
-    virtual VideoFrame frameAt(muse::secs_t projectTime,
-                               int targetWidth, int targetHeight) = 0;
+    //! What is already decoded for this project time. Returns immediately, so
+    //! it is safe to call on every repaint. `covers` says whether the frame's
+    //! own interval contains the time or whether it is an earlier one held
+    //! over because the decoder has not caught up.
+    virtual VideoFrame cachedFrameAt(muse::secs_t projectTime, bool* covers = nullptr) const = 0;
+
+    //! Asks the decoder for this time. Returns at once; the frame appears in
+    //! the cache later and frameReady() fires. Requests supersede one another,
+    //! so calling this on every position report is cheap.
+    virtual void requestFrame(muse::secs_t projectTime,
+                              int targetWidth, int targetHeight) = 0;
+
+    //! Fires on the GUI thread once a newly decoded frame is available.
+    virtual muse::async::Notification frameReady() const = 0;
 
     //! Whether the attached video actually covers this project time. Outside
     //! it there is nothing to show, and the panel says so rather than leaving

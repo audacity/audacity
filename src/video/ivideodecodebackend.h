@@ -38,6 +38,17 @@ public:
     //! logical ones: the caller multiplies by the device pixel ratio, because
     //! decoding at logical size renders at half resolution on a 2x display.
     virtual VideoFrame frameAt(muse::secs_t time, int targetWidth, int targetHeight) = 0;
+
+    //! Content-relative time to a timestamp on the video stream's timeline.
+    //! Reads only state fixed at open(), so unlike frameAt() it is safe to
+    //! call from another thread while the decoder is working.
+    virtual int64_t timeToPts(muse::secs_t time) const = 0;
+
+    //! How long a frame is shown for, in the video stream's own time base.
+    //! Used to decide which requests a cached frame covers. Only a fallback
+    //! for containers that carry no per-packet duration; variable frame rate
+    //! content legitimately holds a single frame for seconds.
+    virtual int64_t frameDurationPts() const = 0;
 };
 
 using IVideoDecodeBackendPtr = std::shared_ptr<IVideoDecodeBackend>;

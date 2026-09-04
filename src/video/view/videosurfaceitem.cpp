@@ -3,16 +3,34 @@
 */
 #include "videosurfaceitem.h"
 
+#include <chrono>
+#include <cmath>
+
 #include <QPainter>
 #include <QQuickWindow>
 #include <QtMath>
 
 using namespace au::video;
 
+namespace {
+//! Matches the player's own position timer. Faster would repaint frames that
+//! have not changed; slower would show stale ones at high frame rates.
+constexpr int TICK_INTERVAL_MS = 16;
+}
+
 VideoSurfaceItem::VideoSurfaceItem(QQuickItem* parent)
     : QQuickPaintedItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     setFlag(ItemHasContents, true);
+
+    m_tick.setInterval(TICK_INTERVAL_MS);
+    m_tick.setTimerType(Qt::PreciseTimer);
+    connect(&m_tick, &QTimer::timeout, this, [this]() { onTick(); });
+}
+
+VideoSurfaceItem::~VideoSurfaceItem()
+{
+    m_tick.stop();
 }
 
 void VideoSurfaceItem::componentComplete()
@@ -24,25 +42,217 @@ void VideoSurfaceItem::componentComplete()
     }
     m_subscribed = true;
 
-    // The position channel is the one signal that matters: it fires on every
-    // seek while stopped, and on every tick of the player's own timer while
-    // playing, so following it covers both halves of "in sync".
-    globalContext()->playbackState()->playbackPositionChanged().onReceive(
-        this, [this](muse::secs_t position) { onPositionChanged(position); });
+    applyClockConfig();
+
+    const auto state = globalContext()->playbackState();
+
+    state->playbackPositionChanged().onReceive(
+        this, [this](muse::secs_t position) { onPositionReport(position); });
+
+    state->playbackStatusChanged().onReceive(
+        this, [this](playback::PlaybackStatus status) { onStatusChanged(status); });
+
+    globalContext()->isRecordingChanged().onNotify(
+        this, [this]() { onRecordingChanged(); });
 
     videoService()->attachedChanged().onNotify(this, [this]() {
-        m_lastPosition = -1.0;
-        requestFrame(globalContext()->playbackState()->playbackPosition());
+        applyClockConfig();
+        m_haveShown = false;
+        refreshNow();
     });
 
-    const auto refresh = [this]() {
-        m_lastPosition = -1.0;
-        requestFrame(globalContext()->playbackState()->playbackPosition());
-    };
+    // A frame the decoder just produced may be the one that should be showing.
+    videoService()->frameReady().onNotify(this, [this]() {
+        if (!m_tick.isActive()) {
+            refreshNow();
+        }
+    });
+
+    const auto refresh = [this]() { m_haveShown = false; refreshNow(); };
     connect(this, &QQuickItem::widthChanged, this, refresh);
     connect(this, &QQuickItem::heightChanged, this, refresh);
 
-    refresh();
+    m_clock.stop(state->playbackPosition());
+    onStatusChanged(state->playbackStatus());
+    refreshNow();
+}
+
+void VideoSurfaceItem::applyClockConfig()
+{
+    VideoSyncClock::Config config;
+
+    const VideoStreamInfo& info = videoService()->streamInfo();
+    if (info.frameRate > 0.0) {
+        config.frameDuration = 1.0 / info.frameRate;
+    }
+
+    m_clock.setConfig(config);
+}
+
+bool VideoSurfaceItem::shouldAdvance() const
+{
+    // Recording advances the playhead without the transport being "playing",
+    // and following it is the whole point of sync-to-picture work: voiceover,
+    // dialogue replacement, foley. Keep rolling.
+    if (globalContext()->isRecording()) {
+        return true;
+    }
+    return m_haveStatus && m_lastStatus == playback::PlaybackStatus::Running;
+}
+
+void VideoSurfaceItem::onStatusChanged(playback::PlaybackStatus status)
+{
+    // The channel sends on every set, including sets to the value it already
+    // had, so a transition is only a transition if the value actually moved.
+    if (m_haveStatus && status == m_lastStatus) {
+        return;
+    }
+    m_lastStatus = status;
+    m_haveStatus = true;
+
+    const auto state = globalContext()->playbackState();
+
+    if (shouldAdvance()) {
+        m_clock.start(state->playbackPosition(), std::chrono::steady_clock::now());
+        m_tick.start();
+    } else {
+        // There is no final position report after a stop, so read the value
+        // rather than waiting for one that will not arrive.
+        m_clock.stop(state->playbackPosition());
+        m_tick.stop();
+        refreshNow();
+    }
+}
+
+void VideoSurfaceItem::onRecordingChanged()
+{
+    const auto state = globalContext()->playbackState();
+
+    if (shouldAdvance()) {
+        if (!m_tick.isActive()) {
+            m_clock.start(state->playbackPosition(), std::chrono::steady_clock::now());
+            m_tick.start();
+        }
+    } else {
+        m_clock.stop(state->playbackPosition());
+        m_tick.stop();
+        refreshNow();
+    }
+}
+
+void VideoSurfaceItem::onPositionReport(muse::secs_t position)
+{
+    // Runs inside the player's own timer tick, so it stays cheap: feed the
+    // clock, and ask for a decode. No decoding, no allocation, no file access.
+    const auto response = m_clock.onPosition(position, std::chrono::steady_clock::now());
+
+    if (!m_clock.isAdvancing()) {
+        // Stopped or paused: the report is a seek, and there is no tick
+        // running to pick it up.
+        if (response == VideoSyncClock::Response::Reanchored) {
+            refreshNow();
+        }
+        return;
+    }
+
+    if (response == VideoSyncClock::Response::Reanchored) {
+        showFrameFor(position, true);
+    }
+}
+
+void VideoSurfaceItem::onTick()
+{
+    const auto now = std::chrono::steady_clock::now();
+
+    if (m_clock.isStalled(now)) {
+        // The player's own position freezes when the audio callback stops
+        // delivering. Freeze with it rather than running on into a gap.
+        return;
+    }
+
+    showFrameFor(m_clock.advanceTo(now), true);
+}
+
+void VideoSurfaceItem::refreshNow()
+{
+    const muse::secs_t position = m_clock.isAdvancing()
+                                  ? m_clock.position(std::chrono::steady_clock::now())
+                                  : globalContext()->playbackState()->playbackPosition();
+    showFrameFor(position, true);
+}
+
+void VideoSurfaceItem::setOutOfRange(bool outOfRange)
+{
+    if (m_outOfRange == outOfRange) {
+        return;
+    }
+    m_outOfRange = outOfRange;
+
+    if (m_outOfRange && !m_image.isNull()) {
+        m_image = QImage();
+        m_haveShown = false;
+        update();
+    }
+    emit frameChanged();
+}
+
+void VideoSurfaceItem::showFrameFor(muse::secs_t time, bool requestDecode)
+{
+    if (width() <= 0 || height() <= 0) {
+        return;
+    }
+
+    if (!videoService()->isAttached()) {
+        if (!m_image.isNull()) {
+            m_image = QImage();
+            m_haveShown = false;
+            emit frameChanged();
+            update();
+        }
+        return;
+    }
+
+    // Past the end of the video there is nothing to decode. Clear rather than
+    // leaving the last frame up, which would read as though it were current.
+    if (!videoService()->isTimeInRange(time)) {
+        setOutOfRange(true);
+        return;
+    }
+    setOutOfRange(false);
+
+    bool covers = false;
+    const VideoFrame frame = videoService()->cachedFrameAt(time, &covers);
+
+    if (frame.valid() && (!m_haveShown || frame.pts != m_shownPts)) {
+        m_image = frame.image;
+        m_shownPts = frame.pts;
+        m_haveShown = true;
+        emit frameChanged();
+        update();
+    }
+
+    if (frame.valid()) {
+        const int drift = static_cast<int>(
+            std::lround((frame.time.to_double() - time.to_double()) * 1000.0));
+        if (drift != m_driftMs) {
+            m_driftMs = drift;
+            emit driftChanged();
+        }
+    }
+
+    // Ask for this time whether or not the cache had it. The request slot only
+    // keeps the newest, so asking again while already correct costs one
+    // superseded entry rather than a decode.
+    if (requestDecode && !covers) {
+        const QSize target = targetPixelSize();
+        videoService()->requestFrame(time, target.width(), target.height());
+    }
+}
+
+QSize VideoSurfaceItem::targetPixelSize() const
+{
+    const qreal dpr = window() != nullptr ? window()->effectiveDevicePixelRatio() : 1.0;
+    return QSize(qMax(1, qCeil(width() * dpr)), qMax(1, qCeil(height() * dpr)));
 }
 
 bool VideoSurfaceItem::hasFrame() const
@@ -55,66 +265,9 @@ bool VideoSurfaceItem::outOfRange() const
     return m_outOfRange;
 }
 
-QSize VideoSurfaceItem::targetPixelSize() const
+int VideoSurfaceItem::driftMs() const
 {
-    const qreal dpr = window() != nullptr ? window()->effectiveDevicePixelRatio() : 1.0;
-    return QSize(qMax(1, qCeil(width() * dpr)), qMax(1, qCeil(height() * dpr)));
-}
-
-void VideoSurfaceItem::onPositionChanged(muse::secs_t position)
-{
-    // The player publishes unconditionally on seek, so identical values arrive
-    // repeatedly while a playhead is held still. Decoding those again would be
-    // pure waste.
-    if (qFuzzyCompare(position.to_double() + 1.0, m_lastPosition.to_double() + 1.0)) {
-        return;
-    }
-    requestFrame(position);
-}
-
-void VideoSurfaceItem::requestFrame(muse::secs_t position)
-{
-    if (!m_subscribed || width() <= 0 || height() <= 0) {
-        return;
-    }
-
-    if (!videoService()->isAttached()) {
-        if (!m_image.isNull()) {
-            m_image = QImage();
-            emit frameChanged();
-            update();
-        }
-        return;
-    }
-
-    // Past the end of the video there is nothing to decode. Clear rather than
-    // leaving the last frame up, which would read as though it were current.
-    if (!videoService()->isTimeInRange(position)) {
-        m_lastPosition = position;
-        if (!m_outOfRange || !m_image.isNull()) {
-            m_outOfRange = true;
-            m_image = QImage();
-            emit frameChanged();
-            update();
-        }
-        return;
-    }
-    m_outOfRange = false;
-
-    const QSize target = targetPixelSize();
-    const VideoFrame frame = videoService()->frameAt(position, target.width(), target.height());
-
-    m_lastPosition = position;
-
-    if (!frame.valid()) {
-        // Hold the previous frame rather than blanking. A momentary decode miss
-        // should not flash the panel to black.
-        return;
-    }
-
-    m_image = frame.image;
-    emit frameChanged();
-    update();
+    return m_driftMs;
 }
 
 void VideoSurfaceItem::paint(QPainter* painter)

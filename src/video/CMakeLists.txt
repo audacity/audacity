@@ -16,6 +16,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ivideodecodebackend.h
 
     #internal
+    ${CMAKE_CURRENT_LIST_DIR}/internal/videodecodeworker.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/videodecodeworker.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/videoframecache.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/videoframecache.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/videosyncclock.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/videosyncclock.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/videoservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/videoservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/videoerrors.cpp

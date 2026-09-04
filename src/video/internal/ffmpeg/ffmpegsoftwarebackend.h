@@ -39,6 +39,9 @@ public:
 
     VideoFrame frameAt(muse::secs_t time, int targetWidth, int targetHeight) override;
 
+    int64_t timeToPts(muse::secs_t time) const override;
+    int64_t frameDurationPts() const override;
+
 private:
     //! Content-relative seconds to a raw timestamp on the container timeline.
     int64_t toPts(muse::secs_t seconds) const;

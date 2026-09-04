@@ -117,6 +117,11 @@ public:
     virtual AVSampleFormatFwd GetSampleFmt() const noexcept = 0;
     virtual void SetSampleFmt(AVSampleFormatFwd value) noexcept = 0;
 
+    //! Picture dimensions. Known as soon as the codec is opened, so the
+    //! panel can size itself without waiting for a frame to be decoded.
+    virtual int GetVideoWidth() const noexcept = 0;
+    virtual int GetVideoHeight() const noexcept = 0;
+
     virtual int GetSampleRate() const noexcept = 0;
     virtual void SetSampleRate(int value) noexcept = 0;
 

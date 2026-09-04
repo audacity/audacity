@@ -43,6 +43,16 @@ const VideoStreamInfo& FFmpegSoftwareBackend::streamInfo() const
     return m_info;
 }
 
+int64_t FFmpegSoftwareBackend::timeToPts(muse::secs_t time) const
+{
+    return toPts(time);
+}
+
+int64_t FFmpegSoftwareBackend::frameDurationPts() const
+{
+    return m_defaultFrameDuration;
+}
+
 void FFmpegSoftwareBackend::close()
 {
     m_frame.reset();
@@ -145,6 +155,11 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
                             ? muse::secs_t(0.0)
                             : muse::secs_t(static_cast<double>(videoStart)
                                            * m_timeBaseNum / m_timeBaseDen);
+
+    // Known as soon as the codec is open, so the panel can report the size
+    // without waiting for a frame; the decode now happens on another thread.
+    m_info.width = m_codec->GetVideoWidth();
+    m_info.height = m_codec->GetVideoHeight();
 
     const AudacityAVRational sar = videoStream->GetSampleAspectRatio();
     m_sampleAspectNum = sar.num;
@@ -331,11 +346,6 @@ VideoFrame FFmpegSoftwareBackend::frameAt(muse::secs_t time,
                                  m_frame->GetColorRange());
     result.pts = m_lastDecodedPts;
     result.time = toContentSeconds(m_lastDecodedPts);
-
-    if (m_info.width == 0) {
-        m_info.width = m_frame->GetWidth();
-        m_info.height = m_frame->GetHeight();
-    }
 
     return result;
 }
