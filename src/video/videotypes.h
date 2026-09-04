@@ -56,6 +56,11 @@ struct VideoStreamInfo {
     muse::secs_t audioStartTime = 0.0;
     muse::secs_t videoStartTime = 0.0;
 
+    //! Whether the file carries audio at all. Without this a start time of
+    //! zero is indistinguishable from having no audio stream, which matters
+    //! to anything that would offer to put that audio on the timeline.
+    bool hasAudioStream = false;
+
     bool isValid() const { return streamIndex >= 0 && width > 0 && height > 0; }
 };
 }

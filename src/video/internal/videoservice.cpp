@@ -202,6 +202,13 @@ VideoError VideoService::attach(const std::string& path)
     const std::thread::id guiThread = std::this_thread::get_id();
     m_worker->setFrameReadyCallback([this, guiThread]() {
         muse::async::Async::call(this, [this]() {
+            // A frame arrived, so whatever went wrong before has passed.
+            // Without this one transient failure pins its message for the
+            // rest of the session.
+            if (m_error != VideoError::None) {
+                m_error = VideoError::None;
+                m_attachedChanged.notify();
+            }
             m_frameReady.notify();
         }, guiThread);
     });

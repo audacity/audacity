@@ -160,6 +160,8 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
 
     // Recorded so the difference between the two streams is inspectable; the
     // anchor itself is the video start time, see toPts().
+    m_info.hasAudioStream = audioStream != nullptr;
+
     if (audioStream != nullptr) {
         const AudacityAVRational audioBase = audioStream->GetTimeBase();
         const int64_t audioStart = audioStream->GetStartTime();
@@ -221,6 +223,19 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
 
     m_open = true;
     m_haveFrame = false;
+    m_lastFrameError = VideoError::None;
+
+    // Decode the first frame here rather than waiting for the panel to ask.
+    // Pixel format and transfer function are properties of the stream, so a
+    // file that can never be displayed should fail to attach - otherwise it
+    // is recorded in the project and only turns black later.
+    const VideoFrame probe = frameAt(muse::secs_t(0.0), 64, 64);
+    if (!probe.valid() && m_lastFrameError != VideoError::None) {
+        const VideoError reason = m_lastFrameError;
+        close();
+        return reason;
+    }
+
     return VideoError::None;
 }
 
@@ -297,8 +312,12 @@ bool FFmpegSoftwareBackend::decodeUpTo(int64_t targetPts, int64_t* firstDecodedP
         return pts;
     };
 
-    bool haveHeld = false;
-    int64_t heldPts = 0;
+    // Start from the frame already held, when there is one and it does not
+    // start after the target. Discarding it would answer with the NEXT frame
+    // whenever two requests fall inside the same one - which is most of them
+    // during playback, where the panel asks far more often than frames change.
+    bool haveHeld = m_haveFrame && m_lastDecodedPts <= targetPts;
+    int64_t heldPts = haveHeld ? m_lastDecodedPts : 0;
     bool draining = false;
 
     const auto takeHeld = [&](int64_t pts) {

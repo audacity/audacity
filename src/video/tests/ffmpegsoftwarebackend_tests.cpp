@@ -327,7 +327,15 @@ TEST(FFmpegSoftwareBackendTests, ContainerOffsetDoesNotShiftTheContent)
     // sync25-offset.mp4 carries a 1.5 s container offset. Anchoring correctly
     // means the same content time still selects the same picture; anchoring
     // wrongly shifts it by tens of frames.
-    EXPECT_GT(offset.streamInfo().audioStartTime.to_double(), 1.0);
+    // Measured, not merely "greater than one": the container offset is 1.5 s
+    // and the audio stream begins 22 ms earlier than the video, which is the
+    // AAC priming. MPEG-TS is not the only container where the two streams
+    // diverge, so the video start is what the anchor must use here too.
+    const VideoStreamInfo& offsetInfo = offset.streamInfo();
+    EXPECT_NEAR(offsetInfo.videoStartTime.to_double(), 1.500, 0.001);
+    EXPECT_NEAR(offsetInfo.audioStartTime.to_double(), 1.478, 0.001);
+    EXPECT_NEAR(offsetInfo.videoStartTime.to_double() - offsetInfo.audioStartTime.to_double(),
+                0.022, 0.002);
 
     const double halfFrame = 0.5 / FPS;
     for (double second : { 1.0, 3.0, 5.0 }) {
@@ -377,6 +385,7 @@ TEST(FFmpegSoftwareBackendTests, SeeksAccuratelyInMpegTs)
 
     const double halfFrame = 0.5 / FPS;
     int wrong = 0;
+    int maxAttempts = 0;
 
     // Visited out of order so each one forces a real seek rather than being
     // served by decoding forward from the last.
@@ -384,6 +393,7 @@ TEST(FFmpegSoftwareBackendTests, SeeksAccuratelyInMpegTs)
         const double target = second + halfFrame;
         const VideoFrame frame = backend.frameAt(target, 1280, 720);
         ASSERT_TRUE(frame.valid()) << "no frame at t=" << target;
+        maxAttempts = std::max(maxAttempts, backend.seekAttempts());
 
         // The patch alone is too weak a check: markers are one second apart
         // and the GOP is one second, so landing a whole GOP late still lights
@@ -401,6 +411,10 @@ TEST(FFmpegSoftwareBackendTests, SeeksAccuratelyInMpegTs)
     }
 
     EXPECT_EQ(wrong, 0);
+
+    // MPEG-TS seeks land past the target, so getting these right at all means
+    // the retry ladder ran.
+    EXPECT_GT(maxAttempts, 1) << "the retry ladder should have run";
 }
 
 TEST(FFmpegSoftwareBackendTests, MpegTsFrameTimeMatchesTheRequest)
@@ -545,7 +559,11 @@ TEST(FFmpegSoftwareBackendTests, MpegTsSweepLandsOnEveryFrame)
 
     EXPECT_EQ(result.late, 0) << "worst was " << result.worstLateSeconds << " s";
     EXPECT_EQ(result.missing, 0);
-    EXPECT_GT(result.maxSeekAttempts, 1) << "the retry ladder should have run";
+
+    // Walking forward needs no seeks at all: open() decodes the first frame,
+    // so the decoder is already positioned. The retry ladder is exercised by
+    // SeeksAccuratelyInMpegTs, which visits targets out of order.
+    EXPECT_EQ(result.maxSeekAttempts, 0) << "a forward walk should not seek";
 }
 
 TEST(FFmpegSoftwareBackendTests, MpegTsReturnsAFrameAtTheLastKeyframe)
@@ -584,9 +602,10 @@ TEST(FFmpegSoftwareBackendTests, ContainersThatSeekCorrectlyNeedNoRetry)
 
         EXPECT_EQ(result.late, 0) << name << ", worst " << result.worstLateSeconds << " s";
         EXPECT_EQ(result.missing, 0) << name;
-        EXPECT_EQ(result.maxSeekAttempts, 1)
+        EXPECT_LE(result.maxSeekAttempts, 1)
             << name << " needed " << result.maxSeekAttempts
-            << " seeks; it should need exactly one";
+            << " seeks for one request; the retry ladder must not fire on a"
+               " container that already seeks correctly";
     }
 }
 
@@ -776,34 +795,38 @@ TEST(FFmpegSoftwareBackendTests, StartsWithNoFrameError)
     EXPECT_EQ(backend.lastFrameError(), VideoError::None);
 }
 
-TEST(FFmpegSoftwareBackendTests, AnUnsupportedPixelFormatSaysSo)
+TEST(FFmpegSoftwareBackendTests, AnUnsupportedPixelFormatFailsToOpen)
 {
     REQUIRE_FIXTURE("yuv422.mp4");
 
     FFmpegSoftwareBackend backend;
-    REQUIRE_OPENED(backend, "yuv422.mp4");
+    const VideoError err = backend.open(fixture("yuv422.mp4"));
+    if (err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld) {
+        GTEST_SKIP() << "No usable FFmpeg on this machine";
+    }
 
-    const VideoFrame frame = backend.frameAt(1.0, 320, 180);
-
-    EXPECT_FALSE(frame.valid()) << "4:2:2 is not handled yet";
-    EXPECT_EQ(backend.lastFrameError(), VideoError::UnsupportedFormat)
-        << "the panel has to be able to say why it is blank";
+    // The pixel format is a property of the stream, so this is knowable at
+    // open time. Failing here keeps it out of the project rather than
+    // recording a file that only turns black later.
+    EXPECT_EQ(err, VideoError::UnsupportedFormat);
+    EXPECT_FALSE(backend.isOpen());
 }
 
-TEST(FFmpegSoftwareBackendTests, HdrIsRefusedRatherThanShownWrong)
+TEST(FFmpegSoftwareBackendTests, HdrIsRefusedAtOpenRatherThanShownWrong)
 {
     REQUIRE_FIXTURE("hdr_pq.mp4");
 
     FFmpegSoftwareBackend backend;
-    REQUIRE_OPENED(backend, "hdr_pq.mp4");
+    const VideoError err = backend.open(fixture("hdr_pq.mp4"));
+    if (err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld) {
+        GTEST_SKIP() << "No usable FFmpeg on this machine";
+    }
 
-    // Decoded as though it were ordinary gamma, reference white lands near
-    // middle grey. That looks merely dark rather than obviously broken, which
-    // is worse than refusing it.
-    const VideoFrame frame = backend.frameAt(1.0, 320, 180);
-
-    EXPECT_FALSE(frame.valid());
-    EXPECT_EQ(backend.lastFrameError(), VideoError::UnsupportedHdr);
+    // Decoded as ordinary gamma, reference white lands near middle grey: it
+    // looks merely dark rather than obviously broken, which is worse than
+    // refusing it.
+    EXPECT_EQ(err, VideoError::UnsupportedHdr);
+    EXPECT_FALSE(backend.isOpen());
 }
 
 TEST(FFmpegSoftwareBackendTests, OrdinaryFilesReportNoFrameError)
@@ -832,4 +855,63 @@ TEST(FFmpegSoftwareBackendTests, AMissingFileIsReportedAsMissing)
     // Distinguishable from a file that exists but cannot be decoded, which is
     // what any later relocate flow needs.
     EXPECT_EQ(err, VideoError::FileNotFound);
+}
+
+TEST(FFmpegSoftwareBackendTests, ReportsWhetherTheFileCarriesAudio)
+{
+    REQUIRE_FIXTURE("sync25.mkv");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.mkv");
+
+    // A start time of zero cannot be told apart from having no audio, which
+    // matters to anything that would offer to put that audio on a timeline.
+    EXPECT_TRUE(backend.streamInfo().hasAudioStream);
+}
+
+TEST(FFmpegSoftwareBackendTests, TwoRequestsInsideOneFrameReturnThatFrame)
+{
+    REQUIRE_FIXTURE("sync25.mkv");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.mkv");
+
+    // Frame 50 covers [2.00, 2.04). Asking three times within it must give
+    // the same frame each time. Decoding forward used to discard the frame
+    // already held and answer with the next one, which is wrong for every
+    // request after the first inside a frame - and during playback the panel
+    // asks about sixty times a second while frames change twenty-five times.
+    const VideoFrame first = backend.frameAt(2.001, 320, 180);
+    ASSERT_TRUE(first.valid());
+
+    for (double t : { 2.010, 2.020, 2.039 }) {
+        const VideoFrame again = backend.frameAt(t, 320, 180);
+        ASSERT_TRUE(again.valid()) << "t=" << t;
+        EXPECT_EQ(again.pts, first.pts)
+            << "t=" << t << " left the frame it should have stayed in";
+    }
+
+    // And crossing the boundary does advance.
+    const VideoFrame next = backend.frameAt(2.041, 320, 180);
+    ASSERT_TRUE(next.valid());
+    EXPECT_GT(next.pts, first.pts);
+}
+
+TEST(FFmpegSoftwareBackendTests, RepeatedIdenticalRequestsAreStable)
+{
+    REQUIRE_FIXTURE("sync25.mkv");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.mkv");
+
+    const VideoFrame reference = backend.frameAt(3.5, 320, 180);
+    ASSERT_TRUE(reference.valid());
+
+    // A held playhead republishes the same position repeatedly; the picture
+    // must not creep forward.
+    for (int i = 0; i < 5; ++i) {
+        const VideoFrame same = backend.frameAt(3.5, 320, 180);
+        ASSERT_TRUE(same.valid()) << "repeat " << i;
+        EXPECT_EQ(same.pts, reference.pts) << "repeat " << i;
+    }
 }
