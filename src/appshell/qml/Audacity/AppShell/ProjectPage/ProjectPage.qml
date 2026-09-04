@@ -51,6 +51,10 @@ DockPage {
     //! id declared in there is not reachable from the dock that needs it.
     VideoPanelMenuModel {
         id: videoPanelMenuModel
+
+        Component.onCompleted: {
+            videoPanelMenuModel.load()
+        }
     }
 
     TrackNavigationModel {

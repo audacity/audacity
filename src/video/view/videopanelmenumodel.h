@@ -30,12 +30,19 @@ class VideoPanelMenuModel : public muse::uicomponents::AbstractMenuModel
 public:
     explicit VideoPanelMenuModel(QObject* parent = nullptr);
 
-    void load() override;
+    //! Q_INVOKABLE because nothing calls it for us: DockPanelView wires a
+    //! custom model up but never loads it, so an unloaded model reports no
+    //! rows and its items are silently left out of the menu.
+    Q_INVOKABLE void load() override;
     void handleMenuItem(const QString& itemId) override;
 
 private:
     muse::ContextInject<IVideoService> videoService { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+
+    void attach();
+
+    bool m_subscribed = false;
 };
 }
 
