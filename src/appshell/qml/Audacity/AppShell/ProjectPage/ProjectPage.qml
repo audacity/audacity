@@ -469,6 +469,11 @@ DockPage {
             width: root.verticalPanelDefaultWidth
             minimumWidth: 160
 
+            //! Usable heights for when it is docked as a horizontal strip
+            //! rather than down one side.
+            minimumHeight: 120
+            maximumHeight: root.horizontalPanelMaxHeight
+
             contextMenuModel: videoPanelMenuModel
 
             groupName: root.verticalPanelsGroup
@@ -477,7 +482,12 @@ DockPage {
             //! NOTE: hidden by default
             visible: false
 
+            //! Unlike the other panels this one can also be dropped above or
+            //! below the tracks, not only beside them. Where the picture wants
+            //! to be depends on the edit, and a wide short strip over the
+            //! timeline is a reasonable place for it.
             dropDestinations: root.verticalPanelDropDestinations
+                              .concat(root.horizontalPanelDropDestinations)
 
             VideoPanel {
                 navigationSection: videoPanel.navigationSection
