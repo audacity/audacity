@@ -118,6 +118,15 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action_description", "Show/hide playback controls"),
              Checkable::Yes
              ),
+    UiAction("toggle-video-toolbar",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Video &thumbnail"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Show/hide the video thumbnail in the toolbar"),
+             Checkable::Yes
+             ),
     // Vertical panels
     UiAction("toggle-video",
              au::context::UiCtxProjectOpened,
@@ -359,6 +368,7 @@ const QMap<muse::actions::ActionCode, DockName>& ApplicationUiActions::toggleDoc
 {
     static const QMap<muse::actions::ActionCode, DockName> actionsMap {
         { "toggle-transport", PLAYBACK_TOOLBAR_NAME },
+        { "toggle-video-toolbar", VIDEO_TOOLBAR_NAME },
 
         { "toggle-tracks", TRACKS_PANEL_NAME },
         { "toggle-history", HISTORY_PANEL_NAME },

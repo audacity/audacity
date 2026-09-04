@@ -189,6 +189,37 @@ DockPage {
             }
         },
         DockToolBar {
+            id: videoToolBar
+
+            objectName: pageModel.videoToolBarName()
+            title: qsTrc("appshell", "Video thumbnail")
+
+            floatable: false
+            separatorsVisible: false
+
+            //! Resizable, unlike the button toolbars: this one shows a picture
+            //! and how large that picture is is the whole point. The thickness
+            //! is the row height, and the content takes its width from the
+            //! video's own aspect ratio so it never stretches.
+            resizable: true
+            thickness: 72
+
+            alignment: DockToolBarAlignment.Right
+            contentBottomPadding: 2
+
+            //! NOTE: hidden by default, like the video panel
+            visible: false
+
+            compactPriorityOrder: 4
+
+            VideoToolBar {
+                isCompactMode: videoToolBar.isCompact
+
+                navigationPanel.section: root.topToolKeyNavSec
+                navigationPanel.order: 5
+            }
+        },
+        DockToolBar {
             id: workspacesToolBar
 
             objectName: pageModel.workspacesToolBarName()

@@ -355,6 +355,7 @@ MenuItem* AppMenuModel::makeViewMenu()
               << makeMenuItem("open-metadata-editor")
               << makeMenuItem("toggle-history")
               << makeMenuItem("toggle-video")
+              << makeMenuItem("toggle-video-toolbar")
               << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
         << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"),

@@ -38,6 +38,11 @@ class VideoSurfaceItem : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(bool hasFrame READ hasFrame NOTIFY frameChanged FINAL)
     Q_PROPERTY(bool outOfRange READ outOfRange NOTIFY frameChanged FINAL)
 
+    //! Width divided by height of the picture currently held, honouring the
+    //! stream's pixel aspect ratio. Zero when there is no frame. Lets a
+    //! container size itself to the video rather than guessing.
+    Q_PROPERTY(qreal frameAspect READ frameAspect NOTIFY frameChanged FINAL)
+
     //! How far the shown frame is from where the playhead says it should be,
     //! in milliseconds. Published so a sync complaint can be a number rather
     //! than an argument.
@@ -57,6 +62,7 @@ public:
 
     bool hasFrame() const;
     bool outOfRange() const;
+    qreal frameAspect() const;
     int driftMs() const;
     int frameNumber() const;
     QString frameTimecode() const;

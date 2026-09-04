@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>qml/Audacity/Video/qmldir</file>
         <file>qml/Audacity/Video/VideoPanel.qml</file>
+        <file>qml/Audacity/Video/VideoToolBar.qml</file>
         <file>qml/Audacity/Video/VideoOffsetDialog.qml</file>
     </qresource>
 </RCC>

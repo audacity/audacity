@@ -298,6 +298,15 @@ bool VideoSurfaceItem::hasFrame() const
     return !m_image.isNull();
 }
 
+qreal VideoSurfaceItem::frameAspect() const
+{
+    if (m_image.isNull() || m_image.height() <= 0) {
+        return 0.0;
+    }
+
+    return qreal(m_image.width()) / qreal(m_image.height());
+}
+
 bool VideoSurfaceItem::outOfRange() const
 {
     return m_outOfRange;
