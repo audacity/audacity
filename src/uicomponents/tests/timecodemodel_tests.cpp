@@ -122,4 +122,21 @@ TEST_F(TimecodeModelEditTests, ValueIsModifiedWhenUpKeyIsPressed)
     //! [THEN] Check value
     EXPECT_EQ(m_model.valueString(), "00 h 01 m 00 s");
 }
+
+TEST(TimecodeModelTests, BeatsFormatSurvivesZeroTimeSignature) {
+    TimecodeModel model;
+    model.setTempo(0.0);
+    model.setUpperTimeSignature(0);
+    model.setLowerTimeSignature(0);
+
+    model.setCurrentFormat(static_cast<int>(TimecodeFormatType::BarBeatTick));
+    model.setValue(1.0);
+
+    //! [THEN] Once the real time signature arrives, formatting recovers
+    model.setTempo(TEMPO);
+    model.setUpperTimeSignature(UPPER_TIME_SIGNATURE);
+    model.setLowerTimeSignature(LOWER_TIME_SIGNATURE);
+
+    EXPECT_EQ(model.valueString(), "001 bar 03 beat 01");
+}
 }

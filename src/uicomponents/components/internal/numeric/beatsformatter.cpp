@@ -56,6 +56,11 @@ BeatsFormatter::BeatsFormatter(const QString& formatStr, int fracPart, TimecodeM
 
 void BeatsFormatter::init()
 {
+    if (m_tempo <= 0 || m_upperTimeSignature <= 0 || m_lowerTimeSignature <= 0) {
+        updateFields(MIN_DIGITS[0]);
+        return;
+    }
+
     const bool formatOk = checkField(1, m_upperTimeSignature) && checkFracField(m_lowerTimeSignature);
 
     // 1/4 = BPM is used for now
@@ -203,7 +208,7 @@ bool BeatsFormatter::checkField(size_t fieldIndex, int value) const
 
 bool BeatsFormatter::checkFracField(int newLts) const
 {
-    if (m_fracPart > newLts) {
+    if (m_lowerTimeSignature > 0 && m_fracPart > newLts) {
         return checkField(2, m_fracPart / m_lowerTimeSignature);
     } else {
         return m_fields.size() == 2;
@@ -225,7 +230,7 @@ void BeatsFormatter::updateFields(size_t barsDigits)
 
     beatsField.label = " " + beatString();
 
-    const auto hasFracPart = m_fracPart > m_lowerTimeSignature;
+    const auto hasFracPart = m_lowerTimeSignature > 0 && m_fracPart > m_lowerTimeSignature;
 
     if (hasFracPart) {
         beatsField.label += " ";
