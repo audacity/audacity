@@ -2,6 +2,8 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Muse.UiComponents
 
+import Audacity.UiComponents
+
 Item {
     id: root
 
@@ -25,6 +27,7 @@ Item {
 
         property var pressedFader: null
         property var lastPaintingFader: null
+        property var tooltipFader: null
         property bool isPainting: false
 
         function mouseIsOver(item) {
@@ -42,6 +45,24 @@ Item {
             return null
         }
 
+        function moveTooltip(fader) {
+            if (prv.tooltipFader === fader) {
+                return
+            }
+            prv.tooltipFader = fader
+            if (!fader) {
+                sharedEqTooltip.hide(true)
+                return
+            }
+
+            sharedEqTooltip.parent = fader.handle
+            if (sharedEqTooltip.isOpened) {
+                sharedEqTooltip.repositionWindowIfNeed()
+            } else {
+                sharedEqTooltip.show(true)
+            }
+        }
+
         function updateFader(fader) {
             if (!fader) {
                 return
@@ -51,6 +72,14 @@ Item {
             const newValue = fader.min + (fader.max - fader.min) * (1 - p.y / fader.height)
             fader.requestNewValue(Math.min(Math.max(newValue, fader.min), fader.max))
         }
+    }
+
+    ValueTooltip {
+        id: sharedEqTooltip
+
+        value: prv.tooltipFader ? prv.tooltipFader.value : 0
+        unitText: "dB"
+        sizingText: "-60.0dB"
     }
 
     GraphicEqGridLines {
@@ -78,6 +107,7 @@ Item {
             }
             prv.isPainting = false
             prv.lastPaintingFader = null
+            prv.tooltipFader = null
             const fader = prv.faderUnderMouse()
             prv.pressedFader = fader
             prv.updateFader(fader)
@@ -95,7 +125,7 @@ Item {
 
             if (!prv.isPainting) {
                 prv.isPainting = fader && fader !== prv.pressedFader
-                if (prv.isPainting) {
+                if (prv.isPainting && prv.pressedFader) {
                     prv.pressedFader.hideTooltip()
                 }
             }
@@ -107,7 +137,15 @@ Item {
                     prv.lastPaintingFader = fader
                 }
                 const targetFader = fader || prv.lastPaintingFader
+                prv.moveTooltip(targetFader)
                 prv.updateFader(targetFader)
+            }
+        }
+
+        onReleased: function (mouse) {
+            prv.moveTooltip(null)
+            if (prv.pressedFader && !prv.isPainting && !prv.mouseIsOver(prv.pressedFader.handle)) {
+                prv.pressedFader.hideTooltip()
             }
         }
 
