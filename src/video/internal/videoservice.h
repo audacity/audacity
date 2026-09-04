@@ -53,7 +53,8 @@ public:
     muse::async::Notification offsetChanged() const override;
 
     VideoFrame cachedFrameAt(muse::secs_t projectTime, bool* covers = nullptr) const override;
-    void requestFrame(muse::secs_t projectTime, int targetWidth, int targetHeight) override;
+    void setViewSize(int width, int height) override;
+    void requestFrame(muse::secs_t projectTime) override;
 
     bool isTimeInRange(muse::secs_t projectTime) const override;
 

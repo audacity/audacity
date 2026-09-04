@@ -43,17 +43,17 @@ Item {
         anchors.fill: parent
     }
 
-    //! Right click chooses how large the thumbnail is. The cap is what fits
-    //! in the toolbar's row; the dockable panel is there for a real view.
+    //! Right click chooses how large the thumbnail is. The toolbar row grows
+    //! to fit; the dockable panel is still the place for a real view.
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
         onClicked: function(mouse) {
             sizeMenu.items = [
-                { "id": "20", "title": qsTrc("video", "Small"), "checkable": true, "checked": model.toolbarHeight === 20 },
-                { "id": "28", "title": qsTrc("video", "Medium"), "checkable": true, "checked": model.toolbarHeight === 28 },
-                { "id": "36", "title": qsTrc("video", "Large"), "checkable": true, "checked": model.toolbarHeight === 36 },
-                { "id": "44", "title": qsTrc("video", "Extra large"), "checkable": true, "checked": model.toolbarHeight === 44 }
+                { "id": "44", "title": qsTrc("video", "Small"), "checkable": true, "checked": model.toolbarHeight === 44 },
+                { "id": "64", "title": qsTrc("video", "Medium"), "checkable": true, "checked": model.toolbarHeight === 64 },
+                { "id": "88", "title": qsTrc("video", "Large"), "checkable": true, "checked": model.toolbarHeight === 88 },
+                { "id": "120", "title": qsTrc("video", "Extra large"), "checkable": true, "checked": model.toolbarHeight === 120 }
             ]
             sizeMenu.show(Qt.point(mouse.x, mouse.y))
         }

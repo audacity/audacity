@@ -64,11 +64,17 @@ public:
     //! over because the decoder has not caught up.
     virtual VideoFrame cachedFrameAt(muse::secs_t projectTime, bool* covers = nullptr) const = 0;
 
+    //! How large this view wants the picture, in device pixels. Call on every
+    //! repaint, whether or not a frame is wanted: the decode size is the
+    //! largest any view has asked for, and a view that keeps hitting the cache
+    //! would otherwise never say how big it is.
+    virtual void setViewSize(int width, int height) = 0;
+
     //! Asks the decoder for this time. Returns at once; the frame appears in
     //! the cache later and frameReady() fires. Requests supersede one another,
-    //! so calling this on every position report is cheap.
-    virtual void requestFrame(muse::secs_t projectTime,
-                              int targetWidth, int targetHeight) = 0;
+    //! so calling this on every position report is cheap. The size comes from
+    //! setViewSize().
+    virtual void requestFrame(muse::secs_t projectTime) = 0;
 
     //! Fires on the GUI thread once a newly decoded frame is available.
     virtual muse::async::Notification frameReady() const = 0;

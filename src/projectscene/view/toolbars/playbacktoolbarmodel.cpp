@@ -340,6 +340,8 @@ void PlaybackToolBarModel::updateActions()
     }
 
     setItems(items);
+
+    emit hasVideoItemChanged();
 }
 
 ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
@@ -392,6 +394,17 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
     }
 
     return result;
+}
+
+bool PlaybackToolBarModel::hasVideoItem() const
+{
+    for (const muse::uicomponents::ToolBarItem* item : items()) {
+        if (item != nullptr && item->action().code == VIDEO_ACTION_CODE) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool PlaybackToolBarModel::isEnabled() const

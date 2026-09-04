@@ -18,11 +18,18 @@ using namespace au::video;
 //! Kept next to the other per-module settings rather than in the project,
 //! because it describes this installation's toolbar and not the edit.
 static const muse::Settings::Key TOOLBAR_THUMBNAIL_HEIGHT("video", "videoToolbar/thumbnailHeight");
-static constexpr int DEFAULT_TOOLBAR_HEIGHT = 28;
+static constexpr int DEFAULT_TOOLBAR_HEIGHT = 44;
 
 VideoPanelModel::VideoPanelModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
+    // In the constructor rather than init(): the playback toolbar keeps its
+    // own instance purely to read toolbarHeight and never calls init(), and
+    // without this it would not hear the size chosen from the right-click
+    // menu, so the toolbar row would not resize.
+    muse::settings()->valueChanged(TOOLBAR_THUMBNAIL_HEIGHT).onReceive(this, [this](const muse::Val&) {
+        emit toolbarHeightChanged();
+    });
 }
 
 void VideoPanelModel::init()

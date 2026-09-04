@@ -14,10 +14,11 @@
 #include "../ivideoservice.h"
 
 namespace au::video {
-//! Bounds for the toolbar thumbnail. The upper one is what fits in the
-//! playback toolbar's 48 px row; taller than that and it would be clipped.
-constexpr int MIN_TOOLBAR_HEIGHT = 20;
-constexpr int MAX_TOOLBAR_HEIGHT = 44;
+//! Bounds for the toolbar thumbnail. The toolbar row grows to fit it, so the
+//! upper bound is a judgement about how much of the window a thumbnail should
+//! be allowed to take, not a layout limit.
+constexpr int MIN_TOOLBAR_HEIGHT = 44;
+constexpr int MAX_TOOLBAR_HEIGHT = 120;
 
 //! Backs the video panel's chrome: the attach and detach controls, and the
 //! line of text that says what is going on when there is no picture.

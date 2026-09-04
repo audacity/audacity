@@ -290,20 +290,14 @@ void VideoService::stopDecoding()
 
 void VideoService::detach()
 {
-    const bool had = m_backend != nullptr || m_error != VideoError::None;
-
-    stopDecoding();
-    m_path.clear();
-    m_error = VideoError::None;
-    m_sourceMismatch = false;
+    // Shares the teardown rather than repeating it: this used to reset only
+    // the attachment, leaving the offset and the decode size behind for the
+    // next video to inherit.
+    detachWithoutClearingProject();
 
     if (auto* ref = projectRef()) {
         ref->clear();
         commitProjectChange();
-    }
-
-    if (had) {
-        m_attachedChanged.notify();
     }
 }
 
@@ -381,7 +375,35 @@ VideoFrame VideoService::cachedFrameAt(muse::secs_t projectTime, bool* covers) c
     return lookup.frame;
 }
 
-void VideoService::requestFrame(muse::secs_t projectTime, int targetWidth, int targetHeight)
+void VideoService::setViewSize(int width, int height)
+{
+    if (width <= 0 || height <= 0) {
+        return;
+    }
+
+    // Two views can show the same video at once - the panel and the toolbar
+    // thumbnail - and the cache holds one image per timestamp, so they cannot
+    // each have their own size. Decoding at the smaller one would leave the
+    // larger view upscaling a thumbnail, which is very visible; decoding at
+    // the larger one only costs the smaller view a downscale, which is not.
+    if (width <= m_targetWidth && height <= m_targetHeight) {
+        return;
+    }
+
+    m_targetWidth = std::max(m_targetWidth, width);
+    m_targetHeight = std::max(m_targetHeight, height);
+
+    // Everything already cached was decoded for a smaller box, and the cache
+    // answers "is there a frame here", not "at what size", so those entries
+    // would satisfy every future lookup and never be replaced. Without this
+    // the picture alternates between the old small frames and newly decoded
+    // large ones as the playhead crosses them.
+    if (m_cache) {
+        m_cache->clear();
+    }
+}
+
+void VideoService::requestFrame(muse::secs_t projectTime)
 {
     if (!isAttached() || !m_worker) {
         return;
@@ -389,15 +411,6 @@ void VideoService::requestFrame(muse::secs_t projectTime, int targetWidth, int t
     if (!isTimeInRange(projectTime)) {
         return;
     }
-
-    // Two views can show the same video at once - the panel and the toolbar
-    // thumbnail - and the cache holds one image per timestamp, so they cannot
-    // each have their own size. Decoding at the smaller request would leave
-    // the larger view upscaling a thumbnail, which is very visible; decoding
-    // at the larger one only costs the smaller view a downscale, which is
-    // not. So the largest request wins until the video is detached.
-    m_targetWidth = std::max(m_targetWidth, targetWidth);
-    m_targetHeight = std::max(m_targetHeight, targetHeight);
 
     VideoDecodeWorker::Request request;
     request.time = toVideoTime(projectTime);

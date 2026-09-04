@@ -257,6 +257,12 @@ void VideoSurfaceItem::showFrameFor(muse::secs_t time, bool requestDecode)
     }
     setOutOfRange(false);
 
+    // Published before the lookup, not inside the miss branch below: a view
+    // that keeps hitting the cache would otherwise never tell the service how
+    // large it is, and the decode size is the largest any view has asked for.
+    const QSize target = targetPixelSize();
+    videoService()->setViewSize(target.width(), target.height());
+
     bool covers = false;
     const VideoFrame frame = videoService()->cachedFrameAt(time, &covers);
 
@@ -282,8 +288,7 @@ void VideoSurfaceItem::showFrameFor(muse::secs_t time, bool requestDecode)
     // keeps the newest, so asking again while already correct costs one
     // superseded entry rather than a decode.
     if (requestDecode && !covers) {
-        const QSize target = targetPixelSize();
-        videoService()->requestFrame(time, target.width(), target.height());
+        videoService()->requestFrame(time);
     }
 }
 
