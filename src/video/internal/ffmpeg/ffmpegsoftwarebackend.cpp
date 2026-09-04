@@ -238,10 +238,11 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
 //! with the video start, not with the raw audio start, and anchoring on the
 //! latter shifts the picture by half a frame or more.
 //!
-//! The residual case is a container that carries priming with no edit list to
-//! strip it, MPEG-TS being the common one. There the sound is late by the
-//! priming duration relative to the picture; that is the importer's error to
-//! fix rather than one to compensate for here, and it is bounded at ~21 ms.
+//! The residual is the importer's, not this code's. On MPEG-TS the two streams
+//! start 21 ms apart AND the importer prepends silence it should not, so the
+//! observable gap is about 153 ms rather than 21 ms. Correcting the importer
+//! is a change to where every AAC and MPEG-TS import lands on the timeline and
+//! belongs to whoever owns the importer; see tools/videosync/README.md.
 int64_t FFmpegSoftwareBackend::toPts(muse::secs_t seconds) const
 {
     const double base = static_cast<double>(m_timeBaseNum) / m_timeBaseDen;

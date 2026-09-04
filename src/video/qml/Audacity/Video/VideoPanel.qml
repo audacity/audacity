@@ -51,6 +51,14 @@ Item {
             }
         }
 
+        StyledTextLabel {
+            Layout.fillWidth: true
+            visible: model.sourceMismatch
+            text: model.warningText
+            wrapMode: Text.WordWrap
+            horizontalAlignment: Text.AlignLeft
+        }
+
         RowLayout {
             Layout.fillWidth: true
             spacing: 8
@@ -62,8 +70,22 @@ Item {
                 elide: Text.ElideMiddle
             }
 
+            //! The frame on screen and how far it is from the playhead. The
+            //! drift is the only place a sync error becomes a number the user
+            //! can quote.
             StyledTextLabel {
-                text: model.hasVideo ? model.statusText : ""
+                visible: model.hasVideo && surface.hasFrame
+                text: surface.frameTimecode
+                      + "  \u00b7  " + qsTrc("video", "frame %1").arg(surface.frameNumber)
+                      + (Math.abs(surface.driftMs) >= 1
+                         ? "  \u00b7  " + qsTrc("video", "%1 ms").arg(surface.driftMs > 0 ? "+" + surface.driftMs : surface.driftMs)
+                         : "")
+                opacity: 0.7
+                elide: Text.ElideRight
+            }
+
+            StyledTextLabel {
+                text: model.hasVideo && !surface.hasFrame ? model.statusText : ""
                 opacity: 0.7
             }
 

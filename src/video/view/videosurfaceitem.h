@@ -39,8 +39,17 @@ class VideoSurfaceItem : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(bool outOfRange READ outOfRange NOTIFY frameChanged FINAL)
 
     //! How far the shown frame is from where the playhead says it should be,
-    //! in milliseconds. Published so a sync complaint can be a number.
+    //! in milliseconds. Published so a sync complaint can be a number rather
+    //! than an argument.
     Q_PROPERTY(int driftMs READ driftMs NOTIFY driftChanged FINAL)
+
+    //! Index of the frame actually on screen, derived from its own timestamp
+    //! and the stream's frame rate. Taken from the frame rather than from the
+    //! interpolating clock, so it is what the eye is seeing.
+    Q_PROPERTY(int frameNumber READ frameNumber NOTIFY frameChanged FINAL)
+
+    //! Timestamp of the frame on screen, as hh:mm:ss.mmm.
+    Q_PROPERTY(QString frameTimecode READ frameTimecode NOTIFY frameChanged FINAL)
 
 public:
     explicit VideoSurfaceItem(QQuickItem* parent = nullptr);
@@ -49,6 +58,8 @@ public:
     bool hasFrame() const;
     bool outOfRange() const;
     int driftMs() const;
+    int frameNumber() const;
+    QString frameTimecode() const;
 
     void paint(QPainter* painter) override;
 
@@ -101,6 +112,7 @@ private:
     bool m_haveShown = false;
     bool m_outOfRange = false;
     int m_driftMs = 0;
+    muse::secs_t m_shownTime = 0.0;
 
     playback::PlaybackStatus m_lastStatus = playback::PlaybackStatus::Stopped;
     bool m_haveStatus = false;

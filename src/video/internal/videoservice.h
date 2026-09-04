@@ -11,6 +11,7 @@
 #include "modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
+#include "trackedit/iprojecthistory.h"
 
 namespace au::au3 { class ProjectVideoRef; }
 
@@ -62,6 +63,16 @@ private:
     //! Writes the current attachment into the project so it is saved with it.
     void storeInProject();
 
+    //! Commits an attach or detach into the project so it survives a close.
+    void commitProjectChange();
+
+    //! Tears down the decoder without touching the project's record. Used when
+    //! switching projects, where the old project's attachment must stay
+    //! recorded against the old project.
+    void detachWithoutClearingProject();
+
+    void stopDecoding();
+
     //! Absolute path of the directory the project lives in, or empty when it
     //! has never been saved.
     std::string projectDirectory() const;
@@ -70,6 +81,9 @@ private:
     au::au3::ProjectVideoRef* projectRef() const;
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
+
+    //! Only to commit an attach or detach so it is not lost on close.
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
 
     IVideoDecodeBackendPtr m_backend;
     std::unique_ptr<VideoFrameCache> m_cache;

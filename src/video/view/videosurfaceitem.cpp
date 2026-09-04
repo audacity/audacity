@@ -263,6 +263,7 @@ void VideoSurfaceItem::showFrameFor(muse::secs_t time, bool requestDecode)
     if (frame.valid() && (!m_haveShown || frame.pts != m_shownPts)) {
         m_image = frame.image;
         m_shownPts = frame.pts;
+        m_shownTime = frame.time;
         m_haveShown = true;
         emit frameChanged();
         update();
@@ -305,6 +306,31 @@ bool VideoSurfaceItem::outOfRange() const
 int VideoSurfaceItem::driftMs() const
 {
     return m_driftMs;
+}
+
+int VideoSurfaceItem::frameNumber() const
+{
+    const double rate = videoService()->streamInfo().frameRate;
+    if (rate <= 0.0) {
+        return -1;
+    }
+    return static_cast<int>(std::llround(m_shownTime.to_double() * rate));
+}
+
+QString VideoSurfaceItem::frameTimecode() const
+{
+    if (!m_haveShown) {
+        return QString();
+    }
+
+    const double t = std::max(0.0, m_shownTime.to_double());
+    const int totalMs = static_cast<int>(std::llround(t * 1000.0));
+
+    return QString("%1:%2:%3.%4")
+           .arg(totalMs / 3600000, 2, 10, QLatin1Char('0'))
+           .arg((totalMs / 60000) % 60, 2, 10, QLatin1Char('0'))
+           .arg((totalMs / 1000) % 60, 2, 10, QLatin1Char('0'))
+           .arg(totalMs % 1000, 3, 10, QLatin1Char('0'));
 }
 
 void VideoSurfaceItem::paint(QPainter* painter)

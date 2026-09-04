@@ -46,9 +46,9 @@ bool fixtureExists(const std::string& name)
         const VideoError err = backend.open(fixture(name));                    \
         if (err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld) { \
             GTEST_SKIP() << "No usable FFmpeg on this machine: "               \
-                         << errorMessage(err);                                 \
+                         << errorMessage(err).toStdString();                                 \
         }                                                                      \
-        ASSERT_EQ(err, VideoError::None) << errorMessage(err);                 \
+        ASSERT_EQ(err, VideoError::None) << errorMessage(err).toStdString();                 \
     } while (0)
 
 constexpr double FPS = 25.0;
@@ -578,7 +578,7 @@ TEST(FFmpegSoftwareBackendTests, ContainersThatSeekCorrectlyNeedNoRetry)
         if (err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld) {
             GTEST_SKIP() << "No usable FFmpeg on this machine";
         }
-        ASSERT_EQ(err, VideoError::None) << name << ": " << errorMessage(err);
+        ASSERT_EQ(err, VideoError::None) << name << ": " << errorMessage(err).toStdString();
 
         const SweepResult result = sweep(backend, FPS, 200, 1.0 / 1000.0);
 
@@ -725,7 +725,7 @@ TEST(FFmpegSoftwareBackendTests, SurvivesManyOpenCloseCycles)
         if (err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld) {
             GTEST_SKIP() << "No usable FFmpeg on this machine";
         }
-        ASSERT_EQ(err, VideoError::None) << "cycle " << i << ": " << errorMessage(err);
+        ASSERT_EQ(err, VideoError::None) << "cycle " << i << ": " << errorMessage(err).toStdString();
 
         // Decode something so the demuxer actually allocates its state.
         const VideoFrame frame = backend.frameAt(1.0 + i * 0.1, 160, 90);

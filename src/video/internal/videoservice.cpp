@@ -103,12 +103,31 @@ void VideoService::storeInProject()
     const VideoStreamInfo& info = streamInfo();
     ref->setDuration(info.duration.to_double());
     ref->setFrameRate(info.frameRate);
+
+    commitProjectChange();
+}
+
+void VideoService::commitProjectChange()
+{
+    // Writing into the project object is not enough on its own: without this
+    // the attachment is only in memory, so closing the project discards it
+    // with no prompt. Autosaves rather than pushing an undo entry - attaching
+    // a video is a property of the session, not an edit to undo.
+    if (projectHistory()) {
+        projectHistory()->modifyState(true);
+    }
 }
 
 void VideoService::restoreFromProject()
 {
     auto* ref = projectRef();
+
     if (ref == nullptr || ref->isEmpty()) {
+        // The new project has no video. Without this the previous project's
+        // picture stays on screen and follows the new project's playhead.
+        if (isAttached() || m_error != VideoError::None) {
+            detachWithoutClearingProject();
+        }
         return;
     }
 
@@ -210,10 +229,18 @@ VideoError VideoService::attach(const std::string& path)
     return VideoError::None;
 }
 
-void VideoService::detach()
+void VideoService::detachWithoutClearingProject()
 {
-    const bool had = m_backend != nullptr || m_error != VideoError::None;
+    stopDecoding();
 
+    m_path.clear();
+    m_error = VideoError::None;
+    m_sourceMismatch = false;
+    m_attachedChanged.notify();
+}
+
+void VideoService::stopDecoding()
+{
     // Order matters: the worker holds the backend and may be mid-decode, so it
     // is stopped and joined before anything it uses goes away.
     if (m_worker) {
@@ -223,12 +250,20 @@ void VideoService::detach()
 
     m_backend.reset();
     m_cache.reset();
+}
+
+void VideoService::detach()
+{
+    const bool had = m_backend != nullptr || m_error != VideoError::None;
+
+    stopDecoding();
     m_path.clear();
     m_error = VideoError::None;
     m_sourceMismatch = false;
 
     if (auto* ref = projectRef()) {
         ref->clear();
+        commitProjectChange();
     }
 
     if (had) {

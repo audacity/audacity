@@ -25,6 +25,10 @@ class VideoPanelModel : public QObject, public muse::async::Asyncable,
     Q_PROPERTY(QString statusText READ statusText NOTIFY stateChanged FINAL)
     Q_PROPERTY(QString sourceName READ sourceName NOTIFY stateChanged FINAL)
 
+    //! The reopened file does not match what was saved with the project.
+    Q_PROPERTY(bool sourceMismatch READ sourceMismatch NOTIFY stateChanged FINAL)
+    Q_PROPERTY(QString warningText READ warningText NOTIFY stateChanged FINAL)
+
 public:
     explicit VideoPanelModel(QObject* parent = nullptr);
 
@@ -35,6 +39,8 @@ public:
     bool hasVideo() const;
     QString statusText() const;
     QString sourceName() const;
+    bool sourceMismatch() const;
+    QString warningText() const;
 
 signals:
     void stateChanged();

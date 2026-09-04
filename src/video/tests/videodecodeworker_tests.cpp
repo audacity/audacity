@@ -445,3 +445,30 @@ TEST(VideoDecodeWorkerTests, DoesNotReportFailureWhenAFrameArrives)
 
     worker.stop();
 }
+
+// ---------------------------------------------------------------------------
+// Switching away from a video must actually stop it. The panel follows the
+// current project's playhead, so a stale backend keeps drawing the previous
+// project's picture against the new project's time.
+// ---------------------------------------------------------------------------
+
+TEST(VideoDecodeWorkerTests, StoppingReleasesTheBackend)
+{
+    std::weak_ptr<FakeBackend> observer;
+
+    {
+        auto backend = std::make_shared<FakeBackend>();
+        observer = backend;
+
+        VideoFrameCache cache;
+        VideoDecodeWorker worker(backend, &cache);
+        worker.start();
+        worker.request(requestAt(1.0));
+        ASSERT_TRUE(waitFor([&]() { return backend->calls() > 0; }));
+        worker.stop();
+    }
+
+    // The worker holds the only other reference. If it outlived its owner the
+    // backend would still be decoding against a project that has gone away.
+    EXPECT_TRUE(observer.expired());
+}

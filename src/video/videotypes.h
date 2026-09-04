@@ -8,6 +8,7 @@
 #include <string>
 
 #include <QImage>
+#include <QString>
 
 #include "global/types/ratio.h"
 #include "global/types/secs.h"
@@ -28,7 +29,8 @@ enum class VideoError {
     DecodeFailed,
 };
 
-std::string errorMessage(VideoError err);
+//! Translated, like every other string the panel shows.
+QString errorMessage(VideoError err);
 
 //! A decoded frame, already converted and scaled to the size that was asked
 //! for. Owns its pixels: the decode worker reuses its own buffers, so nothing

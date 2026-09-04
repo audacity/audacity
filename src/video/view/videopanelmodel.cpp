@@ -79,6 +79,24 @@ QString VideoPanelModel::sourceName() const
     return QFileInfo(QString::fromStdString(path)).fileName();
 }
 
+bool VideoPanelModel::sourceMismatch() const
+{
+    return videoService() != nullptr && videoService()->sourceMismatch();
+}
+
+QString VideoPanelModel::warningText() const
+{
+    if (!sourceMismatch()) {
+        return QString();
+    }
+
+    // The path still resolved, so nothing else in the module would notice
+    // that the material behind it changed.
+    return muse::qtrc("video",
+                      "This file does not match the one saved with the project. "
+                      "It may have been replaced or re-encoded.");
+}
+
 QString VideoPanelModel::statusText() const
 {
     if (videoService() == nullptr) {
@@ -90,7 +108,7 @@ QString VideoPanelModel::statusText() const
     // rectangle.
     const VideoError err = videoService()->lastError();
     if (err != VideoError::None) {
-        return QString::fromStdString(errorMessage(err));
+        return errorMessage(err);
     }
 
     if (!videoService()->isAttached()) {

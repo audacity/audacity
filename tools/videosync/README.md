@@ -102,13 +102,36 @@ a comment saying the author was unsure what the field meant.
 The generator probes each fixture and records what the importer will actually
 do. Measured on a 10 second clip at 25 fps:
 
-| File | time_base | start_pts | Should insert | Will insert | Error |
+| File | time_base | start_pts | Container start | Should insert | Will insert |
 |---|---|---|---|---|---|
-| `sync25.mkv` | 1/1000 | 0 | 0 s | 0 s | none |
-| `sync25.webm` | 1/1000 | -7 | -0.007 s | -0.000007 s | none, guarded |
-| `sync25.mp4` | 1/48000 | 0 | 0 s | 0 s | none |
-| `sync25.ts` | 1/90000 | 131280 | 1.458667 s | 0.131280 s | **1.327 s, ~33 frames** |
-| `sync25-offset.mp4` | 1/48000 | 70944 | 1.478000 s | 0.070944 s | **1.407 s, ~35 frames** |
+| `sync25.mkv` | 1/1000 | 0 | 0 | 0 s | 0 s |
+| `sync25.webm` | 1/1000 | -7 | -0.007 s | 0 s | 0 s, guarded |
+| `sync25.mp4` | 1/48000 | 0 | 0 | 0 s | 0 s |
+| `sync25.ts` | 1/90000 | 131280 | 1.458667 s | **0 s** | 0.131280 s |
+| `sync25-offset.mp4` | 1/48000 | 70944 | 1.478 s | **0 s** | 0.070944 s |
+
+An earlier version of this table put 1.458667 s and 1.478 s in the "should
+insert" column. That was wrong, and worth spelling out because it prescribes
+the most damaging of the three possible fixes.
+
+`AVStream::start_time` is the stream's position on the *container's* timeline,
+not its offset from the other streams. For MPEG-TS that origin is the
+broadcast PCR, which is arbitrary and can sit hours from zero; the 33-bit
+counter wraps every 95443 s. Inserting it as silence prepends the container's
+clock origin to the audio - for a file muxed an hour into a PCR epoch, an hour
+of silence in front of a ten second clip.
+
+What matters is the stream's offset *relative to the container start*, and
+measured across a twenty file corpus that value is **zero for every
+single-audio-stream file**, including all of the above. libavformat sets the
+container start time to the minimum across streams, and has already applied
+Opus pre-skip and MP4/Matroska edit lists before the importer sees anything.
+
+It is only non-zero for genuinely multi-stream files. Muxing a second audio
+stream two seconds late and reading it back recovers 2.000000 s exactly under
+the container-relative rule, in both Matroska and MPEG-TS - where the current
+code recovers 0.001979 s and 0.311280 s respectively, and a units-only fix
+recovers neither.
 
 Two things worth knowing, both of which contradict the obvious reading of the
 code:
@@ -198,10 +221,17 @@ priming duration, which at 25 fps is over half a frame, and
 `ContainerOffsetDoesNotShiftTheContent` in the backend tests fails on exactly
 that.
 
-The residual is a container that carries priming with no edit list to strip it,
-MPEG-TS being the common one; there the sound is late against the picture by
-the priming duration. That is the importer's error rather than the panel's, and
-it is bounded at about 21 ms.
+The residual is not bounded at about 21 ms, which an earlier version of this
+file claimed. That figure is the gap between the two streams' own start times;
+the observable error also includes whatever silence the importer inserts. On
+`sync25.ts` the audio starts at 1.458667 s, the video at 1.480000 s, and the
+importer prepends 0.131280 s, so picture and sound sit **153 ms** apart.
+
+Correcting the importer to the container-relative rule takes that to 21.3 ms.
+Correcting only the units would take it to -1.480 s, which is worse than the
+bug. That change is not part of this branch: it alters where every AAC,
+MPEG-TS and LAME MP3 import lands on the timeline, which belongs to whoever
+owns the importer rather than being a side effect of adding a video panel.
 
 **MPEG-TS needed a further fix, and the mechanism is not what it looks like.**
 `av_seek_frame` on MPEG-TS is *exact on the decode timestamp* — it reliably
