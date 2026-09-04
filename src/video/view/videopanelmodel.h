@@ -36,10 +36,19 @@ public:
     Q_INVOKABLE void attachVideo();
     Q_INVOKABLE void detachVideo();
 
+    //! Opens the preferences page carrying the FFmpeg download and locate
+    //! controls. "FFmpeg not found" is otherwise a dead end: Audacity does
+    //! not ship it, and that page is the only working pointer in the app.
+    Q_INVOKABLE void openFFmpegPreferences();
+
+    //! Whether the panel should offer that route.
+    Q_PROPERTY(bool needsFFmpeg READ needsFFmpeg NOTIFY stateChanged FINAL)
+
     bool hasVideo() const;
     QString statusText() const;
     QString sourceName() const;
     bool sourceMismatch() const;
+    bool needsFFmpeg() const;
     QString warningText() const;
 
 signals:

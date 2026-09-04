@@ -85,8 +85,10 @@ Item {
             }
 
             StyledTextLabel {
+                Layout.fillWidth: true
                 text: model.hasVideo && !surface.hasFrame ? model.statusText : ""
                 opacity: 0.7
+                elide: Text.ElideRight
             }
 
             FlatButton {
@@ -103,6 +105,16 @@ Item {
                 navigation.panel: navPanel
                 navigation.order: 2
                 onClicked: model.detachVideo()
+            }
+
+            // Stays alongside "Attach video…" rather than replacing it, so
+            // that installing FFmpeg and trying again is one panel visit.
+            FlatButton {
+                text: qsTrc("video", "Get FFmpeg…")
+                visible: model.needsFFmpeg
+                navigation.panel: navPanel
+                navigation.order: 3
+                onClicked: model.openFFmpegPreferences()
             }
         }
     }

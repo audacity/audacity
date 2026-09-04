@@ -261,6 +261,15 @@ void ApplicationUiActions::init()
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_actionEnabledChanged.send(m_controller->prohibitedActionsWhileRecording());
     });
+
+    // The video panel ships hidden, so attaching a video would otherwise
+    // change nothing visible and the user would have to know to go and find
+    // View > Video. Reveal it once, when a video actually attaches.
+    if (videoService()) {
+        videoService()->attachedChanged().onNotify(this, [this]() {
+            revealVideoPanelIfNeeded();
+        });
+    }
 }
 
 void ApplicationUiActions::listenOpenedDocksChanged(IDockWindow* window)
@@ -318,6 +327,22 @@ bool ApplicationUiActions::actionChecked(const UiAction& act) const
 
     const IDockWindow* window = dockWindowProvider()->window();
     return window ? window->isDockOpen(dockName) : false;
+}
+
+void ApplicationUiActions::revealVideoPanelIfNeeded()
+{
+    if (!videoService() || !videoService()->isAttached()) {
+        // Only a successful attach opens the panel. Popping a dock to show an
+        // error the user did not ask for is worse than staying quiet.
+        return;
+    }
+
+    const IDockWindow* window = dockWindowProvider()->window();
+    if (!window || window->isDockOpen(VIDEO_PANEL_NAME)) {
+        return;
+    }
+
+    dispatcher()->dispatch("toggle-video");
 }
 
 muse::async::Channel<muse::actions::ActionCodeList> ApplicationUiActions::actionEnabledChanged() const

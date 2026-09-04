@@ -7,6 +7,8 @@
 
 #include "translation.h"
 
+#include "../videoattachpolicy.h"
+
 using namespace au::video;
 
 VideoPanelModel::VideoPanelModel(QObject* parent)
@@ -32,14 +34,8 @@ void VideoPanelModel::attachVideo()
         return;
     }
 
-    // Same extension list the import dialog offers, so a file that can be
-    // imported for its audio can also be attached for its picture.
-    const std::string videoFileExt
-        = "*.avi *.mp4 *.mkv *.mov *.flv *.wmv *.asf *.webm *.mpg *.mpeg "
-          "*.m4v *.ts *.gxf *.mxf *.nut *.dv *.3gp *.3g2 *.mj2";
-
     const std::vector<std::string> filter {
-        muse::trc("video", "Video files") + " (" + videoFileExt + ")"
+        muse::trc("video", "Video files") + " (" + videoFileFilter() + ")"
     };
 
     const muse::io::path_t path = interactive()->selectOpeningFileSync(
@@ -77,6 +73,30 @@ QString VideoPanelModel::sourceName() const
         return QString();
     }
     return QFileInfo(QString::fromStdString(path)).fileName();
+}
+
+bool VideoPanelModel::needsFFmpeg() const
+{
+    if (videoService() == nullptr) {
+        return false;
+    }
+
+    const VideoError err = videoService()->lastError();
+    return err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld;
+}
+
+void VideoPanelModel::openFFmpegPreferences()
+{
+    if (interactive() == nullptr) {
+        return;
+    }
+
+    // The download and locate controls live in the General page's FFmpeg
+    // section, which is the same library audio import and export use.
+    muse::UriQuery preferences("audacity://preferences");
+    preferences.addParam("currentPageId", muse::Val("general"));
+
+    interactive()->open(preferences);
 }
 
 bool VideoPanelModel::sourceMismatch() const

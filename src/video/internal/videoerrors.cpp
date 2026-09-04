@@ -12,7 +12,10 @@ QString errorMessage(VideoError err)
     case VideoError::None:
         return QString();
     case VideoError::FFmpegNotFound:
-        return muse::qtrc("video", "FFmpeg not found");
+        return muse::qtrc("video",
+                          "FFmpeg is needed to show video, and Audacity does not "
+                          "ship it. The same library is used for audio import "
+                          "and export.");
     case VideoError::FFmpegTooOld:
         return muse::qtrc("video", "This FFmpeg build is too old for video preview. FFmpeg 3.4 or newer is required; audio import is unaffected.");
     case VideoError::FileNotFound:
