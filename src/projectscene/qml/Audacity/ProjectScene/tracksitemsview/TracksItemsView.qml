@@ -416,12 +416,12 @@ Rectangle {
 
                     onPressed: function (e) {
                         head.dragActive = true
-                        head.dragPositionX = mapToItem(timeline, e.x, e.y).x
+                        head.dragPositionX = Math.max(mapToItem(timeline, e.x, e.y).x, timeline.context.timeToPosition(0.0))
                         timeline.displayedPlayCursorX = head.dragPositionX
                     }
 
                     onPositionChanged: function (e) {
-                        var ix = mapToItem(timeline, e.x, e.y).x
+                        var ix = Math.max(mapToItem(timeline, e.x, e.y).x, timeline.context.timeToPosition(0.0))
                         if (pressed) {
                             head.dragPositionX = ix
                             timeline.displayedPlayCursorX = ix
@@ -431,7 +431,7 @@ Rectangle {
                     }
 
                     onReleased: function (e) {
-                        var ix = mapToItem(timeline, e.x, e.y).x
+                        var ix = Math.max(mapToItem(timeline, e.x, e.y).x, timeline.context.timeToPosition(0.0))
                         let ixTime = timeline.context.positionToTime(ix)
                         playCursorController.seekToTime(ixTime)
                         if (!timelineMouseArea.playRegionActivated) {
