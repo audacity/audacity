@@ -15,7 +15,10 @@ namespace au::projectscene {
 class RealtimeEffectListItemModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
-    Q_PROPERTY(bool isAvailable READ prop_isAvailable CONSTANT)
+    Q_PROPERTY(bool isAvailable READ prop_isAvailable NOTIFY availabilityChanged)
+    Q_PROPERTY(QString name READ effectName NOTIFY availabilityChanged)
+    Q_PROPERTY(bool isValidating READ prop_isValidating NOTIFY availabilityChanged)
+    Q_PROPERTY(QString unavailableStatus READ unavailableStatus NOTIFY availabilityChanged)
     Q_PROPERTY(bool isActive READ prop_isActive WRITE prop_setIsActive NOTIFY isActiveChanged)
     Q_PROPERTY(bool isMasterEffect READ prop_isMasterEffect CONSTANT)
 
@@ -33,12 +36,15 @@ public:
     Q_INVOKABLE void showEffectDialog();
 
     bool prop_isAvailable() const;
+    bool prop_isValidating() const;
+    QString unavailableStatus() const;
     bool prop_isActive() const;
     void prop_setIsActive(bool isActive);
     bool prop_isMasterEffect() const;
 
 signals:
     void isActiveChanged();
+    void availabilityChanged();
 
 private:
     std::weak_ptr<RealtimeEffectState> m_effectState;

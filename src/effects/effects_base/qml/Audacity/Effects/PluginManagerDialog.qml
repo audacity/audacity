@@ -88,7 +88,10 @@ StyledDialogView {
                 navigation.panel: buttonBoxNavigationPanel
                 navigation.order: cancelButton.navigation.order + 1
 
-                text: qsTrc("effects", "Rescan plugins")
+                text: root.tableViewModel.isValidating
+                      ? qsTrc("effects", "Scanning…")
+                      : qsTrc("effects", "Rescan plugins")
+                enabled: !root.tableViewModel.isValidating
 
                 onClicked: {
                     root.tableViewModel.rescanPlugins()

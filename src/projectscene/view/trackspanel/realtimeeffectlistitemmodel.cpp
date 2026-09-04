@@ -23,6 +23,11 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
     {
         emit isActiveChanged();
     });
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this]
+    {
+        emit availabilityChanged();
+    });
 }
 
 RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
@@ -54,16 +59,37 @@ QString RealtimeEffectListItemModel::effectName() const
     IF_ASSERT_FAILED(state) {
         return QString();
     }
+    // Base plugin name only; the QML composes any status prefix ("Validating…",
+    // "Broken", "Missing") around it so it can animate the validating case.
+    return QString::fromStdString(effectsProvider()->effectName(state->GetID().ToStdString()));
+}
 
-    const auto effectId = state->GetID().ToStdString();
-    const auto name = effectsProvider()->effectName(effectId);
-    const auto isValid = effectsProvider()->meta(muse::String::fromStdString(effectId)).isValid();
-
-    if (!isValid) {
-        //: %1 is the name of the effect that is missing/unavailable
-        return muse::qtrc("effects", "Missing - “%1”").arg(name);
+bool RealtimeEffectListItemModel::prop_isValidating() const
+{
+    const auto state = m_effectState.lock();
+    if (!state) {
+        return false;
     }
-    return QString::fromStdString(name);
+    const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
+    return meta.state == effects::EffectState::Discovered
+           || meta.state == effects::EffectState::PreviouslyValidated;
+}
+
+QString RealtimeEffectListItemModel::unavailableStatus() const
+{
+    const auto state = m_effectState.lock();
+    if (!state) {
+        return QString();
+    }
+    const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
+    // Only the unavailable, non-validating cases carry a status prefix; Validated
+    // (available) and Discovered (validating) are handled by other bindings.
+    if (meta.isLoadable()
+        || meta.state == effects::EffectState::Discovered
+        || meta.state == effects::EffectState::PreviouslyValidated) {
+        return QString();
+    }
+    return effects::pluginStateToString(effects::effectStateToRegister(meta.state));
 }
 
 QString RealtimeEffectListItemModel::effectState() const

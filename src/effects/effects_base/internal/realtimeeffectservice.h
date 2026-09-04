@@ -78,6 +78,7 @@ public:
 
 private:
     void onProjectChanged(const au::project::IAudacityProjectPtr& project);
+    void buildNewlyValidatedRealtimeEffects();
     void registerRealtimeEffectList(TrackId, RealtimeEffectList&);
     void unregisterRealtimeEffectList(TrackId);
     void onTrackListEvent(const TrackListEvent&);

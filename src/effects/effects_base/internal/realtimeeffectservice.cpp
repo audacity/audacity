@@ -11,6 +11,7 @@
 #include "au3-effects/Effect.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-realtime-effects/RealtimeEffectManager.h"
 
 #include "project/iaudacityproject.h"
 
@@ -49,6 +50,42 @@ void RealtimeEffectService::init()
     { onProjectChanged(globalContext()->currentProject()); });
 
     onProjectChanged(globalContext()->currentProject());
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this] {
+        // In case an effect of this project transited from `PreviouslyValidated` to `NewlyValidated`.
+        buildNewlyValidatedRealtimeEffects();
+    });
+}
+
+namespace {
+void buildList(::AudacityProject& project, ChannelGroup* group, RealtimeEffectList& list)
+{
+    for (auto i = 0u; i < list.GetStatesCount(); ++i) {
+        const auto state = list.GetStateAt(i);
+        // No-op once the plugin is built; when it has just become validated
+        // this builds mPlugin and its (VST3) settings.
+        state->GetEffect();
+        // If playback is running, the state was skipped at InitializationScope while
+        // its plugin wasn't loadable: integrate it into the live scope in place now.
+        // No-op when not playing or already integrated.
+        AudioIO::Get()->ReloadState(project, group, state);
+    }
+}
+}
+
+void RealtimeEffectService::buildNewlyValidatedRealtimeEffects()
+{
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+    auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    auto& trackList = TrackList::Get(*au3Project);
+    for (WaveTrack* track : trackList.Any<WaveTrack>()) {
+        buildList(*au3Project, track, RealtimeEffectList::Get(*track));
+    }
+    buildList(*au3Project, RealtimeEffectManager::MasterGroup, RealtimeEffectList::Get(*au3Project));
 }
 
 void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProjectPtr& project)
@@ -393,9 +430,12 @@ void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& sta
 
 bool RealtimeEffectService::isActive(const RealtimeEffectStatePtr& state) const
 {
-    if (!isAvailable(state)) {
+    if (!state) {
         return false;
     }
+    // The stored active/bypass flag, independent of whether the plugin is currently
+    // loadable: the UI shows the real state and merely greys out when unavailable,
+    // rather than the bypass button falsely reading as bypassed while validating.
     return state->GetSettings().extra.GetActive();
 }
 
@@ -465,7 +505,9 @@ const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const Plu
     IF_ASSERT_FAILED(provider) {
         return nullptr;
     }
-    if (!provider->loadEffect(EffectId::fromStdString(id.ToStdString()))) {
+    const EffectId effectId = EffectId::fromStdString(id.ToStdString());
+    if (!provider->loadEffect(effectId)) {
+        provider->validateEffectAsync(effectId);
         return nullptr;
     }
     return EffectManager::GetInstanceFactory(id, [provider](const PluginID& id) -> EffectSettingsManager* {
@@ -490,8 +532,8 @@ bool RealtimeEffectService::isAvailable(const RealtimeEffectStatePtr& state) con
     if (!state) {
         return false;
     }
-    // isValid() passes for Missing/Error/Discovered entries too;
-    // only isLoadable (Validated) gates actual usability
+    // isValid() passes for Missing/Error/Discovered/PreviouslyValidated entries too;
+    // only isLoadable() (validated in this session) gates actual usability.
     const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
     return meta.isValid() && meta.isLoadable();
 }

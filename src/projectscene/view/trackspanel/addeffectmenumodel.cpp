@@ -21,6 +21,11 @@ void AddEffectMenuModel::handleMenuItem(const QString& itemId)
     }
 
     const auto effectId = effects::effectIdFromAction(menuItem.id());
+    // first use of a plugin in this session validates it first (blocking)
+    if (!effectsProvider()->validateEffect(iocContext(), effectId)) {
+        LOGW() << "effect not available: " << effectId;
+        return;
+    }
     if (const auto state = realtimeEffectService()->addRealtimeEffect(*tId, effectId)) {
         effectViewController()->showEffect(state);
     }

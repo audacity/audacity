@@ -47,17 +47,25 @@ static bool isNyquistPrompt(const Effect& effect)
     return effect.GetSymbol().Internal() == NYQUIST_PROMPT_ID;
 }
 
-muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
+void EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
+    if (!effectsProvider()->validateEffect(iocContext(), effectId)) {
+        LOGW() << "effect not available: " << effectId;
+        return;
+    }
+
     au3::Au3Project& project = projectRef();
-    return performEffectWithShowError(project, effectId, 0);
+    const muse::Ret ret = performEffectWithShowError(project, effectId, 0);
+    if (!ret) {
+        LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
+    }
 }
 
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
 {
     EffectId resolved;
     EffectId titleFallback;
-    // Search effect by id with a conviniece fallback to title for scripting
+    // Search effect by id with a convenience fallback to title for scripting
     for (const auto& meta : effectsProvider()->effectMetaList()) {
         if (meta.id == effectId) {
             resolved = meta.id;
@@ -72,6 +80,11 @@ muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const
     }
     if (resolved.empty()) {
         LOGE() << "no effect found for symbol: " << effectId;
+        return make_ret(Err::EffectNotFound);
+    }
+
+    if (!effectsProvider()->validateEffect(iocContext(), resolved)) {
+        LOGW() << "effect not available: " << resolved;
         return make_ret(Err::EffectNotFound);
     }
 

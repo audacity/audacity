@@ -100,6 +100,14 @@ public:
     /*! No effect if realtime is active but scope is not supplied */
     void RemoveState(RealtimeEffects::InitializationScope* pScope, ChannelGroup* pGroup, std::shared_ptr<RealtimeEffectState> pState);
 
+    /*!
+     Integrate an already-listed state into the running processing scope, in place.
+     No-op when not playing, when the state is already integrated, or when its plugin
+     still isn't loadable.
+     */
+    void ReloadState(RealtimeEffects::InitializationScope* pScope, ChannelGroup* pGroup,
+                     const std::shared_ptr<RealtimeEffectState>& pState);
+
     //! Report the position of a state in the global or a per-group list
     std::optional<size_t> FindState(
         ChannelGroup* pGroup, const std::shared_ptr<RealtimeEffectState>& pState) const;
@@ -122,6 +130,10 @@ private:
 
     std::shared_ptr<RealtimeEffectState>
     MakeNewState(RealtimeEffects::InitializationScope* pScope, ChannelGroup* pGroup, const PluginID& id);
+
+    //! Initialize a state and add its processors for the groups of a running scope
+    //! (the "adding a state while playback is in-flight" part of MakeNewState).
+    void IntegrateStateInFlight(RealtimeEffects::InitializationScope& scope, ChannelGroup* pGroup, RealtimeEffectState& state);
 
     //! Main thread begins to define a set of groups for playback
     void Initialize(RealtimeEffects::InitializationScope& scope, unsigned numPlaybackChannels, double sampleRate,

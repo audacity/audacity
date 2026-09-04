@@ -55,7 +55,7 @@ public:
     EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
-    muse::Ret performEffect(const EffectId& effectId) override;
+    void performEffect(const EffectId& effectId) override;
     muse::Ret performEffect(const EffectId& effectId, const std::string& params) override;
     bool lastProcessorIsAvailable() const override;
     muse::async::Notification lastProcessorIsNowAvailable() const override;

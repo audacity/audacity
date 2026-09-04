@@ -4,6 +4,7 @@
 
  #include "pluginmanagertableviewmodel.h"
 
+#include "effectstypes.h"
  #include "internal/effectsutils.h"
  #include "pluginmanagertableviewverticalheader.h"
  #include "pluginmanagersortfilterproxy.h"
@@ -46,24 +47,6 @@ QString effectDisplayName(const EffectMeta& meta)
            : meta.id.toQString();
 }
 
-QString pluginStateToString(muse::audioplugins::AudioPluginState state)
-{
-    using muse::audioplugins::AudioPluginState;
-    switch (state) {
-    case AudioPluginState::Validated:
-        return muse::qtrc("effects", "OK");
-    case AudioPluginState::Discovered:
-        //: The plugin was found but the user chose to validate it later
-        return muse::qtrc("effects", "Not validated");
-    case AudioPluginState::Missing:
-        return muse::qtrc("effects", "Missing");
-    case AudioPluginState::Error:
-    case AudioPluginState::Undefined:
-    default:
-        return muse::qtrc("effects", "Broken");
-    }
-}
-
 const PluginManagerTableViewModel::EffectFilter PluginManagerTableViewModel::allPassFilter = [](const EffectMeta&) { return true; };
 
 PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
@@ -81,7 +64,7 @@ void PluginManagerTableViewModel::componentComplete()
         // 3rd-party plugins typically also have instruments (e.g. VSTi) but we don't support them yet.
         // Only validated entries carry a trustworthy type; non-validated ones
         // (type Unknown) must stay visible so the Status column can report them.
-        return meta.isLoadable() && meta.type == EffectType::Unknown;
+        return meta.isValidated() && meta.type == EffectType::Unknown;
     }), m_initialState.end());
     rebuildSourceTable(m_initialState);
 
@@ -95,7 +78,7 @@ void PluginManagerTableViewModel::componentComplete()
     knownPlugins()->pluginInfoListChanged().onNotify(this, [this] {
         EffectMetaList effects = effectsProvider()->effectMetaList();
         effects.erase(std::remove_if(effects.begin(), effects.end(), [](const EffectMeta& meta) {
-            return meta.isLoadable() && meta.type == EffectType::Unknown;
+            return meta.isValidated() && meta.type == EffectType::Unknown;
         }), effects.end());
         for (const EffectMeta& effect : effects) {
             const auto known = std::find_if(m_initialState.begin(), m_initialState.end(), [&](const EffectMeta& initial) {
@@ -106,6 +89,12 @@ void PluginManagerTableViewModel::componentComplete()
             }
         }
         rebuildSourceTable(std::move(effects));
+    });
+
+    // Rescan runs asynchronously now; clear the busy state when the background
+    // validation scan reports it has fully finished.
+    registerAudioPluginsScenario()->pluginValidationScanFinished().onNotify(this, [this] {
+        setIsValidating(false);
     });
 }
 
@@ -267,7 +256,7 @@ void PluginManagerTableViewModel::setStatusSelectedIndex(int index)
         m_acceptStatus = [target = statusFilterOrder[index - 1]](const EffectMeta& meta) {
             // Undefined shows as Broken in the Status column, so the Broken
             // filter must catch it too
-            auto state = meta.state;
+            auto state = effectStateToRegister(meta.state);
             if (state == muse::audioplugins::AudioPluginState::Undefined) {
                 state = muse::audioplugins::AudioPluginState::Error;
             }
@@ -342,9 +331,9 @@ QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewMode
 
     for (const auto& meta : effects) {
         QVector<muse::uicomponents::TableViewCell*> row;
-        row.append(makeCell(muse::Val(meta.isActivated && meta.isLoadable())));
+        row.append(makeCell(muse::Val(meta.isActivated && meta.isValidated())));
         row.append(makeCell(muse::Val(effectDisplayName(meta))));
-        row.append(makeCell(muse::Val(pluginStateToString(meta.state))));
+        row.append(makeCell(muse::Val(pluginStateToString(effectStateToRegister(meta.state)))));
         row.append(makeCell(muse::Val(meta.vendor.toQString())));
         row.append(makeCell(muse::Val(meta.path.toQString())));
         row.append(makeCell(muse::Val(utils::effectFamilyLabel(meta.family).toQString())));
@@ -367,7 +356,7 @@ void PluginManagerTableViewModel::handleEdit(int proxyRow, int column)
         return;
     }
 
-    if (!effectsProvider()->meta(verticalHeader->effectId()).isLoadable()) {
+    if (!effectsProvider()->meta(verticalHeader->effectId()).isValidated()) {
         return;
     }
 
@@ -400,13 +389,30 @@ void PluginManagerTableViewModel::rescanPlugins()
 
     if (m_alsoRescanBrokenPlugins) {
         effectsProvider()->forgetPlugins([](const EffectMeta& meta) {
-            return !meta.isLoadable();
+            return !meta.isValidated();
         });
     }
 
-    effectsProvider()->rescanPlugins(iocContext(), *interactive(), *registerAudioPluginsScenario());
+    if (effectsProvider()->rescanPlugins(iocContext(), *registerAudioPluginsScenario()) == NewPluginsRegistered::No) {
+        interactive()->infoSync(muse::trc("audio", "Audio plugins scan completed"),
+                                muse::trc("audio", "All audio plugins are up to date."));
+    }
+
+    // If new/changed plugins were queued, validation now runs in the background
+    // and the table updates live; reflect that in the button. If nothing needed
+    // validating, rescanPlugins() already showed the "up to date" message.
+    setIsValidating(registerAudioPluginsScenario()->isValidating());
 
     rebuildSourceTable(effectsProvider()->effectMetaList());
+}
+
+void PluginManagerTableViewModel::setIsValidating(bool validating)
+{
+    if (m_isValidating == validating) {
+        return;
+    }
+    m_isValidating = validating;
+    emit isValidatingChanged();
 }
 
 void PluginManagerTableViewModel::accept()

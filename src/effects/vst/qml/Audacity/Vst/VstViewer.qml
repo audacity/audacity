@@ -42,6 +42,8 @@ Rectangle {
     property alias title: view.title
     property bool isPreviewing: viewModel.isPreviewing
 
+    signal vendorUiFailed
+
     color: ui.theme.backgroundPrimaryColor
 
     implicitWidth: view.implicitWidth
@@ -52,13 +54,17 @@ Rectangle {
     QtObject {
         id: prv
 
+        property bool vendorUiFailed: false
         property AbstractMenuModel activeMenuModel: null
     }
 
     Component.onCompleted: {
         viewModel.init()
         view.init()
-        Qt.callLater(presetsBarModel.load)
+
+        if (!prv.vendorUiFailed) {
+            Qt.callLater(presetsBarModel.load)
+        }
     }
 
     function startPreview() {
@@ -96,5 +102,10 @@ Rectangle {
     VstView {
         id: view
         instanceId: viewModel.instanceId
+
+        onViewLoadFailed: {
+            prv.vendorUiFailed = true
+            root.vendorUiFailed()
+        }
     }
 }

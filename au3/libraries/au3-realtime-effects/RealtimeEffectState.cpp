@@ -416,9 +416,20 @@ const EffectInstanceFactory* RealtimeEffectState::GetEffect()
             mMainSettings.settings.extra.SetActive(wasActive);
             mOutputs = mPlugin->MakeOutputs();
             mMovedOutputs = mPlugin->MakeOutputs();
+            ConsumeXmlParameters();
         }
     }
     return mPlugin;
+}
+
+void RealtimeEffectState::ConsumeXmlParameters()
+{
+    assert(mPlugin);
+    if (mPlugin && !mParameters.empty()) {
+        CommandParameters parms(mParameters);
+        mPlugin->LoadSettings(parms, mMainSettings.settings);
+    }
+    mParameters.clear();
 }
 
 std::shared_ptr<EffectInstance> RealtimeEffectState::MakeInstance()
@@ -562,6 +573,12 @@ RealtimeEffectState::AddGroup(
 
 bool RealtimeEffectState::ProcessStart(bool running)
 {
+    // Not (yet) integrated into this scope - e.g. its plugin only became loadable after
+    // InitializationScope - or being reintegrated in place: nothing to sync or process.
+    if (!ReadyForAudio()) {
+        return false;
+    }
+
     // Get state changes from the main thread
     // Note that it is only here that the answer of IsActive() may be changed,
     // and it is important that for each state the answer is unchanging in one
@@ -613,6 +630,15 @@ size_t RealtimeEffectState::Process(
     const float* const* inbuf, float* const* outbuf, float* const dummybuf,
     size_t numSamples)
 {
+    // Not (yet) integrated, or being reintegrated in place: pass the audio through and
+    // stay away from mGroups, which the main thread may be populating right now.
+    if (!ReadyForAudio()) {
+        for (size_t ii = 0; ii < chans; ++ii) {
+            memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
+        }
+        return 0;
+    }
+
     const auto pInstance = mwInstance.lock();
     const auto& pair = mGroups[group];
     const float** const clientIn
@@ -725,6 +751,10 @@ size_t RealtimeEffectState::Process(
 
 bool RealtimeEffectState::ProcessEnd()
 {
+    if (!ReadyForAudio()) {
+        return false;
+    }
+
     auto pInstance = mwInstance.lock();
     bool result = pInstance
                   &&// Assuming we are in a processing scope, use the worker settings
@@ -888,11 +918,11 @@ bool RealtimeEffectState::HandleXMLTag(
 void RealtimeEffectState::HandleXMLEndTag(const std::string_view& tag)
 {
     if (tag == XMLTag()) {
-        if (mPlugin && !mParameters.empty()) {
-            CommandParameters parms(mParameters);
-            mPlugin->LoadSettings(parms, mMainSettings.settings);
+        // Apply the parsed parameters now if the plugin is already loaded; otherwise
+        // keep them until it loads.
+        if (mPlugin) {
+            ConsumeXmlParameters();
         }
-        mParameters.clear();
     }
 }
 
