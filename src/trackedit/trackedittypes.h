@@ -52,6 +52,23 @@ using ClipKeyList = TrackItemKeyList;
 using LabelKey = TrackItemKey;
 using LabelKeyList = TrackItemKeyList;
 
+struct ClipAndLabelKeys
+{
+    ClipKeyList clips;
+    LabelKeyList labels;
+
+    inline bool empty() const { return clips.empty() && labels.empty(); }
+};
+
+struct ItemWithTime
+{
+    TrackItemKey key;
+    double startTime = 0.0;
+    double endTime = 0.0;
+};
+
+using ItemWithTimeList = std::vector<ItemWithTime>;
+
 struct TimeSignature
 {
     double tempo = 0;

@@ -51,8 +51,6 @@ public:
     void setFocusedItem(const TrackItemKey& key, bool highlight = false) override;
     muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const override;
 
-    TrackItemKeyList itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const override;
-
     void resetNavigation() override;
 
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
@@ -109,7 +107,6 @@ private:
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
-    TrackItemKey m_lastSelectedItem;
 
     std::optional<double> m_savedItemStartTime;
 

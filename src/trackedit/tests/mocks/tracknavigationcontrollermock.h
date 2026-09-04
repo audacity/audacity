@@ -23,8 +23,6 @@ public:
     MOCK_METHOD(void, setFocusedItem, (const TrackItemKey& key, bool), (override));
     MOCK_METHOD((muse::async::Channel<TrackItemKey, bool>), focusedItemChanged, (), (const, override));
 
-    MOCK_METHOD(TrackItemKeyList, itemKeysInRange, (const TrackItemKey& anchor, const TrackItemKey& target), (const, override));
-
     MOCK_METHOD(void, resetNavigation, (), (override));
 
     MOCK_METHOD(muse::async::Channel<TrackItemKey>, openContextMenuRequested, (), (const, override));
