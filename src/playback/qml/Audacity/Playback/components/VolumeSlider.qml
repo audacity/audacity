@@ -9,6 +9,7 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene 1.0
 import Audacity.Playback 1.0
+import Audacity.UiComponents 1.0
 
 Slider {
     id: root
@@ -68,14 +69,15 @@ Slider {
 
     onFromChanged: () => root.volumeLevelMoved(Math.max(root.from, root.volumeLevel))
 
-    VolumeTooltip {
+    ValueTooltip {
         id: tooltip
 
         parent: root.handle
+
         decimalPlaces: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? 2 : 1) : 1
-        minValue: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0
         unitText: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? "" : "dB") : ""
-        volume: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
+        sizingText: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? "1.00" : root.meterModel.dbRange.toFixed(1) + "dB") : "0.0"
+        value: root.meterModel ? (root.meterModel.meterType === PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
     }
 
     NavigationControl {
