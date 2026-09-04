@@ -585,6 +585,11 @@ TEST(FFmpegSoftwareBackendTests, ContainersThatSeekCorrectlyNeedNoRetry)
     // The retry must be free where it is not needed. A second seek here would
     // mean the ladder had started firing on files that were already correct -
     // which is how a byte rewind regresses a working container.
+    //
+    // The targets are deliberately out of order. A forward walk never seeks at
+    // all - open() decodes the first frame, so the decoder is already in
+    // position and every request is served by decoding forward - which would
+    // make this test pass no matter what the seek path did.
     for (const char* name : { "sync25.mkv", "sync25.webm", "sync25.mp4",
                               "sync25-offset.mp4" }) {
         if (!fixtureExists(name)) {
@@ -598,12 +603,47 @@ TEST(FFmpegSoftwareBackendTests, ContainersThatSeekCorrectlyNeedNoRetry)
         }
         ASSERT_EQ(err, VideoError::None) << name << ": " << errorMessage(err).toStdString();
 
-        const SweepResult result = sweep(backend, FPS, 200, 1.0 / 1000.0);
+        int checked = 0;
+        int late = 0;
+        int missing = 0;
+        int maxSeekAttempts = 0;
+        int sawASeek = 0;
 
-        EXPECT_EQ(result.late, 0) << name << ", worst " << result.worstLateSeconds << " s";
-        EXPECT_EQ(result.missing, 0) << name;
-        EXPECT_LE(result.maxSeekAttempts, 1)
-            << name << " needed " << result.maxSeekAttempts
+        // Alternating far forward and back, so each request is outside the
+        // forward decode window and has to seek for real.
+        for (double target : { 9.5, 0.5, 8.0, 1.5, 7.0, 2.5, 6.0, 3.5, 5.0, 4.5,
+                               0.1, 9.1, 2.0, 7.5, 1.0 }) {
+            const double centred = target + 0.5 / FPS;
+            const VideoFrame frame = backend.frameAt(centred, 320, 180);
+            ++checked;
+
+            maxSeekAttempts = std::max(maxSeekAttempts, backend.seekAttempts());
+            sawASeek = std::max(sawASeek, backend.seekAttempts());
+
+            if (!frame.valid()) {
+                ++missing;
+                continue;
+            }
+
+            const double start = frame.time.to_double();
+            const double end = start + backend.frameDurationPts() / 1000.0;
+            if (start > centred + 1e-9 || end <= centred - 1e-9) {
+                ++late;
+            }
+        }
+
+        EXPECT_EQ(checked, 15) << name;
+        EXPECT_EQ(late, 0) << name;
+        EXPECT_EQ(missing, 0) << name;
+
+        // Without this the whole test goes quietly vacuous the moment the
+        // requests stop needing a seek, which is exactly what happened when
+        // open() started decoding a probe frame.
+        EXPECT_GE(sawASeek, 1)
+            << name << " never seeked, so this test proved nothing about the"
+               " retry ladder";
+        EXPECT_LE(maxSeekAttempts, 1)
+            << name << " needed " << maxSeekAttempts
             << " seeks for one request; the retry ladder must not fire on a"
                " container that already seeks correctly";
     }

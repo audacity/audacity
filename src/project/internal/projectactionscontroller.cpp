@@ -487,8 +487,11 @@ void ProjectActionsController::attachImportedVideo(const muse::io::paths_t& file
         paths.push_back(path.toStdString());
     }
 
+    // hasRecordedAttachment(), not isAttached(): a project whose video sits
+    // on an unplugged drive has one, it just could not be opened, and an
+    // unrelated import must not quietly take its place.
     const auto candidate =
-        video::videoToAttachAfterImport(paths, videoService()->isAttached());
+        video::videoToAttachAfterImport(paths, videoService()->hasRecordedAttachment());
 
     if (candidate.has_value()) {
         // Failure is not reported: the audio import succeeded, which is what

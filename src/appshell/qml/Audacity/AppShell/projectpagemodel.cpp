@@ -6,6 +6,8 @@
 #include "framework/global/log.h"
 #include "framework/global/async/async.h"
 
+#include "framework/dockwindow/idockwindow.h"
+
 #include "internal/applicationuiactions.h"
 #include "projectscene/internal/projectsceneuiactions.h"
 
@@ -17,6 +19,25 @@ static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
+}
+
+void ProjectPageModel::revealVideoPanelIfAttached()
+{
+    // A project restored with a video attaches it during setCurrentProject,
+    // which happens before this page is loaded - so the reveal dispatched
+    // from ApplicationUiActions at that moment lands on the home page and is
+    // lost. This is the first point at which the project page's docks exist,
+    // so catch that case here. setDockOpen rather than the "toggle-video"
+    // action, because the action is registered a few lines above and only
+    // reaches whichever page is current.
+    if (!videoService() || !videoService()->isAttached()) {
+        return;
+    }
+
+    muse::dock::IDockWindow* window = dockWindowProvider()->window();
+    if (window && !window->isDockOpen(VIDEO_PANEL_NAME)) {
+        window->setDockOpen(VIDEO_PANEL_NAME, true);
+    }
 }
 
 void ProjectPageModel::init()
@@ -36,6 +57,8 @@ void ProjectPageModel::init()
         playbackUiState()->playbackMeterPositionChanged().onNotify(this, [this]() {
             updatePlaybackMeterVisibility();
         });
+
+        revealVideoPanelIfAttached();
 
         m_inited = true;
     }

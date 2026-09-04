@@ -14,6 +14,7 @@
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackuistate.h"
+#include "video/ivideoservice.h"
 
 #include <QtQml/qqmlregistration.h>
 
@@ -24,6 +25,9 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     QML_ELEMENT
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
+    //! Optional: the video module can be compiled out, so always null-checked.
+    muse::ContextInject<video::IVideoService> videoService { this };
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
@@ -52,6 +56,10 @@ private:
     void toggleDock(const QString& name);
 
     void updatePlaybackMeterVisibility();
+
+private:
+    //! Opens the video dock for a project that restored with a video.
+    void revealVideoPanelIfAttached();
 
     bool m_inited = false;
 };

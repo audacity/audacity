@@ -41,6 +41,7 @@ public:
     void detach() override;
 
     bool isAttached() const override;
+    bool hasRecordedAttachment() const override;
     bool sourceMismatch() const override;
     std::string attachedPath() const override;
     VideoError lastError() const override;

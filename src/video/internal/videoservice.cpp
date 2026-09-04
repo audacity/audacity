@@ -165,6 +165,18 @@ void VideoService::restoreFromProject()
     }
 }
 
+bool VideoService::hasRecordedAttachment() const
+{
+    if (isAttached()) {
+        return true;
+    }
+
+    // The file may simply be unreachable right now - an unplugged drive, a
+    // cloud path that has not synced. The project still records it.
+    const au::au3::ProjectVideoRef* ref = projectRef();
+    return ref != nullptr && !ref->isEmpty();
+}
+
 bool VideoService::sourceMismatch() const
 {
     return m_sourceMismatch;

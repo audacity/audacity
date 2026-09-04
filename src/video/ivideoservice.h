@@ -32,6 +32,13 @@ public:
 
     virtual bool isAttached() const = 0;
 
+    //! Whether this project has a video associated with it at all, including
+    //! one whose file did not resolve on open. Distinct from isAttached(),
+    //! which is "currently decodable" - a video on an unplugged drive is
+    //! still the project's video, and must not be replaced behind the user's
+    //! back.
+    virtual bool hasRecordedAttachment() const = 0;
+
     //! The file that was reopened does not match what was recorded with the
     //! project - different duration or frame rate. The path resolved, but to
     //! different material, which is worse than not resolving at all because
