@@ -9,6 +9,8 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "log.h"
 
+#include <QFile>
+
 using namespace muse;
 using namespace au::au3;
 
@@ -112,12 +114,31 @@ bool EffectConfigSettings::Save()
 
     ByteArray json = JsonDocument(arr).toJson();
 
-    Ret ret = io::File::writeFile(m_filename, json);
-    if (!ret) {
-        LOGE() << "failed write to file: " << m_filename << ", err: " << ret.toString();
+    QFile file(io::path_t(m_filename).toQString());
+    if (!file.open(QIODevice::WriteOnly)) {
+        LOGE() << "failed write to file: " << m_filename << ", err: " << file.errorString().toStdString();
+        return false;
     }
 
-    return ret;
+    const auto numBytesToWrite = static_cast<qint64>(json.size());
+    const qint64 numBytesWritten = file.write(json.constChar(), numBytesToWrite);
+    if (numBytesWritten == -1) {
+        LOGE() << "failed write to file: " << m_filename << ", err: " << file.errorString().toStdString();
+        return false;
+    }
+
+    if (numBytesWritten != numBytesToWrite) {
+        LOGE() << "failed write to file: " << m_filename << ", err: failed to write entire file";
+        return false;
+    }
+
+    if (!file.flush() || file.error() != QFile::NoError) {
+        LOGE() << "failed write to file: " << m_filename << ", err: " << file.errorString().toStdString();
+        return false;
+    }
+
+    file.close();
+    return true;
 }
 
 std::string EffectConfigSettings::fullKey(const wxString& key) const
