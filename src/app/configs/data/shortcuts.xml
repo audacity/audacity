@@ -815,11 +815,11 @@
         <key>track-move-bottom</key>
     </SC>
     <SC>
-        <key>play-stop-select</key>
+        <key>action://playback/toggle-play-stop-and-set-cursor</key>
         <seq>X</seq>
     </SC>
     <SC>
-        <key>once-play-stop</key>
+        <key>action://playback/play-selection</key>
         <seq>Shift+Space</seq>
     </SC>
     <SC>
@@ -871,10 +871,6 @@
     <SC>
         <key>action://playback/toggle-play-stop</key>
         <seq>Space</seq>
-    </SC>
-    <SC>
-        <key>action://playback/toggle-play-from-cursor</key>
-        <seq>Shift+Space</seq>
     </SC>
     <SC>
         <key>action://record/stop</key>

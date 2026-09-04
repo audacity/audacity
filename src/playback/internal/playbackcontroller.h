@@ -74,7 +74,6 @@ public:
     bool isStopped() const override;
 
     void stop() override;
-    void stopSeekAndUpdatePlaybackRegion() override;
 
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
 
@@ -94,8 +93,6 @@ public:
     void setLastPlaybackSeekTime(muse::secs_t secs) override;
     muse::async::Notification lastPlaybackSeekTimeChanged() const override;
 
-    muse::Progress loadingProgress() const override;
-
     audio::AudioStreamRestorer suspendForAudioConfiguration(
         audio::AudioStreamKind streamKind) override;
 
@@ -106,13 +103,9 @@ private:
 
     IPlayerPtr player() const;
 
-    bool isLoaded() const;
-
     bool loopBoundariesSet() const;
 
     PlaybackRegion selectionPlaybackRegion() const;
-    bool isPlaybackRegionChanged() const;
-    void updatePlaybackRegion();
 
     void onProjectChanged();
     void onPlaybackPositionChanged();
@@ -124,16 +117,19 @@ private:
     enum class TogglePlayMode {
         PlayPause,      //!< pause while playing; resume/replay when not
         PlayStop,       //!< stop while playing; play when not
-        PlayFromCursor  //!< pause while playing; play from the cursor, clearing the playback region, when not
+        PlayStopAndSetCursor, //!< stop and seek to the stop position while playing, so the next play continues from there; play when not
     };
 
     void togglePlay(TogglePlayMode mode);
 
+    void stopAndSeekToLastSeekTime();
+    void stopAndSeekToPlaybackPosition();
+
     void togglePlayPauseAction();
     void togglePlayStopAction();
-    void togglePlayFromCursorAction();
+    void togglePlayStopAndSetCursorAction();
     void playSelectionAction();
-    void doPlay(bool clearPlaybackRegion);
+    void doPlay();
     void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
     void rewindToStartAction();
@@ -145,7 +141,6 @@ private:
     void pauseAction();
     void doPause();
     void doResume();
-    void seek(const muse::secs_t secs, bool applyIfPlaying);
     bool ensurePhysicalStreamStopped();
 
     void togglePlayRepeats();
@@ -177,7 +172,7 @@ private:
 
     bool isEqualToPlaybackPosition(muse::secs_t position) const;
     bool isPlaybackPositionOnTheEndOfProject() const;
-    bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
+    bool isPlaybackPositionAtOrAfterPlaybackRegionEnd() const;
     bool isPlaybackStartPositionValid() const;
     bool isSeekPositionValid(const muse::secs_t& seekTime) const;
     muse::secs_t playbackPosition() const;
@@ -196,19 +191,11 @@ private:
 
     muse::async::Notification m_currentSequenceIdChanged;
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
-    PlaybackRegion m_lastPlaybackRegion;
     bool m_pauseShouldStopPlayback = false;
+    bool m_isPlayingSelection = false;
     std::optional<muse::secs_t> m_pausedResumePos;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;
-
-    muse::async::Channel<audio::aux_channel_idx_t, std::string> m_auxChannelNameChanged;
-
-    muse::Progress m_loadingProgress;
-    size_t m_loadingTrackCount = 0;
-
-    bool m_isExportingAudio = false;
-    bool m_isRangeSelection = false;
 };
 }
