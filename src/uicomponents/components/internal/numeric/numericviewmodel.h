@@ -117,8 +117,8 @@ private:
     const muse::uicomponents::MenuItemList m_availableFormatsCache;
 
     double m_sampleRate = 1.0;
-    double m_tempo = 0;
-    int m_upperTimeSignature = 0;
-    int m_lowerTimeSignature = 0;
+    double m_tempo = 120;
+    int m_upperTimeSignature = 4;
+    int m_lowerTimeSignature = 4;
 };
 }
