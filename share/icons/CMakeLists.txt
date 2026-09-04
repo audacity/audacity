@@ -5,7 +5,44 @@
 include(GetPlatformInfo)
 
 if (OS_IS_MAC)
-    install(FILES AppIcon/AU4_AppIcon.icns RENAME AppIcon.icns DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME})
+    execute_process(
+        COMMAND xcrun actool --version --output-format human-readable-text
+        OUTPUT_VARIABLE AU4_ACTOOL_VERSION
+        ERROR_QUIET
+    )
+
+    if (AU4_ACTOOL_VERSION MATCHES "short-bundle-version: ([0-9]+)" AND CMAKE_MATCH_1 GREATER_EQUAL 26)
+        set(AU4_APPICON_DIR ${CMAKE_BINARY_DIR}/src/app/${AU4_SHARE_NAME}${AU4_INSTALL_NAME})
+        set(AU4_APPICON_FILES ${AU4_APPICON_DIR}Assets.car ${AU4_APPICON_DIR}AppIcon.icns)
+        file(GLOB_RECURSE AU4_APPICON_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/AppIcon.icon/*)
+
+        add_custom_command(
+            OUTPUT ${AU4_APPICON_FILES}
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${AU4_APPICON_DIR}
+            COMMAND xcrun actool
+                    --compile ${AU4_APPICON_DIR}
+                    --enable-on-demand-resources NO
+                    --app-icon AppIcon
+                    --platform macosx
+                    --include-all-app-icons
+                    --minimum-deployment-target ${CMAKE_OSX_DEPLOYMENT_TARGET}
+                    --output-partial-info-plist /dev/null
+                    --target-device mac
+                    ${CMAKE_CURRENT_SOURCE_DIR}/AppIcon.icon
+            DEPENDS ${AU4_APPICON_SOURCES}
+            COMMENT "Compiling AppIcon.icon"
+            VERBATIM
+        )
+
+        add_custom_target(appicon DEPENDS ${AU4_APPICON_FILES})
+        add_dependencies(audacity appicon)
+        set_property(TARGET audacity APPEND PROPERTY LINK_DEPENDS "${AU4_APPICON_FILES}")
+
+        install(FILES ${AU4_APPICON_FILES} DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME})
+    else()
+        message(WARNING "actool >= 26.0 not found, falling back to AppIcon/AU4_AppIcon.icns")
+        install(FILES AppIcon/AU4_AppIcon.icns RENAME AppIcon.icns DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME})
+    endif()
 
     install(FILES AupIcon/AU4_AupIcon.icns RENAME AupIcon.icns DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME})
 
