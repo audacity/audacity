@@ -150,6 +150,10 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
                             : muse::secs_t(static_cast<double>(videoStart)
                                            * m_timeBaseNum / m_timeBaseDen);
 
+    const AudacityAVRational sar = videoStream->GetSampleAspectRatio();
+    m_sampleAspectNum = sar.num;
+    m_sampleAspectDen = sar.den;
+
     const AudacityAVRational rate = videoStream->GetAvgFrameRate();
     m_info.frameRate = rate.den != 0 ? static_cast<double>(rate.num) / rate.den : 0.0;
 
@@ -165,6 +169,15 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
     const int64_t duration = videoStream->GetDuration();
     if (duration != AUDACITY_AV_NOPTS_VALUE && duration > 0) {
         m_info.duration = static_cast<double>(duration) * m_timeBaseNum / m_timeBaseDen;
+    } else {
+        // Matroska, among others, stores no per-stream duration. The container
+        // level one is in AV_TIME_BASE units regardless of any stream's time
+        // base. Without this the range check is inert and seeking past the end
+        // silently leaves the last decoded frame on screen.
+        const int64_t containerDuration = m_format->GetDuration();
+        if (containerDuration > 0) {
+            m_info.duration = static_cast<double>(containerDuration) / AUDACITY_AV_TIME_BASE;
+        }
     }
 
     m_frame = m_ffmpeg->CreateAVFrameWrapper();
@@ -275,9 +288,30 @@ VideoFrame FFmpegSoftwareBackend::frameAt(muse::secs_t time,
         m_frame->GetLineSize(0), m_frame->GetLineSize(1), m_frame->GetLineSize(2)
     };
 
+    const int srcWidth = m_frame->GetWidth();
+    const int srcHeight = m_frame->GetHeight();
+    if (srcWidth <= 0 || srcHeight <= 0) {
+        return result;
+    }
+
+    // Fit inside the requested box rather than filling it. Anamorphic material
+    // - DV and HDV in particular - stores non-square pixels, so the shape on
+    // screen comes from the sample aspect ratio and not from the stored
+    // dimensions; ignoring it squashes exactly the formats this feature is
+    // most likely to be pointed at.
+    double displayWidth = srcWidth;
+    if (m_sampleAspectNum > 0 && m_sampleAspectDen > 0) {
+        displayWidth = srcWidth * static_cast<double>(m_sampleAspectNum) / m_sampleAspectDen;
+    }
+
+    const double scale = std::min(targetWidth / displayWidth,
+                                  static_cast<double>(targetHeight) / srcHeight);
+    const int outWidth = std::max(1, static_cast<int>(llround(displayWidth * scale)));
+    const int outHeight = std::max(1, static_cast<int>(llround(srcHeight * scale)));
+
     result.image = yuv420ToImage(data, lineSize,
-                                 m_frame->GetWidth(), m_frame->GetHeight(),
-                                 targetWidth, targetHeight,
+                                 srcWidth, srcHeight,
+                                 outWidth, outHeight,
                                  m_frame->GetPixelFormat(),
                                  m_frame->GetColorSpace(),
                                  m_frame->GetColorRange());

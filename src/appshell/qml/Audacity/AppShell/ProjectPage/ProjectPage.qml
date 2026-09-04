@@ -30,6 +30,7 @@ import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.TrackEdit
+import Audacity.Video
 
 DockPage {
     id: root
@@ -437,6 +438,33 @@ DockPage {
             HistoryPanel {
                 navigationSection: historyPanel.navigationSection
                 navigationOrderStart: historyPanel.contentNavigationPanelOrderStart
+            }
+        },
+
+        DockPanel {
+            id: videoPanel
+
+            objectName: root.pageModel.videoPanelName()
+            title: qsTrc("appshell", "Video")
+
+            navigationSection: root.navigationPanelSec(videoPanel.location)
+
+            //! NOTE: unlike the history panel this one is resizable, since how
+            //! large the picture is matters to whoever is watching it
+            width: root.verticalPanelDefaultWidth
+            minimumWidth: root.verticalPanelDefaultWidth
+
+            groupName: root.verticalPanelsGroup
+            location: Location.Right
+
+            //! NOTE: hidden by default
+            visible: false
+
+            dropDestinations: root.verticalPanelDropDestinations
+
+            VideoPanel {
+                navigationSection: videoPanel.navigationSection
+                navigationOrderStart: videoPanel.contentNavigationPanelOrderStart
             }
         }
     ]

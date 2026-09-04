@@ -32,7 +32,9 @@ public:
     virtual const VideoStreamInfo& streamInfo() const = 0;
 
     //! Returns the frame covering the given content-relative time, converted
-    //! and scaled to the requested size. The size is in device pixels, not
+    //! and scaled to fit inside the requested box while keeping the source
+    //! display aspect ratio, so the caller centres it rather than stretching
+    //! it. The size is in device pixels, not
     //! logical ones: the caller multiplies by the device pixel ratio, because
     //! decoding at logical size renders at half resolution on a 2x display.
     virtual VideoFrame frameAt(muse::secs_t time, int targetWidth, int targetHeight) = 0;

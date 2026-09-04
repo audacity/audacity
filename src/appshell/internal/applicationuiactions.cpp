@@ -119,6 +119,15 @@ const UiActionList ApplicationUiActions::m_actions = {
              Checkable::Yes
              ),
     // Vertical panels
+    UiAction("toggle-video",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "&Video"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Show/hide video"),
+             Checkable::Yes
+             ),
     UiAction("toggle-tracks",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
@@ -328,6 +337,7 @@ const QMap<muse::actions::ActionCode, DockName>& ApplicationUiActions::toggleDoc
 
         { "toggle-tracks", TRACKS_PANEL_NAME },
         { "toggle-history", HISTORY_PANEL_NAME },
+        { "toggle-video", VIDEO_PANEL_NAME },
 
         { "toggle-statusbar", PROJECT_STATUSBAR_NAME },
     };

@@ -59,6 +59,8 @@ private:
     int m_timeBaseNum = 0;
     int m_timeBaseDen = 1;
     int64_t m_defaultFrameDuration = 1;
+    int m_sampleAspectNum = 0;
+    int m_sampleAspectDen = 0;
     int64_t m_lastDecodedPts = 0;
     bool m_haveFrame = false;
     bool m_open = false;

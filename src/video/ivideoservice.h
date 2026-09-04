@@ -42,6 +42,11 @@ public:
     virtual VideoFrame frameAt(muse::secs_t projectTime,
                                int targetWidth, int targetHeight) = 0;
 
+    //! Whether the attached video actually covers this project time. Outside
+    //! it there is nothing to show, and the panel says so rather than leaving
+    //! the last decoded frame on screen looking current.
+    virtual bool isTimeInRange(muse::secs_t projectTime) const = 0;
+
     //! Fires when a video is attached or detached, or the error state changes.
     virtual muse::async::Notification attachedChanged() const = 0;
 };

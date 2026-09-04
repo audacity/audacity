@@ -43,6 +43,7 @@ public:
 
     Q_INVOKABLE QString tracksPanelName() const;
     Q_INVOKABLE QString historyPanelName() const;
+    Q_INVOKABLE QString videoPanelName() const;
     Q_INVOKABLE QString playbackMeterPanelName() const;
 
     Q_INVOKABLE QString statusBarName() const;

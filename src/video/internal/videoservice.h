@@ -30,6 +30,8 @@ public:
     VideoFrame frameAt(muse::secs_t projectTime,
                        int targetWidth, int targetHeight) override;
 
+    bool isTimeInRange(muse::secs_t projectTime) const override;
+
     muse::async::Notification attachedChanged() const override;
 
 private:

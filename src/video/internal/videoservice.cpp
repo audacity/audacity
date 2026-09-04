@@ -79,6 +79,20 @@ VideoFrame VideoService::frameAt(muse::secs_t projectTime,
     return m_backend->frameAt(projectTime, targetWidth, targetHeight);
 }
 
+bool VideoService::isTimeInRange(muse::secs_t projectTime) const
+{
+    if (!isAttached()) {
+        return false;
+    }
+
+    const VideoStreamInfo& info = m_backend->streamInfo();
+    if (info.duration <= 0.0) {
+        return true;   // duration unknown; let the decoder decide
+    }
+
+    return projectTime >= muse::secs_t(0.0) && projectTime < info.duration;
+}
+
 muse::async::Notification VideoService::attachedChanged() const
 {
     return m_attachedChanged;

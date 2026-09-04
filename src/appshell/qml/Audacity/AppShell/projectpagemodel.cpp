@@ -92,6 +92,11 @@ QString ProjectPageModel::historyPanelName() const
     return HISTORY_PANEL_NAME;
 }
 
+QString ProjectPageModel::videoPanelName() const
+{
+    return VIDEO_PANEL_NAME;
+}
+
 QString ProjectPageModel::playbackMeterPanelName() const
 {
     return PLAYBACK_METER_PANEL_NAME;

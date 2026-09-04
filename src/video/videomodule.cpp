@@ -3,15 +3,25 @@
 */
 #include "videomodule.h"
 
+#include <QQmlEngine>
+#include <QtQml>
+
 #include "modularity/ioc.h"
 
 #include "internal/videoservice.h"
+#include "view/videopanelmodel.h"
+#include "view/videosurfaceitem.h"
 
 using namespace au::video;
 using namespace muse;
 using namespace muse::modularity;
 
 static const std::string mname("video");
+
+static void video_init_qrc()
+{
+    Q_INIT_RESOURCE(video);
+}
 
 std::string VideoModule::moduleName() const
 {
@@ -24,10 +34,13 @@ void VideoModule::registerExports()
 
 void VideoModule::registerResources()
 {
+    video_init_qrc();
 }
 
 void VideoModule::registerUiTypes()
 {
+    qmlRegisterType<VideoPanelModel>("Audacity.Video", 1, 0, "VideoPanelModel");
+    qmlRegisterType<VideoSurfaceItem>("Audacity.Video", 1, 0, "VideoSurfaceItem");
 }
 
 void VideoModule::onInit(const IApplication::RunMode&)
