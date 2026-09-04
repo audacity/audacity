@@ -58,7 +58,7 @@ static bool isTimeSnap(SnapType type)
 
 static double timeMultiplier(SnapType type)
 {
-    static const std::map<SnapType, int> multipliers = {
+    static const std::map<SnapType, double> multipliers = {
         { SnapType::Seconds, 1.0 },
         { SnapType::Deciseconds, 10.0 },
         { SnapType::Centiseconds, 100.0 },
@@ -88,7 +88,7 @@ static bool isFrameSnap(SnapType type)
 
 static double frameMultiplier(SnapType type)
 {
-    static const std::map<SnapType, int> rates = {
+    static const std::map<SnapType, double> rates = {
         { SnapType::FilmFrames, 24.0 },
         { SnapType::NTSCFrames, 30.0 / 1.001 },
         { SnapType::NTSCFramesDrop, 30.0 / 1.001 },
@@ -96,7 +96,7 @@ static double frameMultiplier(SnapType type)
         { SnapType::CDDAFrames, 75.0 }
     };
 
-    return muse::value(rates, type, 1);
+    return muse::value(rates, type, 1.0);
 }
 
 muse::secs_t SnapTimeFormatter::snapTime(muse::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const
