@@ -195,6 +195,7 @@ Item {
                     id: fader
 
                     height: prv.faderHeight
+                    hoverTooltipEnabled: !mouseArea.pressed
                     min: root.minDbGain
                     max: root.maxDbGain
                     anchors.horizontalCenter: parent.horizontalCenter
