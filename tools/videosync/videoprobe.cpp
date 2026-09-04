@@ -112,7 +112,8 @@ static void yuv420ToRgb(const uint8_t* const src[3], const int stride[3],
             const int y = accY / n;
             const int u = accU / n - 128;
             const int v = accV / n - 128;
-            const int yy = (y - c.yOffset) * c.yGain;
+            // +128 rounds rather than truncates; matches pixelconvert.cpp
+            const int yy = (y - c.yOffset) * c.yGain + 128;
 
             uint8_t* out = &dst[((size_t)dy * dw + dx) * 3];
             out[0] = clamp8((yy + c.rCr * v) >> 8);

@@ -114,7 +114,11 @@ QImage yuv420ToImage(const uint8_t* const data[3], const int lineSize[3],
             const int y = accY / n;
             const int u = accU / n - 128;
             const int v = accV / n - 128;
-            const int yy = (y - c.yOffset) * c.yGain;
+
+            // The +128 rounds rather than truncates. Without it the top of the
+            // limited range lands on 254 instead of 255, so nothing is ever
+            // quite white.
+            const int yy = (y - c.yOffset) * c.yGain + 128;
 
             out[dx * 3 + 0] = clamp8((yy + c.rCr * v) >> 8);
             out[dx * 3 + 1] = clamp8((yy + c.gCb * u + c.gCr * v) >> 8);

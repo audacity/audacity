@@ -185,11 +185,23 @@ audio  start_pts 131280 @ 1/90000 = 1.458667 s
                            difference 21.33 ms
 ```
 
-21.33 ms is 1024 samples at 48 kHz, which is the AAC encoder priming. So the
-video stream's own start time is the wrong anchor: what has to line up is the
-frame and the sample that Audacity actually imported, and the importer works
-from the audio stream. Anchor to the audio start time and let the video
-timestamps sit where they fall.
+21.33 ms is 1024 samples at 48 kHz, which is the AAC encoder priming: the audio
+stream begins that much earlier because it opens with priming samples that are
+not content.
+
+The anchor is therefore the **video** stream's start time, not the audio's.
+That reads backwards at first, since it is the audio Audacity imports, but
+libavformat strips the priming while demuxing — through the edit list in MP4 —
+so the first imported sample lines up with the video start rather than with the
+raw audio start. Anchoring on the audio start instead shifts the picture by the
+priming duration, which at 25 fps is over half a frame, and
+`ContainerOffsetDoesNotShiftTheContent` in the backend tests fails on exactly
+that.
+
+The residual is a container that carries priming with no edit list to strip it,
+MPEG-TS being the common one; there the sound is late against the picture by
+the priming duration. That is the importer's error rather than the panel's, and
+it is bounded at about 21 ms.
 
 **MPEG-TS still fails after both corrections**, landing exactly one GOP late on
 every target. MPEG-TS carries no index, so libavformat seeks it by estimating

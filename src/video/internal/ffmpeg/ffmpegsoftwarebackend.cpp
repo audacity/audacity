@@ -128,12 +128,8 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
 
     m_info.streamIndex = videoStream->GetIndex();
 
-    // The anchor is the audio stream's start time, not the video stream's.
-    // Audacity imported the audio, and within one container the two streams do
-    // not necessarily start together - encoder priming routinely puts them tens
-    // of milliseconds apart - so anchoring to the video stream would line the
-    // picture up against samples that are not the ones on the timeline.
-    // Set this before anything calls toPts() or toContentSeconds().
+    // Recorded so the difference between the two streams is inspectable; the
+    // anchor itself is the video start time, see toPts().
     if (audioStream != nullptr) {
         const AudacityAVRational audioBase = audioStream->GetTimeBase();
         const int64_t audioStart = audioStream->GetStartTime();
@@ -143,7 +139,7 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
         }
     }
 
-    // Reported for the panel readout only; never used as the anchor.
+    // The anchor. Set before anything calls toPts() or toContentSeconds().
     const int64_t videoStart = videoStream->GetStartTime();
     m_info.videoStartTime = videoStart == AUDACITY_AV_NOPTS_VALUE
                             ? muse::secs_t(0.0)
@@ -190,17 +186,35 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
     return VideoError::None;
 }
 
+//! Content-relative seconds to a timestamp on the container timeline.
+//!
+//! The anchor is the video stream's start time. Frame timestamps live on the
+//! container timeline, and content frame zero sits at that start time, so
+//! subtracting it maps project time onto the picture.
+//!
+//! The audio stream's start time is deliberately not used, even though it is
+//! the audio that Audacity imported. Within one container the two differ by
+//! the encoder priming - 21.33 ms for AAC at 48 kHz - because the audio stream
+//! begins with priming samples that libavformat strips while demuxing, via the
+//! edit list in MP4. Once those are stripped the first imported sample lines up
+//! with the video start, not with the raw audio start, and anchoring on the
+//! latter shifts the picture by half a frame or more.
+//!
+//! The residual case is a container that carries priming with no edit list to
+//! strip it, MPEG-TS being the common one. There the sound is late by the
+//! priming duration relative to the picture; that is the importer's error to
+//! fix rather than one to compensate for here, and it is bounded at ~21 ms.
 int64_t FFmpegSoftwareBackend::toPts(muse::secs_t seconds) const
 {
     const double base = static_cast<double>(m_timeBaseNum) / m_timeBaseDen;
-    const double absolute = seconds.to_double() + m_info.audioStartTime.to_double();
+    const double absolute = seconds.to_double() + m_info.videoStartTime.to_double();
     return static_cast<int64_t>(llround(absolute / base));
 }
 
 muse::secs_t FFmpegSoftwareBackend::toContentSeconds(int64_t pts) const
 {
     const double absolute = static_cast<double>(pts) * m_timeBaseNum / m_timeBaseDen;
-    return absolute - m_info.audioStartTime.to_double();
+    return absolute - m_info.videoStartTime.to_double();
 }
 
 void FFmpegSoftwareBackend::flushDecoder()
