@@ -11,6 +11,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/videosyncclock_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/videoframecache_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/videopathresolve_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/videoattachpolicy_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/videodecodeworker_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ffmpegsoftwarebackend_tests.cpp
     )
@@ -28,7 +29,8 @@ set(MODULE_TEST_LINK
 
 # The media fixtures are generated rather than committed; see
 # tools/videosync/make_fixtures.py. Tests that need them skip when they are
-# absent, which is also what happens on CI, since no job installs FFmpeg.
+# absent, so a run with no fixtures passes while proving very little - the
+# unit test workflow generates them before running.
 set(MODULE_TEST_DATA_ROOT ${CMAKE_SOURCE_DIR}/tools/videosync)
 
 include(SetupGTest)

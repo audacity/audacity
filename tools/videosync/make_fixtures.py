@@ -66,6 +66,39 @@ def require(tool):
         sys.exit("%s not found on PATH." % tool)
 
 
+# SVT-AV1 specifically, not "any AV1 encoder". libaom-av1 is the obvious
+# substitute and it does produce valid AV1 with byte-identical stream
+# metadata, but the resulting fixtures fail eight of the backend seek tests:
+# its alt-ref frame structure makes av_seek_frame land somewhere the decoder
+# then walks seconds past. That is worth knowing on its own - it means real
+# libaom-encoded files seek badly here - but it is not something a fixture
+# generator should paper over by quietly picking a different encoder.
+AV1_ENCODER = ("libsvtav1", ["-crf", "40", "-preset", "8"])
+
+_av1_cache = []
+
+
+def av1_encoder():
+    """SVT-AV1 as ffmpeg -c:v arguments, or a clear failure."""
+    if _av1_cache:
+        return _av1_cache[0]
+
+    name, extra = AV1_ENCODER
+    listing = subprocess.run(["ffmpeg", "-hide_banner", "-encoders"],
+                             capture_output=True, text=True).stdout
+
+    # The encoder column is whitespace-delimited, so match the whole word.
+    if any(name in line.split() for line in listing.splitlines()):
+        _av1_cache.append(["-c:v", name] + extra)
+        return _av1_cache[0]
+
+    sys.exit(
+        "This ffmpeg has no %s encoder, which the AV1 fixtures need.\n"
+        "Ubuntu 22.04 and older ship ffmpeg without it; 24.04 has it.\n"
+        "libaom-av1 is NOT a substitute - fixtures encoded with it fail the\n"
+        "backend seek tests." % name)
+
+
 def run(args):
     proc = subprocess.run(args, capture_output=True, text=True)
     if proc.returncode != 0:
@@ -137,7 +170,7 @@ TARGETS = [
     {
         "name": "sync{tag}.mkv",
         "note": "lossless reference - measure sync against this one",
-        "vargs": ["-c:v", "libsvtav1", "-crf", "40", "-preset", "8"],
+        "vargs": "av1",
         "aargs": ["-c:a", "flac"],
         "muxargs": [],
         "reference": True,
@@ -145,7 +178,7 @@ TARGETS = [
     {
         "name": "sync{tag}.webm",
         "note": "AV1 + Opus; Opus carries a codec pre-skip",
-        "vargs": ["-c:v", "libsvtav1", "-crf", "40", "-preset", "8"],
+        "vargs": "av1",
         "aargs": ["-c:a", "libopus", "-b:a", "160k"],
         "muxargs": [],
         "reference": False,
@@ -304,7 +337,11 @@ def build(args):
                    "-vf", video_filter(font, interval, label),
                    "-g", str(interval),
                    "-shortest"]
-            cmd += target["vargs"] + target["aargs"] + target["muxargs"] + [path]
+            # "av1" defers the encoder choice to whatever this ffmpeg has.
+            vargs = target["vargs"]
+            if vargs == "av1":
+                vargs = av1_encoder()
+            cmd += vargs + target["aargs"] + target["muxargs"] + [path]
             print("  %s" % name)
             run(cmd)
             entry = {
