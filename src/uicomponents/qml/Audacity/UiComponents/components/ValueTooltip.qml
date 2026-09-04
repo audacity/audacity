@@ -31,6 +31,11 @@ StyledPopupView {
     placementPolicies: PopupView.PreferAbove
     openPolicies: PopupView.NoActivateFocus
 
+    //! NOTE The tooltip never takes navigation focus, so it must not
+    //! reactivate the captured control on close - that would yank the
+    //! keyboard focus back while the user navigates away
+    activateParentOnClose: false
+
     StyledTextLabel {
         id: valueLabel
 

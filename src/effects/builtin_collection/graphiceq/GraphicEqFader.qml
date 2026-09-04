@@ -50,6 +50,14 @@ Item {
         accessible.maximumValue: root.max
         accessible.stepSize: root.stepSize
 
+        onHighlightChanged: {
+            if (navCtrl.highlight) {
+                tooltip.show(true)
+            } else {
+                tooltip.hide(true)
+            }
+        }
+
         onNavigationEvent: function (event) {
             switch (event.type) {
             case NavigationEvent.Up:
