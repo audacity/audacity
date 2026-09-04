@@ -3,6 +3,7 @@
 */
 #include <gtest/gtest.h>
 
+#include <chrono>
 #include <cmath>
 #include <string>
 
@@ -169,9 +170,12 @@ TEST(FFmpegSoftwareBackendTests, ReturnsTheFrameCoveringTheRequestedTime)
         // Half-open interval: the frame starts at or before the target and
         // the next one starts after it.
         EXPECT_LE(frame.time.to_double(), target + 1e-6)
-            << "frame starts after the time it should cover, t=" << target;
+            << "wanted a frame covering t=" << target
+            << " but got one starting at " << frame.time.to_double()
+            << " (pts " << frame.pts << ")";
         EXPECT_GT(frame.time.to_double() + frameDuration, target - 1e-6)
-            << "frame ends before the time it should cover, t=" << target;
+            << "wanted a frame covering t=" << target
+            << " but got one starting at " << frame.time.to_double();
     }
 }
 
@@ -352,4 +356,352 @@ TEST(FFmpegSoftwareBackendTests, KnowsItsDurationSoTheRangeCheckWorks)
     // this reads zero and seeking past the end silently holds the last frame.
     EXPECT_GT(backend.streamInfo().duration.to_double(), 5.0);
     EXPECT_LT(backend.streamInfo().duration.to_double(), 60.0);
+}
+
+// ---------------------------------------------------------------------------
+// MPEG-TS. The format carries no index, so libavformat seeks it by estimating
+// byte positions, and AVSEEK_FLAG_BACKWARD does not reliably land at or before
+// the requested time. Measured with tools/videosync/videoprobe: the TS fixture
+// lands exactly one GOP late on every target while MKV and MP4 are exact.
+// ---------------------------------------------------------------------------
+
+TEST(FFmpegSoftwareBackendTests, SeeksAccuratelyInMpegTs)
+{
+    REQUIRE_FIXTURE("sync25.ts");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.ts");
+
+    const double halfFrame = 0.5 / FPS;
+    int wrong = 0;
+
+    // Visited out of order so each one forces a real seek rather than being
+    // served by decoding forward from the last.
+    for (double second : { 7.0, 1.0, 5.0, 2.0, 8.0, 3.0 }) {
+        const double target = second + halfFrame;
+        const VideoFrame frame = backend.frameAt(target, 1280, 720);
+        ASSERT_TRUE(frame.valid()) << "no frame at t=" << target;
+
+        // The patch alone is too weak a check: markers are one second apart
+        // and the GOP is one second, so landing a whole GOP late still lights
+        // it. The frame's own time has to match too.
+        const bool lit = flashPatchLuma(frame.image) > 200;
+        const bool onTime = std::fabs(frame.time.to_double() - second) < 0.5 / FPS;
+
+        if (!lit || !onTime) {
+            ++wrong;
+            ADD_FAILURE() << "t=" << target << " should show the marker at "
+                          << second << " but got a frame at "
+                          << frame.time.to_double()
+                          << (lit ? " (a marker, but the wrong one)" : " (not a marker)");
+        }
+    }
+
+    EXPECT_EQ(wrong, 0);
+}
+
+TEST(FFmpegSoftwareBackendTests, MpegTsFrameTimeMatchesTheRequest)
+{
+    REQUIRE_FIXTURE("sync25.ts");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.ts");
+
+    const double frameDuration = 1.0 / FPS;
+
+    for (double target : { 1.5, 4.5, 2.5, 6.5 }) {
+        const VideoFrame frame = backend.frameAt(target, 640, 360);
+        ASSERT_TRUE(frame.valid()) << "no frame at t=" << target;
+
+        EXPECT_LE(frame.time.to_double(), target + 1e-6)
+            << "wanted a frame covering t=" << target
+            << " but got one starting at " << frame.time.to_double()
+            << " (pts " << frame.pts << ")";
+        EXPECT_GT(frame.time.to_double() + frameDuration, target - 1e-6)
+            << "wanted a frame covering t=" << target
+            << " but got one starting at " << frame.time.to_double();
+    }
+}
+
+// ---------------------------------------------------------------------------
+// The seek retry ladder, as arithmetic. Both non-termination modes live here:
+// a probe that never reaches the start of the file, and a clamp that does not
+// report itself so the caller loops on the floor forever.
+// ---------------------------------------------------------------------------
+
+TEST(FFmpegSoftwareBackendTests, ProbeLadderBacksOffByDoubling)
+{
+    const int64_t ticks = 90000;              // MPEG-TS
+    const int64_t target = 100 * ticks;
+    bool atFloor = true;
+
+    EXPECT_EQ(FFmpegSoftwareBackend::nextProbePts(target, 0, 0, ticks, &atFloor),
+              target - 1 * ticks);
+    EXPECT_FALSE(atFloor);
+
+    EXPECT_EQ(FFmpegSoftwareBackend::nextProbePts(target, 1, 0, ticks, &atFloor),
+              target - 2 * ticks);
+    EXPECT_FALSE(atFloor);
+
+    EXPECT_EQ(FFmpegSoftwareBackend::nextProbePts(target, 2, 0, ticks, &atFloor),
+              target - 4 * ticks);
+    EXPECT_FALSE(atFloor);
+}
+
+TEST(FFmpegSoftwareBackendTests, ProbeLadderClampsToTheStartAndSaysSo)
+{
+    const int64_t ticks = 90000;
+    const int64_t floor = 5 * ticks;
+    const int64_t target = floor + ticks / 2;   // half a second past the floor
+    bool atFloor = false;
+
+    // Every rung is already past the start of the stream, so all of them
+    // clamp - and each one has to report it, or the caller cannot tell that
+    // the ladder is exhausted and will keep seeking to the same place.
+    for (int attempt = 0; attempt < 3; ++attempt) {
+        EXPECT_EQ(FFmpegSoftwareBackend::nextProbePts(target, attempt, floor, ticks, &atFloor),
+                  floor) << "attempt " << attempt;
+        EXPECT_TRUE(atFloor) << "attempt " << attempt;
+    }
+}
+
+TEST(FFmpegSoftwareBackendTests, ProbeLadderToleratesANullFloorFlag)
+{
+    EXPECT_EQ(FFmpegSoftwareBackend::nextProbePts(1000, 0, 0, 100, nullptr), 900);
+}
+
+// ---------------------------------------------------------------------------
+// Sweeps. A handful of spot checks hid the fact that MPEG-TS was wrong on
+// nearly every target, so these walk every frame.
+// ---------------------------------------------------------------------------
+
+namespace {
+struct SweepResult {
+    int checked = 0;
+    int late = 0;
+    int missing = 0;
+    double worstLateSeconds = 0.0;
+    int maxSeekAttempts = 0;
+};
+
+//! Asks for every frame's midpoint in turn and checks the returned frame
+//! actually covers it, using the frame's own reported duration rather than a
+//! nominal one.
+SweepResult sweep(FFmpegSoftwareBackend& backend, double fps, int frames,
+                  double timeBase)
+{
+    SweepResult result;
+
+    for (int i = 0; i < frames; ++i) {
+        const double target = (i + 0.5) / fps;
+        const VideoFrame frame = backend.frameAt(target, 320, 180);
+        ++result.checked;
+
+        result.maxSeekAttempts = std::max(result.maxSeekAttempts, backend.seekAttempts());
+
+        if (!frame.valid()) {
+            ++result.missing;
+            continue;
+        }
+
+        const double start = frame.time.to_double();
+        const double end = start + backend.frameDurationPts() * timeBase;
+
+        if (start > target + 1e-9 || end <= target - 1e-9) {
+            ++result.late;
+            result.worstLateSeconds =
+                std::max(result.worstLateSeconds, std::fabs(start - target));
+        }
+    }
+
+    return result;
+}
+
+double timeBaseOf(const std::string& fixtureName, double fallback)
+{
+    // The fixtures use 1/90000 for MPEG-TS and 1/1000 for Matroska; the sweep
+    // only needs it to turn a duration in ticks back into seconds.
+    if (fixtureName.size() >= 3
+        && fixtureName.compare(fixtureName.size() - 3, 3, ".ts") == 0) {
+        return 1.0 / 90000.0;
+    }
+    return fallback;
+}
+}
+
+TEST(FFmpegSoftwareBackendTests, MpegTsSweepLandsOnEveryFrame)
+{
+    REQUIRE_FIXTURE("sync25.ts");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.ts");
+
+    // Every frame of the ten second fixture. Before the retry, 224 of 250
+    // were late, the worst by over a second.
+    const SweepResult result = sweep(backend, FPS, 240, timeBaseOf("sync25.ts", 0.0));
+
+    EXPECT_EQ(result.late, 0) << "worst was " << result.worstLateSeconds << " s";
+    EXPECT_EQ(result.missing, 0);
+    EXPECT_GT(result.maxSeekAttempts, 1) << "the retry ladder should have run";
+}
+
+TEST(FFmpegSoftwareBackendTests, MpegTsReturnsAFrameAtTheLastKeyframe)
+{
+    REQUIRE_FIXTURE("sync25.ts");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.ts");
+
+    // The old code returned no frame at all here, and the panel silently kept
+    // whatever was already on screen.
+    const VideoFrame frame = backend.frameAt(9.0 + 0.5 / FPS, 320, 180);
+    ASSERT_TRUE(frame.valid());
+    EXPECT_NEAR(frame.time.to_double(), 9.0, 1.0 / FPS);
+}
+
+TEST(FFmpegSoftwareBackendTests, ContainersThatSeekCorrectlyNeedNoRetry)
+{
+    // The retry must be free where it is not needed. A second seek here would
+    // mean the ladder had started firing on files that were already correct -
+    // which is how a byte rewind regresses a working container.
+    for (const char* name : { "sync25.mkv", "sync25.webm", "sync25.mp4",
+                              "sync25-offset.mp4" }) {
+        if (!fixtureExists(name)) {
+            continue;
+        }
+
+        FFmpegSoftwareBackend backend;
+        const VideoError err = backend.open(fixture(name));
+        if (err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld) {
+            GTEST_SKIP() << "No usable FFmpeg on this machine";
+        }
+        ASSERT_EQ(err, VideoError::None) << name << ": " << errorMessage(err);
+
+        const SweepResult result = sweep(backend, FPS, 200, 1.0 / 1000.0);
+
+        EXPECT_EQ(result.late, 0) << name << ", worst " << result.worstLateSeconds << " s";
+        EXPECT_EQ(result.missing, 0) << name;
+        EXPECT_EQ(result.maxSeekAttempts, 1)
+            << name << " needed " << result.maxSeekAttempts
+            << " seeks; it should need exactly one";
+    }
+}
+
+TEST(FFmpegSoftwareBackendTests, NonIntegerFrameRateLandsOnEveryFrame)
+{
+    REQUIRE_FIXTURE("sync30000_1001.mkv");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync30000_1001.mkv");
+
+    // 30000/1001 has real frame deltas that alternate rather than being
+    // constant, so a single duration derived from the average frame rate
+    // picks the wrong frame on about one target in a hundred. Measuring each
+    // frame's end from the next frame's timestamp is what fixes it.
+    const double fps = 30000.0 / 1001.0;
+    const SweepResult result = sweep(backend, fps, 290, 1.0 / 1000.0);
+
+    EXPECT_EQ(result.late, 0) << "worst was " << result.worstLateSeconds << " s";
+    EXPECT_EQ(result.missing, 0);
+}
+
+TEST(FFmpegSoftwareBackendTests, ReportsARealDurationForTheHeldFrame)
+{
+    REQUIRE_FIXTURE("sync25.mkv");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.mkv");
+
+    const VideoFrame frame = backend.frameAt(4.0, 320, 180);
+    ASSERT_TRUE(frame.valid());
+
+    // 25 fps in a 1/1000 time base is 40 ticks. The value has to come from the
+    // next frame's timestamp, not from a nominal figure.
+    EXPECT_GT(backend.frameDurationPts(), 0);
+    EXPECT_NEAR(static_cast<double>(backend.frameDurationPts()) / 1000.0,
+                1.0 / FPS, 0.005);
+}
+
+TEST(FFmpegSoftwareBackendTests, PastTheEndReturnsTheFinalFrame)
+{
+    REQUIRE_FIXTURE("sync25.mkv");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.mkv");
+
+    // The drain path used to pair the last decoded image with the previous
+    // frame's timestamp.
+    const VideoFrame frame = backend.frameAt(60.0, 320, 180);
+    if (!frame.valid()) {
+        GTEST_SKIP() << "this build returns nothing past the end; nothing to check";
+    }
+
+    const VideoStreamInfo& info = backend.streamInfo();
+    EXPECT_GT(frame.time.to_double(), info.duration.to_double() - 0.5)
+        << "the frame handed back should be the last one, not an earlier one";
+}
+
+// ---------------------------------------------------------------------------
+// The retry ladder runs on the decode thread, which detach() joins. That
+// raises the worst-case join from one seek to several, so the bound matters.
+// ---------------------------------------------------------------------------
+
+TEST(FFmpegSoftwareBackendTests, RetryingSeeksStaysBoundedInTime)
+{
+    REQUIRE_FIXTURE("sync25.ts");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.ts");
+
+    // Worst case for the ladder: every target far from the last, so the
+    // forward window never helps and each one seeks from scratch.
+    const double worstCaseBudgetSeconds = 1.0;
+
+    for (double target : { 8.5, 0.5, 7.5, 1.5, 6.5, 2.5 }) {
+        const auto began = std::chrono::steady_clock::now();
+        const VideoFrame frame = backend.frameAt(target, 320, 180);
+        const double elapsed = std::chrono::duration<double>(
+            std::chrono::steady_clock::now() - began).count();
+
+        ASSERT_TRUE(frame.valid()) << "no frame at t=" << target;
+        EXPECT_LT(elapsed, worstCaseBudgetSeconds)
+            << "a single request took " << elapsed
+            << " s at t=" << target << "; detach() waits on exactly this";
+        EXPECT_LE(backend.seekAttempts(), 5)
+            << "the ladder must stay bounded, not walk the file";
+    }
+}
+
+TEST(FFmpegSoftwareBackendTests, SeekingOffTheEndTerminates)
+{
+    REQUIRE_FIXTURE("sync25.ts");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.ts");
+
+    // Far past the end of a ten second file. The ladder must give up rather
+    // than seek forever on the thread detach() is waiting for.
+    const auto began = std::chrono::steady_clock::now();
+    backend.frameAt(600.0, 320, 180);
+    const double elapsed = std::chrono::duration<double>(
+        std::chrono::steady_clock::now() - began).count();
+
+    EXPECT_LT(elapsed, 2.0) << "took " << elapsed << " s to give up";
+    EXPECT_LE(backend.seekAttempts(), 5);
+}
+
+TEST(FFmpegSoftwareBackendTests, SeekingBeforeTheStartTerminates)
+{
+    REQUIRE_FIXTURE("sync25.ts");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.ts");
+
+    const auto began = std::chrono::steady_clock::now();
+    backend.frameAt(-30.0, 320, 180);
+    const double elapsed = std::chrono::duration<double>(
+        std::chrono::steady_clock::now() - began).count();
+
+    EXPECT_LT(elapsed, 2.0) << "took " << elapsed << " s to give up";
+    EXPECT_LE(backend.seekAttempts(), 5);
 }

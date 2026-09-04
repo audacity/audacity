@@ -203,9 +203,33 @@ MPEG-TS being the common one; there the sound is late against the picture by
 the priming duration. That is the importer's error rather than the panel's, and
 it is bounded at about 21 ms.
 
-**MPEG-TS still fails after both corrections**, landing exactly one GOP late on
-every target. MPEG-TS carries no index, so libavformat seeks it by estimating
-byte positions, and `AVSEEK_FLAG_BACKWARD` does not reliably land on or before
-the requested time. This is what the keyframe index is for, and it means the
-index is a requirement for TS rather than a later optimisation — worth knowing
-when scheduling, since TS is a common camera and broadcast delivery format.
+**MPEG-TS needed a further fix, and the mechanism is not what it looks like.**
+`av_seek_frame` on MPEG-TS is *exact on the decode timestamp* — it reliably
+lands on the largest DTS at or before the target — but it is *blind to
+keyframes*, hitting one only by chance. The decoder then has to discard
+forward to the next keyframe, so the first frame it can emit may be a whole
+group of pictures past the requested time. Near the end of a file the seek can
+land past the last frame and produce nothing at all, which showed up as the
+panel silently keeping the previous picture.
+
+An earlier version of this file concluded that a keyframe index was the fix.
+That was wrong, and the measurements are worth recording so nobody re-derives
+it:
+
+- `avformat_seek_file` with a bounded `max_ts` behaves identically to
+  `av_seek_frame(BACKWARD)` on MPEG-TS — the same targets miss.
+- `AVSEEK_FLAG_ANY` is worse than nothing: it breaks Matroska and MP4 into the
+  same failure mode.
+- Feeding libavformat a self-scanned index via `av_add_index_entry` changes
+  nothing, because the MPEG-TS demuxer exposes `read_timestamp` and takes the
+  binary-search path regardless.
+- An index is also unavailable exactly when it would be needed most — a user
+  who seeks two seconds after attaching a long file — so the ordinary seek
+  path has to be correct anyway. That is the whole job.
+
+The fix is to verify and retry: seek, decode, and check whether the first
+frame produced actually starts at or before the target. If it does not, seek
+again from further back, doubling the backoff. Landing early is only slower,
+never wrong, because the decoder walks forward to the target either way; only
+landing late is wrong, and that is precisely what the check detects. Files
+that already seek correctly take exactly one seek, which the tests assert.

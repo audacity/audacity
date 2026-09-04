@@ -128,6 +128,10 @@ typedef struct AVCodecContext AVCodecContext;
 #define AUDACITY_AV_PKT_FLAG_KEY 0x0001
 #define AUDACITY_AVSEEK_FLAG_BACKWARD 1
 
+//! Seek by byte position rather than timestamp. Value is ABI stable across
+//! every bundled header, 2.3.6 through 9.0.0.
+#define AUDACITY_AVSEEK_FLAG_BYTE 2
+
 //! AVMEDIA_TYPE_VIDEO. The AVMediaType enumeration is ABI frozen at zero for
 //! video, so this needs no per-version mapping.
 #define AUDACITY_AVMEDIA_TYPE_VIDEO 0

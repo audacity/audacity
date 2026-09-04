@@ -146,7 +146,6 @@ void VideoService::requestFrame(muse::secs_t projectTime, int targetWidth, int t
     request.time = projectTime;
     request.targetWidth = targetWidth;
     request.targetHeight = targetHeight;
-    request.mode = VideoDecodeWorker::Mode::Seek;
 
     m_worker->request(request);
 }

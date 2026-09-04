@@ -393,7 +393,8 @@ int main(int argc, char** argv)
 
     for (double t : order) {
         // Aim at the middle of the marker frame so rounding cannot put us on
-        // the neighbour: the frame covers [t, t + 1/fps).
+        // the neighbour: the frame covers [t, t + 1/fps). seekAndDecode adds
+        // the stream start time itself, so this stays content-relative.
         const double aim = t + 0.5 / fps;
         if (!d.seekAndDecode(aim)) {
             printf("  t=%6.3f  DECODE FAILED\n", t);

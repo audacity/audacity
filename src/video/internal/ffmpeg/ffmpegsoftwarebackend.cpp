@@ -24,6 +24,10 @@ namespace {
 //! flush and a re-decode from the previous keyframe, so for a short hop
 //! forward it is usually cheaper to just keep going.
 constexpr double FORWARD_WINDOW_SEC = 2.0;
+
+//! Retries after an overshooting seek, backing off 1 s, 2 s then 4 s. Bounded
+//! on purpose: this runs on the decode thread, which detach() joins.
+constexpr int MAX_SEEK_ATTEMPTS = 3;
 }
 
 FFmpegSoftwareBackend::FFmpegSoftwareBackend() = default;
@@ -50,12 +54,13 @@ int64_t FFmpegSoftwareBackend::timeToPts(muse::secs_t time) const
 
 int64_t FFmpegSoftwareBackend::frameDurationPts() const
 {
-    return m_defaultFrameDuration;
+    return m_currentFrameDuration;
 }
 
 void FFmpegSoftwareBackend::close()
 {
     m_frame.reset();
+    m_nextFrame.reset();
     m_codec.reset();
     m_format.reset();
     m_info = VideoStreamInfo();
@@ -168,9 +173,11 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
     const AudacityAVRational rate = videoStream->GetAvgFrameRate();
     m_info.frameRate = rate.den != 0 ? static_cast<double>(rate.num) / rate.den : 0.0;
 
-    // Frame duration is only a fallback for containers that do not carry a
-    // packet duration. Variable frame rate content legitimately holds a single
-    // frame for seconds, so a computed 1/fps is never used to decide staleness.
+    // A fallback only, for the final frame before end of stream and for files
+    // that report no frame rate. Frame selection measures each frame's real
+    // end from the next frame's timestamp instead: a computed 1/fps is wrong
+    // on variable frame rate material and slightly wrong even on constant rate
+    // material whose real deltas alternate, as 30000/1001 does.
     m_defaultFrameDuration = 1;
     if (m_info.frameRate > 0.0) {
         m_defaultFrameDuration = std::max<int64_t>(
@@ -192,7 +199,8 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
     }
 
     m_frame = m_ffmpeg->CreateAVFrameWrapper();
-    if (!m_frame) {
+    m_nextFrame = m_ffmpeg->CreateAVFrameWrapper();
+    if (!m_frame || !m_nextFrame) {
         return VideoError::DecodeFailed;
     }
 
@@ -238,64 +246,198 @@ void FFmpegSoftwareBackend::flushDecoder()
         m_codec->FlushBuffers();
     }
     m_haveFrame = false;
+
+    // Anything carried over belongs to the position we just left.
+    m_haveLookahead = false;
 }
 
-bool FFmpegSoftwareBackend::decodeUpTo(int64_t targetPts)
+//! Where to retry a seek from, having overshot. Doubling, clamped to the
+//! start of the stream. Free-standing and arithmetic-only so the two
+//! non-termination modes can be tested without a file.
+int64_t FFmpegSoftwareBackend::nextProbePts(int64_t targetPts, int attempt,
+                                            int64_t floorPts, int64_t ticksPerSecond,
+                                            bool* atFloor)
 {
-    while (true) {
-        const int received = m_codec->ReceiveFrame(*m_frame);
-        if (received == 0) {
-            int64_t pts = m_frame->GetBestEffortTimestamp();
-            if (pts == AUDACITY_AV_NOPTS_VALUE) {
-                pts = m_frame->GetPresentationTimestamp();
-            }
-            m_lastDecodedPts = pts;
-            m_haveFrame = true;
+    const int64_t backoffSeconds = static_cast<int64_t>(1) << attempt;   // 1, 2, 4
+    int64_t probe = targetPts - backoffSeconds * ticksPerSecond;
 
-            if (pts + m_defaultFrameDuration > targetPts) {
-                return true;
-            }
-            continue;
-        }
-
-        // Needs more input. Feed it the next packet belonging to our stream.
-        auto packet = m_format->ReadNextPacket();
-        if (!packet) {
-            m_codec->SendPacket(nullptr);   // drain
-            const int drained = m_codec->ReceiveFrame(*m_frame);
-            if (drained == 0) {
-                m_haveFrame = true;
-                return true;
-            }
-            return m_haveFrame;
-        }
-
-        if (packet->GetStreamIndex() == m_info.streamIndex) {
-            m_codec->SendPacket(packet.get());
-        }
+    const bool clamped = probe <= floorPts;
+    if (clamped) {
+        probe = floorPts;
     }
+    if (atFloor != nullptr) {
+        *atFloor = clamped;
+    }
+    return probe;
+}
+
+bool FFmpegSoftwareBackend::decodeUpTo(int64_t targetPts, int64_t* firstDecodedPts)
+{
+    const auto timestampOf = [](AVFrameWrapper& frame) {
+        int64_t pts = frame.GetBestEffortTimestamp();
+        if (pts == AUDACITY_AV_NOPTS_VALUE) {
+            pts = frame.GetPresentationTimestamp();
+        }
+        return pts;
+    };
+
+    bool haveHeld = false;
+    int64_t heldPts = 0;
+    bool draining = false;
+
+    const auto takeHeld = [&](int64_t pts) {
+        m_frame.swap(m_nextFrame);
+        heldPts = pts;
+        haveHeld = true;
+        m_lastDecodedPts = pts;
+        m_haveFrame = true;
+    };
+
+    const auto answer = [&](int64_t nextPts) {
+        // The held frame starts at or before the target and the next one
+        // starts after it, so the held frame is the answer and the gap
+        // between them is its true duration.
+        m_currentFrameDuration = std::max<int64_t>(1, nextPts - heldPts);
+        m_lastDecodedPts = heldPts;
+        m_haveFrame = true;
+    };
+
+    while (true) {
+        int64_t pts = 0;
+
+        if (m_haveLookahead) {
+            // Left over from the previous search. Dropping it would cost a
+            // frame on every forward step.
+            pts = m_lookaheadPts;
+            m_haveLookahead = false;
+        } else {
+            if (m_codec->ReceiveFrame(*m_nextFrame) != 0) {
+                if (draining) {
+                    break;   // nothing left anywhere
+                }
+
+                auto packet = m_format->ReadNextPacket();
+                if (!packet) {
+                    m_codec->SendPacket(nullptr);
+                    draining = true;
+                    continue;
+                }
+
+                if (packet->GetStreamIndex() == m_info.streamIndex) {
+                    m_codec->SendPacket(packet.get());
+                }
+                continue;
+            }
+            pts = timestampOf(*m_nextFrame);
+        }
+
+        if (firstDecodedPts != nullptr) {
+            *firstDecodedPts = pts;
+            firstDecodedPts = nullptr;   // only the first one after a flush
+        }
+
+        if (haveHeld && pts > targetPts) {
+            // Keep this one: it is the first frame of the next search.
+            m_haveLookahead = true;
+            m_lookaheadPts = pts;
+            answer(pts);
+            return true;
+        }
+
+        takeHeld(pts);
+    }
+
+    if (haveHeld) {
+        // End of stream, so there is no next frame to measure against and the
+        // last one falls back to the nominal duration. Its timestamp is
+        // recorded too; the previous version left it unset, so the drained
+        // image was paired with the preceding frame's time.
+        m_currentFrameDuration = m_defaultFrameDuration;
+        m_lastDecodedPts = heldPts;
+        m_haveFrame = true;
+        return true;
+    }
+
+    return false;
 }
 
 bool FFmpegSoftwareBackend::seekAndDecode(int64_t targetPts)
 {
+    m_seekAttempts = 0;
+
     const double base = static_cast<double>(m_timeBaseNum) / m_timeBaseDen;
-    const int64_t forwardWindow =
-        static_cast<int64_t>(FORWARD_WINDOW_SEC / base);
+    const int64_t forwardWindow = static_cast<int64_t>(FORWARD_WINDOW_SEC / base);
+    const int64_t ticksPerSecond =
+        std::max<int64_t>(1, static_cast<int64_t>(llround(1.0 / base)));
 
     const bool canDecodeForward = m_haveFrame
                                   && targetPts >= m_lastDecodedPts
                                   && targetPts - m_lastDecodedPts <= forwardWindow;
 
-    if (!canDecodeForward) {
-        if (m_ffmpeg->av_seek_frame == nullptr) {
-            return false;
-        }
-        m_ffmpeg->av_seek_frame(m_format->GetWrappedValue(), m_info.streamIndex,
-                                targetPts, AUDACITY_AVSEEK_FLAG_BACKWARD);
-        flushDecoder();
+    if (canDecodeForward) {
+        // Already at or before the target, so decoding forward cannot overshoot
+        // and there is nothing to verify.
+        return decodeUpTo(targetPts, nullptr);
     }
 
-    return decodeUpTo(targetPts);
+    if (m_ffmpeg->av_seek_frame == nullptr) {
+        return false;
+    }
+
+    AVFormatContext* format = m_format->GetWrappedValue();
+    const int64_t floorPts = toPts(muse::secs_t(0.0));
+
+    int64_t seekTo = targetPts;
+
+    for (int attempt = 0; attempt <= MAX_SEEK_ATTEMPTS; ++attempt) {
+        m_ffmpeg->av_seek_frame(format, m_info.streamIndex, seekTo,
+                                AUDACITY_AVSEEK_FLAG_BACKWARD);
+        flushDecoder();
+        ++m_seekAttempts;
+
+        int64_t firstPts = AUDACITY_AV_NOPTS_VALUE;
+        const bool decoded = decodeUpTo(targetPts, &firstPts);
+
+        // Decoding nothing at all is the same problem as overshooting, and it
+        // is what happens near the end of a file when the seek lands past the
+        // last frame. Back off rather than giving up; the attempt counter
+        // bounds this either way.
+        if (decoded && (firstPts == AUDACITY_AV_NOPTS_VALUE || firstPts <= targetPts)) {
+            // Landed at or before the target, so decoding forward reached the
+            // right frame. Landing early is only slower, never wrong; only
+            // landing late is wrong, and that is what this detects.
+            return true;
+        }
+
+        // Overshot. MPEG-TS is the case that needs this: av_seek_frame is
+        // exact on the decode timestamp but blind to keyframes, so the
+        // decoder discards forward to the next one and the first frame it
+        // emits can be a whole group of pictures past the target. Retry from
+        // further back; the forward walk then reaches the right frame.
+        if (attempt == MAX_SEEK_ATTEMPTS) {
+            break;
+        }
+
+        bool atFloor = false;
+        seekTo = nextProbePts(targetPts, attempt, floorPts, ticksPerSecond, &atFloor);
+
+        if (atFloor) {
+            // The start of the stream still overshoots, which means timestamp
+            // seeking cannot reach the first keyframe. Rewinding by byte is
+            // the last resort - and only here, because using it generally
+            // regresses containers that seek correctly by timestamp.
+            m_ffmpeg->av_seek_frame(format, -1, 0, AUDACITY_AVSEEK_FLAG_BYTE);
+            flushDecoder();
+            ++m_seekAttempts;
+
+            int64_t fromStart = AUDACITY_AV_NOPTS_VALUE;
+            return decodeUpTo(targetPts, &fromStart);
+        }
+    }
+
+    // Out of attempts. The held frame is the closest reachable one, which is
+    // better than showing nothing.
+    return m_haveFrame;
 }
 
 VideoFrame FFmpegSoftwareBackend::frameAt(muse::secs_t time,

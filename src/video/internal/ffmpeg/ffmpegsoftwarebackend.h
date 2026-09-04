@@ -47,21 +47,62 @@ private:
     int64_t toPts(muse::secs_t seconds) const;
     muse::secs_t toContentSeconds(int64_t pts) const;
 
-    //! Keyframe seek backwards, flush, then decode forward to the frame whose
-    //! presentation interval contains the target.
+    //! Seek backwards, flush, decode forward - then check the result and
+    //! retry from further back if the seek overshot the target.
     bool seekAndDecode(int64_t targetPts);
-    bool decodeUpTo(int64_t targetPts);
+
+    //! Decodes forward until the frame covering targetPts. Holds one frame of
+    //! lookahead, so a frame's end is the next frame's timestamp rather than a
+    //! guess from the average frame rate.
+    //!
+    //! firstDecodedPts reports the timestamp of the first frame produced after
+    //! the last flush. It is how the caller learns that the seek overshot; by
+    //! the time this returns, the loop has already walked past it.
+    bool decodeUpTo(int64_t targetPts, int64_t* firstDecodedPts);
+
     void flushDecoder();
+
+    //! How far before the target to retry from, per attempt. Public for the
+    //! unit tests, which drive the ladder without touching a file.
+public:
+    static int64_t nextProbePts(int64_t targetPts, int attempt,
+                                int64_t floorPts, int64_t ticksPerSecond,
+                                bool* atFloor);
+
+    //! Seeks issued for the most recent request. One means the first seek
+    //! landed correctly; more means the retry ladder ran.
+    int seekAttempts() const { return m_seekAttempts; }
+
+private:
 
     std::shared_ptr<FFmpegFunctions> m_ffmpeg;
     std::unique_ptr<AVFormatContextWrapper> m_format;
     std::unique_ptr<AVCodecContextWrapper> m_codec;
     std::unique_ptr<AVFrameWrapper> m_frame;
 
+    //! One frame of lookahead. A frame's true end is the next frame's
+    //! timestamp; anything derived from the average frame rate is wrong on
+    //! variable frame rate material and slightly wrong even on constant rate
+    //! material whose real deltas alternate.
+    //!
+    //! It has to survive between requests. The frame that ends one search is
+    //! the first frame of the next one, and dropping it costs exactly one
+    //! frame on every forward step.
+    std::unique_ptr<AVFrameWrapper> m_nextFrame;
+    bool m_haveLookahead = false;
+    int64_t m_lookaheadPts = 0;
+
     VideoStreamInfo m_info;
     int m_timeBaseNum = 0;
     int m_timeBaseDen = 1;
+    //! Only a fallback now: the final frame before end of stream, and files
+    //! that report no frame rate at all.
     int64_t m_defaultFrameDuration = 1;
+
+    //! True duration of the frame currently held, measured from the next
+    //! frame's timestamp.
+    int64_t m_currentFrameDuration = 1;
+    int m_seekAttempts = 0;
     int m_sampleAspectNum = 0;
     int m_sampleAspectDen = 0;
     int64_t m_lastDecodedPts = 0;

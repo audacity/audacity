@@ -32,16 +32,10 @@ namespace au::video {
 class VideoDecodeWorker
 {
 public:
-    enum class Mode {
-        Stream,   //!< following playback; decoding forward is usually enough
-        Seek,     //!< the playhead jumped; expect a real seek
-    };
-
     struct Request {
         muse::secs_t time = 0.0;
         int targetWidth = 0;
         int targetHeight = 0;
-        Mode mode = Mode::Seek;
     };
 
     //! Called on the decode thread once a frame has been placed in the cache.

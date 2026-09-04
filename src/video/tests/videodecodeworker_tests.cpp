@@ -97,7 +97,6 @@ VideoDecodeWorker::Request requestAt(double seconds, int w = 320, int h = 180)
     r.time = muse::secs_t(seconds);
     r.targetWidth = w;
     r.targetHeight = h;
-    r.mode = VideoDecodeWorker::Mode::Seek;
     return r;
 }
 }
