@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
 #include "modularity/ioc.h"
+#include "audio/iaudioengine.h"
 #include "playback/iplaybackcontroller.h"
 #include "playback/playbacktypes.h"
 
@@ -86,6 +87,11 @@ private:
     //! Only for the loop region. Transport commands go through the action
     //! dispatcher, never straight to the controller.
     muse::ContextInject<playback::IPlaybackController> playbackController { this };
+
+    //! Only for the stream's sample rate, which sets how coarse the player's
+    //! position reports are. Never for the callback queue: that has a single
+    //! documented consumer.
+    muse::GlobalInject<audio::IAudioEngine> audioEngine;
 
     VideoSyncClock m_clock;
     QTimer m_tick;

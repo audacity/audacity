@@ -680,3 +680,78 @@ TEST(VideoSyncClockTests, LoopRegionCanBeClearedAtRuntime)
     EXPECT_EQ(clock.onPosition(muse::secs_t(10.006), wall.advance(0.016)),
               VideoSyncClock::Response::Continue);
 }
+
+// ---------------------------------------------------------------------------
+// Report quantisation.
+//
+// The time queue consumes a fixed number of samples per record, so how coarse
+// the player's position reports are depends on the rate the stream is actually
+// running at - the negotiated device rate, not the project's nominal one.
+// Assuming 44.1 kHz on a 48 kHz stream overstates it by about 9%.
+// ---------------------------------------------------------------------------
+
+TEST(VideoSyncClockTests, GrainFollowsTheSampleRate)
+{
+    EXPECT_NEAR(VideoSyncClock::grainForSampleRate(44100.0), 480.0 / 44100.0, 1e-12);
+    EXPECT_NEAR(VideoSyncClock::grainForSampleRate(48000.0), 480.0 / 48000.0, 1e-12);
+    EXPECT_NEAR(VideoSyncClock::grainForSampleRate(96000.0), 480.0 / 96000.0, 1e-12);
+
+    // 10.9 ms against 10.0 ms.
+    EXPECT_GT(VideoSyncClock::grainForSampleRate(44100.0),
+              VideoSyncClock::grainForSampleRate(48000.0));
+}
+
+TEST(VideoSyncClockTests, GrainFallsBackWhenNoStreamHasOpened)
+{
+    // getPlaybackSampleRate() reads zero until a stream has been negotiated.
+    EXPECT_NEAR(VideoSyncClock::grainForSampleRate(0.0),
+                VideoSyncClock::grainForSampleRate(VideoSyncClock::FALLBACK_SAMPLE_RATE),
+                1e-12);
+    EXPECT_NEAR(VideoSyncClock::grainForSampleRate(-1.0),
+                VideoSyncClock::grainForSampleRate(VideoSyncClock::FALLBACK_SAMPLE_RATE),
+                1e-12);
+}
+
+TEST(VideoSyncClockTests, TheSampleRateChangesTheDeadbandAtHighFrameRates)
+{
+    VideoSyncClock clock;
+
+    // Below about 44 fps the half-frame term dominates and the grain is
+    // invisible, which is why the wrong constant went unnoticed. At 120 fps
+    // half a frame is 4.2 ms and two grains is 20-22 ms, so the grain decides.
+    VideoSyncClock::Config at441;
+    at441.grain = VideoSyncClock::grainForSampleRate(44100.0);
+    at441.frameDuration = 1.0 / 120.0;
+    clock.setConfig(at441);
+    const double deadband441 = clock.deadband();
+
+    VideoSyncClock::Config at48;
+    at48.grain = VideoSyncClock::grainForSampleRate(48000.0);
+    at48.frameDuration = 1.0 / 120.0;
+    clock.setConfig(at48);
+    const double deadband48 = clock.deadband();
+
+    EXPECT_NEAR(deadband441, 2.0 * 480.0 / 44100.0, 1e-12);
+    EXPECT_NEAR(deadband48, 2.0 * 480.0 / 48000.0, 1e-12);
+    EXPECT_GT(deadband441, deadband48)
+        << "assuming 44.1 kHz on a 48 kHz stream makes the deadband too wide";
+
+    // The size of the error the wrong constant was producing.
+    EXPECT_NEAR(deadband441 / deadband48, 48000.0 / 44100.0, 1e-9);
+}
+
+TEST(VideoSyncClockTests, TheSampleRateIsInvisibleAtOrdinaryFrameRates)
+{
+    VideoSyncClock clock;
+
+    // 25 fps: half a frame is 20 ms, two grains is 20-22 ms. They are close
+    // enough that the frame term wins at 48 kHz, which is exactly why this
+    // was harmless in practice and worth pinning rather than assuming.
+    VideoSyncClock::Config at48;
+    at48.grain = VideoSyncClock::grainForSampleRate(48000.0);
+    at48.frameDuration = 1.0 / 25.0;
+    clock.setConfig(at48);
+
+    EXPECT_NEAR(clock.deadband(), 0.5 / 25.0, 1e-12)
+        << "at 25 fps the half-frame term should still dominate";
+}

@@ -40,11 +40,27 @@ class VideoSyncClock
 public:
     using TimePoint = std::chrono::steady_clock::time_point;
 
+    //! Samples the playback time queue consumes per record, from au3's
+    //! TimeQueueGrainSize in PlaybackSchedule.h. Duplicated rather than
+    //! linked: pulling au3-audio-io into this module for one integer is not
+    //! worth the dependency.
+    static constexpr int TIME_QUEUE_GRAIN_SAMPLES = 480;
+
+    //! Rate assumed until a stream has been opened and a real one is known.
+    static constexpr double FALLBACK_SAMPLE_RATE = 44100.0;
+
+    //! Report quantisation at a given playback sample rate. Non-positive
+    //! rates fall back, which is what getPlaybackSampleRate() returns before
+    //! anything has played.
+    static double grainForSampleRate(double sampleRate);
+
     struct Config {
-        //! Quantisation of the player's position reports, in seconds. It is
-        //! the playback time queue's grain: 480 samples at the project rate,
-        //! so 10.9 ms at 44.1 kHz rather than a round 10 ms.
-        double grain = 480.0 / 44100.0;
+        //! Quantisation of the player's position reports, in seconds: the
+        //! playback time queue's grain divided by the rate the stream is
+        //! actually running at. That is the negotiated device rate, not the
+        //! project rate - AudioIO passes its own mRate to TimeQueue::Consumer,
+        //! and mRate comes from GetBestRate or the device's own current rate.
+        double grain = TIME_QUEUE_GRAIN_SAMPLES / FALLBACK_SAMPLE_RATE;
 
         //! Duration of one video frame, used to size the deadband. There is no
         //! point chasing an error smaller than half a frame.

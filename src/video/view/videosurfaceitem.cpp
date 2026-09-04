@@ -95,6 +95,14 @@ void VideoSurfaceItem::applyClockConfig()
         config.frameDuration = 1.0 / info.frameRate;
     }
 
+    // The time queue consumes a fixed number of samples per record, so how
+    // coarse the position reports are depends on the rate the stream runs at.
+    // It reads zero until something has played, and grainForSampleRate falls
+    // back for that; this is re-applied when the transport starts, by which
+    // point the rate has been negotiated.
+    config.grain = VideoSyncClock::grainForSampleRate(
+        audioEngine() != nullptr ? audioEngine()->getPlaybackSampleRate() : 0.0);
+
     m_clock.setConfig(config);
 }
 
@@ -138,6 +146,10 @@ void VideoSurfaceItem::onStatusChanged(playback::PlaybackStatus status)
     const auto state = globalContext()->playbackState();
 
     if (shouldAdvance()) {
+        // The stream rate is only known once a stream is open, so pick it up
+        // here rather than keeping the fallback for the whole session.
+        applyClockConfig();
+
         m_clock.start(state->playbackPosition(), std::chrono::steady_clock::now());
         m_tick.start();
     } else {

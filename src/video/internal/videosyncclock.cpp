@@ -25,6 +25,12 @@ double VideoSyncClock::secondsBetween(TimePoint from, TimePoint to)
     return std::chrono::duration_cast<std::chrono::duration<double> >(to - from).count();
 }
 
+double VideoSyncClock::grainForSampleRate(double sampleRate)
+{
+    const double rate = sampleRate > 0.0 ? sampleRate : FALLBACK_SAMPLE_RATE;
+    return TIME_QUEUE_GRAIN_SAMPLES / rate;
+}
+
 void VideoSyncClock::setConfig(const Config& config)
 {
     m_config = config;
