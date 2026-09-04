@@ -8080,7 +8080,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="387"/>
         <source>Effect</source>
-        <translation>Efect</translation>
+        <translation>Efecte</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="388"/>
