@@ -3,11 +3,17 @@
 */
 #include "videoservice.h"
 
+#include <cmath>
+#include <filesystem>
 #include <thread>
 
 #include "global/async/async.h"
 
+#include "au3wrap/internal/projectvideoref.h"
+#include "project/iaudacityproject.h"
+
 #include "ffmpeg/ffmpegsoftwarebackend.h"
+#include "videopathresolve.h"
 
 using namespace au::video;
 
@@ -30,6 +36,121 @@ VideoService::~VideoService()
     detach();
 }
 
+void VideoService::init()
+{
+    // A project becoming current is the point at which a saved attachment can
+    // be reopened. The project has already been loaded and its attributes
+    // parsed by the time this fires.
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        restoreFromProject();
+    });
+
+    restoreFromProject();
+}
+
+std::string VideoService::projectDirectory() const
+{
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return {};
+    }
+
+    const std::string projectFile = project->path().toStdString();
+    if (projectFile.empty()) {
+        return {};
+    }
+
+    std::error_code ec;
+    const auto dir = std::filesystem::u8path(projectFile).parent_path();
+    if (ec) {
+        return {};
+    }
+
+    const auto u8 = dir.u8string();
+    return std::string(u8.begin(), u8.end());
+}
+
+au::au3::ProjectVideoRef* VideoService::projectRef() const
+{
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return nullptr;
+    }
+
+    auto* au3Project = reinterpret_cast<AudacityProject*>(project->au3ProjectPtr());
+    if (au3Project == nullptr) {
+        return nullptr;
+    }
+
+    return &au::au3::ProjectVideoRef::Get(*au3Project);
+}
+
+void VideoService::storeInProject()
+{
+    auto* ref = projectRef();
+    if (ref == nullptr) {
+        return;
+    }
+
+    if (m_path.empty()) {
+        ref->clear();
+        return;
+    }
+
+    ref->setPath(m_path);
+    ref->setRelativePath(makeRelativeVideoPath(projectDirectory(), m_path));
+
+    const VideoStreamInfo& info = streamInfo();
+    ref->setDuration(info.duration.to_double());
+    ref->setFrameRate(info.frameRate);
+}
+
+void VideoService::restoreFromProject()
+{
+    auto* ref = projectRef();
+    if (ref == nullptr || ref->isEmpty()) {
+        return;
+    }
+
+    const std::string resolved = resolveVideoPath(
+        ref->path(), ref->relativePath(), projectDirectory(),
+        [](const std::string& candidate) {
+            return std::filesystem::exists(std::filesystem::u8path(candidate));
+        });
+
+    if (resolved.empty()) {
+        // The project opens regardless; the panel says the file is missing.
+        m_error = VideoError::FileNotFound;
+        m_attachedChanged.notify();
+        return;
+    }
+
+    const VideoError err = attach(resolved);
+    if (err != VideoError::None) {
+        return;
+    }
+
+    // A path that still resolves after the media was replaced or re-encoded
+    // is worse than one that does not, because nothing else would notice.
+    const VideoStreamInfo& info = streamInfo();
+    const double frameDuration = info.frameRate > 0.0 ? 1.0 / info.frameRate : 0.04;
+
+    m_sourceMismatch =
+        (ref->duration() > 0.0
+         && std::fabs(ref->duration() - info.duration.to_double()) > frameDuration)
+        || (ref->frameRate() > 0.0
+            && std::fabs(ref->frameRate() - info.frameRate) > 0.01);
+
+    if (m_sourceMismatch) {
+        m_attachedChanged.notify();
+    }
+}
+
+bool VideoService::sourceMismatch() const
+{
+    return m_sourceMismatch;
+}
+
 VideoError VideoService::attach(const std::string& path)
 {
     detach();
@@ -48,6 +169,7 @@ VideoError VideoService::attach(const std::string& path)
 
     m_backend = backend;
     m_path = path;
+    m_sourceMismatch = false;
 
     m_cache = std::make_unique<VideoFrameCache>(CACHE_BUDGET_BYTES);
     m_worker = std::make_unique<VideoDecodeWorker>(m_backend, m_cache.get());
@@ -65,7 +187,24 @@ VideoError VideoService::attach(const std::string& path)
         }, guiThread);
     });
 
+    // A frame that could not be produced has a reason, and the panel says it
+    // rather than showing an unexplained black rectangle.
+    m_worker->setFrameFailedCallback([this, guiThread](VideoError reason) {
+        if (reason == VideoError::None) {
+            return;
+        }
+        muse::async::Async::call(this, [this, reason]() {
+            if (m_error == reason) {
+                return;
+            }
+            m_error = reason;
+            m_attachedChanged.notify();
+        }, guiThread);
+    });
+
     m_worker->start();
+
+    storeInProject();
 
     m_attachedChanged.notify();
     return VideoError::None;
@@ -86,6 +225,11 @@ void VideoService::detach()
     m_cache.reset();
     m_path.clear();
     m_error = VideoError::None;
+    m_sourceMismatch = false;
+
+    if (auto* ref = projectRef()) {
+        ref->clear();
+    }
 
     if (had) {
         m_attachedChanged.notify();

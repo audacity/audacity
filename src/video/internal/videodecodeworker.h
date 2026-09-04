@@ -41,6 +41,11 @@ public:
     //! Called on the decode thread once a frame has been placed in the cache.
     using FrameReadyCallback = std::function<void ()>;
 
+    //! Called on the decode thread when a request produced no frame, with the
+    //! backend's reason. Without this a file the converter cannot handle is
+    //! just a black rectangle with the resolution printed under it.
+    using FrameFailedCallback = std::function<void (VideoError)>;
+
     VideoDecodeWorker(IVideoDecodeBackendPtr backend, VideoFrameCache* cache);
     ~VideoDecodeWorker();
 
@@ -48,6 +53,7 @@ public:
     VideoDecodeWorker& operator=(const VideoDecodeWorker&) = delete;
 
     void setFrameReadyCallback(FrameReadyCallback callback);
+    void setFrameFailedCallback(FrameFailedCallback callback);
 
     void start();
 
@@ -72,6 +78,7 @@ private:
     IVideoDecodeBackendPtr m_backend;
     VideoFrameCache* m_cache = nullptr;
     FrameReadyCallback m_frameReady;
+    FrameFailedCallback m_frameFailed;
 
     mutable std::mutex m_mutex;
     std::condition_variable m_wake;

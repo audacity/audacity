@@ -64,6 +64,11 @@ public:
     virtual AudacityAVColorSpace GetColorSpace() const noexcept = 0;
     virtual AudacityAVColorRange GetColorRange() const noexcept = 0;
 
+    //! Transfer function. A high dynamic range frame decoded as though it
+    //! were ordinary gamma renders at roughly half brightness, so this has to
+    //! be checked rather than assumed.
+    virtual AudacityAVColorTransfer GetColorTransfer() const noexcept = 0;
+
     virtual AudacityAVRational GetSampleAspectRatio() const noexcept = 0;
     virtual int64_t GetPresentationTimestamp() const noexcept = 0;
     virtual int64_t GetPacketPresentationTimestamp() const noexcept = 0;

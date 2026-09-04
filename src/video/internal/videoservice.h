@@ -10,6 +10,10 @@
 #include "global/async/asyncable.h"
 #include "modularity/ioc.h"
 
+#include "context/iglobalcontext.h"
+
+namespace au::au3 { class ProjectVideoRef; }
+
 #include "../ivideodecodebackend.h"
 #include "../ivideoservice.h"
 #include "videodecodeworker.h"
@@ -26,12 +30,17 @@ class VideoService : public IVideoService, public muse::async::Asyncable,
 {
 public:
     explicit VideoService(const muse::modularity::ContextPtr& ctx);
+
+    //! Subscribes to the project changing, so an attachment saved with a
+    //! project is restored when it is opened again.
+    void init();
     ~VideoService() override;
 
     VideoError attach(const std::string& path) override;
     void detach() override;
 
     bool isAttached() const override;
+    bool sourceMismatch() const override;
     std::string attachedPath() const override;
     VideoError lastError() const override;
 
@@ -46,6 +55,22 @@ public:
     muse::async::Notification frameReady() const override;
 
 private:
+    //! Reads the attachment back out of the project that has just been made
+    //! current, and tries to open it.
+    void restoreFromProject();
+
+    //! Writes the current attachment into the project so it is saved with it.
+    void storeInProject();
+
+    //! Absolute path of the directory the project lives in, or empty when it
+    //! has never been saved.
+    std::string projectDirectory() const;
+
+    //! The current project's video record, or null when there is no project.
+    au::au3::ProjectVideoRef* projectRef() const;
+
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
+
     IVideoDecodeBackendPtr m_backend;
     std::unique_ptr<VideoFrameCache> m_cache;
     std::unique_ptr<VideoDecodeWorker> m_worker;
@@ -55,6 +80,10 @@ private:
 
     muse::async::Notification m_attachedChanged;
     muse::async::Notification m_frameReady;
+
+    //! Set when the reopened file disagrees with what was recorded, which
+    //! means the path still resolves but points at different material.
+    bool m_sourceMismatch = false;
 
     static const VideoStreamInfo s_emptyInfo;
 };

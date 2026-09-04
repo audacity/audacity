@@ -156,6 +156,15 @@ enum AudacityAVColorSpace {
     AUDACITY_AVCOL_SPC_BT601,
 };
 
+//! Only the distinction that matters: whether the frame is encoded with a
+//! transfer function the converter can treat as ordinary gamma.
+enum AudacityAVColorTransfer {
+    AUDACITY_AVCOL_TRC_UNSPECIFIED = 0,
+    AUDACITY_AVCOL_TRC_SDR,
+    AUDACITY_AVCOL_TRC_SMPTE2084,   //!< PQ
+    AUDACITY_AVCOL_TRC_ARIB_STD_B67, //!< HLG
+};
+
 enum AudacityAVColorRange {
     AUDACITY_AVCOL_RANGE_UNSPECIFIED = 0,
     AUDACITY_AVCOL_RANGE_MPEG,   //!< limited, 16..235

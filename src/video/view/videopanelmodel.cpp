@@ -85,6 +85,9 @@ QString VideoPanelModel::statusText() const
         return QString();
     }
 
+    // Checked before the resolution readout, so a file that opens but cannot
+    // be displayed says why instead of showing its dimensions over a black
+    // rectangle.
     const VideoError err = videoService()->lastError();
     if (err != VideoError::None) {
         return QString::fromStdString(errorMessage(err));

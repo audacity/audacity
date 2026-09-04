@@ -24,6 +24,7 @@ enum class VideoError {
     NoVideoStream,
     NoDecoder,          //!< the codec is not in this FFmpeg build
     UnsupportedFormat,  //!< pixel format the converter does not handle yet
+    UnsupportedHdr,     //!< high dynamic range transfer function
     DecodeFailed,
 };
 

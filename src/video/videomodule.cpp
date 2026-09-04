@@ -68,6 +68,8 @@ void VideoContext::onInit(const IApplication::RunMode& mode)
     if (mode == IApplication::RunMode::AudioPluginRegistration) {
         return;
     }
+
+    m_service->init();
 }
 
 void VideoContext::onDeinit()

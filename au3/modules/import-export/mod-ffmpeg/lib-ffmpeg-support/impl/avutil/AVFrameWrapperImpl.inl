@@ -157,6 +157,29 @@ public:
       }
    }
 
+   AudacityAVColorTransfer GetColorTransfer() const noexcept override
+   {
+      if (mAVFrame == nullptr)
+         return AUDACITY_AVCOL_TRC_UNSPECIFIED;
+
+      switch (mAVFrame->color_trc)
+      {
+#if LIBAVUTIL_VERSION_MAJOR >= 55
+      // The high dynamic range transfer functions were added after 2.3.6.
+      // That build cannot decode video at all - it has no send/receive API -
+      // so this only has to compile there, not work.
+      case AVCOL_TRC_SMPTE2084:
+         return AUDACITY_AVCOL_TRC_SMPTE2084;
+      case AVCOL_TRC_ARIB_STD_B67:
+         return AUDACITY_AVCOL_TRC_ARIB_STD_B67;
+#endif
+      case AVCOL_TRC_UNSPECIFIED:
+         return AUDACITY_AVCOL_TRC_UNSPECIFIED;
+      default:
+         return AUDACITY_AVCOL_TRC_SDR;
+      }
+   }
+
    AudacityAVRational GetSampleAspectRatio() const noexcept override
    {
       if (mAVFrame != nullptr)

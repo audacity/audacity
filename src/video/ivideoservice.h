@@ -31,6 +31,12 @@ public:
     virtual void detach() = 0;
 
     virtual bool isAttached() const = 0;
+
+    //! The file that was reopened does not match what was recorded with the
+    //! project - different duration or frame rate. The path resolved, but to
+    //! different material, which is worse than not resolving at all because
+    //! nothing else would ever notice.
+    virtual bool sourceMismatch() const = 0;
     virtual std::string attachedPath() const = 0;
     virtual VideoError lastError() const = 0;
 

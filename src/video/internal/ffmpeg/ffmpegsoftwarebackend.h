@@ -39,6 +39,7 @@ public:
 
     VideoFrame frameAt(muse::secs_t time, int targetWidth, int targetHeight) override;
 
+    VideoError lastFrameError() const override;
     int64_t timeToPts(muse::secs_t time) const override;
     int64_t frameDurationPts() const override;
 
@@ -103,6 +104,7 @@ private:
     //! frame's timestamp.
     int64_t m_currentFrameDuration = 1;
     int m_seekAttempts = 0;
+    VideoError m_lastFrameError = VideoError::None;
     int m_sampleAspectNum = 0;
     int m_sampleAspectDen = 0;
     int64_t m_lastDecodedPts = 0;

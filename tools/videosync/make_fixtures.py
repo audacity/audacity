@@ -167,6 +167,32 @@ TARGETS = [
         "reference": False,
     },
     {
+        # Tagged as PQ. The backend refuses high dynamic range rather than
+        # decoding it as ordinary gamma, which puts reference white near
+        # middle grey and looks merely dark rather than obviously wrong.
+        "name": "hdr_pq.mp4",
+        "once": True,
+        "note": "tagged SMPTE 2084; must be refused, not shown dark",
+        "vargs": ["-c:v", "libx264", "-crf", "20", "-preset", "veryfast",
+                  "-color_trc", "smpte2084", "-colorspace", "bt2020nc",
+                  "-color_primaries", "bt2020"],
+        "aargs": ["-c:a", "aac", "-b:a", "128k"],
+        "muxargs": [],
+        "reference": False,
+    },
+    {
+        # 4:2:2 chroma, which the converter does not handle. Without this the
+        # only test of the unsupported-format path is a synthetic one.
+        "name": "yuv422.mp4",
+        "once": True,
+        "note": "yuv422p; must report an unsupported pixel format",
+        "vargs": ["-c:v", "libx264", "-crf", "20", "-preset", "veryfast",
+                  "-pix_fmt", "yuv422p"],
+        "aargs": ["-c:a", "aac", "-b:a", "128k"],
+        "muxargs": [],
+        "reference": False,
+    },
+    {
         # A plain MP4 out of ffmpeg reports start_pts 0 because libavformat
         # applies the edit list that carries the AAC priming, so the importer
         # bug never fires on it. Forcing a container offset produces the MP4
@@ -238,7 +264,7 @@ def build(args):
         "clips": [],
     }
 
-    for fps_str in args.fps:
+    for clipIndex, fps_str in enumerate(args.fps):
         fps = Fraction(fps_str)
         tag = fps_str.replace("/", "_").replace(".", "p")
         total_frames = int(round(args.duration * float(fps)))
@@ -263,6 +289,11 @@ def build(args):
         }
 
         for target in TARGETS:
+            # Format fixtures describe a pixel format or a transfer function,
+            # not a frame rate, so one copy is enough.
+            if target.get("once") and clipIndex > 0:
+                continue
+
             name = target["name"].format(tag=tag)
             path = os.path.join(outdir, name)
             cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error",

@@ -102,7 +102,10 @@ TEST(FFmpegSoftwareBackendTests, ReportsAMissingFileRatherThanCrashing)
     if (err == VideoError::FFmpegNotFound) {
         GTEST_SKIP() << "No usable FFmpeg on this machine";
     }
-    EXPECT_EQ(err, VideoError::CannotOpen);
+
+    // Specifically missing, not merely unopenable: a project whose media has
+    // moved needs to be distinguishable from a corrupt file.
+    EXPECT_EQ(err, VideoError::FileNotFound);
     EXPECT_FALSE(backend.isOpen());
 }
 
@@ -756,4 +759,77 @@ TEST(FFmpegSoftwareBackendTests, ReopeningTheSameBackendWorks)
         EXPECT_NEAR(frame.time.to_double(), 2.0, 1.0 / FPS)
             << name << " on cycle " << i;
     }
+}
+
+// ---------------------------------------------------------------------------
+// Saying why there is no picture.
+//
+// A file the converter cannot handle used to come back as a black rectangle
+// with its resolution printed underneath and no error anywhere: the converter
+// returned a null image, the worker dropped the frame, and nothing recorded a
+// reason.
+// ---------------------------------------------------------------------------
+
+TEST(FFmpegSoftwareBackendTests, StartsWithNoFrameError)
+{
+    FFmpegSoftwareBackend backend;
+    EXPECT_EQ(backend.lastFrameError(), VideoError::None);
+}
+
+TEST(FFmpegSoftwareBackendTests, AnUnsupportedPixelFormatSaysSo)
+{
+    REQUIRE_FIXTURE("yuv422.mp4");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "yuv422.mp4");
+
+    const VideoFrame frame = backend.frameAt(1.0, 320, 180);
+
+    EXPECT_FALSE(frame.valid()) << "4:2:2 is not handled yet";
+    EXPECT_EQ(backend.lastFrameError(), VideoError::UnsupportedFormat)
+        << "the panel has to be able to say why it is blank";
+}
+
+TEST(FFmpegSoftwareBackendTests, HdrIsRefusedRatherThanShownWrong)
+{
+    REQUIRE_FIXTURE("hdr_pq.mp4");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "hdr_pq.mp4");
+
+    // Decoded as though it were ordinary gamma, reference white lands near
+    // middle grey. That looks merely dark rather than obviously broken, which
+    // is worse than refusing it.
+    const VideoFrame frame = backend.frameAt(1.0, 320, 180);
+
+    EXPECT_FALSE(frame.valid());
+    EXPECT_EQ(backend.lastFrameError(), VideoError::UnsupportedHdr);
+}
+
+TEST(FFmpegSoftwareBackendTests, OrdinaryFilesReportNoFrameError)
+{
+    REQUIRE_FIXTURE("sync25.mkv");
+
+    FFmpegSoftwareBackend backend;
+    REQUIRE_OPENED(backend, "sync25.mkv");
+
+    // No false positives: ten consecutive frames, all fine.
+    for (int i = 0; i < 10; ++i) {
+        const VideoFrame frame = backend.frameAt(0.5 + i * 0.4, 320, 180);
+        ASSERT_TRUE(frame.valid()) << "frame " << i;
+        EXPECT_EQ(backend.lastFrameError(), VideoError::None) << "frame " << i;
+    }
+}
+
+TEST(FFmpegSoftwareBackendTests, AMissingFileIsReportedAsMissing)
+{
+    FFmpegSoftwareBackend backend;
+    const VideoError err = backend.open(fixture("definitely-not-here.mkv"));
+    if (err == VideoError::FFmpegNotFound) {
+        GTEST_SKIP() << "No usable FFmpeg on this machine";
+    }
+
+    // Distinguishable from a file that exists but cannot be decoded, which is
+    // what any later relocate flow needs.
+    EXPECT_EQ(err, VideoError::FileNotFound);
 }

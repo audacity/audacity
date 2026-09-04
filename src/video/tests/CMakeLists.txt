@@ -10,6 +10,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/pixelconvert_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/videosyncclock_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/videoframecache_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/videopathresolve_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/videodecodeworker_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ffmpegsoftwarebackend_tests.cpp
     )

@@ -23,6 +23,12 @@ void VideoDecodeWorker::setFrameReadyCallback(FrameReadyCallback callback)
     m_frameReady = std::move(callback);
 }
 
+void VideoDecodeWorker::setFrameFailedCallback(FrameFailedCallback callback)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_frameFailed = std::move(callback);
+}
+
 void VideoDecodeWorker::start()
 {
     if (m_running.load()) {
@@ -87,6 +93,7 @@ void VideoDecodeWorker::run()
     while (true) {
         Request current;
         FrameReadyCallback callback;
+        FrameFailedCallback failed;
 
         {
             std::unique_lock<std::mutex> lock(m_mutex);
@@ -99,6 +106,7 @@ void VideoDecodeWorker::run()
             current = m_pending;
             m_havePending = false;
             callback = m_frameReady;
+            failed = m_frameFailed;
         }
 
         // Decoding happens with the lock released, so a request arriving
@@ -109,6 +117,11 @@ void VideoDecodeWorker::run()
         m_served.fetch_add(1);
 
         if (!frame.valid()) {
+            // Report why. Silently dropping this is what turns an unsupported
+            // file into a black rectangle with no explanation.
+            if (failed) {
+                failed(m_backend->lastFrameError());
+            }
             continue;
         }
 

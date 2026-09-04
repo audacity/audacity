@@ -296,11 +296,17 @@ static void compareWithSwscale(const AVFrame* f, const YuvCoeffs& coeffs,
         f->colorspace == AVCOL_SPC_UNSPECIFIED
             ? (f->height > 576 ? SWS_CS_ITU709 : SWS_CS_ITU601)
             : f->colorspace);
-    int srcRange, dstRange, brightness, contrast, saturation;
-    const int* inv;
-    sws_getColorspaceDetails(sws, const_cast<int**>(&inv), &srcRange,
-                             const_cast<int**>(&table), &dstRange,
+    // Read the current settings into scratch variables. Passing `table` as the
+    // out-param here would overwrite it with swscale's default matrix and
+    // throw away what sws_getCoefficients just returned, which scores every
+    // BT.709 clip against a BT.601 reference.
+    int srcRange = 0, dstRange = 0, brightness = 0, contrast = 0, saturation = 0;
+    int* currentInv = nullptr;
+    int* currentTable = nullptr;
+    sws_getColorspaceDetails(sws, &currentInv, &srcRange,
+                             &currentTable, &dstRange,
                              &brightness, &contrast, &saturation);
+
     sws_setColorspaceDetails(sws, table,
                              f->color_range == AVCOL_RANGE_JPEG ? 1 : 0,
                              table, 1, brightness, contrast, saturation);

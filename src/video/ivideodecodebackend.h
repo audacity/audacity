@@ -39,6 +39,10 @@ public:
     //! decoding at logical size renders at half resolution on a 2x display.
     virtual VideoFrame frameAt(muse::secs_t time, int targetWidth, int targetHeight) = 0;
 
+    //! Why the most recent frameAt() produced nothing. None when it
+    //! succeeded, or when it failed for a reason already reported by open().
+    virtual VideoError lastFrameError() const = 0;
+
     //! Content-relative time to a timestamp on the video stream's timeline.
     //! Reads only state fixed at open(), so unlike frameAt() it is safe to
     //! call from another thread while the decoder is working.

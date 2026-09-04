@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <filesystem>
 
 #include <wx/string.h>
 
@@ -47,6 +48,11 @@ const VideoStreamInfo& FFmpegSoftwareBackend::streamInfo() const
     return m_info;
 }
 
+VideoError FFmpegSoftwareBackend::lastFrameError() const
+{
+    return m_lastFrameError;
+}
+
 int64_t FFmpegSoftwareBackend::timeToPts(muse::secs_t time) const
 {
     return toPts(time);
@@ -65,6 +71,8 @@ void FFmpegSoftwareBackend::close()
     m_format.reset();
     m_info = VideoStreamInfo();
     m_haveFrame = false;
+    m_haveLookahead = false;
+    m_lastFrameError = VideoError::None;
     m_open = false;
 }
 
@@ -80,6 +88,13 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
     m_format = m_ffmpeg->CreateAVFormatContext();
     if (!m_format) {
         return VideoError::FFmpegNotFound;
+    }
+
+    // Distinguish a file that is not there from one that cannot be decoded.
+    // Without this both arrive as CannotOpen, and a project whose media has
+    // moved is indistinguishable from a corrupt file.
+    if (!std::filesystem::exists(std::filesystem::u8path(path))) {
+        return VideoError::FileNotFound;
     }
 
     const wxString wxPath = wxString::FromUTF8(path.c_str());
@@ -444,11 +459,14 @@ VideoFrame FFmpegSoftwareBackend::frameAt(muse::secs_t time,
                                           int targetWidth, int targetHeight)
 {
     VideoFrame result;
+    m_lastFrameError = VideoError::None;
+
     if (!m_open || targetWidth <= 0 || targetHeight <= 0) {
         return result;
     }
 
     if (!seekAndDecode(toPts(time))) {
+        m_lastFrameError = VideoError::DecodeFailed;
         return result;
     }
 
@@ -462,6 +480,23 @@ VideoFrame FFmpegSoftwareBackend::frameAt(muse::secs_t time,
     const int srcWidth = m_frame->GetWidth();
     const int srcHeight = m_frame->GetHeight();
     if (srcWidth <= 0 || srcHeight <= 0) {
+        m_lastFrameError = VideoError::DecodeFailed;
+        return result;
+    }
+
+    // A high dynamic range frame decoded as though it were ordinary gamma
+    // renders at roughly half brightness - reference white lands on middle
+    // grey - and looks merely dark rather than obviously broken. Refuse it
+    // and say so instead of showing something quietly wrong.
+    const AudacityAVColorTransfer transfer = m_frame->GetColorTransfer();
+    if (transfer == AUDACITY_AVCOL_TRC_SMPTE2084
+        || transfer == AUDACITY_AVCOL_TRC_ARIB_STD_B67) {
+        m_lastFrameError = VideoError::UnsupportedHdr;
+        return result;
+    }
+
+    if (!isSupportedPixelFormat(m_frame->GetPixelFormat())) {
+        m_lastFrameError = VideoError::UnsupportedFormat;
         return result;
     }
 
@@ -486,6 +521,11 @@ VideoFrame FFmpegSoftwareBackend::frameAt(muse::secs_t time,
                                  m_frame->GetPixelFormat(),
                                  m_frame->GetColorSpace(),
                                  m_frame->GetColorRange());
+    if (result.image.isNull()) {
+        m_lastFrameError = VideoError::UnsupportedFormat;
+        return result;
+    }
+
     result.pts = m_lastDecodedPts;
     result.time = toContentSeconds(m_lastDecodedPts);
 

@@ -23,7 +23,9 @@ std::string errorMessage(VideoError err)
     case VideoError::NoDecoder:
         return "This FFmpeg build cannot decode this video codec";
     case VideoError::UnsupportedFormat:
-        return "Unsupported pixel format";
+        return "This video uses a pixel format that is not supported yet";
+    case VideoError::UnsupportedHdr:
+        return "HDR video is not supported yet";
     case VideoError::DecodeFailed:
         return "Could not decode this video";
     }

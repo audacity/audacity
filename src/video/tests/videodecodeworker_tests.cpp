@@ -26,6 +26,9 @@ public:
     const VideoStreamInfo& streamInfo() const override { return m_info; }
     int64_t frameDurationPts() const override { return 40; }
 
+    VideoError lastFrameError() const override { return m_frameError.load(); }
+    void setFrameError(VideoError err) { m_frameError.store(err); }
+
     //! Milliseconds, matching the pts the fake frames carry.
     int64_t timeToPts(muse::secs_t time) const override
     {
@@ -70,6 +73,7 @@ private:
     VideoStreamInfo m_info;
     std::chrono::milliseconds m_delay { 0 };
     std::atomic<bool> m_failing { false };
+    std::atomic<VideoError> m_frameError { VideoError::None };
     std::atomic<int> m_calls { 0 };
     std::atomic<int> m_lastWidth { 0 };
     std::atomic<int> m_lastHeight { 0 };
@@ -391,4 +395,53 @@ TEST(VideoDecodeWorkerTests, SurvivesAFloodOfRequests)
     EXPECT_LT(backend->calls(), 2000)
         << "the point of latest-wins is that most of these never run";
     EXPECT_LE(cache.sizeBytes(), cache.byteBudget());
+}
+
+TEST(VideoDecodeWorkerTests, ReportsWhyAFrameCouldNotBeProduced)
+{
+    auto backend = std::make_shared<FakeBackend>();
+    backend->setFailing(true);
+    backend->setFrameError(VideoError::UnsupportedFormat);
+
+    VideoFrameCache cache;
+    VideoDecodeWorker worker(backend, &cache);
+
+    std::atomic<int> failures { 0 };
+    std::atomic<VideoError> reported { VideoError::None };
+    worker.setFrameFailedCallback([&](VideoError err) {
+        reported.store(err);
+        failures.fetch_add(1);
+    });
+
+    worker.start();
+    worker.request(requestAt(1.0));
+
+    // Silently dropping this is what turns an unsupported file into a black
+    // rectangle with the resolution printed under it and no explanation.
+    ASSERT_TRUE(waitFor([&failures]() { return failures.load() > 0; }));
+    EXPECT_EQ(reported.load(), VideoError::UnsupportedFormat);
+    EXPECT_EQ(cache.count(), 0u);
+
+    worker.stop();
+}
+
+TEST(VideoDecodeWorkerTests, DoesNotReportFailureWhenAFrameArrives)
+{
+    auto backend = std::make_shared<FakeBackend>();
+    VideoFrameCache cache;
+    VideoDecodeWorker worker(backend, &cache);
+
+    std::atomic<int> failures { 0 };
+    std::atomic<int> ready { 0 };
+    worker.setFrameFailedCallback([&failures](VideoError) { failures.fetch_add(1); });
+    worker.setFrameReadyCallback([&ready]() { ready.fetch_add(1); });
+
+    worker.start();
+    worker.request(requestAt(1.0));
+
+    ASSERT_TRUE(waitFor([&ready]() { return ready.load() > 0; }));
+    std::this_thread::sleep_for(50ms);
+    EXPECT_EQ(failures.load(), 0);
+
+    worker.stop();
 }
