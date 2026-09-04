@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
 #include "modularity/ioc.h"
+#include "playback/iplaybackcontroller.h"
 #include "playback/playbacktypes.h"
 
 #include "../internal/videosyncclock.h"
@@ -65,6 +66,7 @@ private:
     void onStatusChanged(playback::PlaybackStatus status);
     void onRecordingChanged();
     void onTick();
+    void applyLoopRegion();
 
     void refreshNow();
     void showFrameFor(muse::secs_t time, bool requestDecode);
@@ -80,6 +82,10 @@ private:
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
     muse::ContextInject<IVideoService> videoService { this };
+
+    //! Only for the loop region. Transport commands go through the action
+    //! dispatcher, never straight to the controller.
+    muse::ContextInject<playback::IPlaybackController> playbackController { this };
 
     VideoSyncClock m_clock;
     QTimer m_tick;

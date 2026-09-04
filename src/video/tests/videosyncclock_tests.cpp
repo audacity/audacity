@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <cmath>
 
 #include "internal/videosyncclock.h"
 
@@ -248,20 +249,6 @@ TEST(VideoSyncClockTests, HardResyncBackwardsForALoopWrap)
     EXPECT_NEAR(clock.position(now).to_double(), 10.0, 1e-6);
 }
 
-TEST(VideoSyncClockTests, ExplicitReanchorResetsEverything)
-{
-    VideoSyncClock clock;
-    clock.setConfig(config25fps());
-    FakeWall wall;
-
-    clock.start(muse::secs_t(0.0), wall.now());
-    playFor(clock, wall, 20.0, 0.0, 1.002);
-
-    clock.notifyReanchor(muse::secs_t(3.0), wall.now());
-    EXPECT_NEAR(clock.position(wall.now()).to_double(), 3.0, 1e-6);
-    EXPECT_DOUBLE_EQ(clock.rateRatio(), 1.0);
-}
-
 // ---------------------------------------------------------------------------
 // Rate estimation. The sound card and the CPU clock are independent, and the
 // difference only shows up over minutes.
@@ -436,4 +423,260 @@ TEST(VideoSyncClockTests, DeadbandFollowsTheSlowerOfGrainAndFrameRate)
     coarseGrain.frameDuration = 1.0 / 50.0;
     clock.setConfig(coarseGrain);
     EXPECT_NEAR(clock.deadband(), 0.12, 1e-9) << "two grains dominate";
+}
+
+// ---------------------------------------------------------------------------
+// Loops.
+//
+// A loop longer than the hard resync threshold wraps by more than that
+// threshold, and the existing branch already handles it. A shorter one wraps
+// by less, so the correction falls into the slew branch, where the monotonic
+// guard clamps it forward and the estimate can never move back. That is the
+// case these cover.
+// ---------------------------------------------------------------------------
+
+namespace {
+VideoSyncClock::LoopRegion loop(double start, double end, bool active = true)
+{
+    VideoSyncClock::LoopRegion region;
+    region.start = start;
+    region.end = end;
+    region.active = active;
+    return region;
+}
+
+//! Plays from the loop start to near its end, then returns the clock's
+//! estimate just before the wrap report arrives.
+double playToLoopEnd(VideoSyncClock& clock, FakeWall& wall, double start, double end)
+{
+    clock.start(muse::secs_t(start), wall.now());
+    playFor(clock, wall, (end - start) * 0.9, start);
+    return clock.position(wall.now()).to_double();
+}
+}
+
+TEST(VideoSyncClockTests, ShortLoopWrapReanchors)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(10.0, 10.1));
+    FakeWall wall;
+
+    playToLoopEnd(clock, wall, 10.0, 10.1);
+
+    const TimePoint now = wall.advance(0.016);
+    EXPECT_EQ(clock.onPosition(muse::secs_t(10.006), now),
+              VideoSyncClock::Response::Reanchored);
+    EXPECT_NEAR(clock.position(now).to_double(), 10.006, 1e-6);
+}
+
+TEST(VideoSyncClockTests, ShortLoopWrapBeatsTheMonotonicGuard)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(10.0, 10.1));
+    FakeWall wall;
+
+    const double before = playToLoopEnd(clock, wall, 10.0, 10.1);
+
+    const TimePoint now = wall.advance(0.016);
+    clock.onPosition(muse::secs_t(10.006), now);
+
+    // The whole point: the estimate has to be allowed back to the loop start.
+    EXPECT_LT(clock.position(now).to_double(), before);
+}
+
+TEST(VideoSyncClockTests, WithoutALoopRegionTheSameJumpIsSwallowed)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    FakeWall wall;
+
+    // Identical sequence with no loop set. This pins the behaviour the loop
+    // branch exists to fix: the jump is too small for the hard resync, so the
+    // monotonic guard holds the estimate forward.
+    const double before = playToLoopEnd(clock, wall, 10.0, 10.1);
+
+    const TimePoint now = wall.advance(0.016);
+    EXPECT_EQ(clock.onPosition(muse::secs_t(10.006), now),
+              VideoSyncClock::Response::Continue);
+    EXPECT_GE(clock.position(now).to_double(), before);
+}
+
+TEST(VideoSyncClockTests, InactiveLoopRegionIsIgnored)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(10.0, 10.1, false));
+    FakeWall wall;
+
+    playToLoopEnd(clock, wall, 10.0, 10.1);
+
+    const TimePoint now = wall.advance(0.016);
+    EXPECT_EQ(clock.onPosition(muse::secs_t(10.006), now),
+              VideoSyncClock::Response::Continue);
+}
+
+TEST(VideoSyncClockTests, LongLoopIsLeftToTheHardResync)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(10.0, 15.0));
+    FakeWall wall;
+
+    clock.start(muse::secs_t(10.0), wall.now());
+    playFor(clock, wall, 1.0, 10.0);
+
+    // Small backwards jitter inside a long loop is jitter, not a wrap; a real
+    // wrap here would exceed the hard resync threshold and take that branch.
+    const TimePoint now = wall.advance(0.016);
+    const double predicted = clock.position(now).to_double();
+    EXPECT_EQ(clock.onPosition(muse::secs_t(predicted - 0.030), now),
+              VideoSyncClock::Response::Continue);
+}
+
+TEST(VideoSyncClockTests, NegativeJitterInsideAShortLoopIsNotAWrap)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(10.0, 10.1));
+    FakeWall wall;
+
+    clock.start(muse::secs_t(10.0), wall.now());
+    playFor(clock, wall, 0.05, 10.0);
+
+    // 25 ms back is outside the deadband but well under half the loop, so it
+    // is jitter. Without the length-relative test this would be a false wrap.
+    const TimePoint now = wall.advance(0.016);
+    const double predicted = clock.position(now).to_double();
+    EXPECT_EQ(clock.onPosition(muse::secs_t(predicted - 0.025), now),
+              VideoSyncClock::Response::Continue);
+}
+
+TEST(VideoSyncClockTests, JitterInsideTheDeadbandIsNeverAWrap)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(10.0, 10.1));
+    FakeWall wall;
+
+    clock.start(muse::secs_t(10.0), wall.now());
+    playFor(clock, wall, 0.05, 10.0);
+
+    const TimePoint now = wall.advance(0.016);
+    const double predicted = clock.position(now).to_double();
+    EXPECT_EQ(clock.onPosition(muse::secs_t(predicted - 0.015), now),
+              VideoSyncClock::Response::Continue);
+}
+
+TEST(VideoSyncClockTests, ReportOutsideTheLoopIsNotAWrap)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    // A shorter loop, so a jump that lands outside it is still small enough
+    // to reach this branch rather than being claimed by the hard resync.
+    clock.setLoopRegion(loop(10.0, 10.06));
+    FakeWall wall;
+
+    playToLoopEnd(clock, wall, 10.0, 10.06);
+
+    // Landing before the loop start is a seek out of the loop, not a wrap.
+    const TimePoint now = wall.advance(0.016);
+    const double predicted = clock.position(now).to_double();
+    ASSERT_LT(std::abs(9.97 - predicted), 0.15) << "must not trip the hard resync";
+
+    EXPECT_EQ(clock.onPosition(muse::secs_t(9.97), now),
+              VideoSyncClock::Response::Continue);
+}
+
+TEST(VideoSyncClockTests, ReversedLoopBoundsAreIgnored)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    // A real intermediate state while dragging a loop bar right to left.
+    clock.setLoopRegion(loop(10.1, 10.0));
+    FakeWall wall;
+
+    clock.start(muse::secs_t(10.0), wall.now());
+    playFor(clock, wall, 0.09, 10.0);
+
+    const TimePoint now = wall.advance(0.016);
+    EXPECT_EQ(clock.onPosition(muse::secs_t(10.006), now),
+              VideoSyncClock::Response::Continue);
+}
+
+TEST(VideoSyncClockTests, ClearedLoopRegionIsIgnored)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(0.0, 0.0));
+    FakeWall wall;
+
+    clock.start(muse::secs_t(10.0), wall.now());
+    playFor(clock, wall, 0.09, 10.0);
+
+    const TimePoint now = wall.advance(0.016);
+    EXPECT_EQ(clock.onPosition(muse::secs_t(10.006), now),
+              VideoSyncClock::Response::Continue);
+}
+
+TEST(VideoSyncClockTests, WrapDiscardsTheRateEstimate)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    FakeWall wall;
+
+    // Learn a rate first, over a long stretch with no loop in the way.
+    clock.start(muse::secs_t(0.0), wall.now());
+    playFor(clock, wall, 60.0, 0.0, 1.002);
+    ASSERT_GT(clock.rateRatio(), 1.0);
+
+    clock.setLoopRegion(loop(10.0, 10.1));
+    clock.start(muse::secs_t(10.0), wall.now());
+    playFor(clock, wall, 0.09, 10.0);
+
+    const TimePoint now = wall.advance(0.016);
+    ASSERT_EQ(clock.onPosition(muse::secs_t(10.006), now),
+              VideoSyncClock::Response::Reanchored);
+    EXPECT_DOUBLE_EQ(clock.rateRatio(), 1.0);
+}
+
+TEST(VideoSyncClockTests, WrapStillReportsItsMagnitude)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(10.0, 10.1));
+    FakeWall wall;
+
+    const double before = playToLoopEnd(clock, wall, 10.0, 10.1);
+
+    const TimePoint now = wall.advance(0.016);
+    const double predicted = clock.position(now).to_double();
+    ASSERT_EQ(clock.onPosition(muse::secs_t(10.006), now),
+              VideoSyncClock::Response::Reanchored);
+
+    // The published drift has to keep showing the wrap rather than hiding it.
+    EXPECT_NEAR(clock.lastError().to_double(), 10.006 - predicted, 1e-6);
+    EXPECT_LT(clock.lastError().to_double(), 0.0);
+    EXPECT_GT(before, 10.0);
+}
+
+TEST(VideoSyncClockTests, LoopRegionCanBeClearedAtRuntime)
+{
+    VideoSyncClock clock;
+    clock.setConfig(config25fps());
+    clock.setLoopRegion(loop(10.0, 10.1));
+    FakeWall wall;
+
+    playToLoopEnd(clock, wall, 10.0, 10.1);
+    ASSERT_EQ(clock.onPosition(muse::secs_t(10.006), wall.advance(0.016)),
+              VideoSyncClock::Response::Reanchored);
+
+    // Turning looping off has to stop the detection immediately.
+    clock.setLoopRegion(VideoSyncClock::LoopRegion());
+    EXPECT_FALSE(clock.loopRegion().usable());
+
+    playFor(clock, wall, 0.09, 10.006);
+    EXPECT_EQ(clock.onPosition(muse::secs_t(10.006), wall.advance(0.016)),
+              VideoSyncClock::Response::Continue);
 }

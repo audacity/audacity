@@ -55,6 +55,11 @@ void VideoSurfaceItem::componentComplete()
     globalContext()->isRecordingChanged().onNotify(
         this, [this]() { onRecordingChanged(); });
 
+    // One notification covers both the geometry and the enabled flag, so both
+    // are re-read every time rather than tracked separately.
+    playbackController()->loopRegionChanged().onNotify(
+        this, [this]() { applyLoopRegion(); });
+
     videoService()->attachedChanged().onNotify(this, [this]() {
         applyClockConfig();
         m_haveShown = false;
@@ -72,6 +77,10 @@ void VideoSurfaceItem::componentComplete()
     connect(this, &QQuickItem::widthChanged, this, refresh);
     connect(this, &QQuickItem::heightChanged, this, refresh);
 
+    // Seed it now: the notification only fires on a change, so waiting for
+    // one would leave the clock loop-blind until the user touched the region.
+    applyLoopRegion();
+
     m_clock.stop(state->playbackPosition());
     onStatusChanged(state->playbackStatus());
     refreshNow();
@@ -87,6 +96,22 @@ void VideoSurfaceItem::applyClockConfig()
     }
 
     m_clock.setConfig(config);
+}
+
+void VideoSurfaceItem::applyLoopRegion()
+{
+    VideoSyncClock::LoopRegion loop;
+
+    // isLoopRegionActive() is asked first, and not only for readability: it
+    // tolerates there being no current project, where loopRegion() does not.
+    loop.active = playbackController()->isLoopRegionActive();
+    if (loop.active) {
+        const playback::PlaybackRegion region = playbackController()->loopRegion();
+        loop.start = region.start.to_double();
+        loop.end = region.end.to_double();
+    }
+
+    m_clock.setLoopRegion(loop);
 }
 
 bool VideoSurfaceItem::shouldAdvance() const

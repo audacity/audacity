@@ -69,14 +69,43 @@ void VideoSyncClock::stop(muse::secs_t reported)
     invalidateRateReference();
 }
 
-void VideoSyncClock::notifyReanchor(muse::secs_t reported, TimePoint wall)
+void VideoSyncClock::setLoopRegion(const LoopRegion& loop)
 {
-    hardAnchor(reported, wall);
-    m_ratio = 1.0;
-    m_lastError = 0.0;
-    m_lastEventWall = wall;
-    m_haveEvent = true;
-    invalidateRateReference();
+    m_loop = loop;
+}
+
+bool VideoSyncClock::looksLikeLoopWrap(double reported, double error) const
+{
+    if (!m_loop.usable()) {
+        return false;
+    }
+
+    const double length = m_loop.length();
+
+    // Longer loops wrap by more than the hard resync threshold, and that
+    // branch already does exactly this. Claiming them here would only be a
+    // second route to the same place.
+    if (length >= m_config.hardResync) {
+        return false;
+    }
+
+    // Backwards, and by more than the reports' own quantisation.
+    if (error >= -deadband()) {
+        return false;
+    }
+
+    // A wrap steps back by roughly the loop length: the estimate was near the
+    // loop end and the report is near its start. Scaling the test to the loop
+    // rather than using a fixed window is what stops this degenerating into
+    // "any backwards jitter is a wrap" on exactly the short loops it exists
+    // to serve.
+    if (-error < 0.5 * length) {
+        return false;
+    }
+
+    // And the report has to be inside the loop. One grain of slack below the
+    // start, because the reported value is a quantised queue record.
+    return reported >= m_loop.start - m_config.grain && reported <= m_loop.end;
 }
 
 VideoSyncClock::Response VideoSyncClock::onPosition(muse::secs_t reported, TimePoint wall)
@@ -111,8 +140,23 @@ VideoSyncClock::Response VideoSyncClock::onPosition(muse::secs_t reported, TimeP
     m_lastError = muse::secs_t(error);
 
     if (std::fabs(error) > m_config.hardResync) {
-        // A seek while playing, a loop wrap, or the audio stream being torn
-        // down and rebuilt for a device change.
+        // A seek while playing, a long loop wrapping, or the audio stream
+        // being torn down and rebuilt for a device change.
+        hardAnchor(reported, wall);
+        m_ratio = 1.0;
+        invalidateRateReference();
+        return Response::Reanchored;
+    }
+
+    if (looksLikeLoopWrap(reported.to_double(), error)) {
+        // Short loops wrap by less than the threshold above, so without this
+        // the correction falls into the slew branch, where the monotonic
+        // guard clamps it forward and the estimate can never move back. The
+        // picture would run past the loop end and saw back once the error
+        // finally grew past the threshold, over and over.
+        //
+        // m_lastError keeps the real magnitude, so the published drift still
+        // shows the wrap rather than hiding it.
         hardAnchor(reported, wall);
         m_ratio = 1.0;
         invalidateRateReference();

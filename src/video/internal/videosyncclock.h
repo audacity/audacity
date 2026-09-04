@@ -65,6 +65,20 @@ public:
         double rateWindow = 5.0;
     };
 
+    //! The loop region, pushed in by the owner rather than read from a
+    //! service, so the clock stays testable without a running application.
+    struct LoopRegion {
+        double start = 0.0;
+        double end = 0.0;
+        bool active = false;
+
+        double length() const { return end - start; }
+
+        //! Reversed bounds are a real intermediate state while a loop bar is
+        //! being dragged, and a cleared region reads back as {0, 0}.
+        bool usable() const { return active && end > start; }
+    };
+
     //! What the caller should do after a position report.
     enum class Response {
         Continue,     //!< keep interpolating; no decode needed beyond the usual
@@ -85,8 +99,11 @@ public:
     //! Feed a position report from the player.
     Response onPosition(muse::secs_t reported, TimePoint wall);
 
-    //! Tell the clock a loop wrapped, so a large backwards jump is expected.
-    void notifyReanchor(muse::secs_t reported, TimePoint wall);
+    //! Tells the clock where the loop is, so it can recognise a wrap that is
+    //! too small to trip the hard resync threshold. Safe to call often; the
+    //! notification behind it fires at mouse-move rate during a drag.
+    void setLoopRegion(const LoopRegion& loop);
+    const LoopRegion& loopRegion() const { return m_loop; }
 
     //! Current estimate. Monotonic while advancing.
     muse::secs_t position(TimePoint wall) const;
@@ -108,12 +125,18 @@ public:
     double deadband() const;
 
 private:
+    //! A short loop wraps by less than the hard resync threshold, so that
+    //! branch does not fire, and the slew branch clamps corrections forward -
+    //! the estimate would run past the loop end and saw back later.
+    bool looksLikeLoopWrap(double reported, double error) const;
+
     void hardAnchor(muse::secs_t reported, TimePoint wall);
     void invalidateRateReference();
     void updateRateEstimate(muse::secs_t reported, TimePoint wall);
     static double secondsBetween(TimePoint from, TimePoint to);
 
     Config m_config;
+    LoopRegion m_loop;
 
     bool m_advancing = false;
     double m_anchorProject = 0.0;
