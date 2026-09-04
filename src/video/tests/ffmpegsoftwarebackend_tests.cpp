@@ -705,3 +705,55 @@ TEST(FFmpegSoftwareBackendTests, SeekingBeforeTheStartTerminates)
     EXPECT_LT(elapsed, 2.0) << "took " << elapsed << " s to give up";
     EXPECT_LE(backend.seekAttempts(), 5);
 }
+
+// ---------------------------------------------------------------------------
+// Repeated open and close. Attaching one file after another is an ordinary
+// thing to do, and every open used to leak the demuxer's internal state -
+// around 0.9 MB for Matroska and MP4, far more for MPEG-TS.
+// ---------------------------------------------------------------------------
+
+TEST(FFmpegSoftwareBackendTests, SurvivesManyOpenCloseCycles)
+{
+    REQUIRE_FIXTURE("sync25.mkv");
+
+    for (int i = 0; i < 40; ++i) {
+        FFmpegSoftwareBackend backend;
+        const VideoError err = backend.open(fixture("sync25.mkv"));
+        if (err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld) {
+            GTEST_SKIP() << "No usable FFmpeg on this machine";
+        }
+        ASSERT_EQ(err, VideoError::None) << "cycle " << i << ": " << errorMessage(err);
+
+        // Decode something so the demuxer actually allocates its state.
+        const VideoFrame frame = backend.frameAt(1.0 + i * 0.1, 160, 90);
+        EXPECT_TRUE(frame.valid()) << "cycle " << i;
+
+        backend.close();
+        EXPECT_FALSE(backend.isOpen());
+    }
+}
+
+TEST(FFmpegSoftwareBackendTests, ReopeningTheSameBackendWorks)
+{
+    REQUIRE_FIXTURE("sync25.mkv");
+    REQUIRE_FIXTURE("sync25.ts");
+
+    FFmpegSoftwareBackend backend;
+
+    // Alternating containers exercises both teardown paths and makes sure no
+    // state survives from the previous file.
+    for (int i = 0; i < 6; ++i) {
+        const char* name = (i % 2 == 0) ? "sync25.mkv" : "sync25.ts";
+
+        const VideoError err = backend.open(fixture(name));
+        if (err == VideoError::FFmpegNotFound || err == VideoError::FFmpegTooOld) {
+            GTEST_SKIP() << "No usable FFmpeg on this machine";
+        }
+        ASSERT_EQ(err, VideoError::None) << name << " on cycle " << i;
+
+        const VideoFrame frame = backend.frameAt(2.0 + 0.5 / FPS, 160, 90);
+        ASSERT_TRUE(frame.valid()) << name << " on cycle " << i;
+        EXPECT_NEAR(frame.time.to_double(), 2.0, 1.0 / FPS)
+            << name << " on cycle " << i;
+    }
+}

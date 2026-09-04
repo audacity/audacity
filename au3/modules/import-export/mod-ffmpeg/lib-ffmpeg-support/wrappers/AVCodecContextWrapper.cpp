@@ -64,6 +64,11 @@ AVCodecContextWrapper::~AVCodecContextWrapper()
     }
 }
 
+void AVCodecContextWrapper::TakeOwnership() noexcept
+{
+    mIsOwned = true;
+}
+
 bool AVCodecContextWrapper::CanDecodeVideo() const noexcept
 {
     return mFFmpeg.avcodec_send_packet != nullptr

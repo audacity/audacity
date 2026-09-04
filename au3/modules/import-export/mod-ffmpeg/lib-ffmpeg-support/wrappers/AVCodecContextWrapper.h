@@ -46,6 +46,14 @@ public:
 
     std::vector<uint8_t> DecodeAudioPacket(const AVPacketWrapper* packet);
 
+    //! Makes this wrapper responsible for freeing the context it holds.
+    //!
+    //! The wrapper is built either around a context libavformat owns or
+    //! around one freshly allocated for the caller, and only the caller knows
+    //! which. Freeing a borrowed context would be a double free, so the
+    //! default is to borrow and this opts in.
+    void TakeOwnership() noexcept;
+
     //! True when this FFmpeg build exposes the send/receive decoding API.
     //! Video decoding requires it; it is absent on avcodec 55 (FFmpeg 2.3.6),
     //! where audio import still works through the older call.
