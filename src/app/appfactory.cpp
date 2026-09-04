@@ -66,6 +66,11 @@
 #else
 #include "stubs/usageinfo/usageinfostubmodule.h"
 #endif
+#ifdef AU_BUILD_VIDEO_MODULE
+#include "video/videomodule.h"
+#else
+#include "stubs/video/videostubmodule.h"
+#endif
 #include "automation/automationmodule.h"
 
 #if AU_MODULE_EFFECTS_NYQUIST
@@ -163,6 +168,11 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     // Audacity modules
     app->addModule(new au::appshell::AppShellModule());
     app->addModule(new au::usageinfo::UsageInfoModule());
+#ifdef AU_BUILD_VIDEO_MODULE
+    app->addModule(new au::video::VideoModule());
+#else
+    app->addModule(new au::video::VideoStubModule());
+#endif
     app->addModule(new au::preferences::PreferencesModule());
     app->addModule(new au::uicomponents::UiComponentsModule());
     app->addModule(new au::extensions::AudacityExtensionsModule());

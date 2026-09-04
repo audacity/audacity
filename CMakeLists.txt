@@ -84,6 +84,7 @@ option(AU_BUILD_SHARED_TESTS "Build shared tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_TRACKEDIT_TESTS "Build trackedit tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_UICOMPONENTS_TESTS "Build uicomponents tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_USAGEINFO_MODULE "Build usage info module" ON)
+option(AU_BUILD_VIDEO_MODULE "Build video module" ON)
 
 option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
 option(AU_MODULE_EFFECTS_NYQUIST "Build audacity nyquist module" ON)

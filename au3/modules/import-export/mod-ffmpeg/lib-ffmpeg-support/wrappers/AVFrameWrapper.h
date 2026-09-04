@@ -56,6 +56,14 @@ public:
 
     virtual int GetKeyFrame() const noexcept = 0;
 
+    //! Pixel format of a video frame, mapped away from the raw AVPixelFormat
+    //! values, which are not stable across FFmpeg major versions. Meaningless
+    //! on an audio frame, where the same field holds an AVSampleFormat.
+    virtual AudacityAVPixelFormat GetPixelFormat() const noexcept = 0;
+
+    virtual AudacityAVColorSpace GetColorSpace() const noexcept = 0;
+    virtual AudacityAVColorRange GetColorRange() const noexcept = 0;
+
     virtual AudacityAVRational GetSampleAspectRatio() const noexcept = 0;
     virtual int64_t GetPresentationTimestamp() const noexcept = 0;
     virtual int64_t GetPacketPresentationTimestamp() const noexcept = 0;

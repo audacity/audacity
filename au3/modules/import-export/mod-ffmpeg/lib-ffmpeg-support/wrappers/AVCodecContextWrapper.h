@@ -46,6 +46,27 @@ public:
 
     std::vector<uint8_t> DecodeAudioPacket(const AVPacketWrapper* packet);
 
+    //! True when this FFmpeg build exposes the send/receive decoding API.
+    //! Video decoding requires it; it is absent on avcodec 55 (FFmpeg 2.3.6),
+    //! where audio import still works through the older call.
+    bool CanDecodeVideo() const noexcept;
+
+    //! Submits a packet to the decoder. Pass nullptr to start draining.
+    //! Returns 0, or a negative error code.
+    int SendPacket(const AVPacketWrapper* packet);
+
+    //! Retrieves one decoded frame. Returns 0 on success, or a negative error
+    //! code; AUDACITY_AVERROR(EAGAIN) means more input is needed first.
+    int ReceiveFrame(AVFrameWrapper& frame);
+
+    //! Discards buffered decoder state, which a seek requires. Does nothing
+    //! when avcodec_flush_buffers was not resolved, in which case the caller
+    //! has to rebuild the codec context instead.
+    void FlushBuffers();
+
+    //! Whether FlushBuffers() actually does anything on this build.
+    bool CanFlushBuffers() const noexcept;
+
     virtual sampleFormat GetPreferredAudacitySampleFormat() const noexcept = 0;
 
     virtual std::vector<int16_t> DecodeAudioPacketInt16(const AVPacketWrapper* packet) = 0;

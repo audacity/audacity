@@ -127,6 +127,14 @@ public:
          mAVStream->discard = static_cast<AVDiscard>(discard);
    }
 
+   AudacityAVRational GetAvgFrameRate() const noexcept override
+   {
+      if (mAVStream != nullptr)
+         return { mAVStream->avg_frame_rate.num, mAVStream->avg_frame_rate.den };
+
+      return {};
+   }
+
    AudacityAVRational GetSampleAspectRatio() const noexcept override
    {
       if (mAVStream != nullptr)

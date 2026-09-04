@@ -108,6 +108,55 @@ public:
       return {};
    }
 
+   AudacityAVPixelFormat GetPixelFormat() const noexcept override
+   {
+      if (mAVFrame == nullptr)
+         return AUDACITY_AV_PIX_FMT_NONE;
+
+      switch (static_cast<AVPixelFormat>(mAVFrame->format))
+      {
+      case AV_PIX_FMT_YUV420P:
+         return AUDACITY_AV_PIX_FMT_YUV420P;
+      case AV_PIX_FMT_YUVJ420P:
+         return AUDACITY_AV_PIX_FMT_YUVJ420P;
+      default:
+         return AUDACITY_AV_PIX_FMT_UNSUPPORTED;
+      }
+   }
+
+   AudacityAVColorSpace GetColorSpace() const noexcept override
+   {
+      if (mAVFrame == nullptr)
+         return AUDACITY_AVCOL_SPC_UNSPECIFIED;
+
+      switch (mAVFrame->colorspace)
+      {
+      case AVCOL_SPC_BT709:
+         return AUDACITY_AVCOL_SPC_BT709;
+      case AVCOL_SPC_BT470BG:
+      case AVCOL_SPC_SMPTE170M:
+         return AUDACITY_AVCOL_SPC_BT601;
+      default:
+         return AUDACITY_AVCOL_SPC_UNSPECIFIED;
+      }
+   }
+
+   AudacityAVColorRange GetColorRange() const noexcept override
+   {
+      if (mAVFrame == nullptr)
+         return AUDACITY_AVCOL_RANGE_UNSPECIFIED;
+
+      switch (mAVFrame->color_range)
+      {
+      case AVCOL_RANGE_MPEG:
+         return AUDACITY_AVCOL_RANGE_MPEG;
+      case AVCOL_RANGE_JPEG:
+         return AUDACITY_AVCOL_RANGE_JPEG;
+      default:
+         return AUDACITY_AVCOL_RANGE_UNSPECIFIED;
+      }
+   }
+
    AudacityAVRational GetSampleAspectRatio() const noexcept override
    {
       if (mAVFrame != nullptr)
