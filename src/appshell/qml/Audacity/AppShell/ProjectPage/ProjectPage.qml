@@ -46,6 +46,13 @@ DockPage {
     signal externalDropAreaExited
     signal externalDropAreaDropped(var drop)
 
+    //! Backs the video panel's "..." menu. Declared here rather than inside
+    //! VideoPanel because DockPanel takes its content as a Component, so an
+    //! id declared in there is not reachable from the dock that needs it.
+    VideoPanelMenuModel {
+        id: videoPanelMenuModel
+    }
+
     TrackNavigationModel {
         id: tracksNavModel
 
@@ -450,9 +457,15 @@ DockPage {
             navigationSection: root.navigationPanelSec(videoPanel.location)
 
             //! NOTE: unlike the history panel this one is resizable, since how
-            //! large the picture is matters to whoever is watching it
+            //! large the picture is matters to whoever is watching it. The
+            //! minimum is deliberately well below the starting width - binding
+            //! it to verticalPanelDefaultWidth, as the fixed-width panels do,
+            //! meant the panel could be grown but never shrunk, so dragging it
+            //! narrower snapped straight back.
             width: root.verticalPanelDefaultWidth
-            minimumWidth: root.verticalPanelDefaultWidth
+            minimumWidth: 160
+
+            contextMenuModel: videoPanelMenuModel
 
             groupName: root.verticalPanelsGroup
             location: Location.Right

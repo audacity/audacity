@@ -36,6 +36,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/ffmpeg/pixelconvert.h
 
     #view
+    ${CMAKE_CURRENT_LIST_DIR}/view/videopanelmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/videopanelmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/videopanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/videopanelmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/videosurfaceitem.cpp
