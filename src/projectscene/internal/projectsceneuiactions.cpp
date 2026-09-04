@@ -286,6 +286,30 @@ static UiActionList STATIC_ACTIONS = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Move playhead to selection end")
              ),
+    UiAction("curs-project-start",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Go to project start"),
+             TranslatableString("action", "Go to project start")
+             ),
+    UiAction("curs-project-end",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Go to project end"),
+             TranslatableString("action", "Go to project end")
+             ),
+    UiAction("curs-page-up",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Seek backward one screen"),
+             TranslatableString("action", "Seek backward one screen")
+             ),
+    UiAction("curs-page-down",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Seek forward one screen"),
+             TranslatableString("action", "Seek forward one screen")
+             ),
     UiAction("clip-pitch-speed",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
