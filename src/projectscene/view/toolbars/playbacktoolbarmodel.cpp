@@ -46,6 +46,7 @@ static const ActionCode PLAYBACK_BPM("playback-bpm");
 static const ActionCode PLAYBACK_TIME_SIGNATURE("playback-time-signature");
 
 static const ActionCode SNAP_ACTION_CODE("snap");
+static const ActionCode VIDEO_ACTION_CODE("video-thumbnail");
 
 static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
 {
@@ -64,7 +65,8 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { CLIP_GAIN_AUTOMATION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SPLIT_TOOL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
+        { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP },
+        { VIDEO_ACTION_CODE, PlaybackToolBarModel::VIDEO }
     };
 
     return muse::value(types, actionCode, PlaybackToolBarModel::PROJECT_CONTROL);
@@ -344,7 +346,9 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
 {
     PlaybackToolBarModel::ItemType type = itemType(actionCode);
 
-    if (type == PlaybackToolBarModel::PROJECT_CONTROL) {
+    // Carries no state of its own - the picture comes from the video service
+    // through the delegate - so a plain item with the right type is enough.
+    if (type == PlaybackToolBarModel::PROJECT_CONTROL || type == PlaybackToolBarModel::VIDEO) {
         ToolBarItem* item = AbstractToolBarModel::makeItem(actionCode);
         item->setType(static_cast<ToolBarItemType::Type>(type));
         return item;

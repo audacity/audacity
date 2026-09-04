@@ -105,11 +105,6 @@ QString ProjectPageModel::workspacesToolBarName() const
     return WORKSPACES_TOOLBAR_NAME;
 }
 
-QString ProjectPageModel::videoToolBarName() const
-{
-    return VIDEO_TOOLBAR_NAME;
-}
-
 QString ProjectPageModel::tracksPanelName() const
 {
     return TRACKS_PANEL_NAME;

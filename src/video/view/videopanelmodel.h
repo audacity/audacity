@@ -14,6 +14,11 @@
 #include "../ivideoservice.h"
 
 namespace au::video {
+//! Bounds for the toolbar thumbnail. The upper one is what fits in the
+//! playback toolbar's 48 px row; taller than that and it would be clipped.
+constexpr int MIN_TOOLBAR_HEIGHT = 20;
+constexpr int MAX_TOOLBAR_HEIGHT = 44;
+
 //! Backs the video panel's chrome: the attach and detach controls, and the
 //! line of text that says what is going on when there is no picture.
 class VideoPanelModel : public QObject, public muse::async::Asyncable,
@@ -49,6 +54,10 @@ public:
     //! The offset formatted for display, e.g. "+1.250 s". Empty at zero.
     Q_PROPERTY(QString offsetText READ offsetText NOTIFY offsetChanged FINAL)
 
+    //! Height in pixels of the thumbnail in the playback toolbar. Persisted,
+    //! so the size chosen from its right-click menu survives a restart.
+    Q_PROPERTY(int toolbarHeight READ toolbarHeight WRITE setToolbarHeight NOTIFY toolbarHeightChanged FINAL)
+
     bool hasVideo() const;
     QString statusText() const;
     QString sourceName() const;
@@ -58,11 +67,15 @@ public:
     double offset() const;
     void setOffset(double offset);
     QString offsetText() const;
+
+    int toolbarHeight() const;
+    void setToolbarHeight(int height);
     QString warningText() const;
 
 signals:
     void stateChanged();
     void offsetChanged();
+    void toolbarHeightChanged();
 
 private:
     muse::ContextInject<IVideoService> videoService { this };

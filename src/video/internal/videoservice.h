@@ -98,6 +98,10 @@ private:
     std::string m_path;
     VideoError m_error = VideoError::None;
     muse::secs_t m_offset { 0.0 };
+
+    //! Largest decode size any view has asked for; see requestFrame().
+    int m_targetWidth = 0;
+    int m_targetHeight = 0;
     muse::async::Notification m_offsetChanged;
 
     muse::async::Notification m_attachedChanged;

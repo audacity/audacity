@@ -9,6 +9,7 @@ import Muse.UiComponents
 import Audacity.Playback 1.0
 import Audacity.Record 1.0
 import Audacity.ProjectScene 1.0
+import Audacity.Video 1.0
 import Audacity.UiComponents 1.0
 
 import "internal"
@@ -78,9 +79,25 @@ Item {
                 return projectControlComp
             case PlaybackToolBarModel.SNAP:
                 return snapComp
+            case PlaybackToolBarModel.VIDEO:
+                return videoComp
             }
 
             return null
+        }
+
+        //! Not a button: it shows the frame at the playhead, sized by the
+        //! toolbar's own height and by the video's aspect ratio so it never
+        //! stretches. The dockable panel remains the place to actually watch.
+        Component {
+            id: videoComp
+
+            VideoToolBar {
+                // Both follow the size chosen from the item's own right-click
+                // menu; neither reads its own value back, so there is no cycle.
+                height: implicitHeight
+                width: implicitWidth
+            }
         }
 
         Component {

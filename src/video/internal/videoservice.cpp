@@ -3,6 +3,7 @@
 */
 #include "videoservice.h"
 
+#include <algorithm>
 #include <cmath>
 #include <filesystem>
 #include <thread>
@@ -267,6 +268,9 @@ void VideoService::detachWithoutClearingProject()
     // video must not inherit the last one's alignment.
     m_offset = muse::secs_t(0.0);
 
+    m_targetWidth = 0;
+    m_targetHeight = 0;
+
     m_attachedChanged.notify();
     m_offsetChanged.notify();
 }
@@ -386,10 +390,19 @@ void VideoService::requestFrame(muse::secs_t projectTime, int targetWidth, int t
         return;
     }
 
+    // Two views can show the same video at once - the panel and the toolbar
+    // thumbnail - and the cache holds one image per timestamp, so they cannot
+    // each have their own size. Decoding at the smaller request would leave
+    // the larger view upscaling a thumbnail, which is very visible; decoding
+    // at the larger one only costs the smaller view a downscale, which is
+    // not. So the largest request wins until the video is detached.
+    m_targetWidth = std::max(m_targetWidth, targetWidth);
+    m_targetHeight = std::max(m_targetHeight, targetHeight);
+
     VideoDecodeWorker::Request request;
     request.time = toVideoTime(projectTime);
-    request.targetWidth = targetWidth;
-    request.targetHeight = targetHeight;
+    request.targetWidth = m_targetWidth;
+    request.targetHeight = m_targetHeight;
 
     m_worker->request(request);
 }

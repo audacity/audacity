@@ -3,7 +3,10 @@
 */
 #include "videopanelmodel.h"
 
+#include <algorithm>
 #include <cmath>
+
+#include "settings.h"
 
 #include <QFileInfo>
 
@@ -11,6 +14,11 @@
 
 
 using namespace au::video;
+
+//! Kept next to the other per-module settings rather than in the project,
+//! because it describes this installation's toolbar and not the edit.
+static const muse::Settings::Key TOOLBAR_THUMBNAIL_HEIGHT("video", "videoToolbar/thumbnailHeight");
+static constexpr int DEFAULT_TOOLBAR_HEIGHT = 28;
 
 VideoPanelModel::VideoPanelModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -60,6 +68,27 @@ QString VideoPanelModel::sourceName() const
         return QString();
     }
     return QFileInfo(QString::fromStdString(path)).fileName();
+}
+
+int VideoPanelModel::toolbarHeight() const
+{
+    const muse::Val value = muse::settings()->value(TOOLBAR_THUMBNAIL_HEIGHT);
+    const int height = value.isNull() ? DEFAULT_TOOLBAR_HEIGHT : value.toInt();
+
+    // Clamped on read as well as on write, so a hand-edited settings file
+    // cannot produce a thumbnail taller than the toolbar row that holds it.
+    return std::clamp(height, MIN_TOOLBAR_HEIGHT, MAX_TOOLBAR_HEIGHT);
+}
+
+void VideoPanelModel::setToolbarHeight(int height)
+{
+    const int clamped = std::clamp(height, MIN_TOOLBAR_HEIGHT, MAX_TOOLBAR_HEIGHT);
+    if (clamped == toolbarHeight()) {
+        return;
+    }
+
+    muse::settings()->setSharedValue(TOOLBAR_THUMBNAIL_HEIGHT, muse::Val(clamped));
+    emit toolbarHeightChanged();
 }
 
 double VideoPanelModel::offset() const
