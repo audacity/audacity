@@ -69,6 +69,16 @@ void ProjectVideoRef::setFrameRate(double frameRate)
     m_frameRate = frameRate;
 }
 
+double ProjectVideoRef::offset() const
+{
+    return m_offset;
+}
+
+void ProjectVideoRef::setOffset(double offset)
+{
+    m_offset = offset;
+}
+
 bool ProjectVideoRef::isEmpty() const
 {
     return m_path.empty() && m_relativePath.empty();
@@ -80,6 +90,7 @@ void ProjectVideoRef::clear()
     m_relativePath.clear();
     m_duration = 0.0;
     m_frameRate = 0.0;
+    m_offset = 0.0;
 }
 
 static ProjectFileIORegistry::AttributeWriterEntry entry {
@@ -93,6 +104,7 @@ static ProjectFileIORegistry::AttributeWriterEntry entry {
         xmlFile.WriteAttr(wxT("video_path_rel"), wxString::FromUTF8(ref.relativePath()));
         xmlFile.WriteAttr(wxT("video_duration"), ref.duration());
         xmlFile.WriteAttr(wxT("video_frame_rate"), ref.frameRate());
+        xmlFile.WriteAttr(wxT("video_offset"), ref.offset());
     }
 };
 
@@ -109,6 +121,11 @@ static ProjectFileIORegistry::AttributeReaderEntries entries {
             } },
         { "video_frame_rate", [](auto& ref, auto value) {
                 ref.setFrameRate(value.Get(ref.frameRate()));
+            } },
+        // Absent in projects written before the offset existed, which read
+        // back as the 0.0 the member already holds.
+        { "video_offset", [](auto& ref, auto value) {
+                ref.setOffset(value.Get(ref.offset()));
             } }
     }
 };

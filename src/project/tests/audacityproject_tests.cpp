@@ -295,6 +295,10 @@ TEST_F(Project_Audacity4ProjectTests, VideoReference_SurvivesSaveAndReload)
         ref.setRelativePath("../media/interview.mkv");
         ref.setDuration(123.456);
         ref.setFrameRate(25.0);
+
+        // Negative on purpose: the sign is the part most likely to be lost by
+        // a format that writes the number as text.
+        ref.setOffset(-1.25);
     }
 
     saveThroughAu3(path);
@@ -318,6 +322,10 @@ TEST_F(Project_Audacity4ProjectTests, VideoReference_SurvivesSaveAndReload)
     // still resolves after the media was replaced be noticed.
     EXPECT_NEAR(ref.duration(), 123.456, 1e-6);
     EXPECT_NEAR(ref.frameRate(), 25.0, 1e-9);
+
+    // The offset is the only value here the user sets by hand, so losing it
+    // silently would mean re-aligning the video after every reopen.
+    EXPECT_NEAR(ref.offset(), -1.25, 1e-6);
 
     m_currentProject->close();
 }

@@ -1,2 +1,3 @@
 module Audacity.Video
 VideoPanel 1.0 VideoPanel.qml
+VideoOffsetDialog 1.0 VideoOffsetDialog.qml

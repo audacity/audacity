@@ -48,6 +48,10 @@ public:
 
     const VideoStreamInfo& streamInfo() const override;
 
+    muse::secs_t offset() const override;
+    void setOffset(muse::secs_t offset) override;
+    muse::async::Notification offsetChanged() const override;
+
     VideoFrame cachedFrameAt(muse::secs_t projectTime, bool* covers = nullptr) const override;
     void requestFrame(muse::secs_t projectTime, int targetWidth, int targetHeight) override;
 
@@ -80,6 +84,7 @@ private:
 
     //! The current project's video record, or null when there is no project.
     au::au3::ProjectVideoRef* projectRef() const;
+    muse::secs_t toVideoTime(muse::secs_t projectTime) const;
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
 
@@ -92,6 +97,8 @@ private:
 
     std::string m_path;
     VideoError m_error = VideoError::None;
+    muse::secs_t m_offset { 0.0 };
+    muse::async::Notification m_offsetChanged;
 
     muse::async::Notification m_attachedChanged;
     muse::async::Notification m_frameReady;

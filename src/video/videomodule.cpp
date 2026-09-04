@@ -7,8 +7,10 @@
 #include <QtQml>
 
 #include "modularity/ioc.h"
+#include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/videoservice.h"
+#include "view/videopanelmenumodel.h"
 #include "view/videopanelmodel.h"
 #include "view/videosurfaceitem.h"
 
@@ -41,6 +43,13 @@ void VideoModule::registerUiTypes()
 {
     qmlRegisterType<VideoPanelModel>("Audacity.Video", 1, 0, "VideoPanelModel");
     qmlRegisterType<VideoSurfaceItem>("Audacity.Video", 1, 0, "VideoSurfaceItem");
+    qmlRegisterType<VideoPanelMenuModel>("Audacity.Video", 1, 0, "VideoPanelMenuModel");
+
+    auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
+    if (ir) {
+        ir->registerQmlUri(muse::Uri("audacity://video/offset"),
+                           "Audacity/Video/VideoOffsetDialog.qml");
+    }
 }
 
 void VideoModule::onInit(const IApplication::RunMode&)

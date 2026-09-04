@@ -45,6 +45,12 @@ public:
     double frameRate() const;
     void setFrameRate(double frameRate);
 
+    //! Seconds to shift the picture along the timeline. Positive means the
+    //! video runs late relative to the audio, which is the common case when
+    //! sound was recorded on a separate device started a moment earlier.
+    double offset() const;
+    void setOffset(double offset);
+
     bool isEmpty() const;
     void clear();
 
@@ -53,5 +59,6 @@ private:
     std::string m_relativePath;
     double m_duration { 0.0 };
     double m_frameRate { 0.0 };
+    double m_offset { 0.0 };
 };
 }

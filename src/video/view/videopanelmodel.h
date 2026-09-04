@@ -44,15 +44,26 @@ public:
     //! Whether the panel should offer that route.
     Q_PROPERTY(bool needsFFmpeg READ needsFFmpeg NOTIFY stateChanged FINAL)
 
+    //! Seconds the picture is shifted along the timeline; see IVideoService.
+    Q_PROPERTY(double offset READ offset WRITE setOffset NOTIFY offsetChanged FINAL)
+
+    //! The offset formatted for display, e.g. "+1.250 s". Empty at zero.
+    Q_PROPERTY(QString offsetText READ offsetText NOTIFY offsetChanged FINAL)
+
     bool hasVideo() const;
     QString statusText() const;
     QString sourceName() const;
     bool sourceMismatch() const;
     bool needsFFmpeg() const;
+
+    double offset() const;
+    void setOffset(double offset);
+    QString offsetText() const;
     QString warningText() const;
 
 signals:
     void stateChanged();
+    void offsetChanged();
 
 private:
     muse::ContextInject<IVideoService> videoService { this };

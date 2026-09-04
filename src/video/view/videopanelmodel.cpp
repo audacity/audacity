@@ -3,6 +3,8 @@
 */
 #include "videopanelmodel.h"
 
+#include <cmath>
+
 #include <QFileInfo>
 
 #include "translation.h"
@@ -25,7 +27,13 @@ void VideoPanelModel::init()
     videoService()->attachedChanged().onNotify(this, [this]() {
         emit stateChanged();
     });
+
+    videoService()->offsetChanged().onNotify(this, [this]() {
+        emit offsetChanged();
+    });
+
     emit stateChanged();
+    emit offsetChanged();
 }
 
 void VideoPanelModel::attachVideo()
@@ -73,6 +81,32 @@ QString VideoPanelModel::sourceName() const
         return QString();
     }
     return QFileInfo(QString::fromStdString(path)).fileName();
+}
+
+double VideoPanelModel::offset() const
+{
+    return videoService() != nullptr ? videoService()->offset().to_double() : 0.0;
+}
+
+void VideoPanelModel::setOffset(double offset)
+{
+    if (videoService() != nullptr) {
+        videoService()->setOffset(muse::secs_t(offset));
+    }
+}
+
+QString VideoPanelModel::offsetText() const
+{
+    const double value = offset();
+    if (std::fabs(value) < 5e-4) {
+        return QString();
+    }
+
+    // Milliseconds, because that is the resolution the offset is set at and
+    // a frame at 25 fps is only 40 ms wide.
+    return QString("%1%2 s")
+           .arg(value > 0.0 ? "+" : "-")
+           .arg(std::fabs(value), 0, 'f', 3);
 }
 
 bool VideoPanelModel::needsFFmpeg() const

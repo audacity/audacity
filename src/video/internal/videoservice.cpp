@@ -103,6 +103,7 @@ void VideoService::storeInProject()
     const VideoStreamInfo& info = streamInfo();
     ref->setDuration(info.duration.to_double());
     ref->setFrameRate(info.frameRate);
+    ref->setOffset(m_offset.to_double());
 
     commitProjectChange();
 }
@@ -144,10 +145,16 @@ void VideoService::restoreFromProject()
         return;
     }
 
+    // Read before attaching: attach() begins with detach(), which resets the
+    // offset along with the rest of the attachment state.
+    const double savedOffset = ref->offset();
+
     const VideoError err = attach(resolved);
     if (err != VideoError::None) {
         return;
     }
+
+    m_offset = muse::secs_t(savedOffset);
 
     // A path that still resolves after the media was replaced or re-encoded
     // is worse than one that does not, because nothing else would notice.
@@ -255,7 +262,13 @@ void VideoService::detachWithoutClearingProject()
     m_path.clear();
     m_error = VideoError::None;
     m_sourceMismatch = false;
+
+    // The offset belongs to the attachment, not to the panel: a different
+    // video must not inherit the last one's alignment.
+    m_offset = muse::secs_t(0.0);
+
     m_attachedChanged.notify();
+    m_offsetChanged.notify();
 }
 
 void VideoService::stopDecoding()
@@ -310,6 +323,39 @@ const VideoStreamInfo& VideoService::streamInfo() const
     return m_backend ? m_backend->streamInfo() : s_emptyInfo;
 }
 
+muse::secs_t VideoService::toVideoTime(muse::secs_t projectTime) const
+{
+    // Positive offset means the picture runs late, so the frame shown at
+    // project time t is the one the file holds at t - offset.
+    return projectTime - m_offset;
+}
+
+muse::secs_t VideoService::offset() const
+{
+    return m_offset;
+}
+
+void VideoService::setOffset(muse::secs_t offset)
+{
+    if (std::fabs(offset.to_double() - m_offset.to_double()) < 1e-9) {
+        return;
+    }
+
+    m_offset = offset;
+
+    // The cache is keyed on video pts, which the offset does not change, so
+    // it stays valid - only the mapping from project time moves.
+    storeInProject();
+    commitProjectChange();
+
+    m_offsetChanged.notify();
+}
+
+muse::async::Notification VideoService::offsetChanged() const
+{
+    return m_offsetChanged;
+}
+
 VideoFrame VideoService::cachedFrameAt(muse::secs_t projectTime, bool* covers) const
 {
     if (covers != nullptr) {
@@ -323,7 +369,7 @@ VideoFrame VideoService::cachedFrameAt(muse::secs_t projectTime, bool* covers) c
     // timeToPts reads only state fixed when the file was opened, so this does
     // not race the decoder.
     const VideoFrameCache::Lookup lookup =
-        m_cache->frameFor(m_backend->timeToPts(projectTime));
+        m_cache->frameFor(m_backend->timeToPts(toVideoTime(projectTime)));
 
     if (covers != nullptr) {
         *covers = lookup.covers;
@@ -341,7 +387,7 @@ void VideoService::requestFrame(muse::secs_t projectTime, int targetWidth, int t
     }
 
     VideoDecodeWorker::Request request;
-    request.time = projectTime;
+    request.time = toVideoTime(projectTime);
     request.targetWidth = targetWidth;
     request.targetHeight = targetHeight;
 
@@ -359,7 +405,8 @@ bool VideoService::isTimeInRange(muse::secs_t projectTime) const
         return true;   // duration unknown; let the decoder decide
     }
 
-    return projectTime >= muse::secs_t(0.0) && projectTime < info.duration;
+    const muse::secs_t videoTime = toVideoTime(projectTime);
+    return videoTime >= muse::secs_t(0.0) && videoTime < info.duration;
 }
 
 muse::async::Notification VideoService::attachedChanged() const

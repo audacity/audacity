@@ -49,6 +49,15 @@ public:
 
     virtual const VideoStreamInfo& streamInfo() const = 0;
 
+    //! Seconds the picture is shifted along the timeline. Positive means the
+    //! video runs late: at project time t the frame shown is the one at
+    //! t - offset. Saved with the project.
+    virtual muse::secs_t offset() const = 0;
+    virtual void setOffset(muse::secs_t offset) = 0;
+
+    //! Fires when the offset changes, so the panel can redraw at once.
+    virtual muse::async::Notification offsetChanged() const = 0;
+
     //! What is already decoded for this project time. Returns immediately, so
     //! it is safe to call on every repaint. `covers` says whether the frame's
     //! own interval contains the time or whether it is an earlier one held
