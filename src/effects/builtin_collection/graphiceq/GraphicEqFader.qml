@@ -12,6 +12,7 @@ Item {
     property double max: 0
     property double value: 0
     property double stepSize: 1
+    property bool hoverTooltipEnabled: true
     property alias handle: eqFaderHandle
     property alias navigation: navCtrl
 
@@ -115,11 +116,15 @@ Item {
                 }
 
                 onEntered: {
-                    tooltip.show()
+                    if (root.hoverTooltipEnabled) {
+                        tooltip.show()
+                    }
                 }
 
                 onExited: {
-                    tooltip.hide()
+                    if (root.hoverTooltipEnabled) {
+                        tooltip.hide()
+                    }
                 }
             }
         }
