@@ -36,8 +36,8 @@ struct CVSD_CONFIG {
     double syllabicCompandingFactor = 1.0009765625;
 
     // Accumulator step size limits (δ_min and δ_max)
-    int minAccumulatorStepSize = 10;
-    int maxAccumulatorStepSize = 1280;
+    float minAccumulatorStepSize = 10.0f;
+    float maxAccumulatorStepSize = 1280.0f;
 
     // Bit history for syllabic companding (stores last 4 bits)
     u_int8_t bitHistory = 0;

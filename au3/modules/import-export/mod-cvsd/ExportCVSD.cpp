@@ -20,7 +20,7 @@ std::vector<u_int8_t> CVSDEncode(std::vector<int16_t> temp, CVSD_CONFIG& current
         // 3. Update step size (δ(k)) based on PREVIOUS J bits
         if (current_config.alpha) {
             current_config.accumulatorStepSize = std::min(
-                current_config.accumulatorStepSize * static_cast<float>(current_config.syllabicCompandingFactor),
+                current_config.accumulatorStepSize + current_config.minAccumulatorStepSize,
                 static_cast<float>(current_config.maxAccumulatorStepSize));
         } else {
             current_config.accumulatorStepSize = std::max(

@@ -35,7 +35,7 @@ void CVSDDecode(wxFFile* wxCVSDFile, int16_t* PCMbuffer, uint32_t& samplesRead, 
         uint8_t rawCVSDbyte = CVSDBuffer[i];
 
         // unpack bit-by-bit
-        for (int bitPos = 0; bitPos <= 7; bitPos++) {
+        for (int bitPos = 7; bitPos >= 0; bitPos--) {
             bool bit = (rawCVSDbyte >> bitPos) & 0x01;
 
             // Update decoder state (bitHistory, accumulator, etc.)
@@ -46,7 +46,7 @@ void CVSDDecode(wxFFile* wxCVSDFile, int16_t* PCMbuffer, uint32_t& samplesRead, 
             bool alpha = (mDecoderConfig.bitHistory == 0x00 || mDecoderConfig.bitHistory == 0x0F);
             if (mDecoderConfig.alpha) {
                 mDecoderConfig.accumulatorStepSize = std::min(
-                    mDecoderConfig.accumulatorStepSize * static_cast<float>(mDecoderConfig.syllabicCompandingFactor),
+                mDecoderConfig.accumulatorStepSize + mDecoderConfig.minAccumulatorStepSize,
                     static_cast<float>(mDecoderConfig.maxAccumulatorStepSize));
             } else {
                 mDecoderConfig.accumulatorStepSize = std::max(
@@ -129,7 +129,7 @@ double CVSDImportFileHandle::GetDuration() const {
     if (mSampleRate <= 0 || mNumSamples <= 0) {
         return 0.0;
     }
-    double duration = static_cast<double>(mNumSamples) / mSampleRate;
+    double const duration = static_cast<double>(mNumSamples) / mSampleRate;
 
     return duration;
 }
