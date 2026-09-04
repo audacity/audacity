@@ -39,13 +39,13 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sair</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="55"/>
         <source>Restart</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Recomeçar</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="61"/>
@@ -656,7 +656,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
         <source>Insert</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Inserir</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
@@ -2067,7 +2067,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
         <source>Exit</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sair</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="63"/>
@@ -2480,7 +2480,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
         <source>Insert</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Inserir</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
@@ -3764,7 +3764,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
         <source>Restart</source>
-        <translation type="unfinished"/>
+        <translation>Recomeçar</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
