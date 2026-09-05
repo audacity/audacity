@@ -178,7 +178,6 @@ ExportResult ExportCVSDProcessor::Process(ExportProcessorDelegate& delegate)
     delegate.SetStatusString(context.status);
     auto exportResult = ExportResult::Success;
     {
-        int eos = 0;
         while (exportResult == ExportResult::Success) {
             // get the number of samples
             auto pcmNumSamples = context.mMixer->Process();
@@ -188,21 +187,16 @@ ExportResult ExportCVSDProcessor::Process(ExportProcessorDelegate& delegate)
                 break;
             }
 
-            // we receive interleaved audio
-            // GetBuffer spits out char*
             float* pcmBuffer = (float*)context.mMixer->GetBuffer();
             std::vector<int16_t> LinearPCMBuffer = {};
 
-            std::vector<u_int8_t> EncoderOuputFromBuffer;
             // convert the sample buffer to Linear 16 bit PCM
             for (int i=0; i<pcmNumSamples; i++)
             {
                 const float sample = pcmBuffer[i];
-                // Map float range [-1.0, 1.0] to int16 range [-32768, 32767]
                 int16_t linearSample = static_cast<int16_t>(std::clamp(sample * 32768.0f, -32768.0f, 32767.0f));
                 LinearPCMBuffer.push_back(linearSample);
             }
-            EncoderOuputFromBuffer = CVSDEncode(LinearPCMBuffer, config, pcmNumSamples);
 
             std::vector<u_int8_t> EncodeData;
             EncodeData.reserve(pcmNumSamples / 8 + 1);
