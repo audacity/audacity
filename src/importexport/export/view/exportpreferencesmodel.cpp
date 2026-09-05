@@ -477,7 +477,11 @@ void ExportPreferencesModel::setFilePickerPath(const QString& path)
 
     if (info.entryType() == muse::io::EntryType::File) {
         setDirectoryPath(info.absolutePath());
-        setFilename(info.baseName());
+
+        // completeBaseName, not baseName: the latter cuts at the FIRST dot, so
+        // picking "Community Roundup 9.45am 1.45pm.mp3" to overwrite offered
+        // "Community Roundup 9" as the name to export to.
+        setFilename(info.completeBaseName());
         return;
     }
 
@@ -494,7 +498,9 @@ void ExportPreferencesModel::setFileDialogPath(const QString& path)
     }
 
     setDirectoryPath(info.absolutePath());
-    setFilename(info.baseName());
+
+    // See setFilePickerPath: everything after the first dot is not a suffix.
+    setFilename(info.completeBaseName());
 }
 
 void ExportPreferencesModel::updateCurrentSampleRate()
