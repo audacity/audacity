@@ -13,7 +13,9 @@
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
 
-namespace au::au3 { class ProjectVideoRef; }
+namespace au::au3 {
+class ProjectVideoRef;
+}
 
 #include "../ivideodecodebackend.h"
 #include "../ivideoservice.h"
@@ -26,8 +28,7 @@ namespace au::video {
 //! The backend is opened here, on the GUI thread, and then handed to the decode
 //! worker; nothing else touches it afterwards. Reads go through the frame
 //! cache, which is why they can happen on every repaint.
-class VideoService : public IVideoService, public muse::async::Asyncable,
-    public muse::Contextable
+class VideoService : public IVideoService, public muse::async::Asyncable, public muse::Contextable
 {
 public:
     explicit VideoService(const muse::modularity::ContextPtr& ctx);
@@ -77,8 +78,6 @@ private:
 
     //! Commits an attach or detach into the project so it survives a close.
     void commitProjectChange();
-
-
 
     void stopDecoding();
 

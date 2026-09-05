@@ -66,7 +66,7 @@ StyledDialogView {
                 navigation.panel: navPanel
                 navigation.order: 1
 
-                onValueEdited: function(newValue) {
+                onValueEdited: function (newValue) {
                     root.pendingOffset = newValue
                 }
             }
@@ -80,13 +80,17 @@ StyledDialogView {
             }
         }
 
-        Item { Layout.fillHeight: true }
+        Item {
+            Layout.fillHeight: true
+        }
 
         RowLayout {
             Layout.fillWidth: true
             spacing: 8
 
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
+            }
 
             FlatButton {
                 text: qsTrc("global", "Cancel")

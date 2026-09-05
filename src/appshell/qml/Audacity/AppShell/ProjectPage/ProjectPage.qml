@@ -451,7 +451,6 @@ DockPage {
                 navigationOrderStart: historyPanel.contentNavigationPanelOrderStart
             }
         },
-
         DockPanel {
             id: videoPanel
 
@@ -490,8 +489,7 @@ DockPage {
             //! below the tracks, not only beside them. Where the picture wants
             //! to be depends on the edit, and a wide short strip over the
             //! timeline is a reasonable place for it.
-            dropDestinations: root.verticalPanelDropDestinations
-                              .concat(root.horizontalPanelDropDestinations)
+            dropDestinations: root.verticalPanelDropDestinations.concat(root.horizontalPanelDropDestinations)
 
             VideoPanel {
                 navigationSection: videoPanel.navigationSection

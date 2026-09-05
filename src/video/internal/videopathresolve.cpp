@@ -28,8 +28,7 @@ std::string au::video::makeRelativeVideoPath(const std::string& projectDir,
     }
 
     std::error_code ec;
-    const std::filesystem::path relative =
-        std::filesystem::relative(toPath(absolute), toPath(projectDir), ec);
+    const std::filesystem::path relative = std::filesystem::relative(toPath(absolute), toPath(projectDir), ec);
 
     if (ec || relative.empty()) {
         // Different roots, most often a different drive on Windows. There is
@@ -52,8 +51,7 @@ std::string au::video::resolveVideoPath(const std::string& absolute,
     // Relative first: a project and its media moved together is both the
     // common case and the one an absolute path gets wrong.
     if (!relative.empty() && !projectDir.empty()) {
-        const std::string candidate =
-            fromPath((toPath(projectDir) / toPath(relative)).lexically_normal());
+        const std::string candidate = fromPath((toPath(projectDir) / toPath(relative)).lexically_normal());
 
         if (exists(candidate)) {
             return candidate;

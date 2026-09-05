@@ -40,7 +40,9 @@ public:
         bool valid() const { return frame.valid(); }
     };
 
-    explicit VideoFrameCache(size_t byteBudget = 64u * 1024u * 1024u);
+    static constexpr size_t DEFAULT_BYTE_BUDGET = 64 * 1024 * 1024;
+
+    explicit VideoFrameCache(size_t byteBudget = DEFAULT_BYTE_BUDGET);
 
     void setByteBudget(size_t bytes);
     size_t byteBudget() const;

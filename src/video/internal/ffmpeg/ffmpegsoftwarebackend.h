@@ -66,9 +66,7 @@ private:
     //! How far before the target to retry from, per attempt. Public for the
     //! unit tests, which drive the ladder without touching a file.
 public:
-    static int64_t nextProbePts(int64_t targetPts, int attempt,
-                                int64_t floorPts, int64_t ticksPerSecond,
-                                bool* atFloor);
+    static int64_t nextProbePts(int64_t targetPts, int attempt, int64_t floorPts, int64_t ticksPerSecond, bool* atFloor);
 
     //! Seeks issued for the most recent request. One means the first seek
     //! landed correctly; more means the retry ladder ran.

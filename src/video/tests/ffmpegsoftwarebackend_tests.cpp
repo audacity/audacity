@@ -526,8 +526,7 @@ SweepResult sweep(FFmpegSoftwareBackend& backend, double fps, int frames,
 
         if (start > target + 1e-9 || end <= target - 1e-9) {
             ++result.late;
-            result.worstLateSeconds =
-                std::max(result.worstLateSeconds, std::fabs(start - target));
+            result.worstLateSeconds = std::max(result.worstLateSeconds, std::fabs(start - target));
         }
     }
 
@@ -641,11 +640,11 @@ TEST(FFmpegSoftwareBackendTests, ContainersThatSeekCorrectlyNeedNoRetry)
         // open() started decoding a probe frame.
         EXPECT_GE(sawASeek, 1)
             << name << " never seeked, so this test proved nothing about the"
-               " retry ladder";
+                   " retry ladder";
         EXPECT_LE(maxSeekAttempts, 1)
             << name << " needed " << maxSeekAttempts
             << " seeks for one request; the retry ladder must not fire on a"
-               " container that already seeks correctly";
+            " container that already seeks correctly";
     }
 }
 

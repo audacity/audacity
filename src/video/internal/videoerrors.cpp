@@ -17,7 +17,8 @@ QString errorMessage(VideoError err)
                           "ship it. The same library is used for audio import "
                           "and export.");
     case VideoError::FFmpegTooOld:
-        return muse::qtrc("video", "This FFmpeg build is too old for video preview. FFmpeg 3.4 or newer is required; audio import is unaffected.");
+        return muse::qtrc("video",
+                          "This FFmpeg build is too old for video preview. FFmpeg 3.4 or newer is required; audio import is unaffected.");
     case VideoError::FileNotFound:
         return muse::qtrc("video", "Video file not found");
     case VideoError::CannotOpen:

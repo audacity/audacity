@@ -18,7 +18,7 @@ public:
     Files(std::initializer_list<std::string> present)
         : m_present(present) {}
 
-    std::function<bool (const std::string&)> checker() const
+    std::function<bool(const std::string&)> checker() const
     {
         return [this](const std::string& path) {
             return m_present.count(path) > 0;
@@ -156,8 +156,7 @@ TEST(VideoPathResolveTests, RoundTripsThroughAMove)
 {
     // Record where it was, then move project and media together and confirm
     // the stored relative path still finds it.
-    const std::string relative =
-        makeRelativeVideoPath("/before", "/before/media/clip.mp4");
+    const std::string relative = makeRelativeVideoPath("/before", "/before/media/clip.mp4");
     ASSERT_EQ(relative, "media/clip.mp4");
 
     const Files moved { "/after/media/clip.mp4" };

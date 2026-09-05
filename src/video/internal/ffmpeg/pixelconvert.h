@@ -22,12 +22,8 @@ namespace au::video {
 //! reading those is a large part of why anyone scrubs video.
 //!
 //! Returns a null image if the format is not one this handles.
-QImage yuv420ToImage(const uint8_t* const data[3], const int lineSize[3],
-                     int srcWidth, int srcHeight,
-                     int dstWidth, int dstHeight,
-                     AudacityAVPixelFormat format,
-                     AudacityAVColorSpace colorSpace,
-                     AudacityAVColorRange colorRange);
+QImage yuv420ToImage(const uint8_t* const data[3], const int lineSize[3], int srcWidth, int srcHeight, int dstWidth, int dstHeight,
+                     AudacityAVPixelFormat format, AudacityAVColorSpace colorSpace, AudacityAVColorRange colorRange);
 
 //! Whether yuv420ToImage can handle this pixel format.
 bool isSupportedPixelFormat(AudacityAVPixelFormat format);

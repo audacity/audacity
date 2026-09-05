@@ -30,8 +30,7 @@ namespace au::video {
 //! position reports, so the picture updates smoothly between them. The reports
 //! re-anchor the clock; the clock interpolates; the decoder runs on its own
 //! thread and leaves frames in the cache.
-class VideoSurfaceItem : public QQuickPaintedItem, public muse::async::Asyncable,
-    public muse::Contextable
+class VideoSurfaceItem : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

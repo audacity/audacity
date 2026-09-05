@@ -143,8 +143,8 @@ void VideoService::restoreFromProject()
     const std::string resolved = resolveVideoPath(
         ref->path(), ref->relativePath(), projectDirectory(),
         [](const std::string& candidate) {
-            return std::filesystem::exists(std::filesystem::u8path(candidate));
-        });
+        return std::filesystem::exists(std::filesystem::u8path(candidate));
+    });
 
     if (resolved.empty()) {
         // The project opens regardless; the panel says the file is missing.
@@ -169,11 +169,10 @@ void VideoService::restoreFromProject()
     const VideoStreamInfo& info = streamInfo();
     const double frameDuration = info.frameRate > 0.0 ? 1.0 / info.frameRate : 0.04;
 
-    m_sourceMismatch =
-        (ref->duration() > 0.0
-         && std::fabs(ref->duration() - info.duration.to_double()) > frameDuration)
-        || (ref->frameRate() > 0.0
-            && std::fabs(ref->frameRate() - info.frameRate) > 0.01);
+    m_sourceMismatch = (ref->duration() > 0.0
+                        && std::fabs(ref->duration() - info.duration.to_double()) > frameDuration)
+                       || (ref->frameRate() > 0.0
+                           && std::fabs(ref->frameRate() - info.frameRate) > 0.01);
 
     if (m_sourceMismatch) {
         m_attachedChanged.notify();
@@ -373,8 +372,7 @@ VideoFrame VideoService::cachedFrameAt(muse::secs_t projectTime, bool* covers) c
 
     // timeToPts reads only state fixed when the file was opened, so this does
     // not race the decoder.
-    const VideoFrameCache::Lookup lookup =
-        m_cache->frameFor(m_backend->timeToPts(toVideoTime(projectTime)));
+    const VideoFrameCache::Lookup lookup = m_cache->frameFor(m_backend->timeToPts(toVideoTime(projectTime)));
 
     if (covers != nullptr) {
         *covers = lookup.covers;

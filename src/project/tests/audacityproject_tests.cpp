@@ -274,10 +274,8 @@ TEST_F(Project_Audacity4ProjectTests, Load_NonEmptyFileIsWriteProtected_ReturnsR
 
 TEST_F(Project_Audacity4ProjectTests, VideoReference_SurvivesSaveAndReload)
 {
-    const std::string srcPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
-    const std::string dstPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/video_roundtrip.aup4").toStdString();
+    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
+    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/video_roundtrip.aup4").toStdString();
 
     const ScopedTestFile tempFile{ srcPath, dstPath, AccessMode::Full };
     const muse::io::path_t path{ tempFile.getPath() };
@@ -332,10 +330,8 @@ TEST_F(Project_Audacity4ProjectTests, VideoReference_SurvivesSaveAndReload)
 
 TEST_F(Project_Audacity4ProjectTests, VideoReference_AbsentWhenNoVideoWasAttached)
 {
-    const std::string srcPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
-    const std::string dstPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/video_absent.aup4").toStdString();
+    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
+    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/video_absent.aup4").toStdString();
 
     const ScopedTestFile tempFile{ srcPath, dstPath, AccessMode::Full };
     const muse::io::path_t path{ tempFile.getPath() };
@@ -360,10 +356,8 @@ TEST_F(Project_Audacity4ProjectTests, VideoReference_AbsentWhenNoVideoWasAttache
 
 TEST_F(Project_Audacity4ProjectTests, VideoReference_DetachClearsItFromTheProject)
 {
-    const std::string srcPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
-    const std::string dstPath
-        = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/video_cleared.aup4").toStdString();
+    const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
+    const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/video_cleared.aup4").toStdString();
 
     const ScopedTestFile tempFile{ srcPath, dstPath, AccessMode::Full };
     const muse::io::path_t path{ tempFile.getPath() };
@@ -395,5 +389,4 @@ TEST_F(Project_Audacity4ProjectTests, VideoReference_DetachClearsItFromTheProjec
 
     m_currentProject->close();
 }
-
 } // namespace au::project

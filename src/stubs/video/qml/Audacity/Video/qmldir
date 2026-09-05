@@ -1,4 +1,5 @@
 module Audacity.Video
 VideoPanel 1.0 VideoPanelStub.qml
 VideoToolBar 1.0 VideoToolBarStub.qml
+VideoPanelModel 1.0 VideoPanelModelStub.qml
 VideoPanelMenuModel 1.0 VideoPanelMenuModelStub.qml

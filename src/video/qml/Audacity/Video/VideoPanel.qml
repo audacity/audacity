@@ -25,8 +25,7 @@ Item {
     //! is the fontconfig alias, which resolves on Linux and costs nothing
     //! where it does not.
     readonly property string monoFamily: {
-        var candidates = ["Menlo", "Consolas", "DejaVu Sans Mono",
-                          "Liberation Mono", "Courier New"]
+        var candidates = ["Menlo", "Consolas", "DejaVu Sans Mono", "Liberation Mono", "Courier New"]
         var available = Qt.fontFamilies()
         for (var i = 0; i < candidates.length; ++i) {
             if (available.indexOf(candidates[i]) !== -1) {
@@ -46,7 +45,6 @@ Item {
     VideoPanelModel {
         id: model
     }
-
 
     Component.onCompleted: {
         model.init()
@@ -146,7 +144,9 @@ Item {
                 horizontalAlignment: Text.AlignLeft
             }
 
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
+            }
 
             //! Which file is on screen matters far less than where in it we
             //! are, so it sits at the far end and stays quiet.

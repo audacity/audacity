@@ -490,8 +490,7 @@ void ProjectActionsController::attachImportedVideo(const muse::io::paths_t& file
     // hasRecordedAttachment(), not isAttached(): a project whose video sits
     // on an unplugged drive has one, it just could not be opened, and an
     // unrelated import must not quietly take its place.
-    const auto candidate =
-        video::videoToAttachAfterImport(paths, videoService()->hasRecordedAttachment());
+    const auto candidate = video::videoToAttachAfterImport(paths, videoService()->hasRecordedAttachment());
 
     if (candidate.has_value()) {
         // Failure is not reported: the audio import succeeded, which is what
@@ -1318,15 +1317,13 @@ bool ProjectActionsController::shouldRetryLoadAfterError(const Ret& ret, const m
 
 void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const muse::io::path_t& filepath) const
 {
-    const std::string title
-        = ret.data<std::string>("title",
-                                muse::mtrc("project", "Cannot read file %1")
-                                .arg(io::toNativeSeparators(filepath).toString())
-                                .toStdString());
+    const std::string title = ret.data<std::string>("title",
+                                                    muse::mtrc("project", "Cannot read file %1")
+                                                    .arg(io::toNativeSeparators(filepath).toString())
+                                                    .toStdString());
 
-    const std::string body
-        = ret.data<std::string>("body", !ret.text().empty() ? ret.text() : muse::trc("project",
-                                                                                     "An error occurred while reading this file."));
+    const std::string body = ret.data<std::string>("body", !ret.text().empty() ? ret.text() : muse::trc("project",
+                                                                                                        "An error occurred while reading this file."));
     interactive()->error(title, body);
 }
 

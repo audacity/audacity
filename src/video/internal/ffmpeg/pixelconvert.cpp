@@ -16,8 +16,8 @@ struct YuvCoeffs {
 
 constexpr YuvCoeffs BT601_LIMITED { 16, 298, 409, -100, -208, 516 };
 constexpr YuvCoeffs BT709_LIMITED { 16, 298, 459,  -55, -136, 541 };
-constexpr YuvCoeffs BT601_FULL    {  0, 256, 359,  -88, -183, 454 };
-constexpr YuvCoeffs BT709_FULL    {  0, 256, 403,  -48, -120, 475 };
+constexpr YuvCoeffs BT601_FULL    { 0, 256, 359,  -88, -183, 454 };
+constexpr YuvCoeffs BT709_FULL    { 0, 256, 403,  -48, -120, 475 };
 
 const YuvCoeffs& pickCoeffs(AudacityAVPixelFormat format,
                             AudacityAVColorSpace space,

@@ -22,8 +22,7 @@ constexpr int MAX_TOOLBAR_HEIGHT = 120;
 
 //! Backs the video panel's chrome: the attach and detach controls, and the
 //! line of text that says what is going on when there is no picture.
-class VideoPanelModel : public QObject, public muse::async::Asyncable,
-    public muse::Contextable
+class VideoPanelModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

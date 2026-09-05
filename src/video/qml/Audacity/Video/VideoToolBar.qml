@@ -26,9 +26,7 @@ Item {
     //! The toolbar row gives the height; the width follows from what is being
     //! shown, so the picture is never stretched and never leaves a gap.
     implicitHeight: model.toolbarHeight
-    implicitWidth: surface.hasFrame && surface.frameAspect > 0
-                   ? Math.max(32, Math.round(root.height * surface.frameAspect))
-                   : Math.round(root.height * 16 / 9)
+    implicitWidth: surface.hasFrame && surface.frameAspect > 0 ? Math.max(32, Math.round(root.height * surface.frameAspect)) : Math.round(root.height * 16 / 9)
 
     VideoPanelModel {
         id: model
@@ -48,12 +46,32 @@ Item {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
-        onClicked: function(mouse) {
+        onClicked: function (mouse) {
             sizeMenu.items = [
-                { "id": "44", "title": qsTrc("video", "Small"), "checkable": true, "checked": model.toolbarHeight === 44 },
-                { "id": "64", "title": qsTrc("video", "Medium"), "checkable": true, "checked": model.toolbarHeight === 64 },
-                { "id": "88", "title": qsTrc("video", "Large"), "checkable": true, "checked": model.toolbarHeight === 88 },
-                { "id": "120", "title": qsTrc("video", "Extra large"), "checkable": true, "checked": model.toolbarHeight === 120 }
+                {
+                    "id": "44",
+                    "title": qsTrc("video", "Small"),
+                    "checkable": true,
+                    "checked": model.toolbarHeight === 44
+                },
+                {
+                    "id": "64",
+                    "title": qsTrc("video", "Medium"),
+                    "checkable": true,
+                    "checked": model.toolbarHeight === 64
+                },
+                {
+                    "id": "88",
+                    "title": qsTrc("video", "Large"),
+                    "checkable": true,
+                    "checked": model.toolbarHeight === 88
+                },
+                {
+                    "id": "120",
+                    "title": qsTrc("video", "Extra large"),
+                    "checkable": true,
+                    "checked": model.toolbarHeight === 120
+                }
             ]
             sizeMenu.show(Qt.point(mouse.x, mouse.y))
         }
@@ -62,7 +80,7 @@ Item {
     ContextMenuLoader {
         id: sizeMenu
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             model.toolbarHeight = parseInt(itemId, 10)
         }
     }

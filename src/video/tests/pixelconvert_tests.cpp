@@ -135,9 +135,9 @@ TEST(PixelConvertTests, RejectsNullPlanes)
 TEST(PixelConvertTests, RejectsNonPositiveDimensions)
 {
     Yuv420Image src(16, 16, 128, 128, 128);
-    for (const auto& dims : std::vector<std::array<int, 4> >{
-             { 0, 16, 8, 8 }, { 16, 0, 8, 8 }, { 16, 16, 0, 8 }, { 16, 16, 8, 0 },
-             { -4, 16, 8, 8 }, { 16, 16, 8, -1 } }) {
+    for (const auto& dims : std::vector<std::array<int, 4> > {
+        { 0, 16, 8, 8 }, { 16, 0, 8, 8 }, { 16, 16, 0, 8 }, { 16, 16, 8, 0 },
+        { -4, 16, 8, 8 }, { 16, 16, 8, -1 } }) {
         EXPECT_TRUE(yuv420ToImage(src.data(), src.lineSize(),
                                   dims[0], dims[1], dims[2], dims[3],
                                   AUDACITY_AV_PIX_FMT_YUV420P,
@@ -343,8 +343,8 @@ TEST(PixelConvertTests, DownscaleKeepsAThinFeatureVisible)
 TEST(PixelConvertTests, SolidColourSurvivesAnyScale)
 {
     Yuv420Image src(300, 200, 235, 128, 128);
-    for (const auto& size : std::vector<std::pair<int, int> >{
-             { 1, 1 }, { 7, 3 }, { 150, 100 }, { 300, 200 }, { 640, 360 } }) {
+    for (const auto& size : std::vector<std::pair<int, int> > {
+        { 1, 1 }, { 7, 3 }, { 150, 100 }, { 300, 200 }, { 640, 360 } }) {
         const QImage out = yuv420ToImage(src.data(), src.lineSize(), 300, 200,
                                          size.first, size.second,
                                          AUDACITY_AV_PIX_FMT_YUV420P,

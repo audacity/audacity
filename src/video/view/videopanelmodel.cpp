@@ -12,7 +12,6 @@
 
 #include "translation.h"
 
-
 using namespace au::video;
 
 //! Kept next to the other per-module settings rather than in the project,

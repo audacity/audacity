@@ -23,8 +23,7 @@ namespace au::video {
 //! Path of `absolute` relative to `projectDir`, or empty when there is no
 //! sensible relative form - a different drive, or nothing above the project
 //! directory worth walking up through.
-std::string makeRelativeVideoPath(const std::string& projectDir,
-                                  const std::string& absolute);
+std::string makeRelativeVideoPath(const std::string& projectDir, const std::string& absolute);
 
 //! Picks whichever stored path still points at a file, relative first.
 //! Returns empty when neither does.
@@ -32,9 +31,7 @@ std::string makeRelativeVideoPath(const std::string& projectDir,
 //! `exists` is injected so the whole thing is testable without touching a
 //! disk. `projectDir` empty means the project has never been saved, in which
 //! case only the absolute path can mean anything.
-std::string resolveVideoPath(const std::string& absolute,
-                             const std::string& relative,
-                             const std::string& projectDir,
+std::string resolveVideoPath(const std::string& absolute, const std::string& relative, const std::string& projectDir,
                              const std::function<bool(const std::string&)>& exists);
 }
 

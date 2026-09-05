@@ -30,15 +30,6 @@ void VideoPanelMenuModel::load()
         m_subscribed = true;
     }
 
-    if (!m_subscribed && videoService() != nullptr) {
-        // Rebuild whenever a video comes or goes, so the enabled state is not
-        // frozen at whatever it was when the panel was first created.
-        videoService()->attachedChanged().onNotify(this, [this]() {
-            load();
-        });
-        m_subscribed = true;
-    }
-
     // Rebuilt on every open, so "Set offset…" carries the current value and
     // both items disable themselves when there is nothing attached.
     const bool hasVideo = videoService() != nullptr && videoService()->isAttached();

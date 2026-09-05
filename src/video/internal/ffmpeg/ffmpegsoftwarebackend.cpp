@@ -402,8 +402,7 @@ bool FFmpegSoftwareBackend::seekAndDecode(int64_t targetPts)
 
     const double base = static_cast<double>(m_timeBaseNum) / m_timeBaseDen;
     const int64_t forwardWindow = static_cast<int64_t>(FORWARD_WINDOW_SEC / base);
-    const int64_t ticksPerSecond =
-        std::max<int64_t>(1, static_cast<int64_t>(llround(1.0 / base)));
+    const int64_t ticksPerSecond = std::max<int64_t>(1, static_cast<int64_t>(llround(1.0 / base)));
 
     const bool canDecodeForward = m_haveFrame
                                   && targetPts >= m_lastDecodedPts
