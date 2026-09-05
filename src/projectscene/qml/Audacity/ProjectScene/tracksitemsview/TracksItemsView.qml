@@ -356,6 +356,16 @@ Rectangle {
 
             property double displayedPlayCursorX: playCursorController.positionX
 
+            //! Where the playhead is actually drawn. During playback
+            //! displayedPlayCursorX comes from time x zoom and so lands
+            //! between pixels, and a one pixel line drawn on a fraction is
+            //! spread over two - which is why the playhead looks smudged while
+            //! playing but crisp while dragged, where the position comes from
+            //! whole mouse pixels. Rounding gives the dragged appearance in
+            //! both cases. Only the drawing is snapped; the time the playhead
+            //! represents is untouched.
+            readonly property int playCursorPixelX: Math.round(displayedPlayCursorX)
+
             function updateCursorPosition(x, y) {
                 const snappedTime = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
                 lineCursor.x = timeline.context.timeToPosition(snappedTime)
@@ -407,7 +417,7 @@ Rectangle {
                 property bool dragActive: false
                 property double dragPositionX: timeline.displayedPlayCursorX
 
-                x: timeline.displayedPlayCursorX - (width / 2)
+                x: timeline.playCursorPixelX - Math.round(width / 2)
 
                 MouseArea {
                     anchors.fill: parent
@@ -1261,7 +1271,7 @@ Rectangle {
             anchors.top: tracksItemsViewArea.top
             anchors.bottom: parent.bottom
 
-            x: timeline.displayedPlayCursorX
+            x: timeline.playCursorPixelX
         }
 
         Rectangle {
