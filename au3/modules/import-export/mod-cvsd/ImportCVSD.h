@@ -51,6 +51,9 @@ private:
     int mBytesPerSample;
     int64_t mNumSamples;
     CVSD_CONFIG mDecoderConfig;
+    // Fixed-point decoder state. Zero-initialised once per file and carried across
+    // Import()'s block reads, so the integrator does not restart at every block boundary.
+    T_CVSD_MAIN_STRUCT mDecoderParams {};
     sampleFormat mFormat;
     std::unique_ptr<wxFFile> wxCVSDFile;
 };

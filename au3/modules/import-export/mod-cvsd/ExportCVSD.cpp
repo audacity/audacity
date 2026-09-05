@@ -1,5 +1,66 @@
 #include "ExportCVSD.h"
 
+#include <cstdlib>
+
+void cvsd_encode(const int16_t *voice_frame, size_t len, T_CVSD_MAIN_STRUCT& params,
+                 CVSD_BITPACKER& packer, std::vector<u_int8_t>& cvsd_out)
+{
+    int16_t current_bit;
+    int32_t tmp1, tmp2;
+    size_t i;
+
+
+    for (i = 0; i<len; i++)
+    {
+        params.In_current = voice_frame[i];
+
+        if (params.In_current >(params.product))
+            current_bit = 1;
+        else
+            current_bit = -1;
+
+        params.bit_accum = current_bit + params.prev1 + params.prev2;
+
+        tmp1 = (SYLLABIC_CONST * params.step) >> 15;
+
+        if (std::abs(params.bit_accum) == 3)
+            params.step = tmp1 + DELTA_MAX;
+        else
+            params.step = tmp1 + DELTA_MIN;
+        tmp1 = (PRM_INTEG_CONST * params.product) >> 15;
+        tmp2 = params.step*current_bit;
+
+        params.product = tmp1 + tmp2;
+
+        // Shift
+        params.prev2 = params.prev1;
+        params.prev1 = current_bit;
+
+        params.Out_current = (current_bit + 1) >> 1; // -1 --> 0; 1 --> 1
+
+        // Most significant bit first, matching cvsd_decode()'s (byte >> (7 - i % 8)) & 1
+        packer.partialByte <<= 1;
+        packer.partialByte |= params.Out_current;
+        if (++packer.partialBits == 8) {
+            cvsd_out.push_back(packer.partialByte);
+            packer.partialByte = 0;
+            packer.partialBits = 0;
+        }
+    }
+}
+
+// Left-aligns any leftover bits into a final byte.
+// Only valid after the last block.
+void cvsd_encode_flush(CVSD_BITPACKER& packer, std::vector<u_int8_t>& cvsd_out)
+{
+    if (packer.partialBits > 0) {
+        packer.partialByte <<= (8 - packer.partialBits);
+        cvsd_out.push_back(packer.partialByte);
+        packer.partialByte = 0;
+        packer.partialBits = 0;
+    }
+}
+
 std::vector<u_int8_t> CVSDEncode(std::vector<int16_t> temp, CVSD_CONFIG& current_config, size_t numSamples)
 {
     const auto& audioBuffer = temp;
@@ -203,8 +264,20 @@ ExportResult ExportCVSDProcessor::Process(ExportProcessorDelegate& delegate)
                 LinearPCMBuffer.push_back(linearSample);
             }
             EncoderOuputFromBuffer = CVSDEncode(LinearPCMBuffer, config, pcmNumSamples);
-            context.mfile->Write( EncoderOuputFromBuffer.data(),
-                EncoderOuputFromBuffer.size());
+
+            std::vector<u_int8_t> EncodeData;
+            EncodeData.reserve(pcmNumSamples / 8 + 1);
+            cvsd_encode(LinearPCMBuffer.data(), pcmNumSamples, mEncoderParams, mBitPacker, EncodeData);
+            if (!EncodeData.empty()) {
+                context.mfile->Write(EncodeData.data(), EncodeData.size());
+            }
+        }
+
+        // Emit the trailing partial byte, if the total sample count was not a multiple of 8
+        std::vector<u_int8_t> FinalByte;
+        cvsd_encode_flush(mBitPacker, FinalByte);
+        if (!FinalByte.empty()) {
+            context.mfile->Write(FinalByte.data(), FinalByte.size());
         }
     }
 

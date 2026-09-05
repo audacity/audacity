@@ -1,5 +1,7 @@
 #include "ImportCVSD.h"
 
+#include <cstdlib>
+
 #include <MacTypes.h>
 #include <wx/log.h>
 #include <wx/setup.h>
@@ -19,52 +21,52 @@ static const auto exts = {
   wxT("CVSD"), wxT("CVSDM")
 };
 
-void CVSDDecode(wxFFile* wxCVSDFile, int16_t* PCMbuffer, uint32_t& samplesRead, const uint32_t samples_to_read, CVSD_CONFIG& mDecoderConfig)
+void cvsd_decode(int16_t *voice_frame, const uint8_t *cvsd_in_pack, size_t len, T_CVSD_MAIN_STRUCT& params)
 {
-    std::vector<uint8_t> CVSDBuffer(samples_to_read, 0);
+    int32_t tmp1, tmp2, tmp3;
+    size_t i;
 
-    // Read the entire file into the buffer
-    const size_t bytesRead = wxCVSDFile->Read(CVSDBuffer.data(), samples_to_read);
-
-    // don't need to handle eof for now
-
-    // raw binary file
-    int sampleIndex = 0;
-    for (size_t i=0; i<bytesRead; i++)
+    for (i = 0; i<len; i++)
     {
-        uint8_t rawCVSDbyte = CVSDBuffer[i];
+        params.In_current = (cvsd_in_pack[i / 8] >> (7 - i % 8)) & 1; //extract current bit from byte
 
-        // unpack bit-by-bit
-        for (int bitPos = 7; bitPos >= 0; bitPos--) {
-            bool bit = (rawCVSDbyte >> bitPos) & 0x01;
+        params.In_current = 2 * params.In_current - 1;   // 0 --> -1; 1 --> 1
 
-            // Update decoder state (bitHistory, accumulator, etc.)
-            mDecoderConfig.bitHistory <<= 1;
-            mDecoderConfig.bitHistory |= bit ? 1 : 0;
-            mDecoderConfig.bitHistory &= 0x0F;
+        params.bit_accum = params.In_current + params.prev1 + params.prev2;
 
-            bool alpha = (mDecoderConfig.bitHistory == 0x00 || mDecoderConfig.bitHistory == 0x0F);
-            if (mDecoderConfig.alpha) {
-                mDecoderConfig.accumulatorStepSize = std::min(
-                mDecoderConfig.accumulatorStepSize + mDecoderConfig.minAccumulatorStepSize,
-                    static_cast<float>(mDecoderConfig.maxAccumulatorStepSize));
-            } else {
-                mDecoderConfig.accumulatorStepSize = std::max(
-                    mDecoderConfig.accumulatorStepSize * static_cast<float>(mDecoderConfig.stepSizeDecay),
-                    static_cast<float>(mDecoderConfig.minAccumulatorStepSize));
-            }
+        tmp1 = (SYLLABIC_CONST * params.dec_step) >> 15;
 
-            mDecoderConfig.accumulator += (bit ? 1.0f : -1.0f) * mDecoderConfig.accumulatorStepSize;
-            mDecoderConfig.accumulator = std::clamp(
-                mDecoderConfig.accumulator,
-                mDecoderConfig.minAccumulatorSize,
-                mDecoderConfig.maxAccumulatorSize);
+        if (std::abs(params.bit_accum) == 3)
+            params.dec_step = tmp1 + DELTA_MAX;
+        else
+            params.dec_step = tmp1 + DELTA_MIN;
 
-            // Assign to PCMBuffer using index
-            PCMbuffer[sampleIndex++] = static_cast<int16_t>(mDecoderConfig.accumulator);
-        }
+        //  Primary reconstruction integration
+        tmp1 = (INTEG_B1 * params.dec_prev1) >> 15;
+        tmp2 = (INTEG_B2 * params.dec_prev2) >> 15;
+
+        tmp3 = (INTEG_G2D * params.dec_step) >> 15;
+        tmp3 = tmp3 * params.In_current;
+
+        tmp1 = tmp1 - tmp2 + tmp3;
+
+        //  Saturation process
+        if (tmp1 >= 32767)        // up overflow
+            params.Out_current = 32767;
+        else if (tmp1 <= -32768)  // down overflow
+            params.Out_current = -32768;
+        else                      // no overflow
+            params.Out_current = tmp1;
+
+        //  Shift
+        params.prev2 = params.prev1;
+        params.prev1 = params.In_current;
+
+        params.dec_prev2 = params.dec_prev1;
+        params.dec_prev1 = params.Out_current;
+
+        voice_frame[i] = params.Out_current;
     }
-    samplesRead=sampleIndex;
 }
 
 CVSDImportPlugin::CVSDImportPlugin()
@@ -154,14 +156,22 @@ void CVSDImportFileHandle::Import(
 
     auto tracks = trackFactory->Create(mNumChannels, mFormat, mSampleRate);
     const size_t SAMPLES_TO_READ = (tracks->GetMaxBlockSize());
-    int totalSamplesRead = 0;
+    int64_t totalSamplesRead = 0;
     {
-        const uint32_t bufferSize = (mNumChannels * SAMPLES_TO_READ)/8;
-        ArrayOf<int16_t> int16Buffer { bufferSize*8 };
-        uint32_t samplesRead = 0;
-        do
+        const size_t bytesToRead = (mNumChannels * SAMPLES_TO_READ)/8;
+        ArrayOf<uint8_t> cvsdBuffer { bytesToRead };
+        ArrayOf<int16_t> int16Buffer { bytesToRead*8 };
+
+        while (!IsCancelled() && !IsStopped())
         {
-            CVSDDecode(wxCVSDFile.get(), int16Buffer.get(), samplesRead, bufferSize, mDecoderConfig);
+            const size_t bytesRead = wxCVSDFile->Read(cvsdBuffer.get(), bytesToRead);
+            if (bytesRead == 0) {
+                break;
+            }
+
+            const size_t samplesRead = bytesRead * 8;
+            cvsd_decode(int16Buffer.get(), cvsdBuffer.get(), samplesRead, mDecoderParams);
+
             ImportUtils::ForEachChannel(*tracks, [&](auto& channel)
             {
                 channel.AppendBuffer(
@@ -174,12 +184,12 @@ void CVSDImportFileHandle::Import(
             });
 
             totalSamplesRead += samplesRead;
-        } while (!IsCancelled() && !IsStopped() && samplesRead != 0);
-
+        }
     }
 
     if (IsCancelled()) {
         progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
+        return;
     }
 
     if (totalSamplesRead < mNumSamples && !IsStopped()) {
