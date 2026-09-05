@@ -112,8 +112,6 @@ void VideoService::storeInProject()
     ref->setDuration(info.duration.to_double());
     ref->setFrameRate(info.frameRate);
     ref->setOffset(m_offset.to_double());
-
-    commitProjectChange();
 }
 
 void VideoService::commitProjectChange()
@@ -157,7 +155,7 @@ void VideoService::restoreFromProject()
     // offset along with the rest of the attachment state.
     const double savedOffset = ref->offset();
 
-    const VideoError err = attach(resolved);
+    const VideoError err = attach(resolved, CommitToProject::No);
     if (err != VideoError::None) {
         return;
     }
@@ -197,6 +195,11 @@ bool VideoService::sourceMismatch() const
 }
 
 VideoError VideoService::attach(const std::string& path)
+{
+    return attach(path, CommitToProject::Yes);
+}
+
+VideoError VideoService::attach(const std::string& path, CommitToProject commit)
 {
     detach();
 

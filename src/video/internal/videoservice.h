@@ -45,6 +45,15 @@ public:
     ~VideoService() override;
 
     VideoError attach(const std::string& path) override;
+
+    //! Whether an attach should mark the project as changed. Restoring a
+    //! saved attachment must not: it writes back what it read.
+    enum class CommitToProject {
+        No,
+        Yes
+    };
+
+    VideoError attach(const std::string& path, CommitToProject commit);
     void detach() override;
 
     bool isAttached() const override;
