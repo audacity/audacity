@@ -61,67 +61,6 @@ void cvsd_encode_flush(CVSD_BITPACKER& packer, std::vector<u_int8_t>& cvsd_out)
     }
 }
 
-std::vector<u_int8_t> CVSDEncode(std::vector<int16_t> temp, CVSD_CONFIG& current_config, size_t numSamples)
-{
-    const auto& audioBuffer = temp;
-    std::vector<u_int8_t> EncoderOutput;
-    u_int8_t currentByte = 0;
-    int bitCount = 0;
-
-    // process sample-by-sample
-    for (size_t i = 0; i < numSamples; ++i) {
-        int16_t x = audioBuffer[i];
-
-        // 1. Compute current bit:
-        current_config.b = (x >= current_config.accumulator);
-
-        // 2. Check if last 4 bits are all 0s or all 1s
-        current_config.alpha = (current_config.bitHistory == 0x00 || current_config.bitHistory == 0x0F);
-
-        // 3. Update step size (δ(k)) based on PREVIOUS J bits
-        if (current_config.alpha) {
-            current_config.accumulatorStepSize = std::min(
-                current_config.accumulatorStepSize + current_config.minAccumulatorStepSize,
-                static_cast<float>(current_config.maxAccumulatorStepSize));
-        } else {
-            current_config.accumulatorStepSize = std::max(
-                current_config.accumulatorStepSize * static_cast<float>(current_config.stepSizeDecay),
-                static_cast<float>(current_config.minAccumulatorStepSize));
-        }
-
-        // 4. Update bit history (J-bit window for syllabic companding)
-        current_config.bitHistory <<= 1;
-        current_config.bitHistory |= current_config.b ? 1 : 0;
-        current_config.bitHistory &= 0x0F;  // Keep only last 4 bits
-
-        // 5. Pack the bit
-        currentByte <<= 1;
-        currentByte |= current_config.b ? 1 : 0;
-        bitCount++;
-
-        // 6. Push full bytes
-        if (bitCount == 8) {
-            EncoderOutput.push_back(currentByte);
-            currentByte = 0;
-            bitCount = 0;
-        }
-
-        // 7. Update accumulator: y(k) = y(k-1) + b(k) * δ(k)
-        current_config.accumulator += (current_config.b ? 1.0f : -1.0f) * current_config.accumulatorStepSize;
-        current_config.accumulator = std::clamp(
-            current_config.accumulator,
-            current_config.minAccumulatorSize,
-            current_config.maxAccumulatorSize);
-    }
-
-    // Push remaining bits at the end
-    if (bitCount > 0) {
-        currentByte <<= (8 - bitCount);
-        EncoderOutput.push_back(currentByte);
-    }
-    return EncoderOutput;
-};
-
 void CVSDDecode(std::unique_ptr<wxFFile> openedFile)
 {
 
