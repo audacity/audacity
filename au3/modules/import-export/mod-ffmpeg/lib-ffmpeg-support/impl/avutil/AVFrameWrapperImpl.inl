@@ -108,6 +108,78 @@ public:
       return {};
    }
 
+   AudacityAVPixelFormat GetPixelFormat() const noexcept override
+   {
+      if (mAVFrame == nullptr)
+         return AUDACITY_AV_PIX_FMT_NONE;
+
+      switch (static_cast<AVPixelFormat>(mAVFrame->format))
+      {
+      case AV_PIX_FMT_YUV420P:
+         return AUDACITY_AV_PIX_FMT_YUV420P;
+      case AV_PIX_FMT_YUVJ420P:
+         return AUDACITY_AV_PIX_FMT_YUVJ420P;
+      default:
+         return AUDACITY_AV_PIX_FMT_UNSUPPORTED;
+      }
+   }
+
+   AudacityAVColorSpace GetColorSpace() const noexcept override
+   {
+      if (mAVFrame == nullptr)
+         return AUDACITY_AVCOL_SPC_UNSPECIFIED;
+
+      switch (mAVFrame->colorspace)
+      {
+      case AVCOL_SPC_BT709:
+         return AUDACITY_AVCOL_SPC_BT709;
+      case AVCOL_SPC_BT470BG:
+      case AVCOL_SPC_SMPTE170M:
+         return AUDACITY_AVCOL_SPC_BT601;
+      default:
+         return AUDACITY_AVCOL_SPC_UNSPECIFIED;
+      }
+   }
+
+   AudacityAVColorRange GetColorRange() const noexcept override
+   {
+      if (mAVFrame == nullptr)
+         return AUDACITY_AVCOL_RANGE_UNSPECIFIED;
+
+      switch (mAVFrame->color_range)
+      {
+      case AVCOL_RANGE_MPEG:
+         return AUDACITY_AVCOL_RANGE_MPEG;
+      case AVCOL_RANGE_JPEG:
+         return AUDACITY_AVCOL_RANGE_JPEG;
+      default:
+         return AUDACITY_AVCOL_RANGE_UNSPECIFIED;
+      }
+   }
+
+   AudacityAVColorTransfer GetColorTransfer() const noexcept override
+   {
+      if (mAVFrame == nullptr)
+         return AUDACITY_AVCOL_TRC_UNSPECIFIED;
+
+      switch (mAVFrame->color_trc)
+      {
+#if LIBAVUTIL_VERSION_MAJOR >= 55
+      // The high dynamic range transfer functions were added after 2.3.6.
+      // That build cannot decode video at all - it has no send/receive API -
+      // so this only has to compile there, not work.
+      case AVCOL_TRC_SMPTE2084:
+         return AUDACITY_AVCOL_TRC_SMPTE2084;
+      case AVCOL_TRC_ARIB_STD_B67:
+         return AUDACITY_AVCOL_TRC_ARIB_STD_B67;
+#endif
+      case AVCOL_TRC_UNSPECIFIED:
+         return AUDACITY_AVCOL_TRC_UNSPECIFIED;
+      default:
+         return AUDACITY_AVCOL_TRC_SDR;
+      }
+   }
+
    AudacityAVRational GetSampleAspectRatio() const noexcept override
    {
       if (mAVFrame != nullptr)

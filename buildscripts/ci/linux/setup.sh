@@ -87,11 +87,13 @@ apt_packages_runtime=(
   libvulkan-dev
   )
 
+# Only the command line tool, used to generate the video test fixtures, plus
+# the font their burnt-in frame counter is drawn with. Audacity itself loads
+# FFmpeg at runtime by soname and never links it, so the -dev packages are
+# not needed to build or to test.
 apt_packages_ffmpeg=(
   ffmpeg
-  libavcodec-dev
-  libavformat-dev
-  libswscale-dev
+  fonts-dejavu-core
   )
 
 apt_packages_au3=(
@@ -114,6 +116,7 @@ sudo apt-get install -y --no-install-recommends \
   "${apt_packages_basic[@]}" \
   "${apt_packages_standard[@]}" \
   "${apt_packages_runtime[@]}" \
+  "${apt_packages_ffmpeg[@]}" \
   "${apt_packages_au3[@]}"
 
 ##########################################################################

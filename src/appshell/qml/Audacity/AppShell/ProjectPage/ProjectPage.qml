@@ -30,6 +30,7 @@ import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.TrackEdit
+import Audacity.Video
 
 DockPage {
     id: root
@@ -44,6 +45,17 @@ DockPage {
     signal externalDropAreaEntered(var drop)
     signal externalDropAreaExited
     signal externalDropAreaDropped(var drop)
+
+    //! Backs the video panel's "..." menu. Declared here rather than inside
+    //! VideoPanel because DockPanel takes its content as a Component, so an
+    //! id declared in there is not reachable from the dock that needs it.
+    VideoPanelMenuModel {
+        id: videoPanelMenuModel
+
+        Component.onCompleted: {
+            videoPanelMenuModel.load()
+        }
+    }
 
     TrackNavigationModel {
         id: tracksNavModel
@@ -437,6 +449,51 @@ DockPage {
             HistoryPanel {
                 navigationSection: historyPanel.navigationSection
                 navigationOrderStart: historyPanel.contentNavigationPanelOrderStart
+            }
+        },
+        DockPanel {
+            id: videoPanel
+
+            objectName: root.pageModel.videoPanelName()
+            title: qsTrc("appshell", "Video")
+
+            navigationSection: root.navigationPanelSec(videoPanel.location)
+
+            //! NOTE: unlike the history panel this one is resizable, since how
+            //! large the picture is matters to whoever is watching it. The
+            //! minimum is deliberately well below the starting width - binding
+            //! it to verticalPanelDefaultWidth, as the fixed-width panels do,
+            //! meant the panel could be grown but never shrunk, so dragging it
+            //! narrower snapped straight back.
+            width: root.verticalPanelDefaultWidth
+            minimumWidth: 160
+
+            //! A floor so it stays usable when docked as a horizontal strip.
+            //! Deliberately no maximumHeight: no other panel sets one, and a
+            //! cap applies in every orientation - dropped beside the timeline
+            //! it stopped the panel filling the column, so it landed short and
+            //! had to be dragged to fit. The declared "location" cannot be used
+            //! to apply it only when horizontal: nothing updates that property
+            //! when the user moves the dock.
+            minimumHeight: 120
+
+            contextMenuModel: videoPanelMenuModel
+
+            groupName: root.verticalPanelsGroup
+            location: Location.Right
+
+            //! NOTE: hidden by default
+            visible: false
+
+            //! Unlike the other panels this one can also be dropped above or
+            //! below the tracks, not only beside them. Where the picture wants
+            //! to be depends on the edit, and a wide short strip over the
+            //! timeline is a reasonable place for it.
+            dropDestinations: root.verticalPanelDropDestinations.concat(root.horizontalPanelDropDestinations)
+
+            VideoPanel {
+                navigationSection: videoPanel.navigationSection
+                navigationOrderStart: videoPanel.contentNavigationPanelOrderStart
             }
         }
     ]
