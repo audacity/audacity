@@ -24,7 +24,14 @@ static QStringList prepareArguments(int argc, char** argv)
     QStringList args;
 
     for (int i = 0; i < argc; ++i) {
-        QString arg = QString::fromLocal8Bit(argv[i]);
+        // argv is UTF-8 on every path that reaches here: main.cpp rebuilds it
+        // from CommandLineToArgvW through toUtf8() on Windows, GuiApp builds it
+        // from muse::StringList, and it is natively UTF-8 elsewhere - main.cpp
+        // reads the very same buffers back with fromUtf8(). fromLocal8Bit()
+        // decodes with the Windows ANSI code page instead, which turns any name
+        // outside that page into mojibake; off Windows Qt maps it to UTF-8
+        // anyway, so this is the correct decode on all platforms.
+        QString arg = QString::fromUtf8(argv[i]);
 
 #ifndef NDEBUG
         if (arg.startsWith("-qmljsdebugger")) {
