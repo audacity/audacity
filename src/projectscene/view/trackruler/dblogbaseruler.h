@@ -4,6 +4,7 @@
 #pragma once
 
 #include "projectscene/view/trackruler/itrackruler.h"
+#include <string>
 
 namespace au::projectscene {
 struct DbLogRulerUiSettings {

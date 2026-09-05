@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <QQuickItem>
+#include <QtQuick/QQuickItem>
 
 #include "global/modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"

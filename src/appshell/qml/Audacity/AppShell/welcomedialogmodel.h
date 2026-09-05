@@ -26,7 +26,7 @@
 
 #include <QObject>
 #include <qcontainerfwd.h>
-#include <qqmlintegration.h>
+#include <QtQmlIntegration/qqmlintegration.h>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"

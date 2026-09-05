@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <limits>
 
-#include <QJSEngine>
+#include <QtQml/QJSEngine>
 
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project/Project.h"

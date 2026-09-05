@@ -7,6 +7,10 @@
 
 #include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
 
+#include <QtQml/qqml.h>
+#include <QtQml/QJSEngine>
+#include <QtQml/QQmlEngine>
+
 #define REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(Factory) \
     qmlRegisterSingletonType<Factory>("Audacity.Effects", 1, 0, #Factory, \
                                       [] (QQmlEngine*, QJSEngine*) -> QObject* { \

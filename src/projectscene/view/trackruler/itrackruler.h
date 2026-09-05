@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <vector>
+#include <string>
 
 namespace au::projectscene {
 enum class IsFullWidthTick : bool {

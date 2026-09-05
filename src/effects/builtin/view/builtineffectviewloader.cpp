@@ -23,8 +23,8 @@
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/internal/abstractviewlauncher.h"
 
-#include <QQmlEngine>
-#include <QQmlContext>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "global/types/number.h"
