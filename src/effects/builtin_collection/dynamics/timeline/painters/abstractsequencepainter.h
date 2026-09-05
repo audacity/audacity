@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <QSGGeometry>
+#include <QtQuick/QSGGeometry>
 
 #include <atomic>
 

@@ -6,6 +6,8 @@
 #include "framework/global/io/path.h"
 #include "framework/global/types/retval.h"
 
+#include <QDateTime>
+
 using namespace au::au3cloud;
 
 AccountModel::AccountModel(QObject* parent)

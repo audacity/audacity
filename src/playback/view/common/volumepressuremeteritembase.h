@@ -5,7 +5,7 @@
 
 #include <QColor>
 #include <QPointer>
-#include <QQuickPaintedItem>
+#include <QtQuick/QQuickPaintedItem>
 
 #include <vector>
 

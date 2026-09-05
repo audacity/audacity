@@ -3,8 +3,8 @@
 */
 #include "recordmodule.h"
 
-#include <QQmlEngine>
-#include <QtQml>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QtQml>
 
 #include "modularity/ioc.h"
 

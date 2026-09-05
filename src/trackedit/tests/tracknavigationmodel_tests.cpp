@@ -3,8 +3,8 @@
 */
 #include <gtest/gtest.h>
 
-#include <QQmlEngine>
-#include <QQmlContext>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
 
 #include "../view/tracknavigationmodel.h"
 

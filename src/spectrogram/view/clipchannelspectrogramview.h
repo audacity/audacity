@@ -11,7 +11,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
-#include <QQuickPaintedItem>
+#include <QtQuick/QQuickPaintedItem>
 
 namespace au::spectrogram {
 class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Contextable

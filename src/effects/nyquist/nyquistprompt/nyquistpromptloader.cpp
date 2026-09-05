@@ -2,8 +2,13 @@
  * Audacity: A Digital Audio Editor
  */
 #include "nyquistpromptloader.h"
+#include "nyquistprompteffect.h"
+#include "nyquistpromptviewmodel.h"
 
 #include "au3-effects/LoadEffects.h"
+#include "au3wrap/internal/wxtypes_convert.h"
+
+#include <QtQml/qqml.h>
 
 namespace au::effects {
 void NyquistPromptLoader::preInit()

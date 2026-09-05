@@ -4,7 +4,7 @@
  */
 #include "bytebuffer.h"
 
-#include <QJSEngine>
+#include <QtQml/QJSEngine>
 
 using namespace muse::extensions;
 

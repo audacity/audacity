@@ -3,7 +3,7 @@
  */
 #include "audiounitview.h"
 
-#include <QQuickWindow>
+#include <QtQuick/QQuickWindow>
 
 #include "framework/global/log.h"
 

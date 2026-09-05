@@ -7,7 +7,7 @@
 #include <memory>
 #include <string>
 
-#include <QJSValue>
+#include <QtQml/QJSValue>
 #include <QObject>
 
 #include "trackedit/api/audiotransform.h"

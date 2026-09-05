@@ -8,7 +8,7 @@
 #include <QScreen>
 #include <QPixmap>
 #include <QWindow>
-#include <QQuickWindow>
+#include <QtQuick/QQuickWindow>
 
 #include "log.h"
 

@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <QQuickItem>
+#include <QtQuick/QQuickItem>
 
 namespace au::projectscene {
 class MouseHelper : public QObject
