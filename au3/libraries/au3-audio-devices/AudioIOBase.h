@@ -78,6 +78,10 @@ struct AudioIOStartStreamOptions
 
     bool loopEnabled{ false };
     bool variableSpeed{ false };
+
+    // Zero-based physical input channels grouped by destination track.  A
+    // one-element group is mono; a two-element group is a stereo pair.
+    std::vector<std::vector<unsigned int> > inputChannelSelection;
 };
 
 struct AudioIODiagnostics {

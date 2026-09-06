@@ -11,6 +11,24 @@
 namespace audacity::audio_io::details {
 using InputChannelSelection = std::vector<std::vector<unsigned int> >;
 
+inline bool IsStructurallyValidInputChannelSelection(
+    const InputChannelSelection& selection)
+{
+    std::vector<unsigned int> usedChannels;
+    for (const auto& group : selection) {
+        if (group.empty() || group.size() > 2) {
+            return false;
+        }
+        for (const auto channel : group) {
+            if (std::find(usedChannels.begin(), usedChannels.end(), channel) != usedChannels.end()) {
+                return false;
+            }
+            usedChannels.push_back(channel);
+        }
+    }
+    return true;
+}
+
 inline InputChannelSelection LegacyInputChannelSelection(size_t channels)
 {
     if (channels == 1) {
@@ -25,6 +43,55 @@ inline InputChannelSelection LegacyInputChannelSelection(size_t channels)
         result.push_back({ static_cast<unsigned int>(channel) });
     }
     return result;
+}
+
+inline size_t InputChannelSelectionCount(const InputChannelSelection& selection)
+{
+    size_t result = 0;
+    for (const auto& group : selection) {
+        result += group.size();
+    }
+    return result;
+}
+
+inline std::vector<unsigned int> FlattenInputChannelSelection(
+    const InputChannelSelection& selection)
+{
+    std::vector<unsigned int> result;
+    result.reserve(InputChannelSelectionCount(selection));
+    for (const auto& group : selection) {
+        result.insert(result.end(), group.begin(), group.end());
+    }
+    return result;
+}
+
+inline size_t InputChannelSelectionStreamWidth(
+    const InputChannelSelection& selection)
+{
+    size_t result = 0;
+    for (const auto& group : selection) {
+        for (const auto channel : group) {
+            result = std::max(result, static_cast<size_t>(channel) + 1);
+        }
+    }
+    return result;
+}
+
+template<typename Sample>
+inline bool CopyInputChannel(
+    const Sample* inputSamples, size_t inputStreamChannels,
+    unsigned int inputChannel, Sample* outputSamples, size_t frames)
+{
+    if (!inputSamples || !outputSamples || inputStreamChannels == 0
+        || inputChannel >= inputStreamChannels) {
+        return false;
+    }
+
+    for (size_t frame = 0; frame < frames; ++frame) {
+        outputSamples[frame]
+            = inputSamples[frame * inputStreamChannels + inputChannel];
+    }
+    return true;
 }
 
 inline void MixInputChannelSelectionToStereo(
@@ -56,4 +123,25 @@ inline void MixInputChannelSelectionToStereo(
     }
 }
 
+inline float InputChannelSelectionPeak(
+    const float* inputSamples, size_t inputStreamChannels,
+    const std::vector<unsigned int>& inputChannelIndices, size_t frames)
+{
+    if (!inputSamples || inputStreamChannels == 0) {
+        return 0.0f;
+    }
+
+    float maxPeak = 0.0f;
+    for (size_t frame = 0; frame < frames; ++frame) {
+        for (const auto channel : inputChannelIndices) {
+            if (channel >= inputStreamChannels) {
+                continue;
+            }
+            maxPeak = std::max(
+                maxPeak,
+                std::fabs(inputSamples[frame * inputStreamChannels + channel]));
+        }
+    }
+    return maxPeak;
+}
 }

@@ -246,6 +246,7 @@ public:
     std::vector<std::vector<size_t> > mTrackChannelSourceMap;
     bool mCaptureNeedsMixdown{ false };
     std::vector<std::vector<unsigned int> > mInputChannelSelection;
+    std::vector<unsigned int> mInputChannelIndices;
     //!Buffers that hold outcome of transformations applied to each individual sample source.
     //!Number of buffers equals to the sum of number all source channels.
     std::vector<std::vector<float> > mProcessingBuffers;
@@ -293,8 +294,11 @@ public:
     /*! Read by a worker thread but unchanging during playback */
     bool mPauseRec;
     float mSilenceLevel;
-    /*! Read by a worker thread but unchanging during playback */
+    /*! Flattened selected logical input count. Read by a worker thread but
+        unchanging during playback. */
     size_t mNumCaptureChannels;
+    /*! Raw interleaved PortAudio input width; may exceed the selected count. */
+    size_t mNumInputStreamChannels{};
     /*! Read by a worker thread but unchanging during playback */
     size_t mNumPlaybackChannels;
     sampleFormat mCaptureFormat;

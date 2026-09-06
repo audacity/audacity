@@ -82,10 +82,12 @@ public:
         });
     }
 
-    void setInputChannelCount(size_t channels)
+    void setSelection(const details::InputChannelSelection& selection)
     {
-        m_callback.mNumCaptureChannels = channels;
-        m_callback.mInputChannelSelection = details::LegacyInputChannelSelection(channels);
+        m_callback.mInputChannelSelection = selection;
+        m_callback.mInputChannelIndices = details::FlattenInputChannelSelection(selection);
+        m_callback.mNumCaptureChannels = m_callback.mInputChannelIndices.size();
+        m_callback.mNumInputStreamChannels = details::InputChannelSelectionStreamWidth(selection);
     }
 
     void setTracks(const std::vector<size_t>& channelCounts, const std::vector<std::vector<size_t> >& sourceMap)
@@ -99,10 +101,10 @@ public:
 
     void pushInput(const std::vector<float>& input)
     {
-        ASSERT_GT(m_callback.mNumCaptureChannels, 0u);
-        ASSERT_EQ(input.size() % m_callback.mNumCaptureChannels, 0u);
+        ASSERT_GT(m_callback.mNumInputStreamChannels, 0u);
+        ASSERT_EQ(input.size() % m_callback.mNumInputStreamChannels, 0u);
         m_submissions.clear();
-        m_callback.PushInputMeterValues(m_sender, input.data(), input.size() / m_callback.mNumCaptureChannels, m_dacTime);
+        m_callback.PushInputMeterValues(m_sender, input.data(), input.size() / m_callback.mNumInputStreamChannels, m_dacTime);
     }
 
     void expectMainMeter(const std::vector<std::vector<float> >& expected, size_t stride)
@@ -140,9 +142,55 @@ public:
     std::vector<MeterSubmission> m_submissions;
 };
 
+struct InputMeterCase {
+    const char* name;
+    details::InputChannelSelection selection;
+    std::vector<float> input;
+    std::vector<std::vector<float> > expected;
+};
+
+class AudioIOInputMeterRoutesTests : public AudioIOInputMeterTests, public ::testing::WithParamInterface<InputMeterCase>
+{
+};
+
+TEST_P(AudioIOInputMeterRoutesTests, PreservesEachSelectedInputIndependently)
+{
+    const auto& testCase = GetParam();
+    setSelection(testCase.selection);
+
+    ASSERT_NO_FATAL_FAILURE(pushInput(testCase.input));
+
+    expectMainMeter(testCase.expected, m_callback.mNumInputStreamChannels);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    SelectedInputs,
+    AudioIOInputMeterRoutesTests,
+    ::testing::Values(
+        InputMeterCase { "NonAdjacentMonos", { { 0 }, { 2 } },
+                        { 0.8f, 0.99f, 0.0f, -0.4f, -0.99f, 0.2f, 0.6f, 0.99f, -0.6f },
+                        { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
+        InputMeterCase { "AdjacentMonos", { { 0 }, { 1 } },
+                        { 0.8f, 0.0f, -0.4f, 0.2f, 0.6f, -0.6f },
+                        { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
+        InputMeterCase { "FirstStereoPair", { { 0, 1 } },
+                        { 0.8f, 0.0f, -0.4f, 0.2f, 0.6f, -0.6f },
+                        { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
+        InputMeterCase { "HigherStereoPair", { { 2, 3 } },
+                        { 0.99f, -0.99f, 0.8f, 0.0f, -0.99f, 0.99f, -0.4f, 0.2f, 0.99f, -0.99f, 0.6f, -0.6f },
+                        { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
+        InputMeterCase { "FirstMono", { { 0 } },
+                        { 0.4f, -0.5f, 0.6f }, { { 0.4f, -0.5f, 0.6f } } },
+        InputMeterCase { "HigherMono", { { 3 } },
+                        { 0.99f, -0.99f, 0.75f, 0.4f, -0.99f, 0.99f, 0.2f, -0.5f, 0.99f, -0.99f, 0.3f, 0.6f },
+                        { { 0.4f, -0.5f, 0.6f } } }),
+    [](const ::testing::TestParamInfo<InputMeterCase>& info) {
+    return info.param.name;
+});
+
 TEST_F(AudioIOInputMeterTests, PassesUnclampedSamplesToTheMeter)
 {
-    setInputChannelCount(2);
+    setSelection({ { 0, 1 } });
 
     ASSERT_NO_FATAL_FAILURE(pushInput({ 1.5f, 0.0f, -1.5f, 0.5f }));
 
@@ -151,7 +199,7 @@ TEST_F(AudioIOInputMeterTests, PassesUnclampedSamplesToTheMeter)
 
 TEST_F(AudioIOInputMeterTests, ZeroFramesProduceNoUpdates)
 {
-    setInputChannelCount(2);
+    setSelection({ { 0 }, { 2 } });
     const float input[] { 0.8f, 0.99f, 0.0f };
     EXPECT_CALL(*m_sender, push(_, _, _)).Times(0);
 
@@ -160,16 +208,35 @@ TEST_F(AudioIOInputMeterTests, ZeroFramesProduceNoUpdates)
 
 TEST_F(AudioIOInputMeterTests, EmptySelectionProducesNoUpdates)
 {
-    setInputChannelCount(0);
+    setSelection({});
     const float input[] { 0.8f };
     EXPECT_CALL(*m_sender, push(_, _, _)).Times(0);
 
     m_callback.PushInputMeterValues(m_sender, input, 1, m_dacTime);
 }
 
+TEST_F(AudioIOInputMeterTests, ThreeMonoInputsUseSelectedSampleMagnitudes)
+{
+    setSelection({ { 0 }, { 2 }, { 4 } });
+
+    ASSERT_NO_FATAL_FAILURE(pushInput({ 0.75f, 1.0f, -0.375f, -1.0f, 0.375f,
+                                       -0.75f, 1.0f, 0.375f, -1.0f, -0.375f }));
+
+    expectMainMeter({ { 0.75f, 0.75f }, { 0.375f, 0.375f } }, 1);
+}
+
+TEST_F(AudioIOInputMeterTests, StereoGroupAfterMonoKeepsItsLeftAndRightChannels)
+{
+    setSelection({ { 0 }, { 2, 3 } });
+
+    ASSERT_NO_FATAL_FAILURE(pushInput({ 0.9f, 0.2f, -0.4f, 0.8f, -0.6f, 0.1f, 0.4f, -0.2f }));
+
+    expectMainMeter({ { 0.9f, 0.6f }, { 0.8f, 0.2f } }, 1);
+}
+
 TEST_F(AudioIOInputMeterTests, LegacyThreeInputPresetMetersBeforeRecordingWithoutPolarityCancellation)
 {
-    setInputChannelCount(3);
+    setSelection(details::LegacyInputChannelSelection(3));
 
     ASSERT_NO_FATAL_FAILURE(pushInput({ 0.75f, -0.25f, -0.75f, -0.6f, -0.4f, -0.2f, 0.2f, 0.9f, 0.4f }));
 
@@ -178,16 +245,26 @@ TEST_F(AudioIOInputMeterTests, LegacyThreeInputPresetMetersBeforeRecordingWithou
 
 TEST_F(AudioIOInputMeterTests, LegacyFourInputPresetUsesMaximumMagnitudeInEachBar)
 {
-    setInputChannelCount(4);
+    setSelection(details::LegacyInputChannelSelection(4));
 
     ASSERT_NO_FATAL_FAILURE(pushInput({ 0.8f, 0.2f, -0.8f, -0.7f, -0.25f, -0.5f, -0.75f, -0.1f }));
 
     expectMainMeter({ { 0.8f, 0.75f }, { 0.7f, 0.5f } }, 1);
 }
 
+TEST_F(AudioIOInputMeterTests, MixedGroupsKeepStereoSidesAndAlternateMonosByGroupIndex)
+{
+    setSelection({ { 0, 1 }, { 2 }, { 4 }, { 6, 7 } });
+
+    ASSERT_NO_FATAL_FAILURE(pushInput({ -0.2f, 0.1f, -0.7f, 0.99f, -0.8f, -0.99f, 0.4f, -0.3f,
+                                       0.9f, -0.8f, 0.1f, -0.99f, 0.2f, 0.99f, -0.3f, 0.4f }));
+
+    expectMainMeter({ { 0.8f, 0.9f }, { 0.7f, 0.8f } }, 1);
+}
+
 TEST_F(AudioIOInputMeterTests, MultichannelSummaryDoesNotClampSamples)
 {
-    setInputChannelCount(3);
+    setSelection(details::LegacyInputChannelSelection(3));
 
     ASSERT_NO_FATAL_FAILURE(pushInput({ 1.5f, -1.25f, -1.75f }));
 
@@ -196,7 +273,7 @@ TEST_F(AudioIOInputMeterTests, MultichannelSummaryDoesNotClampSamples)
 
 TEST_F(AudioIOInputMeterTests, MainMeterDoesNotDependOnRecordingDestinationCount)
 {
-    setInputChannelCount(4);
+    setSelection(details::LegacyInputChannelSelection(4));
     const std::vector<float> input { 0.8f, 0.2f, -0.8f, -0.7f, -0.25f, -0.5f, -0.75f, -0.1f };
     ASSERT_NO_FATAL_FAILURE(pushInput(input));
     expectMainMeter({ { 0.8f, 0.75f }, { 0.7f, 0.5f } }, 1);
@@ -212,7 +289,7 @@ TEST_F(AudioIOInputMeterTests, MainMeterDoesNotDependOnRecordingDestinationCount
 
 TEST_F(AudioIOInputMeterTests, SeparateMonoTracksReceiveIndependentSelectedInputs)
 {
-    setInputChannelCount(2);
+    setSelection(details::LegacyInputChannelSelection(2));
     setTracks({ 1, 1 }, { { 0 }, { 1 } });
     ASSERT_NO_FATAL_FAILURE(pushInput({ 0.8f, 0.2f, -0.6f, 0.4f }));
 
@@ -221,11 +298,29 @@ TEST_F(AudioIOInputMeterTests, SeparateMonoTracksReceiveIndependentSelectedInput
     expectMeter({ { 0.8f, -0.6f } }, 2, 100);
     expectMeter({ { 0.2f, 0.4f } }, 2, 101);
 
+    setSelection({ { 0 }, { 2 } });
+    ASSERT_NO_FATAL_FAILURE(pushInput({ 0.8f, 0.99f, 0.2f, -0.6f, -0.99f, 0.4f }));
+
+    ASSERT_EQ(m_submissions.size(), 4u);
+    expectMainMeter({ { 0.8f, -0.6f }, { 0.2f, 0.4f } }, 3);
+    expectMeter({ { 0.8f, -0.6f } }, 3, 100);
+    expectMeter({ { 0.2f, 0.4f } }, 3, 101);
+}
+
+TEST_F(AudioIOInputMeterTests, StereoTrackReceivesNonAdjacentInputsIndependently)
+{
+    setSelection({ { 0 }, { 2 } });
+    setTracks({ 2 }, { { 0 }, { 1 } });
+    ASSERT_NO_FATAL_FAILURE(pushInput({ 0.8f, 0.99f, 0.2f, -0.6f, -0.99f, 0.4f }));
+
+    ASSERT_EQ(m_submissions.size(), 4u);
+    expectMainMeter({ { 0.8f, -0.6f }, { 0.2f, 0.4f } }, 3);
+    expectMeter({ { 0.8f, -0.6f }, { 0.2f, 0.4f } }, 3, 100);
 }
 
 TEST_F(AudioIOInputMeterTests, MonoTrackMetersTheRecordedStereoDownmix)
 {
-    setInputChannelCount(2);
+    setSelection(details::LegacyInputChannelSelection(2));
     setTracks({ 1 }, { { 0, 1 } });
     ASSERT_NO_FATAL_FAILURE(pushInput({ 0.8f, -0.8f, -0.4f, 0.2f }));
 
@@ -236,18 +331,18 @@ TEST_F(AudioIOInputMeterTests, MonoTrackMetersTheRecordedStereoDownmix)
 
 TEST_F(AudioIOInputMeterTests, StereoTrackDuplicatesTheSelectedMonoInput)
 {
-    setInputChannelCount(1);
+    setSelection({ { 3 } });
     setTracks({ 2 }, { { 0 }, { 0 } });
-    ASSERT_NO_FATAL_FAILURE(pushInput({ 0.4f, -0.6f }));
+    ASSERT_NO_FATAL_FAILURE(pushInput({ 0.99f, -0.99f, 0.75f, 0.4f, -0.99f, 0.99f, 0.2f, -0.6f }));
 
     ASSERT_EQ(m_submissions.size(), 3u);
-    expectMainMeter({ { 0.4f, -0.6f } }, 1);
-    expectMeter({ { 0.4f, -0.6f }, { 0.4f, -0.6f } }, 1, 100);
+    expectMainMeter({ { 0.4f, -0.6f } }, 4);
+    expectMeter({ { 0.4f, -0.6f }, { 0.4f, -0.6f } }, 4, 100);
 }
 
 TEST_F(AudioIOInputMeterTests, MultichannelMeterLevelsDoNotChangeCancellingSoftwarePlaythrough)
 {
-    setInputChannelCount(3);
+    setSelection(details::LegacyInputChannelSelection(3));
     const std::vector<float> input { 0.8f, -0.8f, 0.0f, -0.6f, 0.3f, 0.3f };
     ASSERT_NO_FATAL_FAILURE(pushInput(input));
     expectMainMeter({ { 0.8f, 0.6f }, { 0.8f, 0.3f } }, 1);
@@ -261,6 +356,26 @@ TEST_F(AudioIOInputMeterTests, MultichannelMeterLevelsDoNotChangeCancellingSoftw
     for (size_t sample = 0; sample < 4; ++sample) {
         EXPECT_FLOAT_EQ(output[sample], 0.0f);
         EXPECT_FLOAT_EQ(outputMeter[sample], 0.0f);
+    }
+}
+
+TEST_F(AudioIOInputMeterTests, IndependentInputMetersDoNotChangeSoftwarePlaythrough)
+{
+    setSelection({ { 0 }, { 2 } });
+    const std::vector<float> input { 0.8f, 0.99f, 0.0f, -0.6f, -0.99f, 0.2f };
+    ASSERT_NO_FATAL_FAILURE(pushInput(input));
+    expectMainMeter({ { 0.8f, -0.6f }, { 0.0f, 0.2f } }, 3);
+
+    m_callback.mSoftwarePlaythrough = true;
+    m_callback.mNumPlaybackChannels = 2;
+    float output[4] {};
+    float outputMeter[4] {};
+    m_callback.DoPlaythrough(input.data(), output, 2, outputMeter);
+
+    const float expected[] { 0.4f, 0.4f, -0.2f, -0.2f };
+    for (size_t sample = 0; sample < 4; ++sample) {
+        EXPECT_FLOAT_EQ(output[sample], expected[sample]);
+        EXPECT_FLOAT_EQ(outputMeter[sample], expected[sample]);
     }
 }
 }
