@@ -69,6 +69,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "au3-audio-devices/DeviceManager.h"
 
 #include <cfloat>
+#include <cmath>
 #include <cstring>
 #include <math.h>
 #include <stdlib.h>
@@ -3221,39 +3222,58 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
     }
 
     // Update meter tracks
-    auto sptr = values;
+    size_t destinationChannel = 0;
     for (const auto& sequence : mCaptureSequences) {
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
-            // Map track channel to input channel, wrapping if track has more channels than input
-            size_t inputCh = ch % mNumCaptureChannels;
-            sender->push(ch, { sptr + inputCh, frames, mNumCaptureChannels, dacTime }, IMeterSender::TrackId { id });
+            if (destinationChannel >= mTrackChannelSourceMap.size()) {
+                break;
+            }
+            const auto& sources = mTrackChannelSourceMap[destinationChannel++];
+            if (sources.empty()) {
+                continue;
+            }
+            if (sources.size() == 1) {
+                const auto physicalChannel = sources.front();
+                sender->push(ch, { values + physicalChannel, frames, mNumCaptureChannels, dacTime },
+                             IMeterSender::TrackId { id });
+            } else {
+                const auto mixed = stackAllocate(float, frames);
+                for (size_t frame = 0; frame < frames; ++frame) {
+                    float value = 0.0f;
+                    for (const auto source : sources) {
+                        value += values[frame * mNumCaptureChannels + source];
+                    }
+                    mixed[frame] = value / static_cast<float>(sources.size());
+                }
+                sender->push(ch, { mixed, frames, 1, dacTime }, IMeterSender::TrackId { id });
+            }
         }
     }
 
     // Update main meter
-    // If the input source has more than 2 channels it will be splitted on multiple mono sequences
+    // With one or two inputs, preserve individual levels.
     if (mNumCaptureChannels <= 2) {
         for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
-            sender->push(ch, { sptr + ch, frames, mNumCaptureChannels, dacTime });
+            sender->push(ch, { values + ch, frames,
+                              mNumCaptureChannels, dacTime });
         }
     } else {
-        constexpr size_t maxMainTrackChannels = 2;
-        const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
-        std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
+        constexpr size_t mainMeterChannels = 2;
+        const auto mainInput = stackAllocate(float, frames * mainMeterChannels);
+        std::fill_n(mainInput, frames * mainMeterChannels, 0.0f);
 
-        for (size_t i = 0; i < frames; ++i) {
-            for (size_t seqNum = 0; seqNum < mCaptureSequences.size(); seqNum++) {
-                const auto channel = seqNum % maxMainTrackChannels;
-                mainTrackInput[channel * frames + i] = std::max(
-                    mainTrackInput[channel * frames + i], *sptr);
-                sptr++;
+        // Use every input even before recording, and include both sample polarities.
+        for (size_t frame = 0; frame < frames; ++frame) {
+            for (size_t inputChannel = 0; inputChannel < mNumCaptureChannels; ++inputChannel) {
+                auto& peak = mainInput[(inputChannel % mainMeterChannels) * frames + frame];
+                peak = std::max(peak, std::fabs(values[frame * mNumCaptureChannels + inputChannel]));
             }
         }
 
-        for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
-            sender->push(ch, { mainTrackInput + ch * frames, frames, 1, dacTime });
+        for (size_t ch = 0; ch < mainMeterChannels; ++ch) {
+            sender->push(ch, { mainInput + ch * frames, frames, 1, dacTime });
         }
     }
 }
