@@ -70,10 +70,6 @@ tft_add_to_build()
 list(APPEND AU3_LINK twolame)
 
 # Conditional time-stretching and pitch-shifting libraries
-if (AU_USE_SOUNDTOUCH)
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soundtouch au3-soundtouch)
-endif()
-
 if (AU_USE_SBSMS)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sbsms au3-sbsms)
 endif()

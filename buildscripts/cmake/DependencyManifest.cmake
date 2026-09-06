@@ -48,7 +48,7 @@ require_dep(twolame)
 require_dep(soxr)
 
 if (AU_USE_SOUNDTOUCH)
-    require_source_dep(soundtouch)
+    require_dep(soundtouch)
 endif()
 
 if (AU_USE_SBSMS)
