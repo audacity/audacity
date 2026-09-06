@@ -106,10 +106,27 @@ Steinberg::tresult internal::ConnectionProxy::notify(Steinberg::Vst::IMessage* m
 
 void internal::ConnectionProxy::deliverPendingMessages()
 {
+    //Bounded by what was already queued when this started, rather than draining
+    //until empty. notify() runs outside the lock, so the sending thread can enqueue
+    //again between iterations; an "until empty" loop therefore need never return if
+    //a plug-in produces faster than its target consumes, and the thread calling this
+    //- the UI thread - would stop repainting and handling input. Anything that
+    //arrives while this is running is delivered on the next call instead.
+    //
+    //The bound is the queued count and not a smaller fixed budget so that a burst is
+    //still delivered in one go: the ring is small and drops the newest message when
+    //full, so a budget below its capacity would leave the newest values waiting
+    //behind older ones and make a meter read late under sustained load.
+    std::size_t budget = 0;
+    {
+        std::lock_guard<std::mutex> lock(mPendingMutex);
+        budget = mPendingCount;
+    }
+
     //One at a time, with the message released outside the lock: notify() reaches
     //plug-in code that may call back into this proxy, and the final release of a
     //message may free it - neither should happen while holding the lock.
-    for (;;) {
+    for (std::size_t delivered = 0; delivered < budget; ++delivered) {
         Steinberg::IPtr<Steinberg::Vst::IMessage> message;
         Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> target;
         {
