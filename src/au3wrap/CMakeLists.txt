@@ -68,11 +68,6 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/pffft au3-pffft)
 add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/portmixer au3-portmixer)
 tft_add_to_build()
 
-# Conditional time-stretching and pitch-shifting libraries
-if (AU_USE_SBSMS)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/sbsms au3-sbsms)
-endif()
-
 # Conditional third-party SDKs (must be set up before AU3 libraries)
 if (AU_MODULE_EFFECTS_LV2)
     add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/lv2sdk lv2sdk)
