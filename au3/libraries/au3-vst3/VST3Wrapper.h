@@ -116,6 +116,13 @@ public:
     //Intialize first, before calling to Process. It's safe to it use from another thread
     size_t Process(const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
+    //!Call periodically from the UI thread (never the audio thread). Plugins whose
+    //!processor and controller are separate objects stream live data to their own editor
+    //!(meters, analyser curves) through IConnectionPoint, from their processing thread.
+    //!Those messages cannot be handed to the controller on that thread, so ConnectionProxy
+    //!queues them; this delivers them here, where controller/editor access is safe.
+    void DeliverPendingUiMessages();
+
     void SuspendProcessing();
     void ResumeProcessing();
 

@@ -21,7 +21,18 @@ internal::ConnectionProxy::ConnectionProxy(Steinberg::Vst::IConnectionPoint* sou
 
 internal::ConnectionProxy::~ConnectionProxy()
 {
+    clearPendingMessages();
     FUNKNOWN_DTOR;
+}
+
+void internal::ConnectionProxy::clearPendingMessages()
+{
+    std::lock_guard<std::mutex> lock(mPendingMutex);
+    for (auto& message : mPending) {
+        message = nullptr;
+    }
+    mPendingHead = 0;
+    mPendingCount = 0;
 }
 
 Steinberg::tresult internal::ConnectionProxy::connect(IConnectionPoint* other)
@@ -52,6 +63,9 @@ Steinberg::tresult internal::ConnectionProxy::disconnect(IConnectionPoint* other
         return Steinberg::kResultFalse;
     }
 
+    //Anything still queued is addressed to a connection point that is going away
+    clearPendingMessages();
+
     auto result = mSource->disconnect(this);
     if (result == Steinberg::kResultOk) {
         mTarget = nullptr;
@@ -61,12 +75,58 @@ Steinberg::tresult internal::ConnectionProxy::disconnect(IConnectionPoint* other
 
 Steinberg::tresult internal::ConnectionProxy::notify(Steinberg::Vst::IMessage* message)
 {
-    if (mTarget.get() == nullptr
-        || std::this_thread::get_id() != mThreadId) {
+    if (mTarget.get() == nullptr || message == nullptr) {
         return Steinberg::kResultFalse;
     }
 
-    return mTarget->notify(message);
+    if (std::this_thread::get_id() == mThreadId) {
+        return mTarget->notify(message);
+    }
+
+    //Off-thread, typically the plug-in's realtime processing thread reporting live
+    //data to its controller. The controller and its editor may only be touched on
+    //the proxy's own thread, so take a reference to the message and hand it over in
+    //deliverPendingMessages(). Everything below is allocation-free and never blocks.
+    std::unique_lock<std::mutex> lock(mPendingMutex, std::try_to_lock);
+    if (!lock.owns_lock()) {
+        return Steinberg::kResultFalse;
+    }
+
+    if (mPendingCount == kPendingCapacity) {
+        //Full: drop this message rather than evicting the oldest, which would release
+        //it - and possibly free it - on a thread that must not be doing either.
+        return Steinberg::kResultFalse;
+    }
+
+    const auto tail = (mPendingHead + mPendingCount) % kPendingCapacity;
+    mPending[tail] = message;
+    ++mPendingCount;
+    return Steinberg::kResultOk;
+}
+
+void internal::ConnectionProxy::deliverPendingMessages()
+{
+    //One at a time, with the message released outside the lock: notify() reaches
+    //plug-in code that may call back into this proxy, and the final release of a
+    //message may free it - neither should happen while holding the lock.
+    for (;;) {
+        Steinberg::IPtr<Steinberg::Vst::IMessage> message;
+        Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> target;
+        {
+            std::lock_guard<std::mutex> lock(mPendingMutex);
+            if (mPendingCount == 0) {
+                return;
+            }
+            message = std::move(mPending[mPendingHead]);
+            mPendingHead = (mPendingHead + 1) % kPendingCapacity;
+            --mPendingCount;
+            target = mTarget;
+        }
+
+        if (target && message) {
+            target->notify(message);
+        }
+    }
 }
 
 IMPLEMENT_FUNKNOWN_METHODS(internal::ConnectionProxy, Steinberg::Vst::IConnectionPoint, Steinberg::Vst::IConnectionPoint::iid);
