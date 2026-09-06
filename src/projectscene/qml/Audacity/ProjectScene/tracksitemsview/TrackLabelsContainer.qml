@@ -398,7 +398,13 @@ TrackItemsContainer {
         function onItemMoveRequested(itemKey, completed) {
             root.updateMouseMoveActive(completed)
 
-            labelsModel.moveSelectedLabels(itemKey, completed)
+            let newKey = labelsModel.moveSelectedLabels(itemKey, completed)
+
+            // the label might change its track, we need to update grabbed itemKey
+            if (newKey.trackId() !== itemKey.trackId()) {
+                setHoveredItemKey(newKey)
+                itemKey = newKey
+            }
 
             handleLabelGuideline(itemKey, Direction.Auto, completed)
         }

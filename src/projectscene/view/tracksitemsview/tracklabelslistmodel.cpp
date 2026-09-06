@@ -362,23 +362,24 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
     }
 }
 
-bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool completed)
+au::projectscene::LabelKey TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool completed)
 {
     TrackLabelItem* item = labelItemByKey(key.key);
+    LabelKey labelKey = LabelKey(key);
     if (!item) {
-        return false;
+        return labelKey;
     }
 
     m_pendingToggleDeselect = {};
 
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
-        return false;
+        return labelKey;
     }
 
     auto vs = project->viewState();
     IF_ASSERT_FAILED(vs) {
-        return false;
+        return labelKey;
     }
 
     bool ok = false;
@@ -391,7 +392,23 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
             ok = trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
         } else {
             auto selectedLabels = selectionController()->selectedLabels();
-            ok = trackeditInteraction()->moveLabels(selectedLabels, moveOffset.timeOffset, moveOffset.trackOffset, completed).ret;
+            auto result = trackeditInteraction()->moveLabels(selectedLabels, moveOffset.timeOffset, moveOffset.trackOffset, completed);
+            ok = result.ret;
+            auto movedLabelKeys = result.val;
+            if (selectedLabels != movedLabelKeys) {
+                selectionController()->setSelectedLabels(movedLabelKeys, completed);
+
+                if (selectedLabels.size() == movedLabelKeys.size()) {
+                    int currentLabelIndex = 0;
+                    for (int i = 0; i < (int)selectedLabels.size(); ++i) {
+                        if (selectedLabels[i] == labelKey) {
+                            currentLabelIndex = i;
+                            break;
+                        }
+                    }
+                    labelKey = LabelKey(movedLabelKeys[currentLabelIndex]);
+                }
+            }
         }
     }
 
@@ -402,10 +419,13 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
     if ((completed && m_autoScrollConnection)) {
         disconnectAutoScroll();
     } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedLabels(key, false); });
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged,
+            [this, key = labelKey]() mutable {
+                key = moveSelectedLabels(key, false);
+        });
     }
 
-    return ok;
+    return labelKey;
 }
 
 bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed)
