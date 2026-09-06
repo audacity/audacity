@@ -70,7 +70,8 @@ tft_add_to_build()
 list(APPEND AU3_LINK twolame)
 
 # Conditional third-party SDKs (must be set up before AU3 libraries)
-if (AU_MODULE_EFFECTS_LV2)
+# lv2sdk target may be already provided by the system, then skip it
+if (AU_MODULE_EFFECTS_LV2 AND NOT TARGET lv2sdk)
     add_subdirectory(lv2sdk)
 endif()
 
