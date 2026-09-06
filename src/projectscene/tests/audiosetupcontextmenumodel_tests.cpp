@@ -117,6 +117,25 @@ public:
     muse::shortcuts::Shortcut m_shortcut;
 };
 
+TEST_F(AudioSetupContextMenuModelTests, InputChannelsMenuOffersCountPresetsAndCustomCommand)
+{
+    const auto* menu = inputChannelsMenu();
+    const auto items = menu->subitems();
+
+    EXPECT_EQ(menu->translatedTitle(), "Recording channels: Custom");
+    ASSERT_EQ(items.size(), 6);
+    const QStringList expectedTitles { "1 (Mono) Recording channel", "2 (Stereo) Recording channels", "3", "4", "", "Custom..." };
+    for (int index = 0; index < items.size(); ++index) {
+        EXPECT_EQ(items.at(index)->translatedTitle(), expectedTitles.at(index));
+        EXPECT_FALSE(items.at(index)->checked());
+        EXPECT_EQ(items.at(index)->checkable(), index < 4);
+    }
+
+    EXPECT_FALSE(items.at(4)->isValid());
+    EXPECT_EQ(items.last()->actionCode(), "audio-settings");
+    EXPECT_EQ(items.last()->id(), "customInputChannels");
+}
+
 TEST_F(AudioSetupContextMenuModelTests, InputChannelsMenuEncodesOneBasedCountInActionQuery)
 {
     const auto items = inputChannelsMenu()->subitems();
@@ -151,7 +170,7 @@ TEST_F(AudioSetupContextMenuModelTests, ExactPresetSelectionChecksOnlyTheMatchin
     }
 }
 
-TEST_F(AudioSetupContextMenuModelTests, NonPresetChannelsOrGroupingDoNotCheckAPreset)
+TEST_F(AudioSetupContextMenuModelTests, NonPresetChannelsOrGroupingShowCustomState)
 {
     const std::vector<audio::InputChannelSelection> selections {
         { { { 2 } } },
@@ -164,11 +183,37 @@ TEST_F(AudioSetupContextMenuModelTests, NonPresetChannelsOrGroupingDoNotCheckAPr
         SCOPED_TRACE(::testing::PrintToString(selection));
         setSelection(selection);
         const auto* menu = inputChannelsMenu();
-        EXPECT_EQ(menu->translatedTitle(), "Recording channels");
+        EXPECT_EQ(menu->translatedTitle(), "Recording channels: Custom");
         for (const auto* item : menu->subitems()) {
             EXPECT_FALSE(item->checked());
         }
     }
+}
+
+TEST_F(AudioSetupContextMenuModelTests, NoInputsOffersOnlyCustomWithoutASeparator)
+{
+    setSelection({}, 0);
+    const auto* menu = inputChannelsMenu();
+
+    EXPECT_EQ(menu->translatedTitle(), "Recording channels");
+    ASSERT_EQ(menu->subitems().size(), 1);
+    const auto* item = menu->subitems().first();
+    EXPECT_EQ(item->translatedTitle(), "Custom...");
+    EXPECT_EQ(item->actionCode(), "audio-settings");
+    EXPECT_TRUE(item->isValid());
+    EXPECT_TRUE(item->enabled());
+    EXPECT_FALSE(item->checkable());
+    EXPECT_FALSE(item->checked());
+}
+
+TEST_F(AudioSetupContextMenuModelTests, NoInputsDoesNotDescribeAnUnavailableSelectionAsCustom)
+{
+    setSelection({ { { 2, 3 } } }, 0);
+    const auto* menu = inputChannelsMenu();
+
+    EXPECT_EQ(menu->translatedTitle(), "Recording channels");
+    ASSERT_EQ(menu->subitems().size(), 1);
+    EXPECT_EQ(menu->subitems().first()->actionCode(), "audio-settings");
 }
 
 TEST_F(AudioSetupContextMenuModelTests, EmptySelectionDoesNotCheckAPresetOrShowCustomState)
@@ -179,6 +224,37 @@ TEST_F(AudioSetupContextMenuModelTests, EmptySelectionDoesNotCheckAPresetOrShowC
     EXPECT_EQ(menu->translatedTitle(), "Recording channels");
     for (const auto* item : menu->subitems()) {
         EXPECT_FALSE(item->checked());
+    }
+}
+
+TEST_F(AudioSetupContextMenuModelTests, MonoDeviceOffersOnlyMonoPresetAndCustom)
+{
+    setSelection({ { { 0 } } }, 1);
+    const auto* menu = inputChannelsMenu();
+
+    EXPECT_EQ(menu->translatedTitle(), "Recording channels");
+    ASSERT_EQ(menu->subitems().size(), 3);
+    EXPECT_TRUE(menu->subitems().first()->checked());
+    EXPECT_FALSE(menu->subitems().at(1)->isValid());
+    EXPECT_EQ(menu->subitems().last()->translatedTitle(), "Custom...");
+}
+
+TEST_F(AudioSetupContextMenuModelTests, CustomDispatchesAudioSettingsWithoutChangingSelection)
+{
+    EXPECT_CALL(*m_dispatcher, dispatch(testing::Matcher<const muse::actions::ActionQuery&>(testing::_))).Times(0);
+    EXPECT_CALL(*m_dispatcher, dispatch(testing::Matcher<const muse::actions::ActionCode&>(testing::_))).Times(0);
+    for (const auto& selection : { audio::InputChannelSelection { { { 0, 1 } } }, audio::InputChannelSelection { { { 2, 3 } } } }) {
+        setSelection(selection);
+        const auto* item = inputChannelsMenu()->subitems().last();
+
+        EXPECT_FALSE(item->checkable());
+        EXPECT_FALSE(item->checked());
+        EXPECT_CALL(*m_controller, apply(testing::_, testing::_)).Times(0);
+        EXPECT_CALL(*m_dispatcher, dispatch(muse::actions::ActionCode("audio-settings"), testing::_)).Times(1);
+
+        m_model.handleMenuItem(item->id());
+
+        EXPECT_EQ(m_controller->configuration().inputChannelSelection, selection);
     }
 }
 

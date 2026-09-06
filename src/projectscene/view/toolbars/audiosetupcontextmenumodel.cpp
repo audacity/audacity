@@ -215,14 +215,28 @@ MenuItem* AudioSetupContextMenuModel::makeInputChannelsMenu()
         return muse::TranslatableString::untranslatable(QString::number(channelCount));
     };
 
+    bool hasCheckedPreset = false;
     for (int channelCount = 1; channelCount <= inputChannelsAvailable; ++channelCount) {
         MenuItem* item = makeMenuItem(makeChangeInputChannelsAction(channelCount).toString(), channelName(channelCount));
 
         item->setId(QString::fromStdString(item->query().toString()));
         item->setCheckable(true);
         item->setChecked(selection == audio::legacyInputChannelSelection(channelCount));
+        hasCheckedPreset = hasCheckedPreset || item->checked();
         items << item;
     }
 
-    return makeMenu(muse::TranslatableString("audio setup", "Recording channels"), items, "inputChannelsMenu");
+    if (!items.empty()) {
+        items << makeSeparator();
+    }
+    MenuItem* customItem = makeMenuItem("audio-settings", muse::TranslatableString("audio setup", "Custom..."));
+    customItem->setId("customInputChannels");
+    customItem->setCheckable(false);
+    customItem->setChecked(false);
+    items << customItem;
+
+    const auto title = inputChannelsAvailable > 0 && !selection.empty() && !hasCheckedPreset
+                       ? muse::TranslatableString("audio setup", "Recording channels: Custom")
+                       : muse::TranslatableString("audio setup", "Recording channels");
+    return makeMenu(title, items, "inputChannelsMenu");
 }
