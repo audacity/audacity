@@ -43,7 +43,7 @@ require_source_dep(tft)
 require_source_dep(rapidjson)
 require_source_dep(nyquist)
 require_source_dep(pffft)
-require_source_dep(sqlite)
+require_dep(sqlite)
 require_source_dep(twolame)
 require_source_dep(soxr)
 
