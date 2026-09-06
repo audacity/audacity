@@ -168,22 +168,22 @@ INSTANTIATE_TEST_SUITE_P(
     AudioIOInputMeterRoutesTests,
     ::testing::Values(
         InputMeterCase { "NonAdjacentMonos", { { 0 }, { 2 } },
-                        { 0.8f, 0.99f, 0.0f, -0.4f, -0.99f, 0.2f, 0.6f, 0.99f, -0.6f },
-                        { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
+                         { 0.8f, 0.99f, 0.0f, -0.4f, -0.99f, 0.2f, 0.6f, 0.99f, -0.6f },
+                         { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
         InputMeterCase { "AdjacentMonos", { { 0 }, { 1 } },
-                        { 0.8f, 0.0f, -0.4f, 0.2f, 0.6f, -0.6f },
-                        { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
+                         { 0.8f, 0.0f, -0.4f, 0.2f, 0.6f, -0.6f },
+                         { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
         InputMeterCase { "FirstStereoPair", { { 0, 1 } },
-                        { 0.8f, 0.0f, -0.4f, 0.2f, 0.6f, -0.6f },
-                        { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
+                         { 0.8f, 0.0f, -0.4f, 0.2f, 0.6f, -0.6f },
+                         { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
         InputMeterCase { "HigherStereoPair", { { 2, 3 } },
-                        { 0.99f, -0.99f, 0.8f, 0.0f, -0.99f, 0.99f, -0.4f, 0.2f, 0.99f, -0.99f, 0.6f, -0.6f },
-                        { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
+                         { 0.99f, -0.99f, 0.8f, 0.0f, -0.99f, 0.99f, -0.4f, 0.2f, 0.99f, -0.99f, 0.6f, -0.6f },
+                         { { 0.8f, -0.4f, 0.6f }, { 0.0f, 0.2f, -0.6f } } },
         InputMeterCase { "FirstMono", { { 0 } },
-                        { 0.4f, -0.5f, 0.6f }, { { 0.4f, -0.5f, 0.6f } } },
+                         { 0.4f, -0.5f, 0.6f }, { { 0.4f, -0.5f, 0.6f } } },
         InputMeterCase { "HigherMono", { { 3 } },
-                        { 0.99f, -0.99f, 0.75f, 0.4f, -0.99f, 0.99f, 0.2f, -0.5f, 0.99f, -0.99f, 0.3f, 0.6f },
-                        { { 0.4f, -0.5f, 0.6f } } }),
+                         { 0.99f, -0.99f, 0.75f, 0.4f, -0.99f, 0.99f, 0.2f, -0.5f, 0.99f, -0.99f, 0.3f, 0.6f },
+                         { { 0.4f, -0.5f, 0.6f } } }),
     [](const ::testing::TestParamInfo<InputMeterCase>& info) {
     return info.param.name;
 });
@@ -220,7 +220,7 @@ TEST_F(AudioIOInputMeterTests, ThreeMonoInputsUseSelectedSampleMagnitudes)
     setSelection({ { 0 }, { 2 }, { 4 } });
 
     ASSERT_NO_FATAL_FAILURE(pushInput({ 0.75f, 1.0f, -0.375f, -1.0f, 0.375f,
-                                       -0.75f, 1.0f, 0.375f, -1.0f, -0.375f }));
+                                        -0.75f, 1.0f, 0.375f, -1.0f, -0.375f }));
 
     expectMainMeter({ { 0.75f, 0.75f }, { 0.375f, 0.375f } }, 1);
 }
@@ -257,7 +257,7 @@ TEST_F(AudioIOInputMeterTests, MixedGroupsKeepStereoSidesAndAlternateMonosByGrou
     setSelection({ { 0, 1 }, { 2 }, { 4 }, { 6, 7 } });
 
     ASSERT_NO_FATAL_FAILURE(pushInput({ -0.2f, 0.1f, -0.7f, 0.99f, -0.8f, -0.99f, 0.4f, -0.3f,
-                                       0.9f, -0.8f, 0.1f, -0.99f, 0.2f, 0.99f, -0.3f, 0.4f }));
+                                        0.9f, -0.8f, 0.1f, -0.99f, 0.2f, 0.99f, -0.3f, 0.4f }));
 
     expectMainMeter({ { 0.8f, 0.9f }, { 0.7f, 0.8f } }, 1);
 }

@@ -17,7 +17,7 @@ Item {
         name: "PreferencesTestWindow"
         order: 1
         type: NavigationSection.Exclusive
-        onNavigationEvent: function(event) {
+        onNavigationEvent: function (event) {
             if (event.type === NavigationEvent.Escape) {
                 root.closeRequested = true
             }

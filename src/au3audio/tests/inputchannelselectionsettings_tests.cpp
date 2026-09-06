@@ -42,8 +42,8 @@ TEST(InputChannelSelectionSettingsTests, CapacityReductionClampsLegacyCountBefor
     for (const int legacyCount : { -1, 0, 1, 2, 3, 4 }) {
         SCOPED_TRACE(legacyCount);
         const audio::InputChannelSelection expected = legacyCount <= 1
-                                                     ? audio::InputChannelSelection { { { 0 } } }
-                                                     : audio::InputChannelSelection { { { 0, 1 } } };
+                                                      ? audio::InputChannelSelection { { { 0 } } }
+        : audio::InputChannelSelection { { { 0, 1 } } };
         EXPECT_EQ(details::inputChannelSelectionFromSettings(emptySelection, legacyCount, 2), expected);
         EXPECT_EQ(details::inputChannelSelectionFromSettings(emptySelection, legacyCount, 1),
                   audio::InputChannelSelection({ { { 0 } } }));

@@ -238,8 +238,8 @@ TEST_P(RecordOnNewTrackWithoutInputsTests, ReportsErrorWithoutChangingTracksOrSt
     InSequence sequence;
     EXPECT_CALL(*m_playbackController, stop()).Times(playbackPaused ? 1 : 0);
     EXPECT_CALL(*m_interactive, error(muse::trc("record", "Recording error"),
-                                    ::testing::Field(&muse::IInteractive::Text::text, make_ret(Err::NoRecordingDevice).text()),
-                                    _, _, _, _))
+                                      ::testing::Field(&muse::IInteractive::Text::text, make_ret(Err::NoRecordingDevice).text()),
+                                      _, _, _, _))
     .WillOnce(Return(muse::async::make_promise<muse::IInteractive::Result>(
                          [](const auto& resolve) {
         return resolve(muse::IInteractive::Result {});

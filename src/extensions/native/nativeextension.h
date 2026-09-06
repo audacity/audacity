@@ -51,11 +51,7 @@ typedef struct ext_value {
 typedef int32_t (* ext_dispatch_fn)(const char* call, const ext_value* args, uint32_t arg_count, ext_value* result);
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
 #endif
 
 EXT_EXPORT int32_t extension_dispatch_v0(const char* call, const ext_value* args, uint32_t arg_count, ext_value* result);
-
-#ifdef __cplusplus
-}
-#endif
