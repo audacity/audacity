@@ -27,8 +27,8 @@ Paul Licameli split from AudioIO.cpp
 #endif
 
 std::map<int, std::vector<long> > AudioIOBase::mCachedPlaybackRates;
-std::map<int, std::vector<long> > AudioIOBase::mCachedCaptureRates;
-std::map<std::pair<int, int>, std::vector<long> > AudioIOBase::mCachedSampleRates;
+std::map<std::pair<int, int>, std::vector<long> > AudioIOBase::mCachedCaptureRates;
+std::map<std::tuple<int, int, int>, std::vector<long> > AudioIOBase::mCachedSampleRates;
 int AudioIOBase::mCurrentPlaybackIndex { -1 };
 int AudioIOBase::mCurrentCaptureIndex { -1 };
 double AudioIOBase::mCachedBestRateIn { 0.0 };
@@ -459,15 +459,20 @@ bool AudioIOBase::IsPlaybackRateSupported(int devIndex, long rate)
     return false;
 }
 
-bool AudioIOBase::IsCaptureRateSupported(int devIndex, long rate)
+bool AudioIOBase::IsCaptureRateSupported(int devIndex, long rate, int captureChannels)
 {
     if (devIndex == -1) { // not given a device, look up in prefs / default
         devIndex = getRecordDevIndex();
     }
 
+    if (captureChannels < 0) {
+        captureChannels = AudioIORecordChannels.ReadWithDefault(1);
+    }
+    const auto cacheKey = std::make_pair(devIndex, captureChannels);
+
     // Check if we can use the cached rate
-    if (mCachedCaptureRates.count(devIndex)
-        && (make_iterator_range(mCachedCaptureRates.at(devIndex)).contains(rate))) {
+    if (mCachedCaptureRates.count(cacheKey)
+        && (make_iterator_range(mCachedCaptureRates.at(cacheKey)).contains(rate))) {
         return true;
     }
 
@@ -479,8 +484,6 @@ bool AudioIOBase::IsCaptureRateSupported(int devIndex, long rate)
     }
 
     auto latencyDuration = AudioIOLatencyDuration.Read();
-    // Why not defaulting to 2 as elsewhere?
-    auto recordChannels = AudioIORecordChannels.ReadWithDefault(1);
 
     // LLL: Remove when a proper method of determining actual supported
     //      DirectSound rate is devised.
@@ -490,7 +493,7 @@ bool AudioIOBase::IsCaptureRateSupported(int devIndex, long rate)
     PaStreamParameters pars;
 
     pars.device = devIndex;
-    pars.channelCount = recordChannels;
+    pars.channelCount = captureChannels;
     pars.sampleFormat = paFloat32;
     pars.suggestedLatency = latencyDuration / 1000.0;
     pars.hostApiSpecificStreamInfo = NULL;
@@ -499,7 +502,7 @@ bool AudioIOBase::IsCaptureRateSupported(int devIndex, long rate)
     //      DirectSound rate is devised.
     if (!(isDirectSound && rate > 200000)) {
         if (Pa_IsFormatSupported(&pars, NULL, rate) == 0) {
-            mCachedCaptureRates[devIndex].push_back(rate);
+            mCachedCaptureRates[cacheKey].push_back(rate);
             return true;
         }
     }
@@ -525,7 +528,7 @@ std::vector<long> AudioIOBase::GetSupportedPlaybackRates(int devIndex)
     return supportedRates;
 }
 
-std::vector<long> AudioIOBase::GetSupportedCaptureRates(int devIndex)
+std::vector<long> AudioIOBase::GetSupportedCaptureRates(int devIndex, int captureChannels)
 {
     if (devIndex == -1) { // weren't given a device index, get the prefs / default one
         devIndex = getRecordDevIndex();
@@ -534,7 +537,7 @@ std::vector<long> AudioIOBase::GetSupportedCaptureRates(int devIndex)
     std::vector<long> supportedRates;
 
     for (const long rate : RatesToTry) {
-        if (IsCaptureRateSupported(devIndex, rate)) {
+        if (IsCaptureRateSupported(devIndex, rate, captureChannels)) {
             supportedRates.push_back(rate);
         }
         Pa_Sleep(10);   // There are ALSA drivers that don't like being probed
@@ -577,7 +580,7 @@ long AudioIOBase::GetClosestSupportedPlaybackRate(int devIndex, long rate)
     return supportedRate;
 }
 
-long AudioIOBase::GetClosestSupportedCaptureRate(int devIndex, long rate)
+long AudioIOBase::GetClosestSupportedCaptureRate(int devIndex, long rate, int captureChannels)
 {
     long supportedRate = 0;
     if (devIndex == -1) { // not given a device, look up in prefs / default
@@ -588,9 +591,14 @@ long AudioIOBase::GetClosestSupportedCaptureRate(int devIndex, long rate)
         return supportedRate;
     }
 
+    if (captureChannels < 0) {
+        captureChannels = AudioIORecordChannels.ReadWithDefault(1);
+    }
+    const auto cacheKey = std::make_pair(devIndex, captureChannels);
+
     // Check if we can use the cached rate
-    if (mCachedCaptureRates.count(devIndex)
-        && (make_iterator_range(mCachedCaptureRates[devIndex]).contains(rate))) {
+    if (mCachedCaptureRates.count(cacheKey)
+        && (make_iterator_range(mCachedCaptureRates[cacheKey]).contains(rate))) {
         supportedRate = rate;
         return supportedRate;
     }
@@ -608,7 +616,7 @@ long AudioIOBase::GetClosestSupportedCaptureRate(int devIndex, long rate)
               std::back_inserter(rates));
 
     for (const long rateToTry : rates) {
-        if (IsCaptureRateSupported(devIndex, rateToTry)) {
+        if (IsCaptureRateSupported(devIndex, rateToTry, captureChannels)) {
             supportedRate = rateToTry;
             break;
         }
@@ -620,7 +628,7 @@ long AudioIOBase::GetClosestSupportedCaptureRate(int devIndex, long rate)
 }
 
 long AudioIOBase::GetClosestSupportedSampleRate(
-    int playDevice, int recDevice, long rate)
+    int playDevice, int recDevice, long rate, int captureChannels)
 {
     long supportedRate = 0;
 
@@ -633,7 +641,10 @@ long AudioIOBase::GetClosestSupportedSampleRate(
     }
 
     // Check if we can use the cached rates
-    std::pair<int, int> devicePair { playDevice, recDevice };
+    if (captureChannels < 0) {
+        captureChannels = AudioIORecordChannels.ReadWithDefault(1);
+    }
+    const auto devicePair = std::make_tuple(playDevice, recDevice, captureChannels);
     if (mCachedSampleRates.count(devicePair)
         && make_iterator_range(mCachedSampleRates.at(devicePair)).contains(rate)) {
         return rate;
@@ -653,7 +664,7 @@ long AudioIOBase::GetClosestSupportedSampleRate(
 
     for (const long rateToTry : rates) {
         if (IsPlaybackRateSupported(playDevice, rateToTry)
-            && IsCaptureRateSupported(recDevice, rateToTry)) {
+            && IsCaptureRateSupported(recDevice, rateToTry, captureChannels)) {
             supportedRate = rateToTry;
             break;
         }
@@ -666,7 +677,7 @@ long AudioIOBase::GetClosestSupportedSampleRate(
     return supportedRate;
 }
 
-std::vector<long> AudioIOBase::GetSupportedSampleRates(int playDevice, int recDevice)
+std::vector<long> AudioIOBase::GetSupportedSampleRates(int playDevice, int recDevice, int captureChannels)
 {
     // Not given device indices, look up prefs
     if (playDevice == -1) {
@@ -677,7 +688,7 @@ std::vector<long> AudioIOBase::GetSupportedSampleRates(int playDevice, int recDe
     }
 
     auto playback = GetSupportedPlaybackRates(playDevice);
-    auto capture = GetSupportedCaptureRates(recDevice);
+    auto capture = GetSupportedCaptureRates(recDevice, captureChannels);
 
     // Return only sample rates which are in both arrays
     std::vector<long> result;

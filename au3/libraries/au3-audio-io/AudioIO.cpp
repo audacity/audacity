@@ -186,6 +186,7 @@ int AudioIoCallback::mNextStreamToken = 0;
 double AudioIoCallback::mCachedBestRateOut;
 bool AudioIoCallback::mCachedBestRatePlaying;
 bool AudioIoCallback::mCachedBestRateCapturing;
+size_t AudioIoCallback::mCachedBestRateInputStreamChannels;
 
 #ifdef __WXGTK__
 // Might #define this for a useful thing on Linux
@@ -515,7 +516,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     }
 
     if (mRate == 0.0) {
-        mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
+        mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate,
+                            numCaptureChannels);
     }
 
     // GetBestRate() will return 0.0 for bidirectional streams when there is no
@@ -1848,11 +1850,12 @@ void AudioIO::SetPaused(bool state, bool publish)
     }
 }
 
-double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
+double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate, size_t inputStreamChannels)
 {
     // Check if we can use the cached value
     if (mCachedBestRateIn != 0.0 && mCachedBestRateIn == sampleRate
-        && mCachedBestRatePlaying == playing && mCachedBestRateCapturing == capturing) {
+        && mCachedBestRatePlaying == playing && mCachedBestRateCapturing == capturing
+        && mCachedBestRateInputStreamChannels == inputStreamChannels) {
         return mCachedBestRateOut;
     }
 
@@ -1868,12 +1871,12 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     long supportedRate = 0;
 
     if (capturing && !playing) {
-        supportedRate = GetClosestSupportedCaptureRate(-1, sampleRate);
+        supportedRate = GetClosestSupportedCaptureRate(-1, sampleRate, static_cast<int>(inputStreamChannels));
     } else if (playing && !capturing) {
         supportedRate = GetClosestSupportedPlaybackRate(-1, sampleRate);
     } else { // we assume capturing and playing - the alternative would be a
              // bit odd
-        supportedRate = GetClosestSupportedSampleRate(-1, -1, sampleRate);
+        supportedRate = GetClosestSupportedSampleRate(-1, -1, sampleRate, static_cast<int>(inputStreamChannels));
     }
 
     /* if we get here, there is a problem - the project rate isn't supported
@@ -1890,6 +1893,7 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     mCachedBestRateOut = supportedRate;
     mCachedBestRatePlaying = playing;
     mCachedBestRateCapturing = capturing;
+    mCachedBestRateInputStreamChannels = inputStreamChannels;
     return supportedRate;
 }
 
