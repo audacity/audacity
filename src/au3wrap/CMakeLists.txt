@@ -64,7 +64,6 @@ set(MODULE_SRC
 include(${CMAKE_CURRENT_LIST_DIR}/au3wrapDefs.cmake)
 
 # Third-party libraries (not part of au3/libraries)
-add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/soxr au3-soxr)
 add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/pffft au3-pffft)
 add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/portmixer au3-portmixer)
 tft_add_to_build()

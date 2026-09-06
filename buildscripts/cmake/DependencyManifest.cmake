@@ -45,7 +45,7 @@ require_source_dep(nyquist)
 require_source_dep(pffft)
 require_dep(sqlite)
 require_dep(twolame)
-require_source_dep(soxr)
+require_dep(soxr)
 
 if (AU_USE_SOUNDTOUCH)
     require_source_dep(soundtouch)
