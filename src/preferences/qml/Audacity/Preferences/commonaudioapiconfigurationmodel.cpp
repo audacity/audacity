@@ -107,7 +107,7 @@ void CommonAudioApiConfigurationModel::load()
         if (delta.contains(audio::AudioConfigurationField::Api)
             || delta.contains(audio::AudioConfigurationField::OutputDevice)
             || delta.contains(audio::AudioConfigurationField::InputDevice)
-            || delta.contains(audio::AudioConfigurationField::InputChannels)) {
+            || delta.contains(audio::AudioConfigurationField::InputChannelSelection)) {
             notifyDeviceContextChanged();
         }
         if (delta.contains(audio::AudioConfigurationField::BufferLength)) {
@@ -205,11 +205,11 @@ int CommonAudioApiConfigurationModel::effectiveInputChannelsAvailable() const
     return audioDriverController()->inputChannelsAvailable(effectiveApi(), effectiveInputDevice());
 }
 
-int CommonAudioApiConfigurationModel::effectiveInputChannels() const
+au::audio::InputChannelSelection CommonAudioApiConfigurationModel::effectiveInputChannelSelection() const
 {
-    int channels = m_pending.inputChannels.value_or(audioDriverController()->configuration().inputChannels);
     const int available = effectiveInputChannelsAvailable();
-    return available > 0 ? std::min(channels, available) : 0;
+    return audio::normalizeInputChannelSelection(
+        m_pending.inputChannelSelection.value_or(audioDriverController()->configuration().inputChannelSelection), available);
 }
 
 void CommonAudioApiConfigurationModel::notifyDeviceContextChanged()
@@ -302,7 +302,7 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
     }
     m_pending.outputDevice.reset();
     m_pending.inputDevice.reset();
-    m_pending.inputChannels.reset();
+    m_pending.inputChannelSelection.reset();
     notifyDeviceContextChanged();
 }
 
@@ -413,7 +413,7 @@ void CommonAudioApiConfigurationModel::inputDeviceSelected(int index)
     } else {
         m_pending.inputDevice = value;
     }
-    m_pending.inputChannels.reset();
+    m_pending.inputChannelSelection.reset();
     emit currentInputDeviceIndexChanged();
     emit inputChannelsListChanged();
     emit currentInputChannelsSelectedChanged();
@@ -482,7 +482,10 @@ void CommonAudioApiConfigurationModel::latencyCompensationSelected(
 
 QString CommonAudioApiConfigurationModel::currentInputChannelsSelected() const
 {
-    return channelName(effectiveInputChannels());
+    const auto selection = effectiveInputChannelSelection();
+    const int channels = static_cast<int>(audio::inputChannelCount(selection));
+    return selection == audio::legacyInputChannelSelection(channels)
+           ? channelName(channels) : QStringLiteral("\u2014");
 }
 
 QVariantList CommonAudioApiConfigurationModel::inputChannelsList() const
@@ -498,12 +501,15 @@ QVariantList CommonAudioApiConfigurationModel::inputChannelsList() const
 
 void CommonAudioApiConfigurationModel::inputChannelsSelected(const int index)
 {
-    const int value = index + 1;
+    if (index < 0 || index >= effectiveInputChannelsAvailable()) {
+        return;
+    }
+    const auto value = audio::legacyInputChannelSelection(index + 1);
     if (!m_pending.api && !m_pending.inputDevice
-        && value == audioDriverController()->configuration().inputChannels) {
-        m_pending.inputChannels.reset();
+        && value == audioDriverController()->configuration().inputChannelSelection) {
+        m_pending.inputChannelSelection.reset();
     } else {
-        m_pending.inputChannels = value;
+        m_pending.inputChannelSelection = value;
     }
     emit currentInputChannelsSelectedChanged();
 }

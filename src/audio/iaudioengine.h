@@ -52,6 +52,7 @@ public:
         std::vector<std::vector<float> >* crossfadeData = nullptr;
         //! Does not change the play region.
         std::optional<double> streamStartTime;
+        InputChannelSelection inputChannelSelection;
     };
 
     //! Returns a positive stream token on success, 0 otherwise.
@@ -70,7 +71,7 @@ public:
     virtual std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                             size_t effectListIndex, const std::string& newEffectId) = 0;
 
-    virtual void startMonitoring(AudacityProject& project) = 0;
+    virtual void startMonitoring(AudacityProject& project, const InputChannelSelection& inputChannelSelection) = 0;
     virtual void stopMonitoring() = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;

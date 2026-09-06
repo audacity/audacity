@@ -29,7 +29,7 @@ public:
         m_applied.api = "Core Audio";
         m_applied.outputDevice = "Built-in Output";
         m_applied.inputDevice = "Built-in Mic";
-        m_applied.inputChannels = 1;
+        m_applied.inputChannelSelection = audio::legacyInputChannelSelection(1);
         m_applied.bufferLength = 100.0;
         m_applied.defaultSampleRate = 44100;
         m_applied.defaultSampleFormat = "32-bit float";
@@ -97,7 +97,8 @@ TEST_F(CommonAudioApiConfigurationModelTests, Apply_SubmitsAllPendingFieldsInOne
     EXPECT_CALL(*m_controller, apply(_, _))
     .WillOnce([](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
         EXPECT_EQ(change.outputDevice, std::optional<std::string>("Headphones"));
-        EXPECT_EQ(change.inputChannels, std::optional<int>(2));
+        EXPECT_EQ(change.inputChannelSelection,
+                  std::optional<audio::InputChannelSelection>(audio::legacyInputChannelSelection(2)));
         EXPECT_EQ(change.bufferLength, std::optional<double>(50.0));
         EXPECT_FALSE(change.api.has_value());
         EXPECT_FALSE(change.inputDevice.has_value());
@@ -127,7 +128,7 @@ TEST_F(CommonAudioApiConfigurationModelTests, ApplySuccess_ClearsFieldsThatNorma
         EXPECT_FALSE(change.api);
         EXPECT_FALSE(change.outputDevice);
         EXPECT_FALSE(change.inputDevice);
-        EXPECT_FALSE(change.inputChannels);
+        EXPECT_FALSE(change.inputChannelSelection);
         EXPECT_FALSE(change.bufferLength);
         EXPECT_FALSE(change.automaticLatencyCompensation);
         EXPECT_FALSE(change.latencyCompensation);
@@ -165,7 +166,7 @@ TEST_F(CommonAudioApiConfigurationModelTests, EditingBackToAppliedStateProducesA
         EXPECT_FALSE(change.api);
         EXPECT_FALSE(change.outputDevice);
         EXPECT_FALSE(change.inputDevice);
-        EXPECT_FALSE(change.inputChannels);
+        EXPECT_FALSE(change.inputChannelSelection);
         EXPECT_FALSE(change.bufferLength);
         EXPECT_FALSE(change.automaticLatencyCompensation);
         EXPECT_FALSE(change.latencyCompensation);

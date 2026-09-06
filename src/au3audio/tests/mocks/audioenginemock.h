@@ -34,7 +34,7 @@ public:
     MOCK_METHOD(std::shared_ptr<RealtimeEffectState>, replaceRealtimeEffectState,
                 (AudacityProject&, ChannelGroup*, size_t, const std::string&), (override));
 
-    MOCK_METHOD(void, startMonitoring, (AudacityProject & project), (override));
+    MOCK_METHOD(void, startMonitoring, (AudacityProject & project, const InputChannelSelection& inputChannelSelection), (override));
     MOCK_METHOD(void, stopMonitoring, (), (override));
     MOCK_METHOD(void, setInputVolume, (float newInputVolume), (override));
     MOCK_METHOD(float, getInputVolume, (), (const, override));

@@ -191,6 +191,18 @@ public:
         m_controller->setAudioInputDevice(q);
     }
 
+    void changeInputChannels(int channelCount)
+    {
+        muse::actions::ActionQuery q("action://playback/change-input-channels");
+        q.addParam("input-channels_index", muse::Val(channelCount));
+        changeInputChannels(q);
+    }
+
+    void changeInputChannels(const muse::actions::ActionQuery& q)
+    {
+        m_controller->setInputChannels(q);
+    }
+
     void playFromCurrentState()
     {
         m_controller->doPlay(false);
@@ -1376,12 +1388,17 @@ TEST_F(PlaybackControllerTests, SuspendMonitoring_RestoresTheOwningProject)
     .WillByDefault(Return(std::vector<std::string> { "Built-in microphone" }));
     ON_CALL(*m_audioDriverController, inputChannelsAvailable())
     .WillByDefault(Return(2));
+    audio::AudioConfiguration configuration;
+    configuration.inputChannelSelection = { { { 1 } } };
+    ON_CALL(*m_audioDriverController, configuration())
+    .WillByDefault(Return(configuration));
 
     EXPECT_CALL(*m_audioEngine, stopMonitoring()).Times(1);
     auto restoreStream = suspend(audio::AudioStreamKind::Monitoring);
 
     ASSERT_TRUE(restoreStream);
-    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(1);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(
+                    _, configuration.inputChannelSelection)).Times(1);
     EXPECT_TRUE(restoreStream());
 }
 
@@ -1398,7 +1415,7 @@ TEST_F(PlaybackControllerTests, SuspendMonitoring_WithoutRecordDevice_DoesNotRes
     auto restoreStream = suspend(audio::AudioStreamKind::Monitoring);
 
     ASSERT_TRUE(restoreStream);
-    EXPECT_CALL(*m_audioEngine, startMonitoring(_)).Times(0);
+    EXPECT_CALL(*m_audioEngine, startMonitoring(_, _)).Times(0);
     EXPECT_TRUE(restoreStream());
 }
 
@@ -1442,6 +1459,118 @@ TEST_F(PlaybackControllerTests, ChangeInputDevice_RejectedChangeRestoresMenuStat
     changeInputDevice(1);
 
     EXPECT_THAT(changedActions, ::testing::ElementsAre("action://playback/change-recording-device"));
+}
+
+TEST_F(PlaybackControllerTests, ChangeInputChannelsReplacesCustomSelectionWithTheCountPreset)
+{
+    audio::AudioConfiguration configuration;
+    configuration.inputChannelSelection = { { { 0 } }, { { 2, 3 } } };
+    ON_CALL(*m_audioDriverController, configuration())
+    .WillByDefault(Return(configuration));
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable())
+    .WillByDefault(Return(4));
+
+    const std::vector<audio::InputChannelSelection> presets {
+        { { { 0 } } },
+        { { { 0, 1 } } },
+        { { { 0 } }, { { 1 } }, { { 2 } } },
+        { { { 0 } }, { { 1 } }, { { 2 } }, { { 3 } } }
+    };
+    for (size_t index = 0; index < presets.size(); ++index) {
+        SCOPED_TRACE(index);
+        EXPECT_CALL(*m_audioDriverController, apply(muse::modularity::globalCtx(), _))
+        .WillOnce([&presets, index](const muse::modularity::ContextPtr&,
+                                    const audio::AudioConfigurationChange& change) {
+            EXPECT_EQ(change.inputChannelSelection, std::optional<audio::InputChannelSelection>(presets[index]));
+            EXPECT_FALSE(change.api.has_value());
+            EXPECT_FALSE(change.inputDevice.has_value());
+            EXPECT_FALSE(change.outputDevice.has_value());
+            return audio::ApplyResult { audio::ApplyStatus::Applied };
+        });
+
+        changeInputChannels(static_cast<int>(index + 1));
+    }
+}
+
+TEST_F(PlaybackControllerTests, ChangeInputChannelsKeepsTheActivePresetCheckedWhenUnchanged)
+{
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable()).WillByDefault(Return(4));
+    EXPECT_CALL(*m_audioDriverController, apply(muse::modularity::globalCtx(), _))
+    .WillOnce([](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
+        EXPECT_EQ(change.inputChannelSelection, std::optional<audio::InputChannelSelection>({ { { 0, 1 } } }));
+        return audio::ApplyResult { audio::ApplyStatus::NoChange };
+    });
+    EXPECT_CALL(*m_interactive, error(_, _, _, _, _, _)).Times(0);
+
+    std::vector<muse::actions::ActionCode> changedActions;
+    m_controller->actionCheckedChanged().onReceive(nullptr, [&changedActions](const muse::actions::ActionCode& code) {
+        changedActions.push_back(code);
+    });
+
+    changeInputChannels(2);
+
+    EXPECT_THAT(changedActions, ::testing::ElementsAre("action://playback/change-input-channels"));
+}
+
+TEST_F(PlaybackControllerTests, ChangeInputChannelsRejectedChangeRestoresMenuStateAndReportsError)
+{
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable()).WillByDefault(Return(4));
+    EXPECT_CALL(*m_audioDriverController, apply(muse::modularity::globalCtx(), _))
+    .WillOnce(Return(audio::ApplyResult { audio::ApplyStatus::OwnerUnavailable }));
+    EXPECT_CALL(*m_interactive, error(_, _, _, _, _, _))
+    .WillOnce(Return(muse::async::make_promise<muse::IInteractive::Result>(
+                         [](const auto& resolve) { return resolve(muse::IInteractive::Result {}); },
+                         muse::async::PromiseType::AsyncByBody)));
+
+    std::vector<muse::actions::ActionCode> changedActions;
+    m_controller->actionCheckedChanged().onReceive(nullptr, [&changedActions](const muse::actions::ActionCode& code) {
+        changedActions.push_back(code);
+    });
+
+    changeInputChannels(2);
+
+    EXPECT_THAT(changedActions, ::testing::ElementsAre("action://playback/change-input-channels"));
+}
+
+TEST_F(PlaybackControllerTests, ChangeInputChannelsRejectsMalformedOrOutOfRangeQueries)
+{
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable())
+    .WillByDefault(Return(4));
+    EXPECT_CALL(*m_audioDriverController, apply(_, _)).Times(0);
+
+    changeInputChannels(-1);
+    changeInputChannels(0);
+    changeInputChannels(5);
+
+    for (const auto* count : { "", "not-a-number", "2.5", "2tail", "999999999999999999999" }) {
+        SCOPED_TRACE(count);
+        muse::actions::ActionQuery q("action://playback/change-input-channels");
+        q.addParam("input-channels_index", muse::Val(count));
+        changeInputChannels(q);
+    }
+
+    changeInputChannels(muse::actions::ActionQuery("action://playback/change-input-channels"));
+    changeInputChannels(muse::actions::ActionQuery("action://playback/change-input-channels?first-channel-index=0&channel-count=2"));
+}
+
+TEST_F(PlaybackControllerTests, ChangeInputChannelsAcceptsSerializedCountQuery)
+{
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable()).WillByDefault(Return(4));
+    EXPECT_CALL(*m_audioDriverController, apply(muse::modularity::globalCtx(), _))
+    .WillOnce([](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
+        EXPECT_EQ(change.inputChannelSelection, std::optional<audio::InputChannelSelection>({ { { 0, 1 } } }));
+        return audio::ApplyResult { audio::ApplyStatus::Applied };
+    });
+
+    changeInputChannels(muse::actions::ActionQuery("action://playback/change-input-channels?input-channels_index=2"));
+}
+
+TEST_F(PlaybackControllerTests, ChangeInputChannelsRejectsCountWhenNoInputsAreAvailable)
+{
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable()).WillByDefault(Return(0));
+    EXPECT_CALL(*m_audioDriverController, apply(_, _)).Times(0);
+
+    changeInputChannels(1);
 }
 
 TEST_F(PlaybackControllerTests, RescanAudioDevices_DelegatesToGlobalController)

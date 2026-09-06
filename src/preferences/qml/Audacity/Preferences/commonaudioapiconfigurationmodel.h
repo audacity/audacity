@@ -163,7 +163,7 @@ private:
     audio::AudioDeviceSelection effectiveOutputDevice() const;
     audio::AudioDeviceSelection effectiveInputDevice() const;
     int effectiveInputChannelsAvailable() const;
-    int effectiveInputChannels() const;
+    audio::InputChannelSelection effectiveInputChannelSelection() const;
     void setPendingSampleRate(uint64_t rateValue);
     void clearPendingValues();
     void notifyDeviceContextChanged();

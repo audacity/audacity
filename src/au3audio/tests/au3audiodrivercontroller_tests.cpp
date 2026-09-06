@@ -110,6 +110,22 @@ public:
         m_controller.m_applying = applying;
     }
 
+    bool streamNeedsSuspension(
+        const audio::AudioConfigurationDelta& delta,
+        const muse::modularity::ContextPtr& requester,
+        const std::optional<audio::AudioStreamDescriptor>& currentStream)
+    {
+        return m_controller.streamNeedsSuspension(
+            delta, 44100, requester, currentStream);
+    }
+
+    audio::AudioConfigurationDelta makeDelta(
+        const audio::AudioConfiguration& before,
+        const audio::AudioConfiguration& after)
+    {
+        return m_controller.makeDelta(before, after);
+    }
+
     Au3AudioDriverController m_controller;
     std::shared_ptr<NiceMock<audio::AudioEngineMock> > m_audioEngine;
     std::shared_ptr<NiceMock<muse::ApplicationMock> > m_application;
@@ -265,5 +281,50 @@ TEST_F(Au3AudioDriverControllerTests, Apply_ReentrantRequestIsRejectedWithoutCha
 
     EXPECT_EQ(result.status, audio::ApplyStatus::Busy);
     EXPECT_EQ(m_controller.configuration().bufferLength, 100.0);
+}
+
+TEST_F(Au3AudioDriverControllerTests, SelectionChangeIsReportedInConfigurationDelta)
+{
+    audio::AudioConfiguration before;
+    before.inputChannelSelection = { { { 0 } } };
+    auto after = before;
+    after.inputChannelSelection = { { { 2, 3 } } };
+
+    const auto delta = makeDelta(before, after);
+
+    EXPECT_TRUE(delta.contains(audio::AudioConfigurationField::InputChannelSelection));
+    EXPECT_EQ(delta.fields,
+              audio::fieldMask(audio::AudioConfigurationField::InputChannelSelection));
+}
+
+TEST_F(Au3AudioDriverControllerTests, SelectionChangeRestartsOwnedMonitoringAndRecording)
+{
+    audio::AudioConfigurationDelta delta;
+    delta.fields
+        = audio::fieldMask(audio::AudioConfigurationField::InputChannelSelection);
+
+    EXPECT_TRUE(streamNeedsSuspension(
+                    delta, m_ownerContext,
+                    stream(audio::AudioStreamKind::Monitoring)));
+    EXPECT_TRUE(streamNeedsSuspension(
+                    delta, m_ownerContext,
+                    stream(audio::AudioStreamKind::Recording)));
+    EXPECT_FALSE(streamNeedsSuspension(
+                     delta, m_ownerContext,
+                     stream(audio::AudioStreamKind::Playback)));
+}
+
+TEST_F(Au3AudioDriverControllerTests, SelectionChangeDoesNotRestartAnotherContextsStream)
+{
+    audio::AudioConfigurationDelta delta;
+    delta.fields
+        = audio::fieldMask(audio::AudioConfigurationField::InputChannelSelection);
+
+    EXPECT_FALSE(streamNeedsSuspension(
+                     delta, m_requesterContext,
+                     stream(audio::AudioStreamKind::Monitoring)));
+    EXPECT_FALSE(streamNeedsSuspension(
+                     delta, m_requesterContext,
+                     stream(audio::AudioStreamKind::Recording)));
 }
 }

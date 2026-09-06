@@ -88,7 +88,7 @@ public:
         .WillByDefault(Return(2));
 
         audio::AudioConfiguration audioConfiguration;
-        audioConfiguration.inputChannels = 2;
+        audioConfiguration.inputChannelSelection = { { { 0, 1 } } };
         ON_CALL(*m_audioDriverController, configuration())
         .WillByDefault(Return(audioConfiguration));
 
@@ -138,14 +138,20 @@ public:
         return *reinterpret_cast<Au3Project*>(m_au3ProjectAccessor->au3ProjectPtr());
     }
 
-    Au3WaveTrack* addSelectedMonoTrack()
+    Au3WaveTrack* addSelectedTrack(size_t channels = 1)
     {
         auto& trackFactory = Au3WaveTrackFactory::Get(projectRef());
-        auto track = trackFactory.Create(sampleFormat::floatSample, TEST_SAMPLE_RATE);
+        auto track = trackFactory.Create(
+            channels, sampleFormat::floatSample, TEST_SAMPLE_RATE);
         Au3TrackList::Get(projectRef()).Add(track, ::TrackList::DoAssignId::Yes,
                                             ::TrackList::EventPublicationSynchrony::Synchronous);
         track->SetSelected(true);
         return track.get();
+    }
+
+    Au3WaveTrack* addSelectedMonoTrack()
+    {
+        return addSelectedTrack();
     }
 
     std::shared_ptr<Au3Record> m_record;
@@ -239,6 +245,96 @@ TEST_F(Au3RecordTests, RecordingToNewTrackUsesConfiguredTrackName)
     ASSERT_EQ(tracks.size(), 1u);
     EXPECT_EQ((*tracks.begin())->NChannels(), 2u);
     EXPECT_EQ((*tracks.begin())->GetName(), wxString("MyTake_1"));
+}
+
+struct ChannelSelectionCase {
+    const char* name;
+    audio::InputChannelSelection selection;
+    std::vector<size_t> trackChannels;
+    int availableChannels;
+};
+
+class Au3RecordChannelSelectionTests : public Au3RecordTests, public ::testing::WithParamInterface<ChannelSelectionCase>
+{
+};
+
+TEST_P(Au3RecordChannelSelectionTests, CreatesMatchingTracksAndPassesExactRouteToEngine)
+{
+    const auto& testCase = GetParam();
+    audio::AudioConfiguration configuration;
+    configuration.inputChannelSelection = testCase.selection;
+    ON_CALL(*m_audioDriverController, configuration()).WillByDefault(Return(configuration));
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable())
+    .WillByDefault(Return(testCase.availableChannels));
+
+    audio::IAudioEngine::StartStreamOptions streamOptions;
+    EXPECT_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<5>(&streamOptions), Return(1)));
+
+    ASSERT_TRUE(m_record->start());
+
+    const auto tracks = Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>();
+    ASSERT_EQ(tracks.size(), testCase.trackChannels.size());
+    auto track = tracks.begin();
+    for (const auto channels : testCase.trackChannels) {
+        ASSERT_NE(track, tracks.end());
+        EXPECT_EQ((*track++)->NChannels(), channels);
+    }
+    EXPECT_EQ(streamOptions.inputChannelSelection, configuration.inputChannelSelection);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    RecordingRoutes,
+    Au3RecordChannelSelectionTests,
+    ::testing::Values(
+        ChannelSelectionCase { "HighMono", { { { 2 } } }, { 1 }, 4 },
+        ChannelSelectionCase { "HighStereo", { { { 2, 3 } } }, { 2 }, 4 },
+        ChannelSelectionCase { "MultipleMonos", { { { 0 } }, { { 2 } } },
+                               { 1, 1 }, 4 },
+        ChannelSelectionCase { "MixedMonoAndStereo", { { { 0 } }, { { 2, 3 } } },
+                               { 1, 2 }, 4 },
+        ChannelSelectionCase { "MultipleStereoPairs", { { { 0, 1 } }, { { 2, 3 } } },
+                               { 2, 2 }, 4 },
+        ChannelSelectionCase { "HighestConventionalPair", { { { 6, 7 } } },
+                               { 2 }, 8 }),
+    [](const ::testing::TestParamInfo<ChannelSelectionCase>& info) {
+    return info.param.name;
+});
+
+TEST_F(Au3RecordTests, ExistingTrackCompatibilityUsesLogicalChannelCount)
+{
+    addSelectedTrack(2);
+    audio::AudioConfiguration configuration;
+    configuration.inputChannelSelection = { { { 0 } }, { { 2 } } };
+    ON_CALL(*m_audioDriverController, configuration()).WillByDefault(Return(configuration));
+    ON_CALL(*m_audioDriverController, inputChannelsAvailable()).WillByDefault(Return(4));
+
+    audio::IAudioEngine::StartStreamOptions streamOptions;
+    EXPECT_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<5>(&streamOptions), Return(1)));
+
+    ASSERT_TRUE(m_record->start());
+
+    EXPECT_EQ(Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>().size(), 1u);
+    EXPECT_EQ(streamOptions.inputChannelSelection, configuration.inputChannelSelection);
+}
+
+TEST_F(Au3RecordTests, CapacityReducedPresetCreatesOneStereoTrack)
+{
+    audio::AudioConfiguration configuration;
+    configuration.inputChannelSelection = audio::normalizeInputChannelSelection(audio::legacyInputChannelSelection(4), 2);
+    ON_CALL(*m_audioDriverController, configuration()).WillByDefault(Return(configuration));
+
+    audio::IAudioEngine::StartStreamOptions streamOptions;
+    EXPECT_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<5>(&streamOptions), Return(1)));
+
+    ASSERT_TRUE(m_record->start());
+
+    const auto tracks = Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>();
+    ASSERT_EQ(tracks.size(), 1u);
+    EXPECT_EQ((*tracks.begin())->NChannels(), 2u);
+    EXPECT_EQ(streamOptions.inputChannelSelection, audio::InputChannelSelection({ { { 0, 1 } } }));
 }
 
 TEST_F(Au3RecordTests, RecordingWithBusyEngineStartsUnpausedAtPlayhead)
