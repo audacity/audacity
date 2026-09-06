@@ -69,10 +69,6 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/portmixer au3-portmixer)
 tft_add_to_build()
 
 # Conditional time-stretching and pitch-shifting libraries
-if (AU_USE_SOUNDTOUCH)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/soundtouch au3-soundtouch)
-endif()
-
 if (AU_USE_SBSMS)
     add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/sbsms au3-sbsms)
 endif()
