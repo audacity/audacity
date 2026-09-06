@@ -52,5 +52,5 @@ if (AU_USE_SOUNDTOUCH)
 endif()
 
 if (AU_USE_SBSMS)
-    require_source_dep(sbsms)
+    require_dep(sbsms)
 endif()
