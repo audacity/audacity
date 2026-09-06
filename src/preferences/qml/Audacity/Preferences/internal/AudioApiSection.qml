@@ -178,7 +178,9 @@ BaseSection {
                                 CheckBox {
                                     id: channelCheckBox
                                     anchors.left: parent.left
+                                    anchors.right: parent.right
                                     anchors.leftMargin: 8
+                                    anchors.rightMargin: 8
                                     anchors.bottom: parent.bottom
                                     text: channelDelegate.model.title
                                     checked: channelDelegate.model.checked

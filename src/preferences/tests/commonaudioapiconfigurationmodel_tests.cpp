@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include <QAbstractItemModel>
+#include <QFontMetricsF>
 #include <QPointer>
 #include <QQmlComponent>
 #include <QQmlContext>
@@ -302,6 +303,43 @@ TEST_F(RecordingChannelPopupTests, TriggerTogglesPendingSelectionWithoutClosing)
         EXPECT_EQ(m_model->inputChannelGroups().at(1).toMap().value("checked").toBool(), checked);
         EXPECT_EQ(m_applied.inputChannelSelection, (audio::InputChannelSelection { { { 0 } } }));
     }
+}
+
+TEST_F(RecordingChannelPopupTests, DeviceChangeKeepsReusedStereoLabelVisible)
+{
+    ON_CALL(*m_controller, inputChannelsAvailable()).WillByDefault(Return(4));
+    ON_CALL(*m_controller, inputChannelsAvailable("Core Audio", _)).WillByDefault(Return(2));
+    m_applied.inputChannelSelection = { { { 2, 3 } } };
+    ASSERT_EQ(m_model->inputChannelSelectionSummary(), "3+4");
+    ASSERT_NO_FATAL_FAILURE(createView());
+    ASSERT_NO_FATAL_FAILURE(openPopup());
+    dispatch(muse::ui::DOWN_COMMAND);
+    dispatch(muse::ui::DOWN_COMMAND);
+    ASSERT_NO_FATAL_FAILURE(expectChannelFocus(2, "3"));
+
+    const QPointer<QQuickItem> checkBox = m_navigation->activeControl()->visualItem();
+    ASSERT_TRUE(QTest::qWaitFor([checkBox]() { return checkBox->width() > 20; }));
+
+    // The third row changes from mono 3 to stereo 1+2 without recreating its checkbox.
+    m_model->inputDeviceSelected(2);
+    ASSERT_TRUE(QMetaObject::invokeMethod(m_list, "forceLayout"));
+    ASSERT_FALSE(checkBox.isNull());
+    ASSERT_EQ(checkBox->property("text").toString(), "1+2");
+
+    QQuickItem* label = nullptr;
+    for (auto* item : checkBox->findChildren<QQuickItem*>()) {
+        if (item->property("text").toString() == "1+2"
+            && item->property("truncated").isValid()) {
+            label = item;
+            break;
+        }
+    }
+    ASSERT_NE(label, nullptr);
+    const qreal textWidth = QFontMetricsF(label->property("font").value<QFont>()).horizontalAdvance("1+2");
+    EXPECT_TRUE(QTest::qWaitFor([label, textWidth]() {
+        return label->isVisible() && label->width() >= textWidth
+               && !label->property("truncated").toBool();
+    })) << "label width=" << label->width() << ", text width=" << textWidth;
 }
 
 TEST_F(RecordingChannelPopupTests, KeyboardNavigationScrollsToOffscreenMonoAndStereoGroups)
