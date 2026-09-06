@@ -210,7 +210,7 @@ public:
     void UpdateTimePosition(
         unsigned long framesPerBuffer);
     void DoPlaythrough(
-        constSamplePtr inputBuffer, float* outputBuffer, unsigned long framesPerBuffer, float* outputMeterFloats);
+        const float* inputSamples, float* outputBuffer, unsigned long framesPerBuffer, float* outputMeterFloats);
     void SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer, const TimePoint& dacTime);
     void SendVuOutputMeterData(const float* outputMeterFloats, unsigned long framesPerBuffer, const TimePoint& dacTime);
     void PushMasterOutputMeterValues(const IMeterSenderPtr& sender, const float* values, uint8_t channels, unsigned long frames,
@@ -245,6 +245,7 @@ public:
     std::vector<TrackChannelInfo> mCaptureChannelLayout;
     std::vector<std::vector<size_t> > mTrackChannelSourceMap;
     bool mCaptureNeedsMixdown{ false };
+    std::vector<std::vector<unsigned int> > mInputChannelSelection;
     //!Buffers that hold outcome of transformations applied to each individual sample source.
     //!Number of buffers equals to the sum of number all source channels.
     std::vector<std::vector<float> > mProcessingBuffers;

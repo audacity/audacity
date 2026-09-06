@@ -62,6 +62,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "AudioIOExt.h"
 #include "AudioIOListener.h"
+#include "internal/AudioIOInputChannelSelection.h"
 
 #include "au3-math/float_cast.h"
 #include "au3-math/Resample.h"
@@ -497,6 +498,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     ResetMeters();
 
     mLastPaError = paNoError;
+    mInputChannelSelection
+        = audacity::audio_io::details::LegacyInputChannelSelection(numCaptureChannels);
     // pick a rate to do the audio I/O at, from those available. The project
     // rate is suggested, but we may get something else if it isn't supported
     mRate = 0.0;
@@ -1805,6 +1808,7 @@ void AudioIO::StopStream()
 
     mNumCaptureChannels = 0;
     mNumPlaybackChannels = 0;
+    mInputChannelSelection.clear();
 
     mPlaybackSequences.clear();
     mCaptureSequences.clear();
@@ -2698,27 +2702,6 @@ void AudioIoCallback::SetListener(
     mListener = listener;
 }
 
-static void DoSoftwarePlaythrough(constSamplePtr inputBuffer,
-                                  sampleFormat inputFormat,
-                                  unsigned inputChannels,
-                                  float* outputBuffer,
-                                  unsigned long len)
-{
-    for (unsigned int i=0; i < inputChannels; i++) {
-        auto inputPtr = inputBuffer + (i * SAMPLE_SIZE(inputFormat));
-
-        SamplesToFloats(inputPtr, inputFormat,
-                        outputBuffer + i, len, inputChannels, 2);
-    }
-
-    // One mono input channel goes to both output channels...
-    if (inputChannels == 1) {
-        for (int i=0; i < len; i++) {
-            outputBuffer[2 * i + 1] = outputBuffer[2 * i];
-        }
-    }
-}
-
 int audacityAudioCallback(const void* inputBuffer, void* outputBuffer,
                           unsigned long framesPerBuffer,
                           const PaStreamCallbackTimeInfo* timeInfo,
@@ -3139,12 +3122,11 @@ void OldCodeToCalculateLatency()
 // return true, IFF we have fully handled the callback.
 // Prime the output buffer with 0's, optionally adding in the playthrough.
 void AudioIoCallback::DoPlaythrough(
-    constSamplePtr inputBuffer,
+    const float* inputSamples,
     float* outputBuffer,
     unsigned long framesPerBuffer,
     float* outputMeterFloats)
 {
-    const auto numCaptureChannels = mNumCaptureChannels;
     const auto numPlaybackChannels = mNumPlaybackChannels;
 
     // Quick returns if next to nothing to do.
@@ -3160,10 +3142,10 @@ void AudioIoCallback::DoPlaythrough(
         outputFloats[i] = 0.0;
     }
 
-    if (inputBuffer && mSoftwarePlaythrough) {
-        DoSoftwarePlaythrough(inputBuffer, mCaptureFormat,
-                              numCaptureChannels,
-                              outputBuffer, framesPerBuffer);
+    if (inputSamples && mSoftwarePlaythrough) {
+        audacity::audio_io::details::MixInputChannelSelectionToStereo(
+            inputSamples, mNumCaptureChannels, mInputChannelSelection,
+            outputBuffer, framesPerBuffer);
     }
 
     // Copy the results to outputMeterFloats if necessary
@@ -3407,8 +3389,8 @@ int AudioIoCallback::AudioCallback(
     const auto levelDisplayTime = std::chrono::steady_clock::now()
                                   + std::chrono::milliseconds(static_cast<int>(mHardwarePlaybackLatencyMs));
 
+    float* inputSamples = nullptr;
     if (inputBuffer && numCaptureChannels) {
-        float* inputSamples;
 
         if (!mInputMixerWorks) {
             const float gain = GetSoftwareRecordGain();
@@ -3445,7 +3427,7 @@ int AudioIoCallback::AudioCallback(
     // Initialise output buffer to zero or to playthrough data.
     // Initialise output meter values.
     DoPlaythrough(
-        inputBuffer,
+        inputSamples,
         outputBuffer,
         framesPerBuffer,
         outputMeterFloats);

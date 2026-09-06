@@ -11,12 +11,14 @@
 #include <gtest/gtest.h>
 
 #include "au3-audio-io/AudioIO.h"
+#include "au3-audio-io/internal/AudioIOInputChannelSelection.h"
 #include "au3-mixer/AudioIOSequences.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
 
 namespace au::au3audio {
+namespace details = audacity::audio_io::details;
 
 namespace {
 class TestAudioIoCallback : public AudioIoCallback
@@ -83,6 +85,7 @@ public:
     void setInputChannelCount(size_t channels)
     {
         m_callback.mNumCaptureChannels = channels;
+        m_callback.mInputChannelSelection = details::LegacyInputChannelSelection(channels);
     }
 
     void setTracks(const std::vector<size_t>& channelCounts, const std::vector<std::vector<size_t> >& sourceMap)
@@ -240,5 +243,24 @@ TEST_F(AudioIOInputMeterTests, StereoTrackDuplicatesTheSelectedMonoInput)
     ASSERT_EQ(m_submissions.size(), 3u);
     expectMainMeter({ { 0.4f, -0.6f } }, 1);
     expectMeter({ { 0.4f, -0.6f }, { 0.4f, -0.6f } }, 1, 100);
+}
+
+TEST_F(AudioIOInputMeterTests, MultichannelMeterLevelsDoNotChangeCancellingSoftwarePlaythrough)
+{
+    setInputChannelCount(3);
+    const std::vector<float> input { 0.8f, -0.8f, 0.0f, -0.6f, 0.3f, 0.3f };
+    ASSERT_NO_FATAL_FAILURE(pushInput(input));
+    expectMainMeter({ { 0.8f, 0.6f }, { 0.8f, 0.3f } }, 1);
+
+    m_callback.mSoftwarePlaythrough = true;
+    m_callback.mNumPlaybackChannels = 2;
+    float output[4] {};
+    float outputMeter[4] {};
+    m_callback.DoPlaythrough(input.data(), output, 2, outputMeter);
+
+    for (size_t sample = 0; sample < 4; ++sample) {
+        EXPECT_FLOAT_EQ(output[sample], 0.0f);
+        EXPECT_FLOAT_EQ(outputMeter[sample], 0.0f);
+    }
 }
 }

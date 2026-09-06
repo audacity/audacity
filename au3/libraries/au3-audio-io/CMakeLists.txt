@@ -22,6 +22,7 @@ set( SOURCES
    ProjectAudioIO.h
    RingBuffer.cpp
    RingBuffer.h
+   internal/AudioIOInputChannelSelection.h
 )
 set( LIBRARIES
 PUBLIC
