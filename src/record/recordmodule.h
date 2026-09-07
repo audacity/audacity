@@ -21,8 +21,6 @@ public:
 
     std::string moduleName() const override;
     void registerExports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;

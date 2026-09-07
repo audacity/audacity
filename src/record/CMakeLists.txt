@@ -33,16 +33,7 @@ target_sources(record PRIVATE
 
     view/toolbars/playbacktoolbarrecordlevelitem.cpp
     view/toolbars/playbacktoolbarrecordlevelitem.h
-    view/common/recordmetermodel.cpp
-    view/common/recordmetermodel.h
-    view/common/leadinrecordingindicatormodel.cpp
-    view/common/leadinrecordingindicatormodel.h
     )
-
-qt_add_resources(record_RCC_SOURCES record.qrc)
-target_sources(record PRIVATE ${record_RCC_SOURCES})
-
-add_qml_import_path(${CMAKE_CURRENT_LIST_DIR}/qml)
 
 target_link_libraries(record PRIVATE
         au3wrap
@@ -55,6 +46,8 @@ target_link_libraries(record PRIVATE
         au3-track
         au3-wave-track
 )
+
+add_subdirectory(qml/Audacity/Record)
 
 if (AU_BUILD_RECORD_TESTS)
     add_subdirectory(tests)

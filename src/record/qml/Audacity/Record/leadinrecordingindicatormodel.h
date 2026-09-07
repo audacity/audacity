@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QVariantList>
+#include <QtQml/qqmlregistration.h>
 
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
@@ -15,6 +16,7 @@ namespace au::record {
 class LeadInRecordingIndicatorModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(bool visible READ visible NOTIFY visibleChanged FINAL)
     Q_PROPERTY(double startTime READ startTime NOTIFY visibleChanged FINAL)
     Q_PROPERTY(QVariantList trackIds READ trackIds NOTIFY visibleChanged FINAL)
