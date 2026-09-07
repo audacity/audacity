@@ -42,6 +42,7 @@ public:
     bool isAuthorized() const override;
 
 private:
+    bool initReplyHandlerIfNecessary();
     std::string buildOAuthRequestURL(const std::string& provider);
     void syncUsageInfoPrefs();
     void openBrowserSession();
@@ -52,7 +53,7 @@ private:
 
     muse::ValCh<AuthState> m_authState;
 
-    OAuthHttpServerReplyHandler* m_replyHandler;
+    OAuthHttpServerReplyHandler* m_replyHandler { nullptr };
 
     AccountInfo m_accountInfo;
     muse::async::Notification m_accountInfoChanged;
