@@ -7,6 +7,8 @@ import QtQuick.Controls 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents
 
+import Audacity.UiComponents
+
 KnobControl {
     id: root
 
@@ -21,9 +23,16 @@ KnobControl {
         newPanRequested(value, false)
     }
 
-    PanTooltip {
+    ValueTooltip {
         id: tooltip
-        value: root.value
+
+        format: qsTrc("projectscene", "Pan: %1")
+        unitText: root.value < 0 ? "L" : root.value > 0 ? "R" : ""
+        sizingText: "100R"
+
+        decimalPlaces: 0
+
+        value: Math.abs(root.value)
     }
 
     onMousePressed: {

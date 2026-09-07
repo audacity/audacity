@@ -5481,7 +5481,7 @@ Leo Wattenberg, Septembre 2024 (Migration vers Transifex)</translation>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>Indication de mesure : %1/%2</translation>
     </message>
 </context>
 <context>
@@ -6233,17 +6233,17 @@ Sélectionnez une section de piste.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="77"/>
         <source>Half-wave Rectifier</source>
-        <translation>Rectifieur de demi-onde</translation>
+        <translation>Redresseur demi-onde</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="78"/>
         <source>Full-wave Rectifier</source>
-        <translation>Rectifieur d’onde complète</translation>
+        <translation>Redresseur onde entière</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="79"/>
         <source>Full-wave Rectifier (DC blocked)</source>
-        <translation>Rectifieur d’onde complète (CC bloqué)</translation>
+        <translation>Redresseur onde entière (CC bloqué)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="80"/>
@@ -7877,7 +7877,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Décalage de hauteur initial</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -7889,7 +7889,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Décalage de hauteur final</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="57"/>
@@ -8037,7 +8037,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="343"/>
         <source>Fading</source>
-        <translation>Fondu</translation>
+        <translation>Fondus</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="345"/>
@@ -8112,7 +8112,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
     <message>
         <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="125"/>
         <source>Generated audio duration</source>
-        <translation type="unfinished"/>
+        <translation>Durée de l&apos;audio généré</translation>
     </message>
 </context>
 <context>
@@ -8205,7 +8205,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
         <source>Preparing preview</source>
-        <translation>Préparation de la prélecture</translation>
+        <translation>Préparation de l&apos;aperçu</translation>
     </message>
 </context>
 <context>
@@ -8310,12 +8310,12 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="69"/>
         <source>Median</source>
-        <translation>Median</translation>
+        <translation>Médian</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
         <source>Second greatest</source>
-        <translation>Second greatest</translation>
+        <translation>Le deuxième plus grand</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="201"/>
@@ -10574,19 +10574,19 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="68"/>
         <source>Acoustic</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Acoustic</translation>
+        <translation>Acoustique</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="70"/>
         <source>Ambience</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Ambience</translation>
+        <translation>Ambiance</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="72"/>
         <source>Artificial</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Artificial</translation>
+        <translation>Artificiel</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="74"/>
@@ -10694,7 +10694,7 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="21"/>
         <source>Reverse</source>
-        <translation>Inverser</translation>
+        <translation>Retourner</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="30"/>
@@ -11382,12 +11382,12 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Décalage de hauteur initial</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>Décalage de hauteur final</translation>
     </message>
 </context>
 <context>
@@ -11617,7 +11617,7 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
 Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <extracomment>%1 is the function name, %2 is the source file path, %3 is the line number in that file</extracomment>
         <translation>Erreur interne dans %1 à %2 ligne %3.
-Veuillez en informer l’équipe d’Audacity à https://forum.audacityteam.org/ (en anglais).</translation>
+Veuillez en informer l’équipe d’Audacity à https://forum.audacityteam.org/.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.cpp" line="35"/>
@@ -11625,7 +11625,7 @@ Veuillez en informer l’équipe d’Audacity à https://forum.audacityteam.org/
 Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <extracomment>%1 is the source file path, %2 is the line number in that file</extracomment>
         <translation>Erreur interne à %1 ligne %2.
-Veuillez en informer l’équipe d’Audacity à https://forum.audacityteam.org/ (en anglais).</translation>
+Veuillez en informer l’équipe d’Audacity à https://forum.audacityteam.org/.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.h" line="27"/>
@@ -12048,7 +12048,7 @@ Recommandé - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>Export audio in loop region</source>
-        <translation>Exporter l&apos;audio dans une one de boucle</translation>
+        <translation>Exporter l&apos;audio dans une zone de boucle</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="198"/>
@@ -15333,7 +15333,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="227"/>
         <source>Unable to export - problem with file</source>
-        <translation>Incapable d’exporter - problème avec le fichier</translation>
+        <translation>Impossible d’exporter - problème avec le fichier</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="236"/>
@@ -21191,7 +21191,7 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n heure restante</numerusform><numerusform>%n heures restantes</numerusform><numerusform>%n heures restantes</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
@@ -21203,7 +21203,7 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n seconde restante</numerusform><numerusform>%n secondes restantes</numerusform><numerusform>%n secondes restantes</numerusform></translation>
     </message>
 </context>
 <context>
