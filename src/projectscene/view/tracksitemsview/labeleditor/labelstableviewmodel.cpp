@@ -8,8 +8,8 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
-#include "uicomponents/components/timecodemodel.h"
-#include "uicomponents/components/frequencymodel.h"
+#include "uicomponents/qml/Audacity/UiComponents/components/timecodemodel.h"
+#include "uicomponents/qml/Audacity/UiComponents/components/frequencymodel.h"
 
 #include "labelstableviewverticalheader.h"
 #include "labelstableviewtrackcell.h"

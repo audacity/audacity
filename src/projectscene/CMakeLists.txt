@@ -255,6 +255,7 @@ set(MODULE_LINK
         record_qml # PlaybackToolBarRecordLevelItem is created in C++ by PlaybackToolBarModel
         spectrogram
         uicomponents
+        uicomponents_qml
         au3-registries
         au3-track
         au3-project
