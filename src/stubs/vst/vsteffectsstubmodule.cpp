@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "vsteffectsmodule.h"
+#include "vsteffectsstubmodule.h"
 
 namespace au::effects {
 std::string VstEffectsModule::moduleName() const
