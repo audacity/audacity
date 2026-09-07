@@ -2,47 +2,46 @@
 # Audacity: A Digital Audio Editor
 #
 
-declare_module(uicomponents)
+muse_create_module(uicomponents)
 
-set(MODULE_QRC au_uicomponents.qrc)
+target_sources(uicomponents PRIVATE
+    uicomponentsmodule.cpp
+    uicomponentsmodule.h
+    types/numerictypes.h
 
-set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
+    components/bpmmodel.cpp
+    components/bpmmodel.h
+    components/frequencymodel.cpp
+    components/frequencymodel.h
+    components/timecodemodel.cpp
+    components/timecodemodel.h
 
-set(MODULE_SRC
-    ${CMAKE_CURRENT_LIST_DIR}/uicomponentsmodule.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/uicomponentsmodule.h
-    ${CMAKE_CURRENT_LIST_DIR}/types/numerictypes.h
+    components/timecodemodeselector.cpp
+    components/timecodemodeselector.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/components/bpmmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/bpmmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/components/frequencymodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/frequencymodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/components/timecodemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/timecodemodel.h
+    components/tablesortfilterproxymodel.cpp
+    components/tablesortfilterproxymodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/components/timecodemodeselector.cpp
+    components/internal/numeric/numericviewmodel.cpp
+    components/internal/numeric/numericviewmodel.h
+    components/internal/numeric/timecodeformatter.cpp
+    components/internal/numeric/timecodeformatter.h
+    components/internal/numeric/numericformatter.cpp
+    components/internal/numeric/numericformatter.h
+    components/internal/numeric/beatsformatter.cpp
+    components/internal/numeric/beatsformatter.h
+    components/internal/numeric/fieldsinteractioncontroller.cpp
+    components/internal/numeric/fieldsinteractioncontroller.h
+    )
 
-    ${CMAKE_CURRENT_LIST_DIR}/components/tablesortfilterproxymodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/tablesortfilterproxymodel.h
+qt_add_resources(uicomponents_RCC_SOURCES au_uicomponents.qrc)
+target_sources(uicomponents PRIVATE ${uicomponents_RCC_SOURCES})
 
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/numericviewmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/numericviewmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/timecodeformatter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/timecodeformatter.h
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/numericformatter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/numericformatter.h
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/beatsformatter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/beatsformatter.h
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/fieldsinteractioncontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/fieldsinteractioncontroller.h
+add_qml_import_path(${CMAKE_CURRENT_LIST_DIR}/qml)
 
-)
-
-set(MODULE_LINK
+target_link_libraries(uicomponents PRIVATE
     muse::uicomponents_qml
 )
-
-setup_module()
 
 if (AU_BUILD_UICOMPONENTS_TESTS)
     add_subdirectory(tests)
