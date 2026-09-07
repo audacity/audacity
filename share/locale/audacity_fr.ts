@@ -9312,7 +9312,7 @@ ou, pour LISP, commencez par une parenthèse ouvrante telle que :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished"/>
+        <translation>Placer un label aux sons</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -9411,7 +9411,7 @@ ou, pour LISP, commencez par une parenthèse ouvrante telle que :
         <source>Labelling regions between sounds requires~%~
                  at least two sounds.~%~
                  Only one sound detected.</source>
-        <translation>Mettre un label aux régions entre les sons nécessite~%~
+        <translation>Placer un label aux régions entre les sons nécessite~%~
                  au moins deux sons.~%~
                  Un seul son détecté.</translation>
     </message>

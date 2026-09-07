@@ -931,7 +931,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Plugin manager</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Laajennusten hallinta</translation>
+        <translation>Liitännäisten hallinta</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
@@ -1053,7 +1053,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nyquist laajennuksen asentaja</translation>
+        <translation>Nyquist-liitännäisen asentaja</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
@@ -2715,7 +2715,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="491"/>
         <source>Plugin manager</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Laajennusten hallinta</translation>
+        <translation>Liitännäisten hallinta</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
@@ -2781,7 +2781,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="585"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nyquist laajennuksen asentaja</translation>
+        <translation>Nyquist-liitännäisen asentaja</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
@@ -5466,7 +5466,7 @@ Tämä toiminto ei poista projektejasi.</translation>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>Tahtilaji: %1/%2</translation>
     </message>
 </context>
 <context>
@@ -5947,17 +5947,17 @@ Virhekoodi: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
         <source>The plugin “%1” does not support the required block size</source>
-        <translation type="unfinished"/>
+        <translation>Liitännäinen ”%1” ei tue vaadittua lohkokokoa</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
         <source>The plugin “%1” has crashed while processing audio</source>
-        <translation type="unfinished"/>
+        <translation>Liitännäinen ”%1” kaatui äänen käsittelyn aikana</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
         <source>Realtime effect error</source>
-        <translation type="unfinished"/>
+        <translation>Reaaliaikaisen tehosteen virhe</translation>
     </message>
 </context>
 <context>
@@ -7620,7 +7620,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
         <source>Effect preview</source>
-        <translation type="unfinished"/>
+        <translation>Tehosteen esikatselu</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
@@ -9583,7 +9583,7 @@ Taajuuden on oltava alle ~a Hz.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="194"/>
         <source>Nyquist plugin installer</source>
-        <translation>Nyquist laajennuksen asentaja</translation>
+        <translation>Nyquist-liitännäisen asentaja</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="195"/>
@@ -12146,17 +12146,17 @@ Master-efektit palautetaan käyttöön viennin jälkeen.</translation>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="46"/>
         <source>Plugin not found</source>
-        <translation>Lisäosaa ei löydy</translation>
+        <translation>Liitännäistä ei löydy</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
         <source>Could not load plugin</source>
-        <translation>Lisäosaa ei voida ladata</translation>
+        <translation>Liitännäistä ei voida ladata</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
         <source>Plugin is not in the correct format</source>
-        <translation>Lisäosa ei ole oikeassa muodossa</translation>
+        <translation>Liitännäinen ei ole oikeassa muodossa</translation>
     </message>
     <message>
         <source>Manually</source>
@@ -12207,7 +12207,7 @@ Master-efektit palautetaan käyttöön viennin jälkeen.</translation>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="74"/>
         <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
-        <translation>Lisäosa “%1” on tällä hetkellä poissa käytöstä. Haluatko ottaa sen käyttöön nyt?</translation>
+        <translation>Liitännäinen “%1” on tällä hetkellä poissa käytöstä. Haluatko ottaa sen käyttöön nyt?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="75"/>
@@ -12237,12 +12237,12 @@ Master-efektit palautetaan käyttöön viennin jälkeen.</translation>
     <message>
         <source>Run plugin %1</source>
         <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation type="vanished">Suorita lisäosa %1</translation>
+        <translation type="vanished">Suorita liitännäinen %1</translation>
     </message>
     <message>
         <source>Run plugin %1: %2</source>
         <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation type="vanished">Suorita lisäosa %1: %2</translation>
+        <translation type="vanished">Suorita liitännäinen %1: %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="118"/>
@@ -17961,7 +17961,7 @@ Sitä ei ladata.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation>Valitse laajennusten sijainti</translation>
+        <translation>Valitse liitännäisten sijainti</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
@@ -18021,7 +18021,7 @@ Sitä ei ladata.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>Näytä ”Miten haluat viedä?” -valintaikkuna</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -18036,12 +18036,12 @@ Sitä ei ladata.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Tallenna aina pilveen</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>Tallenna aina tietokoneelle</translation>
     </message>
 </context>
 <context>
@@ -19200,7 +19200,7 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>Vie tietokoneelle</translation>
     </message>
 </context>
 <context>
