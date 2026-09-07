@@ -47,8 +47,6 @@ public:
 class ExportCVSDProcessor final : public ExportProcessor
 {
 private:
-    CVSD_CONFIG config;
-
     T_CVSD_MAIN_STRUCT mEncoderParams {};
     CVSD_BITPACKER mBitPacker {};
     struct {
