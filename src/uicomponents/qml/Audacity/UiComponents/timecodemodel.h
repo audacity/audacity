@@ -6,7 +6,7 @@
 #include <QtQml/qqmlregistration.h>
 
 #include "timecodemodeselector.h"
-#include "internal/numeric/numericviewmodel.h"
+#include "numericviewmodel.h"
 
 namespace au::uicomponents {
 class TimecodeModel : public NumericViewModel

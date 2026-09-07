@@ -19,7 +19,7 @@ class TableSortFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT
     QML_ELEMENT
 
-    Q_PROPERTY(QItemSelectionModel * selectionModel READ selectionModel CONSTANT)
+    Q_PROPERTY(QItemSelectionModel* selectionModel READ selectionModel CONSTANT)
     Q_PROPERTY(int rowCount READ rowCount NOTIFY rowCountChanged)
 
 public:
