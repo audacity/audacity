@@ -139,4 +139,17 @@ TEST(TimecodeModelTests, BeatsFormatSurvivesZeroTimeSignature) {
 
     EXPECT_EQ(model.valueString(), "001 bar 03 beat 01");
 }
+
+TEST(TimecodeModelTests, NegativeTimeSignatureKeepsFieldLayout) {
+    TimecodeModel model;
+    model.setMode(TimecodeMode::Duration);
+    model.setTempo(TEMPO);
+    model.setUpperTimeSignature(-1);
+    model.setLowerTimeSignature(-1);
+
+    model.setCurrentFormat(static_cast<int>(TimecodeFormatType::BarBeat));
+    model.setValue(0.0);
+
+    EXPECT_EQ(model.valueString(), "000 bar 00 beat");
+}
 }

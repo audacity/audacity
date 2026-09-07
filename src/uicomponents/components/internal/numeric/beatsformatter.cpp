@@ -112,8 +112,9 @@ BeatsFormatter::ConversionResult BeatsFormatter::valueToString(double value, boo
 
     for (size_t fieldIndex = 0; fieldIndex < m_fields.size(); ++fieldIndex) {
         const auto fieldLength = m_fieldLengths[fieldIndex];
-        const auto fieldValue = std::max(
-            0, static_cast<int>(std::floor(value * eps / fieldLength)));
+        const auto fieldValue = fieldLength > 0
+                                ? std::max(0, static_cast<int>(std::floor(value * eps / fieldLength)))
+                                : 0;
 
         char field[10];
         int offset = timecodeModeToOffset(m_mode);
@@ -226,7 +227,8 @@ void BeatsFormatter::updateFields(size_t barsDigits)
     barsField.label = " " + barString() + " ";
 
     int offset = timecodeModeToOffset(m_mode);
-    auto& beatsField = m_fields.emplace_back(NumericField::range(std::max<size_t>(UPPER_BOUNDS[1], m_upperTimeSignature + offset)));
+    const size_t beatsRange = static_cast<size_t>(std::max(0, m_upperTimeSignature + offset));
+    auto& beatsField = m_fields.emplace_back(NumericField::range(std::max(UPPER_BOUNDS[1], beatsRange)));
 
     beatsField.label = " " + beatString();
 
