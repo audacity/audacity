@@ -5,7 +5,7 @@
 
 #include <QtQml/qqmlregistration.h>
 
-#include "internal/numeric/numericviewmodel.h"
+#include "numericviewmodel.h"
 
 namespace au::uicomponents {
 class FrequencyModel : public NumericViewModel

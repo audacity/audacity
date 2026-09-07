@@ -4,26 +4,26 @@ qt_add_qml_module(uicomponents_qml
     URI Audacity.UiComponents
     VERSION 1.0
     SOURCES
-        components/bpmmodel.cpp
-        components/bpmmodel.h
-        components/frequencymodel.cpp
-        components/frequencymodel.h
-        components/timecodemodel.cpp
-        components/timecodemodel.h
-        components/timecodemodeselector.cpp
-        components/timecodemodeselector.h
-        components/tablesortfilterproxymodel.cpp
-        components/tablesortfilterproxymodel.h
-        components/internal/numeric/numericviewmodel.cpp
-        components/internal/numeric/numericviewmodel.h
-        components/internal/numeric/timecodeformatter.cpp
-        components/internal/numeric/timecodeformatter.h
-        components/internal/numeric/numericformatter.cpp
-        components/internal/numeric/numericformatter.h
-        components/internal/numeric/beatsformatter.cpp
-        components/internal/numeric/beatsformatter.h
-        components/internal/numeric/fieldsinteractioncontroller.cpp
-        components/internal/numeric/fieldsinteractioncontroller.h
+        bpmmodel.cpp
+        bpmmodel.h
+        frequencymodel.cpp
+        frequencymodel.h
+        timecodemodel.cpp
+        timecodemodel.h
+        timecodemodeselector.cpp
+        timecodemodeselector.h
+        tablesortfilterproxymodel.cpp
+        tablesortfilterproxymodel.h
+        numericviewmodel.cpp
+        numericviewmodel.h
+        timecodeformatter.cpp
+        timecodeformatter.h
+        numericformatter.cpp
+        numericformatter.h
+        beatsformatter.cpp
+        beatsformatter.h
+        fieldsinteractioncontroller.cpp
+        fieldsinteractioncontroller.h
     QML_FILES
         components/ArrowButton.qml
         components/ArrowMenuButton.qml
