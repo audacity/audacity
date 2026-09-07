@@ -17,20 +17,9 @@ target_sources(effects_builtin PRIVATE
     internal/builtintypes.h
 
     # view
-    view/builtineffectinstanceaccess.cpp
-    view/builtineffectinstanceaccess.h
-    view/builtineffectmodel.cpp
-    view/builtineffectmodel.h
-    view/builtineffectviewloader.cpp
-    view/builtineffectviewloader.h
     view/builtineffectsviewregister.cpp
     view/builtineffectsviewregister.h
     )
-
-qt_add_resources(effects_builtin_RCC_SOURCES effects_builtin.qrc)
-target_sources(effects_builtin PRIVATE ${effects_builtin_RCC_SOURCES})
-
-add_qml_import_path(${CMAKE_CURRENT_LIST_DIR}/qml)
 
 target_link_libraries(effects_builtin PRIVATE
         au3wrap
@@ -40,3 +29,5 @@ target_link_libraries(effects_builtin PUBLIC
         au3-effects
         au3-components # exposed by this module's public headers
 )
+
+add_subdirectory(qml/Audacity/BuiltinEffects)
