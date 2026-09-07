@@ -1,3 +1,0 @@
-module Audacity.BuiltinEffects
-BuiltinEffectViewer 1.0 BuiltinEffectViewer.qml
-BuiltinEffectBase 1.0 BuiltinEffectBase.qml

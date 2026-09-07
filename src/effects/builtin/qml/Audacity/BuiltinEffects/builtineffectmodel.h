@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QObject>
+#include <QtQml/qqmlregistration.h>
 
 #include "au3-components/EffectInterface.h"
 
@@ -19,6 +20,8 @@ namespace au::effects {
 class BuiltinEffectModel : public AbstractEffectViewModel, public BuiltinEffectInstanceAccess
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("Not creatable abstract type")
     Q_PROPERTY(QString effectId READ effectId NOTIFY effectIdChanged FINAL)
     Q_PROPERTY(bool usesPresets READ usesPresets CONSTANT FINAL)
 
