@@ -1,4 +1,4 @@
-muse_create_qml_module(effects_builtin_qml FOR effects_builtin)
+muse_create_qml_module(effects_builtin_qml FOR effects_builtin NO_UNITY)
 
 qt_add_qml_module(effects_builtin_qml
     URI Audacity.BuiltinEffects
