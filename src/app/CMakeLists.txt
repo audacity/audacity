@@ -410,20 +410,22 @@ elseif(OS_IS_MAC)
         )
     endif()
 
-    qt_generate_deploy_qml_app_script(
-        TARGET audacity
-        OUTPUT_SCRIPT deploy_script
-        NO_TRANSLATIONS
-        EXCLUDE_PLUGIN_TYPES qmltooling sqldrivers styles
-        DEPLOY_TOOL_OPTIONS
-            -qmldir=${PROJECT_SOURCE_DIR}/src
-            -qmldir=${PROJECT_SOURCE_DIR}/muse/framework
-    )
-    install(SCRIPT ${deploy_script})
+    if(MU_COMPILE_INSTALL_QTQML_FILES)
+        qt_generate_deploy_qml_app_script(
+            TARGET audacity
+            OUTPUT_SCRIPT deploy_script
+            NO_TRANSLATIONS
+            EXCLUDE_PLUGIN_TYPES qmltooling sqldrivers styles
+            DEPLOY_TOOL_OPTIONS
+                -qmldir=${PROJECT_SOURCE_DIR}/src
+                -qmldir=${PROJECT_SOURCE_DIR}/muse/framework
+        )
+        install(SCRIPT ${deploy_script})
 
-    install(SCRIPT
-        "${PROJECT_SOURCE_DIR}/buildscripts/packaging/prune_qt_runtime.cmake"
-    )
+        install(SCRIPT
+            "${PROJECT_SOURCE_DIR}/buildscripts/packaging/prune_qt_runtime.cmake"
+        )
+    endif()
 
 ###########################################
 # Wasm
