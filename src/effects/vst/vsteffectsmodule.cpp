@@ -19,23 +19,17 @@
 
 #include "internal/musevstpluginsregister.h"
 
-#include "view/vstviewmodel.h"
+#include "qml/Audacity/Vst/vstviewmodel.h"
 
 using namespace muse;
 using namespace au::effects;
 
 static const std::string mname("effects_vst");
 
-static void vst_init_qrc()
-{
-    Q_INIT_RESOURCE(vst);
-}
-
 VstEffectsModule::VstEffectsModule()
     : m_vstMetaReader(std::make_shared<Vst3PluginsMetaReader>()), m_effectLoader(std::make_shared<Vst3EffectLoader>()), m_pluginsScanner(
         std::make_shared<Vst3PluginsScanner>())
 {
-    vst_init_qrc();
 }
 
 std::string VstEffectsModule::moduleName() const
@@ -70,10 +64,6 @@ void VstEffectsModule::resolveImports()
     if (loadersRegister) {
         loadersRegister->registerLoader(m_effectLoader);
     }
-}
-
-void VstEffectsModule::registerResources()
-{
 }
 
 void VstEffectsModule::registerUiTypes()
