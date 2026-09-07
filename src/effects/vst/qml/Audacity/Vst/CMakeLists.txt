@@ -1,4 +1,4 @@
-muse_create_qml_module(effects_vst_qml FOR effects_vst)
+muse_create_qml_module(effects_vst_qml FOR effects_vst NO_UNITY)
 
 qt_add_qml_module(effects_vst_qml
     URI Audacity.Vst
