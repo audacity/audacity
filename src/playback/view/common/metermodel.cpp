@@ -12,12 +12,6 @@ using namespace au::playback;
 
 namespace {
 constexpr float LINEAR_METER_MIN_VOLUME = -60.0f;
-
-//! The same context these strings are already translated under. They come
-//! from Audacity 3's wave track settings, and the translations shipped in
-//! share/locale are filed against "wave-track-settings"; looking them up
-//! under any other context would silently find nothing.
-constexpr const char* DB_RANGE_CONTEXT = "wave-track-settings";
 }
 
 MeterModel::MeterModel(QObject* parent)
@@ -214,21 +208,21 @@ QString MeterModel::description(PlaybackMeterDbRange::DbRange range) const
 {
     switch (range) {
     case PlaybackMeterDbRange::DbRange::Range36:
-        return muse::qtrc(DB_RANGE_CONTEXT, "-36 dB (shallow range for high-amplitude editing)");
+        return muse::qtrc("wave-track-settings", "-36 dB (shallow range for high-amplitude editing)");
     case PlaybackMeterDbRange::DbRange::Range48:
-        return muse::qtrc(DB_RANGE_CONTEXT, "-48 dB (PCM range of 8 bit samples)");
+        return muse::qtrc("wave-track-settings", "-48 dB (PCM range of 8 bit samples)");
     case PlaybackMeterDbRange::DbRange::Range60:
-        return muse::qtrc(DB_RANGE_CONTEXT, "-60 dB (PCM range of 10 bit samples)");
+        return muse::qtrc("wave-track-settings", "-60 dB (PCM range of 10 bit samples)");
     case PlaybackMeterDbRange::DbRange::Range72:
-        return muse::qtrc(DB_RANGE_CONTEXT, "-72 dB (PCM range of 12 bit samples)");
+        return muse::qtrc("wave-track-settings", "-72 dB (PCM range of 12 bit samples)");
     case PlaybackMeterDbRange::DbRange::Range84:
-        return muse::qtrc(DB_RANGE_CONTEXT, "-84 dB (PCM range of 14 bit samples)");
+        return muse::qtrc("wave-track-settings", "-84 dB (PCM range of 14 bit samples)");
     case PlaybackMeterDbRange::DbRange::Range96:
-        return muse::qtrc(DB_RANGE_CONTEXT, "-96 dB (PCM range of 16 bit samples)");
+        return muse::qtrc("wave-track-settings", "-96 dB (PCM range of 16 bit samples)");
     case PlaybackMeterDbRange::DbRange::Range120:
-        return muse::qtrc(DB_RANGE_CONTEXT, "-120 dB (approximate limit of human hearing)");
+        return muse::qtrc("wave-track-settings", "-120 dB (approximate limit of human hearing)");
     case PlaybackMeterDbRange::DbRange::Range144:
-        return muse::qtrc(DB_RANGE_CONTEXT, "-145 dB (PCM range of 24 bit samples)");
+        return muse::qtrc("wave-track-settings", "-145 dB (PCM range of 24 bit samples)");
     }
 
     return "";
