@@ -114,7 +114,7 @@ StyledPopupView {
             }
         }
 
-        StyledGroupBox {
+        RadioOptionsGroup {
             Layout.fillWidth: true
             Layout.preferredHeight: uiModel.formatGroupBoxHeight
 

@@ -115,7 +115,7 @@ StyledPopupView {
             }
         }
 
-        StyledGroupBox {
+        RadioOptionsGroup {
             id: scaleGroupBox
 
             width: parent.width

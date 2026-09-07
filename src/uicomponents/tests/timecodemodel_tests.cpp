@@ -3,7 +3,7 @@
  */
 #include <gtest/gtest.h>
 
-#include "components/timecodemodel.h"
+#include "uicomponents/qml/Audacity/UiComponents/components/timecodemodel.h"
 
 namespace au::uicomponents {
 constexpr double SAMPLE_RATE = 44100.0;
