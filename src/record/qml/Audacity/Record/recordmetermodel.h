@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <QtQml/qqmlregistration.h>
+
 #include "playback/view/common/metermodel.h"
 #include "record/irecord.h"
 
@@ -10,6 +12,7 @@ namespace au::record {
 class RecordMeterModel : public playback::MeterModel
 {
     Q_OBJECT
+    QML_ELEMENT
 
     muse::ContextInject<IRecord> record{ this };
 
