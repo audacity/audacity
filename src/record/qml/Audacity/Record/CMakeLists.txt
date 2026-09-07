@@ -1,4 +1,4 @@
-muse_create_qml_module(record_qml FOR record)
+muse_create_qml_module(record_qml FOR record NO_UNITY)
 
 qt_add_qml_module(record_qml
     URI Audacity.Record
