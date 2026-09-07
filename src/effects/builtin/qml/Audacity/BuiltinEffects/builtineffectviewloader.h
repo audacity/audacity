@@ -22,7 +22,7 @@ class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable, m
     Q_OBJECT
     QML_ELEMENT
 
-    Q_PROPERTY(QQuickItem * contentItem READ contentItem NOTIFY contentItemChanged FINAL)
+    Q_PROPERTY(QQuickItem* contentItem READ contentItem NOTIFY contentItemChanged FINAL)
 
     muse::GlobalInject<IBuiltinEffectsViewRegister> viewRegister;
     muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
