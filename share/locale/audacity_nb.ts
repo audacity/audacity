@@ -4,12 +4,12 @@
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="72"/>
         <source>Meter style</source>
-        <translation type="unfinished"/>
+        <translation>Målerstil</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="108"/>
         <source>Meter type</source>
-        <translation type="unfinished"/>
+        <translation>Målertype</translation>
     </message>
 </context>
 <context>
@@ -30,7 +30,7 @@
     <message>
         <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
         <source>%1 panel</source>
-        <translation type="unfinished"/>
+        <translation>%1-panel</translation>
     </message>
 </context>
 <context>
@@ -39,75 +39,75 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Avslutt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="55"/>
         <source>Restart</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Start på nytt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="61"/>
         <source>&amp;Full screen</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Fullskjerm</translation>
     </message>
     <message>
         <source>Full screen</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Fullskjerm</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
         <source>About &amp;Qt…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Om &amp;Qt...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
         <source>Online &amp;handbook</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Håndbok på nett</translation>
     </message>
     <message>
         <source>Open online handbook</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Åpne håndbok på nett</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="90"/>
         <source>As&amp;k for help</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spør om hjelp</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="96"/>
         <source>Revert to &amp;factory settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tilbakestill til &amp;fabrikkinnstillinger</translation>
     </message>
     <message>
         <source>Revert to factory settings</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Tilbakestill til fabrikkinnstillinger</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
         <source>Restore the &amp;default layout</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tilbakestill til stan&amp;dardoppsett</translation>
     </message>
     <message>
         <source>Restore the default layout</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Tilbakestill til standardoppsett</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
         <source>&amp;Playback controls</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Avs&amp;pillingskontroller</translation>
     </message>
     <message>
         <source>Show/hide playback controls</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Vis/skjul avspillingskontroller</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
@@ -117,33 +117,33 @@
     </message>
     <message>
         <source>Show/hide tracks</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Vis/skjul spor</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="70"/>
         <source>&amp;About Audacity…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Om &amp;Audacity...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="136"/>
         <source>&amp;Status bar</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Statuslinje</translation>
     </message>
     <message>
         <source>Show/hide status bar</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Vis/skjul statuslinje</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
         <source>&amp;Preferences</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Innstillinger</translation>
     </message>
     <message>
         <source>Preferences…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Innstillinger...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
@@ -214,7 +214,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="214"/>
         <source>&amp;Cancel</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Avbryt</translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -224,134 +224,134 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
         <source>&amp;Trigger</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>U&amp;tløser</translation>
     </message>
     <message>
         <source>Trigger</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Utløser</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="231"/>
         <source>&amp;Enter</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Enter</translation>
     </message>
     <message>
         <source>Trigger the focused control or select the focused track item</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Utløs kontrollen i fokus eller velg det fokuserte sporelementet</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>Angre &apos;%1&apos;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>Gjør om &apos;%1&apos;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
         <source>Silence audio</source>
-        <translation type="unfinished"/>
+        <translation>Demp lyd</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se prosjektet på audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
         <source>View on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se på audio.com</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
         <source>Repeat last effect</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Gjenta forrige effekt</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="33"/>
         <source>Remove realtime effect</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fjern sanntidseffekt</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="41"/>
         <source>&amp;Apply preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Bruk forhåndsinnstilling</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="47"/>
         <source>Save preset as…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lagre forhåndsinnstilling som...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="53"/>
         <source>&amp;Save preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lagre forhåndsinnstilling</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="59"/>
         <source>&amp;Delete preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Slett forhåndsinnstilling</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
         <source>&amp;Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Importer...</translation>
     </message>
     <message>
         <source>Import preset</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Importer forhåndsinnstilling</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
         <source>&amp;Export…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Eksporter...</translation>
     </message>
     <message>
         <source>Export preset</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Eksporter forhåndsinnstilling</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
         <source>Play/Pause</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill av/pause</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
         <source>Play/Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill av/stopp</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill av/pause fra markør</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
         <source>Play selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill valgt område</translation>
     </message>
     <message>
         <source>Play the selected time range</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Spill av det valgte tidsintervallet</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
@@ -369,85 +369,85 @@
     </message>
     <message>
         <source>Stop playback</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Stopp avspilling</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
         <source>Rewind to start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spol tilbake til start</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="103"/>
         <source>Rewind to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spol til slutten</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
         <source>Loop playback</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill av i løkke</translation>
     </message>
     <message>
         <source>Toggle ‘Loop playback’</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Veksle &apos;Spill av i løkke&apos;</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
         <source>Audio setup</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lydoppsett</translation>
     </message>
     <message>
         <source>Open audio setup context menu</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Åpne menyen for lydoppsett</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
         <source>Get effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Få effekter</translation>
     </message>
     <message>
         <source>Open Get effects dialog</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Åpne Få effekter-dialogen</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
         <source>Audio settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lydinnstillinger</translation>
     </message>
     <message>
         <source>Open audio setup dialog</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Åpne dialog for lydoppsett</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
         <source>Rescan audio devices</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Skann lydenheter på nytt</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="156"/>
         <source>Metronome</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Metronom</translation>
     </message>
     <message>
         <source>Toggle metronome playback</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Veksle metronomavspilling</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="166"/>
         <source>Timecode</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tidskode</translation>
     </message>
     <message>
         <source>Set playback time</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Sett avspillingstid</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
@@ -457,133 +457,133 @@
     </message>
     <message>
         <source>Set playback tempo</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Sett avspillingstempo</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="184"/>
         <source>Time signature</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tidssignatur</translation>
     </message>
     <message>
         <source>Set playback time signature</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Sett tidssignatur for avspilling</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
         <source>Playback level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Avspillingsnivå</translation>
     </message>
     <message>
         <source>Set playback level</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Sett avspillingsnivå</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
         <source>Change audio host</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre lydvert</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="211"/>
         <source>Change playback device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre avspillingsenhet</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="220"/>
         <source>Change recording device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre innspillingsenhet</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="229"/>
         <source>Change input channels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre inngangskanaler</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="238"/>
         <source>Toggle loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre løkkeområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="247"/>
         <source>Clear loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fjern valgt løkkeområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="255"/>
         <source>Set loop region to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sett løkkeområde til valgt område</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="263"/>
         <source>Set selection to loop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg løkkeområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="271"/>
         <source>Set loop region in out</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg inn og ut for løkkeområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="279"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Når du lager et løkkeområde velges også lyden</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
         <source>Play repeats</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Avspillingsgjentakelser</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="301"/>
         <source>Pan automatically</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Automatisk panorering</translation>
     </message>
     <message>
         <source>Pan automatically during playback</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Automatisk panorering under avspilling</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
         <source>&amp;New…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Ny...</translation>
     </message>
     <message>
         <source>New…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Ny...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
         <source>&amp;Open…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Åpne...</translation>
     </message>
     <message>
         <source>Open…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Åpne...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
         <source>Open recent</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Åpne nylig</translation>
     </message>
     <message>
         <source>Open recent project</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Åpne nylig prosjekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
@@ -597,37 +597,37 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
         <source>&amp;Clear recent files</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tøm nylig åpnede filer</translation>
     </message>
     <message>
         <source>Clear recent files</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Tøm nylig åpnede filer</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
         <source>Save &amp;as…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>L&amp;agre som...</translation>
     </message>
     <message>
         <source>Save as…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Lagre som...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="125"/>
         <source>&amp;Export labels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Eksporter merkelapper</translation>
     </message>
     <message>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Eksporter merkelapper</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
         <source>&amp;Export MIDI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Eksporter MIDI</translation>
     </message>
     <message>
         <source>Export MIDI</source>
@@ -637,11 +637,11 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
         <source>&amp;Close project</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lukk prosjekt</translation>
     </message>
     <message>
         <source>Close project</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Lukk prosjekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
@@ -656,60 +656,60 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
         <source>Insert</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sett inn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
         <source>Trim clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Beskjær klipp</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="175"/>
         <source>Split into new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Splitt til nytt spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
         <source>Paste new label</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lim inn ny merkelapp</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
         <source>Manage labels</source>
-        <translation type="unfinished"/>
+        <translation>Administrer merkelapper</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="296"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation>Metadataredigering</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="192"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <source>Select all</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg alt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
         <source>Select all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg alle spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <source>Left of playback position</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Til venstre for avspillingsposisjon</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="216"/>
         <source>Right of playback position</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Til høyre for avspillingsposisjon</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="224"/>
@@ -721,7 +721,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="232"/>
         <source>Cursor to track end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Flytt markør til slutten av sporet</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
@@ -745,13 +745,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
         <source>Previous clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Forrige klipp</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
         <source>Next clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Neste klipp</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
@@ -769,79 +769,79 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="41"/>
         <source>Zoom in</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zoom inn</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
         <source>Zoom out</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zoom ut</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="59"/>
         <source>Zoom default</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Standardzoom</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="67"/>
         <source>Zoom to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zoom inn på valg</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="85"/>
         <source>Zoom toggle</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Veksle zoom</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
         <source>Collapse all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Slå sammen alle spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="306"/>
         <source>Expand all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Utvid alle spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
         <source>Skip to selection start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hopp til starten av valgt område</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="322"/>
         <source>Skip to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hopp til slutten av valgt område</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
         <source>Show metadata editor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hvis metadataredigering</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="347"/>
         <source>Show history</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis historikk</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
         <source>Record on current track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill inn på valgt spor</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
         <source>Record on new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill inn til nytt spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
@@ -853,25 +853,25 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
         <source>Enable sound activating recording</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Skru på lydaktivert innspilling</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="374"/>
         <source>Set sound activation level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Juster aktiveringsnivå</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
         <source>Remove tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fjern spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
         <source>Mix-down to…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Miks ned til...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
@@ -919,13 +919,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
         <source>Sort by time</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sorter etter tid</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
         <source>Sort by name</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sorter etter navn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
@@ -955,31 +955,31 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="93"/>
         <source>Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Importer...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="46"/>
         <source>Show in Finder</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis i Finder</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="51"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"/>
+        <translation>Vis i Explorer</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
         <source>Show in File Manager</source>
-        <translation type="unfinished"/>
+        <translation>Vis i filutforsker</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="101"/>
         <source>&amp;Save</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Lagre</translation>
+        <translation>Lagre</translation>
     </message>
     <message>
         <source>Save</source>
@@ -989,29 +989,29 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Eksporter lyd...</translation>
     </message>
     <message>
         <source>Export audio…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Eksporter lyd...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
         <source>Show effects panel</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis effektpanel</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="480"/>
         <source>Keep tracks synchronized</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hold sporene synkronisert</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="499"/>
         <source>Add track effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Legg til sporeffekter</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
@@ -1179,17 +1179,17 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="755"/>
         <source>Save to clo&amp;ud…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lagre til sky...</translation>
     </message>
     <message>
         <source>Save to cloud…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Lagre til sky...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="764"/>
         <source>Share audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Del lyd</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="773"/>
@@ -2067,55 +2067,55 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
         <source>Exit</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Avslutt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="63"/>
         <source>Full screen</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fullskjerm</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="84"/>
         <source>Open online handbook</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Åpne håndbok på nett</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="98"/>
         <source>Revert to factory settings</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tilbakestill til fabrikkinnstillinger</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
         <source>Restore the default layout</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tilbakestill til standardoppsett</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
         <source>Show/hide playback controls</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis/skjul avspillingskontroller</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="128"/>
         <source>Show/hide tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis/skjul spor</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="138"/>
         <source>Show/hide status bar</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis/skjul statuslinje</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
         <source>Preferences…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Innstillinger...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
@@ -2170,67 +2170,67 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
         <source>Trigger</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Utløser</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
         <source>Trigger the focused control or select the focused track item</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Utløs kontrollen i fokus eller velg det fokuserte sporelementet</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
         <source>View project on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se prosjektet på audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
         <source>View on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se på audio.com</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
         <source>Remove realtime effect</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fjern sanntidseffekt</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
         <source>Import preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Importer forhåndsinnstilling</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="76"/>
         <source>Export preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eksporter forhåndsinnstilling</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
         <source>Play/Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill av/pause</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="51"/>
         <source>Play/Stop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill av/stopp</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill av/pause fra markør</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
         <source>Play the selected time range</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill av det valgte tidsintervallet</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
@@ -2243,175 +2243,175 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
         <source>Stop playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Stopp avspilling</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
         <source>Rewind to start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spol tilbake til start</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
         <source>Rewind to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spol til slutten</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
         <source>Toggle ‘Loop playback’</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Veksle &apos;Spill av i løkke&apos;</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="124"/>
         <source>Open audio setup context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Åpne menyen for lydinnstillinger</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
         <source>Open Get effects dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Åpne Få effekter-dialogen</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="142"/>
         <source>Open audio setup dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Åpne dialog for lydoppsett</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="150"/>
         <source>Rescan audio devices</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Skann lydenheter på nytt</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="158"/>
         <source>Toggle metronome playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Veksle metronomavspilling</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
         <source>Set playback time</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sett avspillingstid</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="177"/>
         <source>Set playback tempo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sett avspillingstempo</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="186"/>
         <source>Set playback time signature</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sett tidssignatur for avspilling</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
         <source>Set playback level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sett avspillingsnivå</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
         <source>Change audio host</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre lydvert</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="213"/>
         <source>Change playback device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre avspillingsenhet</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="222"/>
         <source>Change recording device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre innspillingsenhet</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="231"/>
         <source>Change input channels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre inngangskanaler</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="240"/>
         <source>Toggle loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Endre løkkeområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="249"/>
         <source>Clear loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fjern valgt løkkeområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="257"/>
         <source>Set loop region to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sett løkkeområde til valgt område</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="265"/>
         <source>Set selection to loop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg løkkeområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="273"/>
         <source>Set loop region in out</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg inn og ut for løkkeområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="281"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Når du lager et løkkeområde velges også lyden</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="293"/>
         <source>Play repeats</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Avspillingsgjentakelser</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="303"/>
         <source>Pan automatically during playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Automatisk panorering under avspilling</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="31"/>
         <source>New…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ny...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
         <source>Open…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Åpne...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
         <source>Show in Finder</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis i Finder</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="63"/>
         <source>Open recent project</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Åpne nylig prosjekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
@@ -2424,13 +2424,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="87"/>
         <source>Clear recent files</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tøm nylig åpnede filer</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
         <source>Import…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Importer...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
@@ -2442,19 +2442,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="111"/>
         <source>Save as…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lagre som...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="119"/>
         <source>Export audio…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eksporter lyd...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
         <source>Export labels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eksporter merkelapper</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
@@ -2466,7 +2466,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="143"/>
         <source>Close project</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lukk prosjekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="153"/>
@@ -2480,50 +2480,50 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
         <source>Insert</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sett inn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
         <source>Trim clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Beskjær klipp</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="177"/>
         <source>Split into new track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Splitt til nytt spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
         <source>Paste new label</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lim inn ny merkelapp</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="81"/>
         <source>Select all</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg alt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
         <source>Select all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg alle spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="210"/>
         <source>Left of playback position</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Til venstre for avspillingsposisjon</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="218"/>
         <source>Right of playback position</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Til høyre for avspillingsposisjon</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
@@ -2535,7 +2535,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <source>Cursor to track end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Flytt markør til slutten av sporet</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="242"/>
@@ -2559,13 +2559,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
         <source>Previous clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Forrige klipp</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="274"/>
         <source>Next clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Neste klipp</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="282"/>
@@ -2583,43 +2583,43 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="300"/>
         <source>Collapse all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Slå sammen alle spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="308"/>
         <source>Expand all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Åpne alle spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="316"/>
         <source>Skip to selection start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hopp til starten på valgt område</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
         <source>Skip to selection end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hopp til slutten av valgt område</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="332"/>
         <source>Show effects panel</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis effektpanel</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="341"/>
         <source>Show metadata editor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hvis metadataredigering</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
         <source>Show history</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vis historikk</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
@@ -2631,25 +2631,25 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="368"/>
         <source>Enable sound activating recording</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Skru på lydaktivert innspilling</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="376"/>
         <source>Set sound activation level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Juster aktiveringsnivå</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="394"/>
         <source>Remove tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fjern spor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="402"/>
         <source>Mix-down to…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Miks ned til...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
@@ -2697,19 +2697,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="466"/>
         <source>Sort by time</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sorter etter tid</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="474"/>
         <source>Sort by name</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sorter etter navn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
         <source>Keep tracks synchronized</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hold sporene synkronisert</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="491"/>
@@ -2721,7 +2721,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
         <source>Add track effects</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Legg til sporeffekter</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="509"/>
@@ -2907,13 +2907,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="757"/>
         <source>Save to cloud…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lagre til sky...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="766"/>
         <source>Share audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Del lyd</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
@@ -2949,25 +2949,25 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
         <source>Zoom in</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zoom inn</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="52"/>
         <source>Zoom out</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zoom ut</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="61"/>
         <source>Zoom default</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Standardzoom</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="69"/>
         <source>Zoom to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zoom inn på valg</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
@@ -2979,7 +2979,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="87"/>
         <source>Zoom toggle</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Veksle zoom</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="96"/>
@@ -3200,13 +3200,13 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="95"/>
         <source>Record on current track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill inn på valgt spor</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="103"/>
         <source>Record on new track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spill inn til nytt spor</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="21"/>
@@ -3749,7 +3749,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
         <source>Revert to factory settings</source>
-        <translation type="unfinished"/>
+        <translation>Tilbakestill til fabrikkinnstillinger</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="459"/>
@@ -3764,7 +3764,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
         <source>Restart</source>
-        <translation type="unfinished"/>
+        <translation>Start på nytt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
@@ -6536,7 +6536,7 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="35"/>
         <source>Sawtooth</source>
-        <translation>Sagtenner</translation>
+        <translation>Sagtann</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="36"/>
@@ -6562,7 +6562,7 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="90"/>
         <source>Truncate silence</source>
-        <translation type="unfinished"/>
+        <translation>Kort ned stillhet</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="123"/>
@@ -6585,22 +6585,22 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="26"/>
         <source>Paste and overlap</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og legg over</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="28"/>
         <source>Paste and make room on this track</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og forskyv dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="30"/>
         <source>Paste and make room on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og forskyv alle spor</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="35"/>
         <source>Paste and…</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og...</translation>
     </message>
 </context>
 <context>
@@ -6613,12 +6613,12 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
         <source>Cut and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut og tett tomrommet på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="61"/>
         <source>Cut and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut og tett tomrommet på alle spor</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="66"/>
@@ -6628,7 +6628,7 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
         <source>Delete and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>Slett og tett tomrommet på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="70"/>
@@ -6825,7 +6825,7 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
         <source>View on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Se på audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
@@ -6835,7 +6835,7 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
         <source>Share audio</source>
-        <translation type="unfinished"/>
+        <translation>Del lyd</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
@@ -7700,7 +7700,7 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
     <message>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="86"/>
         <source>Save as…</source>
-        <translation type="unfinished"/>
+        <translation>Lagre som...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="56"/>
@@ -10674,7 +10674,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceeffect.cpp" line="10"/>
         <source>Truncate silence</source>
-        <translation type="unfinished"/>
+        <translation>Kort ned stillhet</translation>
     </message>
 </context>
 <context>
@@ -10966,13 +10966,13 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="143"/>
         <source>Zoom in</source>
         <extracomment>Tooltip of a zoom button in the EQ curve view</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zoom inn</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="160"/>
         <source>Zoom out</source>
         <extracomment>Tooltip of a zoom button in the EQ curve view</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zoom ut</translation>
     </message>
 </context>
 <context>
@@ -11388,7 +11388,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="20"/>
         <source>Truncate silence</source>
-        <translation type="unfinished"/>
+        <translation>Kort ned stillhet</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="25"/>
@@ -11874,7 +11874,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="17"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation>Metadataredigering</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
@@ -11930,7 +11930,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation>Eksporter merkelapper</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
@@ -12485,7 +12485,7 @@ Trykk Hjelp-knappen for tips om egnede disker.</translation>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="114"/>
         <source>Select all</source>
-        <translation type="unfinished"/>
+        <translation>Velg alt</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
@@ -15655,27 +15655,27 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="29"/>
         <source>Cut and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut og tett tomrommet på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="31"/>
         <source>Cut and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut og tett tomrommet på alle spor</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="36"/>
         <source>Paste and overlap</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og legg over</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="38"/>
         <source>Paste and make room on this track</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og lag plass på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="40"/>
         <source>Paste and make room on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og forskyv alle spor</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
@@ -15685,7 +15685,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="47"/>
         <source>Delete and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation> Klipp ut og tett tomrommet på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="49"/>
@@ -15705,7 +15705,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="60"/>
         <source>Paste and…</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="61"/>
@@ -16322,12 +16322,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="28"/>
         <source>Cut and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut og tett tomrommet på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="30"/>
         <source>Cut and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut og tett tomrommet på alle spor</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="35"/>
@@ -16337,7 +16337,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="37"/>
         <source>Delete and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation> Klipp ut og tett tomrommet på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="39"/>
@@ -17030,7 +17030,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml" line="44"/>
         <source>Time signature</source>
-        <translation type="unfinished"/>
+        <translation>Tidssignatur</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="39"/>
@@ -17171,7 +17171,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
         <source>Audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Lydinnstillinger</translation>
     </message>
 </context>
 <context>
@@ -17745,7 +17745,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="266"/>
         <source>Audio settings</source>
         <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
-        <translation type="unfinished"/>
+        <translation>Lydinnstillinger</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
@@ -19424,7 +19424,7 @@ Du må bruke den versjonen av Audacity for å gjenopprette prosjektet.</translat
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>
         <source>Get effects</source>
-        <translation type="unfinished"/>
+        <translation>Få effekter</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="52"/>
@@ -20180,27 +20180,27 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="30"/>
         <source>Cut and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut og tett tomrommet på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="32"/>
         <source>Cut and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut og tett tomrommet på alle spor</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="37"/>
         <source>Paste and overlap</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og legg over</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="39"/>
         <source>Paste and make room on this track</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og lag plass på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="41"/>
         <source>Paste and make room on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og forskyv alle spor</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="46"/>
@@ -20215,7 +20215,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="50"/>
         <source>Delete and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation> Klipp ut og tett tomrommet på dette sporet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="52"/>
@@ -20230,7 +20230,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="63"/>
         <source>Paste and…</source>
-        <translation type="unfinished"/>
+        <translation>Lim inn og...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="64"/>
@@ -21459,7 +21459,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="473"/>
         <source>Split into new track</source>
-        <translation type="unfinished"/>
+        <translation>Splitt til nytt spor</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
@@ -22854,7 +22854,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
         <source>Could not open file: “%1”</source>
-        <translation type="unfinished"/>
+        <translation>Kunne ikke åpne fil: &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
@@ -22867,13 +22867,13 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
         <source>Could not load file: “%1”</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Kunne ikke laste fil: &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="150"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
-        <translation>Kunne ikke analysere XML</translation>
+        <translation>Kunne ikke lese XML</translation>
     </message>
 </context>
 </TS>

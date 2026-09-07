@@ -5466,7 +5466,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>Тактовый размер: %1/%2</translation>
     </message>
 </context>
 <context>
@@ -17891,7 +17891,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
         <source>Export</source>
-        <translation>Экспортировать</translation>
+        <translation>Экспорт</translation>
     </message>
     <message>
         <source>Cloud</source>
@@ -18019,7 +18019,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation>Показывать диалог «Как бы вы хотите экспортировать»?</translation>
+        <translation>Показывать диалог «Как вы хотите экспортировать»?</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -18134,7 +18134,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="471"/>
         <source>Unable to load online files</source>
-        <translation>Не удалось загрузить онлайн-файлы</translation>
+        <translation>Не удалось загрузить сетевые файлы</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="491"/>
@@ -18155,7 +18155,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="517"/>
         <source>Please sign in to view your online files</source>
-        <translation>Пожалуйста, войдите, чтобы просмотреть ваши онлайн-файлы</translation>
+        <translation>Пожалуйста, войдите для просмотра ваших сетевых файлов</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectIndicatorButton.qml" line="44"/>
@@ -22868,7 +22868,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
         <source>Save layout as new workspace</source>
-        <translation>Сохранить расстановку как новое рабочее пространство</translation>
+        <translation>Сохранить макет как новую рабочую область</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
