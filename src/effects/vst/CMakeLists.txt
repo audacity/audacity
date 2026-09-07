@@ -17,20 +17,12 @@ target_sources(effects_vst PRIVATE
     internal/vstparameterextractorservice.h
     internal/vsttypes.h
 
-    view/vstviewmodel.cpp
-    view/vstviewmodel.h
-
     # for muse
     internal/musevstplugininstance.cpp
     internal/musevstplugininstance.h
     internal/musevstpluginsregister.cpp
     internal/musevstpluginsregister.h
 )
-
-qt_add_resources(effects_vst_RCC_SOURCES vst.qrc)
-target_sources(effects_vst PRIVATE ${effects_vst_RCC_SOURCES})
-
-add_qml_import_path(${CMAKE_CURRENT_LIST_DIR}/qml)
 
 target_link_libraries(effects_vst PRIVATE
     au3wrap
@@ -42,3 +34,5 @@ target_link_libraries(effects_vst PRIVATE
 if (MUSE_MODULE_VST_QML)
     target_link_libraries(effects_vst PRIVATE muse::vst_qml)
 endif()
+
+add_subdirectory(qml/Audacity/Vst)

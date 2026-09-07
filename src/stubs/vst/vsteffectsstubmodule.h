@@ -12,6 +12,5 @@ public:
     VstEffectsModule() = default;
 
     std::string moduleName() const override;
-    void registerResources() override;
 };
 }
