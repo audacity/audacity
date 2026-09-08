@@ -97,12 +97,20 @@ TrackItemsContainer {
                             }
                         }
 
-                        function clearGuidelineIfPointerLeft() {
-                            const overAnyLabel = labelsContainer.checkIfAnyLabel(function (labelItem) {
-                                return labelItem && labelItem.hover
-                            })
-                            if (!labelsContainerMouseArea.containsMouse && !overAnyLabel) {
-                                root.clearItemGuideline()
+                        // Timer to wait for hover state to update after item creation
+                        Timer {
+                            id: clearGuidelineTimer
+                            interval: 0
+
+                            onTriggered: {
+                                if (root.moveActive || labelsContainerMouseArea.containsMouse) {
+                                    return
+                                }
+
+                                const overAnyLabel = labelsContainer.checkIfAnyLabel(labelItem => labelItem.hover)
+                                if (!overAnyLabel) {
+                                    root.clearItemGuideline()
+                                }
                             }
                         }
 
@@ -147,8 +155,10 @@ TrackItemsContainer {
                                 labelItem.setContainsMouse(containsMouse)
                             })
 
-                            if (!containsMouse) {
-                                Qt.callLater(labelsContainerMouseArea.clearGuidelineIfPointerLeft)
+                            if (!containsMouse && !root.moveActive) {
+                                clearGuidelineTimer.restart()
+                            } else {
+                                clearGuidelineTimer.stop()
                             }
                         }
 
