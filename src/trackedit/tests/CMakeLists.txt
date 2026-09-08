@@ -32,6 +32,7 @@ set(MODULE_TEST_LINK
     trackedit
     spectrogram
     au3wrap
+    au3-project-file-io
 
     muse::ui
     muse::ui_qml
