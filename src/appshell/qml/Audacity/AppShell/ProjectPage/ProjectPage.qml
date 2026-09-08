@@ -82,10 +82,16 @@ DockPage {
         order: effectsKeyNavSec.order + 1
     }
 
+    property NavigationSection timelineKeyNavSec: NavigationSection {
+        name: "TimelineSection"
+        enabled: root.visible
+        order: addNewTrackKeyNavSec.order + 1
+    }
+
     property NavigationSection keynavTopPanelSec: NavigationSection {
         name: "NavigationTopPanel"
         enabled: root.visible
-        order: addNewTrackKeyNavSec.order + 1
+        order: timelineKeyNavSec.order + 1
     }
 
     property NavigationSection keynavLeftPanelSec: NavigationSection {
@@ -448,6 +454,8 @@ DockPage {
 
         navPanels: tracksNavModel.viewItemPanels
         navDefaultControl: tracksNavModel.defaultNavigationControl
+
+        timelineNavigationSection: root.timelineKeyNavSec
 
         Binding {
             target: tracksNavModel
