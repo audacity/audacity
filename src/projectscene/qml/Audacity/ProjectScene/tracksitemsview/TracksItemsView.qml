@@ -57,12 +57,14 @@ Rectangle {
 
     clip: true
 
-    enum State {
-        Idle,
-        DraggingItem
-    }
+    TrackItemsMoveController {
+        id: itemsMoveController
+        context: timeline.context
 
-    property int interactionState: TracksItemsView.State.Idle
+        onGuidelineChanged: function (time) {
+            root.updateGuidelineAtTime(time)
+        }
+    }
 
     MouseHelper {
         id: mouseHelper
@@ -80,6 +82,13 @@ Rectangle {
                 // This will lead to a cancel signal on `mainMouseArea` that will call back into this function,
                 // but this time in released state.
                 mouseHelper.callUngrabMouseOnItem(mainMouseArea)
+                return
+            }
+            if (itemsMoveController.cancel()) {
+                root.hoveredItemKey = null
+                root.itemHeaderHovered = false
+                tracksItemsView.mouseMoveActive = false
+                timeline.context.updateSelectedItemTime()
                 return
             }
             if (root.hoveredItemKey) {
@@ -567,8 +576,7 @@ Rectangle {
 
                 if (e.button === Qt.LeftButton) {
                     if (root.itemHeaderHovered && !(splitToolController.active && splitToolController.hoveredTrackSplittable)) {
-                        tracksItemsView.itemStartEditRequested(hoveredItemKey)
-                        root.interactionState = TracksItemsView.State.DraggingItem
+                        itemsMoveController.start(hoveredItemKey)
                         lastItemClickKey = root.hoveredItemKey
                     } else {
                         content.forceActiveFocus()
@@ -609,7 +617,7 @@ Rectangle {
                 splitToolController.mouseMove(e.x)
                 playCursorController.updateSeekGesture(e.x, e.y)
 
-                if (root.interactionState === TracksItemsView.State.DraggingItem && !itemWasMoved) {
+                if (itemsMoveController.active && !itemWasMoved) {
                     var dx = Math.abs(e.x - pressStartPosition.x)
                     var dy = Math.abs(e.y - pressStartPosition.y)
                     if (dx > moveThreshold || dy > moveThreshold) {
@@ -617,12 +625,12 @@ Rectangle {
                     }
                 }
 
-                if (root.interactionState === TracksItemsView.State.DraggingItem && itemWasMoved) {
-                    tracksItemsView.itemMoveRequested(hoveredItemKey, false)
+                if (itemsMoveController.active && itemWasMoved) {
+                    tracksItemsView.mouseMoveActive = true
+                    itemsMoveController.update()
                     tracksItemsView.startAutoScroll()
                 } else {
                     selectionViewController.onPositionChanged(timeline.context.positionToTime(e.x), e.y)
-                    let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
                     snapGuidelineToPosition(e.x)
                 }
@@ -635,16 +643,12 @@ Rectangle {
 
                 if (!itemWasMoved) {
                     tracksItemsView.itemReleaseRequested(hoveredItemKey)
-                    itemWasMoved = false
                 }
 
-                if (root.interactionState === TracksItemsView.State.DraggingItem) {
-                    root.interactionState = TracksItemsView.State.Idle
-                    if (itemWasMoved) {
-                        tracksItemsView.itemMoveRequested(hoveredItemKey, true)
-                        tracksItemsView.stopAutoScroll()
-                    }
-                    tracksItemsView.itemEndEditRequested(hoveredItemKey)
+                if (itemsMoveController.active) {
+                    root.hoveredItemKey = itemsMoveController.finish()
+                    tracksItemsView.mouseMoveActive = false
+                    tracksItemsView.stopAutoScroll()
                 } else {
                     splitToolController.mouseUp(e.x)
 
@@ -668,7 +672,6 @@ Rectangle {
             }
 
             onCanceled: e => {
-                root.interactionState = TracksItemsView.State.Idle
                 playCursorController.cancelSeekGesture()
                 prv.cancelItemDragEdit()
             }
@@ -709,7 +712,7 @@ Rectangle {
         HoverHandler {
             id: emptyAreaGuidelineHandler
 
-            enabled: root.interactionState !== TracksItemsView.State.DraggingItem
+            enabled: !itemsMoveController.active
 
             function processHover() {
                 let pos = point.position
@@ -822,9 +825,6 @@ Rectangle {
                     tracksViewState.insureVerticallyVisible(tracksItemsView.contentY + prv.listHeaderHeight, tracksItemsView.height, itemViewY + prv.listHeaderHeight, item.height)
                 }
 
-                signal itemMoveRequested(var itemKey, bool completed)
-                signal itemStartEditRequested(var itemKey)
-                signal itemEndEditRequested(var itemKey)
                 signal itemReleaseRequested(var itemKey)
                 signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
@@ -853,6 +853,9 @@ Rectangle {
                     } else {
                         tracksViewState.changeTracksVerticalOffset(tracksItemsView.contentY + prv.listHeaderHeight)
                         timeline.context.startVerticalScrollPosition = tracksItemsView.contentY
+                        if (tracksItemsView.mouseMoveActive) {
+                            itemsMoveController.update()
+                        }
                     }
                 }
 
@@ -911,6 +914,7 @@ Rectangle {
 
                             context: timeline.context
 
+                            moveController: itemsMoveController
                             container: tracksItemsView
                             canvas: content
 
@@ -993,13 +997,6 @@ Rectangle {
 
                             onSelectionResetRequested: {
                                 selectionViewController.resetDataSelection()
-                            }
-
-                            onUpdateMouseMoveActive: function (completed) {
-                                if (tracksItemsView.mouseMoveActive !== completed) {
-                                    return
-                                }
-                                tracksItemsView.mouseMoveActive = !completed
                             }
 
                             onRequestSelectionContextMenu: function (x, y) {
@@ -1112,6 +1109,7 @@ Rectangle {
                             width: trackItemLoader.width
 
                             context: timeline.context
+                            moveController: itemsMoveController
                             container: tracksItemsView
                             canvas: content
                             canvasIndentWidth: content.anchors.leftMargin
@@ -1193,13 +1191,6 @@ Rectangle {
 
                             onSelectionResetRequested: {
                                 selectionViewController.resetDataSelection()
-                            }
-
-                            onUpdateMouseMoveActive: function (completed) {
-                                if (tracksItemsView.mouseMoveActive !== completed) {
-                                    return
-                                }
-                                tracksItemsView.mouseMoveActive = !completed
                             }
 
                             onUpdateItemGuideline: function (time) {

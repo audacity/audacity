@@ -10,6 +10,7 @@ TrackItemsContainer {
 
     TrackLabelsListModel {
         id: labelsModel
+        moveController: root.moveController
         trackId: root.trackId
         context: root.context
     }
@@ -179,6 +180,9 @@ TrackItemsContainer {
                             z: Boolean(itemData) && itemData.isEditing ? 1000 : itemData.level
 
                             asynchronous: true
+
+                            active: !itemData.dragged
+                            enabled: !itemData.isDragGhost
 
                             visible: y < root.height
 
@@ -410,22 +414,6 @@ TrackItemsContainer {
 
     Connections {
         target: root.container
-
-        function onItemMoveRequested(itemKey, completed) {
-            root.updateMouseMoveActive(completed)
-
-            labelsModel.moveSelectedLabels(itemKey, completed)
-
-            handleLabelGuideline(itemKey, Direction.Auto, completed)
-        }
-
-        function onItemStartEditRequested(itemKey) {
-            labelsModel.startEditItem(itemKey)
-        }
-
-        function onItemEndEditRequested(itemKey) {
-            labelsModel.endEditItem(itemKey)
-        }
 
         function onItemReleaseRequested(itemKey) {
             labelsModel.toggleTracksDataSelectionByLabel(itemKey)

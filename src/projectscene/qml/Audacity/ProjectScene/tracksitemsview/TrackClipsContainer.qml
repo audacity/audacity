@@ -42,6 +42,7 @@ TrackItemsContainer {
 
     TrackClipsListModel {
         id: clipsModel
+        moveController: root.moveController
         trackId: root.trackId
         context: root.context
     }
@@ -307,6 +308,9 @@ TrackItemsContainer {
                         height: parent.height
                         width: Math.max(3, itemData.width)
                         x: itemData.x
+
+                        visible: !itemData.dragged
+                        enabled: !itemData.dragged && !itemData.isDragGhost
 
                         asynchronous: false
 
@@ -740,30 +744,6 @@ TrackItemsContainer {
     Connections {
         target: root.container
 
-        function onItemMoveRequested(itemKey, completed) {
-            // this one notifies every ClipListModel about mouseMoveActive
-            root.updateMouseMoveActive(completed);
-
-            // this one moves the clips
-            let clipMovedToOtherTrack = clipsModel.moveSelectedClips(itemKey, completed);
-
-            // clip might change its' track, we need to update grabbed itemKey
-            if (clipMovedToOtherTrack) {
-                itemKey = clipsModel.updateClipTrack(itemKey)
-                setHoveredItemKey(clipsModel.updateClipTrack(itemKey))
-            }
-
-            handleClipGuideline(itemKey, Direction.Auto, completed)
-        }
-
-        function onItemStartEditRequested(itemKey) {
-            clipsModel.startEditItem(itemKey)
-        }
-
-        function onItemEndEditRequested(itemKey) {
-            clipsModel.endEditItem(itemKey)
-        }
-
         function onItemReleaseRequested(itemKey) {
             clipsModel.handleClipRelease(itemKey)
         }
@@ -784,9 +764,6 @@ TrackItemsContainer {
     }
 
     function handleClipGuideline(clipKey, direction, completed) {
-        // itemMoveRequested is broadcast to every track's container, but the guideline is
-        // shared across all of them. Only the container that owns the dragged clip may touch
-        // it, otherwise non-owners clobber the owning track's guideline.
         if (clipsModel.containsItem(clipKey)) {
             if (completed) {
                 root.clearItemGuideline()

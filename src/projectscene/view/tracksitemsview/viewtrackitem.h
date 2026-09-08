@@ -28,6 +28,8 @@ class ViewTrackItem : public QObject
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged FINAL)
     Q_PROPERTY(bool intersectsSelection READ intersectsSelection WRITE setIntersectsSelection NOTIFY intersectsSelectionChanged FINAL)
     Q_PROPERTY(bool focused READ focused WRITE setFocused NOTIFY focusedChanged FINAL)
+    Q_PROPERTY(bool dragged READ dragged WRITE setDragged NOTIFY draggedChanged FINAL)
+    Q_PROPERTY(bool isDragGhost READ isDragGhost NOTIFY isDragGhostChanged FINAL)
 
 public:
     explicit ViewTrackItem(QObject* parent = nullptr);
@@ -55,6 +57,12 @@ public:
     bool focused() const;
     void setFocused(bool focused);
 
+    bool dragged() const;
+    void setDragged(bool dragged);
+
+    bool isDragGhost() const;
+    void setDragGhost(bool ghost);
+
     double leftVisibleMargin() const;
     void setLeftVisibleMargin(double newLeftVisibleMargin);
 
@@ -80,6 +88,8 @@ signals:
     void intersectsSelectionChanged();
 
     void focusedChanged();
+    void draggedChanged();
+    void isDragGhostChanged();
 
 protected:
     TrackItemKey m_key;
@@ -91,6 +101,8 @@ protected:
     bool m_selected = false;
     bool m_intersectsSelection = false;
     bool m_focused = false;
+    bool m_dragged = false;
+    bool m_dragGhost = false;
     double m_leftVisibleMargin = 0.0;
     double m_rightVisibleMargin = 0.0;
     TrackItemTime m_time;

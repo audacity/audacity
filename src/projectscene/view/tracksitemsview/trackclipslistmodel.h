@@ -38,8 +38,6 @@ public:
     bool isStereo() const;
     ClipStyles::Style clipStyle() const;
 
-    Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
-
     void endEditItem(const TrackItemKey& key) override;
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
     Q_INVOKABLE bool trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
@@ -56,9 +54,6 @@ public:
 
     Q_INVOKABLE void openClipSpeedEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipSpeed(const ClipKey& key);
-
-    // update clip after moving to other track
-    Q_INVOKABLE projectscene::ClipKey updateClipTrack(ClipKey clipKey) const;
 
     bool asymmetricStereoHeightsPossible() const;
     bool isContrastFocusBorderEnabled() const;
@@ -80,6 +75,7 @@ private:
 
     void update();
     void updateItemMetrics(ViewTrackItem* item) override;
+    ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
     trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
 
