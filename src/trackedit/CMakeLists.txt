@@ -16,6 +16,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iselectioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/itracksviewrequestsservice.h
     ${CMAKE_CURRENT_LIST_DIR}/itracksinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/iclipsinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/ilabelsinteraction.h
@@ -53,6 +54,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/itracknavigationcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h

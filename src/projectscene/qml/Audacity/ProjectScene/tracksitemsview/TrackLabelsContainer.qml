@@ -204,6 +204,23 @@ TrackItemsContainer {
 
                                     property var itemData: labelLoader.itemData
 
+                                    readonly property bool titleEditRequested: Boolean(itemData) && itemData.titleEditRequested
+
+                                    function startRequestedTitleEdit() {
+                                        if (!Boolean(itemData)) {
+                                            return
+                                        }
+
+                                        item.editTitle()
+                                        labelsModel.titleEditRequestHandled(itemData.key)
+                                    }
+
+                                    onTitleEditRequestedChanged: {
+                                        if (titleEditRequested) {
+                                            Qt.callLater(startRequestedTitleEdit)
+                                        }
+                                    }
+
                                     title: Boolean(itemData) ? itemData.title : ""
                                     labelColor: Boolean(itemData) ? itemData.color : null
                                     labelKey: Boolean(itemData) ? itemData.key : null
@@ -342,11 +359,6 @@ TrackItemsContainer {
 
                                     Connections {
                                         target: labelsModel
-                                        function onItemTitleEditRequested(key) {
-                                            if (key === item.itemData.key) {
-                                                item.editTitle()
-                                            }
-                                        }
                                         function onItemContextMenuOpenRequested(key) {
                                             if (key === item.itemData.key) {
                                                 item.openContextMenu()
@@ -356,6 +368,10 @@ TrackItemsContainer {
 
                                     Component.onCompleted: {
                                         itemData.visualHeight = item.headerDefaultHeight
+
+                                        if (titleEditRequested) {
+                                            Qt.callLater(startRequestedTitleEdit)
+                                        }
                                     }
                                 }
                             }
