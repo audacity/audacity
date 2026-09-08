@@ -46,8 +46,13 @@ wxString WrappedType::ReadAsString()
         return wxString::Format(wxT("%i"), *mpInt);
         break;
     case eWrappedDouble:
-        return wxString::Format(wxT("%.8g"), *mpDouble);
-        break;
+    {
+        // %g follows LC_NUMERIC; normalize so the value is locale-stable
+        wxString str = wxString::Format(wxT("%.8g"), *mpDouble);
+        str.Replace(wxT(","), wxT("."));
+        return str;
+    }
+    break;
     case eWrappedBool:
         return (*mpBool) ? wxT("true") : wxT("false");
         break;
@@ -194,6 +199,7 @@ void WrappedType::WriteToAsDouble(const double InDouble)
     switch (eWrappedType) {
     case eWrappedString:
         *mpStr = wxString::Format(wxT("%.8g"), InDouble);
+        mpStr->Replace(wxT(","), wxT("."));
         break;
     case eWrappedInt:
         *mpInt = (int)InDouble;
