@@ -947,7 +947,6 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
     // Only the main thread assigns to the atomic pointer, here and
     // once only in the lifetime of the state
     if (!GetAccessState()) {
-        MakeInstance();
         mpAccessState.emplace(*mPlugin, *this);
     }
 

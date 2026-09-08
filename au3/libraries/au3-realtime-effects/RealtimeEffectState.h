@@ -73,6 +73,8 @@ public:
      */
     std::shared_ptr<EffectInstance> GetInstance();
 
+    std::shared_ptr<EffectInstance> PeekInstance() const { return mwInstance.lock(); }
+
     //! Get locations that a GUI can connect meters to
     const EffectOutputs* GetOutputs() const { return mMovedOutputs.get(); }
 
