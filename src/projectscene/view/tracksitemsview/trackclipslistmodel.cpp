@@ -176,7 +176,9 @@ void TrackClipsListModel::update()
     }
 
     QList<TrackClipItem*> newList;
-    bool isStereo = false;
+    const auto prj = globalContext()->currentTrackeditProject();
+    const auto track = prj ? prj->track(m_trackId) : std::nullopt;
+    const bool isStereo = track && track->type == TrackType::Stereo;
 
     // Building a new list, reusing exiting clips
     for (const au::trackedit::Clip& c : m_allClipList) {
@@ -192,7 +194,6 @@ void TrackClipsListModel::update()
 
         item->setClip(c);
         newList.append(item);
-        isStereo |= c.stereo;
     }
 
     // Removing deleted or moved clips
