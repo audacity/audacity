@@ -317,8 +317,6 @@ muse::RetVal<LabelKeyList> Au3LabelsInteraction::moveLabels(const LabelKeyList& 
     muse::RetVal<LabelKeyList> result;
     result.ret = make_ret(Err::NoError);
 
-    trackPositionOffset = std::clamp(trackPositionOffset, -1, 1);
-
     if (muse::RealIsEqual(timePositionOffset, 0.0) && trackPositionOffset == 0) {
         result.val = labelKeys;
         return result;
@@ -338,25 +336,20 @@ muse::RetVal<LabelKeyList> Au3LabelsInteraction::moveLabels(const LabelKeyList& 
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     auto& tracks = Au3TrackList::Get(projectRef());
 
-    auto resolveTrack = [&tracks, &trackPositionOffset](const TrackId& currentTrackId) ->TrackId {
-        size_t index = 0;
-        for (const auto& track : tracks) {
-            if (track->GetId() == currentTrackId) {
-                size_t newIndex = std::clamp(static_cast<int>(index) + trackPositionOffset, 0, static_cast<int>(tracks.Size()) - 1);
-                auto it = std::next(tracks.cbegin(), newIndex);
-                while (*it) {
-                    if (dynamic_cast<const Au3LabelTrack*>(*it)) {
-                        break;
-                    }
-                    newIndex = trackPositionOffset > 0 ? newIndex + 1 : newIndex - 1;
-                    it = std::next(tracks.cbegin(), newIndex);
-                }
-
-                return *it ? (*it)->GetId() : currentTrackId;
-            }
-            ++index;
+    TrackIdList labelTrackIds;
+    for (const auto& track : tracks) {
+        if (dynamic_cast<const Au3LabelTrack*>(track)) {
+            labelTrackIds.push_back(track->GetId());
         }
-        return INVALID_TRACK;
+    }
+    const auto resolveTrack = [&labelTrackIds, trackPositionOffset](TrackId currentTrackId) -> TrackId {
+        const auto it = std::find(labelTrackIds.begin(), labelTrackIds.end(), currentTrackId);
+        if (it == labelTrackIds.end()) {
+            return INVALID_TRACK;
+        }
+        const int index = static_cast<int>(std::distance(labelTrackIds.begin(), it));
+        const int newIndex = std::clamp(index + trackPositionOffset, 0, static_cast<int>(labelTrackIds.size()) - 1);
+        return labelTrackIds[newIndex];
     };
 
     //! NOTE: check if offset is applicable to every label and recalculate if needed
