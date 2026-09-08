@@ -4,6 +4,8 @@
 #include "trackcontextmenumodel.h"
 #include "trackedit/dom/track.h"
 
+#include <QLocale>
+
 #include "global/async/async.h"
 
 using namespace au::projectscene;
@@ -383,7 +385,7 @@ void TrackContextMenuModel::updateTrackRateState()
     MenuItem& menu = findMenu(QString::fromUtf8(TRACK_RATE_MENU_ID));
     //: %1 is a sample rate in hertz, e.g. "44100 Hz"
     menu.setTitle(muse::TranslatableString("trackcontextmenu", "Rate: %1 Hz")
-                  .arg(muse::String::number(static_cast<int>(track.value().rate))));
+                  .arg(muse::String::fromQString(QLocale().toString(static_cast<int>(track.value().rate)))));
 }
 
 void TrackContextMenuModel::updateTrackMonoState()
@@ -471,9 +473,11 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
 {
     muse::uicomponents::MenuItemList items;
     for (const auto& rate : audioDriverController()->sampleRates()) {
+        // Locale-formatted for display; the action query keeps the raw number
         items << makeMenuItem(makeTrackRateChangeAction(rate).toString(),
                               //: %1 is a sample rate in hertz, e.g. "44100 Hz"
-                              muse::TranslatableString("trackcontextmenu", "%1 Hz").arg(muse::String::number(static_cast<int>(rate))));
+                              muse::TranslatableString("trackcontextmenu", "%1 Hz")
+                              .arg(muse::String::fromQString(QLocale().toString(static_cast<int>(rate)))));
     }
     items << makeSeparator();
     items << makeItemWithArg("track-change-rate-custom");

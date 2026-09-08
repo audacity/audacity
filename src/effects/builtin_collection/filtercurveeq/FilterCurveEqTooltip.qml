@@ -30,9 +30,9 @@ StyledPopupView {
 
     function freqLabel(f) {
         if (f >= 1000) {
-            return (f / 1000).toFixed(root.decimalPlaces) + " kHz"
+            return (f / 1000).toLocaleString(Qt.locale(), 'f', root.decimalPlaces) + " kHz"
         }
-        return Math.round(f) + " Hz"
+        return Math.round(f).toLocaleString(Qt.locale(), 'f', 0) + " Hz"
     }
 
     Item {
@@ -44,7 +44,7 @@ StyledPopupView {
             id: label
 
             anchors.horizontalCenter: parent.horizontalCenter
-            text: root.freqLabel(root.freq) + "\n" + root.gain.toFixed(root.decimalPlaces) + " dB"
+            text: root.freqLabel(root.freq) + "\n" + root.gain.toLocaleString(Qt.locale(), 'f', root.decimalPlaces) + " dB"
         }
     }
 

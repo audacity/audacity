@@ -4,6 +4,8 @@
 #include <iomanip>
 
 #include "framework/global/realfn.h"
+
+#include <QLocale>
 #include "framework/global/types/ratio.h"
 
 #include "dblogbaseruler.h"
@@ -37,9 +39,7 @@ void DbLogBaseRuler::setDbRange(double dbRange)
 
 std::string DbLogBaseRuler::sampleToText(double sample) const
 {
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(0) << std::abs(sample);
-    return ss.str();
+    return QLocale().toString(std::abs(sample), 'f', 0).toStdString();
 }
 
 void DbLogBaseRuler::setDisplayBounds(std::pair<float, float> displayBounds)

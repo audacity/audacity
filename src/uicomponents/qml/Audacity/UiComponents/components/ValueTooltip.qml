@@ -16,7 +16,7 @@ StyledPopupView {
 
     property string text: {
         const v = Number(root.value)
-        return (isFinite(v) ? v.toFixed(root.decimalPlaces) : root.value) + root.unitText
+        return (isFinite(v) ? v.toLocaleString(Qt.locale(), 'f', root.decimalPlaces) : root.value) + root.unitText
     }
     property string sizingText: root.text
 
