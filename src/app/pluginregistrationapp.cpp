@@ -4,6 +4,8 @@
 #include "pluginregistrationapp.h"
 
 #include <QCoreApplication>
+#include <cstdio>
+#include <cstdlib>
 
 #include "backgroundprocess.h"
 #include "modularity/ioc.h"
@@ -30,13 +32,18 @@ void PluginRegistrationApp::startupScenario(const muse::modularity::ContextPtr& 
     }
 
     QMetaObject::invokeMethod(qApp, [this, ctxId, options]() {
-        int code = 0;
         if (options->audioPluginRegistration.selfTest) {
-            code = runSelfTest(ctxId);
-        } else {
-            code = processAudioPluginRegistration(ctxId);
+            qApp->exit(runSelfTest(ctxId));
+            return;
         }
-        qApp->exit(code);
+
+        const int code = processAudioPluginRegistration(ctxId);
+
+        // Result's on disk: end the process here. Unwinding through exit() runs the
+        // plugin's static destructors while its threads may still be running, which
+        // can abort the process and make the parent count the validation as failed.
+        std::fflush(nullptr);
+        std::_Exit(code);
     }, Qt::QueuedConnection);
 }
 
