@@ -177,22 +177,20 @@ TrackItemsContainer {
                         }
                     }
 
-                    // True while the pointer is over any guideline-driving part of a clip in
-                    // this track: its body/header (hover) or either trim/stretch edge. The edges
-                    // are separate MouseAreas that drive the guideline but don't set the clip's
-                    // own `hover`, so they must be checked explicitly.
-                    function pointerOverAnyClip() {
-                        return clipsContainer.checkIfAnyClip(function (clipItem) {
-                            return clipItem && (clipItem.hover || clipItem.leftTrimContainsMouse || clipItem.rightTrimContainsMouse)
-                        })
-                    }
+                    // Timer to wait for hover state to update after item creation
+                    Timer {
+                        id: clearGuidelineTimer
+                        interval: 0
 
-                    function clearGuidelineIfPointerLeft() {
-                        // Clear only once the pointer is over neither the body nor any clip
-                        // otherwise a body->clip (or body->edge) hand-off would blink
-                        // the guideline for one frame.
-                        if (!clipsContainerMouseArea.containsMouse && !clipsContainerMouseArea.pointerOverAnyClip()) {
-                            root.clearItemGuideline()
+                        onTriggered: {
+                            if (root.moveActive || clipsContainerMouseArea.containsMouse) {
+                                return
+                            }
+
+                            const overAnyClip = clipsContainer.checkIfAnyClip(clipItem => clipItem.hover || clipItem.leftTrimContainsMouse || clipItem.rightTrimContainsMouse)
+                            if (!overAnyClip) {
+                                root.clearItemGuideline()
+                            }
                         }
                     }
 
@@ -288,8 +286,10 @@ TrackItemsContainer {
                             })
                         }
 
-                        if (!containsMouse) {
-                            Qt.callLater(clipsContainerMouseArea.clearGuidelineIfPointerLeft)
+                        if (!containsMouse && !root.moveActive) {
+                            clearGuidelineTimer.restart()
+                        } else {
+                            clearGuidelineTimer.stop()
                         }
                     }
                 }
