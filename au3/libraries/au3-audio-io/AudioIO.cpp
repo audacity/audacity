@@ -888,12 +888,8 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 
     const auto pOwningProject = mOwningProject.lock();
     if (!success) {
-        using namespace BasicUI;
-        const auto msg = TranslatableString("audio-io", "Error opening recording device.\nError code: %1")
-                         .Format(Get()->LastPaErrorString());
-        ShowErrorDialog(*ProjectFramePlacement(pOwningProject.get()),
-                        TranslatableString("audio-io", "Error"), msg, wxT("Error_opening_sound_device"),
-                        ErrorDialogOptions { ErrorDialogType::ModalErrorReport });
+        wxLogMessage("Error opening recording device for monitoring. Error code: %s",
+                     Get()->LastPaErrorString());
         return;
     }
 
