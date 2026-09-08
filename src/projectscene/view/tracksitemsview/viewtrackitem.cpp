@@ -86,6 +86,34 @@ void ViewTrackItem::setSelected(bool newSelected)
     emit selectedChanged();
 }
 
+bool ViewTrackItem::dragged() const
+{
+    return m_dragged;
+}
+
+void ViewTrackItem::setDragged(bool dragged)
+{
+    if (m_dragged == dragged) {
+        return;
+    }
+    m_dragged = dragged;
+    emit draggedChanged();
+}
+
+bool ViewTrackItem::isDragGhost() const
+{
+    return m_dragGhost;
+}
+
+void ViewTrackItem::setDragGhost(bool ghost)
+{
+    if (m_dragGhost == ghost) {
+        return;
+    }
+    m_dragGhost = ghost;
+    emit isDragGhostChanged();
+}
+
 bool ViewTrackItem::intersectsSelection() const
 {
     return m_intersectsSelection;
