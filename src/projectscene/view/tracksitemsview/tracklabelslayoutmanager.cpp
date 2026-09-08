@@ -135,7 +135,7 @@ void TrackLabelsLayoutManager::subscribeToLabelsChanges()
     for (const LabelInfo& label : labels) {
         connect(label.item, &TrackLabelItem::startTimeChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
         connect(label.item, &TrackLabelItem::endTimeChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
-        connect(label.item, &TrackLabelItem::visualWidthChanged, [this, labelKey = label.key]() {
+        connect(label.item, &TrackLabelItem::visualWidthChanged, this, [this, labelKey = label.key]() {
             QList<LabelInfo> labels = collectLabelsInfo();
             for (const LabelInfo& label : labels) {
                 if (label.key == labelKey && !label.isEditing) {
