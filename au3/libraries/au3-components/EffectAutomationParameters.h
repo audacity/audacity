@@ -128,7 +128,10 @@ public:
 
     virtual bool DoWriteDouble(const wxString& key, double value) override
     {
-        return DoWriteString(key, wxString::Format(wxT("%.8g"), value));
+        // %g follows LC_NUMERIC; normalize so stored values are locale-stable
+        wxString str = wxString::Format(wxT("%.8g"), value);
+        str.Replace(wxT(","), wxT("."));
+        return DoWriteString(key, str);
     }
 
     bool ReadFloat(const wxString& key, float* pf) const
