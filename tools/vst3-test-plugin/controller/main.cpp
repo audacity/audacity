@@ -23,6 +23,7 @@ namespace {
 constexpr int VALIDATION_GATE_LOAD = 1;
 constexpr int VALIDATION_GATE_CRASH = -1;
 constexpr int VALIDATION_GATE_REFUSE = 2;
+constexpr int VALIDATION_GATE_CRASH_AT_EXIT = 3;
 constexpr int DEFAULT_DELAY_SECONDS = 180; // the 3 min plugin-load timeout
 
 // Must mirror vst3testplugin.cpp validationGateFilePath().
@@ -142,6 +143,7 @@ QString describe(const ValidationGate& gate)
 {
     const QString what = gate.code == VALIDATION_GATE_CRASH ? QStringLiteral("crash")
                          : gate.code == VALIDATION_GATE_REFUSE ? QStringLiteral("refuse to load")
+                         : gate.code == VALIDATION_GATE_CRASH_AT_EXIT ? QStringLiteral("load, then abort the process when it exits")
                          : QStringLiteral("load");
     if (gate.delaySeconds > 0) {
         return QStringLiteral("On its next load the plugin will %1 after %2 s.").arg(what).arg(gate.delaySeconds);
@@ -182,10 +184,11 @@ int main(int argc, char* argv[])
     auto* succeedRadio = new QRadioButton(QStringLiteral("Succeed"));
     auto* crashRadio = new QRadioButton(QStringLiteral("Crash"));
     auto* refuseRadio = new QRadioButton(QStringLiteral("Refuse to load"));
+    auto* crashAtExitRadio = new QRadioButton(QStringLiteral("Succeed, then abort at process exit"));
     // Radio buttons sharing a parent form one exclusive set by default; explicit
     // groups keep "outcome" and "when" independent.
     auto* outcomeGroup = new QButtonGroup(outcomeBox);
-    for (auto* radio : { succeedRadio, crashRadio, refuseRadio }) {
+    for (auto* radio : { succeedRadio, crashRadio, refuseRadio, crashAtExitRadio }) {
         outcomeGroup->addButton(radio);
         outcomeLayout->addWidget(radio);
     }
@@ -220,8 +223,15 @@ int main(int argc, char* argv[])
     // handlers, so opening the controller never rewrites the file by itself.
     const fs::path validationGatePath = validationGateFilePath();
     const ValidationGate current = readValidationGate(validationGatePath);
-    (current.code == VALIDATION_GATE_CRASH ? crashRadio : current.code == VALIDATION_GATE_REFUSE ? refuseRadio : succeedRadio)->setChecked(
-        true);
+    QRadioButton* currentOutcome = succeedRadio;
+    if (current.code == VALIDATION_GATE_CRASH) {
+        currentOutcome = crashRadio;
+    } else if (current.code == VALIDATION_GATE_REFUSE) {
+        currentOutcome = refuseRadio;
+    } else if (current.code == VALIDATION_GATE_CRASH_AT_EXIT) {
+        currentOutcome = crashAtExitRadio;
+    }
+    currentOutcome->setChecked(true);
     if (current.delaySeconds > 0) {
         delaySpin->setValue(current.delaySeconds);
         afterRadio->setChecked(true);
@@ -234,8 +244,10 @@ int main(int argc, char* argv[])
     // ---- Behaviour ----------------------------------------------------------
     const auto applyValidationGate = [&] {
         ValidationGate gate;
-        gate.code
-            = crashRadio->isChecked() ? VALIDATION_GATE_CRASH : refuseRadio->isChecked() ? VALIDATION_GATE_REFUSE : VALIDATION_GATE_LOAD;
+        gate.code = crashRadio->isChecked() ? VALIDATION_GATE_CRASH
+                    : refuseRadio->isChecked() ? VALIDATION_GATE_REFUSE
+                    : crashAtExitRadio->isChecked() ? VALIDATION_GATE_CRASH_AT_EXIT
+                    : VALIDATION_GATE_LOAD;
         gate.delaySeconds = afterRadio->isChecked() ? delaySpin->value() : 0;
         QString error;
         if (writeValidationGate(validationGatePath, gate, error)) {
