@@ -76,12 +76,15 @@ a waiting plugin isn't killed.
 
 `3` models a plugin (seen in the wild, wrapped in a copy-protection SDK) that starts
 a worker thread on load and only cleans up in static destructors. The load succeeds
-and the result is written, but when the process exits a static destructor destroys a
-mutex the worker still uses, the worker's next lock throws, and the process aborts
-(SIGABRT). Audacity then logs `Could not register plugin ... error code: -1` and
-lists a plugin that validated fine as broken. The module pins itself in memory so
-the host's `dlclose` after discovery doesn't trigger this early. With the gate left
-at `3`, the in-process load makes Audacity itself abort on quit.
+and the result is written, but if the process then unwinds through `exit()` a static
+destructor destroys a mutex the worker still uses, the worker's next lock throws, and
+the process aborts (SIGABRT). A host that lets this happen counts the validation as
+failed (`Could not register plugin ... error code: -1`) and lists a plugin that
+validated fine as broken; Audacity's registration subprocess ends with `_Exit` right
+after writing the result, so it is immune (see `PluginRegistrationApp`). The module
+pins itself in memory so the host's `dlclose` after discovery doesn't trigger this
+early. With the gate left at `3`, the in-process load makes Audacity itself abort on
+quit.
 
 The validation gate applies to every process that loads the module: the validation
 subprocess _and_ the in-process load in the app. Keep it at `1` once the plugin
