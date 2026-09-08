@@ -5,6 +5,7 @@
 #include "au3clipsinteraction.h"
 
 #include <algorithm>
+#include <set>
 
 #include <QCoreApplication>
 
@@ -461,18 +462,35 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
         return muse::RetVal<ClipKeyList>::make_ret(make_ret(Err::DownmixingIsNotAllowed));
     }
 
+    // Selection can still refer to the source tracks when a preview is committed in one call.
+    std::set<TrackId> destinationTracks;
+    for (const ClipKey& key : newClipKeyList) {
+        destinationTracks.insert(key.trackId);
+    }
+    std::vector<Au3WaveTrack*> tracksToConvert;
+    for (const TrackId trackId : destinationTracks) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return muse::RetVal<ClipKeyList>::make_ret(make_ret(Err::TrackNotFound));
+        }
+        const auto& clips = waveTrack->Intervals();
+        if (std::any_of(clips.begin(), clips.end(), [waveTrack](const auto& clip) {
+            return clip->NChannels() != waveTrack->NChannels();
+        })) {
+            tracksToConvert.push_back(waveTrack);
+        }
+    }
+    if (tracksToConvert.empty()) {
+        return muse::RetVal<ClipKeyList>::make_ok(newClipKeyList);
+    }
+
     muse::RetVal<ClipKeyList> result;
     //! TODO AU4: later when having keyboard arrow shortcut for moving clips
     //! make use of UndoPush::CONSOLIDATE arg in UndoManager
     result.ret = utils::withProgress(*interactive(), mixingDownToMonoLabel, [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
     {
         std::vector<std::pair<WaveTrack*, std::shared_ptr<WaveTrack> > > toReplace;
-        for (const trackedit::TrackId track : selectionController()->selectedTracks()) {
-            Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track));
-            // If this is not an audio track (i.e. a label track), skip it
-            if (!waveTrack) {
-                continue;
-            }
+        for (Au3WaveTrack* waveTrack : tracksToConvert) {
             const auto copy = std::static_pointer_cast<WaveTrack>(waveTrack->Duplicate(::Track::DuplicateOptions {}.Backup()));
             if (copy->FixClipChannels(progressCb, cancelCb)) {
                 toReplace.emplace_back(waveTrack, copy);

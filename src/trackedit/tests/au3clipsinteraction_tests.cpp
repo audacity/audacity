@@ -678,6 +678,40 @@ class Au3ClipsDropTests : public Au3ClipsInteractionTests, public testing::WithP
 {
 };
 
+TEST_P(Au3ClipsDropTests, ConvertsDestinationChannelsBeforeAutosave)
+{
+    const auto [sourceIsStereo, overlap] = GetParam();
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    auto source = factory.createTrackFromTemplate("source", { { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto destination = factory.createTrackFromTemplate("destination", { { 1.0, { { 0.3, TrackTemplateFactory::createNoise } } } });
+    if (sourceIsStereo) {
+        source = source->MonoToStereo();
+    } else {
+        destination = destination->MonoToStereo();
+    }
+    const TrackId sourceId = factory.addTrackToProject(source);
+    const TrackId destinationId = factory.addTrackToProject(destination);
+    const ClipKey sourceKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+
+    // A preview-only drag keeps the original selection until the completed move returns.
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { sourceId }));
+    bool changedTrack = false;
+    const auto result = m_clipsInteraction->moveClips({ sourceKey }, overlap ? 1.1 : 2.0, 1, true, changedTrack);
+
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val, (ClipKeyList { { destinationId, sourceKey.itemId } }));
+    EXPECT_TRUE(changedTrack);
+    const auto movedTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(movedTrack, nullptr);
+    EXPECT_EQ(movedTrack->NChannels(), sourceIsStereo ? 1u : 2u);
+    EXPECT_EQ(movedTrack->NIntervals(), overlap ? 3u : 2u);
+    for (const auto& clip : movedTrack->Intervals()) {
+        // A stereo track containing a mono clip crashes while serializing its second channel.
+        ASSERT_EQ(clip->NChannels(), movedTrack->NChannels());
+    }
+    EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+}
+
 INSTANTIATE_TEST_SUITE_P(CompletedMove, Au3ClipsDropTests, testing::Combine(testing::Bool(), testing::Bool()));
 
 TEST_P(Au3ClipsDropTests, PreservesEffectsThroughUndoRedo)
@@ -715,7 +749,6 @@ TEST_P(Au3ClipsDropTests, PreservesEffectsThroughUndoRedo)
     const TrackId sourceId = trackFactory.addTrackToProject(source);
     const TrackId destinationId = trackFactory.addTrackToProject(destination);
     const ClipKey key { sourceId, source->GetSortedClipByIndex(0)->GetId() };
-    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { destinationId }));
     const auto sourceEffect = RealtimeEffectState::make_shared("au-test:source");
     const auto destinationEffect = RealtimeEffectState::make_shared("au-test:destination");
     ASSERT_TRUE(RealtimeEffectList::Get(*source).AddState(sourceEffect));
@@ -796,6 +829,24 @@ TEST_F(Au3ClipsInteractionTests, TrackCopiesKeepIndependentEffects)
         EXPECT_FALSE(duplicateEffect->IsEnabled());
         EXPECT_TRUE(effect->IsEnabled());
     }
+}
+
+TEST_F(Au3ClipsInteractionTests, CompletedMoveKeepsTrackWhenChannelsAlreadyMatch)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    const auto track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(track, nullptr);
+    const ClipKey key { trackId, track->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { trackId }));
+    EXPECT_CALL(*std::static_pointer_cast<muse::InteractiveMock>(m_interactive), showProgress(_, _)).Times(0);
+
+    bool changedTrack = false;
+    const auto result = m_clipsInteraction->moveClips({ key }, 1.0, 0, true, changedTrack);
+
+    ASSERT_TRUE(result.ret);
+    EXPECT_EQ(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId)), track);
+    EXPECT_FALSE(changedTrack);
+    EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
 }
 
 TEST_F(Au3ClipsInteractionTests, SplitDeteleByClipId)
