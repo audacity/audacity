@@ -67,34 +67,9 @@ public:
     //! const accessor will not initialize the effect on demand
     const EffectInstanceFactory* GetEffect() const { return mPlugin; }
 
-    //! Whether EnsureInstance has integrated this state into the current processing
+    //! Whether EnsureInstance has initialized this state for the current processing
     //! scope (reset by Finalize). Main thread.
-    bool IsInitialized() const noexcept { return mInitialized.load(std::memory_order_acquire); }
-
-    //! Brackets an in-place (re)integration of an already-listed state into a running
-    //! processing scope (RealtimeEffectManager::ReloadState). While alive, the worker
-    //! thread skips the state entirely: EnsureInstance sets mInitialized before
-    //! AddGroup has populated mGroups, so mInitialized alone would let the worker in
-    //! too early. The destructor publishes completion (release).
-    class ReintegrationGuard
-    {
-    public:
-        explicit ReintegrationGuard(RealtimeEffectState& state) noexcept
-            : mState{state}
-        {
-            mState.mReintegrating.store(true, std::memory_order_release);
-        }
-
-        ~ReintegrationGuard()
-        {
-            mState.mReintegrating.store(false, std::memory_order_release);
-        }
-
-        ReintegrationGuard(const ReintegrationGuard&) = delete;
-        ReintegrationGuard& operator=(const ReintegrationGuard&) = delete;
-    private:
-        RealtimeEffectState& mState;
-    };
+    bool IsInitialized() const noexcept { return mInitialized; }
 
     //! Expose a pointer to the state's instance (making one as needed).
     /*!
@@ -236,17 +211,20 @@ private:
 
     wxString mParameters; // Used only during deserialization
     size_t mCurrentProcessor{ 0 };
-    //! Set by EnsureInstance once mWorkerSettings and the instance are ready, cleared by Finalize.
-    std::atomic<bool> mInitialized{ false };
-    //! See ReintegrationGuard.
-    std::atomic<bool> mReintegrating{ false };
+    bool mInitialized{ false };
 
-    //! Worker thread: may this state be processed at all? False until it has been
-    //! integrated into the scope, and during an in-place reintegration.
-    bool ReadyForAudio() const noexcept
+    //! Worker-thread gate: may this state be processed? Set (release) at the end of
+    //! AddGroup, once the state is completely integrated into the current processing
+    //! scope - instance, mWorkerSettings and mGroups all written - and cleared by
+    //! Finalize. Written by the main thread only, read (acquire) by the worker. That
+    //! single store is the one place to check that everything the worker reads is
+    //! written before it. Access consults it too, on the main thread: settings travel
+    //! through the worker iff the worker processes the state.
+    std::atomic<bool> mReadyForWorker{ false };
+
+    bool ReadyForWorker() const noexcept
     {
-        return mInitialized.load(std::memory_order_acquire)
-               && !mReintegrating.load(std::memory_order_acquire);
+        return mReadyForWorker.load(std::memory_order_acquire);
     }
 
     //! @}
