@@ -42,7 +42,7 @@ app so you never have to edit the validation gate file by hand. It
 - **installs** the built bundle into the platform VST3 folder (`~/.vst3`,
   `~/Library/Audio/Plug-Ins/VST3`, `%COMMONPROGRAMFILES%\VST3`) - as a symlink on
   Linux/macOS so rebuilds stay live, a copy on Windows;
-- sets the **load result**: succeed / crash / refuse, either _immediately_ or _after_
+- sets the **load result**: succeed / crash / refuse / succeed-then-abort-at-exit, either _immediately_ or _after_
   a delay (default 180 s = the 3 min plugin-load timeout), by writing the validation gate file;
 - shows the validation gate file's path and current content.
 
@@ -61,6 +61,7 @@ file keeps being polled meanwhile, so writing a new value overrides a pending on
 | `0`            | wait, re-reading the file every 250 ms, until it changes |
 | `-1`           | crash (null dereference) while loading                   |
 | `2`            | refuse to load (`ModuleEntry` returns false)             |
+| `3`            | load, then abort the host process when it exits          |
 
 While waiting it prints `[AuVst3TestPlugin] validation gate closed, waiting ...` to stderr about
 once a second; the validation subprocess timeout is an _inactivity_ timeout, so
@@ -71,6 +72,16 @@ a waiting plugin isn't killed.
     echo -1 > /tmp/au_vst3_test_plugin_validation_gate      # crash on next load
     echo "1 180" > /tmp/au_vst3_test_plugin_validation_gate # load, but only after 3 minutes
     echo "-1 180" > /tmp/au_vst3_test_plugin_validation_gate# crash after 3 minutes
+    echo 3 > /tmp/au_vst3_test_plugin_validation_gate       # load, then abort the process at exit
+
+`3` models a plugin (seen in the wild, wrapped in a copy-protection SDK) that starts
+a worker thread on load and only cleans up in static destructors. The load succeeds
+and the result is written, but when the process exits a static destructor destroys a
+mutex the worker still uses, the worker's next lock throws, and the process aborts
+(SIGABRT). Audacity then logs `Could not register plugin ... error code: -1` and
+lists a plugin that validated fine as broken. The module pins itself in memory so
+the host's `dlclose` after discovery doesn't trigger this early. With the gate left
+at `3`, the in-process load makes Audacity itself abort on quit.
 
 The validation gate applies to every process that loads the module: the validation
 subprocess _and_ the in-process load in the app. Keep it at `1` once the plugin
