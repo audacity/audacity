@@ -164,11 +164,6 @@ int DBConnection::Open(const FilePath fileName)
 
 int DBConnection::OpenStepByStep(const FilePath fileName)
 {
-    // Hold the buffer, do not decay it to a pointer: ToUTF8() returns a
-    // wxScopedCharBuffer by value, and where wxString is not internally UTF-8
-    // (Windows, macOS) that buffer owns its memory and is freed at the end of
-    // the declaration - leaving `name` dangling for both sqlite3_open calls
-    // below.
     const wxScopedCharBuffer nameBuf = fileName.ToUTF8();
     const char* name = nameBuf.data();
 
