@@ -2,11 +2,20 @@
  * Audacity: A Digital Audio Editor
  */
 #include <gtest/gtest.h>
+#include "global/defer.h"
 
 #include "../internal/au3/au3clipsinteraction.h"
 #include "../internal/au3/au3trackdata.h"
 
 #include "au3-wave-track/WaveTrackUtilities.h"
+#include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+
+#include "effects/effects_base/internal/realtimeeffectrestorer.h"
+#include "project/tests/mocks/dummyeffectinstancefactory.h"
 
 #include "au3interactiontestbase.h"
 #include "mocks/selectioncontrollermock.h"
@@ -663,6 +672,130 @@ TEST_F(Au3ClipsInteractionTests, MoveClipLeftWhenClipIsAtZero)
     ValidateClipProperties(modifiedLastClip, lastClipStart, lastClipEnd);
 
     removeTrack(trackId);
+}
+
+class Au3ClipsDropTests : public Au3ClipsInteractionTests, public testing::WithParamInterface<std::tuple<bool, bool> >
+{
+};
+
+INSTANTIATE_TEST_SUITE_P(CompletedMove, Au3ClipsDropTests, testing::Combine(testing::Bool(), testing::Bool()));
+
+TEST_P(Au3ClipsDropTests, PreservesEffectsThroughUndoRedo)
+{
+    class CountingEffectFactory final : public project::DummyEffectInstanceFactory
+    {
+    public:
+        std::shared_ptr<EffectInstance> MakeInstance() const override
+        {
+            ++instanceCreations;
+            return nullptr;
+        }
+
+        mutable int instanceCreations = 0;
+    } factory;
+    RealtimeEffectState::EffectFactory::Scope factoryScope {
+        [&](const PluginID&) -> const EffectInstanceFactory* { return &factory; }
+    };
+    const muse::Defer cleanup([&] {
+        Au3TrackList::Get(projectRef()).Clear();
+        ::UndoManager::Get(projectRef()).ClearStates();
+    });
+    // Include the real settings restorer used by the application's undo/redo path.
+    effects::setRealtimeEffectRestorerSignals(projectRef(), {});
+
+    const auto [sourceIsStereo, overlap] = GetParam();
+    TrackTemplateFactory trackFactory(projectRef(), DEFAULT_SAMPLE_RATE);
+    auto source = trackFactory.createTrackFromTemplate("source", { { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto destination = trackFactory.createTrackFromTemplate("destination", { { 1.0, { { 0.3, TrackTemplateFactory::createNoise } } } });
+    if (sourceIsStereo) {
+        source = source->MonoToStereo();
+    } else {
+        destination = destination->MonoToStereo();
+    }
+    const TrackId sourceId = trackFactory.addTrackToProject(source);
+    const TrackId destinationId = trackFactory.addTrackToProject(destination);
+    const ClipKey key { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { destinationId }));
+    const auto sourceEffect = RealtimeEffectState::make_shared("au-test:source");
+    const auto destinationEffect = RealtimeEffectState::make_shared("au-test:destination");
+    ASSERT_TRUE(RealtimeEffectList::Get(*source).AddState(sourceEffect));
+    ASSERT_TRUE(RealtimeEffectList::Get(*destination).AddState(destinationEffect));
+    RealtimeEffectList::Get(*source).SetActive(false);
+    // Loaded effects may never have been played or opened before this edit.
+    ASSERT_EQ(factory.instanceCreations, 0);
+
+    auto& history = ::ProjectHistory::Get(projectRef());
+    auto& undoManager = ::UndoManager::Get(projectRef());
+    const auto restore = [&](const UndoStackElem& elem) { history.PopState(elem.state); };
+    history.InitialState();
+    history.ModifyState(false);
+
+    bool changedTrack = false;
+    const auto result = m_clipsInteraction->moveClips({ key }, overlap ? 1.1 : 2.0, 1, true, changedTrack);
+    ASSERT_TRUE(result.ret);
+    history.PushState({}, {});
+
+    const auto checkEffects = [&] {
+        const auto sourceTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId));
+        const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+        ASSERT_NE(sourceTrack, nullptr);
+        ASSERT_NE(destinationTrack, nullptr);
+        EXPECT_EQ(RealtimeEffectList::Get(*sourceTrack).GetStateAt(0), sourceEffect);
+        EXPECT_EQ(RealtimeEffectList::Get(*destinationTrack).GetStateAt(0), destinationEffect);
+        EXPECT_FALSE(RealtimeEffectList::Get(*sourceTrack).IsActive());
+        EXPECT_EQ(factory.instanceCreations, 0);
+        EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+    };
+    checkEffects();
+
+    for (int i = 0; i < 2; ++i) {
+        ASSERT_TRUE(undoManager.UndoAvailable());
+        undoManager.Undo(restore);
+        EXPECT_NE(DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId)), key.itemId), nullptr);
+        checkEffects();
+        ASSERT_TRUE(undoManager.RedoAvailable());
+        undoManager.Redo(restore);
+        EXPECT_NE(DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId)), key.itemId), nullptr);
+        checkEffects();
+    }
+
+    destinationEffect->SetActive(false);
+    history.PushState({}, {});
+    undoManager.Undo(restore);
+    EXPECT_TRUE(destinationEffect->IsEnabled());
+    undoManager.Redo(restore);
+    EXPECT_FALSE(destinationEffect->IsEnabled());
+    undoManager.Undo(restore);
+    EXPECT_TRUE(destinationEffect->IsEnabled());
+
+    auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    RealtimeEffectList::Get(*destinationTrack).RemoveState(destinationEffect);
+    history.PushState({}, {});
+    undoManager.Undo(restore);
+    checkEffects();
+    undoManager.Redo(restore);
+    destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    EXPECT_EQ(RealtimeEffectList::Get(*destinationTrack).GetStatesCount(), 0u);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrackCopiesKeepIndependentEffects)
+{
+    RealtimeEffectState::EffectFactory::Scope factoryScope {
+        [](const PluginID&) -> const EffectInstanceFactory* { return &project::dummyFactory(); }
+    };
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    const auto track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto effect = RealtimeEffectState::make_shared("au-test:effect");
+    ASSERT_TRUE(RealtimeEffectList::Get(*track).AddState(effect));
+
+    for (const auto& duplicate : { track->Duplicate(), track->Duplicate(::Track::DuplicateOptions {}.Backup()) }) {
+        const auto duplicateEffect = RealtimeEffectList::Get(*duplicate).GetStateAt(0);
+        ASSERT_NE(duplicateEffect, nullptr);
+        EXPECT_NE(duplicateEffect, effect);
+        duplicateEffect->SetActive(false);
+        EXPECT_FALSE(duplicateEffect->IsEnabled());
+        EXPECT_TRUE(effect->IsEnabled());
+    }
 }
 
 TEST_F(Au3ClipsInteractionTests, SplitDeteleByClipId)

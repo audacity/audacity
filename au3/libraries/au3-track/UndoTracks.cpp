@@ -11,6 +11,7 @@
 #include "PendingTracks.h"
 #include "Track.h"
 #include "au3-project-history/UndoManager.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
 
 // Undo/redo handling of selection changes
 namespace {
@@ -18,6 +19,11 @@ struct TrackListRestorer final : UndoStateExtension {
     TrackListRestorer(AudacityProject& project)
         : mpTracks{TrackList::Get(project).Duplicate()}
     {
+        // Effect settings are captured separately by RealtimeEffectRestorer.
+        const auto& tracks = TrackList::Get(project);
+        for (auto pTrack : *mpTracks) {
+            RealtimeEffectList::ShareStates(*pTrack, *tracks.FindById(pTrack->GetId()));
+        }
     }
 
     void RestoreUndoRedoState(AudacityProject& project) override
@@ -28,9 +34,9 @@ struct TrackListRestorer final : UndoStateExtension {
         constexpr auto sendEvent = true;
         dstTracks.Clear(sendEvent);
         for (auto pTrack : *mpTracks) {
-            dstTracks.Add(
-                pTrack->Duplicate(Track::DuplicateOptions {}.Backup()),
-                TrackList::DoAssignId::No, synchrony);
+            auto restored = pTrack->Duplicate(Track::DuplicateOptions {}.Backup());
+            RealtimeEffectList::ShareStates(*restored, *pTrack);
+            dstTracks.Add(std::move(restored), TrackList::DoAssignId::No, synchrony);
         }
         dstTracks.EndUndoRedo(synchrony);
     }
