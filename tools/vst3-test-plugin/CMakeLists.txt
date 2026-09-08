@@ -92,6 +92,8 @@ target_include_directories(au_vst3_test_plugin_validation_gate PRIVATE ${VST3_SD
 target_compile_definitions(au_vst3_test_plugin_validation_gate PRIVATE $<IF:$<CONFIG:Debug>,DEVELOPMENT=1,RELEASE=1>)
 # the SDK sources aren't warning-clean under the project's flags
 target_compile_options(au_vst3_test_plugin_validation_gate PRIVATE -w)
+find_package(Threads REQUIRED)
+target_link_libraries(au_vst3_test_plugin_validation_gate PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
 
 # VST3 bundle layout: <Name>.vst3/Contents/<arch>-linux/<Name>.so
 set_target_properties(au_vst3_test_plugin_validation_gate PROPERTIES
