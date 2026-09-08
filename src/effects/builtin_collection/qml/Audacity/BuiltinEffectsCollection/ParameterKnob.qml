@@ -93,15 +93,10 @@ Item {
 
                 minValue: knob.from
                 maxValue: knob.to
-                decimals: {
-                    let s = knob.stepSize.toString()
-                    if (s.indexOf('.') >= 0)
-                        return s.split('.')[1].length
-                    return 0
-                }
+                decimals: ui.df.decimalsForStep(knob.stepSize)
                 step: knob.stepSize
 
-                currentValue: +knob.value.toFixed(decimals)
+                currentValue: ui.df.roundReal(knob.value, decimals)
 
                 onValueEdited: function (value) {
                     root.newValueRequested(root.parameter["key"], value)
