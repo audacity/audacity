@@ -31,6 +31,7 @@ set(MODULE_TEST_LINK
         spectrogram
         au3wrap
         au3-label-track
+        au3-project-file-io
         au3-time-frequency-selection
         au3-wave-track
 
