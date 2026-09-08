@@ -880,6 +880,10 @@
         <seq>Shift+Space</seq>
     </SC>
     <SC>
+        <key>action://playback/play-selection</key>
+        <seq>W</seq>
+    </SC>
+    <SC>
         <key>action://record/stop</key>
         <seq>Space</seq>
     </SC>
