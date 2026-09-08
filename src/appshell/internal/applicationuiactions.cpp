@@ -232,6 +232,14 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Trigger the focused control or select the focused track item")
              ),
+    UiAction("item-context-menu",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Open item’s context menu"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Open the context menu of the focused item")
+             ),
 };
 
 ApplicationUiActions::ApplicationUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ApplicationActionController> controller)

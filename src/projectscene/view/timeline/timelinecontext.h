@@ -192,6 +192,7 @@ signals:
     void singleItemSelectedChanged();
 
     void viewContentYChangeRequested(double contentY);
+    void contextMenuRequested();
 
     void horizontalScrollChanged();
     void verticalScrollChanged();

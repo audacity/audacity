@@ -41,6 +41,7 @@ using namespace au::appshell;
 using namespace muse::actions;
 
 static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
+static const QString TIMELINE_SECTION_NAME("TimelineSection");
 
 void ApplicationActionController::preInit()
 {
@@ -97,6 +98,7 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "action://cancel", this, &ApplicationActionController::doGlobalCancel);
     dispatcher()->reg(this, "action://trigger", this, &ApplicationActionController::doGlobalTrigger);
     dispatcher()->reg(this, "action://enter", this, &ApplicationActionController::doGlobalEnter);
+    dispatcher()->reg(this, "item-context-menu", this, &ApplicationActionController::doGlobalContextMenu);
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -577,4 +579,18 @@ void ApplicationActionController::doGlobalEnter()
     }
 
     commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+}
+
+void ApplicationActionController::doGlobalContextMenu()
+{
+    const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
+    if (!activeSection) {
+        return;
+    }
+
+    if (activeSection->name() == TRACK_VIEW_SECTION_NAME) {
+        dispatcher()->dispatch("track-view-item-context-menu");
+    } else if (activeSection->name() == TIMELINE_SECTION_NAME) {
+        dispatcher()->dispatch("timeline-context-menu");
+    }
 }
