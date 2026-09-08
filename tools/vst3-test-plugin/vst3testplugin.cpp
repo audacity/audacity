@@ -18,10 +18,14 @@
  *    0                                 wait, polling the file, until it changes
  *   -1                                 crash (null dereference) while loading
  *    2                                 refuse to load (ModuleEntry returns false)
+ *    3                                 load, then abort the host process when it exits (see ExitRace)
  * e.g. `1 180` loads after 3 minutes, `-1 180` crashes after 3 minutes.
  * While waiting, a heartbeat line is written to stderr about once a second.
  * tools/vst3-test-plugin/controller is a small Qt app that writes this file for you.
  */
+
+#include <dlfcn.h>
+#include <pthread.h>
 
 #include <algorithm>
 #include <chrono>
@@ -32,6 +36,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <system_error>
 #include <thread>
 
 #include "public.sdk/source/main/pluginfactory.h"
@@ -48,6 +53,7 @@ constexpr int VALIDATION_GATE_LOAD = 1;
 constexpr int VALIDATION_GATE_WAIT = 0;
 constexpr int VALIDATION_GATE_CRASH = -1;
 constexpr int VALIDATION_GATE_REFUSE = 2;
+constexpr int VALIDATION_GATE_CRASH_AT_EXIT = 3;
 
 std::filesystem::path validationGateFilePath()
 {
@@ -84,6 +90,62 @@ void say(const char* message, const std::filesystem::path& path, const Validatio
     std::fprintf(stderr, "[AuVst3TestPlugin] %s (validation gate file %s = %d %d)\n",
                  message, path.string().c_str(), gate.code, gate.delaySeconds);
     std::fflush(stderr);
+}
+
+// Gate 3 models a plugin (seen in the wild, wrapped in a copy-protection SDK) that
+// starts a worker thread on load and only cleans up in static destructors: at exit()
+// one destructor destroys a mutex the worker still uses, then joins it; the worker's
+// next lock fails, the exception is uncaught, and std::terminate aborts the process -
+// after the validation result was written. A pthread mutex rather than std::mutex,
+// whose libstdc++ destructor is a no-op, so the lock fails on Linux too.
+struct ExitRace {
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    std::thread worker;
+
+    ~ExitRace()
+    {
+        if (!worker.joinable()) {
+            return;
+        }
+        std::fprintf(stderr, "[AuVst3TestPlugin] static destructor: destroying mutex, joining worker\n");
+        std::fflush(stderr);
+        pthread_mutex_destroy(&mutex);
+        worker.join();
+    }
+};
+ExitRace exitRace;
+
+void exitRaceWork()
+{
+    for (;;) {
+        if (const int err = pthread_mutex_lock(&exitRace.mutex)) {
+            std::fprintf(stderr, "[AuVst3TestPlugin] worker: mutex lock failed, throwing\n");
+            std::fflush(stderr);
+            throw std::system_error(err, std::generic_category(), "mutex lock failed");
+        }
+        pthread_mutex_unlock(&exitRace.mutex);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+}
+
+// The host dlcloses the module as soon as discovery is done, which would run the
+// static destructors (and the abort) before the result is written. Keep the module
+// resident so they run at exit() instead, as they do for a bundle on macOS.
+void pinModuleInMemory()
+{
+    Dl_info info {};
+    if (dladdr(reinterpret_cast<void*>(&pinModuleInMemory), &info) && info.dli_fname) {
+        dlopen(info.dli_fname, RTLD_NOLOAD | RTLD_NODELETE | RTLD_NOW);
+    }
+}
+
+void startExitRace()
+{
+    if (exitRace.worker.joinable()) {
+        return; // a pinned module gets InitModule again on its next load
+    }
+    pinModuleInMemory();
+    exitRace.worker = std::thread(exitRaceWork);
 }
 }
 
@@ -144,6 +206,10 @@ bool InitModule()
         case VALIDATION_GATE_REFUSE:
             say("validation gate says refuse to load", path, gate);
             return false;
+        case VALIDATION_GATE_CRASH_AT_EXIT:
+            say("validation gate open, loading; the process will abort at exit", path, gate);
+            startExitRace();
+            return true;
         case VALIDATION_GATE_LOAD:
             say("validation gate open, loading", path, gate);
             return true;
@@ -154,6 +220,7 @@ bool InitModule()
     }
 }
 
+// Gate 3 deliberately leaves its worker running: cleanup is left to the static destructors.
 bool DeinitModule()
 {
     return true;
