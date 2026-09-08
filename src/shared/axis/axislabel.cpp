@@ -3,6 +3,8 @@
  */
 #include "axislabel.h"
 
+#include <QLocale>
+
 #include "framework/global/translation.h"
 
 #include <QString>
@@ -13,15 +15,17 @@ namespace au {
 namespace {
 std::string valueToLabel(double value, int decimalDigits)
 {
+    const QLocale locale;
+    const QString decimalSep = locale.decimalPoint();
     if (value >= 1000 && decimalDigits < 3) {
-        auto label = QString::number(value / 1000, 'f', decimalDigits);
-        // Trim trailing zeros and a trailing dot, without using regex.
-        while (((label.contains('.') && (label.endsWith('0'))) || label.endsWith('.'))) {
+        auto label = locale.toString(value / 1000, 'f', decimalDigits);
+        // Trim trailing zeros and a trailing decimal separator, without regex.
+        while ((label.contains(decimalSep) && label.endsWith('0')) || label.endsWith(decimalSep)) {
             label.chop(1);
         }
         return label.toStdString() + muse::trc("axis", "k");
     } else {
-        return QString::number(value, 'f', decimalDigits).toStdString();
+        return locale.toString(value, 'f', decimalDigits).toStdString();
     }
 }
 

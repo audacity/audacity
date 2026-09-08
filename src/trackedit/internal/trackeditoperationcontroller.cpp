@@ -4,6 +4,8 @@
 
 #include "trackeditoperationcontroller.h"
 
+#include <QLocale>
+
 #include "trackediterrors.h"
 
 namespace au::trackedit {
@@ -654,7 +656,7 @@ std::pair<std::string, std::string> TrackeditOperationController::stretchHistory
         const double speed = globalContext()->currentTrackeditProject()->clip(clipKeyList[0]).speed;
         const int speedPct = static_cast<int>(100.0 / speed + 0.5);
         return { muse::trc("trackedit", "Changed Speed"),
-                 muse::qtrc("trackedit", "Changed speed to: %1%").arg(speedPct).toStdString() };
+                 muse::qtrc("trackedit", "Changed speed to: %1%").arg(QLocale().toString(speedPct)).toStdString() };
     }
     if (isLeft) {
         return { muse::trc("trackedit", "Stretch Left"),
