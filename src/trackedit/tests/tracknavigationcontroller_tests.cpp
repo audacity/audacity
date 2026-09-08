@@ -377,8 +377,8 @@ TEST_F(TrackNavigationControllerTests, UpFromClipFocusesClosestClipAbove)
 }
 
 /**
- * Shift+F10 (track-view-item-context-menu), while a track is focused, requests
- * the context menu for the focused track (no item).
+ * track-view-item-context-menu (routed from Shift+F10 while the track view is focused)
+ * requests the context menu for the focused track (no item).
  */
 TEST_F(TrackNavigationControllerTests, ContextMenuRequestedForFocusedTrack)
 {
@@ -406,7 +406,7 @@ TEST_F(TrackNavigationControllerTests, ContextMenuRequestedForFocusedTrack)
 }
 
 /**
- * Shift+F10 (track-view-item-context-menu) is a no-op when nothing is focused.
+ * track-view-item-context-menu is a no-op when nothing is focused.
  */
 TEST_F(TrackNavigationControllerTests, ContextMenuNotRequestedWithoutFocus)
 {
