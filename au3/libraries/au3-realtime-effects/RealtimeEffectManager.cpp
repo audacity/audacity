@@ -246,9 +246,8 @@ void RealtimeEffectManager::ReloadState(
     }
 
     // Unlike a state added in-flight, this one is already in the list and visited by
-    // the worker every block; the guard keeps the worker off it until AddGroup has
-    // finished populating mGroups.
-    RealtimeEffectState::ReintegrationGuard guard { *pState };
+    // the worker every block. That is safe: the worker skips it until AddGroup has
+    // published it as ready for audio.
     IntegrateStateInFlight(*pScope, pGroup, *pState);
 }
 

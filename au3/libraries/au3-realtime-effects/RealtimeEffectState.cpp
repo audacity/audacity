@@ -225,15 +225,9 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
     {
         if (auto pState = mwState.lock()) {
             if (auto pAccessState = pState->GetAccessState()) {
-                if (pAccessState->mState.mInitialized) {
-                    // try once
-                    assert(pAccessState->mState.mInitialized);
-                    auto& lastSettings = pAccessState->mLastSettings;
-                    // Assigns to mCounter
+                // Don't try to read worker updates until ready
+                if (pAccessState->mState.ReadyForWorker()) {
                     pAccessState->MainRead();
-                } else {
-                    // Not yet waiting on the other thread's progress
-                    // Not necessarily values yet in the state's Settings objects
                 }
                 return pAccessState->mLastSettings.settings;
             }
@@ -248,7 +242,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
     {
         if (auto pState = mwState.lock()) {
             if (auto pAccessState = pState->GetAccessState()) {
-                if (pMessage && !pAccessState->mState.mInitialized) {
+                if (pMessage && !pAccessState->mState.ReadyForWorker()) {
                     // Other thread isn't processing.
                     // Let the instance consume the message directly.
                     if (auto pInstance = pState->mwInstance.lock()) {
@@ -279,7 +273,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
     {
         if (auto pState = mwState.lock()) {
             if (auto pAccessState = pState->GetAccessState()) {
-                if (pMessage && !pAccessState->mState.mInitialized) {
+                if (pMessage && !pAccessState->mState.ReadyForWorker()) {
                     // Other thread isn't processing.
                     // Let the instance consume the message directly.
                     if (auto pInstance = pState->mwInstance.lock()) {
@@ -308,7 +302,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             if (auto pAccessState = pState->GetAccessState()) {
                 assert(pAccessState->mMainThreadId == std::this_thread::get_id());
 
-                if (pAccessState->mState.mInitialized) {
+                if (pAccessState->mState.ReadyForWorker()) {
                     std::unique_lock lk(pAccessState->mLockForCV);
                     pAccessState->mCV.wait(lk,
                                            [&] {
@@ -566,6 +560,9 @@ RealtimeEffectState::AddGroup(
         // Remember the sampleRate of the group, so latency can be computed
         // later
         mGroups[group] = { first, sampleRate };
+        // Publish the state to the worker: everything it reads (the instance,
+        // mWorkerSettings, mGroups) is written above.
+        mReadyForWorker.store(true, std::memory_order_release);
         return pInstance;
     }
     return {};
@@ -573,9 +570,7 @@ RealtimeEffectState::AddGroup(
 
 bool RealtimeEffectState::ProcessStart(bool running)
 {
-    // Not (yet) integrated into this scope - e.g. its plugin only became loadable after
-    // InitializationScope - or being reintegrated in place: nothing to sync or process.
-    if (!ReadyForAudio()) {
+    if (!ReadyForWorker()) {
         return false;
     }
 
@@ -630,9 +625,7 @@ size_t RealtimeEffectState::Process(
     const float* const* inbuf, float* const* outbuf, float* const dummybuf,
     size_t numSamples)
 {
-    // Not (yet) integrated, or being reintegrated in place: pass the audio through and
-    // stay away from mGroups, which the main thread may be populating right now.
-    if (!ReadyForAudio()) {
+    if (!ReadyForWorker()) {
         for (size_t ii = 0; ii < chans; ++ii) {
             memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
         }
@@ -751,7 +744,7 @@ size_t RealtimeEffectState::Process(
 
 bool RealtimeEffectState::ProcessEnd()
 {
-    if (!ReadyForAudio()) {
+    if (!ReadyForWorker()) {
         return false;
     }
 
@@ -799,6 +792,10 @@ void RealtimeEffectState::SetActive(bool active)
 
 bool RealtimeEffectState::Finalize() noexcept
 {
+    // Relaxed: this store publishes nothing. Keeping the worker off a state that is
+    // being finalized is the caller's job (end of the processing scope, or removal
+    // from the list), not this flag's.
+    mReadyForWorker.store(false, std::memory_order_relaxed);
     mGroups.clear();
     mCurrentProcessor = 0;
 
