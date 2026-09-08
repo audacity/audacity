@@ -109,8 +109,7 @@ FocusScope {
 
                 layer.enabled: true
                 layer.smooth: true
-                layer.textureSize: Qt.size(thumbnail.width * Screen.devicePixelRatio,
-                                           thumbnail.height * Screen.devicePixelRatio)
+                layer.textureSize: Qt.size(thumbnail.width * Screen.devicePixelRatio, thumbnail.height * Screen.devicePixelRatio)
                 layer.effect: RoundedCornersEffect {
                     radius: thumbnail.radius
                 }
