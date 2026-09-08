@@ -135,6 +135,7 @@ private:
     void doGlobalTrigger();
     void doGlobalEnter();
     void doGlobalShiftEnter();
+    void doGlobalContextMenu();
 
     bool m_quiting = false;
 
