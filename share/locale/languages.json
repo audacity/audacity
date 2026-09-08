@@ -44,7 +44,8 @@
         "fallbackLanguages": ["ca"]
     },
     "co": {
-        "name": "Corsu"
+        "name": "Corsu",
+        "fallbackLanguages": ["fr"]
     },
     "cs": {
         "name": "Čeština"
