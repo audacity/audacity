@@ -652,15 +652,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Multi track selection next"),
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Multi track selection next")
-             ),
-
-    UiAction("track-view-item-context-menu",
-             au::context::UiCtxProjectFocused,
-             au::context::CTX_PROJECT_FOCUSED,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Open item’s context menu"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Open item’s context menu")
              )
 };
 }

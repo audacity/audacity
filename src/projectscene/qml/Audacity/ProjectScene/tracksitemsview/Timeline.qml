@@ -86,6 +86,11 @@ Rectangle {
 
     TimelineContext {
         id: timelineContext
+
+        onContextMenuRequested: {
+            contextMenuModel.load()
+            contextMenuLoader.show(Qt.point(0, root.height), contextMenuModel.items)
+        }
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
