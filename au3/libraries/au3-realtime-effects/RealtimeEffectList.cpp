@@ -92,6 +92,11 @@ const RealtimeEffectList& RealtimeEffectList::Get(
     return Get(const_cast<ChannelGroup&>(group));
 }
 
+void RealtimeEffectList::ShareStates(ChannelGroup& group, const ChannelGroup& other)
+{
+    group.Attachments::Assign(channelGroupEffects, std::make_unique<RealtimeEffectList>(Get(other)));
+}
+
 bool
 RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
 {

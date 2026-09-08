@@ -8,6 +8,7 @@
 
 #include <QCoreApplication>
 
+#include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
@@ -1024,6 +1025,7 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
         const auto wasToggled = origWaveTrack->NChannels() != newWaveTrack->NChannels();
         const auto trackId = origWaveTrack->GetId();
         const auto clipsBefore = prj->clipList(trackId);
+        RealtimeEffectList::ShareStates(*newTrack, *origWaveTrack);
         // Careful, this decreases the `origWaveTrack` ref count.
         mutOrig.ReplaceOne(*origWaveTrack, std::move(*copy));
         if (wasToggled) {

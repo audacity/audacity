@@ -381,8 +381,13 @@ RealtimeEffectState::~RealtimeEffectState()
 
 std::shared_ptr<RealtimeEffectState> RealtimeEffectState::Clone() const
 {
-    auto pNewState{ RealtimeEffectState::make_shared(GetID()) };
+    auto pNewState{ RealtimeEffectState::make_shared(PluginID {}) };
+    pNewState->mID = mID;
     pNewState->mPlugin = mPlugin;
+    if (mPlugin) {
+        pNewState->mOutputs = mPlugin->MakeOutputs();
+        pNewState->mMovedOutputs = mPlugin->MakeOutputs();
+    }
     pNewState->mMainSettings.Set(mMainSettings);
     return pNewState;
 }
