@@ -60,7 +60,7 @@ public:
     ITrackDataPtr copyClip(const trackedit::ClipKey& clipKey) override;
     std::optional<TimeSpan> removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
-    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset, bool completed,
+    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset,
                                         bool& clipsMovedToOtherTracks) override;
     void cancelClipDragEdit() override;
 

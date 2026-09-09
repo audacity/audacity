@@ -45,7 +45,7 @@ public:
     virtual std::optional<TimeSpan> removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
     virtual muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset,
-                                                bool completed, bool& clipsMovedToOtherTracks) = 0;
+                                                bool& clipsMovedToOtherTracks) = 0;
     virtual void cancelClipDragEdit() = 0;
 
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
