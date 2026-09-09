@@ -407,7 +407,7 @@ bool Au3ClipsInteraction::removeClips(const ClipKeyList& clipKeyList, bool moveC
 }
 
 muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
-                                                         int trackPositionOffset, bool completed,
+                                                         int trackPositionOffset,
                                                          bool& clipsMovedToOtherTracks)
 {
     ClipKeyList newClipKeyList = clipKeyList;
@@ -440,10 +440,6 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
         // Update m_moveClipsNeedsDownmixing only when moving up/down
         m_moveClipsNeedsDownmixing = moveSelectedClipsUpOrDown(newClipKeyList, trackPositionOffset) == NeedsDownmixing::Yes;
         clipsMovedToOtherTracks = true;
-    }
-
-    if (!completed) {
-        return muse::RetVal<ClipKeyList>::make_ok(newClipKeyList);
     }
 
     m_tracksWhenDragStarted.reset();
@@ -484,8 +480,6 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
     }
 
     muse::RetVal<ClipKeyList> result;
-    //! TODO AU4: later when having keyboard arrow shortcut for moving clips
-    //! make use of UndoPush::CONSOLIDATE arg in UndoManager
     result.ret = utils::withProgress(*interactive(), mixingDownToMonoLabel, [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
     {
         std::vector<std::pair<WaveTrack*, std::shared_ptr<WaveTrack> > > toReplace;
