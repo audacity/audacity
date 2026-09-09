@@ -403,11 +403,6 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
                 if (source != selected.end() && sourceIndex < static_cast<int>(result.val.size())) {
                     movedKey = TrackItemKey(result.val[sourceIndex]);
                 }
-                if (m_sourceIsLabel) {
-                    selectionController()->setSelectedLabels(result.val, true);
-                } else {
-                    selectionController()->setSelectedClips(result.val, true);
-                }
             }
         }
     }
