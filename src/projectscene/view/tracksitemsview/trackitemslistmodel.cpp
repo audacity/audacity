@@ -5,7 +5,6 @@
 
 #include <algorithm>
 
-#include "framework/global/async/async.h"
 #include "global/realfn.h"
 
 using namespace au::projectscene;
@@ -563,9 +562,9 @@ void TrackItemsListModel::onItemsMoveChanged()
             beginRemoveRows(QModelIndex(), firstGhostRow, firstGhostRow + oldItems.size() - 1);
             m_dragGhostItems.clear();
             endRemoveRows();
-            muse::async::Async::call(this, [oldItems]() {
-                qDeleteAll(oldItems);
-            });
+            for (ViewTrackItem* item : oldItems) {
+                item->deleteLater();
+            }
         }
         if (!ghosts.empty()) {
             beginInsertRows(QModelIndex(), firstGhostRow, firstGhostRow + ghosts.size() - 1);
