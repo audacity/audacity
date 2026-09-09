@@ -4258,17 +4258,17 @@ Táto akcia neodstráni žiadne vaše projekty.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="329"/>
         <source>Audacity Team Members</source>
-        <translation type="unfinished"/>
+        <translation>Členovia tímu Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
         <source>Emeritus</source>
-        <translation type="unfinished"/>
+        <translation>Bývalí</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
         <source>Distinguished Audacity Team members, not currently active</source>
-        <translation type="unfinished"/>
+        <translation>Významní členovia tímu, momentálne neaktívni</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
@@ -4298,12 +4298,12 @@ Táto akcia neodstráni žiadne vaše projekty.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="347"/>
         <source>Audacity includes code from the following projects:</source>
-        <translation type="unfinished"/>
+        <translation>Audacity obsahuje kód nasledujúcich projektov:</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
         <source>Special Thanks</source>
-        <translation type="unfinished"/>
+        <translation>Špeciálne poďakovanie</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
@@ -4407,7 +4407,7 @@ Táto akcia neodstráni žiadne vaše projekty.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
         <source>Preferences → General</source>
-        <translation type="unfinished"/>
+        <translation>Nastavenia → Všeobecné</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
@@ -4417,12 +4417,12 @@ Táto akcia neodstráni žiadne vaše projekty.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="41"/>
         <source>Crash reports</source>
-        <translation type="unfinished"/>
+        <translation>Chybové hlásenia</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
         <source>Audacity automatically sends crash reports to help us improve product quality.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity automaticky odosiela hlásenia o zlyhaní, aby nám pomohol zlepšiť kvalitu produktu.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="44"/>
@@ -5337,21 +5337,21 @@ Táto akcia neodstráni žiadne vaše projekty.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="14"/>
         <source>Automatic crash reports</source>
-        <translation type="unfinished"/>
+        <translation>Automatické hlásenia o pádoch</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="25"/>
         <source>Send crash reports</source>
-        <translation type="unfinished"/>
+        <translation>Poslať hlásenia o pádoch</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="39"/>
         <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="unfinished"/>
+        <translation>Hlásenia o pádoch vyžadujú prístup k sieti. Keď Audacity spadne, odošle hlásenie, ktoré nám pomáha nájsť a opraviť príčinu. Tieto hlásenia neobsahujú váš zvuk ani osobné údaje. Viac informácií nájdete v našich &lt;a href=&quot;%1&quot;&gt;zásadách ochrany osobných údajov&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don&apos;t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Hlásenia o pádoch vyžadujú prístup k sieti. Keď Audacity spadne, odošle hlásenie, ktoré nám pomáha nájsť a opraviť príčinu. Tieto hlásenia neobsahujú váš zvuk ani osobné údaje. Viac informácií nájdete v našich &lt;a href=&quot;%1&quot;&gt;zásadách ochrany osobných údajov&lt;/a&gt;.</translation>
     </message>
 </context>
 <context>
@@ -5465,7 +5465,7 @@ Táto akcia neodstráni žiadne vaše projekty.</translation>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>Časové predznamenanie: %1/%2</translation>
     </message>
 </context>
 <context>

@@ -8113,7 +8113,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="222"/>
         <source>The selected audio is silent, so there is nothing to amplify.</source>
-        <translation type="unfinished"/>
+        <translation>Audioul selectat este plat, deci nu este nimic de amplificat.</translation>
     </message>
 </context>
 <context>
@@ -8591,7 +8591,12 @@ For SAL, use a return statement such as:
 or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation type="unfinished"/>
+        <translation>Codul tău pare că folosește sintaxa SAL, dar nu există o instrucțiune „return”.
+Pentru SAL, folosește o instrucțiune „return” astfel:
+	return *track* * 0.1
+sau pentru LISP, începe cu o paranteză deschisă cum ar fi:
+	(mult *track* 0.1)
+ .</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
@@ -9636,22 +9641,22 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="206"/>
         <source>Error~%</source>
-        <translation type="unfinished"/>
+        <translation>Eroare~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="207"/>
         <source>Success~%Files written to:~%~s~%</source>
-        <translation type="unfinished"/>
+        <translation>Succes~%Fișierele au fost scrise în:~%~s~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="208"/>
         <source>Warning~%Failed to copy some files:~%</source>
-        <translation type="unfinished"/>
+        <translation>Avertizare~%A eșuat copierea unor fișiere:~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
         <source>Error~%No file selected.</source>
-        <translation type="unfinished"/>
+        <translation>Eroare~%Niciun fișier selectat.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
@@ -9903,7 +9908,7 @@ Canalul drept</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
         <source>Measure RMS</source>
-        <translation type="unfinished"/>
+        <translation>Măsoară RMS</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
@@ -10756,7 +10761,7 @@ Selectează o arie de reparat cu audio pe cel puțin o parte (cu cât mai mult, 
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="60"/>
         <source>Auto-adjust volume to preserve loudness</source>
-        <translation type="unfinished"/>
+        <translation>Ajustează volumul automat pentru a păstra tăria</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="37"/>
@@ -10771,7 +10776,7 @@ Selectează o arie de reparat cu audio pe cel puțin o parte (cu cât mai mult, 
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="55"/>
         <source>Output volume</source>
-        <translation type="unfinished"/>
+        <translation>Volum ieșire</translation>
     </message>
 </context>
 <context>
@@ -11097,27 +11102,28 @@ Selectează o arie de reparat cu audio pe cel puțin o parte (cu cât mai mult, 
         <location filename="../../src/effects/lv2/qml/Audacity/Lv2/Lv2Viewer.qml" line="97"/>
         <source>No available UI:
 %1</source>
-        <translation type="unfinished"/>
+        <translation>Niciun UI disponibil:
+%1</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
         <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
-        <translation type="unfinished"/>
+        <translation>Niciun UI nu este furnizat de plugin (Raportează dacă AU3 furnizează un UI pentru acest plugin)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
         <source>X11 UI refusing to be externalized</source>
-        <translation type="unfinished"/>
+        <translation>UI-ul X11 refuză să fie externalizat</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
         <source>Unknown reason (please report)</source>
-        <translation type="unfinished"/>
+        <translation>Motiv necunoscut (raportează)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="256"/>
         <source>Idle UI creation failed</source>
-        <translation type="unfinished"/>
+        <translation>A eșuat crearea UI-ului Idle</translation>
     </message>
 </context>
 <context>
@@ -11643,7 +11649,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="65"/>
         <source>Channel count %1</source>
-        <translation type="unfinished"/>
+        <translation>Număr canale %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
@@ -11760,7 +11766,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="73"/>
         <source>Compression %1</source>
-        <translation type="unfinished"/>
+        <translation>Compresie %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="86"/>
@@ -11770,7 +11776,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="105"/>
         <source>LPC %1</source>
-        <translation type="unfinished"/>
+        <translation>LPC %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="118"/>
@@ -11780,7 +11786,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="137"/>
         <source>Min. PdO %1</source>
-        <translation type="unfinished"/>
+        <translation>PdO min. %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="150"/>
@@ -11790,7 +11796,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="169"/>
         <source>Min. PtO %1</source>
-        <translation type="unfinished"/>
+        <translation>PtO min. %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="193"/>
@@ -11800,7 +11806,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="212"/>
         <source>Frame %1</source>
-        <translation type="unfinished"/>
+        <translation>Cadru %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="222"/>
@@ -11810,7 +11816,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="238"/>
         <source>PdO method %1</source>
-        <translation type="unfinished"/>
+        <translation>Metodă PdO %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="248"/>
@@ -11820,7 +11826,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="267"/>
         <source>Max. PdO %1</source>
-        <translation type="unfinished"/>
+        <translation>PdO max. %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="277"/>
@@ -11830,7 +11836,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="296"/>
         <source>Max. PtO %1</source>
-        <translation type="unfinished"/>
+        <translation>PtO max. %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="62"/>
@@ -11873,7 +11879,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="128"/>
         <source>Quality %1</source>
-        <translation type="unfinished"/>
+        <translation>Calitate %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="141"/>
@@ -11883,7 +11889,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="160"/>
         <source>Cutoff %1</source>
-        <translation type="unfinished"/>
+        <translation>Tăiere %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="184"/>
@@ -11893,7 +11899,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="203"/>
         <source>Bit rate %1</source>
-        <translation type="unfinished"/>
+        <translation>Rată de biți %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="213"/>
@@ -11909,7 +11915,7 @@ Recomandat - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="239"/>
         <source>Sample rate %1</source>
-        <translation type="unfinished"/>
+        <translation>Rată de eșantionare %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="249"/>
@@ -11919,7 +11925,7 @@ Recomandat - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="265"/>
         <source>Profile %1</source>
-        <translation type="unfinished"/>
+        <translation>Profil %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
@@ -11966,7 +11972,7 @@ Recomandat - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="72"/>
         <source>Mux rate %1</source>
-        <translation type="unfinished"/>
+        <translation>Rată mux %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="95"/>
@@ -11976,7 +11982,7 @@ Recomandat - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="114"/>
         <source>Packet size %1</source>
-        <translation type="unfinished"/>
+        <translation>Mărime pachet %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
@@ -12021,7 +12027,7 @@ Recomandat - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
         <source>%1 Hz (custom)</source>
-        <translation type="unfinished"/>
+        <translation>%1 Hz (personalizat)</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
@@ -12061,12 +12067,12 @@ Recomandat - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
         <source>Set sample rate</source>
-        <translation type="unfinished"/>
+        <translation>Setează rata de eșantionare</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
-        <translation type="unfinished"/>
+        <translation>Nu s-a putut exporta în „%1”: dosarul destinație nu a putut fi creat. Verifică dacă calea este validă și dacă ai permisiune să scrii în aceasta.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
@@ -16471,12 +16477,12 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation type="unfinished"/>
+        <translation>Instanțe multiple</translation>
     </message>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation type="unfinished"/>
+        <translation>Arată informații multi-ferestre</translation>
     </message>
 </context>
 <context>
@@ -16484,32 +16490,32 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="33"/>
         <source>Escape</source>
-        <translation type="unfinished"/>
+        <translation>Escape</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="34"/>
         <source>Navigate escape</source>
-        <translation type="unfinished"/>
+        <translation>Escape navigație</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
         <source>Next section</source>
-        <translation type="unfinished"/>
+        <translation>Secțiunea următoare</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
         <source>Navigate next section</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la secțiunea următoare</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
         <source>Previous section</source>
-        <translation type="unfinished"/>
+        <translation>Secțiunea anterioară</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
         <source>Navigate previous section</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la secțiunea anterioară</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
@@ -16519,7 +16525,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
         <source>Navigate next panel</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la panoul următor</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
@@ -16529,27 +16535,27 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
         <source>Navigate previous panel</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la panoul anterior</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
         <source>Next tab</source>
-        <translation type="unfinished"/>
+        <translation>Fila următoare</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
         <source>Navigate next tab</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la fila următoare</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
         <source>Previous tab</source>
-        <translation type="unfinished"/>
+        <translation>Fila anterioară</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
         <source>Navigate previous tab</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la fila anterioară</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
@@ -16559,7 +16565,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
         <source>Navigate right</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la dreapta</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
@@ -16569,7 +16575,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
         <source>Navigate left</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la stânga</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
@@ -16579,7 +16585,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
         <source>Navigate up</source>
-        <translation type="unfinished"/>
+        <translation>Navighează în sus</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
@@ -16589,47 +16595,47 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
         <source>Navigate down</source>
-        <translation type="unfinished"/>
+        <translation>Navighează în jos</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
         <source>First control</source>
-        <translation type="unfinished"/>
+        <translation>Primul control</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
         <source>Navigate first control</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la primul control</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
         <source>Last control</source>
-        <translation type="unfinished"/>
+        <translation>Ultimul control</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
         <source>Navigate last control</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la ultimul control</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
         <source>Next row control</source>
-        <translation type="unfinished"/>
+        <translation>Controlul de pe rândul următor</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
         <source>Navigate next row control</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la controlul de pe rândul următor</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
         <source>Previous row control</source>
-        <translation type="unfinished"/>
+        <translation>Controlul de pe rândul anteior</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
         <source>Navigate previous row control</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la controlul de pe rândul anterior</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
@@ -17180,98 +17186,98 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="43"/>
         <source>Audio settings are already being changed.</source>
-        <translation type="unfinished"/>
+        <translation>Setările audio sunt deja în curs de schimbare.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="45"/>
         <source>The selected audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>Setările audio selectate sunt invalide.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="47"/>
         <source>The selected audio routing is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>Rutarea audio selectată este invalidă.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="49"/>
         <source>No usable audio API is available.</source>
-        <translation type="unfinished"/>
+        <translation>Niciun API audio utilizabil disponibil.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="51"/>
         <source>No ASIO device is available.</source>
-        <translation type="unfinished"/>
+        <translation>Niciun dispozitiv ASIO nu este disponibil.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="53"/>
         <source>The active audio stream could not be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>Fluxul audio activ nu poate fi oprit.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="55"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>A apărut o eroare internă la schimbarea setărilor audio.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
         <source>No playback device is available.</source>
-        <translation type="unfinished"/>
+        <translation>Niciun dispozitiv de redare nu este disponibil.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
         <source>“%1” is now used for playback.</source>
-        <translation type="unfinished"/>
+        <translation>„%1” este acum folosit pentru redare.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
         <source>Playback device changed</source>
-        <translation type="unfinished"/>
+        <translation>Dispozitivul de redare a fost schimbat</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
         <source>No recording device is available.</source>
-        <translation type="unfinished"/>
+        <translation>Niciun dispozitiv de înregistrare nu este disponibil.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
         <source>“%1” is now used for recording.</source>
-        <translation type="unfinished"/>
+        <translation>„%1” este acum folosit pentru înregistrare.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="151"/>
         <source>Recording device changed</source>
-        <translation type="unfinished"/>
+        <translation>Dispozitivul de înregistrare a fost schimbat</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
         <source>The previous audio state could not be restored.</source>
-        <translation type="unfinished"/>
+        <translation>Starea audio anterioară nu a putut fi restaurată.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
         <source>Unable to rescan audio devices</source>
-        <translation type="unfinished"/>
+        <translation>Nu s-au putut rescana dispozitivele audio</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
-        <translation type="unfinished"/>
+        <translation>Fluxul audio nu a putut fi restaurat după rescanarea dispozitivelor audio.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
         <source>Audio devices</source>
-        <translation type="unfinished"/>
+        <translation>Dispozitive audio</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
         <source>Unable to change audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Nu s-au putut schimba setările audio</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Fluxul audio nu a putut fi restaurat după schimbarea setărilor audio.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
@@ -17457,7 +17463,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="44"/>
         <source>FFmpeg library path</source>
-        <translation type="unfinished"/>
+        <translation>Cale bibliotecă FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
@@ -17472,7 +17478,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="67"/>
         <source>Language %1</source>
-        <translation type="unfinished"/>
+        <translation>Limba %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="80"/>
@@ -17507,7 +17513,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="58"/>
         <source>Number format %1</source>
-        <translation type="unfinished"/>
+        <translation>Format numeric %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="70"/>
@@ -17697,7 +17703,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="154"/>
         <source>Installation found</source>
-        <translation type="unfinished"/>
+        <translation>Instalare găsită</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="155"/>
@@ -17717,7 +17723,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="166"/>
         <source>FFmpeg has already been found</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg a fost deja găsit</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
@@ -17740,38 +17746,38 @@ Acesta nu va fi încărcat.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="38"/>
         <source>Audio settings are already being changed.</source>
-        <translation type="unfinished"/>
+        <translation>Setările audio sunt deja în curs de schimbare.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="57"/>
         <source>The selected audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>Setările audio selectate sunt invalide.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="59"/>
         <source>The selected audio routing is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>Rutarea audio selectată este invalidă.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="61"/>
         <source>No usable audio API is available.</source>
-        <translation type="unfinished"/>
+        <translation>Niciun API audio utilizabil disponibil.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="63"/>
         <source>No ASIO device is available.</source>
-        <translation type="unfinished"/>
+        <translation>Niciun dispozitiv ASIO nu este disponibil.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="42"/>
         <source>The active audio stream could not be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>Fluxul audio activ nu poate fi oprit.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="67"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>A apărut o eroare internă la schimbarea setărilor audio.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="93"/>
@@ -17781,29 +17787,29 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="161"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Fluxul audio nu a putut fi restaurat după schimbarea setărilor audio.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="252"/>
         <source>The previous audio state could not be restored.</source>
-        <translation type="unfinished"/>
+        <translation>Starea audio anterioară nu a putut fi restaurată.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="174"/>
         <source>Unable to apply audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Nu s-au putut aplica setările audio</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="265"/>
         <source>The audio stream could not be restored after closing the ASIO settings.</source>
-        <translation type="unfinished"/>
+        <translation>Fluxul audio nu a putut fi restaurat după închiderea setărilor ASIO.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="275"/>
         <source>Unable to open ASIO settings</source>
-        <translation type="unfinished"/>
+        <translation>Nu se pot deschide setările ASIO</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
@@ -17855,12 +17861,12 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
         <source>The default audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>Setările audio implicite sunt invalide.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="47"/>
         <source>An internal error occurred while resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>A apărut o eroare internă la resetarea setărilor audio.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="204"/>
@@ -17908,12 +17914,12 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
         <source>Unable to reset audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Nu se pot reseta setările audio</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Fluxul audio nu a putut fi restaurat după resetarea setărilor audio.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
@@ -17998,12 +18004,12 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
         <source>Use device sample rate</source>
-        <translation type="unfinished"/>
+        <translation>Folosește rata de eșantionare a dispozitivului</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
         <source>Driver settings</source>
-        <translation type="unfinished"/>
+        <translation>Setări driver</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
@@ -18013,7 +18019,7 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>Afișează dialogul „Cum dorești să exporți?”</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -18028,12 +18034,12 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Salvează mereu în Cloud</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>Salvează mereu pe PC</translation>
     </message>
 </context>
 <context>
@@ -18428,25 +18434,25 @@ Acesta nu va fi încărcat.</translation>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
         <source>Cloud sync failed</source>
-        <translation type="unfinished"/>
+        <translation>Sincronizarea în Cloud a eșuat</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
         <source>Project unavailable</source>
-        <translation type="unfinished"/>
+        <translation>Proiect indisponibil</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
         <source>Access denied</source>
-        <translation type="unfinished"/>
+        <translation>Acces refuzat</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
         <source>Version conflict</source>
-        <translation type="unfinished"/>
+        <translation>Conflict de versiune</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
@@ -18463,12 +18469,12 @@ Acesta nu va fi încărcat.</translation>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
         <source>Project incomplete</source>
-        <translation type="unfinished"/>
+        <translation>Proiect incomplet</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
         <source>Network error</source>
-        <translation type="unfinished"/>
+        <translation>Eroare rețea</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
@@ -18822,7 +18828,9 @@ Va trebuie să actualizezi această versiune pentru a-l putea deschide.</transla
         <source>Failed to upgrade the project schema.
 
 File might be corrupted or read only.</source>
-        <translation type="unfinished"/>
+        <translation>A eșuat actualizarea schemei proiectului.
+
+Fișierul poate fi corupt sau disponibil doar în citire.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="845"/>
@@ -18950,7 +18958,7 @@ Următoarea comandă a eșuat:
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1185"/>
         <source>Failed to copy the project history.</source>
-        <translation type="unfinished"/>
+        <translation>A eșuat copierea istoricului proiectului.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
@@ -19028,7 +19036,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2155"/>
         <source>The project file is read-only</source>
-        <translation type="unfinished"/>
+        <translation>Fișierul de proiect este disponibil doar în citire.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
@@ -19190,7 +19198,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>Exportă pe PC</translation>
     </message>
 </context>
 <context>
@@ -19607,7 +19615,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="21"/>
         <source>Workspace selection</source>
-        <translation type="unfinished"/>
+        <translation>Selecție spațiu de lucru</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="60"/>
@@ -19733,13 +19741,13 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
         <source>Toggle all master effects</source>
-        <translation type="unfinished"/>
+        <translation>Comută toate efectele principale</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
         <source>Toggle all effects</source>
-        <translation type="unfinished"/>
+        <translation>Comută toate efectele</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
@@ -19750,7 +19758,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
         <source>Add master effect</source>
-        <translation type="unfinished"/>
+        <translation>Adaugă un efect principal</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="158"/>
@@ -19765,7 +19773,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
         <source>Real-time effects panel</source>
-        <translation type="unfinished"/>
+        <translation>Panou efecte în timp real</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
@@ -19776,7 +19784,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
         <source>Close real-time effects panel</source>
         <extracomment>Tooltip of the button that closes the panel</extracomment>
-        <translation type="unfinished"/>
+        <translation>Închide panoul de efecte în timp real</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
@@ -19798,7 +19806,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="80"/>
         <source>Track volume</source>
-        <translation type="unfinished"/>
+        <translation>Volum pistă</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="17"/>
@@ -19809,7 +19817,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="105"/>
         <source>Opens effects panel</source>
-        <translation type="unfinished"/>
+        <translation>Deschide panoul de efecte</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="251"/>
@@ -19976,12 +19984,12 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
         <source>Audio setup and sharing</source>
-        <translation type="unfinished"/>
+        <translation>Setări audio și partajare</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
         <source>Undo and redo</source>
-        <translation type="unfinished"/>
+        <translation>Anulare și revenire</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="159"/>
@@ -20051,7 +20059,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
         <source>Press Enter to select or deselect</source>
-        <translation type="unfinished"/>
+        <translation>Apasă Enter pentru selectare sau deselectare</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
@@ -21427,17 +21435,17 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
         <source>Changed Track Title</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat titlu pistă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
         <source>Clip Title</source>
-        <translation type="unfinished"/>
+        <translation>Titlu clip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
         <source>Changed clip title</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat titlu clip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
@@ -21468,13 +21476,13 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
         <source>Changed track color</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat culoare pistă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="160"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="161"/>
         <source>Reset Clip Pitch and Speed</source>
-        <translation type="unfinished"/>
+        <translation>Resetează înălțime și viteză clip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
@@ -22881,7 +22889,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
         <source>New workspace</source>
-        <translation type="unfinished"/>
+        <translation>Spațiu de lucru nou</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
@@ -22966,7 +22974,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation type="unfinished"/>
+        <translation>Editează spațiile de lucru...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
