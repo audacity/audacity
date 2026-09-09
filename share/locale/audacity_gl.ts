@@ -5468,7 +5468,7 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>Sinatura de tempo: %1/%2</translation>
     </message>
 </context>
 <context>
@@ -6900,12 +6900,12 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
-        <translation type="unfinished"/>
+        <translation>Vista previa de son na nube actualizada</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Subiuse a vista previa do son a audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
@@ -6920,12 +6920,12 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
         <source>Updating cloud audio preview…</source>
-        <translation type="unfinished"/>
+        <translation>Actualizando a vista previa de son na nube…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
         <source>Could not determine the local path of the downloaded project</source>
-        <translation type="unfinished"/>
+        <translation>Non se puido determinar a ruta local do proxecto descargado</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
@@ -7146,7 +7146,7 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
     </message>
     <message>
         <source>Test query action</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Acción de consulta de proba</translation>
     </message>
     <message>
         <source>Test query action with params 1</source>
@@ -17268,12 +17268,12 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
         <source>Audio devices</source>
-        <translation type="unfinished"/>
+        <translation>Dispositivos de son</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
         <source>Unable to change audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Non foi posíbel cambiar a configuración de son</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
