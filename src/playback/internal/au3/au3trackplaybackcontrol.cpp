@@ -70,11 +70,11 @@ void Au3TrackPlaybackControl::setPan(long trackId, au::audio::pan_t pan, bool co
     }
 }
 
-void Au3TrackPlaybackControl::setMuteOrSolo(long trackId, bool value, MuteOrSolo which)
+bool Au3TrackPlaybackControl::setMuteOrSolo(long trackId, bool value, MuteOrSolo which, bool exclusive)
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
-        return;
+    if (!track) {
+        return false;
     }
 
     auto& tracks = TrackList::Get(projectRef());
@@ -86,10 +86,8 @@ void Au3TrackPlaybackControl::setMuteOrSolo(long trackId, bool value, MuteOrSolo
         which == MuteOrSolo::Solo ? t->SetSolo(v) : t->SetMute(v);
     };
 
-    const bool exclusiveSet = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
-
     bool changed = false;
-    if (exclusiveSet) {
+    if (exclusive) {
         value = true;
 
         for (auto playable : tracks.Any<PlayableTrack>().Excluding(track)) {
@@ -105,21 +103,14 @@ void Au3TrackPlaybackControl::setMuteOrSolo(long trackId, bool value, MuteOrSolo
         changed = true;
     }
 
-    if (!changed) {
-        return;
-    }
-
-    for (auto playable : tracks.Any<PlayableTrack>()) {
-        m_muteOrSoloChanged.send(playable->GetId());
-    }
-
-    projectHistory()->modifyState();
-    projectHistory()->markUnsaved();
+    return changed;
 }
 
-void Au3TrackPlaybackControl::setSolo(long trackId, bool solo)
+void Au3TrackPlaybackControl::setSolo(long trackId, bool solo, bool exclusive)
 {
-    setMuteOrSolo(trackId, solo, MuteOrSolo::Solo);
+    if (setMuteOrSolo(trackId, solo, MuteOrSolo::Solo, exclusive)) {
+        onMuteOrSoloChanged();
+    }
 }
 
 bool Au3TrackPlaybackControl::solo(long trackId) const
@@ -132,9 +123,26 @@ bool Au3TrackPlaybackControl::solo(long trackId) const
     return track->GetSolo();
 }
 
-void Au3TrackPlaybackControl::setMuted(long trackId, bool mute)
+void Au3TrackPlaybackControl::setMuted(long trackId, bool mute, bool exclusive)
 {
-    setMuteOrSolo(trackId, mute, MuteOrSolo::Mute);
+    if (setMuteOrSolo(trackId, mute, MuteOrSolo::Mute, exclusive)) {
+        onMuteOrSoloChanged();
+    }
+}
+
+void Au3TrackPlaybackControl::setMuted(const trackedit::TrackIdList& trackIds, bool mute)
+{
+    // Apply to every track first (no short-circuiting), then notify and modify the history once.
+    bool changed = false;
+    for (const trackedit::TrackId trackId : trackIds) {
+        if (setMuteOrSolo(trackId, mute, MuteOrSolo::Mute, false)) {
+            changed = true;
+        }
+    }
+
+    if (changed) {
+        onMuteOrSoloChanged();
+    }
 }
 
 bool Au3TrackPlaybackControl::muted(long trackId) const
@@ -145,6 +153,16 @@ bool Au3TrackPlaybackControl::muted(long trackId) const
     }
 
     return track->GetMute();
+}
+
+void Au3TrackPlaybackControl::onMuteOrSoloChanged()
+{
+    for (const auto& playable : TrackList::Get(projectRef()).Any<PlayableTrack>()) {
+        m_muteOrSoloChanged.send(playable->GetId());
+    }
+
+    projectHistory()->modifyState();
+    projectHistory()->markUnsaved();
 }
 
 muse::async::Channel<long> Au3TrackPlaybackControl::muteOrSoloChanged() const
