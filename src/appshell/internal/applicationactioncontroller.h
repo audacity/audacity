@@ -36,6 +36,7 @@
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/ui/imainwindow.h"
 #include "framework/ui/inavigationcontroller.h"
+#include "framework/update/iappupdateservice.h"
 
 #include "iappshellconfiguration.h"
 #include "iapplication.h"
@@ -69,6 +70,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::update::IAppUpdateService> appUpdateService { this };
     muse::ContextInject<appshell::IStartupScenario> startupScenario { this };
     muse::ContextInject<project::IProjectFilesController> projectFilesController { this };
     muse::ContextInject<record::IRecordController> recordController { this };
