@@ -23,6 +23,7 @@
 #define AU_APPSHELL_FIRSTLAUNCHSETUPMODEL_H
 
 #include <QObject>
+#include <QVariant>
 #include <QtQml/qqmlregistration.h>
 
 #include "framework/global/async/asyncable.h"
@@ -85,6 +86,7 @@ private:
     struct Page {
         QString m_url;
         std::string m_backgroundUri;
+        QVariantMap m_properties;
 
         [[nodiscard]] QVariantMap toMap() const;
     };

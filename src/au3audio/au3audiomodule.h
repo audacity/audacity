@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "modularity/imodulesetup.h"
+#include "framework/global/modularity/imodulesetup.h"
 
 namespace au::au3audio {
 class Au3AudioEngine;

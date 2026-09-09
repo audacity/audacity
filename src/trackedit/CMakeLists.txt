@@ -16,6 +16,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iselectioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/itracksviewrequestsservice.h
     ${CMAKE_CURRENT_LIST_DIR}/itracksinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/iclipsinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/ilabelsinteraction.h
@@ -53,6 +54,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/itracknavigationcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h
@@ -104,17 +107,27 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.h
     )
 
-# AU3
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap extension_native)
-
 set(MODULE_LINK
-    ${MODULE_LINK}
-    muse::draw
+        au3wrap
+        au3-audio-graph
+        au3-effects
+        au3-exceptions
+        au3-label-track
+        au3-math
+        au3-mixer
+        au3-numeric-formats
+        au3-project
+        au3-project-history
+        au3-project-rate
+        au3-realtime-effects
+        au3-stretching-sequence
+        au3-time-frequency-selection
+        au3-time-track
+        au3-track
+        au3-transactions
+        au3-wave-track
+        extension_native
+        muse::draw
 )
 
 set(MODULE_USE_UNITY OFF)

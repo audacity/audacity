@@ -21,11 +21,14 @@ set( SOURCES
    audacityproject.dtd
 )
 set( LIBRARIES
-   au3-files-interface
-   au3-string-utils-interface
-   PRIVATE
+PUBLIC
+   au3-files
+   au3-strings
+   au3-utility
+PRIVATE
+   au3-exceptions
+   au3-string-utils
    expat::expat
-   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -27,6 +27,11 @@ void UsageInfoService::init()
     }
 }
 
+bool UsageInfoService::isUsageInfoAvailable() const
+{
+    return true;
+}
+
 void UsageInfoService::setSendAnonymousUsageInfo(bool allow)
 {
     if (allow == getSendAnonymousUsageInfo()) {

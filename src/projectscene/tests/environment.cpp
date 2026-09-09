@@ -17,8 +17,8 @@ static muse::testing::SuiteEnvironment projectscene_se = muse::testing::SuiteEnv
     std::shared_ptr<NiceMock<ProjectSceneConfigurationMock> > projectSceneConfigurator(new NiceMock<ProjectSceneConfigurationMock>(),
                                                                                        [](ProjectSceneConfigurationMock*) {}); // no delete
     static std::vector<ClipColorInfo> colorInfos = {
-        { "blue", 1 },
-        { "red", 2 },
+        { muse::TranslatableString::untranslatable("blue"), 1 },
+        { muse::TranslatableString::untranslatable("red"), 2 },
     };
 
     ON_CALL(*projectSceneConfigurator, clipColorInfos())

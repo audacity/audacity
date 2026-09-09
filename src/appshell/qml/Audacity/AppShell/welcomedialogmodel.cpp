@@ -30,7 +30,7 @@ using namespace au::appshell;
 
 namespace {
 const char* AU4_VIDEO_URL {
-    "https://youtu.be/QYM3TWf_G38?utm_source=au-app-au4-video&utm_medium=au-app-au4-video&utm_campaign=au-app-au4-video" };
+    "https://youtu.be/BTQymidLYIM" };
 const char* FEATURE_SURVEY_URL { "https://audacityteam.org/survey" };
 const char* SOAP_VOICE_CLEANER_URL {
     "https://www.musehub.com/plugin/soap-voice-cleaner?utm_source=au-app&utm_medium=au-app-welcome-soap&utm_campaign=au-app-welcome-soap-mh" };
@@ -45,7 +45,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
     return {
         {
             muse::qtrc("appshell/welcome", "Video: find out what’s new in Audacity 4"),
-            "qrc:/resources/welcomedialog/Audacity40Video.png",
+            "qrc:/resources/welcomedialog/YT_Release_Video_Thumb_v1.png",
             {},
             muse::qtrc("appshell/welcome", "Watch video"),
             [this]() {
@@ -62,6 +62,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                 dispatcher()->dispatch(query);
             }
         },
+#ifndef Q_OS_LINUX
         {
             muse::qtrc("appshell/welcome", "Explore free plugins for sculpting your audio"),
             "qrc:/resources/welcomedialog/MuseHubPromo.jpg",
@@ -71,6 +72,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                 dispatcher()->dispatch("get-effects");
             }
         },
+#endif
         {
             muse::qtrc("appshell/welcome", "Help us decide the future of Audacity"),
             "qrc:/resources/welcomedialog/Audacity_Feature_Survey.png",
@@ -144,6 +146,23 @@ void WelcomeDialogModel::activateCurrentItem()
     if (action) {
         action();
     }
+}
+
+void WelcomeDialogModel::setCurrentIndex(int index)
+{
+    if (index < 0 || index >= count()) {
+        return;
+    }
+
+    const size_t newIndex = static_cast<size_t>(index);
+    if (newIndex == m_currentIndex) {
+        return;
+    }
+
+    m_currentIndex = newIndex;
+    configuration()->setWelcomeDialogLastShownIndex(index);
+
+    emit currentItemChanged();
 }
 
 void WelcomeDialogModel::nextItem()

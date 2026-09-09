@@ -44,6 +44,6 @@ set(MODULE_LINK
 
 setup_module()
 
-if (AU_BUILD_UICOMONENTS_TESTS)
+if (AU_BUILD_UICOMPONENTS_TESTS)
     add_subdirectory(tests)
 endif()

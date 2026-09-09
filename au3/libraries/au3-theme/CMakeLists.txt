@@ -20,9 +20,10 @@ set( SOURCES
    # ThemeImageDefsAsCee.h # not used in au4 atm
 )
 set( LIBRARIES
-   au3-files-interface
+PRIVATE
+   au3-files
    wxwidgets::wxwidgets
- )
+)
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

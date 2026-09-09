@@ -90,6 +90,7 @@ QString ColorSectionParameterListModel::controlLabel(Control control) const
 {
     switch (control) {
     case ColorGain:
+        //: Noun: label of the spectrogram color gain slider
         return muse::qtrc("spectrogram/preferences", "Gain");
     case ColorRange:
         return muse::qtrc("spectrogram/preferences", "Range");

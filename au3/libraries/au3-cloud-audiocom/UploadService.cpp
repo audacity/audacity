@@ -16,17 +16,15 @@
 
 #include <wx/filefn.h>
 #include <wx/filename.h>
+#include <wx/dir.h> // for wxDIR_FILES
+
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
 
 #include "au3-exceptions/AudacityException.h"
-
-#include "OAuthService.h"
-#include "ServiceConfig.h"
-#include "UserService.h"
-
 #include "au3-network-manager/IResponse.h"
 #include "au3-network-manager/MultipartData.h"
 #include "au3-network-manager/NetworkManager.h"
-#include "NetworkUtils.h"
 #include "au3-network-manager/Request.h"
 #include "au3-network-manager/RequestPayload.h"
 
@@ -34,8 +32,11 @@
 
 #include "au3-files/TempDirectory.h"
 #include "au3-files/FileNames.h"
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
+
+#include "OAuthService.h"
+#include "ServiceConfig.h"
+#include "UserService.h"
+#include "NetworkUtils.h"
 
 namespace audacity::cloud::audiocom {
 namespace {

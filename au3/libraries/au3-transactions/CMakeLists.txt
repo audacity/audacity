@@ -15,8 +15,11 @@ set( SOURCES
    TransactionScope.h
 )
 set( LIBRARIES
-   au3-exceptions-interface
-   au3-strings-interface
+PUBLIC
+   au3-utility
+PRIVATE
+   au3-exceptions
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

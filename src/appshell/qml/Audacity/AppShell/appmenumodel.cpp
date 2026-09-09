@@ -21,8 +21,11 @@
  */
 #include "appmenumodel.h"
 
+#include "shared/types/workspacetitles.h"
+
 #include "global/containers.h"
 #include "types/translatablestring.h"
+#include "extensions/extensionscommands.h"
 
 #include "muse_framework_config.h"
 
@@ -125,6 +128,7 @@ void AppMenuModel::setupConnections()
 #ifdef MUSE_MODULE_WORKSPACE
     connect(m_workspacesMenuModel.get(), &workspace::WorkspacesMenuModel::itemsChanged, this, [this](){
         MenuItem& workspacesItem = findMenu("menu-workspaces");
+        au::shared::translateWorkspaceTitles(m_workspacesMenuModel->items());
         workspacesItem.setSubitems(m_workspacesMenuModel->items());
     });
 #endif
@@ -158,7 +162,7 @@ void AppMenuModel::setupConnections()
         findMenu("menu-tools").setSubitems(makeToolItems());
     });
 
-    extensionsProvider()->manifestChanged().onReceive(this, [this](const Manifest&) {
+    extensionsProvider()->enabledChanged().onReceive(this, [this](const ExtensionUri&) {
         findMenu("menu-tools").setSubitems(makeToolItems());
     });
 
@@ -352,7 +356,8 @@ MenuItem* AppMenuModel::makeViewMenu()
               << makeMenuItem("toggle-history")
               << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
-        << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"), m_workspacesMenuModel->items(), "menu-workspaces")
+        << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"),
+                    au::shared::translateWorkspaceTitles(m_workspacesMenuModel->items()), "menu-workspaces")
         << makeSeparator()
 #endif
 #ifndef Q_OS_MAC
@@ -428,7 +433,7 @@ MenuItemList AppMenuModel::makeExtensionItems()
         if (manifest.actions.size() == 1) {
             const muse::extensions::Action& action = manifest.actions.front();
             if (action.showOnAppmenu) {
-                items << makeMenuItem(makeActionQuery(manifest.uri, action.code).toString(),
+                items << makeMenuItem(makeCommand(manifest.uri, action.code).toString(),
                                       TranslatableString::untranslatable(action.title.empty() ? manifest.title : action.title));
             }
             continue;
@@ -437,7 +442,7 @@ MenuItemList AppMenuModel::makeExtensionItems()
         MenuItemList actions;
         for (const muse::extensions::Action& action : manifest.actions) {
             if (action.showOnAppmenu) {
-                actions << makeMenuItem(makeActionQuery(manifest.uri, action.code).toString(),
+                actions << makeMenuItem(makeCommand(manifest.uri, action.code).toString(),
                                         TranslatableString::untranslatable(action.title));
             }
         }
@@ -456,6 +461,7 @@ MenuItem* AppMenuModel::makeExtraMenu()
 {
     MenuItemList extraItems {
         //! TODO AU4
+        //: Title of the Play menu; a noun rather than a verb
         makeMenu(TranslatableString("appshell-menu-play", "Play"), makeVolumeAndCompressionItems(), "menu-play", false),
         makeMenu(TranslatableString("appshell-menu-scrubbing", "Scrubbing"), makeVolumeAndCompressionItems(), "menu-scrubbing", false),
         makeMenu(TranslatableString("appshell-menu-extratools", "Tools"), makeVolumeAndCompressionItems(), "menu-extra-tools", false),

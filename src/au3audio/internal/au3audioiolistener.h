@@ -3,10 +3,10 @@
 */
 #pragma once
 
-#include "global/timer.h"
-#include "global/async/asyncable.h"
-#include "global/async/notification.h"
-#include "global/async/channel.h"
+#include "framework/global/timer.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/async/channel.h"
 
 #include "au3-audio-io/AudioIOListener.h"
 

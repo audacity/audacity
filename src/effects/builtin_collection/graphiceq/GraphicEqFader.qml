@@ -1,5 +1,7 @@
 import QtQuick 2.15
+
 import Audacity.ProjectScene
+import Audacity.UiComponents
 
 import Muse.UiComponents
 
@@ -10,6 +12,7 @@ Item {
     property double max: 0
     property double value: 0
     property double stepSize: 1
+    property bool hoverTooltipEnabled: true
     property alias handle: eqFaderHandle
     property alias navigation: navCtrl
 
@@ -48,6 +51,14 @@ Item {
         accessible.maximumValue: root.max
         accessible.stepSize: root.stepSize
 
+        onHighlightChanged: {
+            if (navCtrl.highlight) {
+                tooltip.show(true)
+            } else {
+                tooltip.hide(true)
+            }
+        }
+
         onNavigationEvent: function (event) {
             switch (event.type) {
             case NavigationEvent.Up:
@@ -82,9 +93,12 @@ Item {
                 navigationCtrl: navCtrl
             }
 
-            VolumeTooltip {
+            ValueTooltip {
                 id: tooltip
-                volume: root.value
+
+                value: root.value
+                unitText: "dB"
+                sizingText: "-60.0dB"
 
                 // A rather long showDelay, so that the user falls less often
                 // in the situation described above - if the tooltip hasn't yet
@@ -102,11 +116,15 @@ Item {
                 }
 
                 onEntered: {
-                    tooltip.show()
+                    if (root.hoverTooltipEnabled) {
+                        tooltip.show()
+                    }
                 }
 
                 onExited: {
-                    tooltip.hide()
+                    if (root.hoverTooltipEnabled) {
+                        tooltip.hide()
+                    }
                 }
             }
         }

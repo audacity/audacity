@@ -4,6 +4,7 @@
 #pragma once
 
 #include <chrono>
+#include <memory>
 #include <optional>
 #include <vector>
 
@@ -17,6 +18,8 @@
 
 struct TransportSequences;
 struct AudioIOStartStreamOptions;
+class ChannelGroup;
+class RealtimeEffectState;
 namespace au::audio {
 struct AudioCallbackInfo {
     std::chrono::steady_clock::time_point dacTime;
@@ -34,6 +37,13 @@ public:
     virtual bool isMonitoring() const = 0;
     // Includes transitional busy/inactive stream states.
     virtual std::optional<AudioStreamDescriptor> currentStream() const = 0;
+    //! Whether the audio stream started by the given project is still running.
+    //! Reports false as soon as the stream has played out its last buffer (or was stopped),
+    //! even before stopStream() has been called — whereas currentStream() also covers the
+    //! busy window that lasts until stopStream() releases the stream.
+    virtual bool isStreamActive(AudacityProject& project) const = 0;
+    //! Playback time of the active stream.
+    virtual double streamTime() const = 0;
 
     struct StartStreamOptions {
         bool isDefaultPolicy = true;
@@ -44,11 +54,21 @@ public:
         std::optional<double> streamStartTime;
     };
 
+    //! Returns a positive stream token on success, 0 otherwise.
+    //! On success the token is recorded as the project's audio IO token.
     virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
                             AudacityProject& project, const StartStreamOptions& options) = 0;
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
     virtual void seekStream(double time) = 0;
+
+    // Realtime effect stack of the live stream
+    virtual std::shared_ptr<RealtimeEffectState> addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                        const std::string& effectId) = 0;
+    virtual void removeRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                           const std::shared_ptr<RealtimeEffectState>& state) = 0;
+    virtual std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                            size_t effectListIndex, const std::string& newEffectId) = 0;
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;

@@ -21,6 +21,8 @@
  */
 #include "uicontextresolver.h"
 
+#include "framework/extensions/extensionstypes.h"
+
 #include "shortcutcontext.h"
 #include "log.h"
 
@@ -171,4 +173,23 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
     }
 
     return true;
+}
+
+bool UiContextResolver::isContextAllowed(const std::string& extensionContext) const
+{
+    const std::string_view contextName = extensionContext;
+    if (contextName == muse::extensions::ANY_CONTEXT) {
+        return true;
+    }
+
+    if (contextName != muse::extensions::PROJECT_OPENED_CONTEXT) {
+        LOGE() << "unknown extension context: " << extensionContext << ", using the default project-opened context";
+    }
+
+    return matchWithCurrent(context::UiCtxProjectOpened);
+}
+
+async::Notification UiContextResolver::contextChanged() const
+{
+    return currentUiContextChanged();
 }

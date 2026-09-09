@@ -15,5 +15,5 @@ add_unit_test(
       TimeAndPitchRealSource.h
    LIBRARIES
       au3-utility
-      au3-time-and-pitch-interface
+      au3-time-and-pitch
 )

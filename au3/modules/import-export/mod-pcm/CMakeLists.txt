@@ -1,26 +1,32 @@
 #[[
-PCM (that is .wav file) import and export
+PCM (WAV/AIFF/...) import/export via libsndfile.
 ]]
 
-set( TARGET mod-pcm )
+set( TARGET au3-mod-pcm )
 
 set( SOURCES
-      ImportPCM.cpp
-      ExportPCM.cpp
-      PCM.cpp
+   ExportPCM.cpp
+   ExportPCM.h
+   ImportPCM.cpp
+   ImportPCM.h
 )
 
-if ( USE_LIBID3TAG )
-      list ( APPEND LIBRARIES PRIVATE libid3tag::libid3tag)
-endif()
-
-set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
-
-list (APPEND LIBRARIES
-   PRIVATE
-      lib-import-export-interface
-      lib-file-formats-interface
+set( LIBRARIES
+PUBLIC
+   SndFile::sndfile
+   au3-file-formats
+   au3-import-export
+   au3-mixer
+PRIVATE
+   au3-files
+   au3-math
+   au3-preferences
+   au3-tags
+   au3-track
+   au3-wave-track
+   wxBase
 )
 
-
-audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
+)

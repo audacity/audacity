@@ -30,10 +30,13 @@ set( SOURCES
    Gain.h
 )
 set( LIBRARIES
-   au3-preferences-interface
-   PRIVATE
+PUBLIC
+   au3-utility
+PRIVATE
+   au3-components
+   au3-preferences
+   au3-strings
    soxr
-   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

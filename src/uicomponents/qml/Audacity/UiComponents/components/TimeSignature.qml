@@ -23,7 +23,7 @@ RowLayout {
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Information
-        accessible.name: qsTrc("au/uicomponents", "Time Signature" + ": " + upperLabel.text + "/" + lowerLabel.text)
+        accessible.name: qsTrc("au/uicomponents", "Time Signature: %1/%2").arg(upperLabel.text).arg(lowerLabel.text)
     }
 
     signal upperChangeRequested(var newValue)

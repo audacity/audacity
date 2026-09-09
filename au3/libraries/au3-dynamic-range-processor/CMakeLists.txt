@@ -27,8 +27,11 @@ set( SOURCES
    SimpleCompressor/LookAheadGainReduction.h
 )
 set( LIBRARIES
-   au3-utility
+PUBLIC
+   au3-components
    au3-strings
+   au3-utility
+PRIVATE
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

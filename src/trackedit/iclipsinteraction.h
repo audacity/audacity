@@ -80,6 +80,5 @@ public:
     //! TODO
     virtual bool clipTransferNeedsDownmixing(const std::vector<ITrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const = 0;
     virtual bool userIsOkWithDownmixing() const = 0;
-    virtual bool singleClipOnTrack(const TrackId trackId) const = 0;
 };
 }

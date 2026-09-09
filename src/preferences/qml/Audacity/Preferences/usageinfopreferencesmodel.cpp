@@ -3,11 +3,27 @@
  */
 #include "usageinfopreferencesmodel.h"
 
+#include "muse_framework_config.h"
+
 using namespace au::appshell;
 
 UsageInfoPreferencesModel::UsageInfoPreferencesModel(QObject* parent)
     : QObject(parent)
 {
+}
+
+bool UsageInfoPreferencesModel::isCrashReportingAvailable() const
+{
+#ifdef MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool UsageInfoPreferencesModel::isUsageInfoAvailable() const
+{
+    return usageInfo()->isUsageInfoAvailable();
 }
 
 bool UsageInfoPreferencesModel::sendAnonymousUsageInfo() const

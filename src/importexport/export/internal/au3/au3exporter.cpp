@@ -119,6 +119,7 @@ public:
         constexpr long long ProgressSteps = 1000ul;
 
         if (!mProgressDialog) {
+            //: Title of the export progress dialog
             mProgressDialog = BasicUI::MakeProgress(::TranslatableString("import-export", "Export"), mStatus);
         } else {
             mProgressDialog->SetMessage(mStatus);
@@ -416,12 +417,12 @@ std::vector<std::string> Au3Exporter::formatExtensions(const std::string& format
     return {};
 }
 
-std::vector<std::string> Au3Exporter::cloudPreferredAudioFormats() const
+std::vector<std::string> Au3Exporter::cloudPreferredAudioFormats(bool preferLossless) const
 {
     const auto& registry = ExportPluginRegistry::Get();
 
     std::vector<std::string> result;
-    for (const auto& mimeType : cloudConfiguration()->preferredAudioFormats()) {
+    for (const auto& mimeType : cloudConfiguration()->preferredAudioFormats(preferLossless)) {
         for (auto [plugin, formatIndex] : registry) {
             for (const auto& mime : plugin->GetMimeTypes(formatIndex)) {
                 if (mime == mimeType) {

@@ -114,6 +114,7 @@ void RecordController::start()
 
     Ret ret = record()->start();
     if (!ret) {
+        //: Title of an error dialog
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
         return;
     }

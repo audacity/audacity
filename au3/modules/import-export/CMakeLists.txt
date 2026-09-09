@@ -1,45 +1,61 @@
 #[[
-A subdirectory containing module targets
+AU3 import/export format plugins, built as static libraries for AU4.
+
+The au3-import-export-modules library holds only the registration entry
+points (RegisterExportPlugins / RegisterImportPlugins, AU4-specific files);
+each format lives in its own au3-mod-* library. src/importexport calls the
+registration functions explicitly, which pulls in every format plugin
+through the ordinary static link.
+
+Some files in these directories are not compiled in AU4: Audacity 3 builds
+the formats as dynamically loaded modules, and mod-cl, mod-lof, mod-aup,
+the DEFINE_MODULE_ENTRIES module-entry stubs and the wx preference pages
+only make sense in that setup (or need the wx GUI application).
+
+The codec targets are PUBLIC on the mod libraries because the mod headers
+expose codec types; slimming the headers so codecs can go PRIVATE is tracked
+in https://github.com/audacity/audacity/issues/11803
 ]]
 
-# Include the modules that we'll build
+add_subdirectory( mod-ffmpeg/lib-ffmpeg-support au3-ffmpeg-support )
+add_subdirectory( mod-mp3 au3-mod-mp3 )
+add_subdirectory( mod-mpg123 au3-mod-mpg123 )
+add_subdirectory( mod-wavpack au3-mod-wavpack )
+add_subdirectory( mod-pcm au3-mod-pcm )
+add_subdirectory( mod-ogg au3-mod-ogg )
+add_subdirectory( mod-flac au3-mod-flac )
+add_subdirectory( mod-opus au3-mod-opus )
+add_subdirectory( mod-mp2 au3-mod-mp2 )
+add_subdirectory( mod-ffmpeg au3-mod-ffmpeg )
 
-# The list of modules is ordered so that each module occurs after any others
-# that it depends on
-set( MODULES
-   mod-mp3
-   mod-pcm
-   mod-cl
-   mod-lof
-   mod-aup
+set( TARGET au3-import-export-modules )
+
+set( SOURCES
+   RegisterExportPlugins.cpp
+   RegisterExportPlugins.h
+   RegisterImportPlugins.cpp
+   RegisterImportPlugins.h
 )
 
-if ( USE_LIBOGG AND USE_LIBVORBIS )
-   list( APPEND MODULES mod-ogg )
-endif()
+set( LIBRARIES
+PRIVATE
+   au3-mod-mp3
+   au3-mod-mpg123
+   au3-mod-wavpack
+   au3-mod-pcm
+   au3-mod-ogg
+   au3-mod-flac
+   au3-mod-opus
+   au3-mod-mp2
+   au3-mod-ffmpeg
+   au3-import-export
+   wxBase
+)
 
-if ( USE_LIBFLAC )
-   list( APPEND MODULES mod-flac )
-endif()
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
+)
 
-if ( USE_LIBTWOLAME )
-   list ( APPEND MODULES mod-mp2 )
-endif()
-
-if ( USE_WAVPACK )
-   list ( APPEND MODULES mod-wavpack )
-endif()
-
-if ( USE_LIBMPG123 )
-   list ( APPEND MODULES mod-mpg123 )
-endif()
-
-if ( USE_FFMPEG )
-   list ( APPEND MODULES mod-ffmpeg )
-endif()
-
-if ( USE_LIBOPUS AND USE_OPUSFILE AND USE_LIBOGG )
-   list ( APPEND MODULES mod-opus )
-endif()
-
-audacity_module_subdirectory("${MODULES}")
+# Consumers include "RegisterExportPlugins.h" / "RegisterImportPlugins.h"
+# relative to this directory.
+target_include_directories( ${TARGET} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )

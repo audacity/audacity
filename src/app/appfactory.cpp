@@ -28,7 +28,11 @@
 #else
 #include "framework/stubs/update/updatestubmodule.h"
 #endif
+#ifdef MUSE_MODULE_LEARN
 #include "framework/learn/learnmodule.h"
+#else
+#include "framework/stubs/learn/learnmodule.h"
+#endif
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"
 

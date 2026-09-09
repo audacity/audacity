@@ -29,9 +29,14 @@ set( SOURCES
 )
 
 set( LIBRARIES
-   au3-exceptions-interface
-   au3-preferences-interface
-   au3-strings-interface
+PUBLIC
+   au3-basic-ui
+   au3-exceptions
+   au3-preferences
+   au3-strings
+   au3-utility
+PRIVATE
+   Qt6::Core # PlatformCompatibility.cpp
    wxBase
 )
 set(DEFINES

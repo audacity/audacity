@@ -28,8 +28,16 @@ set(SOURCES
 )
 
 set( LIBRARIES
-   au3-project-history-interface
-   au3-strings-interface
+PUBLIC
+   au3-preferences
+   au3-project
+   au3-registries
+   au3-strings
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-basic-ui
+   au3-project-history
    wxBase
 )
 

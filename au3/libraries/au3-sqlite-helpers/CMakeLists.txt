@@ -28,13 +28,13 @@ set( SOURCES
    sqlite/Transaction.h
 )
 set( LIBRARIES
-   PUBLIC
-      au3-exceptions-interface
-      au3-strings-interface
-      au3-string-utils-interface
-      PRIVATE
-      wxBase
-      sqlite
+PRIVATE
+   au3-exceptions
+   au3-string-utils
+   au3-strings
+   au3-utility
+   wxBase
+   sqlite
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" "" )

@@ -3,6 +3,8 @@
 */
 #include "effectexecutionscenario.h"
 
+#include "effectsutils.h"
+
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/realfn.h"
@@ -94,7 +96,7 @@ muse::Ret EffectExecutionScenario::repeatLastProcessor()
 std::pair<std::string, std::string> EffectExecutionScenario::makeErrorMsg(const muse::Ret& ret,
                                                                           const EffectId& effectId)
 {
-    const muse::String& effect = effectsProvider()->meta(effectId).title;
+    const muse::String effect = utils::effectDisplayTitle(effectsProvider()->meta(effectId));
     return { effect.toStdString(), ret.text() };
 }
 

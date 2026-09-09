@@ -20,7 +20,7 @@ public:
     virtual ~ILabelsInteraction() = default;
 
     virtual muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) = 0;
-    virtual bool addLabelToSelection() = 0;
+    virtual muse::RetVal<LabelKey> addLabelToSelection() = 0;
 
     virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
     virtual bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) = 0;

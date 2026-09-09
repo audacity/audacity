@@ -26,18 +26,13 @@ set( SOURCES
    UserException.h
 )
 set( LIBRARIES
-   au3-utility-interface
-   au3-basic-ui-interface
-   au3-strings-interface
+PUBLIC
+   au3-strings
+   au3-utility
+PRIVATE
+   au3-basic-ui
    wxBase
 )
-
-if( APPLE AND MIN_MACOS_VERSION VERSION_LESS "10.12")
-   set( DEFINES
-      PUBLIC
-         -DUNCAUGHT_EXCEPTIONS_UNAVAILABLE
-   )
-endif()
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "${DEFINES}" ""

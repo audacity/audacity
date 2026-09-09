@@ -63,8 +63,8 @@ static muse::testing::SuiteEnvironment audacityproject_se
     });
 
     static std::vector<au::projectscene::ClipColorInfo> colorInfos = {
-        { "blue", 1 },
-        { "red", 2 },
+        { muse::TranslatableString::untranslatable("blue"), 1 },
+        { muse::TranslatableString::untranslatable("red"), 2 },
     };
 
     ON_CALL(*projectSceneConfigurator, clipColorInfos())

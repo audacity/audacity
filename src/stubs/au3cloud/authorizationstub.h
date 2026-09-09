@@ -16,6 +16,7 @@ public:
     void signOut() override;
 
     const AccountInfo& accountInfo() const override;
+    muse::async::Notification accountInfoChanged() const override;
 
     muse::ValCh<AuthState> authState() const override;
     bool isAuthorized() const override;

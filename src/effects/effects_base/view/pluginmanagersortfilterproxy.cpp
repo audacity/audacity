@@ -83,7 +83,7 @@ int PluginManagerSortFilterProxy::compareCells(int column, int leftSourceRow, in
     case PluginManagerTableViewModel::s_pathColumnIndex:
         return cmpStr(a.path.toString(), b.path.toString());
     case PluginManagerTableViewModel::s_typeColumnIndex:
-        return cmpStr(utils::effectFamilyToString(a.family), utils::effectFamilyToString(b.family));
+        return cmpStr(utils::effectFamilyLabel(a.family), utils::effectFamilyLabel(b.family));
     case PluginManagerTableViewModel::s_vendorColumnIndex:
         return cmpStr(a.vendor, b.vendor);
     default:

@@ -97,6 +97,7 @@ Item {
                     navigation.panel: effectsTitleBar.navigation
                     navigation.order: 0
 
+                    //: Tooltip of the button that closes the panel
                     toolTipTitle: qsTrc("projectscene", "Close real-time effects panel")
 
                     normalColor: ui.theme.backgroundPrimaryColor

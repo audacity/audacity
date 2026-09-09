@@ -1,27 +1,30 @@
 #[[
-OGG import and export
+Ogg Vorbis import/export.
 ]]
 
-set( TARGET mod-ogg )
+set( TARGET au3-mod-ogg )
 
 set( SOURCES
-      ImportOGG.cpp
-      ExportOGG.cpp
-      OGG.cpp
+   ExportOGG.cpp
+   ExportOGG.h
+   ImportOGG.cpp
+   ImportOGG.h
 )
 
 set( LIBRARIES
-   PRIVATE
-      Ogg::ogg
-      Vorbis::vorbis
-      Vorbis::vorbisfile
-      Vorbis::vorbisenc
+PUBLIC
+   Ogg::ogg
+   Vorbis::vorbis # bundles vorbis, vorbisenc and vorbisfile
+   au3-files
+   au3-import-export
+   au3-mixer
+   au3-tags
+   au3-track
+   au3-wave-track
+PRIVATE
+   wxBase
 )
 
-set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
-
-list(APPEND LIBRARIES
-   lib-import-export-interface
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
 )
-
-audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

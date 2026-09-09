@@ -24,6 +24,7 @@ for shared and private configs - which need to move out.
 
 #include <wx/log.h>
 #include <wx/tokenzr.h>
+#include <wx/dir.h> // for wxDIR_FILES...
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-components/PluginProvider.h"

@@ -42,12 +42,17 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/common/leadinrecordingindicatormodel.h
     )
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK
+        au3wrap
+        au3-audio-devices
+        au3-audio-io
+        au3-project-rate
+        au3-stretching-sequence
+        au3-strings
+        au3-time-frequency-selection
+        au3-track
+        au3-wave-track
+)
 
 set(MODULE_USE_UNITY OFF)
 

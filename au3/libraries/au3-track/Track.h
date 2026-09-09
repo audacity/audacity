@@ -535,6 +535,8 @@ public:
                                             std::add_pointer_t< std::add_const_t< std::remove_pointer_t<TrackType> > >
                                             ) >;
 
+    TrackIter() = default;
+
     //! Constructor, usually not called directly except by methods of TrackList
     TrackIter(
         TrackNodePointer begin,  //!< Remember lower bound
@@ -709,8 +711,8 @@ template<
     {
         const auto& pred1 = this->first.GetPredicate();
         using Function = typename TrackIter<TrackType>::FunctionType;
-        const auto& newPred = pred1
-                              ? Function{ [=] (typename Function::argument_type track) {
+        auto newPred = pred1
+                       ? Function{ [pred1, pred2](auto&& track) {
                 return pred1(track) && pred2(track);
             } }
         : Function { pred2 };
@@ -733,10 +735,10 @@ template<
     template< typename Predicate2 >
     TrackIterRange operator -(const Predicate2& pred2) const
     {
-        using ArgumentType
-            =typename TrackIterRange::iterator::FunctionType::argument_type;
-        auto neg = [=] (ArgumentType track) { return !pred2(track); };
-        return this->operator +(neg);
+        auto neg = [pred2](auto&& track) {
+            return !pred2(std::forward<decltype(track)>(track));
+        };
+        return this->operator+(neg);
     }
 
     // Specify the negated conjunct as a pointer to member function
@@ -744,7 +746,7 @@ template<
     template< typename R, typename C >
     TrackIterRange operator -(R (C ::* pmf) () const) const
     {
-        return this->operator +(std::not1(std::mem_fn(pmf)));
+        return this->operator +(std::not_fn(pmf));
     }
 
     template< typename TrackType2 >

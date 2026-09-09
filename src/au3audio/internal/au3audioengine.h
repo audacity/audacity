@@ -3,7 +3,8 @@
 */
 #pragma once
 
-#include "global/modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
 #include "audio/iaudioengine.h"
 #include "record/irecordconfiguration.h"
 
@@ -22,6 +23,8 @@ public:
 
     bool isBusy() const override;
     bool isCapturing() const override;
+    bool isStreamActive(AudacityProject& project) const override;
+    double streamTime() const override;
     bool isMonitoring() const override;
     std::optional<audio::AudioStreamDescriptor> currentStream() const override;
 
@@ -31,6 +34,13 @@ public:
     void stopStream() override;
     void pauseStream(bool pause) override;
     void seekStream(double time) override;
+
+    std::shared_ptr<RealtimeEffectState> addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                const std::string& effectId) override;
+    void removeRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                   const std::shared_ptr<RealtimeEffectState>& state) override;
+    std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group, size_t effectListIndex,
+                                                                    const std::string& newEffectId) override;
 
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;

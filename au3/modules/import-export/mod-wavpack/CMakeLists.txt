@@ -1,24 +1,32 @@
 #[[
-WavPack import and export
+WavPack import/export.
 ]]
 
-set( TARGET mod-wavpack )
+set( TARGET au3-mod-wavpack )
 
 set( SOURCES
-      ImportWavPack.cpp
-      ExportWavPack.cpp
-      WavPack.cpp
+   ExportWavPack.cpp
+   ExportWavPack.h
+   ImportWavPack.cpp
+   ImportWavPack.h
 )
 
 set( LIBRARIES
-   PRIVATE
-      wavpack::wavpack
+PUBLIC
+   wavpack::wavpack
+   au3-import-export
+   au3-math
+   au3-mixer
+PRIVATE
+   au3-files
+   au3-string-utils
+   au3-tags
+   au3-track
+   au3-wave-track
+   rapidjson::rapidjson
+   wxBase
 )
 
-set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
-
-list(APPEND LIBRARIES
-   lib-import-export-interface
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
 )
-
-audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

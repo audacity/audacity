@@ -31,10 +31,17 @@ set( SOURCES
    lv2_external_ui.h
 )
 set( LIBRARIES
-   au3-effects-interface
-   PRIVATE
-   lv2sdk
-   au3-strings-interface
+PUBLIC
+   lv2sdk # LoadLV2.h includes lilv/lilv.h
+   au3-components
+   au3-effects
+   au3-math
+   au3-strings
+   au3-utility
+PRIVATE
+   au3-basic-ui
+   au3-exceptions
+   au3-module-manager
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

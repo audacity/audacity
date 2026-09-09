@@ -19,7 +19,11 @@ set(MODULE_SRC
 )
 
 set(MODULE_USE_UNITY OFF)
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK
+        au3wrap
+        au3-mixer
+        au3-wave-track
+)
 
 setup_module()
 

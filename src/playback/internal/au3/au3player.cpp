@@ -11,9 +11,9 @@
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-audio-devices/AudioIOBase.h"
 #include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
-#include "au3-audio-io/AudioIO.h"
 #include "au3-project-rate/ProjectRate.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -38,8 +38,7 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
         if (st != PlaybackStatus::Stopped) {
             m_timer.start();
         } else {
-            int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
-            if (!AudioIO::Get()->IsStreamActive(token)) {
+            if (!audioEngine()->isStreamActive(projectRef())) {
                 m_timer.stop();
             }
         }
@@ -260,10 +259,7 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     engineOptions.streamStartTime = options.streamStartTime;
 
     int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, engineOptions);
-    bool success = token != 0;
-    if (success) {
-        ProjectAudioIO::Get(project).SetAudioIOToken(token);
-    }
+    bool success = token > 0;
 
     return success ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
 }
@@ -290,8 +286,7 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     // Start position tracking if this project's audio stream is active during recording
     // (e.g., lead-in recording). The timer reads GetStreamTime() and
     // updatePlaybackState() will stop it when the stream ends.
-    int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
-    bool isStreamActive = AudioIO::Get()->IsStreamActive(token);
+    bool isStreamActive = audioEngine()->isStreamActive(projectRef());
     if (isStreamActive && m_playbackStatus.val == PlaybackStatus::Stopped
         && !m_timer.isActive()) {
         m_currentTarget.reset();
@@ -530,8 +525,7 @@ muse::async::Notification Au3Player::loopRegionChanged() const
 
 void Au3Player::updateStreamState()
 {
-    int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
-    bool isActive = AudioIO::Get()->IsStreamActive(token);
+    bool isActive = audioEngine()->isStreamActive(projectRef());
 
     if (!isActive) {
         if (playbackStatus() == PlaybackStatus::Running) {
@@ -552,7 +546,7 @@ void Au3Player::updateStreamState()
 
 void Au3Player::updatePlaybackState()
 {
-    const double time = std::max(0.0, AudioIO::Get()->GetStreamTime() + m_startOffset);
+    const double time = std::max(0.0, audioEngine()->streamTime() + m_startOffset);
 
     if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
         m_playbackPosition.set(time);
@@ -594,8 +588,7 @@ void Au3Player::updatePlaybackPosition()
         m_currentTarget.emplace(targetTime, targetConsumedSamples);
     }
 
-    const int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
-    if (!AudioIO::Get()->IsStreamActive(token)) {
+    if (!audioEngine()->isStreamActive(projectRef())) {
         updateStreamState();
         return;
     }

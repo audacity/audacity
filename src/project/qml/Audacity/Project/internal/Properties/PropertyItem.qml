@@ -64,6 +64,7 @@ RowLayout {
 
         currentText: root.propertyName ? root.propertyName : ""
         visible: !root.isStandardProperty
+        //: Placeholder text of an empty project property field
         hint: qsTrc("project/properties", "Property")
 
         navigation.name: root.propertyName + "PropertyName"

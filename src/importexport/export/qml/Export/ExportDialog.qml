@@ -73,6 +73,7 @@ StyledDialogView {
             BaseSection {
                 id: typeSection
 
+                //: Section heading in the Export dialog
                 title: qsTrc("export", "Export")
 
                 rowSpacing: 8
@@ -667,6 +668,7 @@ StyledDialogView {
 
             FlatButton {
                 id: okBtn
+                //: Label of the button that starts the export
                 text: qsTrc("global", "Export")
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.Apply

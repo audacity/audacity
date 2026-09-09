@@ -38,8 +38,12 @@ set( SOURCES
 )
 
 set( LIBRARIES
-   au3-files-interface
-   au3-strings-interface
+PUBLIC
+   au3-preferences
+   au3-strings
+PRIVATE
+   au3-basic-ui
+   au3-files
    wxwidgets::wxwidgets
 )
 

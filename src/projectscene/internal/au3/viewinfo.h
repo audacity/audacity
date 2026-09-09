@@ -4,7 +4,6 @@
 #pragma once
 
 #include "au3-registries/ClientData.h"
-#include "au3-utility/Observer.h"
 #include "au3-project/Project.h"
 
 #include "framework/global/async/notification.h"

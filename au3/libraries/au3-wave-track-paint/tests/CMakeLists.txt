@@ -5,6 +5,6 @@ add_unit_test(
       GraphicsDataCacheTests.cpp
    LIBRARIES
       au3-wave-track-paint
-      au3-screen-geometry-interface
+      au3-screen-geometry
       wxwidgets::base
 )

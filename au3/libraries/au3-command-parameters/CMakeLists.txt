@@ -14,8 +14,11 @@ set( SOURCES
    WrappedType.h
 )
 set( LIBRARIES
-   au3-preferences-interface
-   au3-strings-interface
+PUBLIC
+   au3-components
+PRIVATE
+   au3-preferences
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

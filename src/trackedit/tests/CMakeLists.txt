@@ -6,8 +6,7 @@ set(MODULE_TEST trackedit_tests)
 
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/tracktemplatefactory.h
-    ${CMAKE_CURRENT_LIST_DIR}/tracktemplatefactory.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/tests/tracktemplatefactory.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/clipboardmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/selectioncontrollermock.h
@@ -29,15 +28,18 @@ set(MODULE_TEST_SRC
     )
 
 set(MODULE_TEST_LINK
-    trackedit
-    spectrogram
-    au3wrap
+        trackedit
+        spectrogram
+        au3wrap
+        au3-label-track
+        au3-time-frequency-selection
+        au3-wave-track
 
-    muse::ui
-    muse::ui_qml
+        muse::ui
+        muse::ui_qml
 
-    Qt::Quick
-    )
+        Qt::Quick
+)
 
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})
 

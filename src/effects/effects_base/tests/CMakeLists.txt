@@ -13,21 +13,20 @@ set(MODULE_TEST_SRC
 )
 
 set(MODULE_TEST_LINK
+    au3wrap
+    au3-project
+    au3-realtime-effects
+    au3-track
+    au3-wave-track
     effects_base
     muse_audioplugins
-    au3-preferences
 
     Qt::Qml
 )
 
-# AU3 - needed because test files include AU3 headers
-include(${PROJECT_SOURCE_DIR}/src/au3wrap/au3wrapDefs.cmake)
-
 set(MODULE_TEST_INCLUDE
-    ${AU3_INCLUDE}
     ${PROJECT_SOURCE_DIR}/src/effects/effects_base # for internal headers included relatively (e.g. realtimeeffectservice.h)
 )
-set(MODULE_TEST_DEF ${AU3_DEF})
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 include(SetupGTest)

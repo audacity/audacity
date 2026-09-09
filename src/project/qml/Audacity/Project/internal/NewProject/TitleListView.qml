@@ -120,6 +120,7 @@ Item {
 
         font: ui.theme.bodyBoldFont
 
+        //: Message shown when a search returns nothing
         text: qsTrc("global", "No results found")
 
         visible: view.count < 1

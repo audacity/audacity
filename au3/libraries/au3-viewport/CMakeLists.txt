@@ -10,10 +10,19 @@ set( SOURCES
    Viewport.h
 )
 set( LIBRARIES
-   au3-playable-track-interface
-   au3-snapping-interface
-   au3-track-selection-interface
-   au3-strings-interface
+PUBLIC
+   au3-registries
+   au3-utility
+PRIVATE
+   au3-basic-ui
+   au3-playable-track
+   au3-project
+   au3-project-history
+   au3-snapping
+   au3-strings
+   au3-time-frequency-selection
+   au3-track
+   au3-track-selection
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

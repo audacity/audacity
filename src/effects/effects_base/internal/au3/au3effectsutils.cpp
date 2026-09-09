@@ -17,7 +17,13 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
     meta.id = au3::wxToString(desc.GetID());
     meta.family = utils::effectFamilyFromString(au3::wxToString(desc.GetEffectFamily()));
     meta.type = toAu4EffectType(desc.GetEffectType());
-    meta.title = desc.GetSymbol().Msgid().msgid();
+    const ::TranslatableString& name = desc.GetSymbol().Msgid();
+    meta.title = name.msgid();
+    if (name.isTranslatable()) {
+        meta.titleContext = muse::String::fromUtf8(name.context());
+    } else if (meta.family == EffectFamily::Nyquist) {
+        meta.titleContext = u"effects-nyquist";
+    }
     meta.description = au3::wxToString(desc.GetDescription());
     meta.vendor = au3::wxToString(desc.GetVendor());
     meta.version = au3::wxToString(desc.GetUntranslatedVersion());

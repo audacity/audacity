@@ -23,11 +23,14 @@ set( SOURCES
    SpectrumTransformer.h
 )
 set( LIBRARIES
-   PRIVATE
+PUBLIC
+   au3-math
+   au3-utility
+   # PowerSpectrumGetter.h includes <pffft.h>; making it PRIVATE again is
+   # tracked in https://github.com/audacity/audacity/issues/11803
    pffft
-   au3-math-interface
-   au3-strings-interface
-   au3-utility-interface
+PRIVATE
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

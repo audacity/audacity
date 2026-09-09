@@ -29,6 +29,7 @@ static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
 static const muse::Uri SAVE_TO_CLOUD_URI("audacity://project/savetocloud");
 static const muse::Uri EXPORT_URI("audacity://project/export");
+static const muse::Uri ASK_LOCATION_TYPE_URI("audacity://project/asklocationtype");
 static const muse::Uri CUSTOM_FFMPEG_OPTIONS("audacity://project/export/ffmpeg");
 static const muse::Uri METADATA_DIALOG_URI("audacity://project/export/metadata");
 static const muse::Uri EXPORT_LABELS_URI("audacity://project/export/labels");
@@ -698,6 +699,7 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
                              muse::ui::IconCode::Code::TICK,
                              dismissable,
         {
+            //: Label of the button that dismisses a notification
             { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
             { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
         }
@@ -800,6 +802,7 @@ muse::io::paths_t ProjectActionsController::selectOpeningFiles()
         defaultDir = configuration()->defaultUserProjectsPath();
     }
 
+    //: Title of a file picker dialog
     io::paths_t filePaths = interactive()->selectOpeningFilesSync(muse::trc("project",
                                                                             "Open"), defaultDir, filter,
                                                                   QFileDialog::HideNameFilterDetails);
@@ -1468,6 +1471,7 @@ void ProjectActionsController::doUpdateCloudAudioPreview(const IAudacityProjectP
             onFinished();
         }
 
+        //: Title of an error dialog shown when generating the audio preview fails
         interactive()->error(trc("cloud", "Generate audio preview"), ret.text());
         return;
     }
@@ -1487,8 +1491,13 @@ void ProjectActionsController::doUpdateCloudAudioPreview(const IAudacityProjectP
             }
 
             if (result.ret.success()) {
-                interactive()->info(trc("cloud", "Cloud audio preview updated"),
-                                    trc("cloud", "The audio preview has been uploaded to audio.com"));
+                const std::string url = result.val.toString();
+                if (url.empty()) {
+                    LOGE() << "Cannot open cloud project page: empty URL";
+                    return;
+                }
+
+                platformInteractive()->openUrl(url);
                 return;
             }
 
@@ -1590,6 +1599,25 @@ bool ProjectActionsController::dispatchAudioPreviewToWindowWithProject(const mus
 
 void ProjectActionsController::exportAudio()
 {
+    if (audioComService()->enabled() && exportConfiguration()->askExportLocationType()) {
+        muse::UriQuery query(ASK_LOCATION_TYPE_URI);
+        query.addParam("purpose", Val(std::string("export")));
+        query.addParam("askAgain", Val(true));
+
+        RetVal<Val> rv = interactive()->openSync(query);
+        if (!rv.ret) {
+            return;
+        }
+
+        QVariantMap vals = rv.val.toQVariant().toMap();
+        exportConfiguration()->setAskExportLocationType(vals["askAgain"].toBool());
+
+        if (static_cast<SaveLocationType>(vals["locationType"].toInt()) == SaveLocationType::Cloud) {
+            shareAudio();
+            return;
+        }
+    }
+
     interactive()->open(EXPORT_URI);
 }
 
@@ -1662,6 +1690,8 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
 {
     const auto ret = openSaveProjectScenario()->showCloudOpenError(error, localPath);
 
+    std::optional<muse::Ret> retryRet;
+
     switch (ret.code()) {
     case IOpenSaveProjectScenario::RET_CODE_OPEN_LOCAL:
         doOpenProject(localPath);
@@ -1724,10 +1754,10 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
-        openCloudProject(localPath, {}, {}, true);
+        retryRet = openCloudProject(localPath, {}, {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_LOAD_LATEST_SYNCED:
-        openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), {}, true);
+        retryRet = openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM:
         if (!cloudProjectId.empty()) {
@@ -1737,6 +1767,23 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
     default:
         break;
     }
+
+    if (retryRet.has_value() && retryRet.value().success()) {
+        return;
+    }
+
+    if (globalContext()->currentProject()) {
+        return;
+    }
+
+    //! NOTE No project ended up open.
+    //! Close the window if multiple opened or go to home page
+    if (multiwindowsProvider()->windowCount() > 1) {
+        mainWindow()->qWindow()->close();
+        return;
+    }
+
+    openPageIfNeed(HOME_PAGE_URI);
 }
 
 void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)

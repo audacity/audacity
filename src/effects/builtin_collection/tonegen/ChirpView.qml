@@ -176,6 +176,7 @@ BuiltinEffectBase {
                         minValue: 1
                         maxValue: 1000000
 
+                        //: Abbreviation of hertz, used as a unit suffix
                         measureUnitsSymbol: qsTrc("global", "Hz")
 
                         onValueEdited: function (newValue) {

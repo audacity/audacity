@@ -158,6 +158,7 @@ BuiltinEffectBase {
                         onNewValueRequested: function (newValue) {
                             noiseReduction.reduction = newValue
                         }
+                        //: Abbreviation of decibels, used as a unit suffix
                         measureUnitsSymbol: qsTrc("global", "dB")
                         from: noiseReduction.reductionMin
                         to: noiseReduction.reductionMax

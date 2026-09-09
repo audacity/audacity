@@ -68,6 +68,7 @@ Item {
 
             Layout.alignment: Qt.AlignRight
 
+            //: Label of the button that imports labels from a file
             text: qsTrc("projectscene", "Import")
             isNarrow: true
 
@@ -85,6 +86,7 @@ Item {
 
             Layout.alignment: Qt.AlignRight
 
+            //: Label of the button that exports labels to a file
             text: qsTrc("projectscene", "Export")
             isNarrow: true
 
@@ -104,6 +106,7 @@ Item {
 
             Layout.alignment: Qt.AlignRight
 
+            //: Label of the button that deletes the selected labels
             text: qsTrc("projectscene", "Delete")
             isNarrow: true
 

@@ -96,7 +96,6 @@ public:
     //! TODO
     bool clipTransferNeedsDownmixing(const std::vector<ITrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const override;
     bool userIsOkWithDownmixing() const override;
-    bool singleClipOnTrack(const TrackId trackId) const override;
 
 private:
     friend class Au3ClipsInteractionTests;

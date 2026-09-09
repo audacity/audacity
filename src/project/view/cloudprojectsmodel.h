@@ -10,8 +10,8 @@
 #include "modularity/ioc.h"
 #include "iprojectconfiguration.h"
 #include "au3cloud/iau3audiocomservice.h"
+#include "au3cloud/icloudprojectsprovider.h"
 #include "framework/interactive/iinteractive.h"
-#include <qtmetamacros.h>
 
 namespace au::project {
 class CloudProjectsModel : public AbstractItemModel, public muse::async::Asyncable, public muse::Contextable
@@ -19,6 +19,7 @@ class CloudProjectsModel : public AbstractItemModel, public muse::async::Asyncab
     Q_OBJECT
 
     muse::GlobalInject<au::project::IProjectConfiguration> configuration;
+    muse::GlobalInject<au::au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
     muse::ContextInject<au::au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
 

@@ -314,6 +314,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram);
 
     dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
+    dispatcher()->reg(this, RENAME_ITEM_CODE, this, &TrackeditActionsController::renameSelectedItem);
 
     dispatcher()->reg(this, LABEL_DELETE_MULTI_CODE, this, &TrackeditActionsController::labelDeleteMulti);
     dispatcher()->reg(this, LABEL_CUT_MULTI_CODE, this, &TrackeditActionsController::labelCutMulti);
@@ -700,7 +701,9 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
+    //: Title of an error dialog shown when an action requires selected audio
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
+                             //: Message of an error dialog shown when an action requires selected audio
                              muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
@@ -2182,9 +2185,20 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
 
 void TrackeditActionsController::addLabel()
 {
-    if (trackeditInteraction()->addLabelToSelection()) {
-        dispatcher()->dispatch("rename-item");
+    const muse::RetVal<LabelKey> newLabel = trackeditInteraction()->addLabelToSelection();
+    if (newLabel.ret) {
+        tracksViewRequestsService()->requestLabelTitleEdit(newLabel.val);
     }
+}
+
+void TrackeditActionsController::renameSelectedItem()
+{
+    const LabelKeyList labels = labelsForInteraction();
+    if (labels.size() != 1 || !labels.front().isValid()) {
+        return;
+    }
+
+    tracksViewRequestsService()->requestLabelTitleEdit(labels.front());
 }
 
 void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData&)

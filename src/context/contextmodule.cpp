@@ -49,6 +49,7 @@ void ContextModuleContext::registerExports()
 
     ioc()->registerExport<IGlobalContext>(mname, m_globalContext);
     ioc()->registerExport<IUiContextResolver>(mname, m_uicontextResolver);
+    ioc()->registerExport<muse::extensions::IExtensionContextResolver>(mname, m_uicontextResolver);
     ioc()->registerExport<IShortcutContextPriority>(mname, new ShortcutContextPriority());
 }
 

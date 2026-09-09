@@ -61,7 +61,7 @@ void ExtensionEffectsModule::resolveImports()
 void ExtensionEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_extensionsProvider->reloadExtensions();
-    m_repository->initialize(m_extensionsProvider->manifestList());
+    m_repository->initialize(m_extensionsProvider->manifestList(muse::extensions::Filter::Enabled));
 }
 
 void ExtensionEffectsModule::onDeinit()
@@ -85,10 +85,20 @@ void ExtensionEffectsContext::onInit(const muse::IApplication::RunMode&)
 {
     if (auto provider = ioc()->resolve<muse::extensions::IExtensionsProvider>(mname)) {
         provider->manifestListChanged().onNotify(this, [this] {
-            if (auto scenario = ioc()->resolve<muse::audioplugins::IRegisterAudioPluginsScenario>(mname)) {
-                m_scanner->refreshPlugins(*scenario);
-            }
+            refreshPlugins();
         });
+        provider->enabledChanged().onReceive(this, [this](const muse::extensions::ExtensionUri&) {
+            refreshPlugins();
+        });
+
+        refreshPlugins();
+    }
+}
+
+void ExtensionEffectsContext::refreshPlugins() const
+{
+    if (auto scenario = ioc()->resolve<muse::audioplugins::IRegisterAudioPluginsScenario>(mname)) {
+        m_scanner->refreshPlugins(*scenario);
     }
 }
 } // namespace au::effects::extensions

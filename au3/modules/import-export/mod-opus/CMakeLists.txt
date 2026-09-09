@@ -1,26 +1,32 @@
 #[[
-Opus import and export
+Opus import/export.
 ]]
 
-set( TARGET mod-opus )
+set( TARGET au3-mod-opus )
 
 set( SOURCES
-      ImportOpus.cpp
-      ExportOpus.cpp
-      Opus.cpp
+   ExportOpus.cpp
+   ExportOpus.h
+   ImportOpus.cpp
+   ImportOpus.h
 )
 
 set( LIBRARIES
-   PRIVATE
-      Opus::opus
-      opusfile::opusfile
-      Ogg::ogg
+PUBLIC
+   Ogg::ogg
+   Opus::opus
+   opusfile::opusfile
+   au3-import-export
+   au3-mixer
+   au3-string-utils
+   au3-tags
+   au3-track
+   au3-utility
+   au3-wave-track
+PRIVATE
+   wxBase
 )
 
-set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
-
-list(APPEND LIBRARIES
-   lib-import-export-interface
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
 )
-
-audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

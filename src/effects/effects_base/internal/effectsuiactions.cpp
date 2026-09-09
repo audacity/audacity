@@ -3,6 +3,8 @@
  */
 #include "effectsuiactions.h"
 
+#include "effectsutils.h"
+
 #include "context/uicontext.h"
 #include "context/shortcutcontext.h"
 #include "types/translatablestring.h"
@@ -21,51 +23,64 @@ static UiActionList STATIC_ACTIONS = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              REPEAT_LAST_EFFECT_DEF_TITLE,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Repeat last effect")
              ),
     UiAction("realtimeeffect-remove",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Remove realtime effect"),
-             TranslatableString("action", "Remove realtime effect")
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Remove realtime effect")
              ),
     UiAction("action://effects/presets/apply",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Apply preset")
              ),
     UiAction("action://effects/presets/save_as",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Save preset as…")
              ),
     UiAction("action://effects/presets/save",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Save preset")
              ),
     UiAction("action://effects/presets/delete",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Delete preset"),
              IconCode::Code::DELETE_TANK
              ),
     UiAction("action://effects/presets/import",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Import…"),
-             TranslatableString("action", "Import preset")
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Import preset")
              ),
     UiAction("action://effects/presets/export",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "&Export…"),
-             TranslatableString("action", "Export preset")
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Export preset")
              ),
     UiAction("action://effects/toggle_vendor_ui",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("effects", "Use vendor UI"),
+             //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("effects", "Toggle between vendor UI and fallback UI"),
              Checkable::Yes
              )
@@ -81,7 +96,7 @@ EffectsUiActions::EffectsUiActions(const muse::modularity::ContextPtr& ctx, Effe
         IF_ASSERT_FAILED(it != m_actions.end()) {
             return;
         }
-        const auto effectTitle = effectsProvider()->meta(effectId).title;
+        const auto effectTitle = utils::effectDisplayTitle(effectsProvider()->meta(effectId));
         it->title = REPEAT_LAST_EFFECT_TITLE.arg(effectTitle);
         m_actionsChanged.send({ *it });
     });
@@ -99,7 +114,7 @@ UiAction makeUiAction(const std::string& uri, const EffectMeta& meta)
     action.uiCtx = au::context::UiCtxProjectOpened;
     action.scCtx = au::context::CTX_PROJECT_FOCUSED;
     action.description = TranslatableString::untranslatable(meta.description);
-    action.title = TranslatableString::untranslatable(meta.title);
+    action.title = TranslatableString::untranslatable(utils::effectDisplayTitle(meta));
     return action;
 }
 

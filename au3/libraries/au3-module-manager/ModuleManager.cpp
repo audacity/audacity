@@ -19,6 +19,7 @@ i.e. an alternative to the usual interface, for Audacity.
 *//*******************************************************************/
 
 #include "ModuleManager.h"
+
 #include "au3-components/PluginProvider.h"
 
 #include "au3-basic-ui/BasicUI.h"
@@ -350,7 +351,8 @@ void ModuleManager::TryLoadModules(
             if (!module->HasDispatch()) {
                 auto ShortName = wxFileName(file).GetName();
                 DoMessageBox(
-                    TranslatableString("module-manager", "The module “%1” does not provide any of the required functions.\n\nIt will not be loaded.")
+                    TranslatableString("module-manager",
+                                       "The module “%1” does not provide any of the required functions.\n\nIt will not be loaded.")
                     .Format(ShortName));
                 wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), file);
                 module->Unload();

@@ -31,6 +31,8 @@ public:
     void refreshPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) const;
 
 private:
+    muse::io::paths_t updateRepository() const;
+
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
 
     std::shared_ptr<muse::extensions::IExtensionsProvider> m_extensionsProvider;

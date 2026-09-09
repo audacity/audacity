@@ -84,6 +84,21 @@ void TrackLabelItem::setIsEditing(bool editing)
     emit isEditingChanged();
 }
 
+bool TrackLabelItem::titleEditRequested() const
+{
+    return m_titleEditRequested;
+}
+
+void TrackLabelItem::setTitleEditRequested(bool requested)
+{
+    if (m_titleEditRequested == requested) {
+        return;
+    }
+
+    m_titleEditRequested = requested;
+    emit titleEditRequestedChanged();
+}
+
 bool TrackLabelItem::isLeftLinked() const
 {
     return m_isLeftLinked;

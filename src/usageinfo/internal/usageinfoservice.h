@@ -18,6 +18,8 @@ class UsageInfoService : public IUsageInfo, public muse::update::IUpdateRequestP
 public:
     void init();
 
+    bool isUsageInfoAvailable() const override;
+
     void setSendAnonymousUsageInfo(bool allow) override;
     bool getSendAnonymousUsageInfo() const override;
 

@@ -73,6 +73,7 @@ Ret Audacity4Project::importIntoTrack(const muse::io::path_t& filePath,
     Ret ok = doImportIntoTrack(filePath, dstTrackId, startTime);
 
     if (ok) {
+        //: Name of the undo history entry created by importing files
         projectHistory()->pushHistoryState(importInfo, muse::trc("project", "Import"));
     }
 

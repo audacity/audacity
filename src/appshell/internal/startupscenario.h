@@ -32,8 +32,6 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
 #include "update/iappupdatescenario.h"
-#include "update/iupdateconfiguration.h"
-#include "io/ifilesystem.h"
 #include "record/irecordcontroller.h"
 #include "playback/iplaybackcontroller.h"
 
@@ -46,8 +44,6 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 {
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
-    muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
-    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };

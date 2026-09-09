@@ -110,6 +110,7 @@ int NormalizeLoudnessViewModel::targetDecimals() const
 
 QString NormalizeLoudnessViewModel::normalizeLabel() const
 {
+    //: Verb: starts the sentence-like control row, e.g. "Normalize perceived loudness to -23 LUFS"
     return muse::qtrc("effects/loudness", "Normalize");
 }
 

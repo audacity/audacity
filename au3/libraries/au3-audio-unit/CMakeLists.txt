@@ -17,13 +17,17 @@ set( SOURCES
    AudioUnitWrapper.h
 )
 set( LIBRARIES
+PUBLIC
+   au3-components
+   au3-effects
+   au3-strings
    au3-utility
-   au3-effects-interface
-   PRIVATE
+PRIVATE
    au3-basic-ui
+   au3-exceptions
+   au3-module-manager
    "-framework AudioUnit"
    "-framework AudioToolbox"
-   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -20,15 +20,13 @@ Page {
         id: prv
 
         readonly property int columnSpacing: 16
+        readonly property int columnSideMargin: 100
 
-        readonly property int socialButtonSpacing: 8
         readonly property int socialButtonHeight: 32
         readonly property int socialIconTextSpacing: 8
 
         readonly property string googleAuthProvider: "google"
-        readonly property string facebookAuthProvider: "facebook"
         readonly property string googleTextLabel: qsTrc("appshell/gettingstarted", "Continue with Google")
-        readonly property string facebookTextLabel: qsTrc("appshell/gettingstarted", "Continue with Facebook")
         readonly property string orUseEmailText: qsTrc("appshell/gettingstarted", "Or use email and password")
         readonly property int providerLogoSize: 16
 
@@ -80,14 +78,16 @@ Page {
 
     ColumnLayout {
         anchors.top: parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: prv.columnSideMargin
+        anchors.rightMargin: prv.columnSideMargin
 
         spacing: prv.columnSpacing
 
-        RowLayout {
-            id: socialButtonContainer
-
-            spacing: prv.socialButtonSpacing
+        FlatButton {
+            Layout.fillWidth: true
+            Layout.preferredHeight: prv.socialButtonHeight
 
             NavigationPanel {
                 id: socialButtonsPanel
@@ -99,64 +99,29 @@ Page {
                 accessible.name: qsTrc("appshell/gettingstarted", "Social sign-in options")
             }
 
-            FlatButton {
-                Layout.fillWidth: true
-                Layout.preferredHeight: prv.socialButtonHeight
+            navigation.name: "GoogleSignInButton"
+            navigation.panel: socialButtonsPanel
+            navigation.row: 0
+            navigation.column: 0
 
-                navigation.name: "GoogleSignInButton"
-                navigation.panel: socialButtonsPanel
-                navigation.row: 0
-                navigation.column: 0
+            contentItem: RowLayout {
+                spacing: prv.socialIconTextSpacing
 
-                contentItem: RowLayout {
-                    spacing: prv.socialIconTextSpacing
+                Image {
+                    source: "qrc:/resources/GoogleLogo.png"
+                    fillMode: Image.PreserveAspectFit
 
-                    Image {
-                        source: "qrc:/resources/GoogleLogo.png"
-                        fillMode: Image.PreserveAspectFit
-
-                        Layout.preferredWidth: prv.providerLogoSize
-                        Layout.preferredHeight: prv.providerLogoSize
-                    }
-
-                    StyledTextLabel {
-                        text: prv.googleTextLabel
-                    }
+                    Layout.preferredWidth: prv.providerLogoSize
+                    Layout.preferredHeight: prv.providerLogoSize
                 }
 
-                onClicked: {
-                    model.signInWithSocial(prv.googleAuthProvider)
+                StyledTextLabel {
+                    text: prv.googleTextLabel
                 }
             }
 
-            FlatButton {
-                Layout.fillWidth: true
-                Layout.preferredHeight: prv.socialButtonHeight
-
-                navigation.name: "FacebookSignInButton"
-                navigation.panel: socialButtonsPanel
-                navigation.row: 0
-                navigation.column: 1
-
-                contentItem: RowLayout {
-                    spacing: prv.socialIconTextSpacing
-
-                    Image {
-                        source: "qrc:/resources/FacebookLogo.png"
-                        fillMode: Image.PreserveAspectFit
-
-                        Layout.preferredWidth: prv.providerLogoSize
-                        Layout.preferredHeight: prv.providerLogoSize
-                    }
-
-                    StyledTextLabel {
-                        text: prv.facebookTextLabel
-                    }
-                }
-
-                onClicked: {
-                    model.signInWithSocial(prv.facebookAuthProvider)
-                }
+            onClicked: {
+                model.signInWithSocial(prv.googleAuthProvider)
             }
         }
 

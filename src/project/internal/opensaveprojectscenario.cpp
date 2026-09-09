@@ -112,6 +112,8 @@ RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPt
 {
     SaveLocationType type = preselectedType;
 
+    const bool shouldUpdateLastUsed = configuration()->shouldAskSaveLocationType();
+
     if (type == SaveLocationType::Undefined) {
         RetVal<SaveLocationType> askedType = saveLocationType();
         if (!askedType.ret) {
@@ -127,7 +129,9 @@ RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPt
 
     // The user may switch between Local and Cloud as often as they want
     for (;;) {
-        configuration()->setLastUsedSaveLocationType(type);
+        if (shouldUpdateLastUsed) {
+            configuration()->setLastUsedSaveLocationType(type);
+        }
 
         switch (type) {
         case SaveLocationType::Undefined:
@@ -227,7 +231,8 @@ RetVal<SaveLocationType> OpenSaveProjectScenario::saveLocationType() const
 
 RetVal<SaveLocationType> OpenSaveProjectScenario::askSaveLocationType() const
 {
-    UriQuery query("audacity://project/asksavelocationtype");
+    UriQuery query("audacity://project/asklocationtype");
+    query.addParam("purpose", Val(std::string("save")));
     bool shouldAsk = configuration()->shouldAskSaveLocationType();
     query.addParam("askAgain", Val(shouldAsk));
 
@@ -241,7 +246,7 @@ RetVal<SaveLocationType> OpenSaveProjectScenario::askSaveLocationType() const
     bool askAgain = vals["askAgain"].toBool();
     configuration()->setShouldAskSaveLocationType(askAgain);
 
-    SaveLocationType type = static_cast<SaveLocationType>(vals["saveLocationType"].toInt());
+    SaveLocationType type = static_cast<SaveLocationType>(vals["locationType"].toInt());
     return RetVal<SaveLocationType>::make_ok(type);
 }
 
@@ -604,6 +609,7 @@ Ret OpenSaveProjectScenario::showCloudOpenError(const Ret& error, const muse::io
             const int saveToCloudBtn = static_cast<int>(IInteractive::Button::CustomButton) + 1;
             IInteractive::ButtonDatas buttons {
                 interactive()->buttonData(IInteractive::Button::Cancel),
+                //: Label of a dialog button
                 IInteractive::ButtonData(saveLocallyBtn, trc("project", "Save to computer"), false, false,
                                          IInteractive::ButtonRole::ApplyRole),
                 IInteractive::ButtonData(saveToCloudBtn, trc("cloud", "Save to audio.com"), /*accent=*/ true, false,

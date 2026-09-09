@@ -265,14 +265,14 @@ MenuItemList ClipContextMenuModel::makeClipColourItems()
     MenuItemList items;
     items <<
         makeMenuItem("action://trackedit/clip/change-color-auto",
-                     muse::TranslatableString("clip", muse::String::fromStdString("Same as track color")));
+                     muse::TranslatableString("clip", "Same as track color"));
     items << makeSeparator();
     m_colorChangeActionCodeList.push_back("action://trackedit/clip/change-color-auto");
 
     const auto& colorInfos = projectSceneConfiguration()->clipColorInfos();
     for (const auto& info : colorInfos) {
         items << makeMenuItem(makeClipColorChangeAction(info.index).toString(),
-                              muse::TranslatableString("clip", muse::String::fromStdString(info.name)));
+                              info.title);
         m_colorChangeActionCodeList.push_back(makeClipColorChangeAction(info.index).toString());
     }
 

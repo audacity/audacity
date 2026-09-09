@@ -15,6 +15,8 @@ class IUsageInfo : MODULE_GLOBAL_INTERFACE
 public:
     virtual ~IUsageInfo() = default;
 
+    virtual bool isUsageInfoAvailable() const = 0;
+
     virtual void setSendAnonymousUsageInfo(bool allow) = 0;
     virtual bool getSendAnonymousUsageInfo() const = 0;
 

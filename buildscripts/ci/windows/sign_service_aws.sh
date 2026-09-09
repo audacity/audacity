@@ -29,9 +29,17 @@ if [ -z "$S3_SECRET" ]; then echo "error: not set S3_SECRET"; exit 1; fi
 if [ -z "$FILE_PATH" ]; then echo "error: not set FILE_PATH"; exit 1; fi
 
 FILE_NAME="$(basename "${FILE_PATH}")"
-S3_UNSIGNED_URL="s3://$S3_BUCKET/$S3_UNSIGNED_DIR/$FILE_NAME"
-S3_SIGNED_URL="s3://$S3_BUCKET/$S3_SIGNED_DIR/$FILE_NAME"
+
+# Upload under a unique name so concurrent runs can't pick up each other's files
+GUID="$(uuidgen 2>/dev/null || powershell.exe -NoProfile -Command '[guid]::NewGuid().ToString()' | tr -d '\r')"
+if [ -z "$GUID" ]; then echo "error: failed to generate GUID"; exit 1; fi
+
+S3_FILE_NAME="${FILE_NAME%.*}_${GUID}.${FILE_NAME##*.}"
+S3_UNSIGNED_URL="s3://$S3_BUCKET/$S3_UNSIGNED_DIR/$S3_FILE_NAME"
+S3_SIGNED_URL="s3://$S3_BUCKET/$S3_SIGNED_DIR/$S3_FILE_NAME"
 FILE_SIGNED_PATH="${FILE_PATH}_signed"
+
+echo "Sign file name: $S3_FILE_NAME"
 
 export AWS_ACCESS_KEY_ID=$S3_KEY
 export AWS_SECRET_ACCESS_KEY=$S3_SECRET 

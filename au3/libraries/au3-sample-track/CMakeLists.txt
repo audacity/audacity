@@ -15,9 +15,12 @@ set( SOURCES
    SampleTrack.h
 )
 set( LIBRARIES
-   au3-mixer-interface
-   au3-playable-track-interface
-   au3-strings-interface
+PUBLIC
+   au3-math
+   au3-mixer
+   au3-playable-track
+PRIVATE
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

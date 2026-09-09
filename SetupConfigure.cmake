@@ -93,7 +93,7 @@ elseif (OS_IS_WIN)
     SET(AU4_INSTALL_NAME  "")
     SET(AU4_SHARE_NAME    "./")
 else()
-    SET(AU4_INSTALL_NAME  "audacity${MUSE_APP_INSTALL_SUFFIX}-${AU4_VERSION_MAJ_MIN}/")
+    SET(AU4_INSTALL_NAME  "audacity${MUSE_APP_INSTALL_SUFFIX}-${MUSE_APP_VERSION_MAJ_MIN}/")
     SET(AU4_SHARE_NAME    "share/")
 endif()
 
@@ -107,7 +107,9 @@ endif()
 
 if(BUILD_CONFIGURE MATCHES "APP-PORTABLE")
     set(AU4_GENERAL_APP ON)
-    set(WIN_PORTABLE ON)
+    if (OS_IS_WIN)
+        set(WIN_PORTABLE ON)
+    endif()
 endif()
 
 if (AU4_GENERAL_APP)
@@ -130,7 +132,6 @@ endif()
 # CONFIGURE: UTest
 ###########################################
 if(BUILD_CONFIGURE MATCHES "UTEST")
-    set(MUSE_ENABLE_UNIT_TESTS ON)
     set(MUSE_MODULE_GLOBAL_LOGGER_DEBUGLEVEL ON)
     set(MUSE_MODULE_AUDIO OFF)
     if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
@@ -157,26 +158,6 @@ set(QT_SUPPORT ON)
 
 if (NOT MUSE_MODULE_UI)
     set(MUE_BUILD_APPSHELL_MODULE OFF) # hard dependency
-endif()
-
-###########################################
-# Unit tests
-###########################################
-if (NOT MUSE_ENABLE_UNIT_TESTS)
-
-    set(AU_BUILD_APPSHELL_TESTS OFF)
-    set(AU_BUILD_AUTOMATION_TESTS OFF)
-    set(AU_BUILD_CONTEXT_TESTS OFF)
-    set(AU_BUILD_EFFECTS_TESTS OFF)
-    set(AU_BUILD_PLAYBACK_TESTS OFF)
-    set(AU_BUILD_PREFERENCES_TESTS OFF)
-    set(AU_BUILD_PROJECT_TESTS OFF)
-    set(AU_BUILD_PROJECTSCENE_TESTS OFF)
-    set(AU_BUILD_RECORD_TESTS OFF)
-    set(AU_BUILD_SHARED_TESTS OFF)
-    set(AU_BUILD_TRACKEDIT_TESTS OFF)
-    set(AU_BUILD_UICOMPONENTS_TESTS OFF)
-
 endif()
 
 ###########################################
@@ -228,5 +209,3 @@ endif()
 if (MUE_ENABLE_LOAD_QML_FROM_SOURCE)
     add_definitions(-DMUE_ENABLE_LOAD_QML_FROM_SOURCE)
 endif()
-
-configure_file(${CMAKE_CURRENT_LIST_DIR}/src/app/app_config.h.in app_config.h )
