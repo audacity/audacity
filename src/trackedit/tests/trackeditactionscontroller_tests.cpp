@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "trackedit/internal/trackeditactionscontroller.h"
+#include "trackedit/internal/tracksviewrequestsservice.h"
 
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/tracknavigationcontrollermock.h"
@@ -28,6 +29,8 @@ public:
         m_controller->selectionController.set(m_selectionController);
         m_controller->trackNavigationController.set(m_trackNavigationController);
         m_controller->trackeditInteraction.set(m_trackeditInteraction);
+        m_requests = std::make_shared<TracksViewRequestsService>(m_testCtx);
+        m_controller->tracksViewRequestsService.set(m_requests);
 
         ON_CALL(*m_trackNavigationController, focusedItem())
         .WillByDefault(Return(TrackItemKey { INVALID_TRACK, INVALID_TRACK_ITEM }));
@@ -57,13 +60,34 @@ public:
         m_controller->doGlobalCancel();
     }
 
+    void moveItem(secs_t timeOffset, int trackOffset)
+    {
+        m_controller->moveFocusedItem(timeOffset, trackOffset);
+    }
+
     std::shared_ptr<muse::modularity::Context> m_testCtx;
     std::shared_ptr<TrackeditActionsController> m_controller;
 
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
+    std::shared_ptr<TracksViewRequestsService> m_requests;
 };
+
+TEST_F(TrackeditActionsControllerTests, KeyboardMoveRequestsPreviewInsteadOfEditingItems)
+{
+    std::vector<std::pair<secs_t, int> > steps;
+    m_requests->itemMoveRequested().onReceive(m_controller.get(), [&steps](secs_t timeOffset, int trackOffset) {
+        steps.emplace_back(timeOffset, trackOffset);
+    });
+    EXPECT_CALL(*m_trackeditInteraction, moveClips(::testing::_, ::testing::_, ::testing::_, ::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackeditInteraction, moveLabels(::testing::_, ::testing::_, ::testing::_, ::testing::_)).Times(0);
+
+    moveItem(0.5, 0);
+    moveItem(0.0, 1);
+    const std::vector<std::pair<secs_t, int> > expected { { 0.5, 0 }, { 0.0, 1 } };
+    EXPECT_EQ(steps, expected);
+}
 
 /**
  * Cancel always notifies about the in-progress drag edit being cancelled.

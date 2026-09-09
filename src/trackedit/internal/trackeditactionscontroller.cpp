@@ -333,7 +333,6 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-        setFocusedItemMoveInProgress(false);
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -2355,87 +2354,7 @@ void TrackeditActionsController::moveFocusedItemDown()
 
 void TrackeditActionsController::moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset)
 {
-    const TrackItemKey focusedItem = trackNavigationController()->focusedItem();
-    const bool trackFocused = focusedItem.trackId != INVALID_TRACK && focusedItem.itemId == INVALID_TRACK_ITEM;
-    if (trackFocused) {
-        if (trackPositionOffset != 0) {
-            const TrackMoveDirection direction = trackPositionOffset < 0 ? TrackMoveDirection::Up : TrackMoveDirection::Down;
-            trackeditInteraction()->moveTracks({ focusedItem.trackId }, direction);
-        }
-        return;
-    }
-
-    constexpr bool completed = false;
-
-    if (!labelsForInteraction().empty()) {
-        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), timePositionOffset,
-                                                                               trackPositionOffset, completed);
-        if (!result.ret) {
-            return;
-        }
-        selectionController()->setSelectedLabels(result.val, completed);
-        if (trackPositionOffset != 0 && !result.val.empty()) {
-            trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
-        }
-    } else if (!clipsForInteraction().empty()) {
-        bool itemsMovedToOtherTrack = false;
-        muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(clipsForInteraction(), timePositionOffset,
-                                                                             trackPositionOffset, completed, itemsMovedToOtherTrack);
-        if (!result.ret) {
-            return;
-        }
-        selectionController()->setSelectedClips(result.val, completed);
-        if (trackPositionOffset != 0 && !result.val.empty()) {
-            trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
-        }
-    } else {
-        return;
-    }
-
-    setFocusedItemMoveInProgress(true);
-}
-
-void TrackeditActionsController::setFocusedItemMoveInProgress(bool inProgress)
-{
-    if (m_focusedItemMoveInProgress == inProgress) {
-        return;
-    }
-    m_focusedItemMoveInProgress = inProgress;
-
-    if (auto project = globalContext()->currentProject()) {
-        if (auto viewState = project->viewState()) {
-            viewState->setKeyboardMoveActive(inProgress);
-            if (inProgress) {
-                viewState->modifiersReleased().onNotify(this, [this]() {
-                    completeFocusedItemMove();
-                }, muse::async::Asyncable::Mode::SetReplace);
-            }
-        }
-    }
-}
-
-void TrackeditActionsController::completeFocusedItemMove()
-{
-    if (!m_focusedItemMoveInProgress) {
-        return;
-    }
-    setFocusedItemMoveInProgress(false);
-
-    constexpr bool completed = true;
-
-    if (!labelsForInteraction().empty()) {
-        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0.0, 0, completed);
-        if (result.ret) {
-            selectionController()->setSelectedLabels(result.val, completed);
-        }
-    } else if (!clipsForInteraction().empty()) {
-        bool itemsMovedToOtherTrack = false;
-        muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(clipsForInteraction(), 0.0, 0, completed,
-                                                                             itemsMovedToOtherTrack);
-        if (result.ret) {
-            selectionController()->setSelectedClips(result.val, completed);
-        }
-    }
+    tracksViewRequestsService()->requestItemMove(timePositionOffset, trackPositionOffset);
 }
 
 void TrackeditActionsController::extendFocusedItemBoundaryLeft()

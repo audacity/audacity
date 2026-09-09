@@ -42,6 +42,18 @@ TrackItemsMoveController::~TrackItemsMoveController()
     }
 }
 
+void TrackItemsMoveController::init()
+{
+    tracksViewRequestsService()->itemMoveRequested().onReceive(this, [this](secs_t timeOffset, int trackOffset) {
+        moveByKeyboard(timeOffset, trackOffset);
+    }, muse::async::Asyncable::Mode::SetReplace);
+    projectHistory()->historyChanged().onReceive(this, [this](HistoryEvent) {
+        if (keyboardActive() && !m_updating) {
+            endInteraction();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+}
+
 TimelineContext* TrackItemsMoveController::timelineContext() const
 {
     return m_context;
@@ -67,6 +79,11 @@ void TrackItemsMoveController::setTimelineContext(TimelineContext* context)
 }
 
 void TrackItemsMoveController::start(const TrackItemKey& key)
+{
+    start(key, false);
+}
+
+void TrackItemsMoveController::start(const TrackItemKey& key, bool keyboard)
 {
     if (active() || !m_context || !key.isValid()) {
         return;
@@ -102,7 +119,22 @@ void TrackItemsMoveController::start(const TrackItemKey& key)
     m_sourceKey = key.key;
     m_clips = selectionController()->selectedClipsInTrackOrder();
     m_labels = selectionController()->selectedLabels();
-    m_rangeSelection = !selectionController()->timeSelectionIsEmpty();
+    m_keyboardMove = keyboard;
+    if (keyboard) {
+        muse::remove_if(m_clips, [this](const auto& clipKey) { return !m_project->clip(clipKey).isValid(); });
+        muse::remove_if(m_labels, [this](const auto& labelKey) { return !m_project->label(labelKey).isValid(); });
+        auto& items = m_sourceIsLabel ? m_labels : m_clips;
+        if (!muse::contains(items, m_sourceKey)) {
+            items.push_back(m_sourceKey);
+        }
+        m_viewState->setKeyboardMoveActive(true);
+        m_viewState->modifiersReleased().onNotify(this, [this] {
+            if (keyboardActive()) {
+                finish();
+            }
+        }, muse::async::Asyncable::Mode::SetReplace);
+    }
+    m_rangeSelection = !keyboard && !selectionController()->timeSelectionIsEmpty();
     m_originalTrackCount = m_project->trackList().size();
 
     projectHistory()->startUserInteraction();
@@ -116,6 +148,75 @@ void TrackItemsMoveController::start(const TrackItemKey& key)
 bool TrackItemsMoveController::active() const
 {
     return m_sourceKey.isValid();
+}
+
+bool TrackItemsMoveController::keyboardActive() const
+{
+    return active() && m_keyboardMove;
+}
+
+void TrackItemsMoveController::moveByKeyboard(double timeOffset, int trackOffset)
+{
+    if (m_updating || (active() && !keyboardActive())) {
+        return;
+    }
+    if (!active()) {
+        const auto project = globalContext()->currentTrackeditProject();
+        if (!project) {
+            return;
+        }
+        auto source = trackNavigationController()->focusedItem();
+        if (source.trackId != INVALID_TRACK && source.itemId == INVALID_TRACK_ITEM) {
+            if (trackOffset != 0) {
+                trackeditInteraction()->moveTracks({ source.trackId }, trackOffset < 0 ? TrackMoveDirection::Up : TrackMoveDirection::Down);
+            }
+            return;
+        }
+        const auto exists = [&project](const trackedit::TrackItemKey& key) {
+            const auto track = project->track(key.trackId);
+            return track && (track->type == TrackType::Label ? project->label(key).isValid() : project->clip(key).isValid());
+        };
+        if (!exists(source)) {
+            TrackItemKeyList selected = selectionController()->selectedLabels();
+            const auto clips = selectionController()->selectedClipsInTrackOrder();
+            selected.insert(selected.end(), clips.begin(), clips.end());
+            const auto item = std::find_if(selected.begin(), selected.end(), exists);
+            if (item == selected.end()) {
+                return;
+            }
+            source = *item;
+        }
+        start(TrackItemKey(source), true);
+    }
+    if (!keyboardActive() || globalContext()->currentTrackeditProject() != m_project) {
+        return;
+    }
+    QScopedValueRollback<bool> guard(m_updating, true);
+    m_moved = true;
+    m_viewState->setMoveInitiated(true);
+    int destinationOffset = m_trackOffset + trackOffset;
+    if (m_clips.empty()) {
+        const auto tracks = tracksOfKind(m_project->trackList(), true);
+        int first = static_cast<int>(tracks.size()) - 1;
+        int last = 0;
+        for (const auto& key : m_labels) {
+            const int source = indexOf(tracks, key.trackId);
+            first = std::min(first, source);
+            last = std::max(last, source);
+        }
+        destinationOffset = std::clamp(destinationOffset, -last, static_cast<int>(tracks.size()) - 1 - first);
+    }
+    updatePreview(m_timeOffset + timeOffset, destinationOffset);
+    double guideline = m_context->findGuideline(m_startTime + m_timeOffset);
+    if (!m_context->isGuidelineValid(guideline)) {
+        guideline = m_context->findGuideline(m_endTime + m_timeOffset);
+    }
+    emit guidelineChanged(guideline);
+    if (trackOffset != 0) {
+        const auto tracks = tracksOfKind(m_project->trackList(), m_sourceIsLabel);
+        const int target = std::clamp(indexOf(tracks, m_sourceKey.trackId) + m_trackOffset, 0, static_cast<int>(tracks.size()) - 1);
+        emit keyboardTrackChanged(tracks[target]);
+    }
 }
 
 bool TrackItemsMoveController::isDragged(const trackedit::TrackItemKey& key) const
@@ -171,7 +272,7 @@ int TrackItemsMoveController::pointerTrackOffset() const
 
 void TrackItemsMoveController::update()
 {
-    if (!active() || !m_context || m_updating || globalContext()->currentTrackeditProject() != m_project) {
+    if (!active() || keyboardActive() || !m_context || m_updating || globalContext()->currentTrackeditProject() != m_project) {
         return;
     }
     QScopedValueRollback<bool> guard(m_updating, true);
@@ -278,7 +379,8 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
         return {};
     }
     TrackItemKey movedKey(m_sourceKey);
-    if (m_moved) {
+    const bool keyboard = keyboardActive();
+    if (m_moved && (!keyboard || m_timeOffset != 0.0 || m_trackOffset != 0)) {
         update();
         QScopedValueRollback<bool> guard(m_updating, true);
         if (m_rangeSelection) {
@@ -287,6 +389,10 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
             m_moved = false;
             emit previewChanged();
 
+            if (keyboard) {
+                selectionController()->setSelectedClips(m_clips, false);
+                selectionController()->setSelectedLabels(m_labels, false);
+            }
             const TrackItemKeyList& selected = m_sourceIsLabel ? m_labels : m_clips;
             bool changedTrack = false;
             const auto result = m_sourceIsLabel
@@ -307,6 +413,9 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
         }
     }
     endInteraction();
+    if (keyboard) {
+        trackNavigationController()->setFocusedItem(movedKey.key, true /* highlight */);
+    }
     return movedKey;
 }
 
@@ -338,6 +447,10 @@ void TrackItemsMoveController::endInteraction()
     m_sourceKey = {};
     m_clips.clear();
     m_labels.clear();
+    if (m_keyboardMove) {
+        m_keyboardMove = false;
+        m_viewState->setKeyboardMoveActive(false);
+    }
     m_viewState->setMoveInitiated(false);
     m_viewState->setItemEditStartTimeOffset(-1.0);
     m_viewState->setItemEditEndTimeOffset(-1.0);

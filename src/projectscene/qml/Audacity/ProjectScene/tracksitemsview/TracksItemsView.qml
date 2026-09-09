@@ -64,6 +64,11 @@ Rectangle {
         onGuidelineChanged: function (time) {
             root.updateGuidelineAtTime(time)
         }
+
+        onKeyboardTrackChanged: function (trackId) {
+            const trackY = tracksViewState.trackVerticalPosition(trackId) + tracksViewState.tracksVerticalOffset
+            tracksViewState.insureVerticallyVisible(tracksViewState.tracksVerticalOffset, tracksItemsView.height, trackY, tracksViewState.trackHeight(trackId))
+        }
     }
 
     MouseHelper {
@@ -236,6 +241,7 @@ Rectangle {
         playCursorController.init()
         playPositionActionController.init()
         tracksViewState.init()
+        itemsMoveController.init()
         project.init();
 
         //! NOTE Loading tracks, or rather clips, is the most havy operation.
@@ -570,6 +576,9 @@ Rectangle {
             }
 
             onPressed: function (e) {
+                if (itemsMoveController.keyboardActive) {
+                    itemsMoveController.finish()
+                }
                 if (root.altPressed) {
                     return
                 }
@@ -614,6 +623,9 @@ Rectangle {
 
             onPositionChanged: function (e) {
                 timeline.updateCursorPosition(e.x, e.y)
+                if (itemsMoveController.keyboardActive) {
+                    return
+                }
                 splitToolController.mouseMove(e.x)
                 playCursorController.updateSeekGesture(e.x, e.y)
 
@@ -637,7 +649,7 @@ Rectangle {
             }
 
             onReleased: function (e) {
-                if (e.button !== Qt.LeftButton) {
+                if (e.button !== Qt.LeftButton || itemsMoveController.keyboardActive) {
                     return
                 }
 

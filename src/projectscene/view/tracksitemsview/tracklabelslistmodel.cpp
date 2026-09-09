@@ -185,9 +185,9 @@ void TrackLabelsListModel::update()
 
     updatePendingTitleEdit();
 
-    muse::async::Async::call(this, [cleanupList]() {
-        qDeleteAll(cleanupList);
-    });
+    for (TrackLabelItem* item : cleanupList) {
+        item->deleteLater();
+    }
 }
 
 void TrackLabelsListModel::updatePendingTitleEdit()

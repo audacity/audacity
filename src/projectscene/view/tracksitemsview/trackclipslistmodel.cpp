@@ -242,9 +242,9 @@ void TrackClipsListModel::update()
         emit isStereoChanged();
     }
 
-    muse::async::Async::call(this, [cleanupList]() {
-        qDeleteAll(cleanupList);
-    });
+    for (TrackClipItem* item : cleanupList) {
+        item->deleteLater();
+    }
 }
 
 void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)

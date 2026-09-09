@@ -210,8 +210,6 @@ private:
     void moveFocusedItemUp();
     void moveFocusedItemDown();
     void moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset);
-    void completeFocusedItemMove();
-    void setFocusedItemMoveInProgress(bool inProgress);
     void extendFocusedItemBoundaryLeft();
     void extendFocusedItemBoundaryRight();
     void reduceFocusedItemBoundaryLeft();
@@ -228,7 +226,5 @@ private:
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     DeleteBehaviorOnboardingScenario m_deleteBehaviorOnboardingScenario;
-
-    bool m_focusedItemMoveInProgress = false;
 };
 }
