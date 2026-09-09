@@ -34,6 +34,7 @@ public:
 
 private:
     friend class TrackLabelsLayoutManagerTests;
+    friend class TrackItemsMoveControllerTests;
 
     void onInit() override;
     void onReload() override;
