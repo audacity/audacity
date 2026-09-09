@@ -59,7 +59,6 @@ public:
     muse::RetVal<muse::io::path_t> askLocalPath(IAudacityProjectPtr project, SaveMode mode) const override;
     muse::RetVal<CloudProjectInfo> askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const override;
     muse::RetVal<CloudProjectInfo> askPublishLocation(IAudacityProjectPtr project) const override;
-    muse::RetVal<CloudAudioInfo> askShareAudioLocation(IAudacityProjectPtr project) const override;
 
     muse::RetVal<muse::io::path_t> resolveLegacyProjectFormat(const muse::io::path_t& path) const override;
 
