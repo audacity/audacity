@@ -32,7 +32,7 @@ public:
     MOCK_METHOD(ITrackDataPtr, copyClip, (const ClipKey&), (override));
     MOCK_METHOD(std::optional<TimeSpan>, removeClip, (const ClipKey&), (override));
     MOCK_METHOD(bool, removeClips, (const ClipKeyList&, bool), (override));
-    MOCK_METHOD(muse::RetVal<ClipKeyList>, moveClips, (const ClipKeyList&, secs_t, int, bool, bool&), (override));
+    MOCK_METHOD(muse::RetVal<ClipKeyList>, moveClips, (const ClipKeyList&, secs_t, int, bool&), (override));
     MOCK_METHOD(void, cancelClipDragEdit, (), (override));
 
     MOCK_METHOD(bool, splitClipsAtSilences, (const ClipKeyList&), (override));

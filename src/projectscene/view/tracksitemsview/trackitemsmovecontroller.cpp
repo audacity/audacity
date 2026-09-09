@@ -396,8 +396,8 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
             const TrackItemKeyList& selected = m_sourceIsLabel ? m_labels : m_clips;
             bool changedTrack = false;
             const auto result = m_sourceIsLabel
-                                ? trackeditInteraction()->moveLabels(selected, m_timeOffset, m_trackOffset, true)
-                                : trackeditInteraction()->moveClips(selected, m_timeOffset, m_trackOffset, true, changedTrack);
+                                ? trackeditInteraction()->moveLabels(selected, m_timeOffset, m_trackOffset)
+                                : trackeditInteraction()->moveClips(selected, m_timeOffset, m_trackOffset, changedTrack);
             if (result.ret) {
                 const auto source = std::find(selected.begin(), selected.end(), m_sourceKey);
                 const auto sourceIndex = std::distance(selected.begin(), source);

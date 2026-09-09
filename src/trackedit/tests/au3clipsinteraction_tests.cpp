@@ -621,7 +621,7 @@ TEST_F(Au3ClipsInteractionTests, MoveClipsRight)
 
     //! [WHEN] Move the clips right
     auto clipsMovedToOtherTracks = false;
-    m_clipsInteraction->moveClips(selectedClipsKeys, secondsToMove, 0, true, clipsMovedToOtherTracks);
+    m_clipsInteraction->moveClips(selectedClipsKeys, secondsToMove, 0, clipsMovedToOtherTracks);
 
     //! [THEN] All clips are moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
@@ -661,7 +661,7 @@ TEST_F(Au3ClipsInteractionTests, MoveClipLeftWhenClipIsAtZero)
 
     //! [WHEN] Move the clips left
     auto clipsMovedToOtherTracks = false;
-    m_clipsInteraction->moveClips(selectedClipsKeys, -1.0, 0, true, clipsMovedToOtherTracks);
+    m_clipsInteraction->moveClips(selectedClipsKeys, -1.0, 0, clipsMovedToOtherTracks);
 
     //! [THEN] No clip is moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
@@ -696,7 +696,7 @@ TEST_P(Au3ClipsDropTests, ConvertsDestinationChannelsBeforeAutosave)
     // A preview-only drag keeps the original selection until the completed move returns.
     ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { sourceId }));
     bool changedTrack = false;
-    const auto result = m_clipsInteraction->moveClips({ sourceKey }, overlap ? 1.1 : 2.0, 1, true, changedTrack);
+    const auto result = m_clipsInteraction->moveClips({ sourceKey }, overlap ? 1.1 : 2.0, 1, changedTrack);
 
     ASSERT_TRUE(result.ret);
     ASSERT_EQ(result.val, (ClipKeyList { { destinationId, sourceKey.itemId } }));
@@ -764,7 +764,7 @@ TEST_P(Au3ClipsDropTests, PreservesEffectsThroughUndoRedo)
     history.ModifyState(false);
 
     bool changedTrack = false;
-    const auto result = m_clipsInteraction->moveClips({ key }, overlap ? 1.1 : 2.0, 1, true, changedTrack);
+    const auto result = m_clipsInteraction->moveClips({ key }, overlap ? 1.1 : 2.0, 1, changedTrack);
     ASSERT_TRUE(result.ret);
     history.PushState({}, {});
 
@@ -841,7 +841,7 @@ TEST_F(Au3ClipsInteractionTests, CompletedMoveKeepsTrackWhenChannelsAlreadyMatch
     EXPECT_CALL(*std::static_pointer_cast<muse::InteractiveMock>(m_interactive), showProgress(_, _)).Times(0);
 
     bool changedTrack = false;
-    const auto result = m_clipsInteraction->moveClips({ key }, 1.0, 0, true, changedTrack);
+    const auto result = m_clipsInteraction->moveClips({ key }, 1.0, 0, changedTrack);
 
     ASSERT_TRUE(result.ret);
     EXPECT_EQ(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId)), track);

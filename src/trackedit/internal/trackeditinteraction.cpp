@@ -153,14 +153,13 @@ bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t
 }
 
 muse::RetVal<ClipKeyList> TrackeditInteraction::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
-                                                          int trackPositionOffset, bool completed,
+                                                          int trackPositionOffset,
                                                           bool& clipsMovedToOtherTrack)
 {
     return withPlaybackStopRetVal(&ITrackeditInteraction::moveClips,
                                   clipKeyList,
                                   timePositionOffset,
                                   trackPositionOffset,
-                                  completed,
                                   clipsMovedToOtherTrack);
 }
 
@@ -489,9 +488,9 @@ bool TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t time
 }
 
 muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
-                                                            int trackPositionOffset, bool completed)
+                                                            int trackPositionOffset)
 {
-    return m_interaction->moveLabels(labelKeys, timePositionOffset, trackPositionOffset, completed);
+    return m_interaction->moveLabels(labelKeys, timePositionOffset, trackPositionOffset);
 }
 
 muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)

@@ -327,7 +327,6 @@ bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds
 
 muse::RetVal<ClipKeyList> TrackeditOperationController::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
                                                                   int trackPositionOffset,
-                                                                  bool completed,
                                                                   bool& clipsMovedToOtherTrack)
 {
     // Labels to move along with clips
@@ -354,16 +353,14 @@ muse::RetVal<ClipKeyList> TrackeditOperationController::moveClips(const ClipKeyL
         timePositionOffset = clampedOffset;
     }
 
-    muse::RetVal<ClipKeyList> result = clipsInteraction()->moveClips(clipKeyList, timePositionOffset, trackPositionOffset, completed,
+    muse::RetVal<ClipKeyList> result = clipsInteraction()->moveClips(clipKeyList, timePositionOffset, trackPositionOffset,
                                                                      clipsMovedToOtherTrack);
 
     if (!result.ret) {
-        if (completed) {
-            clipsMovedToOtherTrack = false;
-            projectHistory()->rollbackState();
-            globalContext()->currentTrackeditProject()->reload();
-        }
-    } else if (completed) {
+        clipsMovedToOtherTrack = false;
+        projectHistory()->rollbackState();
+        globalContext()->currentTrackeditProject()->reload();
+    } else {
         const std::string msg = !selectedLabels.empty() ? muse::trc("trackedit", "Items moved") : muse::trc("trackedit", "Clip moved");
         projectHistory()->pushHistoryState(msg, muse::trc("trackedit", "Move clip"));
     }
@@ -1018,8 +1015,7 @@ bool TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, sec
 }
 
 muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
-                                                                    int trackPositionOffset,
-                                                                    bool completed)
+                                                                    int trackPositionOffset)
 {
     muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, timePositionOffset, trackPositionOffset);
     if (!retVal.ret) {
@@ -1029,13 +1025,11 @@ muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelK
     bool clipsSelected = isClipsSelected();
     if (isClipsSelected()) {
         bool clipsMovedToOtherTracks = false;
-        clipsInteraction()->moveClips(selectedClips(), timePositionOffset, trackPositionOffset, completed, clipsMovedToOtherTracks);
+        clipsInteraction()->moveClips(selectedClips(), timePositionOffset, trackPositionOffset, clipsMovedToOtherTracks);
     }
 
-    if (completed) {
-        const std::string msg = clipsSelected ? muse::trc("trackedit", "Move items") : muse::trc("trackedit", "Move labels");
-        projectHistory()->pushHistoryState(muse::trc("trackedit", "Move"), msg);
-    }
+    const std::string msg = clipsSelected ? muse::trc("trackedit", "Move items") : muse::trc("trackedit", "Move labels");
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Move"), msg);
 
     return retVal;
 }
