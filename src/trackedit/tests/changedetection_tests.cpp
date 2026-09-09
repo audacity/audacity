@@ -126,8 +126,7 @@ TEST_F(ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
 
     EXPECT_EQ(before.tracks.size(), after.tracks.size());
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
 
     //! If there are no changes detected,
@@ -158,8 +157,7 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
 
     EXPECT_NE(before.tracks.size(), after.tracks.size());
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(1);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(1);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -184,8 +182,7 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
 
     EXPECT_NE(before.tracks.size(), after.tracks.size());
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(2);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(1);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -213,8 +210,7 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
 
     EXPECT_NE(before.tracks.size(), after.tracks.size());
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(1);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(1);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -246,8 +242,7 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
 
     EXPECT_NE(before.tracks.size(), after.tracks.size());
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(2);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(1);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -283,8 +278,7 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForReordering)
     }
 
     // Reordering is detected indirectly, as removal and addition.
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(1);
 
@@ -310,8 +304,7 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationForTitleChange)
 
     before.tracks.back().title = "new title";
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(1);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -337,8 +330,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingOne)
 
     addClipToTrack(after, after.tracks.back().id, static_cast<int>(after.clips.back().size()));
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -361,8 +353,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwo)
     addClipToTrack(after, after.tracks.front().id, static_cast<int>(after.clips.front().size()));
     addClipToTrack(after, after.tracks.back().id, static_cast<int>(after.clips.back().size()));
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -384,8 +375,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationRemovingOne)
 
     after.clips.back().pop_back();
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -408,8 +398,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationRemovingTwo)
     after.clips.front().pop_back();
     after.clips.back().pop_back();
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -431,8 +420,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStartTime)
 
     after.clips.back().back().startTime += 200;
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -454,8 +442,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeEndTime)
 
     after.clips.back().back().endTime += after.clips.back().back().startTime + 200;
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -488,8 +475,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(5);
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
@@ -509,8 +495,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangePitch)
 
     after.clips.back().back().pitch = 100;
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -532,8 +517,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeSpeed)
 
     after.clips.back().back().speed = 10.0;
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -556,8 +540,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeGroup)
     after.clips.back().back().groupId = 2;
     after.clips.back().front().groupId = 2;
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -579,8 +562,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeVersion)
 
     after.clips.back().back().clipVersion++;
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -610,8 +592,7 @@ TEST_F(ChangeDetectionTests, TestNotificationsForAddingOneTrackAndOneClip)
 
     EXPECT_NE(before.tracks.size(), after.tracks.size());
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(1);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(1);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -639,8 +620,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwoAndRemovingTwo)
     addClipToTrack(after, after.tracks.front().id, newClipIdNumber);
     addClipToTrack(after, after.tracks.back().id, newClipIdNumber + 1);
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -662,8 +642,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeTitle)
 
     after.clips.back().back().title = "new clip title";
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -689,8 +668,7 @@ TEST_F(ChangeDetectionTests, TestLabelNotificationAddingOne)
 
     addLabelToTrack(after, after.tracks.back().id, static_cast<int>(after.labels.back().size()));
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -713,8 +691,7 @@ TEST_F(ChangeDetectionTests, TestLabelNotificationAddingTwo)
     addLabelToTrack(after, after.tracks.front().id, static_cast<int>(after.labels.front().size()));
     addLabelToTrack(after, after.tracks.back().id, static_cast<int>(after.labels.back().size()));
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -736,8 +713,7 @@ TEST_F(ChangeDetectionTests, TestLabelNotificationRemovingOne)
 
     after.labels.back().pop_back();
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -760,8 +736,7 @@ TEST_F(ChangeDetectionTests, TestLabelNotificationRemovingTwo)
     after.labels.front().pop_back();
     after.labels.back().pop_back();
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -783,8 +758,7 @@ TEST_F(ChangeDetectionTests, TestLabelNotificationChangeStartTime)
 
     after.labels.back().back().startTime += 200;
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -806,8 +780,7 @@ TEST_F(ChangeDetectionTests, TestLabelNotificationChangeEndTime)
 
     after.labels.back().back().endTime += 200;
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -829,8 +802,7 @@ TEST_F(ChangeDetectionTests, TestLabelNotificationChangeTitle)
 
     after.labels.back().back().title = "new label title";
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
@@ -858,8 +830,7 @@ TEST_F(ChangeDetectionTests, TestLabelNotificationAddingTwoAndRemovingTwo)
     addLabelToTrack(after, after.tracks.front().id, newLabelIdNumber);
     addLabelToTrack(after, after.tracks.back().id, newLabelIdNumber + 1);
 
-    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackListChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
