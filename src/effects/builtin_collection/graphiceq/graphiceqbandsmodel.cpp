@@ -5,6 +5,8 @@
 
 #include "graphiceq.h"
 
+#include <QLocale>
+
 #include "log.h"
 
 namespace au::effects {
@@ -12,10 +14,10 @@ namespace {
 QString centerFrequencyToString(double frequency)
 {
     if (frequency < 1000.0) {
-        return QString::number(static_cast<int>(frequency + .5));
+        return QLocale().toString(static_cast<int>(frequency + .5));
     } else {
         const auto khz = frequency / 1000.0;
-        return QString::number(khz, 'f', (khz == static_cast<int>(khz)) ? 0 : 1) + "k";
+        return QLocale().toString(khz, 'f', (khz == static_cast<int>(khz)) ? 0 : 1) + "k";
     }
 }
 }

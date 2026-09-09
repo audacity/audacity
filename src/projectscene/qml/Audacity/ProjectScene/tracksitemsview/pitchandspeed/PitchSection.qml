@@ -96,7 +96,7 @@ Column {
                     return
                 }
 
-                var newPitch = parseInt(newValue) * 100 + root.pitch % 100
+                var newPitch = newValue * 100 + root.pitch % 100
                 root.valueChanged(newPitch)
             }
         }
@@ -143,7 +143,7 @@ Column {
                     return
                 }
 
-                var newPitch = Math.trunc(root.pitch / 100) * 100 + parseInt(newValue)
+                var newPitch = Math.trunc(root.pitch / 100) * 100 + newValue
                 root.valueChanged(newPitch)
             }
         }

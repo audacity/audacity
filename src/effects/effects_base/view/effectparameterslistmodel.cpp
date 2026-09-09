@@ -5,11 +5,29 @@
 
 #include <cmath>
 
+#include <QLocale>
+
 #include "framework/global/log.h"
 #include "framework/global/realfn.h"
 
 using namespace au::effects;
 using namespace muse;
+
+namespace {
+//! Extractor strings are plain C-locale numbers; anything else (e.g. a
+//! plugin's own "50 %") passes through untouched
+QString localizeNumericString(const QString& str)
+{
+    bool ok = false;
+    const double value = str.toDouble(&ok);
+    if (!ok) {
+        return str;
+    }
+    const int dot = static_cast<int>(str.indexOf('.'));
+    const int decimals = dot >= 0 ? static_cast<int>(str.length()) - dot - 1 : 0;
+    return QLocale().toString(value, 'f', decimals);
+}
+}
 
 EffectParametersListModel::EffectParametersListModel(QObject* parent, EffectInstanceId instanceId)
     : QAbstractListModel(parent)
@@ -76,7 +94,8 @@ QVariant EffectParametersListModel::data(const QModelIndex& index, int role) con
         return param.currentValueString.toQString();
     case FormattedValueRole:
     {
-        QString displayText = param.currentValueString.toQString();
+        // Display only: CurrentValueStringRole is written back, so it stays C-locale
+        QString displayText = localizeNumericString(param.currentValueString.toQString());
         QString units = param.units.toQString();
         // Add units if available and not already in the formatted string
         if (!units.isEmpty() && !displayText.contains(units)) {

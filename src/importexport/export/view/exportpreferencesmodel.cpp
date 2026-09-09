@@ -4,6 +4,8 @@
 
 #include "exportpreferencesmodel.h"
 
+#include <QLocale>
+
 #include "framework/global/io/fileinfo.h"
 #include "framework/global/translation.h"
 #include "framework/global/defer.h"
@@ -40,7 +42,7 @@ QString otherSampleRateLabel()
 
 QString customSampleRateName(int rate)
 {
-    return muse::qtrc("export", "%1 Hz (custom)").arg(QString::number(rate));
+    return muse::qtrc("export", "%1 Hz (custom)").arg(QLocale().toString(rate));
 }
 }
 
@@ -389,7 +391,7 @@ QVariantList ExportPreferencesModel::exportSampleRateList()
     QVariantList result;
     m_sampleRateMapping.clear();
     for (const auto& rate : sampleRateList) {
-        QString sampleRateName = QString::number(rate) + " Hz";
+        QString sampleRateName = QLocale().toString(rate) + " Hz";
         m_sampleRateMapping.push_back(std::make_pair(rate, sampleRateName));
         result << QVariant::fromValue(sampleRateName);
     }

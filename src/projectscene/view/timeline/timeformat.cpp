@@ -6,6 +6,8 @@
 
 #include "timeformat.h"
 
+#include <QLocale>
+
 using namespace au::projectscene;
 
 const std::vector<std::pair<double, IntervalInfo> > zoomToIntervalInfo = {
@@ -105,7 +107,7 @@ QString TimeFormat::label(double d, const IntervalInfo& intervalInfo, TickType t
             if (intervalInfo.minor >= 1.0) {
                 return QString("%1").arg(static_cast<int>(floor(d + 0.5)));
             } else {
-                return QString::number(d, 'f', intervalInfo.digits);
+                return QLocale().toString(d, 'f', intervalInfo.digits);
             }
         }
     }

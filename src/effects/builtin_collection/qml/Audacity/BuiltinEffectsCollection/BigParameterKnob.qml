@@ -46,7 +46,7 @@ Item {
     }
 
     function normalizedValue(value) {
-        return Number(value.toFixed(textEdit.decimals))
+        return ui.df.roundReal(value, textEdit.decimals)
     }
 
     function activateNumericInput(initialText) {
@@ -150,15 +150,10 @@ Item {
 
             minValue: knob.from
             maxValue: knob.to
-            decimals: {
-                let s = root.precisionStepSize().toString()
-                if (s.indexOf('.') >= 0)
-                    return s.split('.')[1].length
-                return 0
-            }
+            decimals: ui.df.decimalsForStep(root.precisionStepSize())
             step: root.precisionStepSize()
 
-            currentValue: +warper.value.toFixed(decimals)
+            currentValue: ui.df.roundReal(warper.value, decimals)
 
             onValueEdited: function (value) {
                 root.newValueRequested(root.parameter["key"], root.normalizedValue(value))
