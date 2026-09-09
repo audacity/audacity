@@ -67,6 +67,10 @@ public:
     //! const accessor will not initialize the effect on demand
     const EffectInstanceFactory* GetEffect() const { return mPlugin; }
 
+    //! Whether EnsureInstance has initialized this state for the current processing
+    //! scope (reset by Finalize). Main thread.
+    bool IsInitialized() const noexcept { return mInitialized; }
+
     //! Expose a pointer to the state's instance (making one as needed).
     /*!
      @post `true` (no promise result is not null)
@@ -125,6 +129,8 @@ public:
     std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
+
+    void ConsumeXmlParameters();
 
     std::shared_ptr<EffectInstance> MakeInstance();
     std::shared_ptr<EffectInstance> EnsureInstance(double rate, size_t audioThreadBufferSize);
@@ -206,6 +212,20 @@ private:
     wxString mParameters; // Used only during deserialization
     size_t mCurrentProcessor{ 0 };
     bool mInitialized{ false };
+
+    //! Worker-thread gate: may this state be processed? Set (release) at the end of
+    //! AddGroup, once the state is completely integrated into the current processing
+    //! scope - instance, mWorkerSettings and mGroups all written - and cleared by
+    //! Finalize. Written by the main thread only, read (acquire) by the worker. That
+    //! single store is the one place to check that everything the worker reads is
+    //! written before it. Access consults it too, on the main thread: settings travel
+    //! through the worker iff the worker processes the state.
+    std::atomic<bool> mReadyForWorker{ false };
+
+    bool ReadyForWorker() const noexcept
+    {
+        return mReadyForWorker.load(std::memory_order_acquire);
+    }
 
     //! @}
 };

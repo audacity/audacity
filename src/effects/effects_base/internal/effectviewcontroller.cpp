@@ -61,10 +61,17 @@ muse::Ret EffectViewController::showEffect(const EffectId& effectId, const Effec
 
 void EffectViewController::showEffect(const RealtimeEffectStatePtr& state) const
 {
-    if (!realtimeEffectService()->isAvailable(state)) {
+    IF_ASSERT_FAILED(state) {
         return;
     }
 
+    const EffectId effectId = au3::wxToString(state->GetID());
+    if (!effectsProvider()->validateEffect(iocContext(), effectId)) {
+        LOGW() << "effect not available, cannot show: " << effectId;
+        return;
+    }
+
+    state->GetEffect();
     callOnLauncher(state, *effectsProvider(), *viewLaunchRegister(),
                    [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
         launcher.showRealtimeEffect(state);

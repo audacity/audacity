@@ -34,8 +34,8 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
     meta.paramsAreInputAgnostic = desc.ParamsAreInputAgnostic();
     meta.isActivated = desc.IsEnabled();
     meta.state = desc.IsValid()
-                 ? muse::audioplugins::AudioPluginState::Validated
-                 : muse::audioplugins::AudioPluginState::Error;
+                 ? EffectState::NewlyValidated
+                 : EffectState::Error;
 
     return meta;
 }

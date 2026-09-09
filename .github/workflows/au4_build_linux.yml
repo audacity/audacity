@@ -197,6 +197,27 @@ jobs:
       run: |
         cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/linux/package.cmake
 
+    # The controller is a Qt app: ship it as a self-contained AppImage (reuses the tools
+    # the Package step extracted), so QA can run it without a Qt install.
+    - name: Package test VST3 controller
+      if: env.DO_BUILD == 'true'
+      run: |
+        bash ${CI_DIR}/linux/make_controller_appimage.sh \
+          build.release/test-plugins/au_vst3_test_plugin_validation_controller \
+          ${{ matrix.arch }} \
+          share/icons/AppIcon/AU4_AppIcon_64x64.png
+
+    - name: Upload test VST3 plugin
+      if: env.DO_BUILD == 'true'
+      uses: actions/upload-artifact@v7
+      with:
+        name: test-vst3-plugin-linux-${{ matrix.arch }}
+        path: |
+          ./build.release/test-plugins/AuVst3TestPlugin.vst3/
+          ./build.release/test-plugins/au_vst3_test_plugin_validation_controller-*.AppImage
+          ./tools/vst3-test-plugin/README.md
+        if-no-files-found: warn
+
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash

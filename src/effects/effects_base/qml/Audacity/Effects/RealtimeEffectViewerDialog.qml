@@ -135,6 +135,10 @@ EffectStyledDialogView {
             instanceId: root.instanceId
             topPadding: topPanel.height
             minimumWidth: prv.minimumWidth
+
+            onVendorUiFailed: {
+                Qt.callLater(viewerModel.notifyVendorUiFailed)
+            }
         }
     }
 

@@ -4,6 +4,10 @@
 #pragma once
 
 #include "framework/global/async/asyncable.h"
+
+#include <functional>
+#include <map>
+#include <vector>
 #include "framework/global/modularity/ioc.h"
 
 #include "framework/audioplugins/iaudiopluginmetareaderregister.h"
@@ -35,14 +39,19 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
 public:
     void deinit();
 
-    void initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
+    void initOnce(const muse::modularity::ContextPtr& ctx,
                   muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
 
     EffectMetaList effectMetaList() const override;
     muse::async::Notification effectMetaListChanged() const override;
 
     EffectMeta meta(const EffectId& effectId) const override;
+
+    bool validateEffect(const muse::modularity::ContextPtr& ctx, const EffectId& effectId) override;
+    muse::async::Promise<bool> validateEffectAsync(const EffectId& effectId) override;
+
     bool loadEffect(const EffectId& effectId) const override;
+
     std::string effectPath(const std::string& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
     std::string effectName(const effects::RealtimeEffectState& state) const override;
@@ -53,8 +62,8 @@ public:
 
     bool hasEffectFamily(EffectFamily family) const override;
 
-    void rescanPlugins(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
+    NewPluginsRegistered rescanPlugins(const muse::modularity::ContextPtr& ctx,
+                                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
     void forgetPlugins(const EffectFilter& forget = nullptr) override;
     void save() override;
 
@@ -62,15 +71,18 @@ private:
     void reloadEffects();
     IEffectLoaderPtr loader(const EffectId& effectId) const;
 
-    enum NewPluginsRegistered {
-        Yes,
-        No,
-    };
-
-    NewPluginsRegistered doScanPlugins(const muse::modularity::ContextPtr& ctx,
-                                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                       const std::function<bool()>& doScanThirdPartyPlugins = nullptr);
+    NewPluginsRegistered doScanPlugins(
+        const muse::modularity::ContextPtr& ctx, muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+        bool validateInBackground);
     void doSave(EffectFilter removeFromConfig = nullptr);
+
+    bool needsFirstUseValidation(const EffectId&) const;
+    bool needsFirstUseValidation(const EffectMeta&) const;
+    void onPluginValidationFinished(const muse::io::path_t& pluginPath);
+
+    // set by initOnce; the app-wide scenario outlives this provider's use of it
+    muse::audioplugins::IRegisterAudioPluginsScenario* m_registerAudioPluginsScenario = nullptr;
+    std::map<muse::io::path_t, std::vector<std::function<void()> > > m_pendingValidations;
 
     EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;

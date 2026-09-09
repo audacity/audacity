@@ -174,6 +174,10 @@ EffectStyledDialogView {
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
             sidePadding: prv.viewMargins
             minimumWidth: prv.minimumWidth
+
+            onVendorUiFailed: {
+                Qt.callLater(viewerModel.notifyVendorUiFailed)
+            }
         }
     }
 

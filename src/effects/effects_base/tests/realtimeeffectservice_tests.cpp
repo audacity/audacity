@@ -10,6 +10,7 @@
 #include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "project/tests/mocks/dummyeffectinstancefactory.h"
+#include "effects/effects_base/tests/mocks/effectsprovidermock.h"
 
 #include "testing/testcontext.h"
 
@@ -25,12 +26,18 @@ namespace au::effects {
 class Effects_RealtimeEffectServiceTests : public ::testing::Test, public muse::async::Asyncable
 {
 protected:
+    static constexpr const char* MODULE = "effects_base_tests";
+
     void SetUp() override
     {
         m_ctx = testutils::makeTestContext();
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         muse::modularity::ioc(m_ctx)->registerExport<context::IGlobalContext>("utests", m_globalContext);
+
+        m_effectsProvider = std::make_shared<NiceMock<EffectsProviderMock> >();
+        muse::modularity::globalIoc()->unregister<IEffectsProvider>(MODULE);
+        muse::modularity::globalIoc()->registerExport<IEffectsProvider>(MODULE, m_effectsProvider);
 
         m_au3Project = ::AudacityProject::Create();
         m_project = std::make_shared<NiceMock<project::AudacityProjectMock> >();
@@ -41,6 +48,8 @@ protected:
         .WillByDefault(Return(m_project));
         ON_CALL(*m_globalContext, currentProjectChanged())
         .WillByDefault(Return(m_currentProjectChanged));
+        ON_CALL(*m_effectsProvider, effectMetaListChanged())
+        .WillByDefault(Return(m_effectMetaListChanged));
 
         m_service = std::make_shared<RealtimeEffectService>(m_ctx);
     }
@@ -49,14 +58,17 @@ protected:
     {
         m_service.reset();
         muse::modularity::ioc(m_ctx)->unregister<context::IGlobalContext>("utests");
+        muse::modularity::globalIoc()->unregister<IEffectsProvider>(MODULE);
     }
 
     muse::modularity::ContextPtr m_ctx;
     std::shared_ptr<NiceMock<context::GlobalContextMock> > m_globalContext;
     std::shared_ptr<NiceMock<project::AudacityProjectMock> > m_project;
+    std::shared_ptr<NiceMock<EffectsProviderMock> > m_effectsProvider;
     std::shared_ptr<::AudacityProject> m_au3Project;
-    muse::async::Notification m_currentProjectChanged;
     std::shared_ptr<RealtimeEffectService> m_service;
+    muse::async::Notification m_currentProjectChanged;
+    muse::async::Notification m_effectMetaListChanged;
 };
 
 TEST_F(Effects_RealtimeEffectServiceTests, EffectStackGoneOnTrackDeletionWhileStatesStillAlive)

@@ -79,7 +79,7 @@ int PluginManagerSortFilterProxy::compareCells(int column, int leftSourceRow, in
         return QString::compare(effectDisplayName(a), effectDisplayName(b), Qt::CaseInsensitive);
     case PluginManagerTableViewModel::s_statusColumnIndex:
         // sort by the displayed label so rows group as the user sees them
-        return QString::compare(pluginStateToString(a.state), pluginStateToString(b.state), Qt::CaseInsensitive);
+        return QString::compare(pluginStateToString(effectStateToRegister(a.state)), pluginStateToString(effectStateToRegister(b.state)), Qt::CaseInsensitive);
     case PluginManagerTableViewModel::s_pathColumnIndex:
         return cmpStr(a.path.toString(), b.path.toString());
     case PluginManagerTableViewModel::s_typeColumnIndex:

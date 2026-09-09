@@ -64,3 +64,16 @@ void Vst3ViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) c
     registerFxPlugin(state->GetInstance()->id());
     doShowRealtimeEffect(state);
 }
+
+bool Vst3ViewLauncher::vendorUiSupported(const EffectId& effectId) const
+{
+    // Unlike LV2 there is no cheap way to know up front whether a VST3 ships an
+    // editor: we find out when VstView asks for it (createView returns null) and are
+    // told via markVendorUiFailed, after which the generic UI is used for that effect.
+    return m_vendorUiFailed.count(effectId) == 0;
+}
+
+void Vst3ViewLauncher::markVendorUiFailed(const EffectId& effectId)
+{
+    m_vendorUiFailed.insert(effectId);
+}

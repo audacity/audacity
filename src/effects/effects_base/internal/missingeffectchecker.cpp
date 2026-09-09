@@ -29,8 +29,14 @@ void MissingEffectChecker::warnIfEffectsMissing()
             continue;
         }
         for (const auto& state : *effectStack) {
-            if (!realtimeEffectService()->isAvailable(state)) {
-                missingEffectIds.insert(EffectId::fromStdString(state->GetID().ToStdString()));
+            // Flag only genuinely missing/broken effects, not ones merely awaiting
+            // this-session re-validation (PreviouslyValidated/Discovered).
+            const EffectId id = EffectId::fromStdString(state->GetID().ToStdString());
+            const EffectState effectState = effectsProvider()->meta(id).state;
+            if (effectState == EffectState::Missing
+                || effectState == EffectState::Error
+                || effectState == EffectState::Undefined) {
+                missingEffectIds.insert(id);
             }
         }
     }

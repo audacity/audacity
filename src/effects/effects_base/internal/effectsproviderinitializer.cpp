@@ -10,7 +10,7 @@ void EffectsProviderInitializer::callAfterSplashScreen()
     if (effectsProviderInitialized) {
         return;
     }
-    effectsProvider()->initOnce(iocContext(), *interactive(), *registerAudioPluginsScenario());
+    effectsProvider()->initOnce(iocContext(), *registerAudioPluginsScenario());
     effectsProviderInitialized = true;
 }
 } // namespace au::effects

@@ -458,6 +458,9 @@ public:
     //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
     void RemoveState(AudacityProject& project, ChannelGroup* pGroup, std::shared_ptr<RealtimeEffectState> pState);
 
+    //! Forwards to RealtimeEffectManager::ReloadState with proper init scope
+    void ReloadState(AudacityProject& project, ChannelGroup* pGroup, const std::shared_ptr<RealtimeEffectState>& pState);
+
     /** \brief Start up Portaudio for capture and recording as needed for
      * input monitoring and software playthrough only
      *

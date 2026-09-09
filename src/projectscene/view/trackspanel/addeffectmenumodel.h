@@ -5,10 +5,14 @@
 
 #include "realtimeeffectmenumodelbase.h"
 
+#include "context/iglobalcontext.h"
+
 namespace au::projectscene {
 class AddEffectMenuModel : public RealtimeEffectMenuModelBase
 {
     Q_OBJECT
+
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
 public:
     explicit AddEffectMenuModel(QObject* parent = nullptr);

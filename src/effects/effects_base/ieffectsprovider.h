@@ -5,8 +5,8 @@
 #pragma once
 
 #include "framework/audioplugins/iregisteraudiopluginsscenario.h"
-#include "framework/interactive/iinteractive.h"
 #include "framework/global/async/notification.h"
+#include "framework/global/async/promise.h"
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/modularity/ioc.h"
 
@@ -23,7 +23,7 @@ class IEffectsProvider : MODULE_GLOBAL_EXPORT_INTERFACE
 public:
     virtual ~IEffectsProvider() = default;
 
-    virtual void initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
+    virtual void initOnce(const muse::modularity::ContextPtr& ctx,
                           muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
 
     virtual EffectMetaList effectMetaList() const = 0;
@@ -37,6 +37,15 @@ public:
 
     virtual muse::async::Notification effectMetaListChanged() const = 0;
 
+    // Validate-on-first-use, synchronous: if the plugin still needs its first
+    // in-session validation it is run now (blocking, behind a modal dialog) and
+    // this returns whether it is then loadable; otherwise returns its current
+    // loadability at once. `ctx` is the caller's window context - the provider is
+    // a global singleton and cannot know which window/project asked, so it hosts
+    // the modal dialog in the caller's context.
+    virtual bool validateEffect(const muse::modularity::ContextPtr& ctx, const EffectId& effectId) = 0;
+    virtual muse::async::Promise<bool> validateEffectAsync(const EffectId&) = 0;
+
     virtual bool loadEffect(const EffectId& effectId) const = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
     virtual void setEffectActivated(const EffectId& effectId, bool activated) = 0;
@@ -46,8 +55,8 @@ public:
     /**
      * @brief Soft rescan: plugins already in the configuration aren't reevaluated. Use `forgetPlugins` beforehand to force re-evaluation.
      */
-    virtual void rescanPlugins(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
+    virtual NewPluginsRegistered rescanPlugins(const muse::modularity::ContextPtr& ctx,
+                                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
     virtual void forgetPlugins(const EffectFilter& forget = nullptr) = 0;
 
     virtual void save() = 0;

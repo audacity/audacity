@@ -1,0 +1,34 @@
+# Deploys the test VST3 bundle into the user's VST3 folder: a symlink on Linux/macOS
+# (so rebuilds stay live), a copy on Windows.
+
+set(src "@AU_VST3_TEST_PLUGIN_BUNDLE@")
+set(name "@AU_VST3_TEST_PLUGIN_NAME@.vst3")
+
+if(APPLE)
+    set(dir "$ENV{HOME}/Library/Audio/Plug-Ins/VST3")
+elseif(WIN32)
+    set(dir "$ENV{COMMONPROGRAMFILES}/VST3")
+else()
+    set(dir "$ENV{HOME}/.vst3")
+endif()
+set(dst "${dir}/${name}")
+
+if(NOT EXISTS "${src}")
+    message(FATAL_ERROR "[vst3-test-plugin] bundle not built: ${src}")
+endif()
+file(MAKE_DIRECTORY "${dir}")
+
+# Replace whatever is there, symlink-aware: never follow an existing link into the
+# build output (IS_DIRECTORY would, so test IS_SYMLINK first).
+if(IS_SYMLINK "${dst}")
+    file(REMOVE "${dst}")
+elseif(IS_DIRECTORY "${dst}")
+    file(REMOVE_RECURSE "${dst}")
+endif()
+
+if(WIN32)
+    file(COPY "${src}" DESTINATION "${dir}")
+else()
+    file(CREATE_LINK "${src}" "${dst}" SYMBOLIC)
+endif()
+message(STATUS "[vst3-test-plugin] deployed ${name} -> ${dst}")

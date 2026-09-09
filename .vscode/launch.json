@@ -54,7 +54,7 @@
             "name": "Launch (lldb - Linux)",
             "type": "lldb",
             "request": "launch",
-            "preLaunchTask": "CMake: install",
+            "preLaunchTask": "CMake: install + deploy test VST3",
             "cwd": "${workspaceFolder}",
             "program": "${command:cmake.launchTargetPath}",
             "args": [
@@ -77,7 +77,7 @@
             "type": "cppdbg",
             "MIMode": "gdb",
             "request": "launch",
-            "preLaunchTask": "CMake: install",
+            "preLaunchTask": "CMake: install + deploy test VST3",
             "cwd": "${workspaceFolder}",
             "program": "${command:cmake.launchTargetPath}",
             "args": [

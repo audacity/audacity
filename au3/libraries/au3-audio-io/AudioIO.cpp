@@ -380,6 +380,19 @@ void AudioIO::RemoveState(AudacityProject& project,
     RealtimeEffectManager::Get(project).RemoveState(pInit, pGroup, pState);
 }
 
+void AudioIO::ReloadState(AudacityProject& project,
+                          ChannelGroup* pGroup,
+                          const std::shared_ptr<RealtimeEffectState>& pState)
+{
+    RealtimeEffects::InitializationScope* pInit = nullptr;
+    if (mpTransportState && mpTransportState->mpRealtimeInitialization) {
+        if (auto pProject = GetOwningProject(); pProject.get() == &project) {
+            pInit = &*mpTransportState->mpRealtimeInitialization;
+        }
+    }
+    RealtimeEffectManager::Get(project).ReloadState(pInit, pGroup, pState);
+}
+
 void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {

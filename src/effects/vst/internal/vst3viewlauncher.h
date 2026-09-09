@@ -10,6 +10,8 @@
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/internal/abstractviewlauncher.h"
 
+#include <set>
+
 namespace au::effects {
 class Vst3ViewLauncher final : public AbstractViewLauncher
 {
@@ -21,8 +23,12 @@ public:
 
     muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
     void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
+    bool vendorUiSupported(const EffectId& effectId) const override;
+    void markVendorUiFailed(const EffectId& effectId) override;
 
 private:
     void registerFxPlugin(const EffectInstanceId& instanceId) const;
+
+    std::set<EffectId> m_vendorUiFailed;
 };
 }

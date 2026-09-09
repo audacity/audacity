@@ -695,7 +695,8 @@ bool ExportPreferencesModel::masterFxEnabled() const
     }
 
     return std::any_of(stack->begin(), stack->end(), [this](const auto& state) {
-        return realtimeEffectService()->isActive(state);
+        // "effectively active" for export = loaded/available and not bypassed
+        return realtimeEffectService()->isAvailable(state) && realtimeEffectService()->isActive(state);
     });
 }
 

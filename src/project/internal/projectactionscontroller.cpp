@@ -1171,7 +1171,8 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
 
     const Ret ret = openPageIfNeed(PROJECT_PAGE_URI);
     if (ret) {
-        missingEffectChecker()->warnIfEffectsMissing();
+        // TODO this warning must now wait until all effects in the project were validated.
+        // missingEffectChecker()->warnIfEffectsMissing();
     }
 
     return ret;
