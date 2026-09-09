@@ -89,8 +89,8 @@ void TrackNavigationController::init()
                     setFocusedTrack(trackList.front().id);
                 }
 
-                prj->trackListChanged().onReceive(this, [this](const TrackListChange&) {
-                    revalidateFocusedTrack();
+                prj->trackListChanged().onReceive(this, [this](const TrackListChange& change) {
+                    onTrackListChanged(change);
                 });
             }
         });
@@ -840,17 +840,23 @@ void TrackNavigationController::au3SetTrackFocused(const TrackId& trackId)
     }
 }
 
-void TrackNavigationController::revalidateFocusedTrack()
+void TrackNavigationController::onTrackListChanged(const TrackListChange& change)
 {
     const TrackId focused = focusedTrack();
-    const TrackIdList tracks = selectionController()->orderedTrackList();
-    const bool focusedExists = std::any_of(tracks.begin(), tracks.end(),
-                                           [focused](const TrackId& t) { return t == focused; });
+    const TrackIdList& after = change.after();
 
-    if (focusedExists) {
+    if (change.wasRemoved(focused)) {
+        if (after.empty()) {
+            setFocusedTrack(INVALID_TRACK);
+            return;
+        }
+
+        const auto index = muse::indexOf(change.before(), focused);
+        setFocusedTrack(index < after.size() ? after[index] : after.back());
         return;
     }
 
-    const TrackId trackId = tracks.empty() ? INVALID_TRACK : tracks.front();
-    setFocusedTrack(trackId);
+    if (!muse::contains(after, focused)) {
+        setFocusedTrack(after.empty() ? INVALID_TRACK : after.front());
+    }
 }
