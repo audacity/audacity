@@ -80,8 +80,8 @@ TEST_F(TrackeditActionsControllerTests, KeyboardMoveRequestsPreviewInsteadOfEdit
     m_requests->itemMoveRequested().onReceive(m_controller.get(), [&steps](secs_t timeOffset, int trackOffset) {
         steps.emplace_back(timeOffset, trackOffset);
     });
-    EXPECT_CALL(*m_trackeditInteraction, moveClips(::testing::_, ::testing::_, ::testing::_, ::testing::_)).Times(0);
-    EXPECT_CALL(*m_trackeditInteraction, moveLabels(::testing::_, ::testing::_, ::testing::An<int>())).Times(0);
+    EXPECT_CALL(*m_trackeditInteraction, moveClips(::testing::_, ::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackeditInteraction, moveLabels(::testing::_, ::testing::_, ::testing::_)).Times(0);
 
     moveItem(0.5, 0);
     moveItem(0.0, 1);
