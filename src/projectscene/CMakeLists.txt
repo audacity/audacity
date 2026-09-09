@@ -252,6 +252,7 @@ set(MODULE_LINK
         trackedit
         spectrogram
         uicomponents
+        uicomponents_qml
         au3-registries
         au3-track
         au3-project

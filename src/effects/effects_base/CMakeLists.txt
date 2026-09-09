@@ -151,6 +151,7 @@ set(MODULE_LINK
         au3-module-manager
         au3-files
         uicomponents
+        uicomponents_qml
 )
 
 set(MODULE_USE_UNITY OFF)

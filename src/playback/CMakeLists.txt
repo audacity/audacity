@@ -90,6 +90,7 @@ set(MODULE_LINK
         au3-utility
         au3-wave-track
         uicomponents
+        uicomponents_qml
 )
 
 set(MODULE_USE_UNITY OFF)

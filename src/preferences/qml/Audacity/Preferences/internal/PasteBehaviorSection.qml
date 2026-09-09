@@ -8,7 +8,7 @@ import Muse.UiComponents
 
 import Audacity.AppShell
 import Audacity.Preferences
-import Audacity.UiComponents
+import Audacity.UiComponents 1.0
 import Audacity.TrackEdit
 
 BaseSection {

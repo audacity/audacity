@@ -5,7 +5,7 @@ import QtQuick
 
 import Muse.UiComponents
 
-import Audacity.UiComponents
+import Audacity.UiComponents 1.0
 
 BaseSection {
     id: root
