@@ -43,6 +43,8 @@ signals:
     void navigationFocusInsideEffectsPanelChanged();
 
 private:
+    void toggleEffectsPanel();
+
     void savePreviouslyFocusedControl();
     void restorePreviouslyFocusedControl();
 
