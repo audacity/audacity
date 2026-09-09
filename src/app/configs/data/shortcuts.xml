@@ -651,11 +651,11 @@
         <seq>K</seq>
     </SC>
     <SC>
-        <key>curs-project-start</key>
+        <key>action://playback/rewind-start</key>
         <seq>Home</seq>
     </SC>
     <SC>
-        <key>curs-project-end</key>
+        <key>action://playback/rewind-end</key>
         <seq>End</seq>
     </SC>
     <SC>
@@ -878,6 +878,10 @@
     <SC>
         <key>action://playback/toggle-play-from-cursor</key>
         <seq>Shift+Space</seq>
+    </SC>
+    <SC>
+        <key>action://playback/play-selection</key>
+        <seq>W</seq>
     </SC>
     <SC>
         <key>action://record/stop</key>
