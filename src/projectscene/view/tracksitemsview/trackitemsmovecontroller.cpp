@@ -18,11 +18,28 @@ int indexOf(const TrackIdList& tracks, TrackId id)
     return it == tracks.end() ? -1 : static_cast<int>(std::distance(tracks.begin(), it));
 }
 
-TrackIdList tracksOfKind(const std::vector<Track>& tracks, bool labels)
+bool isAudioTrack(TrackType type)
+{
+    return type == TrackType::Mono || type == TrackType::Stereo;
+}
+
+bool isLabelTrack(TrackType type)
+{
+    return type == TrackType::Label;
+}
+
+using TrackFilter = bool (*)(TrackType);
+
+TrackFilter filterFor(TrackType type)
+{
+    return isAudioTrack(type) ? isAudioTrack : isLabelTrack;
+}
+
+TrackIdList tracksMatching(const std::vector<Track>& tracks, TrackFilter filter)
 {
     TrackIdList ids;
     for (const Track& track : tracks) {
-        if (labels ? track.type == TrackType::Label : track.type == TrackType::Mono || track.type == TrackType::Stereo) {
+        if (filter(track.type)) {
             ids.push_back(track.id);
         }
     }
@@ -97,8 +114,8 @@ void TrackItemsMoveController::start(const TrackItemKey& key, bool keyboard)
     if (!track) {
         return;
     }
-    m_sourceIsLabel = track->type == TrackType::Label;
-    if (m_sourceIsLabel) {
+    m_sourceType = track->type;
+    if (isLabelTrack(m_sourceType)) {
         const Label label = trackeditProject->label(key.key);
         if (!label.isValid()) {
             return;
@@ -123,7 +140,7 @@ void TrackItemsMoveController::start(const TrackItemKey& key, bool keyboard)
     if (keyboard) {
         muse::remove_if(m_clips, [this](const auto& clipKey) { return !m_project->clip(clipKey).isValid(); });
         muse::remove_if(m_labels, [this](const auto& labelKey) { return !m_project->label(labelKey).isValid(); });
-        auto& items = m_sourceIsLabel ? m_labels : m_clips;
+        auto& items = isLabelTrack(m_sourceType) ? m_labels : m_clips;
         if (!muse::contains(items, m_sourceKey)) {
             items.push_back(m_sourceKey);
         }
@@ -196,7 +213,7 @@ void TrackItemsMoveController::moveByKeyboard(double timeOffset, int trackOffset
     m_viewState->setMoveInitiated(true);
     int destinationOffset = m_trackOffset + trackOffset;
     if (m_clips.empty()) {
-        const auto tracks = tracksOfKind(m_project->trackList(), true);
+        const auto tracks = tracksMatching(m_project->trackList(), isLabelTrack);
         int first = static_cast<int>(tracks.size()) - 1;
         int last = 0;
         for (const auto& key : m_labels) {
@@ -213,7 +230,7 @@ void TrackItemsMoveController::moveByKeyboard(double timeOffset, int trackOffset
     }
     emit guidelineChanged(guideline);
     if (trackOffset != 0) {
-        const auto tracks = tracksOfKind(m_project->trackList(), m_sourceIsLabel);
+        const auto tracks = tracksMatching(m_project->trackList(), filterFor(m_sourceType));
         const int target = std::clamp(indexOf(tracks, m_sourceKey.trackId) + m_trackOffset, 0, static_cast<int>(tracks.size()) - 1);
         emit keyboardTrackChanged(tracks[target]);
     }
@@ -251,7 +268,7 @@ double TrackItemsMoveController::pointerTimeOffset(double start, double end) con
 
 int TrackItemsMoveController::pointerTrackOffset() const
 {
-    const TrackIdList tracks = tracksOfKind(m_project->trackList(), m_sourceIsLabel);
+    const TrackIdList tracks = tracksMatching(m_project->trackList(), filterFor(m_sourceType));
     const int source = indexOf(tracks, m_sourceKey.trackId);
     if (source < 0) {
         return m_trackOffset;
@@ -281,7 +298,7 @@ void TrackItemsMoveController::update()
     double end = m_endTime;
     if (m_rangeSelection) {
         // Range moves still edit incrementally; their source times change after each update.
-        if (m_sourceIsLabel) {
+        if (isLabelTrack(m_sourceType)) {
             const Label label = m_project->label(m_sourceKey);
             start = label.startTime;
             end = label.endTime;
@@ -322,7 +339,7 @@ void TrackItemsMoveController::updatePreview(double timeOffset, int trackOffset)
     }
 
     const auto tracks = m_project->trackList();
-    const TrackIdList audio = tracksOfKind(tracks, false);
+    const TrackIdList audio = tracksMatching(tracks, isAudioTrack);
     const int originalAudioCount = static_cast<int>(audio.size()) - static_cast<int>(tracks.size() - m_originalTrackCount);
     for (const trackedit::ClipKey& key : m_clips) {
         const int source = indexOf(audio, key.trackId);
@@ -355,9 +372,12 @@ TrackItemKeyList TrackItemsMoveController::itemsOnTrack(TrackId trackId) const
     if (!m_moved || m_rangeSelection) {
         return keys;
     }
-    const auto tracks = m_project->trackList();
-    const bool labels = muse::contains(tracksOfKind(tracks, true), trackId);
-    const TrackIdList destinations = tracksOfKind(tracks, labels);
+    const auto track = m_project->track(trackId);
+    if (!track) {
+        return keys;
+    }
+    const bool labels = isLabelTrack(track->type);
+    const TrackIdList destinations = tracksMatching(m_project->trackList(), filterFor(track->type));
     const TrackItemKeyList& items = labels ? m_labels : m_clips;
     for (const trackedit::TrackItemKey& key : items) {
         const int source = indexOf(destinations, key.trackId);
@@ -393,8 +413,8 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
                 selectionController()->setSelectedClips(m_clips, false);
                 selectionController()->setSelectedLabels(m_labels, false);
             }
-            const TrackItemKeyList& selected = m_sourceIsLabel ? m_labels : m_clips;
-            const auto result = m_sourceIsLabel
+            const TrackItemKeyList& selected = isLabelTrack(m_sourceType) ? m_labels : m_clips;
+            const auto result = isLabelTrack(m_sourceType)
                                 ? trackeditInteraction()->moveLabels(selected, m_timeOffset, m_trackOffset)
                                 : trackeditInteraction()->moveClips(selected, m_timeOffset, m_trackOffset);
             if (result.ret) {
@@ -402,11 +422,6 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
                 const auto sourceIndex = std::distance(selected.begin(), source);
                 if (source != selected.end() && sourceIndex < static_cast<int>(result.val.size())) {
                     movedKey = TrackItemKey(result.val[sourceIndex]);
-                }
-                if (m_sourceIsLabel) {
-                    selectionController()->setSelectedLabels(result.val, true);
-                } else {
-                    selectionController()->setSelectedClips(result.val, true);
                 }
             }
         }
