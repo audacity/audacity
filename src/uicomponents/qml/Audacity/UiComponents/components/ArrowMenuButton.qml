@@ -6,6 +6,8 @@ import QtQuick
 import Muse.Ui
 import Muse.UiComponents
 
+import "internal"
+
 MenuButton {
     id: root
 
@@ -28,9 +30,10 @@ MenuButton {
         color: root.backgroundColor
         border: root.border
 
-        NavigationFocusBorder {
+        DualFocusBorder {
             navigationCtrl: root.navigation
-            drawOutsideParent: !root.drawFocusBorderInsideRect
+            outerColor: root.iconColor
+            radius: background.topRightRadius
         }
 
         states: [
