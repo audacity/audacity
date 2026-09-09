@@ -328,40 +328,78 @@ bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds
 muse::RetVal<ClipKeyList> TrackeditOperationController::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
                                                                   int trackPositionOffset)
 {
-    // Labels to move along with clips
-    LabelKeyList selectedLabels = selectionController()->selectedLabels();
-    if (!selectedLabels.empty()) {
-        secs_t clampedOffset = timePositionOffset;
+    const auto result = moveItems(clipKeyList, selectedLabels(), timePositionOffset, trackPositionOffset);
+    return result.ret ? muse::RetVal<ClipKeyList>::make_ok(result.val.clips) : muse::RetVal<ClipKeyList>::make_ret(result.ret);
+}
 
-        for (const auto& clipKey : clipKeyList) {
-            secs_t startTime = clipsInteraction()->clipStartTime(clipKey);
-            if (startTime + clampedOffset < 0.0) {
-                clampedOffset = -startTime;
-            }
+muse::RetVal<TrackeditOperationController::MovedItems> TrackeditOperationController::moveItems(
+    const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset)
+{
+    for (const ClipKey& key : clips) {
+        timeOffset = std::max(timeOffset, -clipsInteraction()->clipStartTime(key));
+    }
+    const auto project = globalContext()->currentTrackeditProject();
+    for (const LabelKey& key : labels) {
+        const Label label = project->label(key);
+        if (label.isValid()) {
+            timeOffset = std::max(timeOffset, secs_t(-label.startTime));
         }
-
-        auto prj = globalContext()->currentTrackeditProject();
-        for (const auto& labelKey : selectedLabels) {
-            trackedit::Label label = prj->label(labelKey);
-            if (label.isValid() && label.startTime + clampedOffset < 0.0) {
-                clampedOffset = -label.startTime;
-            }
-        }
-
-        labelsInteraction()->moveLabels(selectedLabels, clampedOffset, trackPositionOffset);
-        timePositionOffset = clampedOffset;
     }
 
-    muse::RetVal<ClipKeyList> result = clipsInteraction()->moveClips(clipKeyList, timePositionOffset, trackPositionOffset);
+    const auto selection = selectionController();
 
-    if (!result.ret) {
+    // Move notifications must not expose selection keys whose items have already changed tracks.
+    selection->setSelectedClips({}, false);
+    selection->setSelectedLabels({}, false);
+
+    const auto rollback = [&](const muse::Ret& error) {
         projectHistory()->rollbackState();
-        globalContext()->currentTrackeditProject()->reload();
-    } else {
-        const std::string msg = !selectedLabels.empty() ? muse::trc("trackedit", "Items moved") : muse::trc("trackedit", "Clip moved");
-        projectHistory()->pushHistoryState(msg, muse::trc("trackedit", "Move clip"));
+        project->reload();
+        return muse::RetVal<MovedItems>::make_ret(error);
+    };
+
+    MovedItems moved;
+    if (!labels.empty()) {
+        const auto result = labelsInteraction()->moveLabels(labels, timeOffset, trackOffset);
+        if (!result.ret) {
+            return rollback(result.ret);
+        }
+        moved.labels = result.val;
     }
-    return result;
+    if (!clips.empty()) {
+        const auto result = clipsInteraction()->moveClips(clips, timeOffset, trackOffset);
+        if (!result.ret) {
+            return rollback(result.ret);
+        }
+        moved.clips = result.val;
+    }
+
+    selection->setSelectedClips(moved.clips, true);
+    selection->setSelectedLabels(moved.labels, true);
+    TrackIdList tracks;
+    for (const auto& keys : { moved.clips, moved.labels }) {
+        for (const auto& key : keys) {
+            if (!muse::contains(tracks, key.trackId)) {
+                tracks.push_back(key.trackId);
+            }
+        }
+    }
+    selection->setSelectedTracks(tracks, true);
+
+    std::string description;
+    std::string action;
+    if (!clips.empty() && !labels.empty()) {
+        description = muse::trc("trackedit", "Items moved");
+        action = muse::trc("trackedit", "Move items");
+    } else if (!clips.empty()) {
+        description = muse::trc("trackedit", "Clip moved");
+        action = muse::trc("trackedit", "Move clip");
+    } else {
+        description = muse::trc("trackedit", "Label moved");
+        action = muse::trc("trackedit", "Move label");
+    }
+    projectHistory()->pushHistoryState(description, action);
+    return muse::RetVal<MovedItems>::make_ok(moved);
 }
 
 bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset, bool completed)
@@ -979,20 +1017,8 @@ bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, b
 muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
                                                                     int trackPositionOffset)
 {
-    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, timePositionOffset, trackPositionOffset);
-    if (!retVal.ret) {
-        return retVal;
-    }
-
-    bool clipsSelected = isClipsSelected();
-    if (isClipsSelected()) {
-        clipsInteraction()->moveClips(selectedClips(), timePositionOffset, trackPositionOffset);
-    }
-
-    const std::string msg = clipsSelected ? muse::trc("trackedit", "Move items") : muse::trc("trackedit", "Move labels");
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Move"), msg);
-
-    return retVal;
+    const auto result = moveItems(selectedClips(), labelKeys, timePositionOffset, trackPositionOffset);
+    return result.ret ? muse::RetVal<LabelKeyList>::make_ok(result.val.labels) : muse::RetVal<LabelKeyList>::make_ret(result.ret);
 }
 
 muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId,

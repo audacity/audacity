@@ -236,7 +236,6 @@ TEST_F(TrackItemsMoveControllerTests, DropAfterSourceDelegateIsDestroyed)
     const trackedit::LabelKeyList moved { { 2, 30 } };
     EXPECT_CALL(*m_interaction, moveLabels(m_selectedLabels, trackedit::secs_t(10.0), 1))
     .WillOnce(Return(muse::RetVal<trackedit::LabelKeyList>::make_ok(moved)));
-    EXPECT_CALL(*m_selection, setSelectedLabels(moved, true));
     EXPECT_CALL(*m_history, endUserInteraction(false));
     EXPECT_EQ(m_controller->finish().key, moved.front());
 
@@ -291,7 +290,6 @@ TEST_F(TrackItemsMoveControllerTests, ClipsMoveOnlyOnceOnDrop)
     const trackedit::ClipKeyList moved { { 2, 20 } };
     EXPECT_CALL(*m_interaction, moveClips(m_selectedClips, trackedit::secs_t(15.0), 1))
     .WillOnce(Return(muse::RetVal<trackedit::ClipKeyList>::make_ok(moved)));
-    EXPECT_CALL(*m_selection, setSelectedClips(moved, true));
     m_controller->finish();
     expectFinished();
 }
@@ -403,7 +401,6 @@ TEST_F(TrackItemsMoveControllerTests, KeyboardRepeatsPreviewOriginalItemsUntilMo
     EXPECT_CALL(*m_interaction, moveClips(original, trackedit::secs_t(0.5), 1))
     .WillOnce(Return(muse::RetVal<trackedit::ClipKeyList>::make_ok(moved)));
     EXPECT_CALL(*m_selection, setSelectedClips(original, false));
-    EXPECT_CALL(*m_selection, setSelectedClips(moved, true));
     EXPECT_CALL(*m_navigation, setFocusedItem(moved.front(), true));
     m_viewState->modifiersReleased().notify();
     expectFinished();

@@ -80,7 +80,7 @@ private:
     double m_timeOffset = 0.0;
     int m_trackOffset = 0;
     size_t m_originalTrackCount = 0;
-    bool m_sourceIsLabel = false;
+    trackedit::TrackType m_sourceType = trackedit::TrackType::Undefined;
     bool m_rangeSelection = false;
     bool m_keyboardMove = false;
     bool m_moved = false;
