@@ -111,10 +111,8 @@ private:
     void onSelectedTracks(const trackedit::TrackIdList& tracksIds);
     void onFocusedTrack(const trackedit::TrackId& trackId);
     void onTracksChanged(const std::vector<trackedit::Track>& tracks);
-    void onTrackAdded(const trackedit::Track& track);
-    void onTrackRemoved(const trackedit::Track& track);
+    void onTrackListChanged(const trackedit::TrackListChange& change);
     void onTrackChanged(const trackedit::Track& track);
-    void onTrackInserted(const trackedit::Track& track, int pos);
     void onTrackMoved(const trackedit::Track& track, int pos);
 
     TrackItem* buildTrackItem(const trackedit::Track& track);

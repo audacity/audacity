@@ -81,20 +81,12 @@ void PanelTracksListModel::load()
         onTracksChanged(tracks);
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    prj->trackAdded().onReceive(this, [this](const Track& track) {
-        onTrackAdded(track);
-    }, muse::async::Asyncable::Mode::SetReplace);
-
-    prj->trackRemoved().onReceive(this, [this](const Track& track) {
-        onTrackRemoved(track);
+    prj->trackListChanged().onReceive(this, [this](const TrackListChange& change) {
+        onTrackListChanged(change);
     }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackChanged().onReceive(this, [this](const Track& track) {
         onTrackChanged(track);
-    }, muse::async::Asyncable::Mode::SetReplace);
-
-    prj->trackInserted().onReceive(this, [this](const Track& track, int pos) {
-        onTrackInserted(track, pos);
     }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackMoved().onReceive(this, [this](const Track& track, int pos) {
@@ -671,27 +663,40 @@ void PanelTracksListModel::onTracksChanged(const std::vector<au::trackedit::Trac
     });
 }
 
-void PanelTracksListModel::onTrackAdded(const trackedit::Track& track)
+void PanelTracksListModel::onTrackListChanged(const trackedit::TrackListChange& change)
 {
-    const int size = static_cast<int>(m_trackList.size());
-    beginInsertRows(QModelIndex(), size, size);
-    m_trackList.push_back(buildTrackItem(track));
-    onTrackChanged(track);
-    endInsertRows();
-}
-
-void PanelTracksListModel::onTrackRemoved(const trackedit::Track& track)
-{
-    for (int i = 0; i < m_trackList.size(); ++i) {
-        if (m_trackList.at(i)->trackId() == track.id) {
-            beginRemoveRows(QModelIndex(), i, i);
-            const auto it = m_trackList.begin() + i;
-            const auto item = *it;
-            m_trackList.erase(it);
-            delete item;
-            endRemoveRows();
-            break;
+    for (const trackedit::TrackId& trackId : change.removed()) {
+        for (int i = 0; i < m_trackList.size(); ++i) {
+            if (m_trackList.at(i)->trackId() == trackId) {
+                beginRemoveRows(QModelIndex(), i, i);
+                const auto it = m_trackList.begin() + i;
+                const auto item = *it;
+                m_trackList.erase(it);
+                delete item;
+                endRemoveRows();
+                break;
+            }
         }
+    }
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    for (const trackedit::TrackId& trackId : change.added()) {
+        const std::optional<trackedit::Track> track = prj->track(trackId);
+        if (!track) {
+            continue;
+        }
+
+        const int size = static_cast<int>(m_trackList.size());
+        const int index = std::min(static_cast<int>(change.indexAfter(trackId).value_or(m_trackList.size())), size);
+
+        beginInsertRows(QModelIndex(), index, index);
+        m_trackList.insert(index, buildTrackItem(track.value()));
+        onTrackChanged(track.value());
+        endInsertRows();
     }
 }
 
@@ -704,18 +709,6 @@ void PanelTracksListModel::onTrackChanged(const trackedit::Track& track)
 
     trackItem->init(track);
     updateRemovingAvailability();
-}
-
-void PanelTracksListModel::onTrackInserted(const trackedit::Track& track, int pos)
-{
-    int index = pos >= 0 && pos <= m_trackList.size() ? pos : m_trackList.size();
-
-    beginInsertRows(QModelIndex(), index, index);
-
-    m_trackList.insert(index, buildTrackItem(track));
-    onTrackChanged(track);
-
-    endInsertRows();
 }
 
 void PanelTracksListModel::onTrackMoved(const trackedit::Track& track, int pos)

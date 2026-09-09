@@ -27,8 +27,7 @@ public:
 private:
     void setTrackId(std::optional<au::trackedit::TrackId>);
     void setupCallbacks(trackedit::ITrackeditProject&);
-    void onTrackAdded(const trackedit::Track&);
-    void onTrackRemoved(const trackedit::TrackId&);
+    void onTrackListChanged(const trackedit::TrackListChange& change);
     void onTracksChanged(const std::vector<trackedit::Track>&);
     std::optional<au::trackedit::TrackId> m_trackId;
     muse::async::Notification m_selectedTrackIdChanged;

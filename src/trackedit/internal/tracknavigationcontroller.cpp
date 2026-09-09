@@ -89,15 +89,7 @@ void TrackNavigationController::init()
                     setFocusedTrack(trackList.front().id);
                 }
 
-                prj->trackAdded().onReceive(this, [this](const Track&) {
-                    revalidateFocusedTrack();
-                });
-
-                prj->trackInserted().onReceive(this, [this](const Track&, int) {
-                    revalidateFocusedTrack();
-                });
-
-                prj->trackRemoved().onReceive(this, [this](const Track&) {
+                prj->trackListChanged().onReceive(this, [this](const TrackListChange&) {
                     revalidateFocusedTrack();
                 });
             }
