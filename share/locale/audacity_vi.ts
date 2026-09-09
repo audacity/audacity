@@ -5466,7 +5466,7 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>Số chỉ nhịp: %1/%2</translation>
     </message>
 </context>
 <context>
@@ -18014,7 +18014,7 @@ Nó sẽ không được tải.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>Hiển thị hộp thoại &apos;Bạn muốn xuất như thế nào?&apos;</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -18029,12 +18029,12 @@ Nó sẽ không được tải.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Luôn lưu vào đám mây</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>Luôn luôn lưu vào máy tính</translation>
     </message>
 </context>
 <context>
@@ -19193,7 +19193,7 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>Xuất bản trên máy tính</translation>
     </message>
 </context>
 <context>
@@ -21177,19 +21177,19 @@ Vui lòng kết nối thiết bị đầu vào và quét lại.</translation>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>Còn lại %n giờ</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>Còn lại %n phút</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>Còn lại %n giây</numerusform></translation>
     </message>
 </context>
 <context>

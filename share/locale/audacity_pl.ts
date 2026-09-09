@@ -4284,7 +4284,7 @@ Ta czynność nie usunie żadnego z Twoich projektów.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
-        <translation>Polskie tłumaczenie Audacity: Grzegorz Pruchniakowski, Grzegorz Wojciechowski.</translation>
+        <translation>Polskie tłumaczenie Audacity: Grzegorz Wojciechowski.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>
