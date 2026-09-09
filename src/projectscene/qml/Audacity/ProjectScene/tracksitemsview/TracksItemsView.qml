@@ -580,6 +580,8 @@ Rectangle {
             }
 
             onPressed: function (e) {
+                itemWasMoved = false
+
                 if (itemsMoveController.keyboardActive) {
                     itemsMoveController.finish()
                 }
@@ -614,7 +616,6 @@ Rectangle {
                         lastItemClickKey = null
                     }
 
-                    itemWasMoved = false
                     pressStartPosition = Qt.point(e.x, e.y)
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered)

@@ -708,7 +708,13 @@ void TrackeditActionsController::doGlobalDelete()
 
 void TrackeditActionsController::doGlobalCancel()
 {
+    const bool interactionOngoing = projectHistory()->interactionOngoing();
     trackeditInteraction()->notifyAboutCancelDragEdit();
+
+    // Cancel the drag without clearing the selection restored by rollback.
+    if (interactionOngoing) {
+        return;
+    }
 
     const TrackItemKey focusedItem = trackNavigationController()->focusedItem();
     const ClipKeyList selectedClips = selectionController()->selectedClips();
