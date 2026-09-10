@@ -42,8 +42,9 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(bool trimBlankSpace READ trimBlankSpace WRITE setTrimBlankSpace NOTIFY trimBlankSpaceChanged)
 
     Q_PROPERTY(bool separateFilesExport READ separateFilesExport NOTIFY currentProcessChanged)
+    Q_PROPERTY(bool separateFilesByLabels READ separateFilesByLabels NOTIFY currentProcessChanged)
     Q_PROPERTY(QString fileNamePrefix READ fileNamePrefix WRITE setFileNamePrefix NOTIFY fileNamePrefixChanged)
-    Q_PROPERTY(bool includeTrackNumbers READ includeTrackNumbers WRITE setIncludeTrackNumbers NOTIFY includeTrackNumbersChanged)
+    Q_PROPERTY(bool includeNumbers READ includeNumbers WRITE setIncludeNumbers NOTIFY includeNumbersChanged)
     Q_PROPERTY(QString fileNamePreview READ fileNamePreview NOTIFY fileNamePreviewChanged)
 
     Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged)
@@ -82,10 +83,11 @@ public:
     void setTrimBlankSpace(bool trim);
 
     bool separateFilesExport() const;
+    bool separateFilesByLabels() const;
     QString fileNamePrefix() const;
     void setFileNamePrefix(const QString& prefix);
-    bool includeTrackNumbers() const;
-    void setIncludeTrackNumbers(bool include);
+    bool includeNumbers() const;
+    void setIncludeNumbers(bool include);
     QString fileNamePreview() const;
 
     QString filename() const;
@@ -135,7 +137,7 @@ signals:
     void processListChanged();
     void trimBlankSpaceChanged();
     void fileNamePrefixChanged();
-    void includeTrackNumbersChanged();
+    void includeNumbersChanged();
     void fileNamePreviewChanged();
     void filenameChanged();
     void suggestedFilePathChanged();
@@ -161,6 +163,7 @@ private:
     void openCustomSampleRateDialog();
     void updateExportChannels();
 
+    bool hasLabels() const;
     muse::Ret exportSingleFile();
     muse::Ret exportSeparateFiles();
     bool confirmOverwrite(const std::string& question);

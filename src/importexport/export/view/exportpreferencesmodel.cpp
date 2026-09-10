@@ -53,9 +53,9 @@ const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
     { ExportProcessType::SELECTED_AUDIO, QT_TRANSLATE_NOOP("export", "Export selected audio") },
     { ExportProcessType::AUDIO_IN_LOOP_REGION, QT_TRANSLATE_NOOP("export", "Export audio in loop region") },
     { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES, QT_TRANSLATE_NOOP("export", "Export tracks as separate audio files") },
+    { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE,
+      QT_TRANSLATE_NOOP("export", "Export each label as a separate audio file (chapters)") },
     //! NOTE: not implemented yet
-    // { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE,
-    //   QT_TRANSLATE_NOOP("export", "Export each label as a separate audio file (Chapters)") },
     // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE,
     //   QT_TRANSLATE_NOOP("export", "Export all labels as a subtitle file") }
 };
@@ -112,14 +112,16 @@ void ExportPreferencesModel::init()
         emit trimBlankSpaceChanged();
     });
 
-    exportConfiguration()->includeTrackNumbersChanged().onNotify(this, [this] {
-        emit includeTrackNumbersChanged();
+    exportConfiguration()->includeNumbersChanged().onNotify(this, [this] {
+        emit includeNumbersChanged();
         emit fileNamePreviewChanged();
     });
     if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
          && !playbackController()->loopRegion().isValid())
         || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
-            && selectionController()->timeSelectionIsEmpty())) {
+            && selectionController()->timeSelectionIsEmpty())
+        || (exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE
+            && !hasLabels())) {
         setCurrentProcess(processName(ExportProcessType::FULL_PROJECT_AUDIO));
     }
 
@@ -222,7 +224,20 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
         return;
     }
 
+    if (type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE && !hasLabels()) {
+        interactive()->error(muse::trc("export", "No labels"),
+                             muse::trc("export",
+                                       "Export each label as a separate audio file requires at least one label in the project. Please return to the project, add labels and then try again."));
+        return;
+    }
+
     exportConfiguration()->setProcessType(type);
+}
+
+bool ExportPreferencesModel::hasLabels() const
+{
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    return project && project->hasLabels().val;
 }
 
 bool ExportPreferencesModel::trimBlankSpace() const
@@ -241,7 +256,14 @@ void ExportPreferencesModel::setTrimBlankSpace(bool trim)
 
 bool ExportPreferencesModel::separateFilesExport() const
 {
-    return exportConfiguration()->processType() == ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES;
+    const ExportProcessType type = exportConfiguration()->processType();
+    return type == ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES
+           || type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
+}
+
+bool ExportPreferencesModel::separateFilesByLabels() const
+{
+    return exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
 }
 
 QString ExportPreferencesModel::fileNamePrefix() const
@@ -260,26 +282,29 @@ void ExportPreferencesModel::setFileNamePrefix(const QString& prefix)
     emit fileNamePreviewChanged();
 }
 
-bool ExportPreferencesModel::includeTrackNumbers() const
+bool ExportPreferencesModel::includeNumbers() const
 {
-    return exportConfiguration()->includeTrackNumbers();
+    return exportConfiguration()->includeNumbers();
 }
 
-void ExportPreferencesModel::setIncludeTrackNumbers(bool include)
+void ExportPreferencesModel::setIncludeNumbers(bool include)
 {
-    if (include == exportConfiguration()->includeTrackNumbers()) {
+    if (include == exportConfiguration()->includeNumbers()) {
         return;
     }
 
-    exportConfiguration()->setIncludeTrackNumbers(include);
+    exportConfiguration()->setIncludeNumbers(include);
 }
 
 QString ExportPreferencesModel::fileNamePreview() const
 {
+    //: Placeholder for a label's name in the export file name preview
+    const std::string labelName = muse::trc("export", "LabelName");
     //: Placeholder for a track's name in the export file name preview
     const std::string trackName = muse::trc("export", "TrackName");
-    const std::optional<int> number = includeTrackNumbers() ? std::optional<int>(1) : std::nullopt;
-    const std::string name = utils::separateFileName(m_fileNamePrefix.toStdString(), number, trackName);
+    const std::optional<int> number = includeNumbers() ? std::optional<int>(1) : std::nullopt;
+    const std::string name = utils::separateFileName(m_fileNamePrefix.toStdString(), number,
+                                                     separateFilesByLabels() ? labelName : trackName);
 
     const std::vector<std::string> extensions = exporter()->formatExtensions(currentFormat().toStdString());
     return QString::fromStdString(extensions.empty() ? name : name + "." + extensions.front());
@@ -741,7 +766,7 @@ IExporter::Options ExportPreferencesModel::separateFilesOptions() const
 {
     return {
         { IExporter::OptionKey::FileNamePrefix, muse::Val(m_fileNamePrefix.toStdString()) },
-        { IExporter::OptionKey::IncludeTrackNumbers, muse::Val(includeTrackNumbers()) },
+        { IExporter::OptionKey::IncludeNumbers, muse::Val(includeNumbers()) },
     };
 }
 

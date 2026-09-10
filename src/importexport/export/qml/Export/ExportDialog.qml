@@ -211,19 +211,19 @@ StyledDialogView {
                     }
 
                     CheckBox {
-                        id: includeTrackNumbersCheckBox
+                        id: includeNumbersCheckBox
 
                         Layout.fillWidth: true
 
-                        text: qsTrc("export", "Include track numbers")
-                        checked: exportPreferencesModel.includeTrackNumbers
+                        text: exportPreferencesModel.separateFilesByLabels ? qsTrc("export", "Include label numbers") : qsTrc("export", "Include track numbers")
+                        checked: exportPreferencesModel.includeNumbers
 
-                        navigation.name: "IncludeTrackNumbersBox"
+                        navigation.name: "IncludeNumbersBox"
                         navigation.panel: fileSection.navigation
                         navigation.order: filenameField.navigation.order + 1
                         navigation.accessible.name: text
 
-                        onClicked: exportPreferencesModel.includeTrackNumbers = !exportPreferencesModel.includeTrackNumbers
+                        onClicked: exportPreferencesModel.includeNumbers = !exportPreferencesModel.includeNumbers
                     }
                 }
 
@@ -264,7 +264,7 @@ StyledDialogView {
 
                             navigation.name: "FolderFieldBox"
                             navigation.panel: fileSection.navigation
-                            navigation.order: includeTrackNumbersCheckBox.navigation.order + 1
+                            navigation.order: includeNumbersCheckBox.navigation.order + 1
                             navigation.accessible.name: folderLabel.text + ": " + currentText
 
                             onTextEditingFinished: function (newTextValue) {
