@@ -799,6 +799,38 @@ TEST_F(Au3TracksInteractionTests, DuplicateTracksRemapsClipGroups)
     removeTrack(TrackId(clone->GetId()));
 }
 
+TEST_F(Au3TracksInteractionTests, DuplicateRangeSelectionGivesTheCopyNewClipIds)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    Au3WaveTrack* origTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(origTrack) << "Precondition failed: original track not found";
+
+    std::set<int64_t> originalIds;
+    for (const auto& clip : origTrack->Intervals()) {
+        originalIds.insert(clip->GetId());
+    }
+    ASSERT_FALSE(originalIds.empty());
+
+    m_tracksInteraction->duplicateSelectedOnTracks({ trackId }, origTrack->GetStartTime(), origTrack->GetEndTime());
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 2);
+
+    Au3WaveTrack* clone = nullptr;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId) {
+            clone = dynamic_cast<Au3WaveTrack*>(track);
+        }
+    }
+    ASSERT_TRUE(clone) << "The duplicated track was not found";
+
+    for (const auto& clip : clone->Intervals()) {
+        EXPECT_EQ(originalIds.count(clip->GetId()), 0u)
+            << "duplicated clip reuses id " << clip->GetId()
+            << "; dragging it onto the original track makes findWaveClip ambiguous";
+    }
+}
+
 TEST_F(Au3TracksInteractionTests, DuplicateRangeSelectionRemapsClipGroups)
 {
     //! [GIVEN] A track whose clips form one group
