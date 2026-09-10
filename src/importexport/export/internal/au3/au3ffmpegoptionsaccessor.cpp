@@ -8,6 +8,8 @@
 
 #include "au3ffmpegoptionsaccessor.h"
 
+#include "au3wrap/internal/wxtypes_convert.h"
+
 using namespace au::importexport;
 
 void Au3FFmpegOptionsAccessor::init()
@@ -63,7 +65,7 @@ std::string Au3FFmpegOptionsAccessor::ffmpegLibraryPath() const
     if (!ffmpeg) {
         return {};
     }
-    return ffmpeg->GetLoadedAVFormatPath().ToStdString();
+    return au::au3::wxToStdString(ffmpeg->GetLoadedAVFormatPath());
 }
 
 bool Au3FFmpegOptionsAccessor::setFFmpegLibraryPath(const muse::io::path_t& path)

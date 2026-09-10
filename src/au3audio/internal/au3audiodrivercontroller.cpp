@@ -927,5 +927,5 @@ void Au3AudioDriverController::refreshInputDeviceSettings(const std::string& api
     DeviceManager::Instance()->UpdateAsioDeviceCaps(device->deviceIndex);
     settings()->setLocalValue(RECORDING_SOURCE_INDEX, muse::Val(device->sourceIndex));
     settings()->setLocalValue(RECORDING_SOURCE,
-                              muse::Val(device->totalSources >= 1 ? device->sourceString.ToStdString() : std::string()));
+                              muse::Val(device->totalSources >= 1 ? wxToStdString(device->sourceString) : std::string()));
 }

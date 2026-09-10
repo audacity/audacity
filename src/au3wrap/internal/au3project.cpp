@@ -377,5 +377,5 @@ muse::Ret Au3ProjectAccessor::removeAutosaveData()
 muse::io::path_t Au3ProjectAccessor::getFileName() const
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
-    return projectFileIO.GetFileName().ToStdString();
+    return wxToStdString(projectFileIO.GetFileName());
 }

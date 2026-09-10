@@ -16,6 +16,7 @@
 #include "au3-preferences/Prefs.h"
 
 #include "au3cloud/cloudtypes.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace au::au3cloud;
 
@@ -65,8 +66,8 @@ void Au3CloudService::init()
             auto& userService = audacity::cloud::audiocom::GetUserService();
             m_accountInfo.id = userService.GetUserId().ToStdString();
             m_accountInfo.userSlug = userService.GetUserSlug().ToStdString();
-            m_accountInfo.displayName = userService.GetDisplayName().ToStdString();
-            m_accountInfo.avatarPath = userService.GetAvatarPath().ToStdString();
+            m_accountInfo.displayName = au::au3::wxToStdString(userService.GetDisplayName());
+            m_accountInfo.avatarPath = au::au3::wxToStdString(userService.GetAvatarPath());
 
             if (!std::holds_alternative<Authorized>(m_authState.val)) {
                 //Only set to authorized if we have user data
