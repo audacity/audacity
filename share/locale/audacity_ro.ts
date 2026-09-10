@@ -16640,12 +16640,12 @@ Acesta nu va fi încărcat.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
         <source>Trigger control</source>
-        <translation type="unfinished"/>
+        <translation>Control declanșator</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
         <source>Navigate trigger control</source>
-        <translation type="unfinished"/>
+        <translation>Navighează la controlul declanșatorului</translation>
     </message>
 </context>
 <context>
@@ -17169,7 +17169,7 @@ Acesta nu va fi încărcat.</translation>
         <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
         <source>Playback volume</source>
-        <translation type="unfinished"/>
+        <translation>Volum redare</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/panels/PlaybackMeterPanel.qml" line="27"/>
@@ -17181,7 +17181,7 @@ Acesta nu va fi încărcat.</translation>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="61"/>
         <source>Playback meter settings</source>
         <extracomment>Tooltip of the playback meter settings button</extracomment>
-        <translation type="unfinished"/>
+        <translation>Setări indicator redare</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="43"/>
@@ -20048,12 +20048,12 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track, selected</source>
-        <translation type="unfinished"/>
+        <translation>Pista %1: %2, pistă audio, selectată</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track</source>
-        <translation type="unfinished"/>
+        <translation>Pista %1: %2, pistă audio</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
@@ -20064,12 +20064,12 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track, selected</source>
-        <translation type="unfinished"/>
+        <translation>Pista %1: %2, pistă de etichete, selectată</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track</source>
-        <translation type="unfinished"/>
+        <translation>Pista %1: %2, pistă de etichete</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
@@ -21403,7 +21403,7 @@ Dorești să continui?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
         <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eliminat audio de la %1 secunde la %1 secunde din pistele audio selectate</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
@@ -21414,7 +21414,7 @@ Dorești să continui?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
         <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>Aplatizat audio de la %1 secunde la %1 secunde din pistele audio selectate</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
@@ -21425,7 +21425,7 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
         <source>Silenced selected clips</source>
-        <translation type="unfinished"/>
+        <translation>Pus pe mut clipurile selectate</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
@@ -21521,12 +21521,12 @@ Dorești să continui?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
         <source>Remove multiple items</source>
-        <translation type="unfinished"/>
+        <translation>Eliminat multiple elemente</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
         <source>Remove multiple clips</source>
-        <translation type="unfinished"/>
+        <translation>Eliminat multiple clipuri</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
@@ -21610,12 +21610,12 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
         <source>Trim items left</source>
-        <translation type="unfinished"/>
+        <translation>Taie elementele la stânga</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
         <source>Trim clip left</source>
-        <translation type="unfinished"/>
+        <translation>Tale clipul la stânga</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
@@ -21627,54 +21627,54 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
         <source>Trim items right</source>
-        <translation type="unfinished"/>
+        <translation>Taie elementele la dreapta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
         <source>Trim clip right</source>
-        <translation type="unfinished"/>
+        <translation>Taie clipul la dreapta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
         <source>Changed speed to: %1%</source>
-        <translation type="unfinished"/>
+        <translation>Schimbă viteza la: %1%</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
         <source>Stretch Left</source>
-        <translation type="unfinished"/>
+        <translation>Întinde la stânga</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
         <source>Stretch items left</source>
-        <translation type="unfinished"/>
+        <translation>Întinde elementele la stânga</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
         <source>Stretch clips left</source>
-        <translation type="unfinished"/>
+        <translation>Întinde clipurile la stânga</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
         <source>Stretch Right</source>
-        <translation type="unfinished"/>
+        <translation>Întinde la dreapta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
         <source>Stretch items right</source>
-        <translation type="unfinished"/>
+        <translation>Întinde elementele la dreapta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
         <source>Stretch clips right</source>
-        <translation type="unfinished"/>
+        <translation>Întinde clipurile la dreapta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
         <source>Created new mono track</source>
-        <translation type="unfinished"/>
+        <translation>Creat pistă mono nouă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
@@ -21684,7 +21684,7 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Created new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Creat pistă stereo nouă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
@@ -21694,7 +21694,7 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
         <source>Created label track</source>
-        <translation type="unfinished"/>
+        <translation>Creat pistă de etichete</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
@@ -21725,40 +21725,40 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
         <source>Clips grouped</source>
-        <translation type="unfinished"/>
+        <translation>Grupat clipuri</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
         <source>Clips ungrouped</source>
-        <translation type="unfinished"/>
+        <translation>Degrupat clipuri</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
         <source>Changed track format</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat format pistă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
         <source>Changed track rate</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat rată pistă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
         <source>Swapped stereo channels</source>
-        <translation type="unfinished"/>
+        <translation>Interschimbat canalele stereo</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
         <source>Split stereo tracks to L/R mono</source>
-        <translation type="unfinished"/>
+        <translation>Împărțit pistele stereo la mono S/D</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
         <source>Split stereo tracks to center mono</source>
-        <translation type="unfinished"/>
+        <translation>Împărțit pistele mono la mono central</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
@@ -21785,32 +21785,32 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Label title changed</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat titlu etichetă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Changed label title</source>
-        <translation type="unfinished"/>
+        <translation>Schimbă titlu etichetă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
         <source>Label low frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat etichetă frecvență joasă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
         <source>Change label low frequency</source>
-        <translation type="unfinished"/>
+        <translation>Schimbă etichetă frecvență joasă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
         <source>Label high frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat etichetă frecvență înaltă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
         <source>Change label high frequency</source>
-        <translation type="unfinished"/>
+        <translation>Schimbă etichetă frecvență înaltă</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
@@ -21854,12 +21854,12 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
         <source>Stretch label left</source>
-        <translation type="unfinished"/>
+        <translation>Întinde eticheta la stânga</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
         <source>Stretch labels left</source>
-        <translation type="unfinished"/>
+        <translation>Întinde etichetele la stânga</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
@@ -21870,18 +21870,18 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
         <source>Stretch label right</source>
-        <translation type="unfinished"/>
+        <translation>Întinde eticheta la dreapta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
         <source>Stretch labels right</source>
-        <translation type="unfinished"/>
+        <translation>Întinde etichetele la dreapta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>Alipit %1 secunde la %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
@@ -21903,18 +21903,18 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split-deleted clips</source>
-        <translation type="unfinished"/>
+        <translation>Împărțit-șters clipurile</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split delete</source>
-        <translation type="unfinished"/>
+        <translation>Împarte și șterge</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>Șters %1 secunde la %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
@@ -21929,17 +21929,17 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
         <source>Tempo changed</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat tempo</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
         <source>Upper time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat numărător metrică</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
         <source>Lower time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Schimbat numitor metrică</translation>
     </message>
 </context>
 <context>
@@ -22302,7 +22302,7 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation type="unfinished"/>
+        <translation>expandat</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
@@ -22615,7 +22615,7 @@ Dorești să continui?</translation>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
-        <translation type="unfinished"/>
+        <translation>Verifică pentru actualizare</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
@@ -22630,13 +22630,13 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
         <source>Updating %1</source>
-        <translation type="unfinished"/>
+        <translation>Se actualizează %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
         <source>Downloading %1 %2</source>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Se descarcă %1 %2</translation>
     </message>
 </context>
 <context>
@@ -22657,13 +22657,13 @@ Dorești să continui?</translation>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation type="unfinished"/>
+        <translation>Deschide editor FX</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation type="unfinished"/>
+        <translation>Deschide editor instrument</translation>
     </message>
 </context>
 <context>

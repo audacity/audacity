@@ -391,7 +391,7 @@
     </message>
     <message>
         <source>Toggle ‘Loop playback’</source>
-        <translation type="vanished">‘루프 재생’ 전환</translation>
+        <translation type="vanished">‘루프 재생’ 토글</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
@@ -1195,13 +1195,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="773"/>
         <source>Update cloud audio preview</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>클라우드 오디오 미리보기 업데이트</translation>
+        <translation>클라우드 오디오 미리듣기 업데이트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="781"/>
         <source>Update audio preview</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>오디오 미리보기 업데이트</translation>
+        <translation>오디오 미리듣기 업데이트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="790"/>
@@ -2919,13 +2919,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
         <source>Update cloud audio preview</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>클라우드 오디오 미리보기 업데이트</translation>
+        <translation>클라우드 오디오 미리듣기 업데이트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="783"/>
         <source>Update audio preview</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>오디오 미리보기 업데이트</translation>
+        <translation>오디오 미리듣기 업데이트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="792"/>
@@ -5243,7 +5243,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
         <source>Zoom toggle (magnifying glass)</source>
-        <translation>확대/축소 전환(돋보기)</translation>
+        <translation>줌 토글 (돋보기)</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
@@ -6865,7 +6865,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
         <source>The project must be saved before updating the audio preview</source>
-        <translation>오디오 미리보기를 업데이트하기 전에 프로젝트를 저장해야 합니다</translation>
+        <translation>오디오 미리듣기를 업데이트하기 전에 프로젝트를 저장해야 합니다</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
@@ -6886,22 +6886,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
-        <translation>오디오 미리 듣기 생성</translation>
+        <translation>오디오 미리듣기 생성</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
-        <translation>클라우드 오디오 미리 듣기 기능이 업데이트됨</translation>
+        <translation>클라우드 오디오 미리듣기가 업데이트됨</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
-        <translation>오디오 미리 듣기 파일이 audio.com에 업로드됨</translation>
+        <translation>오디오 미리듣기 파일이 audio.com에 업로드됨</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
         <source>Audio preview is up to date</source>
-        <translation>오디오 미리 듣기 내용이 업데이트됨</translation>
+        <translation>오디오 미리듣기가 업데이트됨</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
@@ -7372,7 +7372,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="321"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
-        <translation>미리보기</translation>
+        <translation>미리듣기</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="89"/>
@@ -7619,19 +7619,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
         <source>Effect preview</source>
-        <translation>이펙트 미리보기</translation>
+        <translation>이펙트 미리듣기</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
         <source>Use vendor UI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>제공 UI 사용</translation>
+        <translation>벤더 UI 사용</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="84"/>
         <source>Toggle between vendor UI and fallback UI</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>제공 UI와 대체 UI 간 전환</translation>
+        <translation>벤더 UI와 대체 UI 간 토글</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
@@ -8189,7 +8189,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
         <source>Preparing preview</source>
-        <translation>미리보기 준비 중</translation>
+        <translation>미리듣기 준비 중</translation>
     </message>
 </context>
 <context>
@@ -8479,9 +8479,9 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>To use ‘Spectral effects’, enable ‘Spectral Selection’
 in the track Spectrogram settings and select the
 frequency range for the effect to act on.</source>
-        <translation>&apos;스펙트럼 효과&apos;를 사용하려면, 
+        <translation>&apos;스펙트럼 이펙트&apos;를 사용하려면, 
 트랙 스펙트로그램 설정의 &apos;스펙트럼 선택&apos;을 활성화하고
-효과가 작용할 주파수 범위를 선택하세요</translation>
+이펙트가 작용할 주파수 범위를 선택하세요</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
@@ -8506,7 +8506,7 @@ frequency range for the effect to act on.</source>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation>‘;type tool’ 효과는 Nyquist에서 오디오를 반환할 수 없습니다.
+        <translation>‘;type tool’ 이펙트는 Nyquist에서 오디오를 반환할 수 없습니다.
 </translation>
     </message>
     <message>
@@ -8514,7 +8514,7 @@ frequency range for the effect to act on.</source>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation>‘;type tool’ 효과는 Nyquist의 레이블을 반환할 수 없습니다.
+        <translation>‘;type tool’ 이펙트는 Nyquist의 레이블을 반환할 수 없습니다.
 </translation>
     </message>
     <message>
@@ -10540,14 +10540,14 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="71"/>
         <source>The Repair effect cannot be applied within stretched or shrunk clips</source>
-        <translation>보정 이펙트는 늘이거나 줄인 클립에는 적용할 수 없습니다</translation>
+        <translation>복구 이펙트는 늘이거나 줄인 클립에는 적용할 수 없습니다</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="77"/>
         <source>The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).
 
 Zoom in and select a tiny fraction of a second to repair.</source>
-        <translation>보정 이펙트는 손상된 오디오의 매우 짧은 부분에 사용하기 위한 것입니다 (최대 128 샘플).
+        <translation>복구 이펙트는 손상된 오디오의 매우 짧은 부분에 사용하기 위한 것입니다 (최대 128 샘플).
 
 수리할 아주 작은 구간을 확대하고 선택하세요.</translation>
     </message>
@@ -10556,7 +10556,7 @@ Zoom in and select a tiny fraction of a second to repair.</source>
         <source>The Repair effect needs some data to go on.
 
 Please select an area to repair with some audio on at least one side (the more the better).</source>
-        <translation>&apos;복원&apos; 효과를 적용하려면 일부 데이터가 필요합니다.
+        <translation>복구 이펙트를 적용하려면 일부 데이터가 필요합니다.
 
 적어도 한쪽 면에 오디오가 포함된 복원할 영역을 선택해 주세요(오디오가 많을수록 좋습니다).</translation>
     </message>
@@ -10679,7 +10679,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="120"/>
         <source>Adds ambience or a “hall effect”</source>
-        <translation>배경음이나 “홀 효과”를 더해줍니다</translation>
+        <translation>배경음이나 “홀 이펙트”를 더해줍니다</translation>
     </message>
 </context>
 <context>
