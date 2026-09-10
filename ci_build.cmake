@@ -174,10 +174,19 @@ elseif(BUILD_TYPE STREQUAL "APPIMAGE")
         WORKING_DIRECTORY ${INSTALL_DIR}
     )
 
-    file(COPY
-        ${BUILD_DIR}/install_manifest.txt
-        DESTINATION ${INSTALL_DIR}
-    )
+    # Rewrite install_manifest.txt so that it only lists the desktop
+    # integration resources, with paths relative to the AppDir root.
+    # portable-utils uses this manifest for `install` and `remove`, so it
+    # must not contain absolute build-machine paths (see #10135).
+    # Equivalent to the sed in MuseScore's ninja_build.sh.
+    file(STRINGS ${BUILD_DIR}/install_manifest.txt MANIFEST_LINES)
+    set(PORTABLE_MANIFEST "")
+    foreach(LINE IN LISTS MANIFEST_LINES)
+        if(LINE MATCHES "/(share/(applications|icons|man|metainfo|mime)/.*)$")
+            string(APPEND PORTABLE_MANIFEST "${CMAKE_MATCH_1}\n")
+        endif()
+    endforeach()
+    file(WRITE ${INSTALL_DIR}/install_manifest.txt "${PORTABLE_MANIFEST}")
 
     file(COPY
         ${BUILD_DIR}/org.audacityteam.Audacity${INSTALL_SUFFIX}.desktop
@@ -188,15 +197,6 @@ elseif(BUILD_TYPE STREQUAL "APPIMAGE")
         ${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Linux+BSD/aup4.svg
         DESTINATION ${INSTALL_DIR}
     )
-
-    # audacity="audacity${MUSE_APP_INSTALL_SUFFIX}"
-    # desktop="org.audacityteam.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop"
-    # icon="${audacity}.png"
-    # mani="install_manifest.txt"
-    # cp "share/applications/${desktop}" "${desktop}"
-    # cp "share/icons/hicolor/128x128/apps/${icon}" "${icon}"
-    # <"$build_dir/${mani}" >"${mani}" sed -rn 's/.*(share\/)(applications|icons|man|metainfo|mime)(.*)/\1\2\3/p'
-    # ;;
 
 
 endif()
