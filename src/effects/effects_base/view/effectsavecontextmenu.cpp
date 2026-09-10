@@ -64,7 +64,7 @@ void EffectSaveContextMenu::reload()
     const PresetIdList userPresets = presetsController()->userPresets(effectId);
     const std::string currentPreset = m_preset.toStdString();
 
-    const auto it = std::find(userPresets.begin(), userPresets.end(), currentPreset);
+    const auto it = std::find(userPresets.begin(), userPresets.end(), au3::wxFromStdString(currentPreset));
     m_canSave = !currentPreset.empty() && it != userPresets.end();
 
     MenuItemList items;

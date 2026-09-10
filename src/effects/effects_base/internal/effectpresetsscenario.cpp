@@ -73,11 +73,11 @@ void EffectPresetsScenario::savePreset(const EffectInstanceId& effectInstanceId,
         return;
     }
 
-    IF_ASSERT_FAILED(presetsProvider()->hasUserPresetWithName(effectId, presetId.ToStdString())) {
+    IF_ASSERT_FAILED(presetsProvider()->hasUserPresetWithName(effectId, au3::wxToStdString(presetId))) {
         return;
     }
 
-    Ret ret = presetsProvider()->saveCurrentAsPreset(effectInstanceId, presetId.ToStdString());
+    Ret ret = presetsProvider()->saveCurrentAsPreset(effectInstanceId, au3::wxToStdString(presetId));
     if (!ret) {
         showError(ret);
     }

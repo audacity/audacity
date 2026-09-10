@@ -19,7 +19,7 @@
 using namespace muse;
 using namespace au::effects;
 
-static const PresetId DEFAULT_PRESET("default");
+static const PresetId DEFAULT_PRESET(wxT("default"));
 
 PresetIdList EffectPresetsProvider::factoryPresets(const EffectId& effectId) const
 {
@@ -120,7 +120,7 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
 bool EffectPresetsProvider::hasUserPresetWithName(const EffectId& effectId, const std::string& presetName) const
 {
     //! NOTE At the moment, the preset ID and name are the same thing.
-    PresetId presetId = presetName;
+    PresetId presetId = au3::wxFromStdString(presetName);
     PresetIdList presets = userPresets(effectId);
     return muse::contains(presets, presetId);
 }
@@ -139,7 +139,7 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
         return make_ret(Err::InternalError);
     }
 
-    bool ok = effect->SaveUserPreset(UserPresetsGroup(wxString(presetName)), *settings);
+    bool ok = effect->SaveUserPreset(UserPresetsGroup(au3::wxFromStdString(presetName)), *settings);
 
     if (ok) {
         m_userPresetsChanged.send(effectId);
@@ -188,7 +188,7 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
         return ret;
     }
 
-    wxString params(data.constChar());
+    wxString params = wxString::FromUTF8(data.constChar());
 
     wxString ident = params.BeforeFirst(':');
     params = params.AfterFirst(':');
@@ -240,7 +240,7 @@ muse::Ret EffectPresetsProvider::exportPreset(const EffectInstanceId& effectInst
     wxString params;
     effect->SaveSettingsAsString(*settings, params);
     auto commandId = effect->GetSquashedName(effect->GetSymbol().Internal());
-    params = commandId.GET() + ":" + params;
+    params = commandId.GET() + wxT(":") + params;
 
     std::string str = au3::wxToStdString(params);
     ByteArray data = ByteArray::fromRawData(str.c_str(), str.size());
