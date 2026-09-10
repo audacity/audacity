@@ -28,7 +28,7 @@ jobs:
             S3_URL="s3://extensions.musescore.org/audacity/4.0/learn/started_playlist.test.json"
           fi
 
-          sudo bash ./buildscripts/ci/learn/make_playlists_info_file.sh \
+          sudo bash ./muse/buildscripts/ci/learn/make_playlists_info_file.sh \
             --youtube_api_key ${{ secrets.YOUTUBE_API_KEY }} \
             --youtube_playlist_id 'PLt__f9D3T90yZiTOE1QOAF2Uc1MPAK_fv'
 
