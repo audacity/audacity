@@ -4,8 +4,6 @@
 
 #include "exportutils.h"
 
-#include <algorithm>
-
 #include "framework/global/stringutils.h"
 
 muse::Val au::importexport::utils::matrixToVal(const std::vector<std::vector<bool> >& matrix)
@@ -75,21 +73,16 @@ std::string au::importexport::utils::separateFileName(const std::string& prefix,
     return result;
 }
 
-std::string au::importexport::utils::makeFileNameUnique(const std::string& name, std::vector<std::string>& otherNames)
+std::string au::importexport::utils::UniqueFileNames::registerName(const std::string& name)
 {
-    const auto isUsed = [&otherNames](const std::string& candidate) {
-        const std::string lowered = muse::strings::toLower(candidate);
-        return std::any_of(otherNames.begin(), otherNames.end(), [&lowered](const std::string& other) {
-            return muse::strings::toLower(other) == lowered;
-        });
-    };
-
     std::string result = name;
-    for (int i = 2; isUsed(result); ++i) {
+    std::string lowered = muse::strings::toLower(result);
+    for (int i = 2; m_loweredNames.count(lowered) > 0; ++i) {
         result = name + "-" + std::to_string(i);
+        lowered = muse::strings::toLower(result);
     }
 
-    otherNames.push_back(result);
+    m_loweredNames.insert(lowered);
     return result;
 }
 

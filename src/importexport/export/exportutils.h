@@ -4,6 +4,7 @@
 #pragma once
 
 #include <optional>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -14,7 +15,15 @@ muse::Val matrixToVal(const std::vector<std::vector<bool> >& matrix);
 std::vector<std::vector<bool> > valToMatrix(const muse::Val& val);
 
 std::string separateFileName(const std::string& prefix, std::optional<int> number, const std::string& name);
-std::string makeFileNameUnique(const std::string& name, std::vector<std::string>& otherNames);
+
+class UniqueFileNames
+{
+public:
+    std::string registerName(const std::string& name);
+
+private:
+    std::set<std::string> m_loweredNames;
+};
 
 struct TimeRange {
     double start = 0.0;

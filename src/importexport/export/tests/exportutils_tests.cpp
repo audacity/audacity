@@ -29,26 +29,33 @@ TEST(ExportUtilsTests, SeparateFileNameSkipsEmptyParts)
     EXPECT_EQ(utils::separateFileName("Song", std::nullopt, ""), "Song");
 }
 
-TEST(ExportUtilsTests, MakeFileNameUniqueKeepsFirstOccurrence)
+TEST(ExportUtilsTests, UniqueFileNamesKeepFirstOccurrence)
 {
-    std::vector<std::string> used;
-    EXPECT_EQ(utils::makeFileNameUnique("Vocals", used), "Vocals");
-    EXPECT_EQ(used, std::vector<std::string> { "Vocals" });
+    utils::UniqueFileNames names;
+    EXPECT_EQ(names.registerName("Vocals"), "Vocals");
 }
 
-TEST(ExportUtilsTests, MakeFileNameUniqueNumbersDuplicates)
+TEST(ExportUtilsTests, UniqueFileNamesNumberDuplicates)
 {
-    std::vector<std::string> used;
-    utils::makeFileNameUnique("Vocals", used);
-    EXPECT_EQ(utils::makeFileNameUnique("Vocals", used), "Vocals-2");
-    EXPECT_EQ(utils::makeFileNameUnique("Vocals", used), "Vocals-3");
+    utils::UniqueFileNames names;
+    names.registerName("Vocals");
+    EXPECT_EQ(names.registerName("Vocals"), "Vocals-2");
+    EXPECT_EQ(names.registerName("Vocals"), "Vocals-3");
 }
 
-TEST(ExportUtilsTests, MakeFileNameUniqueIgnoresCase)
+TEST(ExportUtilsTests, UniqueFileNamesIgnoreCase)
 {
-    std::vector<std::string> used;
-    utils::makeFileNameUnique("Vocals", used);
-    EXPECT_EQ(utils::makeFileNameUnique("VOCALS", used), "VOCALS-2");
+    utils::UniqueFileNames names;
+    names.registerName("Vocals");
+    EXPECT_EQ(names.registerName("VOCALS"), "VOCALS-2");
+}
+
+TEST(ExportUtilsTests, UniqueFileNamesSkipTakenSuffixes)
+{
+    utils::UniqueFileNames names;
+    names.registerName("Vocals");
+    names.registerName("Vocals-2");
+    EXPECT_EQ(names.registerName("Vocals"), "Vocals-3");
 }
 
 TEST(ExportUtilsTests, LabelExportRangesKeepRegionLabels)
