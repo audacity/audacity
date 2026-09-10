@@ -30,6 +30,10 @@ public:
     void setIncludeNumbers(bool include) override;
     muse::async::Notification includeNumbersChanged() const override;
 
+    bool includeAudioBeforeFirstLabel() const override;
+    void setIncludeAudioBeforeFirstLabel(bool include) override;
+    muse::async::Notification includeAudioBeforeFirstLabelChanged() const override;
+
     bool askExportLocationType() const override;
     void setAskExportLocationType(bool ask) override;
     muse::async::Notification askExportLocationTypeChanged() const override;
@@ -160,6 +164,7 @@ private:
     muse::async::Notification m_processChanged;
     muse::async::Notification m_trimBlankSpaceChanged;
     muse::async::Notification m_includeNumbersChanged;
+    muse::async::Notification m_includeAudioBeforeFirstLabelChanged;
     muse::async::Notification m_askExportLocationTypeChanged;
     muse::async::Notification m_filenameChanged;
     muse::async::Notification m_directoryPathChanged;
