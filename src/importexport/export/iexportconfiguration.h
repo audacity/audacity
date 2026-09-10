@@ -29,6 +29,10 @@ public:
     virtual void setTrimBlankSpace(bool trim) = 0;
     virtual muse::async::Notification trimBlankSpaceChanged() const = 0;
 
+    virtual bool includeTrackNumbers() const = 0;
+    virtual void setIncludeTrackNumbers(bool include) = 0;
+    virtual muse::async::Notification includeTrackNumbersChanged() const = 0;
+
     virtual bool askExportLocationType() const = 0;
     virtual void setAskExportLocationType(bool ask) = 0;
     virtual muse::async::Notification askExportLocationTypeChanged() const = 0;

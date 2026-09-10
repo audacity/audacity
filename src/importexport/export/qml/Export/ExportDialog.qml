@@ -134,13 +134,45 @@ StyledDialogView {
                 navigation.order: typeSection.navigation.order + 1
 
                 RowLayout {
+                    visible: exportPreferencesModel.separateFilesExport
+
+                    Item {
+                        width: root.labelColumnWidth
+                        StyledTextLabel {
+                            id: fileNamePreviewLabel
+
+                            text: qsTrc("export", "File name preview")
+
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    TextInputField {
+                        id: fileNamePreviewField
+
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: implicitWidth
+
+                        readOnly: true
+                        currentText: exportPreferencesModel.fileNamePreview
+
+                        implicitWidth: root.dropdownWidth
+
+                        navigation.name: "FileNamePreviewFieldBox"
+                        navigation.panel: fileSection.navigation
+                        navigation.order: 1
+                        navigation.accessible.name: fileNamePreviewLabel.text + ": " + currentText
+                    }
+                }
+
+                RowLayout {
 
                     Item {
                         width: root.labelColumnWidth
                         StyledTextLabel {
                             id: filenameLabel
 
-                            text: qsTrc("export", "File name")
+                            text: exportPreferencesModel.separateFilesExport ? qsTrc("export", "File name prefix") : qsTrc("export", "File name")
 
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -152,18 +184,46 @@ StyledDialogView {
                         Layout.fillWidth: true
                         Layout.minimumWidth: implicitWidth
 
-                        currentText: exportPreferencesModel.filename
+                        currentText: exportPreferencesModel.separateFilesExport ? exportPreferencesModel.fileNamePrefix : exportPreferencesModel.filename
 
                         implicitWidth: root.dropdownWidth
 
                         navigation.name: "FileNameFieldBox"
                         navigation.panel: fileSection.navigation
-                        navigation.order: 1
+                        navigation.order: fileNamePreviewField.navigation.order + 1
                         navigation.accessible.name: filenameLabel.text + ": " + currentText
 
                         onTextChanged: function (newTextValue) {
-                            exportPreferencesModel.setFilename(newTextValue)
+                            if (exportPreferencesModel.separateFilesExport) {
+                                exportPreferencesModel.fileNamePrefix = newTextValue
+                            } else {
+                                exportPreferencesModel.setFilename(newTextValue)
+                            }
                         }
+                    }
+                }
+
+                RowLayout {
+                    visible: exportPreferencesModel.separateFilesExport
+
+                    Item {
+                        width: root.labelColumnWidth
+                    }
+
+                    CheckBox {
+                        id: includeTrackNumbersCheckBox
+
+                        Layout.fillWidth: true
+
+                        text: qsTrc("export", "Include track numbers")
+                        checked: exportPreferencesModel.includeTrackNumbers
+
+                        navigation.name: "IncludeTrackNumbersBox"
+                        navigation.panel: fileSection.navigation
+                        navigation.order: filenameField.navigation.order + 1
+                        navigation.accessible.name: text
+
+                        onClicked: exportPreferencesModel.includeTrackNumbers = !exportPreferencesModel.includeTrackNumbers
                     }
                 }
 
@@ -204,7 +264,7 @@ StyledDialogView {
 
                             navigation.name: "FolderFieldBox"
                             navigation.panel: fileSection.navigation
-                            navigation.order: filenameField.navigation.order + 1
+                            navigation.order: includeTrackNumbersCheckBox.navigation.order + 1
                             navigation.accessible.name: folderLabel.text + ": " + currentText
 
                             onTextEditingFinished: function (newTextValue) {

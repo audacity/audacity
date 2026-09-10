@@ -4,6 +4,10 @@
 
 #include "exportutils.h"
 
+#include <algorithm>
+
+#include "framework/global/stringutils.h"
+
 muse::Val au::importexport::utils::matrixToVal(const std::vector<std::vector<bool> >& matrix)
 {
     muse::ValList rows;
@@ -46,4 +50,45 @@ std::vector<std::vector<bool> > au::importexport::utils::valToMatrix(const muse:
     }
 
     return matrix;
+}
+
+std::string au::importexport::utils::separateFileName(const std::string& prefix, std::optional<int> number, const std::string& name)
+{
+    std::string result;
+    const auto append = [&result](const std::string& part) {
+        if (part.empty()) {
+            return;
+        }
+        if (!result.empty()) {
+            result += "-";
+        }
+        result += part;
+    };
+
+    append(prefix);
+    if (number.has_value()) {
+        const std::string digits = std::to_string(number.value());
+        append(digits.size() < 2 ? "0" + digits : digits);
+    }
+    append(name);
+
+    return result;
+}
+
+std::string au::importexport::utils::makeFileNameUnique(const std::string& name, std::vector<std::string>& otherNames)
+{
+    const auto isUsed = [&otherNames](const std::string& candidate) {
+        const std::string lowered = muse::strings::toLower(candidate);
+        return std::any_of(otherNames.begin(), otherNames.end(), [&lowered](const std::string& other) {
+            return muse::strings::toLower(other) == lowered;
+        });
+    };
+
+    std::string result = name;
+    for (int i = 2; isUsed(result); ++i) {
+        result = name + "-" + std::to_string(i);
+    }
+
+    otherNames.push_back(result);
+    return result;
 }
