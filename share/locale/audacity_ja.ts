@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ja">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ja_JP">
 <context>
     <name>Playback</name>
     <message>
@@ -30,7 +32,7 @@
     <message>
         <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
         <source>%1 panel</source>
-        <translation>%1パネル</translation>
+        <translation>%1 パネル</translation>
     </message>
 </context>
 <context>
@@ -54,24 +56,16 @@
         <translation>フルスクリーンにする(&amp;F)</translation>
     </message>
     <message>
-        <source>Full screen</source>
-        <translation type="vanished">フルスクリーンにする</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
         <source>About &amp;Qt…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Qtについて(&amp;Q)…</translation>
+        <translation>Qt について(&amp;Q)…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
         <source>Online &amp;handbook</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>オンラインハンドブック(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Open online handbook</source>
-        <translation type="vanished">オンラインハンドブックを開く</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="90"/>
@@ -86,18 +80,10 @@
         <translation>工場出荷時の設定に戻す(&amp;F)</translation>
     </message>
     <message>
-        <source>Revert to factory settings</source>
-        <translation type="vanished">工場出荷時の設定に戻す</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
         <source>Restore the &amp;default layout</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>デフォルトのレイアウトに戻す(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Restore the default layout</source>
-        <translation type="vanished">デフォルトのレイアウトに戻す</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
@@ -106,24 +92,16 @@
         <translation>再生コントロール(&amp;P)</translation>
     </message>
     <message>
-        <source>Show/hide playback controls</source>
-        <translation type="vanished">再生コントロールを表示/非表示</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
         <source>&amp;Tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>トラック(&amp;T)</translation>
     </message>
     <message>
-        <source>Show/hide tracks</source>
-        <translation type="vanished">トラックを表示/非表示</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="70"/>
         <source>&amp;About Audacity…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Audacityについて(&amp;A)…</translation>
+        <translation>Audacity について(&amp;A)…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="136"/>
@@ -132,18 +110,10 @@
         <translation>ステータスバー(&amp;S)</translation>
     </message>
     <message>
-        <source>Show/hide status bar</source>
-        <translation type="vanished">ステータスバーを表示/非表示</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
         <source>&amp;Preferences</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>設定(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Preferences…</source>
-        <translation type="vanished">設定…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
@@ -157,31 +127,27 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="42"/>
         <source>Cut</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>カット</translation>
+        <translation>切り取り</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="175"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="336"/>
         <source>&amp;Paste</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>ペースト(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Paste</source>
-        <translation type="vanished">ペースト</translation>
+        <translation>貼り付け(&amp;P)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="185"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="51"/>
         <source>&amp;Undo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>取り消す(&amp;U)</translation>
+        <translation>元に戻す(&amp;U)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
-        <translation>取り消す</translation>
+        <translation>元に戻す</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="195"/>
@@ -217,18 +183,10 @@
         <translation>キャンセル(&amp;C)</translation>
     </message>
     <message>
-        <source>Cancel</source>
-        <translation type="vanished">キャンセル</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
         <source>&amp;Trigger</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>トリガー(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Trigger</source>
-        <translation type="vanished">トリガー</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="231"/>
@@ -237,14 +195,10 @@
         <translation>入力(&amp;E)</translation>
     </message>
     <message>
-        <source>Trigger the focused control or select the focused track item</source>
-        <translation type="vanished">対象のコントロールを操作するか、対象のトラック項目を選択</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
-        <translation>‘%1’を取り消す</translation>
+        <translation>‘%1’を元に戻す</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
@@ -261,13 +215,13 @@
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>audio.comでプロジェクトを確認</translation>
+        <translation>audio.com でプロジェクトを確認</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
         <source>View on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>audio.comで表示</translation>
+        <translation>audio.com で表示</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
@@ -309,21 +263,13 @@
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
         <source>&amp;Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>読み込む(&amp;I)…</translation>
-    </message>
-    <message>
-        <source>Import preset</source>
-        <translation type="vanished">プリセットを読み込む</translation>
+        <translation>インポート(&amp;I)…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
         <source>&amp;Export…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>書き出す(&amp;E)…</translation>
-    </message>
-    <message>
-        <source>Export preset</source>
-        <translation type="vanished">プリセットを書き出す</translation>
+        <translation>エクスポート(&amp;E)…</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
@@ -350,10 +296,6 @@
         <translation>選択範囲を再生</translation>
     </message>
     <message>
-        <source>Play the selected time range</source>
-        <translation type="vanished">選択した時間範囲を再生</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
         <source>Pause</source>
@@ -366,10 +308,6 @@
         <source>Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>停止</translation>
-    </message>
-    <message>
-        <source>Stop playback</source>
-        <translation type="vanished">再生を停止</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
@@ -390,38 +328,22 @@
         <translation>ループ再生</translation>
     </message>
     <message>
-        <source>Toggle ‘Loop playback’</source>
-        <translation type="vanished">‘ループ再生’を切り替え</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
         <source>Audio setup</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>オーディオ設定</translation>
     </message>
     <message>
-        <source>Open audio setup context menu</source>
-        <translation type="vanished">オーディオ設定コンテクストメニューを開く</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
         <source>Get effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>エフェクト取得</translation>
-    </message>
-    <message>
-        <source>Open Get effects dialog</source>
-        <translation type="vanished">エフェクト取得ダイアログを開く</translation>
+        <translation>エフェクトを取得</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
         <source>Audio settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>オーディオ設定</translation>
-    </message>
-    <message>
-        <source>Open audio setup dialog</source>
-        <translation type="vanished">オーディオ設定ダイアログを開く</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
@@ -436,18 +358,10 @@
         <translation>メトロノーム</translation>
     </message>
     <message>
-        <source>Toggle metronome playback</source>
-        <translation type="vanished">メトロノーム再生を切り替え</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="166"/>
         <source>Timecode</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>タイムコード</translation>
-    </message>
-    <message>
-        <source>Set playback time</source>
-        <translation type="vanished">再生時間を設定</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
@@ -456,28 +370,16 @@
         <translation>テンポ</translation>
     </message>
     <message>
-        <source>Set playback tempo</source>
-        <translation type="vanished">再生テンポを設定</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="184"/>
         <source>Time signature</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>拍子記号</translation>
     </message>
     <message>
-        <source>Set playback time signature</source>
-        <translation type="vanished">再生拍子記号を設定</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
         <source>Playback level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>再生レベル</translation>
-    </message>
-    <message>
-        <source>Set playback level</source>
-        <translation type="vanished">再生レベルを設定</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
@@ -552,18 +454,10 @@
         <translation>自動的にパン</translation>
     </message>
     <message>
-        <source>Pan automatically during playback</source>
-        <translation type="vanished">再生中に自動的にパン</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
         <source>&amp;New…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>新規(&amp;N)…</translation>
-    </message>
-    <message>
-        <source>New…</source>
-        <translation type="vanished">新規…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
@@ -572,18 +466,10 @@
         <translation>開く(&amp;O)…</translation>
     </message>
     <message>
-        <source>Open…</source>
-        <translation type="vanished">開く…</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
         <source>Open recent</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>最近使った項目を開く</translation>
-    </message>
-    <message>
-        <source>Open recent project</source>
-        <translation type="vanished">最近使ったプロジェクトを開く</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
@@ -600,48 +486,28 @@
         <translation>最近使ったファイルを消去(&amp;C)</translation>
     </message>
     <message>
-        <source>Clear recent files</source>
-        <translation type="vanished">最近使ったファイルを消去</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
         <source>Save &amp;as…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>別名で保存(&amp;A)…</translation>
     </message>
     <message>
-        <source>Save as…</source>
-        <translation type="vanished">別名で保存…</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="125"/>
         <source>&amp;Export labels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>ラベルを書き出す(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Export labels</source>
-        <translation type="vanished">ラベルを書き出す</translation>
+        <translation>ラベルをエクスポート(&amp;E)</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
         <source>&amp;Export MIDI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>MIDIを書き出す(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Export MIDI</source>
-        <translation type="vanished">MIDIを書き出す</translation>
+        <translation>MIDI をエクスポート(&amp;E)</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
         <source>&amp;Close project</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>プロジェクトを閉じる(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Close project</source>
-        <translation type="vanished">プロジェクトを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
@@ -674,7 +540,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
         <source>Paste new label</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>新規ラベルをペースト</translation>
+        <translation>新規ラベルを貼り付け</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
@@ -691,7 +557,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <source>Select all</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>すべてを選択</translation>
+        <translation>すべて選択</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
@@ -889,7 +755,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
         <source>Align start to zero</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>開始位置をを0位置に揃える</translation>
+        <translation>開始位置をを 0位置に揃える</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
@@ -937,31 +803,31 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
         <source>Fav effect #1</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>お気に入りエフェクト#1</translation>
+        <translation>お気に入りエフェクト #1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="515"/>
         <source>Fav effect #2</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>お気に入りエフェクト#2</translation>
+        <translation>お気に入りエフェクト #2</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="523"/>
         <source>Fav effect #3</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>お気に入りエフェクト#3</translation>
+        <translation>お気に入りエフェクト #3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="93"/>
         <source>Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>読み込む…</translation>
+        <translation>インポート…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="46"/>
         <source>Show in Finder</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Finderに表示</translation>
+        <translation>Finder に表示</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
@@ -982,18 +848,10 @@
         <translation>保存(&amp;S)</translation>
     </message>
     <message>
-        <source>Save</source>
-        <translation type="vanished">保存</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>オーディオを書き出す(&amp;E)…</translation>
-    </message>
-    <message>
-        <source>Export audio…</source>
-        <translation type="vanished">オーディオを書き出す…</translation>
+        <translation>オーディオをエクスポート(&amp;E)…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
@@ -1047,37 +905,37 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="575"/>
         <source>Macro MP3 conversion</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>MP3変換マクロ</translation>
+        <translation>MP3 変換マクロ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nyquistプラグインをインストール</translation>
+        <translation>Nyquist プラグインをインストール</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
         <source>Nyquist prompt</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nyquistプロンプト</translation>
+        <translation>Nyquist プロンプト</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="599"/>
         <source>Sample data export</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>サンプルデータを書き出す</translation>
+        <translation>サンプルデータをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
         <source>Sample data import</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>サンプルデータを読み込む</translation>
+        <translation>サンプルデータをインポートむ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="615"/>
         <source>Raw data import</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Rawデータを読み込む</translation>
+        <translation>Raw データをインポート</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
@@ -1125,7 +983,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="683"/>
         <source>MIDI device info</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>MIDIデバイス情報</translation>
+        <translation>MIDI デバイス情報</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="691"/>
@@ -1182,10 +1040,6 @@
         <translation>クラウドに保存(&amp;U)…</translation>
     </message>
     <message>
-        <source>Save to cloud…</source>
-        <translation type="vanished">クラウドに保存…</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="764"/>
         <source>Share audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1208,10 +1062,6 @@
         <source>Project propert&amp;ies…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>プロジェクトのプロパティ(&amp;I)…</translation>
-    </message>
-    <message>
-        <source>Project properties…</source>
-        <translation type="vanished">プロジェクトのプロパティ…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="23"/>
@@ -1299,10 +1149,6 @@
         <translation>クリップのプロパティ</translation>
     </message>
     <message>
-        <source>Show clip properties</source>
-        <translation type="vanished">クリップのプロパティを表示</translation>
-    </message>
-    <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
         <source>Follow track color</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1372,7 +1218,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
         <source>Show RMS in waveform</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>波形にRMSを表示</translation>
+        <translation>波形に RMS を表示</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="310"/>
@@ -1421,18 +1267,10 @@
         <translation>録音</translation>
     </message>
     <message>
-        <source>Stop record</source>
-        <translation type="vanished">録音を停止</translation>
-    </message>
-    <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
         <source>Record level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>録音レベル</translation>
-    </message>
-    <message>
-        <source>Set record level</source>
-        <translation type="vanished">録音レベルを設定</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
@@ -1453,10 +1291,6 @@
         <translation>リードイン録音</translation>
     </message>
     <message>
-        <source>Start lead-in recording</source>
-        <translation type="vanished">リードイン録音を開始</translation>
-    </message>
-    <message>
         <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="19"/>
         <source>Spectrogram settings…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1472,49 +1306,49 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="95"/>
         <source>Cut and leave gap</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>カット（ギャップを残す）</translation>
+        <translation>切り取ってギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="104"/>
         <source>Cut and close gap (per clip)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>カット（ギャップを閉じる:クリップごと）</translation>
+        <translation>切り取ってギャップを閉じる (クリップ単位)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="113"/>
         <source>Cut and close gap (per track)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>カット（ギャップを閉じる:トラックごと）</translation>
+        <translation>切り取ってギャップを閉じる (トラック単位)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
         <source>Cut and close gap (all tracks)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>カット（ギャップを閉じる:すべてのトラック）</translation>
+        <translation>切り取ってギャップを閉じる (すべてのトラック)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="131"/>
         <source>Delete and leave gap</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>削除（ギャップを残す）</translation>
+        <translation>削除してギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>削除（ギャップを閉じる:クリップごと）</translation>
+        <translation>削除してギャップを閉じる (クリップ単位)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="149"/>
         <source>Delete and close gap (per track)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>削除（ギャップを閉じる:トラックごと）</translation>
+        <translation>削除してギャップを閉じる (トラック単位)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="158"/>
         <source>Delete and close gap (all tracks)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>削除（ギャップを閉じる:すべてのトラック）</translation>
+        <translation>削除してギャップを閉じる (すべてのトラック)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="167"/>
@@ -1539,18 +1373,6 @@
         <source>Rename</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>名称変更</translation>
-    </message>
-    <message>
-        <source>Rename track</source>
-        <translation type="vanished">トラックを名称変更</translation>
-    </message>
-    <message>
-        <source>Duplicate track</source>
-        <translation type="vanished">トラックを複製</translation>
-    </message>
-    <message>
-        <source>Delete track</source>
-        <translation type="vanished">トラックを削除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="225"/>
@@ -1646,25 +1468,25 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
         <source>Rename item (clip/label)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>項目の名称を変更（クリップ/ラベル）</translation>
+        <translation>項目の名称を変更 (クリップ/ラベル)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
         <source>Paste (pushes clips on selected track)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>ペースト（選択トラックにクリップを押し出す）</translation>
+        <translation>貼り付け (選択トラックにクリップを押し出す)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="354"/>
         <source>Paste (overlaps other clips)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>ペースト（ほかのクリップをオーバーラップ）</translation>
+        <translation>貼り付け (ほかのクリップをオーバーラップ)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="363"/>
         <source>Paste (preserves synchronization on all tracks)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>ペースト（すべてのトラックの同期を維持）</translation>
+        <translation>貼り付け (すべてのトラックの同期を維持)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="372"/>
@@ -1688,7 +1510,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="396"/>
         <source>Export clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>クリップを書き出す</translation>
+        <translation>クリップをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="404"/>
@@ -1953,7 +1775,7 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
         <source>Show engraving elements</source>
-        <translation>スコア（楽譜）要素を表示</translation>
+        <translation>スコア (楽譜)要素を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
@@ -1963,7 +1785,7 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
         <source>Show engraving undo stack</source>
-        <translation>スコア（楽譜）編集の履歴を表示</translation>
+        <translation>スコア (楽譜)編集の履歴を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
@@ -1973,7 +1795,7 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
         <source>Show engraving style options list</source>
-        <translation>スコア（楽譜）スタイルのオプションリストを表示</translation>
+        <translation>スコア (楽譜)スタイルのオプションリストを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
@@ -1988,12 +1810,12 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
         <source>Show &amp;rcommands list</source>
-        <translation>rcommandリストを表示(&amp;R)</translation>
+        <translation>rcommand リストを表示(&amp;R)</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
         <source>Show rcommands list</source>
-        <translation>rcommandリストを表示</translation>
+        <translation>rcommand リストを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
@@ -2008,7 +1830,7 @@
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
         <source>Show API dump</source>
-        <translation>APIダンプを表示</translation>
+        <translation>API ダンプを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
@@ -2129,21 +1951,21 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="44"/>
         <source>Cut</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カット</translation>
+        <translation>切り取り</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="177"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="338"/>
         <source>Paste</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ペースト</translation>
+        <translation>貼り付け</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
         <source>Undo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>取り消す</translation>
+        <translation>元に戻す</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="197"/>
@@ -2182,13 +2004,13 @@
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
         <source>View project on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>audio.comでプロジェクトを確認</translation>
+        <translation>audio.com でプロジェクトを確認</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
         <source>View on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>audio.comで表示</translation>
+        <translation>audio.com で表示</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
@@ -2200,13 +2022,13 @@
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
         <source>Import preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>プリセットを読み込む</translation>
+        <translation>プリセットをインポート</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="76"/>
         <source>Export preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>プリセットを書き出す</translation>
+        <translation>プリセットをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
@@ -2405,7 +2227,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
         <source>Show in Finder</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Finderに表示</translation>
+        <translation>Finder に表示</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="63"/>
@@ -2430,7 +2252,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
         <source>Import…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>読み込む…</translation>
+        <translation>インポート…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
@@ -2448,19 +2270,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="119"/>
         <source>Export audio…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオを書き出す…</translation>
+        <translation>オーディオをエクスポート…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
         <source>Export labels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ラベルを書き出す</translation>
+        <translation>ラベルをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
         <source>Export MIDI</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>MIDIを書き出す</translation>
+        <translation>MIDI をエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="143"/>
@@ -2498,14 +2320,14 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
         <source>Paste new label</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>新規ラベルをペースト</translation>
+        <translation>新規ラベルを貼り付け</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="81"/>
         <source>Select all</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>すべてを選択</translation>
+        <translation>すべて選択</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
@@ -2529,31 +2351,31 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
         <source>Track start to cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラック先頭からカーソル</translation>
+        <translation>トラック先頭位置からカーソル位置</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <source>Cursor to track end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カーソルからトラック終了</translation>
+        <translation>カーソル位置からトラック終了位置</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="242"/>
         <source>Track start to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラック先頭から終了</translation>
+        <translation>トラック先頭位置から終了位置</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="250"/>
         <source>Previous clip boundary to cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>前のクリップ境界からカーソル</translation>
+        <translation>前のクリップ境界からカーソル位置</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
         <source>Cursor to next clip boundary</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カーソルから次のクリップ境界</translation>
+        <translation>カーソル位置から次のクリップ境界</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
@@ -2667,7 +2489,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="426"/>
         <source>Align start to zero</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>開始位置をを0位置に揃える</translation>
+        <translation>開始位置をを 0位置に揃える</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="434"/>
@@ -2727,19 +2549,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="509"/>
         <source>Fav effect #1</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>お気に入りエフェクト#1</translation>
+        <translation>お気に入りエフェクト #1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="517"/>
         <source>Fav effect #2</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>お気に入りエフェクト#2</translation>
+        <translation>お気に入りエフェクト #2</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="525"/>
         <source>Fav effect #3</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>お気に入りエフェクト#3</translation>
+        <translation>お気に入りエフェクト #3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="535"/>
@@ -2775,37 +2597,37 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="577"/>
         <source>Macro MP3 conversion</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>MP3変換マクロ</translation>
+        <translation>MP3 変換マクロ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="585"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nyquistプラグインをインストール</translation>
+        <translation>Nyquist プラグインをインストール</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
         <source>Nyquist prompt</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nyquistプロンプト</translation>
+        <translation>Nyquist プロンプト</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
         <source>Sample data export</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>サンプルデータを書き出す</translation>
+        <translation>サンプルデータをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="609"/>
         <source>Sample data import</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>サンプルデータを読み込む</translation>
+        <translation>サンプルデータをインポートむ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="617"/>
         <source>Raw data import</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Rawデータを読み込む</translation>
+        <translation>Raw データをインポート</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="625"/>
@@ -2853,7 +2675,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="685"/>
         <source>MIDI device info</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>MIDIデバイス情報</translation>
+        <translation>MIDI デバイス情報</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="693"/>
@@ -2913,7 +2735,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="766"/>
         <source>Share audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオ共有</translation>
+        <translation>オーディオを共有</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
@@ -3118,7 +2940,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="303"/>
         <source>Show RMS in waveform</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>波形にRMSを表示</translation>
+        <translation>波形に RMS を表示</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="312"/>
@@ -3218,7 +3040,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="27"/>
         <source>Rename item (clip/label)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目の名称を変更（クリップ/ラベル）</translation>
+        <translation>項目の名称を変更 (クリップ/ラベル)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="89"/>
@@ -3230,49 +3052,49 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="97"/>
         <source>Cut and leave gap</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カット（ギャップを残す）</translation>
+        <translation>切り取ってギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="106"/>
         <source>Cut and close gap (per clip)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カット（ギャップを閉じる:クリップごと）</translation>
+        <translation>切り取ってギャップを閉じる (クリップ単位)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
         <source>Cut and close gap (per track)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カット（ギャップを閉じる:トラックごと）</translation>
+        <translation>切り取ってギャップを閉じる (トラック単位)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="124"/>
         <source>Cut and close gap (all tracks)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カット（ギャップを閉じる:すべてのトラック）</translation>
+        <translation>切り取ってギャップを閉じる (すべてのトラック)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="133"/>
         <source>Delete and leave gap</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除（ギャップを残す）</translation>
+        <translation>削除してギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="142"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除（ギャップを閉じる:クリップごと）</translation>
+        <translation>削除してギャップを閉じる (クリップ単位)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="151"/>
         <source>Delete and close gap (per track)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除（ギャップを閉じる:トラックごと）</translation>
+        <translation>削除してギャップを閉じる (トラック単位)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
         <source>Delete and close gap (all tracks)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除（ギャップを閉じる:すべてのトラック）</translation>
+        <translation>削除してギャップを閉じる (すべてのトラック)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
@@ -3392,19 +3214,19 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="347"/>
         <source>Paste (pushes clips on selected track)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ペースト（選択トラックのクリップを押し出す）</translation>
+        <translation>貼り付け (選択トラックにクリップを押し出す)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="356"/>
         <source>Paste (overlaps other clips)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ペースト（ほかのクリップをオーバーラップ）</translation>
+        <translation>貼り付け (ほかのクリップをオーバーラップ)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="365"/>
         <source>Paste (preserves synchronization on all tracks)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ペースト（すべてのトラックの同期を維持）</translation>
+        <translation>貼り付け (すべてのトラックの同期を維持)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="374"/>
@@ -3428,7 +3250,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="398"/>
         <source>Export clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クリップを書き出す</translation>
+        <translation>クリップをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="406"/>
@@ -3488,7 +3310,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
         <source>Silence</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>無音部分</translation>
+        <translation>無音</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="489"/>
@@ -3653,10 +3475,6 @@
         <translation>プロジェクト</translation>
     </message>
     <message>
-        <source>Learn</source>
-        <translation type="vanished">詳しい情報</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="97"/>
         <source>Plugins</source>
@@ -3670,7 +3488,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
         <source>Category:</source>
-        <translation>カテゴリ:</translation>
+        <translation>カテゴリ :</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="138"/>
@@ -3702,7 +3520,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="206"/>
         <source>Undo/redo toolbar</source>
-        <translation>取り消す/やり直すツールバー</translation>
+        <translation>元に戻す/やり直すツールバー</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="228"/>
@@ -3727,19 +3545,19 @@
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="81"/>
         <source>Produce MIDI 2.0 output if supported by the receiver</source>
-        <translation>レシーバが対応している場合はMIDI 2.0出力を生成</translation>
+        <translation>レシーバが対応している場合は MIDI 2.0 出力を生成</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="432"/>
         <source>Are you sure you want to revert to factory settings?</source>
-        <translation>工場出荷時の設定に戻してもよろしいですか?</translation>
+        <translation>工場出荷時の設定に戻しますか?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="433"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation>この操作を行うと、アプリの設定およびカスタムUIの設定がすべてリセットされます。また、カスタムワークスペースやショートカットも削除されます。さらに、すべてのサードパーティ製プラグインを再度スキャンする必要があります。
+        <translation>この操作を行うと、アプリの設定およびカスタム UI の設定がすべてリセットされます。また、カスタムワークスペースやショートカットも削除されます。さらに、すべてのサードパーティ製プラグインを再度スキャンする必要があります。
 
 この操作でプロジェクトが削除されることはありません。</translation>
     </message>
@@ -3756,12 +3574,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="459"/>
         <source>Would you like to restart Audacity now?</source>
-        <translation>Audacityを再起動してもよろしいですか?</translation>
+        <translation>Audacity を再起動しますか?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
-        <translation>この変更を有効にするには、Audacityを再起動する必要があります。</translation>
+        <translation>この変更を有効にするには、Audacity を再起動する必要があります。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
@@ -3771,22 +3589,22 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
         <source>Restart Audacity</source>
-        <translation>Audacityを再起動</translation>
+        <translation>Audacity を再起動</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="54"/>
         <source>Loading…‎</source>
-        <translation>読み込み中…</translation>
+        <translation>読み込み中…‎</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="97"/>
         <source>Version %1</source>
-        <translation>バージョン%1</translation>
+        <translation>バージョン %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="41"/>
         <source>Loading new project…‎</source>
-        <translation>新規プロジェクトを読み込み中…</translation>
+        <translation>新規プロジェクトを読み込み中…‎</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="45"/>
@@ -3796,7 +3614,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="51"/>
         <source>Loading project…‎</source>
-        <translation>プロジェクトを読み込み中…</translation>
+        <translation>プロジェクトを読み込み中…‎</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
@@ -3806,7 +3624,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation>使用前に検証が必要なプラグインが見つかりました。今すぐ検証しますか、それともスキップしてもよろしいですか?</translation>
+        <translation>使用前に検証が必要なプラグインが見つかりました。今すぐ検証しますか、それともスキップしますか?</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
@@ -3831,7 +3649,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/startupscenario.cpp" line="326"/>
         <source>Do you want to restore the session?</source>
-        <translation>このセッションを復元してもよろしいですか?</translation>
+        <translation>このセッションを復元しますか?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/startupscenario.cpp" line="329"/>
@@ -3867,19 +3685,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectStatusBar.qml" line="43"/>
         <source>Selection status</source>
-        <translation>選択範囲の状況</translation>
+        <translation>選択範囲の状態</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
         <source>Accounts</source>
         <translation>アカウント</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-align</name>
-    <message>
-        <source>Align content</source>
-        <translation type="vanished">コンテンツを揃える</translation>
     </message>
 </context>
 <context>
@@ -3900,7 +3711,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="619"/>
         <source>Rename clip</source>
-        <translation>クリップを名称変更</translation>
+        <translation>クリップ名を変更</translation>
     </message>
 </context>
 <context>
@@ -3939,10 +3750,6 @@ This action will not delete any of your projects.</source>
 </context>
 <context>
     <name>appshell-menu-diagnostics</name>
-    <message>
-        <source>Diagnostics</source>
-        <translation type="vanished">診断</translation>
-    </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="529"/>
         <source>&amp;System</source>
@@ -3988,13 +3795,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="416"/>
         <source>&amp;Effect</source>
         <translation>エフェクト(&amp;E)</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-export-other</name>
-    <message>
-        <source>&amp;Export other</source>
-        <translation type="vanished">ほかを書き出す(&amp;E)</translation>
     </message>
 </context>
 <context>
@@ -4088,13 +3888,6 @@ This action will not delete any of your projects.</source>
     </message>
 </context>
 <context>
-    <name>appshell-menu-macros</name>
-    <message>
-        <source>&amp;Macros</source>
-        <translation type="vanished">マクロ(&amp;M)</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-mixer</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
@@ -4154,14 +3947,6 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-select</name>
     <message>
-        <source>Audio clips</source>
-        <translation type="vanished">オーディオクリップ</translation>
-    </message>
-    <message>
-        <source>Spectral</source>
-        <translation type="vanished">スペクトル</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="323"/>
         <source>Region</source>
         <translation>領域</translation>
@@ -4183,20 +3968,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="487"/>
         <source>Settings</source>
         <translation>設定</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-skip</name>
-    <message>
-        <source>Skip to</source>
-        <translation type="vanished">ここへスキップ:</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-sort</name>
-    <message>
-        <source>Sort tracks</source>
-        <translation type="vanished">トラックを並べ替え</translation>
     </message>
 </context>
 <context>
@@ -4254,12 +4025,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="273"/>
         <source>Unstable prerelease for %1</source>
-        <translation>%1用開発版プレリリース</translation>
+        <translation>%1 用開発版プレリリース</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="329"/>
         <source>Audacity Team Members</source>
-        <translation>Audacityチームメンバー</translation>
+        <translation>Audacity チームメンバー</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
@@ -4269,7 +4040,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
         <source>Distinguished Audacity Team members, not currently active</source>
-        <translation>功績あるAudacityチームメンバー（活動休止中）</translation>
+        <translation>功績ある Audacity チームメンバー (活動休止中)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
@@ -4279,17 +4050,18 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="334"/>
         <source>Website and Graphics</source>
-        <translation>Webサイトとグラフィック</translation>
+        <translation>Web サイトとグラフィック</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
-        <translation>日本語訳: &lt;br&gt;
+        <translation>日本語訳 : &lt;br&gt;
 Atsushi Yoshida -2015&lt;br&gt;
 Phroneris 2018-2022&lt;br&gt;
 Akira Nishimura 2023-2026&lt;br&gt;
 Shinki Nishikori 2024-2026&lt;br&gt;
-SakiPapa 2022-2026</translation>
+SakiPapa 2022-2026&lt;br&gt;
+coolvitto 2026-09</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>
@@ -4304,7 +4076,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="347"/>
         <source>Audacity includes code from the following projects:</source>
-        <translation>Audacityには以下のプロジェクトのコードが含まれています:</translation>
+        <translation>Audacity には以下のプロジェクトのコードが含まれています :</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
@@ -4314,7 +4086,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
         <source>About Audacity</source>
-        <translation>Audacityについて</translation>
+        <translation>Audacity について</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
@@ -4329,7 +4101,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
         <source>Audacity the free, open source, cross-platform software for recording and editing sounds.</source>
-        <translation>Audacityはサウンド録音・編集用の、オープンソース、クロスプラットフォームの無料ソフトウェアです。</translation>
+        <translation>Audacity は音声の録音と編集を行うための、無料でオープンソース、クロスプラットフォームのソフトウェアです。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
@@ -4339,17 +4111,17 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
         <source>Audacity website: %1</source>
-        <translation>AudacityのWebサイト: %1</translation>
+        <translation>Audacity の Web サイト : %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
-        <translation>&lt;b&gt;Audacity®&lt;/b&gt;ソフトウェア著作権所有 © 1999-%1 Audacityチーム。</translation>
+        <translation>&lt;b&gt;Audacity®&lt;/b&gt;ソフトウェア著作権所有 © 1999-%1 Audacity チーム。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
-        <translation>&lt;b&gt;Audacity&lt;/b&gt;の名称は登録商標です。</translation>
+        <translation>&lt;b&gt;Audacity&lt;/b&gt; の名称は登録商標です。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="27"/>
@@ -4388,32 +4160,20 @@ SakiPapa 2022-2026</translation>
 <context>
     <name>appshell/gettingstarted</name>
     <message>
-        <source>Preferences → Application</source>
-        <translation type="vanished">設定 → アプリケーション</translation>
-    </message>
-    <message>
-        <source>App Updates</source>
-        <translation type="vanished">アップデート</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="39"/>
         <source>Audacity notifies you in-app when a new version is available to download.</source>
-        <translation>Audacityの新しいバージョンがダウンロード可能になれば、アプリ内で通知します。</translation>
+        <translation>Audacity の新しいバージョンがダウンロード可能になれば、アプリ内で通知します。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="40"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
-        <translation>%1でいつでもオフにすることができます。</translation>
-    </message>
-    <message>
-        <source>Usage Info</source>
-        <translation type="vanished">使用状況情報</translation>
+        <translation>%1 でいつでもオフにすることができます。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
         <source>Preferences → General</source>
-        <translation>設定 → 一般</translation>
+        <translation>設定 → 全般</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
@@ -4428,12 +4188,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
         <source>Audacity automatically sends crash reports to help us improve product quality.</source>
-        <translation>Audacityは、製品の品質向上に役立てるため、クラッシュレポートを自動的に送信します。</translation>
+        <translation>Audacity は、製品の品質向上に役立てるため、クラッシュレポートを自動的に送信します。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="44"/>
         <source>Usage info</source>
-        <translation>使用状況情報</translation>
+        <translation>使用状態情報</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="46"/>
@@ -4443,17 +4203,17 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="47"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.</source>
-        <translation>利用状況を把握するため、インストールごとにランダムなID（UUID）を生成します。このIDには個人を特定できる情報は一切含まれません。さらに詳しく知りたい場合には%1を参照してください。</translation>
+        <translation>利用状態を把握するため、インストールごとにランダムな ID (UUID)を生成します。この ID には個人を特定できる情報は一切含まれません。さらに詳しく知りたい場合には%1を参照してください。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="48"/>
         <source>You can disable this anytime in %1.</source>
-        <translation>%1でいつでも無効にすることができます。</translation>
+        <translation>%1 でいつでも無効にすることができます。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="49"/>
         <source>Disable UUID</source>
-        <translation>UUIDを無効にする</translation>
+        <translation>UUID を無効にする</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="82"/>
@@ -4493,16 +4253,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="16"/>
         <source>Connect to your audio.com account</source>
-        <translation>audio.comのアカウントに接続</translation>
+        <translation>audio.com のアカウントに接続</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
         <source>Continue with Google</source>
-        <translation>Googleで続ける</translation>
-    </message>
-    <message>
-        <source>Continue with Facebook</source>
-        <translation type="vanished">Facebookで続ける</translation>
+        <translation>Google で続ける</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
@@ -4522,7 +4278,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
         <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;%1&quot;&gt;パスワードを消去してもよろしいですか?&lt;/a&gt;</translation>
+        <translation>&lt;a href=&quot;%1&quot;&gt;パスワードをお忘れですか?&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
@@ -4569,7 +4325,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="224"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="231"/>
         <source>Forgot password</source>
-        <translation>パスワードを消去</translation>
+        <translation>パスワードを忘れた場合</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
@@ -4601,7 +4357,7 @@ SakiPapa 2022-2026</translation>
         <source>Behind this dialog is the ‘Learn’ section, where you’ll find tutorials to get you started
 (Video tutorials require an internet connection)</source>
         <translation>このダイアログには‘学習’セクションがあり、使い方を学ぶためのチュートリアルが用意されています。
-（チュートリアルビデオの視聴にはインターネット接続が必要です）</translation>
+ (チュートリアルビデオの視聴にはインターネット接続が必要です)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/UnderConstructionPage.qml" line="12"/>
@@ -4617,13 +4373,13 @@ SakiPapa 2022-2026</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
         <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
-        <translation>テーマ%1</translation>
+        <translation>テーマ %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
         <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
-        <translation>%1テーマを選択</translation>
+        <translation>%1 テーマを選択</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="97"/>
@@ -4712,7 +4468,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="146"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
-        <translation>%1/%2</translation>
+        <translation>%1 / %2</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="164"/>
@@ -4799,7 +4555,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="245"/>
         <source>Current theme: %1</source>
         <extracomment>%1 is the current theme name (Light, Dark, or System)</extracomment>
-        <translation>現在のテーマ: %1</translation>
+        <translation>現在のテーマ : %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="249"/>
@@ -4832,12 +4588,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="46"/>
         <source>Closely matches the layout of Audacity 3</source>
-        <translation>Audacity 3に非常に近いレイアウト</translation>
+        <translation>Audacity 3 に非常に近いレイアウト</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="99"/>
         <source>What UI layout (workspace) do you want?</source>
-        <translation>どのレイアウト（ワークスペース）を使用しますか?</translation>
+        <translation>どのレイアウト (ワークスペース)を使用しますか?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="124"/>
@@ -4847,7 +4603,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="129"/>
         <source>Choose your preferred workspace layout for the Audacity interface</source>
-        <translation>Audacityインターフェイス用のお好みのワークスペースレイアウトを選択</translation>
+        <translation>Audacity インターフェイス用のお好みのワークスペースレイアウトを選択</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="134"/>
@@ -4926,7 +4682,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="309"/>
         <source>Use LPC</source>
-        <translation>LPCを使用</translation>
+        <translation>LPC を使用</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="279"/>
@@ -4946,7 +4702,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioEngineSection.qml" line="36"/>
         <source>Restart audio and MIDI devices</source>
-        <translation>オーディオおよびMIDIデバイスを再起動</translation>
+        <translation>オーディオおよび MIDI デバイスを再起動</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="32"/>
@@ -4956,12 +4712,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="44"/>
         <source>Check to see if a new version of Audacity is available</source>
-        <translation>Audacityの新しいバージョンがあるかを確認</translation>
+        <translation>Audacity の新しいバージョンがあるかを確認</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
         <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>アップデートを確認するにはネットワーク接続が必要です。プライバシーを保護するため、Audacityは個人情報を一切保存しません。詳細については、&lt;a href=&quot;%1&quot;&gt;プライバシーポリシー&lt;/a&gt;を参照してください。</translation>
+        <translation>アップデートを確認するにはネットワーク接続が必要です。プライバシーを保護するため、Audacity は個人情報を一切保存しません。詳細については、&lt;a href=&quot;%1&quot;&gt;プライバシーポリシー&lt;/a&gt;を参照してください。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -4971,32 +4727,32 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="51"/>
         <source>Auto save every</source>
-        <translation>自動保存する間隔:</translation>
+        <translation>自動保存する間隔 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="78"/>
         <source>Auto save every %1 %2</source>
-        <translation>%1 %2ごとに自動保存</translation>
+        <translation>%1 %2 ごとに自動保存</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
         <source>Character set used when importing binary files</source>
-        <translation>バイナリファイルを読み込むときの文字セット</translation>
+        <translation>バイナリファイル インポート時の文字セット</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="39"/>
         <source>Overture import character set:</source>
-        <translation>Overtureを読み込むときの文字セット:</translation>
+        <translation>Overture インポート時の文字セット :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="64"/>
         <source>Color:</source>
-        <translation>カラー:</translation>
+        <translation>カラー :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="97"/>
         <source>Wallpaper:</source>
-        <translation>壁紙:</translation>
+        <translation>壁紙 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/DefaultFilesSection.qml" line="33"/>
@@ -5006,12 +4762,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FoldersSection.qml" line="33"/>
         <source>Folders</source>
-        <translation>フォルダ</translation>
+        <translation>フォルダー</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FoldersSection.qml" line="65"/>
         <source>Choose %1 folder</source>
-        <translation>フォルダ%1を選択</translation>
+        <translation>フォルダー %1 を選択</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ImportStyleSection.qml" line="32"/>
@@ -5036,7 +4792,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="49"/>
         <source>Keyboard layout %1</source>
-        <translation>キーボードレイアウト%1</translation>
+        <translation>キーボードレイアウト %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeiSection.qml" line="32"/>
@@ -5047,7 +4803,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeiSection.qml" line="42"/>
         <source>Import MEI layout</source>
-        <translation>MEIレイアウトを読み込む</translation>
+        <translation>MEI レイアウトをインポート</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="44"/>
@@ -5058,17 +4814,17 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="49"/>
         <source>MIDI input</source>
-        <translation>MIDI入力</translation>
+        <translation>MIDI 入力</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="65"/>
         <source>MIDI output</source>
-        <translation>MIDI出力</translation>
+        <translation>MIDI 出力</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="41"/>
         <source>Shortest note:</source>
-        <translation>最も短い音符:</translation>
+        <translation>最も短い音符 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MiscellaneousSection.qml" line="32"/>
@@ -5078,7 +4834,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MiscellaneousSection.qml" line="41"/>
         <source>Proximity for selecting elements:</source>
-        <translation>要素を選択するための近接条件:</translation>
+        <translation>要素を選択するための近接条件 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="34"/>
@@ -5098,17 +4854,17 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="45"/>
         <source>Import layout</source>
-        <translation>レイアウトを読み込む</translation>
+        <translation>レイアウトをインポート</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="60"/>
         <source>Import system and page breaks</source>
-        <translation>システムおよび改ページを読み込む</translation>
+        <translation>システムおよび改ページをインポート</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="75"/>
         <source>Apply default typeface (Edwin) to imported projects</source>
-        <translation>読み込んだプロジェクトにデフォルトのタイプフェイス（Edwin）を適用</translation>
+        <translation>読み込んだプロジェクトにデフォルトのタイプフェイス (Edwin)を適用</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="46"/>
@@ -5118,7 +4874,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="61"/>
         <source>Default duration:</source>
-        <translation>デフォルトの継続時間:</translation>
+        <translation>デフォルトの長さ :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="84"/>
@@ -5138,7 +4894,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="49"/>
         <source>Advance to next note on key release (MIDI)</source>
-        <translation>キーを離すと次の音符に進む（MIDI）</translation>
+        <translation>キーを離すと次の音符に進む (MIDI)</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="64"/>
@@ -5153,7 +4909,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="93"/>
         <source>Delay between notes in automatic real time mode:</source>
-        <translation>自動リアルタイムモードでの音符間のディレイ:</translation>
+        <translation>自動リアルタイムモードでの音符間のディレイ :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PreferencesButtonsPanel.qml" line="50"/>
@@ -5173,12 +4929,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="33"/>
         <source>OSC remote control</source>
-        <translation>OSCリモート制御</translation>
+        <translation>OSC リモート制御</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="52"/>
         <source>Port number:</source>
-        <translation>ポート番号:</translation>
+        <translation>ポート番号 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="33"/>
@@ -5188,7 +4944,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="43"/>
         <source>Generate MP3 audio for private cloud projects</source>
-        <translation>プライベートクラウドプロジェクト用にMP3オーディオを生成</translation>
+        <translation>プライベートクラウドプロジェクト用に MP3 オーディオを生成</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="32"/>
@@ -5218,12 +4974,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="50"/>
         <source>Default zoom:</source>
-        <translation>デフォルトの拡大/縮小率:</translation>
+        <translation>デフォルトの拡大/縮小率 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
         <source>Mouse zoom precision:</source>
-        <translation>マウスの拡大/縮小精度:</translation>
+        <translation>マウスの拡大/縮小精度 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
@@ -5233,22 +4989,22 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="14"/>
         <source>Usage info</source>
-        <translation>使用状況情報</translation>
+        <translation>使用状態情報</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="25"/>
         <source>Send anonymous usage info</source>
-        <translation>匿名の使用状況情報を送る</translation>
+        <translation>匿名の使用状態情報を送る</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>Audacityの使用状況を把握するため、インストールごとにランダムなID（UUID）を生成します。このIDには、個人を特定できる情報は一切含まれていません。さらに詳しく知りたい場合には、&lt;a href=&quot;%1&quot;&gt;プライバシーポリシー&lt;/a&gt;を参照してください。</translation>
+        <translation>Audacity の使用状態を把握するため、インストールごとにランダムな ID (UUID)を生成します。この ID には、個人を特定できる情報は一切含まれていません。さらに詳しく知りたい場合には、&lt;a href=&quot;%1&quot;&gt;プライバシーポリシー&lt;/a&gt;を参照してください。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
         <source>Zoom toggle (magnifying glass)</source>
-        <translation>倍率を切り替える（拡大鏡）</translation>
+        <translation>倍率を切り替える (拡大鏡)</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
@@ -5258,12 +5014,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="34"/>
         <source>Zoom state 1:</source>
-        <translation>倍率1:</translation>
+        <translation>倍率 1 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="55"/>
         <source>Zoom state 2:</source>
-        <translation>倍率2:</translation>
+        <translation>倍率 2 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="246"/>
@@ -5355,10 +5111,6 @@ SakiPapa 2022-2026</translation>
         <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
         <translation>クラッシュレポートにはネットワーク接続が必要です。クラッシュした場合、原因の特定と修正に役立つレポートを送信します。これらのレポートには、音声データや個人情報は含まれません。詳細については、&lt;a href=&quot;%1&quot;&gt;プライバシーポリシー&lt;/a&gt;をご覧ください。</translation>
     </message>
-    <message>
-        <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don&apos;t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="vanished">クラッシュレポートにはネットワーク接続が必要です。クラッシュした場合、原因の特定と修正に役立つレポートを送信します。これらのレポートには、音声データや個人情報は含まれません。詳細については、&lt;a href=&quot;%1&quot;&gt;プライバシーポリシー&lt;/a&gt;をご覧ください。</translation>
-    </message>
 </context>
 <context>
     <name>appshell/preferences/spectrogram</name>
@@ -5388,7 +5140,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="34"/>
         <source>Welcome</source>
-        <translation>Welcome</translation>
+        <translation>ようこそ</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="115"/>
@@ -5403,12 +5155,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="269"/>
         <source>Don’t show welcome dialog on startup</source>
-        <translation>起動時にWelcomeダイアログを表示しない</translation>
+        <translation>起動時に「ようこそ」ダイアログを表示しない</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="47"/>
         <source>Video: find out what’s new in Audacity 4</source>
-        <translation>ビデオ: Audacity 4の新機能を見る</translation>
+        <translation>ビデオ : Audacity 4 の新機能を見る</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="50"/>
@@ -5418,12 +5170,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="56"/>
         <source>Complete your Audacity cloud setup with Audio.com</source>
-        <translation>audio.comでAudacityクラウドの設定を完了</translation>
+        <translation>audio.com で Audacity クラウドの設定を完了</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="77"/>
         <source>Help us decide the future of Audacity</source>
-        <translation>Audacityの未来を決めるために協力してください</translation>
+        <translation>Audacity の未来を決めるために協力してください</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="80"/>
@@ -5433,17 +5185,17 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="86"/>
         <source>Soap Voice Cleaner: studio-quality voice-over sound</source>
-        <translation>Soap Voice Cleaner: スタジオ品質のボイスオーバーサウンド</translation>
+        <translation>Soap Voice Cleaner : スタジオ品質のボイスオーバーサウンド</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="89"/>
         <source>Get it on MuseHub</source>
-        <translation>MuseHubから入手</translation>
+        <translation>MuseHub から入手</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="59"/>
         <source>Continue</source>
-        <translation>続ける</translation>
+        <translation>続行</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="67"/>
@@ -5461,17 +5213,17 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="47"/>
         <source>Increase BPM</source>
-        <translation>BPMを増やす</translation>
+        <translation>BPM を増やす</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="66"/>
         <source>Decrease BPM</source>
-        <translation>BPMを減らす</translation>
+        <translation>BPM を減らす</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation>拍子記号: %1/%2</translation>
+        <translation>拍子 : %1/%2</translation>
     </message>
 </context>
 <context>
@@ -5537,7 +5289,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="120"/>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="170"/>
         <source>System default: %1</source>
-        <translation>システムデフォルト: %1</translation>
+        <translation>システムデフォルト : %1</translation>
     </message>
 </context>
 <context>
@@ -5553,14 +5305,14 @@ SakiPapa 2022-2026</translation>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="846"/>
         <source>Default recording device number: %1
 </source>
-        <translation>デフォルトの録音デバイス番号: %1
+        <translation>デフォルトの録音デバイス番号 : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="847"/>
         <source>Default playback device number: %1
 </source>
-        <translation>デフォルトの再生デバイス番号: %1
+        <translation>デフォルトの再生デバイス番号 : %1
 </translation>
     </message>
     <message>
@@ -5575,70 +5327,70 @@ SakiPapa 2022-2026</translation>
         <source>Device info unavailable for: %1
 </source>
         <extracomment>%1 is the device index number</extracomment>
-        <translation>デバイス情報を取得できません: %1
+        <translation>デバイス情報を取得できません : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="872"/>
         <source>Device ID: %1
 </source>
-        <translation>デバイスID: %1
+        <translation>デバイス ID : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="873"/>
         <source>Device name: %1
 </source>
-        <translation>デバイス名: %1
+        <translation>デバイス名 : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="874"/>
         <source>Host name: %1
 </source>
-        <translation>ホスト名: %1
+        <translation>ホスト名 : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="875"/>
         <source>Recording channels: %1
 </source>
-        <translation>録音チャンネル数: %1
+        <translation>録音チャンネル数 : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="876"/>
         <source>Playback channels: %1
 </source>
-        <translation>再生チャンネル数: %1
+        <translation>再生チャンネル数 : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="877"/>
         <source>Low Recording Latency: %1
 </source>
-        <translation>最小録音レイテンシ: %1
+        <translation>最小録音レイテンシ : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="878"/>
         <source>Low Playback Latency: %1
 </source>
-        <translation>最小再生レイテンシ: %1
+        <translation>最小再生レイテンシ : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="879"/>
         <source>High Recording Latency: %1
 </source>
-        <translation>最大録音レイテンシ: %1
+        <translation>最大録音レイテンシ : %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="880"/>
         <source>High Playback Latency: %1
 </source>
-        <translation>最大再生レイテンシ: %1
+        <translation>最大再生レイテンシ : %1
 </translation>
     </message>
     <message>
@@ -5646,7 +5398,7 @@ SakiPapa 2022-2026</translation>
         <source>Supported Playback Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
-        <translation>対応再生サンプルレート:
+        <translation>対応再生サンプルレート :
 </translation>
     </message>
     <message>
@@ -5654,7 +5406,7 @@ SakiPapa 2022-2026</translation>
         <source>Supported Capture Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
-        <translation>対応キャプチャサンプルレート:
+        <translation>対応キャプチャサンプルレート :
 </translation>
     </message>
     <message>
@@ -5662,7 +5414,7 @@ SakiPapa 2022-2026</translation>
         <source>Selected recording device: %1 - %2
 </source>
         <extracomment>%1 is the recording device number, %2 is the device name</extracomment>
-        <translation>選択した録音デバイス: %1 - %2
+        <translation>選択した録音デバイス : %1 - %2
 </translation>
     </message>
     <message>
@@ -5677,7 +5429,7 @@ SakiPapa 2022-2026</translation>
         <source>Selected playback device: %1 - %2
 </source>
         <extracomment>%1 is the playback device number, %2 is the device name</extracomment>
-        <translation>選択した再生デバイス: %1 - %2
+        <translation>選択した再生デバイス : %1 - %2
 </translation>
     </message>
     <message>
@@ -5691,7 +5443,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="943"/>
         <source>Supported Rates:
 </source>
-        <translation>対応サンプルレート:
+        <translation>対応サンプルレート :
 </translation>
     </message>
     <message>
@@ -5706,7 +5458,7 @@ SakiPapa 2022-2026</translation>
         <source>Received %1 while opening devices
 </source>
         <extracomment>%1 is a PortAudio error code returned while opening the devices</extracomment>
-        <translation>デバイスを開く際にエラー%1が起きました
+        <translation>デバイスを開く際にエラー %1 が起きました
 </translation>
     </message>
     <message>
@@ -5720,7 +5472,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1019"/>
         <source>Available mixers:
 </source>
-        <translation>使用可能なミキサー:
+        <translation>使用可能なミキサー :
 </translation>
     </message>
     <message>
@@ -5741,14 +5493,14 @@ SakiPapa 2022-2026</translation>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1030"/>
         <source>Available recording sources:
 </source>
-        <translation>使用可能な録音ソース:
+        <translation>使用可能な録音ソース :
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1039"/>
         <source>Available playback volumes:
 </source>
-        <translation>使用可能な再生音量:
+        <translation>使用可能な再生音量 :
 </translation>
     </message>
     <message>
@@ -5787,7 +5539,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="273"/>
         <source>Error: %1</source>
-        <translation>エラー: %1</translation>
+        <translation>エラー : %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="281"/>
@@ -5797,14 +5549,14 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="775"/>
         <source>Audacity Audio</source>
-        <translation>Audacityオーディオ</translation>
+        <translation>Audacity オーディオ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
         <source>Error opening recording device.
 Error code: %1</source>
         <translation>録音デバイスを開く際にエラーが起きました。
-エラーコード: %1</translation>
+エラーコード : %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="895"/>
@@ -5824,7 +5576,7 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="56"/>
         <source>Failed to encode preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation>“%1”からプリセットをエンコードできませんでした。</translation>
+        <translation>“%1”からプリセットをエンコードできませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="61"/>
@@ -5848,7 +5600,7 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="533"/>
         <source>Failed to write XML preset to “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation>“%1”にXMLプリセットを書き込めませんでした</translation>
+        <translation>“%1”に XML プリセットを書き込めませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="555"/>
@@ -5860,44 +5612,44 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
         <source>Audio Unit</source>
         <extracomment>the name of an Apple audio software protocol</extracomment>
-        <translation>Audio Unit</translation>
+        <translation>オーディオ ユニット</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="134"/>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="194"/>
         <source>Audio Unit Effects</source>
         <extracomment>Audio Unit is the name of an Apple audio software protocol</extracomment>
-        <translation>Audio Unitエフェクト</translation>
+        <translation>オーディオユニット エフェクト</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="139"/>
         <source>The Audacity Team</source>
-        <translation>Audacityチーム</translation>
+        <translation>Audacity チーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="150"/>
         <source>Provides Audio Unit Effects support to Audacity</source>
-        <translation>Audio UnitエフェクトをAudacityで対応可能にする</translation>
+        <translation>オーディオユニット エフェクトを Audacity で対応可能にする</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="195"/>
         <source>Audio Unit Generators</source>
-        <translation>Audio Unitジェネレータ</translation>
+        <translation>オーディオユニット ジェネレータ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="196"/>
         <source>Audio Unit Mixers</source>
-        <translation>Audio Unitミキサー</translation>
+        <translation>オーディオユニット ミキサー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="197"/>
         <source>Audio Unit Music Effects</source>
-        <translation>Audio Unitミュージックエフェクト</translation>
+        <translation>オーディオユニット ミュージックエフェクト</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="198"/>
         <source>Audio Unit Panners</source>
-        <translation>Audio Unitパンナー</translation>
+        <translation>オーディオユニット パンナー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="223"/>
@@ -5942,22 +5694,22 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="498"/>
         <source>Failed to convert property list to XML data</source>
-        <translation>プロパティリストからXMLデータへ変換できませんでした</translation>
+        <translation>プロパティリストから XML データへ変換できませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="503"/>
         <source>XML data is empty after conversion</source>
-        <translation>変換の結果、XMLデータは空です</translation>
+        <translation>変換の結果、XML データは空です</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
         <source>The plugin “%1” does not support the required block size</source>
-        <translation>プラグイン”%1”は指定されたブロックサイズに対応していません</translation>
+        <translation>プラグイン“%1”は指定されたブロックサイズに対応していません</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
         <source>The plugin “%1” has crashed while processing audio</source>
-        <translation>プラグイン”%1”がオーディオ処理中にクラッシュしました</translation>
+        <translation>プラグイン“%1”がオーディオ処理中にクラッシュしました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
@@ -5991,18 +5743,18 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="82"/>
         <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation>指定した”コントロール”トラックの音量が指定したレベルに達するたびに、1つまたは複数トラックの音量を下げ（抑え）ます</translation>
+        <translation>指定した”コントロール”トラックの音量が指定したレベルに達するたびに、1つまたは複数トラックの音量を下げ (抑え)ます</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
         <source>You selected a track which does not contain audio. AutoDuck can only process audio tracks.</source>
-        <extracomment>Auto duck is the name of an effect that 'ducks' (reduces the volume) of the audio automatically when there is sound on another track. Not as in 'Donald-Duck'!</extracomment>
+        <extracomment>Auto duck is the name of an effect that &apos;ducks&apos; (reduces the volume) of the audio automatically when there is sound on another track. Not as in &apos;Donald-Duck&apos;!</extracomment>
         <translation>オーディオを含まないトラックが選択されました。自動ダッキングはオーディオトラックのみを処理します。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="144"/>
         <source>Auto Duck needs a control track which must be placed below the selected track(s).</source>
-        <extracomment>Auto duck is the name of an effect that 'ducks' (reduces the volume) of the audio automatically when there is sound on another track. Not as in 'Donald-Duck'!</extracomment>
+        <extracomment>Auto duck is the name of an effect that &apos;ducks&apos; (reduces the volume) of the audio automatically when there is sound on another track. Not as in &apos;Donald-Duck&apos;!</extracomment>
         <translation>自動ダッキングは、選択したトラックの下にコントロールトラックが必要です。</translation>
     </message>
     <message>
@@ -6043,7 +5795,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="48"/>
         <source>Changes the speed of a track, also changing its pitch</source>
-        <translation>トラックの再生速度を変更（ピッチも変化）します</translation>
+        <translation>トラックの再生速度を変更 (ピッチも変化)します</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="33"/>
@@ -6063,7 +5815,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="29"/>
         <source>You can only measure one track at a time.</source>
-        <translation>一度に1トラックのみ測定できます。</translation>
+        <translation>一度に 1トラックのみ測定できます。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="35"/>
@@ -6087,32 +5839,32 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="29"/>
         <source>Hard Clipping</source>
-        <translation>クリッピング（ハード）</translation>
+        <translation>クリッピング (ハード)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="29"/>
         <source>Soft Clipping</source>
-        <translation>クリッピング（ソフト）</translation>
+        <translation>クリッピング (ソフト)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="30"/>
         <source>Soft Overdrive</source>
-        <translation>オーバードライブ（ソフト）</translation>
+        <translation>オーバードライブ (ソフト)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="30"/>
         <source>Medium Overdrive</source>
-        <translation>オーバードライブ（ミディアム）</translation>
+        <translation>オーバードライブ (ミディアム)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="31"/>
         <source>Hard Overdrive</source>
-        <translation>オーバードライブ（ハード）</translation>
+        <translation>オーバードライブ (ハード)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="31"/>
         <source>Cubic Curve (odd harmonics)</source>
-        <translation>キュービックカーブ（奇数ハーモニクス）</translation>
+        <translation>キュービックカーブ (奇数ハーモニクス)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="32"/>
@@ -6137,17 +5889,17 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="34"/>
         <source>Hard Limiter 1413</source>
-        <translation>ハードリミッタ1413</translation>
+        <translation>ハードリミッタ 1413</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="60"/>
         <source>Hard clip -12dB, 80% make-up gain</source>
-        <translation>ハードクリップ -12dB、80%メイクアップゲイン</translation>
+        <translation>ハードクリップ -12dB、80% メイクアップゲイン</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="62"/>
         <source>Soft clip -12dB, 80% make-up gain</source>
-        <translation>ソフトクリップ -12dB、80%メイクアップゲイン</translation>
+        <translation>ソフトクリップ -12dB、80% メイクアップゲイン</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="63"/>
@@ -6168,17 +5920,17 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="66"/>
         <source>Light Crunch Overdrive</source>
-        <translation>オーバードライブ（ライトクランチ）</translation>
+        <translation>オーバードライブ (ライトクランチ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="67"/>
         <source>Heavy Overdrive</source>
-        <translation>オーバードライブ（ヘビー）</translation>
+        <translation>オーバードライブ (ヘビー)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="68"/>
         <source>3rd Harmonic (Perfect Fifth)</source>
-        <translation>3次高調波（完全5度）</translation>
+        <translation>3次高調波 (完全5度)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="69"/>
@@ -6188,7 +5940,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="70"/>
         <source>2nd Harmonic (Octave)</source>
-        <translation>2次高調波（オクターブ）</translation>
+        <translation>2次高調波 (オクターブ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="71"/>
@@ -6198,27 +5950,27 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="72"/>
         <source>Leveller, Light, -70dB noise floor</source>
-        <translation>レベラー（ライト）、-70dBノイズフロア</translation>
+        <translation>レベラー (ライト)、-70dBノイズフロア</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="73"/>
         <source>Leveller, Moderate, -70dB noise floor</source>
-        <translation>レベラー（モデレート）、-70dBノイズフロア</translation>
+        <translation>レベラー (モデレート)、-70dB ノイズフロア</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="74"/>
         <source>Leveller, Heavy, -70dB noise floor</source>
-        <translation>レベラー（ヘビー）、-70dBノイズフロア</translation>
+        <translation>レベラー (ヘビー)、-70dBノイズフロア</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="75"/>
         <source>Leveller, Heavier, -70dB noise floor</source>
-        <translation>レベラー（よりヘビー）、-70dBノイズフロア</translation>
+        <translation>レベラー (よりヘビー)、-70dBノイズフロア</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="76"/>
         <source>Leveller, Heaviest, -70dB noise floor</source>
-        <translation>レベラー（最高にヘビー）、-70dBノイズフロア</translation>
+        <translation>レベラー (最高にヘビー)、-70dBノイズフロア</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="77"/>
@@ -6233,7 +5985,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="79"/>
         <source>Full-wave Rectifier (DC blocked)</source>
-        <translation>全波レクチファイア（DCブロック）</translation>
+        <translation>全波レクチファイア (DCブロック)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="80"/>
@@ -6269,7 +6021,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="34"/>
         <source>Equalization</source>
-        <translation>イコライザ（EQ）</translation>
+        <translation>イコライザ (EQ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="80"/>
@@ -6279,12 +6031,12 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="180"/>
         <source>100Hz Rumble</source>
-        <translation>100Hzゴロゴロ音</translation>
+        <translation>100Hz ゴロゴロ音</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="183"/>
         <source>AM Radio</source>
-        <translation>AMラジオ</translation>
+        <translation>AM ラジオ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="186"/>
@@ -6344,7 +6096,7 @@ Please select a section of a track.</source>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="120"/>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="121"/>
         <source>unnamed</source>
-        <extracomment>name of the 'unnamed' custom curve</extracomment>
+        <extracomment>name of the &apos;unnamed&apos; custom curve</extracomment>
         <translation>名称未設定</translation>
     </message>
     <message>
@@ -6353,8 +6105,8 @@ Please select a section of a track.</source>
 %1
 Error message says:
 %2</source>
-        <extracomment>EQ stands for 'Equalization'.</extracomment>
-        <translation>EQ曲線ファイルの読み込みでエラーが起きました:
+        <extracomment>EQ stands for &apos;Equalization&apos;.</extracomment>
+        <translation>EQ 曲線ファイルの読み込みでエラーが起きました :
 %1
 エラーメッセージ:
 %2</translation>
@@ -6362,7 +6114,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="301"/>
         <source>Error Saving Equalization Curves</source>
-        <translation>EQ曲線の保存エラー</translation>
+        <translation>EQ 曲線の保存エラー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurvesList.cpp" line="280"/>
@@ -6404,7 +6156,7 @@ Error message says:
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="186"/>
         <source>%1 of %2</source>
         <comment>find clipping</comment>
-        <translation>%1/%2</translation>
+        <translation>%1 / %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/Generator.cpp" line="51"/>
@@ -6452,7 +6204,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="110"/>
         <source>Too much audio was selected. Only the first %1 seconds of audio will be analyzed.</source>
-        <translation>大量のオーディオが選択されました。オーディオの最初の%1秒だけを解析します。</translation>
+        <translation>大量のオーディオが選択されました。オーディオの最初の %1 秒だけを解析します。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/RepeatBase.cpp" line="14"/>
@@ -6467,7 +6219,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/SBSMSBase.h" line="38"/>
         <source>SBSMS Time / Pitch Stretch</source>
-        <translation>SBSMSタイム/ピッチストレッチ</translation>
+        <translation>SBSMS タイム/ピッチストレッチ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="40"/>
@@ -6479,13 +6231,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="43"/>
         <source>Chebyshev Type I</source>
         <extracomment>Chebyshev is the name of the person after whom the filter type is named.</extracomment>
-        <translation>チェビシェフ（タイプ1）</translation>
+        <translation>チェビシェフ (タイプ1)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="46"/>
         <source>Chebyshev Type II</source>
         <extracomment>Chebyshev is the name of the person after whom the filter type is named.</extracomment>
-        <translation>チェビシェフ（タイプ2）</translation>
+        <translation>チェビシェフ (タイプ2)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="51"/>
@@ -6506,7 +6258,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="108"/>
         <source>Performs IIR filtering that emulates analog filters</source>
         <extracomment>&quot;infinite impulse response&quot;</extracomment>
-        <translation>アナログフィルタをエミュレートするIIRフィルタを実行</translation>
+        <translation>アナログフィルタをエミュレートする IIR フィルタを実行</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="174"/>
@@ -6583,7 +6335,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="32"/>
         <source>Wahwah</source>
-        <translation>ワウ（Wahwah）</translation>
+        <translation>ワウ (Wahwah)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="57"/>
@@ -6596,22 +6348,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="26"/>
         <source>Paste and overlap</source>
-        <translation>ペースト（オーバーラップ）</translation>
+        <translation>貼り付けてオーバーラップ</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="28"/>
         <source>Paste and make room on this track</source>
-        <translation>ペースト（このトラックに空きを確保）</translation>
+        <translation>貼り付けてこのトラックに空き領域を確保</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="30"/>
         <source>Paste and make room on all tracks</source>
-        <translation>ペースト（すべてのトラックに空きを確保）</translation>
+        <translation>貼り付けてすべてのトラックに空き領域を確保</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="35"/>
         <source>Paste and…</source>
-        <translation>ペーストして…</translation>
+        <translation>貼り付けて…</translation>
     </message>
 </context>
 <context>
@@ -6619,37 +6371,37 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="57"/>
         <source>Cut and leave gap</source>
-        <translation>カット（ギャップを残す）</translation>
+        <translation>切り取ってギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
         <source>Cut and close gap on this track</source>
-        <translation>カット（このトラックのギャップを閉じる）</translation>
+        <translation>このトラックのギャップを切り取って閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="61"/>
         <source>Cut and close gap on all tracks</source>
-        <translation>カット（すべてのトラックのギャップを閉じる）</translation>
+        <translation>すべてのトラックのギャップを切り取って閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="66"/>
         <source>Delete and leave gap</source>
-        <translation>削除（ギャップを残す）</translation>
+        <translation>削除してギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
         <source>Delete and close gap on this track</source>
-        <translation>削除（このトラックのギャップを閉じる）</translation>
+        <translation>このトラックで削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="70"/>
         <source>Delete and close gap on all tracks</source>
-        <translation>削除（すべてのトラックのギャップを閉じる）</translation>
+        <translation>すべてのトラックで削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
         <source>Rename clip</source>
-        <translation>クリップを名称変更</translation>
+        <translation>クリップ名を変更</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="76"/>
@@ -6659,7 +6411,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="83"/>
         <source>Cut and…</source>
-        <translation>カットして…</translation>
+        <translation>切り取って…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="84"/>
@@ -6799,7 +6551,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="857"/>
         <source>Invalid audio ID</source>
-        <translation>無効なオーディオID</translation>
+        <translation>無効なオーディオ ID</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="924"/>
@@ -6824,19 +6576,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="188"/>
         <source>Sign in successful! You’re good to go back to Audacity.</source>
-        <translation>サインインに成功しました! Audacityに戻ってください。</translation>
+        <translation>サインインに成功しました! Audacity に戻ってください。</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="200"/>
         <source>Sign in failed. Please return to Audacity and try again.</source>
-        <translation>サインインできませんでした。Audacityに戻ってやり直してください。</translation>
+        <translation>サインインできませんでした。Audacity に戻ってやり直してください。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
         <source>View on audio.com</source>
-        <translation>audio.comで表示</translation>
+        <translation>audio.com で表示</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
@@ -6846,7 +6598,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
         <source>Share audio</source>
-        <translation>オーディオ共有</translation>
+        <translation>オーディオを共有</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
@@ -6856,12 +6608,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
         <source>Audio shared to audio.com</source>
-        <translation>audio.comで共有したオーディオ</translation>
+        <translation>audio.com で共有したオーディオ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
         <source>Sharing audio to audio.com…</source>
-        <translation>audio.comでオーディオを共有中…</translation>
+        <translation>audio.com でオーディオを共有中…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1411"/>
@@ -6876,12 +6628,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
         <source>Save your changes to continue, or cancel the update.</source>
-        <translation>続けるには変更を保存するか，アップデートをキャンセルしてください。</translation>
+        <translation>続けるには変更を保存するか、アップデートをキャンセルしてください。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
         <source>Unsaved changes</source>
-        <translation>保存されていない変更</translation>
+        <translation>変更が保存されていません</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
@@ -6902,7 +6654,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
-        <translation>audio.comにオーディオプレビューをアップロードしました</translation>
+        <translation>audio.com にオーディオプレビューをアップロードしました</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
@@ -6929,7 +6681,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="736"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
         <source>Save to audio.com</source>
-        <translation>audio.comに保存</translation>
+        <translation>audio.com に保存</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
@@ -6944,12 +6696,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
         <source>Create an account on audio.com</source>
-        <translation>audio.comにアカウントを作成</translation>
+        <translation>audio.com にアカウントを作成</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
         <source>Sign in to audio.com</source>
-        <translation>audio.comにサインイン</translation>
+        <translation>audio.com にサインイン</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
@@ -6970,7 +6722,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
         <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
-        <translation>サインインに成功しました。 MuseScore Studioに戻ってください。</translation>
+        <translation>サインインに成功しました。 MuseScore Studio に戻ってください。</translation>
     </message>
 </context>
 <context>
@@ -6989,18 +6741,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="450"/>
         <source>Invalid Response: %1</source>
-        <translation>無効な応答です: %1</translation>
+        <translation>無効な応答です : %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="178"/>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="189"/>
         <source>Export failed</source>
-        <translation>書き出せませんでした</translation>
+        <translation>エクスポートに失敗しました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="196"/>
         <source>Export error</source>
-        <translation>書き出しエラー</translation>
+        <translation>エクスポートエラー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/RemoteProjectSnapshot.cpp" line="169"/>
@@ -7033,7 +6785,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="16"/>
         <source>Save to audio.com</source>
-        <translation>audio.comに保存</translation>
+        <translation>audio.com に保存</translation>
     </message>
 </context>
 <context>
@@ -7046,7 +6798,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
         <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>デベロッパが問題を診断するのに役立つように、 MuseScore Studioのセットアップに関する情報を含む”.zip”ファイルが作成されます。このファイルを送信する前に、内容を確認することができます。</translation>
+        <translation>デベロッパが問題を診断するのに役立つように、 MuseScore Studio のセットアップに関する情報を含む”.zip”ファイルが作成されます。このファイルを送信する前に、内容を確認することができます。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
@@ -7068,7 +6820,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
-        <translation>プロファイラを表示…</translation>
+        <translation>プロファイルを表示…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
@@ -7078,12 +6830,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
-        <translation>グラフィックス情報を表示…</translation>
+        <translation>グラフィックの情報を表示…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation>グラフィックス情報を表示</translation>
+        <translation>グラフィックの情報を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
@@ -7115,19 +6867,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation>スコア（楽譜）要素を表示</translation>
+        <translation>スコア (楽譜)要素を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation>スコア（楽譜）編集の履歴を表示</translation>
+        <translation>スコア (楽譜)編集の履歴を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation>スコア（楽譜）スタイルのオプションリストを表示</translation>
+        <translation>スコア (楽譜)スタイルのオプションリストを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
@@ -7139,19 +6891,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show rcommands list</source>
-        <translation>rcommandリストを表示</translation>
-    </message>
-    <message>
-        <source>Test query action</source>
-        <translation type="vanished">クエリー操作をテスト</translation>
-    </message>
-    <message>
-        <source>Test query action with params 1</source>
-        <translation type="vanished">パラメータ1でクエリー操作をテスト</translation>
-    </message>
-    <message>
-        <source>Test query action with params 2</source>
-        <translation type="vanished">パラメータ2でクエリー操作をテスト</translation>
+        <translation>rcommand リストを表示</translation>
     </message>
 </context>
 <context>
@@ -7185,25 +6925,25 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="57"/>
         <source>Deep Dive Master</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Deep Diveマスター</translation>
+        <translation>Deep Dive マスター</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="60"/>
         <source>Beefy Master</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Beefyマスター</translation>
+        <translation>Beefy マスター</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="63"/>
         <source>Make It Right Master</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Make It Rightマスター</translation>
+        <translation>Make It Right マスター</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="66"/>
         <source>Brick Wall Master</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Brick Wallマスター</translation>
+        <translation>Brick Wall マスター</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="70"/>
@@ -7329,13 +7069,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="135"/>
         <source>SFX Limiter</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>SFXリミッタ</translation>
+        <translation>SFX リミッタ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="138"/>
         <source>VO Limiter</source>
         <extracomment>This is the name of an effect preset. VO means Voiceover.</extracomment>
-        <translation>VOリミッタ</translation>
+        <translation>VO リミッタ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="144"/>
@@ -7401,7 +7141,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="462"/>
         <source>Unknown parameter type: %1</source>
-        <translation>不明なパラメータタイプ: %1</translation>
+        <translation>不明なパラメータタイプ : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="163"/>
@@ -7415,7 +7155,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="24"/>
         <source>Preset name cannot contain %1 or %2</source>
         <extracomment>%1 is a forward slash, %2 is a backslash; neither character is allowed in a preset name.</extracomment>
-        <translation>プリセット名に%1または%2が含まれていません</translation>
+        <translation>プリセット名に %1 または %2 を含めることはできません</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="69"/>
@@ -7426,7 +7166,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
         <source>Enter Nyquist command:</source>
-        <translation>Nyquistコマンドを入力:</translation>
+        <translation>Nyquist コマンドを入力 :</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="69"/>
@@ -7437,12 +7177,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="94"/>
         <source>Enter Nyquist code here…</source>
         <extracomment>Placeholder text of the Nyquist code editor</extracomment>
-        <translation>Nyquistコードを入力…</translation>
+        <translation>Nyquist コードを入力…</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="107"/>
         <source>Load</source>
-        <translation>読み込む</translation>
+        <translation>読み込み</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="118"/>
@@ -7481,7 +7221,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
         <source>Ratio</source>
-        <translation>レシオ</translation>
+        <translation>比率</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
@@ -7497,7 +7237,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>ms</source>
         <extracomment>Abbreviation of milliseconds, used as a unit suffix</extracomment>
-        <translation>ミリ秒</translation>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="22"/>
@@ -7563,7 +7303,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="412"/>
         <source>Applied effect: %1</source>
-        <translation>適用済エフェクト: %1</translation>
+        <translation>適用済エフェクト : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="49"/>
@@ -7581,7 +7321,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="91"/>
         <source>Are you sure you want to delete “%1”?</source>
         <extracomment>%1 is the name of the preset to delete</extracomment>
-        <translation>“%1”を消去してもよろしいですか?</translation>
+        <translation>“%1”を消去しますか?</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="108"/>
@@ -7591,12 +7331,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="118"/>
         <source>Import effect parameters</source>
-        <translation>エフェクトパラメータを読み込む</translation>
+        <translation>エフェクトパラメータをインポート</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="151"/>
         <source>Export effect parameters</source>
-        <translation>エフェクトのパラメータを書き出す</translation>
+        <translation>エフェクトのパラメータをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="135"/>
@@ -7613,14 +7353,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
         <source>Generating %1…</source>
-        <translation>%1を生成中…</translation>
+        <translation>%1 を生成中…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
-        <translation>%1を適用中…</translation>
+        <translation>%1 を適用中…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
@@ -7631,13 +7371,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
         <source>Use vendor UI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>ベンダーUIを使用</translation>
+        <translation>ベンダー UI を使用</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="84"/>
         <source>Toggle between vendor UI and fallback UI</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ベンダーUIとフォールバックUIを切り替え</translation>
+        <translation>ベンダー UI とフォールバック UI を切り替え</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
@@ -7648,49 +7388,49 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
-        <translation>%1を%2に追加しました</translation>
+        <translation>%1 を %2 に追加しました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
-        <translation>%1を追加</translation>
+        <translation>%1 を追加</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
-        <translation>%1を%2から削除しました</translation>
+        <translation>%1 を %2 から削除しました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
-        <translation>%1を削除</translation>
+        <translation>%1 を削除</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
-        <translation>%1を%2で置き換えました</translation>
+        <translation>%1 を %2 で置き換えました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
-        <translation>%1を置き換える</translation>
+        <translation>%1 を置き換える</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
-        <translation>%2内の%1を上に移動しました</translation>
+        <translation>%2 内の %1 を上に移動しました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
-        <translation>%2内の%1を下に移動しました</translation>
+        <translation>%2 内の %1 を下に移動しました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
@@ -7727,19 +7467,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="42"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="24"/>
         <source>Nyquist prompt</source>
-        <translation>Nyquistプロンプト</translation>
+        <translation>Nyquist プロンプト</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="48"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="101"/>
         <source>Nyquist scripts</source>
-        <translation>Nyquistスクリプト</translation>
+        <translation>Nyquist スクリプト</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="49"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="102"/>
         <source>Lisp scripts</source>
-        <translation>Lispスクリプト</translation>
+        <translation>Lisp スクリプト</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="50"/>
@@ -7750,18 +7490,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="58"/>
         <source>Load Nyquist script</source>
-        <translation>Nyquistスクリプトを読み込む</translation>
+        <translation>Nyquist スクリプトを読み込み</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="111"/>
         <source>Save Nyquist script</source>
-        <translation>Nyquistスクリプトを保存</translation>
+        <translation>Nyquist スクリプトを保存</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="163"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="168"/>
         <source>Nyquist debug output</source>
-        <translation>Nyquistデバッグ出力</translation>
+        <translation>Nyquist デバッグ出力</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="169"/>
@@ -7809,7 +7549,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
         <source>Vendor:</source>
-        <translation>製造元:</translation>
+        <translation>製造元 :</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
@@ -7820,7 +7560,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation>パス:</translation>
+        <translation>パス :</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="242"/>
@@ -7836,22 +7576,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="58"/>
         <source>Show:</source>
-        <translation>表示:</translation>
+        <translation>表示 :</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="64"/>
         <source>Type:</source>
-        <translation>種類:</translation>
+        <translation>種類 :</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="70"/>
         <source>Category:</source>
-        <translation>カテゴリ:</translation>
+        <translation>カテゴリ :</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="76"/>
         <source>Status:</source>
-        <translation>状況:</translation>
+        <translation>状態 :</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
@@ -7920,7 +7660,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="312"/>
         <source>Status</source>
-        <translation>状況</translation>
+        <translation>状態</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
@@ -7984,12 +7724,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-effects/LoadEffects.cpp" line="93"/>
         <source>The Audacity Team</source>
-        <translation>Audacityチーム</translation>
+        <translation>Audacity チーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/LoadEffects.cpp" line="104"/>
         <source>Provides builtin effects to Audacity</source>
-        <translation>内蔵エフェクトをAudacityで使用可能にする</translation>
+        <translation>内蔵エフェクトを Audacity で使用可能にする</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/LoadEffects.cpp" line="185"/>
@@ -8102,7 +7842,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="125"/>
         <source>Generated audio duration</source>
-        <translation>生成されたオーディオの継続時間</translation>
+        <translation>生成されたオーディオの長さ</translation>
     </message>
 </context>
 <context>
@@ -8115,7 +7855,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="202"/>
         <source>No audio selected</source>
-        <translation>オーディオ未選択</translation>
+        <translation>オーディオが未選択です</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="222"/>
@@ -8151,7 +7891,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
         <source>Selection must be larger than 4096 samples.</source>
-        <translation>選択範囲は4096サンプル以上である必要があります。</translation>
+        <translation>選択範囲は 4096 サンプル以上である必要があります。</translation>
     </message>
 </context>
 <context>
@@ -8159,12 +7899,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/dtmfgenerator.cpp" line="13"/>
         <source>DTMF Tones</source>
-        <translation>ダイヤル（DTMF）トーン</translation>
+        <translation>ダイヤル (DTMF)トーン</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/dtmfgenerator.cpp" line="52"/>
         <source>Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones</source>
-        <translation>電話機のキーパッドで発するようなダイヤル（DTMF）トーンを発生します</translation>
+        <translation>電話機のキーパッドで発するようなダイヤル (DTMF)トーンを発生します</translation>
     </message>
 </context>
 <context>
@@ -8226,7 +7966,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/filtercurveeq.cpp" line="9"/>
         <source>Filter Curve EQ</source>
-        <translation>EQフィルタ曲線</translation>
+        <translation>EQ フィルタ曲線</translation>
     </message>
 </context>
 <context>
@@ -8234,7 +7974,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/graphiceq.cpp" line="9"/>
         <source>Graphic EQ</source>
-        <translation>グラフィックEQ</translation>
+        <translation>グラフィック EQ</translation>
     </message>
 </context>
 <context>
@@ -8242,12 +7982,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/invert/inverteffect.cpp" line="15"/>
         <source>Invert</source>
-        <translation>インバート（位相反転）</translation>
+        <translation>インバート (位相反転)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/invert/inverteffect.cpp" line="26"/>
         <source>Flips the audio samples upside-down, reversing their polarity</source>
-        <translation>オーディオサンプルの上下を逆にして、極性（位相）を反転します</translation>
+        <translation>オーディオサンプルの上下を逆にして、極性 (位相)を反転します</translation>
     </message>
 </context>
 <context>
@@ -8273,13 +8013,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation>解析中: %1</translation>
+        <translation>解析中 : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="181"/>
         <source>Processing: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
-        <translation>処理中: %1</translation>
+        <translation>処理中 : %1</translation>
     </message>
 </context>
 <context>
@@ -8325,7 +8065,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
         <source>You must specify the same window size for steps 1 and 2.</source>
-        <translation>ステップ1および2に同じ窓関数のサイズを指定してください。</translation>
+        <translation>ステップ1 および 2に同じ窓関数のサイズを指定してください。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="376"/>
@@ -8360,21 +8100,21 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="97"/>
         <source>Removing DC offset and Normalizing…
 </source>
-        <translation>DCオフセットを削除してノーマライズ中…
+        <translation>DC オフセットを削除してノーマライズ中…
 </translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="99"/>
         <source>Removing DC offset…
 </source>
-        <translation>DCオフセットを削除中…
+        <translation>DC オフセットを削除中…
 </translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="101"/>
         <source>Normalizing without removing DC offset…
 </source>
-        <translation>DCオフセットを削除せずにノーマライズ中…
+        <translation>DC オフセットを削除せずにノーマライズ中…
 </translation>
     </message>
     <message>
@@ -8388,40 +8128,40 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="129"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation>解析中: %1</translation>
+        <translation>解析中 : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="133"/>
         <source>Analyzing first track of stereo pair: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation>ステレオペアのトラック1を解析中: %1</translation>
+        <translation>ステレオペアのトラック1 を解析中 : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="160"/>
         <source>Analyzing second track of stereo pair: %1</source>
-        <translation>ステレオペアのトラック2を解析中: %1</translation>
+        <translation>ステレオペアのトラック2 を解析中 : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="169"/>
         <source>Processing: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
-        <translation>処理中: %1</translation>
+        <translation>処理中 : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="176"/>
         <source>Processing stereo channels independently: %1</source>
-        <translation>ステレオチャンネルを個別に処理中: %1</translation>
+        <translation>ステレオチャンネルを個別に処理中 : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="183"/>
         <source>Processing first track of stereo pair: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
-        <translation>ステレオペアのトラック1を処理中: %1</translation>
+        <translation>ステレオペアのトラック1 を処理中 : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="206"/>
         <source>Processing second track of stereo pair: %1</source>
-        <translation>ステレオペアのトラック2を処理中: %1</translation>
+        <translation>ステレオペアのトラック2 を処理中 : %1</translation>
     </message>
 </context>
 <context>
@@ -8429,7 +8169,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="17"/>
         <source>Nyquist prompt</source>
-        <translation>Nyquistプロンプト</translation>
+        <translation>Nyquist プロンプト</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistprompteffect.cpp" line="23"/>
@@ -8439,22 +8179,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="104"/>
         <source>Nyquist Effects</source>
-        <translation>Nyquistエフェクト</translation>
+        <translation>Nyquist エフェクト</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="109"/>
         <source>The Audacity Team</source>
-        <translation>Audacityチーム</translation>
+        <translation>Audacity チーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="120"/>
         <source>Provides Nyquist Effects support to Audacity</source>
-        <translation>NyquistエフェクトをAudacityで対応可能にする</translation>
+        <translation>Nyquist エフェクトを Audacity で対応可能にする</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="59"/>
         <source>Applying Nyquist Effect…</source>
-        <translation>Nyquistエフェクトを適用中…</translation>
+        <translation>Nyquist エフェクトを適用中…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="67"/>
@@ -8467,12 +8207,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
         <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
-        <translation>Nyquistワーカー</translation>
+        <translation>Nyquist ワーカー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="111"/>
         <source>Ill-formed Nyquist plug-in header</source>
-        <translation>不正なNyquistプラグインヘッダ</translation>
+        <translation>不正な Nyquist プラグインヘッダ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="138"/>
@@ -8493,7 +8233,7 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation>エラー: ヘッダで指定されているファイル”%1”が、プラグインのパス内に見つかりません。
+        <translation>エラー : ヘッダで指定されているファイル“%1”が、プラグインのパス内に見つかりません。
 </translation>
     </message>
     <message>
@@ -8511,16 +8251,16 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1391"/>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
-        <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation>’;type tool’エフェクトは、Nyquistからオーディオを返すことはできません。
+        <extracomment>Don&apos;t translate &apos;;type tool&apos;.</extracomment>
+        <translation>’;type tool’エフェクトは、Nyquist からオーディオを返すことはできません。
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1400"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
-        <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation>‘;type tool’エフェクトは、Nyquistからラベルを返すことができません。
+        <extracomment>Don&apos;t translate &apos;;type tool&apos;.</extracomment>
+        <translation>‘;type tool’エフェクトは、Nyquist からラベルを返すことができません。
 </translation>
     </message>
     <message>
@@ -8528,7 +8268,7 @@ frequency range for the effect to act on.</source>
         <source>nyx_error returned from %1.
 </source>
         <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
-        <translation>%1からnyx_errorが返されました。
+        <translation>%1 から nyx_error が返されました。
 </translation>
     </message>
     <message>
@@ -8539,51 +8279,51 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1426"/>
         <source>Nyquist returned a list.</source>
-        <translation>Nyquistはリストを返しました。</translation>
+        <translation>Nyquist はリストを返しました。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1471"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1484"/>
         <source>Nyquist returned the value: %1</source>
-        <translation>Nyquist返り値: %1</translation>
+        <translation>Nyquist 返り値 : %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1534"/>
         <source>Nyquist returned too many audio channels.
 </source>
-        <translation>Nyquistが返すオーディオチャンネルが多すぎます。
+        <translation>Nyquist が返したオーディオチャンネルが多すぎます。
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1539"/>
         <source>Nyquist returned one audio channel as an array.
 </source>
-        <translation>Nyquistは1個のオーディオチャンネルを配列として返しました。
+        <translation>Nyquist は 1個のオーディオチャンネルを配列として返しました。
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1544"/>
         <source>Nyquist returned an empty array.
 </source>
-        <translation>Nyquistは空の配列を返しました。
+        <translation>Nyquist は空の配列を返しました。
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1565"/>
         <source>Nyquist returned nil audio.
 </source>
-        <translation>Nyquistはnilオーディオを返しました。
+        <translation>Nyquist は nil オーディオを返しました。
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1613"/>
         <source>[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]</source>
-        <translation>［警告: Nyquistが正しくないUTF-8文字列を返したので、Latin-1に変換しました。］</translation>
+        <translation>［警告 : Nyquist が正しくない UTF-8 文字列を返したので、Latin-1 に変換しました。］</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2062"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
-        <translation>このバージョンのAudacityは、バージョン%1のNyquistプラグインには対応していません</translation>
+        <translation>このバージョンの Audacity は、バージョン %1 の Nyquist プラグインには対応していません</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
@@ -8598,11 +8338,12 @@ For SAL, use a return statement such as:
 or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation>コードはSAL構文と思われますが、’return’ステートメントがありません。
-SALの場合には、次のようなreturnステートメントを使用してください:
+        <translation>コードは SAL 構文と思われますが、’return’ステートメントがありません。
+SAL の場合には、次のような return ステートメントを使用してください :
 	return *track* * 0.1
-LISPの場合には、次のように開き括弧から始めてください:
-	(mult *track* 0.1)</translation>
+LISP の場合には、次のように開き括弧から始めてください :
+	(mult *track* 0.1)
+ .</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
@@ -8642,17 +8383,17 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="14"/>
         <source>Frequency (Hz)</source>
-        <translation>周波数（Hz）</translation>
+        <translation>周波数 (Hz)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="15"/>
         <source>Amount (dB)</source>
-        <translation>度（dB）</translation>
+        <translation>適用量 (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="16"/>
         <source>Error.~%Frequency set too high for selected track.</source>
-        <translation>エラー。~%選択トラックに設定した周波数が高すぎます。</translation>
+        <translation>エラー。~% 選択トラックに設定した周波数が高すぎます。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="17"/>
@@ -8667,15 +8408,15 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="19"/>
         <source>~aPlease select frequencies.</source>
-        <translation>~a周波数を選択してください。</translation>
+        <translation>~a 周波数を選択してください。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="20"/>
         <source>~aBandwidth is zero (the upper and lower~%~
                        frequencies are both ~a Hz).~%~
                        Please select a frequency range.</source>
-        <translation>~a帯域幅が0です（選択周波数が~%~
-                       上下ともに~a Hz）。~%~
+        <translation>~a 帯域幅が 0です (選択周波数が ~%~
+                       上下ともに ~a Hz)。~%~
                        周波数範囲を選択してください。</translation>
     </message>
     <message>
@@ -8683,8 +8424,8 @@ LISPの場合には、次のように開き括弧から始めてください:
         <source>~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~
                       or reduce the filter ‘Width’.</source>
-        <translation>~aノッチフィルタのパラメータを適用できません。~%~
-                      低域周波数の境界値を上げるか~%~
+        <translation>~a ノッチフィルタのパラメータを適用できません。~%~
+                      低域周波数の境界値を上げるか ~%~
                       フィルタの’帯域幅’を狭くしてください。</translation>
     </message>
     <message>
@@ -8700,30 +8441,30 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="24"/>
         <source>Gain (dB)</source>
-        <translation>ゲイン（dB）</translation>
+        <translation>ゲイン (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="25"/>
         <source>~aLow frequency is undefined.</source>
-        <translation>~a低域周波数が未定義です。</translation>
+        <translation>~a 低域周波数が未定義です。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="26"/>
         <source>~aHigh frequency is undefined.</source>
-        <translation>~a高域周波数が未定義です。</translation>
+        <translation>~a 高域周波数が未定義です。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="27"/>
         <source>~aCenter frequency must be above 0 Hz.</source>
-        <translation>~a中央周波数は0 Hzより大きい必要があります。</translation>
+        <translation>~a 中央周波数は 0 Hz より大きい必要があります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="28"/>
         <source>~aFrequency selection is too high for track sample rate.~%~
                         For the current track, the high frequency setting cannot~%~
                         be greater than ~a Hz</source>
-        <translation>~aトラックのサンプルレートより高い周波数が選択されています。~%~
-                        現在のトラックでは、高域周波数の設定が~%~
+        <translation>~a トラックのサンプルレートより高い周波数が選択されています。~%~
+                        現在のトラックでは、高域周波数の設定が ~%~
                         ~a Hzを超えてはいけません</translation>
     </message>
     <message>
@@ -8731,8 +8472,8 @@ LISPの場合には、次のように開き括弧から始めてください:
         <source>~aBandwidth is zero (the upper and lower~%~
                          frequencies are both ~a Hz).~%~
                          Please select a frequency range.</source>
-        <translation>~a帯域幅が0です（選択周波数が~%~
-                         上下ともに ~a Hz）。~%~
+        <translation>~a 帯域幅が 0です (選択周波数が ~%~
+                         上下ともに ~a Hz)。~%~
                          周波数範囲を選択してください。</translation>
     </message>
     <message>
@@ -8743,7 +8484,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="31"/>
         <source>GNU General Public License v2.0 or later</source>
-        <translation>GNU General Public License v2.0 or later</translation>
+        <translation>GNU General Public License v2.0 以降</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
@@ -8788,7 +8529,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="40"/>
         <source>Mid-fade Adjust (%)</source>
-        <translation>フェード曲線調整（%）</translation>
+        <translation>フェード曲線調整 (%)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="41"/>
@@ -8798,27 +8539,27 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="42"/>
         <source>% of Original</source>
-        <translation>原音の割合（%）</translation>
+        <translation>原音の割合 (%)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="43"/>
         <source>dB Gain</source>
-        <translation>ゲイン（dB）</translation>
+        <translation>ゲイン (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="44"/>
         <source>Start (or end)</source>
-        <translation>開始（または終了）</translation>
+        <translation>開始 (または終了)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="45"/>
         <source>End (or start)</source>
-        <translation>終了（または開始）</translation>
+        <translation>終了 (または開始)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="46"/>
         <source>Handy Presets (override controls)</source>
-        <translation>お手軽プリセット（優先制御）</translation>
+        <translation>お手軽プリセット (優先制御)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="47"/>
@@ -8893,12 +8634,12 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="61"/>
         <source>~aPercentage values cannot be negative.</source>
-        <translation>~aパーセント値に負の数値を指定できません。</translation>
+        <translation>~a パーセント値に負の数値を指定できません。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="62"/>
         <source>~aPercentage values cannot be more than 1000 %.</source>
-        <translation>~aパーセント値に1000%を超える数値を指定できません。</translation>
+        <translation>~a パーセント値に 1000% を超える数値を指定できません。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="63"/>
@@ -8906,8 +8647,8 @@ LISPの場合には、次のように開き括弧から始めてください:
                                       Hint: 6 dB doubles the amplitude~%~
                                       -6 dB halves the amplitude.</source>
         <translation>~adB値に+100 dBを超える数値は指定できません。~%~%~
-                                      ヒント: 6 dBで振幅が倍に、~%~
-                                      -6 dBで振幅が半分になります。</translation>
+                                      ヒント : 6 dB で振幅が倍に、~%~
+                                      -6 dB で振幅が半分になります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
@@ -8917,7 +8658,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
         <source>Threshold Percentage</source>
-        <translation>しきい値（%）</translation>
+        <translation>しきい値 (%)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
@@ -8932,37 +8673,37 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="69"/>
         <source>Threshold of Clipping (%)</source>
-        <translation>クリッピングしきい値（%）</translation>
+        <translation>クリッピングしきい値 (%)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="70"/>
         <source>Reduce amplitude to allow for restored peaks (dB)</source>
-        <translation>ピークが復元できるよう振幅を低減（dB）</translation>
+        <translation>ピークが復元できるよう振幅を低減 (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation>クロスフェード（クリップ）</translation>
+        <translation>クリップをクロスフェード</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
         <source>Error.~%Invalid selection.~%More than 2 audio clips selected.</source>
-        <translation>エラー。~%選択が正しくありません。~%2つ以上のオーディオクリップが選択されています。</translation>
+        <translation>エラー。~% 選択が正しくありません。~% 2つ以上のオーディオクリップが選択されています。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="73"/>
         <source>Error.~%Invalid selection.~%Empty space at start/ end of the selection.</source>
-        <translation>エラー。~%選択が正しくありません。~%開始点/終了点の選択範囲に空白があります。</translation>
+        <translation>エラー。~% 選択が正しくありません。~% 開始点/終了点の選択範囲が空白です。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="74"/>
         <source>Error.~%Crossfade Clips may only be applied to one track.</source>
-        <translation>エラー。~%クロスフェードクリップは1トラックにだけ適用できます。</translation>
+        <translation>エラー。~% クロスフェードクリップは 1トラックにだけ適用できます。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation>クロスフェード（トラック）</translation>
+        <translation>トラックをクロスフェード</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -8977,12 +8718,12 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="78"/>
         <source>Constant Power 1</source>
-        <translation>固定パワー1</translation>
+        <translation>固定パワー 1</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="79"/>
         <source>Constant Power 2</source>
-        <translation>固定パワー2</translation>
+        <translation>固定パワー 2</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="80"/>
@@ -9017,7 +8758,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="86"/>
         <source>Error.~%Select 2 (or more) tracks to crossfade.</source>
-        <translation>エラー。~%クロスフェードするトラックを2つ以上選んでください。</translation>
+        <translation>エラー。~% クロスフェードするトラックを 2つ以上選んでください。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="87"/>
@@ -9037,22 +8778,22 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="90"/>
         <source>Bouncing Ball</source>
-        <translation>バウンシングボール（加速）</translation>
+        <translation>バウンシングボール (加速)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="91"/>
         <source>Reverse Bouncing Ball</source>
-        <translation>逆バウンシングボール（減速）</translation>
+        <translation>逆バウンシングボール (減速)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="92"/>
         <source>Delay level per echo (dB)</source>
-        <translation>繰り返しごとの減衰量（dB）</translation>
+        <translation>繰り返しごとの減衰量 (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="93"/>
         <source>Delay time (seconds)</source>
-        <translation>ディレイ時間（秒）</translation>
+        <translation>ディレイ時間 (秒)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="94"/>
@@ -9077,7 +8818,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="98"/>
         <source>Pitch change per echo (semitones)</source>
-        <translation>繰り返しごとのピッチ変更（半音）</translation>
+        <translation>繰り返しごとのピッチ変更 (半音)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="99"/>
@@ -9087,7 +8828,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="100"/>
         <source>Allow duration to change</source>
-        <translation>デュレーションの変更を許可</translation>
+        <translation>長さの変更を許可</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="101"/>
@@ -9132,12 +8873,12 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="109"/>
         <source>Label interval (seconds)</source>
-        <translation>ラベルの間隔（秒）</translation>
+        <translation>ラベルの間隔 (秒)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="110"/>
         <source>Length of label region (seconds)</source>
-        <translation>ラベル領域の長さ（秒）</translation>
+        <translation>ラベル領域の長さ (秒)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="111"/>
@@ -9167,32 +8908,32 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="116"/>
         <source>1 (Before Label)</source>
-        <translation>1（ラベルの頭）</translation>
+        <translation>1 (ラベルの頭)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="117"/>
         <source>2 (Before Label)</source>
-        <translation>2（ラベルの頭）</translation>
+        <translation>2 (ラベルの頭)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="118"/>
         <source>3 (Before Label)</source>
-        <translation>3（ラベルの頭）</translation>
+        <translation>3 (ラベルの頭)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="119"/>
         <source>1 (After Label)</source>
-        <translation>1（ラベルの末尾）</translation>
+        <translation>1 (ラベルの末尾)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="120"/>
         <source>2 (After Label)</source>
-        <translation>2（ラベルの末尾）</translation>
+        <translation>2 (ラベルの末尾)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="121"/>
         <source>3 (After Label)</source>
-        <translation>3（ラベルの末尾）</translation>
+        <translation>3 (ラベルの末尾)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="122"/>
@@ -9222,7 +8963,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="127"/>
         <source>Warning: Overlapping region labels.~%</source>
-        <translation>警告: 領域ラベルが重なっています。~%</translation>
+        <translation>警告 : 領域ラベルが重なっています。~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="128"/>
@@ -9237,12 +8978,12 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="130"/>
         <source>~a~a ~a at intervals of ~a seconds.~%</source>
-        <translation>~a~a ~a を ~a秒間隔で生成。~%</translation>
+        <translation>~a~a ~a を ~a 秒間隔で生成。~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="131"/>
         <source>~aRegion length = ~a seconds.</source>
-        <translation>~a領域の長さ = ~a秒。</translation>
+        <translation>~a 領域の長さ = ~a 秒。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
@@ -9257,7 +8998,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="134"/>
         <source>Roll-off (dB per octave)</source>
-        <translation>ロールオフ（減衰量: dB/オクターブ）</translation>
+        <translation>ロールオフ (減衰量 : dB/オクターブ)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="135"/>
@@ -9287,16 +9028,16 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="140"/>
         <source>Frequency must be at least 0.1 Hz.</source>
-        <translation>周波数は0.1 Hz以上である必要があります。</translation>
+        <translation>周波数は 0.1 Hz以上である必要があります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="141"/>
         <source>Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
                  Track sample rate is ~a Hz~%~
                  Frequency must be less than ~a Hz.</source>
-        <translation>エラー:~%~%周波数（~a Hz）がトラックのサンプルレートに対して高すぎます。~%~%~
-                 トラックのサンプルレートは~a Hzです。~%~
-                 周波数を~a Hz未満にする必要があります。</translation>
+        <translation>エラー :~%~% 周波数 (~a Hz)がトラックのサンプルレートに対して高すぎます。~%~%~
+                 トラックのサンプルレートは ~a Hz です。~%~
+                 周波数を ~a Hz 未満にする必要があります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
@@ -9306,7 +9047,7 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
         <source>Threshold level (dB)</source>
-        <translation>しきい値のレベル（dB）</translation>
+        <translation>しきい値のレベル (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="144"/>
@@ -9326,17 +9067,17 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="147"/>
         <source>RMS level</source>
-        <translation>RMSレベル</translation>
+        <translation>RMS レベル</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="148"/>
         <source>Minimum silence duration</source>
-        <translation>無音部分の最小継続時間</translation>
+        <translation>無音部分の最短長さ</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="149"/>
         <source>Minimum label interval</source>
-        <translation>ラベルの最小間隔</translation>
+        <translation>最短ラベル間隔</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="150"/>
@@ -9346,22 +9087,22 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="151"/>
         <source>Point before sound</source>
-        <translation>サウンド開始部分</translation>
+        <translation>サウンド開始部分に</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="152"/>
         <source>Point after sound</source>
-        <translation>サウンド終了部分</translation>
+        <translation>サウンド終了部分に</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="153"/>
         <source>Region around sounds</source>
-        <translation>サウンド継続領域</translation>
+        <translation>サウンド継続部分に</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="154"/>
         <source>Region between sounds</source>
-        <translation>サウンド間の領域</translation>
+        <translation>サウンド間に</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="155"/>
@@ -9381,19 +9122,19 @@ LISPの場合には、次のように開き括弧から始めてください:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="158"/>
         <source>~ah ~am ~as</source>
-        <translation>~a時間 ~a分 ~a秒</translation>
+        <translation>~a 時間 ~a 分 ~a 秒</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="159"/>
         <source>Too many silences detected.~%Only the first 10000 labels added.</source>
-        <translation>検出された無音部分が多すぎます。~%最初の10000件だけにラベルを付加します。</translation>
+        <translation>検出された無音部分が多すぎます。~% 最初の 10000件だけにラベルを付加します。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="160"/>
         <source>No sounds found.~%~
                  Try lowering ‘Threshold level (dB)’.</source>
         <translation>サウンドが検出されません。~%~
-                 しきい値（dB）’を小さくしてください。</translation>
+                 しきい値 (dB)’を小さくしてください。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="161"/>
@@ -9401,8 +9142,8 @@ LISPの場合には、次のように開き括弧から始めてください:
                  at least two sounds.~%~
                  Only one sound detected.</source>
         <translation>サウンド間にラベル領域を作成するには、~%~
-                 サウンドが2か所以上必要です。~%~
-                 サウンドが1か所しか検出されません。</translation>
+                 サウンドが 2か所以上必要です。~%~
+                 サウンドが 1か所しか検出されません。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
@@ -9438,25 +9179,25 @@ LISPの場合には、次のように開き括弧から始めてください:
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="168"/>
         <source>Input Gain (dB)
 mono/Left</source>
-        <translation>入力ゲイン（dB）
+        <translation>入力ゲイン (dB)
 モノラル/左</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="169"/>
         <source>Input Gain (dB)
 Right channel</source>
-        <translation>入力ゲイン（dB）
+        <translation>入力ゲイン (dB)
 右チャンネル</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="170"/>
         <source>Limit to (dB)</source>
-        <translation>リミットレベル（dB）</translation>
+        <translation>リミットレベル (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="171"/>
         <source>Hold (ms)</source>
-        <translation>ホールド（ミリ秒）</translation>
+        <translation>ホールド (ミリ秒)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="172"/>
@@ -9506,27 +9247,27 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="181"/>
         <source>Gate threshold (dB)</source>
-        <translation>ゲートしきい値（dB）</translation>
+        <translation>ゲートしきい値 (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="182"/>
         <source>Gate frequencies above (kHz)</source>
-        <translation>処理周波数の下限（kHz）</translation>
+        <translation>処理周波数の下限 (kHz)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="183"/>
         <source>Level reduction (dB)</source>
-        <translation>レベル低減量（dB）</translation>
+        <translation>レベル低減量 (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="184"/>
         <source>Attack (ms)</source>
-        <translation>アタック（ミリ秒）</translation>
+        <translation>アタック (ミリ秒)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="185"/>
         <source>Decay (ms)</source>
-        <translation>ディケイ（ミリ秒）</translation>
+        <translation>ディケイ (ミリ秒)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="186"/>
@@ -9535,7 +9276,7 @@ Right channel</source>
                              is too high for selected track.~%~
                              Set the control below ~a kHz.</source>
         <translation>エラー。~%~
-                             処理周波数の下限: ~s kHzが~%~
+                             処理周波数の下限 : ~s kHz が ~%~
                              選択したトラックに対して高すぎます。~%~
                              ~a kHz以下に設定してください。</translation>
     </message>
@@ -9546,19 +9287,19 @@ Right channel</source>
                             Make the selection longer than ~a ms.</source>
         <translation>エラー。~%~
                             選択範囲が短かすぎます。~%~
-                            ~aミリ秒より長く選択してください。</translation>
+                            ~a ミリ秒より長く選択してください。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="188"/>
         <source>Peak based on first ~a seconds ~a dB~%~
                Suggested Threshold Setting ~a dB.</source>
-        <translation>最初の~a秒間におけるピークは~a dB~%~
-               推奨されるしきい値は~a dBです。</translation>
+        <translation>最初の ~a 秒間におけるピークは ~a dB~%~
+               推奨されるしきい値は ~a dB です。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="189"/>
         <source>~ah ~am</source>
-        <translation>~a時間 ~a分</translation>
+        <translation>~a 時間 ~a 分</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
@@ -9573,21 +9314,21 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="192"/>
         <source>Q (higher value reduces width)</source>
-        <translation>Q（大きいほど幅が狭くなります）</translation>
+        <translation>Q (大きいほど幅が狭くなります)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="193"/>
         <source>Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
                Track sample rate is ~a Hz.~%~
                Frequency must be less than ~a Hz.</source>
-        <translation>エラー:~%~%周波数（~a Hz）がトラックのサンプルレートに対して高すぎます。~%~%~
-               トラックのサンプルレートは~a Hzです。~%~
-               周波数指定を~a Hz未満に設定する必要があります。</translation>
+        <translation>エラー :~%~% 周波数 (~a Hz)がトラックのサンプルレートに対して高すぎます。~%~%~
+               トラックのサンプルレートは ~a Hzです。~%~
+               周波数指定を ~a Hz 未満に設定する必要があります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="194"/>
         <source>Nyquist plugin installer</source>
-        <translation>Nyquistプラグインをインストール</translation>
+        <translation>Nyquist プラグインをインストール</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="195"/>
@@ -9597,7 +9338,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="196"/>
         <source>Browse…</source>
-        <translation>ブラウズ…</translation>
+        <translation>参照…</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
@@ -9607,12 +9348,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="198"/>
         <source>Lisp file</source>
-        <translation>Lispファイル</translation>
+        <translation>Lisp ファイル</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="199"/>
         <source>HTML file</source>
-        <translation>HTMLファイル</translation>
+        <translation>HTML ファイル</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="200"/>
@@ -9647,57 +9388,57 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="206"/>
         <source>Error~%</source>
-        <translation>エラー~%</translation>
+        <translation>エラー ~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="207"/>
         <source>Success~%Files written to:~%~s~%</source>
-        <translation>完了~%ファイルが書き込まれました:~%~s~%</translation>
+        <translation>完了 ~% ファイルが書き込まれました :~%~s~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="208"/>
         <source>Warning~%Failed to copy some files:~%</source>
-        <translation>警告~%コピーできないファイルがありました:~%</translation>
+        <translation>警告 ~% コピーできないファイルがありました :~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
         <source>Error~%No file selected.</source>
-        <translation>エラー~%ファイルが選択されていません。</translation>
+        <translation>エラー~% ファイルが選択されていません。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
         <source>Plug-ins installed.~%(Use the Plug-in Manager to enable effects):</source>
-        <translation>プラグインをインストールしました。~%（”プラグインマネージャ”から有効にしてください）:</translation>
+        <translation>プラグインをインストールしました。~% (”プラグインマネージャ”から有効にしてください):</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
         <source>Plug-ins updated:</source>
-        <translation>アップデートされたプラグイン:</translation>
+        <translation>アップデートされたプラグイン :</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
         <source>Files copied to plug-ins folder:</source>
-        <translation>プラグインフォルダにコピーされたファイル:</translation>
+        <translation>プラグインフォルダーにコピーされたファイル :</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
         <source>Not found or cannot be read:</source>
-        <translation>見つからなかったか読み込めなかったファイル:</translation>
+        <translation>見つからなかったか読み込めなかったファイル :</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
         <source>Unsupported file type:</source>
-        <translation>未対応のファイル形式:</translation>
+        <translation>未対応のファイル形式 :</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
         <source>Files already installed (‘Allow Overwriting’ disabled):</source>
-        <translation>ファイルはすでにインストールされています（’上書きを許可’が無効です）:</translation>
+        <translation>ファイルはすでにインストールされています (’上書きを許可’が無効です):</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
         <source>Cannot be written to plug-ins folder:</source>
-        <translation>プラグインフォルダに書き込めなかったファイル:</translation>
+        <translation>プラグインフォルダーに書き込めなかったファイル :</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
@@ -9712,7 +9453,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="219"/>
         <source>Pluck MIDI pitch</source>
-        <translation>プラックMIDIピッチ</translation>
+        <translation>プラック MIDI ピッチ</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="220"/>
@@ -9732,7 +9473,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Duration (60s max)</source>
-        <translation>継続時間（最大60秒）</translation>
+        <translation>長さ (最大60秒)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
@@ -9747,12 +9488,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="226"/>
         <source>Tempo (bpm)</source>
-        <translation>テンポ（BPM)</translation>
+        <translation>テンポ (BPM)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="227"/>
         <source>30 - 300 beats/minute</source>
-        <translation>30～300ビート/分</translation>
+        <translation>30～300 ビート/分</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="228"/>
@@ -9777,7 +9518,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
         <source>Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.</source>
-        <translation>’小節数’を0にすると、’リズムトラックの継続時間’が有効になります。</translation>
+        <translation>’小節数’を 0にすると、’リズムトラックの長さ’が有効になります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
@@ -9787,12 +9528,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="234"/>
         <source>1 - 1000 bars</source>
-        <translation>1～1000小節</translation>
+        <translation>1～1000 小節</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="235"/>
         <source>Rhythm track duration</source>
-        <translation>リズムトラックの継続時間</translation>
+        <translation>リズムトラックの長さ</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
@@ -9822,12 +9563,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="241"/>
         <source>Ping (short)</source>
-        <translation>電子音（短）</translation>
+        <translation>電子音 (短)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="242"/>
         <source>Ping (long)</source>
-        <translation>電子音（長）</translation>
+        <translation>電子音 (長)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="243"/>
@@ -9847,17 +9588,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="246"/>
         <source>Drip (short)</source>
-        <translation>しずく（短）</translation>
+        <translation>しずく (短)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="247"/>
         <source>Drip (long)</source>
-        <translation>しずく（長）</translation>
+        <translation>しずく (長)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="248"/>
         <source>MIDI pitch of strong beat</source>
-        <translation>強ビートのMIDIピッチ</translation>
+        <translation>強ビートの MIDI ピッチ</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="249"/>
@@ -9867,19 +9608,19 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
         <source>MIDI pitch of weak beat</source>
-        <translation>弱ビートのMIDIピッチ</translation>
+        <translation>弱ビートの MIDI ピッチ</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Set either ‘Number of bars’ or~%~
                     ‘Rhythm track duration’ to greater than zero.</source>
-        <translation>‘小節数’または‘リズムトラックの継続時間’を~%~
-                    0以上に設定します。</translation>
+        <translation>‘小節数’または‘リズムトラックの長さ’を ~%~
+                    0 以上に設定します。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
         <source>Risset drum</source>
-        <translation>Rissetドラム</translation>
+        <translation>Risset ドラム</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="253"/>
@@ -9889,32 +9630,32 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="254"/>
         <source>Decay (seconds)</source>
-        <translation>ディケイ（秒）</translation>
+        <translation>ディケイ (秒)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="255"/>
         <source>Center frequency of noise (Hz)</source>
-        <translation>ノイズの中央周波数（Hz）</translation>
+        <translation>ノイズの中央周波数 (Hz)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="256"/>
         <source>Width of noise band (Hz)</source>
-        <translation>ノイズ帯域幅（Hz）</translation>
+        <translation>ノイズ帯域幅 (Hz)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="257"/>
         <source>Amount of noise in mix (percent)</source>
-        <translation>ノイズのミックス率（%）</translation>
+        <translation>ノイズのミックス率 (%)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Amplitude (0 - 1)</source>
-        <translation>振幅（0～1）</translation>
+        <translation>振幅 (0～1)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
         <source>Measure RMS</source>
-        <translation>RMSを測定</translation>
+        <translation>RMS を測定</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
@@ -9944,7 +9685,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="265"/>
         <source>Sample data export</source>
-        <translation>サンプルデータを書き出す</translation>
+        <translation>サンプルデータをエクスポート</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="266"/>
@@ -9969,7 +9710,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="270"/>
         <source>Export data to</source>
-        <translation>データ書き出し先</translation>
+        <translation>データエクスポート先</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="271"/>
@@ -9979,17 +9720,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="272"/>
         <source>CSV files</source>
-        <translation>CSVファイル</translation>
+        <translation>CSV ファイル</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="273"/>
         <source>HTML files</source>
-        <translation>HTMLファイル</translation>
+        <translation>HTML ファイル</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="274"/>
         <source>Index (text files only)</source>
-        <translation>インデックス（テキストファイルのみ）</translation>
+        <translation>インデックス (テキストファイルのみ)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="275"/>
@@ -10064,73 +9805,73 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="289"/>
         <source>Left Channel.~%~%</source>
-        <translation>左チャンネル:~%~%</translation>
+        <translation>左チャンネル :~%~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="290"/>
         <source>~%~%Right Channel.~%~%</source>
-        <translation>~%~%右チャンネル~%~%</translation>
+        <translation>~%~% 右チャンネル ~%~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
         <source>~aData written to:~%~a</source>
-        <translation>~aデータを書き出しました:~%~a</translation>
+        <translation>~a データをエクスポートました :~%~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>
         <source>Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a</source>
-        <translation>サンプルレート: ~a Hz。サンプル値スケール: ~a。~%~a~%~a</translation>
+        <translation>サンプルレート : ~a Hz。サンプル値スケール : ~a。~%~a~%~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="293"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a</source>
-        <translation>~a   ~a~%~aサンプルレート: ~a Hz。~%処理長さ: ~aサンプル、~a秒。~a</translation>
+        <translation>~a   ~a~%~a サンプルレート : ~a Hz。~% 処理長さ : ~a サンプル、~a 秒。~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="294"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
                      Length processed: ~a samples ~a seconds.~a</source>
-        <translation>~a   ~a~%~aサンプルレート: ~a Hz。サンプル値スケール: ~a。~%~
-                     処理長さ: ~aサンプル、~a秒。~a</translation>
+        <translation>~a   ~a~%~a サンプルレート : ~a Hz。サンプル値スケール : ~a。~%~
+                     処理長さ : ~a サンプル、~a 秒。~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="295"/>
         <source>~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
                   samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~
                   DC offset: ~a~a</source>
-        <translation>~a~%サンプルレート: ~a Hz。サンプル値スケール: ~a。~a。~%~
-~a処理長さ: ~aサンプル、~a秒。~%ピーク振幅: ~a（リニア）、~a dB。重みなしRMS: ~a dB。~%~
-DCオフセット: ~a~a</translation>
+        <translation>~a~% サンプルレート : ~a Hz。サンプル値スケール : ~a。~a。~%~
+~a 処理長さ : ~a サンプル、~a 秒。~% ピーク振幅 : ~a (リニア)、~a dB。重みなし RMS : ~a dB。~%~
+DC オフセット : ~a~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="296"/>
         <source>~a linear, ~a dB.</source>
-        <translation>~a（リニア）、~a dB。</translation>
+        <translation>~a (リニア)、~a dB。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="297"/>
         <source>Left: ~a lin, ~a dB | Right: ~a lin, ~a dB.</source>
-        <translation>左: ~a（リニア）、~a dB | 右: ~a（リニア）、~a dB。</translation>
+        <translation>左: ~a (リニア)、~a dB | 右: ~a (リニア)、~a dB。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="298"/>
         <source>Sample Data Export</source>
-        <translation>サンプルデータを書き出す</translation>
+        <translation>サンプルデータをエクスポート</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="299"/>
         <source>~a samples.</source>
-        <translation>~aサンプル。</translation>
+        <translation>~a サンプル。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
         <source>~a seconds.</source>
-        <translation>~a秒。</translation>
+        <translation>~a 秒。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="301"/>
         <source>Audio data analysis:</source>
-        <translation>オーディオデータ解析:</translation>
+        <translation>オーディオデータ解析 :</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="302"/>
@@ -10140,27 +9881,27 @@ DCオフセット: ~a~a</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="303"/>
         <source>&lt;b&gt;Peak Amplitude:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a (linear) &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>&lt;b&gt;ピーク振幅:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a（リニア）&amp;nbsp;&amp;nbsp;~a dB.</translation>
+        <translation>&lt;b&gt;ピーク振幅 :&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a (リニア)&amp;nbsp;&amp;nbsp;~a dB.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="304"/>
         <source>&lt;b&gt;RMS&lt;/b&gt; (unweighted): &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>&lt;b&gt;RMS&lt;/b&gt;（重みなし）: &amp;nbsp;&amp;nbsp;~a dB。</translation>
+        <translation>&lt;b&gt;RMS&lt;/b&gt; (重みなし): &amp;nbsp;&amp;nbsp;~a dB。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="305"/>
         <source>&lt;b&gt;DC Offset:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</source>
-        <translation>&lt;b&gt;DCオフセット:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</translation>
+        <translation>&lt;b&gt;DC オフセット :&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="306"/>
         <source>~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>~a（リニア）、&amp;nbsp;&amp;nbsp;~a dB。</translation>
+        <translation>~a (リニア)、&amp;nbsp;&amp;nbsp;~a dB。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="307"/>
         <source>Left: ~a lin, ~a dB | Right: ~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>左: ~a（リニア）, ~a dB | 右: ~a（リニア）, &amp;nbsp;&amp;nbsp;~a dB。</translation>
+        <translation>左: ~a (リニア), ~a dB | 右: ~a (リニア), &amp;nbsp;&amp;nbsp;~a dB。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="308"/>
@@ -10180,12 +9921,12 @@ DCオフセット: ~a~a</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="311"/>
         <source>Value (linear)</source>
-        <translation>値（リニア）</translation>
+        <translation>値 (リニア)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="312"/>
         <source>Value (dB)</source>
-        <translation>値（dB）</translation>
+        <translation>値 (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="313"/>
@@ -10195,29 +9936,29 @@ DCオフセット: ~a~a</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="314"/>
         <source>Left (linear)</source>
-        <translation>左（リニア）</translation>
+        <translation>左 (リニア)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="315"/>
         <source>Right (linear)</source>
-        <translation>右（リニア）</translation>
+        <translation>右 (リニア)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Left (dB)</source>
-        <translation>左（dB）</translation>
+        <translation>左 (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="317"/>
         <source>Right (dB)</source>
-        <translation>右（dB）</translation>
+        <translation>右 (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="318"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
 &lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
-        <translation>&lt;span&gt;サンプルデータを書き出す&lt;/span&gt;&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; 用。作者: Steve Daulton</translation>
+        <translation>&lt;span&gt;サンプルデータをエクスポート&lt;/span&gt;&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; 用。作者 : Steve Daulton</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="319"/>
@@ -10227,22 +9968,22 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="320"/>
         <source>2 channels (stereo)</source>
-        <translation>2チャンネル（ステレオ）</translation>
+        <translation>2チャンネル (ステレオ)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="321"/>
         <source>1 channel (mono)</source>
-        <translation>1チャンネル（モノラル）</translation>
+        <translation>1チャンネル (モノラル)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="322"/>
         <source>One column per channel.~%</source>
-        <translation>1列につき1チャンネル。~%</translation>
+        <translation>1列につき 1チャンネル。~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="323"/>
         <source>One row per channel.~%</source>
-        <translation>1行につき1チャンネル。~%</translation>
+        <translation>1行につき 1チャンネル。~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="324"/>
@@ -10272,7 +10013,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
         <source>Sample data Import</source>
-        <translation>サンプルデータを読み込む</translation>
+        <translation>サンプルデータをインポート</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
@@ -10292,14 +10033,14 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
         <source>Read as Zero</source>
-        <translation>0として読み取る</translation>
+        <translation>0 として読み取る</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="334"/>
         <source>Error~%~
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
-        <translation>エラー~%~
+        <translation>エラー ~%~
                         ‘~a’を開くことができませんでした。~%~
                         ファイルが存在するかを確認してください。</translation>
     </message>
@@ -10308,9 +10049,9 @@ Daulton</source>
         <source>Error:~%~
               The file must contain only plain ASCII text.~%~
               (Invalid byte ‘~a’ at byte number: ~a)</source>
-        <translation>エラー:~%~
-              ファイルはASCIIプレーンテキストである必要があります。~%~
-              （無効なバイト値‘~a’が次のバイト番号に見つかりました: ~a）</translation>
+        <translation>エラー :~%~
+              ファイルは ASCII プレーンテキストである必要があります。~%~
+               (無効なバイト値‘~a’が次のバイト番号に見つかりました : ~a)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
@@ -10318,13 +10059,13 @@ Daulton</source>
               Data must be numbers in plain ASCII text.~%~
               ‘~a’ is not a numeric value.</source>
         <translation>エラー~%~
-              データはASCIIプレーンテキストの数値である必要があります。~%~
+              データは ASCII プレーンテキストの数値である必要があります。~%~
               ‘~a’は数値ではありません。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
         <source>Error.~%Unable to open file</source>
-        <translation>エラー。~%ファイルを開けません</translation>
+        <translation>エラー。~% ファイルを開けません</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
@@ -10334,7 +10075,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
         <source>Error.~%Track sample rate below 100 Hz is not supported.</source>
-        <translation>エラー。~%トラックにおける100 Hz未満のサンプルレートはサポートされません。</translation>
+        <translation>エラー。~% トラックにおける 100 Hz未満のサンプルレートはサポートされません。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="340"/>
@@ -10374,12 +10115,12 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="347"/>
         <source>Starting phase (degrees)</source>
-        <translation>LFO初期位相（度）</translation>
+        <translation>初期位相 (度)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="348"/>
         <source>Wet level (percent)</source>
-        <translation>ウェットレベル（%）</translation>
+        <translation>ウェットレベル (%)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="349"/>
@@ -10394,7 +10135,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="351"/>
         <source>Distance: (1 to 120, default = 20)</source>
-        <translation>距離:（1～120、デフォルトは20）</translation>
+        <translation>距離 : (1～120、デフォルトは20)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="352"/>
@@ -10419,27 +10160,27 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="356"/>
         <source>Amplitude of carrier wave (percent)</source>
-        <translation>キャリア波の振幅（パーセント）</translation>
+        <translation>キャリア波の振幅 (パーセント)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="357"/>
         <source>Amplitude of white noise (percent)</source>
-        <translation>ホワイトノイズの振幅（パーセント）</translation>
+        <translation>ホワイトノイズの振幅 (パーセント)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="358"/>
         <source>Amplitude of Radar Needles (percent)</source>
-        <translation>（キャリアとなる）パルス列の振幅（パーセント）</translation>
+        <translation>レーダーニードルの振幅 (パーセント)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="359"/>
         <source>Frequency of Radar Needles (Hz)</source>
-        <translation>（キャリアとなる）パルス列の周波数（Hz）</translation>
+        <translation>レーダーニードルの周波数 (Hz)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="360"/>
         <source>Error.~%No modulation carrier.</source>
-        <translation>エラー。~%変調キャリアがありません。</translation>
+        <translation>エラー。~% 変調キャリアがありません。</translation>
     </message>
 </context>
 <context>
@@ -10452,7 +10193,7 @@ Daulton</source>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation>Paulstretchは極端なタイムストレッチあるいは”停滞的”エフェクト用です</translation>
+        <translation>Paulstretch は極端なタイムストレッチあるいは”停滞的”エフェクト用です</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
@@ -10465,11 +10206,11 @@ Daulton</source>
 
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
-        <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
+        <extracomment>&apos;Time Resolution&apos; is the name of a control in the Paulstretch effect.</extracomment>
         <translation>選択したオーディオが短すぎてプレビューできません。
 
-オーディオの選択時間を少なくとも%1秒以上に延ばすか、
-‘時間分解能’を%2秒未満に減らしてください。</translation>
+オーディオの選択時間を少なくとも %1 秒以上に延ばすか、
+‘時間分解能’を %2 秒未満に減らしてください。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="233"/>
@@ -10477,11 +10218,11 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
 
 For the current audio selection, the maximum
 ‘Time Resolution’ is %1 seconds.</source>
-        <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
+        <extracomment>&apos;Time Resolution&apos; is the name of a control in the Paulstretch effect.</extracomment>
         <translation>プレビューできません。
 
 現在のオーディオ選択では
-‘時間分解能’の最大値は%1秒です。</translation>
+‘時間分解能’の最大値は %1 秒です。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="242"/>
@@ -10489,11 +10230,11 @@ For the current audio selection, the maximum
 
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
-        <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
+        <extracomment>&apos;Time Resolution&apos; is the name of a control in the Paulstretch effect.</extracomment>
         <translation>‘時間分解能’が選択範囲に対して長すぎます。
 
-オーディオ選択を少なくとも%1秒以上に延ばすか、
-‘時間分解能’を%2秒未満に減らしてください。</translation>
+オーディオ選択を少なくとも %1 秒以上に延ばすか、
+‘時間分解能’を %2 秒未満に減らしてください。</translation>
     </message>
 </context>
 <context>
@@ -10501,31 +10242,31 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="30"/>
         <source>Remove DC offset</source>
-        <translation>DCオフセットを削除</translation>
+        <translation>DC オフセットを削除</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="49"/>
         <source>Removes DC offset (centers audio on 0.0 vertically)</source>
-        <translation>DCオフセットを削除（振幅の中央値を0.0）</translation>
+        <translation>DC オフセットを削除 (振幅の中央値を 0.0)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="67"/>
         <source>Removing DC offset…
 </source>
-        <translation>DCオフセットを削除中…
+        <translation>DC オフセットを削除中…
 </translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation>解析中: %1</translation>
+        <translation>解析中 : %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="100"/>
         <source>Processing: %1</source>
         <extracomment>%1 is the name of the track being processed</extracomment>
-        <translation>処理中: %1</translation>
+        <translation>処理中 : %1</translation>
     </message>
 </context>
 <context>
@@ -10543,14 +10284,14 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="71"/>
         <source>The Repair effect cannot be applied within stretched or shrunk clips</source>
-        <translation>修復エフェクトは、ストレッチを行ったクリップ内では使用できません。</translation>
+        <translation>修復エフェクトは、ストレッチを行ったクリップ内では使用できません</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="77"/>
         <source>The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).
 
 Zoom in and select a tiny fraction of a second to repair.</source>
-        <translation>修復エフェクトは、損傷したオーディオデータの非常に短い範囲（128 サンプルまで）に対して使います。
+        <translation>修復エフェクトは、損傷したオーディオデータの非常に短い範囲 (128 サンプルまで)に対して使います。
 
 拡大して、修復する短い範囲を選択してください。</translation>
     </message>
@@ -10561,7 +10302,7 @@ Zoom in and select a tiny fraction of a second to repair.</source>
 Please select an area to repair with some audio on at least one side (the more the better).</source>
         <translation>修復エフェクトには、一定の長さのデータが必要です。
 
-修復対象として、少なくとも片側（できれば両側）にオーディオが記録されている部分を選択してください。</translation>
+修復対象として、少なくとも片側 (できれば両側)にオーディオが記録されている部分を選択してください。</translation>
     </message>
 </context>
 <context>
@@ -10606,7 +10347,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="81"/>
         <source>Vocal II</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>ボーカルII</translation>
+        <translation>ボーカル II</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="83"/>
@@ -10636,13 +10377,13 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="92"/>
         <source>Small Room Bright</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>スモールルーム（ブライト）</translation>
+        <translation>スモールルーム (ブライト)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="94"/>
         <source>Small Room Dark</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>スモールルーム（ダーク）</translation>
+        <translation>スモールルーム (ダーク)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="96"/>
@@ -10690,7 +10431,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="21"/>
         <source>Reverse</source>
-        <translation>リバース（逆方向）</translation>
+        <translation>リバース (逆方向)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="30"/>
@@ -10765,7 +10506,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="60"/>
         <source>Auto-adjust volume to preserve loudness</source>
-        <translation>音量を自動調整（ラウドネスを保持）</translation>
+        <translation>音量を自動調整 (ラウドネスを保持)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="37"/>
@@ -10794,17 +10535,17 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="34"/>
         <source>Estimated start pitch: %1%2 (%3 Hz)</source>
         <extracomment>%1 = pitch name (e.g. C), %2 = octave number, %3 = frequency in Hz</extracomment>
-        <translation>予想される開始ピッチ: %1%2（%3 Hz）</translation>
+        <translation>予想される開始ピッチ : %1%2 (%3 Hz)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="43"/>
         <source>From pitch</source>
-        <translation>ピッチ（下限）</translation>
+        <translation>ピッチ (下限)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="210"/>
         <source>To pitch</source>
-        <translation>ピッチ（上限）</translation>
+        <translation>ピッチ (上限)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="320"/>
@@ -10819,12 +10560,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="448"/>
         <source>From frequency</source>
-        <translation>周波数（下限）</translation>
+        <translation>周波数 (下限)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="534"/>
         <source>To frequency</source>
-        <translation>周波数（上限）</translation>
+        <translation>周波数 (上限)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="616"/>
@@ -10834,7 +10575,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="681"/>
         <source>Use high quality stretching (slow)</source>
-        <translation>高品質なストレッチを使用（低速）</translation>
+        <translation>高品質なストレッチを使用 (低速)</translation>
     </message>
 </context>
 <context>
@@ -10872,17 +10613,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="244"/>
         <source>Start amplitude (0-1)</source>
-        <translation>開始振幅（0～1）</translation>
+        <translation>開始振幅 (0～1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="268"/>
         <source>End amplitude (0-1)</source>
-        <translation>終了振幅（0～1）</translation>
+        <translation>終了振幅 (0～1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="294"/>
         <source>Duration</source>
-        <translation>継続時間</translation>
+        <translation>長さ</translation>
     </message>
 </context>
 <context>
@@ -10895,12 +10636,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="23"/>
         <source>Threshold (lower is more sensitive)</source>
-        <translation>しきい値（小さいほどより高感度）</translation>
+        <translation>しきい値 (小さいほどより高感度)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="63"/>
         <source>Max spike width (higher is more sensitive)</source>
-        <translation>最大スパイク幅（大きいほどより高感度）</translation>
+        <translation>最大スパイク幅 (大きいほどより高感度)</translation>
     </message>
 </context>
 <context>
@@ -10913,7 +10654,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
         <source>Show:</source>
-        <translation>表示:</translation>
+        <translation>表示 :</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
@@ -10946,17 +10687,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="97"/>
         <source>For each tone you wish to generate, enter numbers from 0 to 9, lower case letters from a to z, and the * and # characters.</source>
-        <translation>生成したいそれぞれのトーンごとに、0から9までの数字、aからzまでの小文字、*と#の文字を入力してください。</translation>
+        <translation>生成したいそれぞれのトーンごとに、0から 9までの数字、a から z までの小文字、* と # の文字を入力してください。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="106"/>
         <source>Amplitude (0-1)</source>
-        <translation>振幅（0～1）</translation>
+        <translation>振幅 (0～1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="129"/>
         <source>Duration</source>
-        <translation>継続時間</translation>
+        <translation>長さ</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
@@ -10976,18 +10717,18 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
         <source>Tone duration</source>
-        <translation>トーン継続時間</translation>
+        <translation>トーンの長さ</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="271"/>
         <source>%1 ms</source>
-        <translation>%1ミリ秒</translation>
+        <translation>%1 ミリ秒</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
         <source>Silence duration</source>
-        <translation>無音部分の継続時間</translation>
+        <translation>無音部分の長さ</translation>
     </message>
 </context>
 <context>
@@ -10995,7 +10736,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="13"/>
         <source>Filter Curve EQ</source>
-        <translation>EQフィルタ曲線</translation>
+        <translation>EQ フィルタ曲線</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
@@ -11015,7 +10756,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="127"/>
         <source>Invert</source>
-        <translation>インバート（位相反転）</translation>
+        <translation>インバート (位相反転)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="143"/>
@@ -11035,7 +10776,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="12"/>
         <source>Graphic EQ</source>
-        <translation>グラフィックEQ</translation>
+        <translation>グラフィック EQ</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="82"/>
@@ -11045,7 +10786,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="96"/>
         <source>Invert</source>
-        <translation>インバート（位相反転）</translation>
+        <translation>インバート (位相反転)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
@@ -11097,7 +10838,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="137"/>
         <source>Treat mono as dual mono (recommended)</source>
-        <translation>モノラルを2つのモノラルとして扱う（推奨）</translation>
+        <translation>モノラルを 2つのモノラルとして扱う (推奨)</translation>
     </message>
 </context>
 <context>
@@ -11106,28 +10847,28 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/lv2/qml/Audacity/Lv2/Lv2Viewer.qml" line="97"/>
         <source>No available UI:
 %1</source>
-        <translation>利用可能なUIがありません:
+        <translation>利用可能な UI がありません :
 %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
         <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
-        <translation>このプラグインにはUIが提供されていません（AU3用のUIがある場合はお知らせください）</translation>
+        <translation>このプラグインには UI が提供されていません (AU3 用の UI がある場合はお知らせください)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
         <source>X11 UI refusing to be externalized</source>
-        <translation>X11 UIの外部出力が拒否されました</translation>
+        <translation>X11 UI の外部出力が拒否されました</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
         <source>Unknown reason (please report)</source>
-        <translation>不明な理由（お知らせください）</translation>
+        <translation>不明な理由 (お知らせください)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="256"/>
         <source>Idle UI creation failed</source>
-        <translation>アイドル状態のUIを作成できませんでした</translation>
+        <translation>アイドル状態の UI を作成できませんでした</translation>
     </message>
 </context>
 <context>
@@ -11140,29 +10881,29 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="67"/>
         <source>Amplitude (0-1)</source>
-        <translation>振幅（0～1）</translation>
+        <translation>振幅 (0～1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="90"/>
         <source>Duration</source>
-        <translation>継続時間</translation>
+        <translation>長さ</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="26"/>
         <source>White</source>
-        <comment>not a color, but 'white noise' having a uniform spectrum</comment>
-        <translation>ホワイト</translation>
+        <comment>not a color, but &apos;white noise&apos; having a uniform spectrum</comment>
+        <translation>白</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="31"/>
         <source>Pink</source>
-        <comment>not a color, but 'pink noise' having a spectrum with more power in low frequencies</comment>
+        <comment>not a color, but &apos;pink noise&apos; having a spectrum with more power in low frequencies</comment>
         <translation>ピンク</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="35"/>
         <source>Brownian</source>
-        <comment>a kind of noise spectrum also known as 'red' or 'brown'</comment>
+        <comment>a kind of noise spectrum also known as &apos;red&apos; or &apos;brown&apos;</comment>
         <translation>ブラウン</translation>
     </message>
 </context>
@@ -11171,7 +10912,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="68"/>
         <source>Step 1</source>
-        <translation>ステップ1</translation>
+        <translation>ステップ 1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="78"/>
@@ -11186,7 +10927,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
         <source>Step 2</source>
-        <translation>ステップ2</translation>
+        <translation>ステップ 2</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="131"/>
@@ -11198,7 +10939,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="155"/>
         <source>Noise reduction</source>
-        <translation>ノイズを除去</translation>
+        <translation>ノイズ除去</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="173"/>
@@ -11254,17 +10995,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="42"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
-        <translation>DCオフセットを削除（垂直方向の振幅中央を0.0）</translation>
+        <translation>DC オフセットを削除 (垂直方向の振幅中央を 0.0)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="63"/>
         <source>Normalize peak amplitude to</source>
-        <translation>最大振幅を次までノーマライズ:</translation>
+        <translation>最大振幅を次までノーマライズ :</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="99"/>
         <source>Normalize stereo channels independently</source>
-        <translation>ステレオチャンネルごとに別々にノーマライズ</translation>
+        <translation>ステレオチャンネルごとにノーマライズ</translation>
     </message>
 </context>
 <context>
@@ -11310,27 +11051,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="49"/>
         <source>ms</source>
-        <translation>ミリ秒</translation>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="57"/>
         <source>Reverberance</source>
-        <translation>リバーブランス（残響）</translation>
+        <translation>リバーブランス (残響)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="66"/>
         <source>Damping</source>
-        <translation>ダンピング（減衰）</translation>
+        <translation>ダンピング (減衰)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="75"/>
         <source>Low tone</source>
-        <translation>ロートーン（低音）</translation>
+        <translation>ロートーン (低音)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="84"/>
         <source>High tone</source>
-        <translation>ハイトーン（高音）</translation>
+        <translation>ハイトーン (高音)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="93"/>
@@ -11353,7 +11094,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="29"/>
         <source>Semitones (%1 → %2)</source>
-        <translation>半音（%1 → %2）</translation>
+        <translation>半音 (%1 → %2)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="61"/>
@@ -11406,12 +11147,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="102"/>
         <source>Amplitude (0-1)</source>
-        <translation>振幅（0～1）</translation>
+        <translation>振幅 (0～1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="125"/>
         <source>Duration</source>
-        <translation>継続時間</translation>
+        <translation>長さ</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/toneviewmodel.cpp" line="35"/>
@@ -11459,7 +11200,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="75"/>
         <source>Duration</source>
-        <translation>継続時間</translation>
+        <translation>長さ</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="120"/>
@@ -11469,7 +11210,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="180"/>
         <source>Truncate to</source>
-        <translation>次まで切り詰める:</translation>
+        <translation>次まで切り詰める :</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="185"/>
@@ -11479,7 +11220,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="230"/>
         <source>Compress to</source>
-        <translation>次まで圧縮:</translation>
+        <translation>次まで圧縮 :</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="235"/>
@@ -11612,16 +11353,16 @@ Please select an area to repair with some audio on at least one side (the more t
         <source>Internal error in %1 at %2 line %3.
 Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <extracomment>%1 is the function name, %2 is the source file path, %3 is the line number in that file</extracomment>
-        <translation>Internal error in %1 at %2 line %3.
-Audacityチーム（https://forum.audacityteam.org/）に報告してください。</translation>
+        <translation>内部エラー in %1 at %2 line %3.
+Audacity チーム (https://forum.audacityteam.org/)に報告してください。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.cpp" line="35"/>
         <source>Internal error at %1 line %2.
 Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <extracomment>%1 is the source file path, %2 is the line number in that file</extracomment>
-        <translation>Internal error at %1 line %2.
-Audacityチーム（https://forum.audacityteam.org/）に報告してください。</translation>
+        <translation>内部エラー at %1 line %2.
+Audacity チーム (https://forum.audacityteam.org/)に報告してください。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.h" line="27"/>
@@ -11635,7 +11376,7 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="17"/>
         <source>Custom FFmpeg options</source>
-        <translation>FFmpegオプションをカスタマイズ</translation>
+        <translation>FFmpeg オプションをカスタマイズ</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
@@ -11651,20 +11392,20 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="65"/>
         <source>Channel count %1</source>
-        <translation>チャンネルカウント%1</translation>
+        <translation>チャンネルカウント %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="714"/>
         <source>Export audio</source>
-        <translation>オーディオを書き出す</translation>
+        <translation>オーディオをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="77"/>
         <source>Export</source>
         <extracomment>Section heading in the Export dialog</extracomment>
-        <translation>書き出す</translation>
+        <translation>エクスポート</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="92"/>
@@ -11687,7 +11428,7 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
-        <translation>フォルダ</translation>
+        <translation>フォルダー</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="245"/>
@@ -11728,17 +11469,17 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="451"/>
         <source>Open custom FFmpeg format options</source>
-        <translation>カスタマイズFFmpegフォーマットオプションを開く</translation>
+        <translation>カスタマイズ FFmpeg フォーマットオプションを開く</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
         <source>Format:</source>
-        <translation>フォーマット:</translation>
+        <translation>フォーマット :</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
         <source>Codec:</source>
-        <translation>コーデック:</translation>
+        <translation>コーデック :</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="588"/>
@@ -11758,7 +11499,7 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
         <source>FLAC options</source>
-        <translation>FLACオプション</translation>
+        <translation>FLAC オプション</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="54"/>
@@ -11859,7 +11600,7 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="38"/>
         <source>General options</source>
-        <translation>一般オプション</translation>
+        <translation>全般オプション</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="56"/>
@@ -11909,8 +11650,8 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
 Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
 192000 - recommended</source>
-        <translation>ビットレート（ビット/秒）- 出力ファイルのサイズと品質に影響します
-コーデックによっては、特定の値（128k、192k、256kなど）しか指定できない場合があります。
+        <translation>ビットレート (ビット/秒)- 出力ファイルのサイズと品質に影響します
+コーデックによっては、特定の値 (128k、192k、256kなど)しか指定できない場合があります。
 0 - 自動
 192000 - 推奨</translation>
     </message>
@@ -11938,7 +11679,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
         <source>Load template</source>
-        <translation>テンプレートを読み込む</translation>
+        <translation>テンプレートを読み込み</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="61"/>
@@ -11964,7 +11705,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="37"/>
         <source>MPEG container options</source>
-        <translation>MPEGコンテナのオプション</translation>
+        <translation>MPEG コンテナのオプション</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="53"/>
@@ -11989,7 +11730,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation>ラベルを書き出す</translation>
+        <translation>ラベルをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
@@ -12009,7 +11750,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="60"/>
         <source>Download FFmpeg</source>
-        <translation>FFmpegをダウンロード</translation>
+        <translation>FFmpeg をダウンロード</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="73"/>
@@ -12029,22 +11770,22 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
         <source>%1 Hz (custom)</source>
-        <translation>%1 Hz（カスタム）</translation>
+        <translation>%1 Hz (カスタム)</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
         <source>Export full project audio</source>
-        <translation>プロジェクトのオーディオ全体を書き出す</translation>
+        <translation>プロジェクトのオーディオ全体をエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>Export selected audio</source>
-        <translation>選択したオーディオを書き出す</translation>
+        <translation>選択したオーディオをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>Export audio in loop region</source>
-        <translation>ループ領域のオーディオを書き出す</translation>
+        <translation>ループ領域のオーディオをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="198"/>
@@ -12054,7 +11795,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="199"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
-        <translation>ループ領域のオーディオを書き出すには、プロジェクト内にループが必要です。ループを作成してやり直してください。</translation>
+        <translation>ループ領域のオーディオをエクスポートするには、プロジェクト内にループが必要です。ループを作成してやり直してください。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="210"/>
@@ -12064,7 +11805,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="211"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
-        <translation>選択したオーディオを書き出すには、プロジェクト内でオーディオデータを選択する必要があります。プロジェクトに戻ってオーディオデータを選択し、やり直してください。</translation>
+        <translation>選択したオーディオをエクスポートするには、プロジェクト内でオーディオデータを選択する必要があります。プロジェクトに戻ってオーディオデータを選択し、やり直してください。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
@@ -12074,12 +11815,12 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
-        <translation>”%1”に書き出すことができません: 書き出し先のフォルダを作成することができませんでした。パスが正しいかや書き込み権限があるかを確認してください。</translation>
+        <translation>“%1”にエクスポートできません : エクスポート先のフォルダーを作成することができませんでした。パスが正しいか書き込み権限があるかを確認してください。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
         <source>Do you want to overwrite?</source>
-        <translation>上書きしてもよろしいですか?</translation>
+        <translation>上書きしますか?</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="639"/>
@@ -12089,16 +11830,16 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="651"/>
         <source>Export error</source>
-        <translation>書き出しエラー</translation>
+        <translation>エクスポートエラー</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="715"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
-        <translation>カスタムチャンネルマッピングを使用して書き出す場合は、マスターエフェクトを一時的にオフにしてください。
+        <translation>カスタムチャンネルマッピングを使用してエクスポートする場合は、マスターエフェクトを一時的にオフにしてください。
 
-書き出し後、マスターエフェクトはオンに戻ります。</translation>
+エクスポート後、マスターエフェクトはオンに戻ります。</translation>
     </message>
 </context>
 <context>
@@ -12121,13 +11862,13 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="187"/>
         <source>Version:</source>
-        <translation>バージョン:</translation>
+        <translation>バージョン :</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
         <source>Shortcut:</source>
         <extracomment>Keyboard shortcut</extracomment>
-        <translation>ショートカット:</translation>
+        <translation>ショートカット :</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="54"/>
@@ -12161,10 +11902,6 @@ Master effects will be turned back on after export.</source>
         <translation>プラグインのフォーマットが正しくありません</translation>
     </message>
     <message>
-        <source>Manually</source>
-        <translation type="vanished">手動</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
         <source>Failed to install extension</source>
@@ -12193,7 +11930,7 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
         <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
-        <translation>拡張機能”%1”の別のバージョン（バージョン%2）がすでにインストールされています。バージョン%3に置き換えもよろしいですか?</translation>
+        <translation>拡張機能“%1”の別のバージョン (バージョン %2)がすでにインストールされています。バージョン %3 に置き換えますか?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
@@ -12204,12 +11941,12 @@ Master effects will be turned back on after export.</source>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
         <source>Error code: %1</source>
-        <translation>エラーコード: %1</translation>
+        <translation>エラーコード : %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="74"/>
         <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
-        <translation>プラグイン”%1”は現在無効になっています。今すぐ有効にしますか?</translation>
+        <translation>プラグイン“%1”は現在無効になっています。今すぐ有効にしますか?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="75"/>
@@ -12237,16 +11974,6 @@ Master effects will be turned back on after export.</source>
         <translation>歌詞</translation>
     </message>
     <message>
-        <source>Run plugin %1</source>
-        <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation type="vanished">プラグイン%1を実行</translation>
-    </message>
-    <message>
-        <source>Run plugin %1: %2</source>
-        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation type="vanished">プラグイン%1を実行: %2</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="118"/>
         <source>Not specified</source>
         <extracomment>No version is specified for this plugin.</extracomment>
@@ -12263,7 +11990,7 @@ Master effects will be turned back on after export.</source>
         <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="35"/>
         <source>Show API dump</source>
-        <translation>APIダンプを表示</translation>
+        <translation>API ダンプを表示</translation>
     </message>
 </context>
 <context>
@@ -12313,19 +12040,19 @@ Master effects will be turned back on after export.</source>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="369"/>
         <source>Gaussian(a=2.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>ガウス窓（a=2.5）</translation>
+        <translation>ガウス窓 (a=2.5)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="372"/>
         <source>Gaussian(a=3.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>ガウス窓（a=3.5）</translation>
+        <translation>ガウス窓 (a=3.5)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="375"/>
         <source>Gaussian(a=4.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>ガウス窓（a=4.5）</translation>
+        <translation>ガウス窓 (a=4.5)</translation>
     </message>
 </context>
 <context>
@@ -12334,7 +12061,7 @@ Master effects will be turned back on after export.</source>
         <location filename="../../au3/libraries/au3-file-formats/FileFormats.cpp" line="350"/>
         <source>Error (file may not have been written): %1</source>
         <extracomment>%s will be the error message from the libsndfile software library</extracomment>
-        <translation>エラー（ファイルが書き込まれなかったと思われます）: %1</translation>
+        <translation>エラー (ファイルが書き込まれなかったと思われます): %1</translation>
     </message>
 </context>
 <context>
@@ -12343,19 +12070,19 @@ Master effects will be turned back on after export.</source>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="25"/>
         <source>Audacity failed to open a file in %1.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>%1にあるファイルを開くことができませんでした。</translation>
+        <translation>%1 にあるファイルを開くことができませんでした。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="29"/>
         <source>Audacity failed to read from a file in %1.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>%1にあるファイルを読むことができませんでした。</translation>
+        <translation>%1 にあるファイルを読むことができませんでした。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="36"/>
         <source>Audacity successfully wrote a file in %1 but failed to rename it as %2.</source>
         <extracomment>%1 is the original file path, %2 is the file name it was being renamed to</extracomment>
-        <translation>ファイルを%1に書き込むことができましたが、名前を%2に変更できませんでした。</translation>
+        <translation>ファイルを %1 に書き込むことができましたが、名前を %2 に変更できませんでした。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="66"/>
@@ -12363,7 +12090,7 @@ Master effects will be turned back on after export.</source>
 Perhaps %1 is not writable or the disk is full.</source>
         <extracomment>%1 is a path where the project is about to be saved</extracomment>
         <translation>ファイルへ書き込みできませんでした。
-%1が書き込み可能でないか、ストレージに空きがありません。</translation>
+%1 が書き込み可能でないか、ストレージに空きがありません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.h" line="31"/>
@@ -12379,7 +12106,7 @@ Perhaps %1 is not writable or the disk is full.</source>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="51"/>
         <source>AUP3 project files</source>
         <extracomment>an Audacity project is the state of the program, stored as files that can be reopened to resume the session later</extracomment>
-        <translation>AUP3プロジェクトファイル</translation>
+        <translation>AUP3 プロジェクトファイル</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="54"/>
@@ -12400,24 +12127,24 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="62"/>
         <source>XML files</source>
-        <translation>XMLファイル</translation>
+        <translation>XML ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="108"/>
         <source>, </source>
-        <translation>、</translation>
+        <translation>, </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
         <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
-        <translation>%1ファイル</translation>
+        <translation>%1 ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
         <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
-        <translation>（%1）</translation>
+        <translation>(%1)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="710"/>
@@ -12425,7 +12152,7 @@ Perhaps %1 is not writable or the disk is full.</source>
 %1 does not have write permissions.</source>
         <extracomment>%1 is the folder path that is not writable</extracomment>
         <translation>
-%1には書き込み権限がありません。</translation>
+%1 には書き込み権限がありません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="712"/>
@@ -12444,7 +12171,7 @@ Perhaps %1 is not writable or the disk is full.</source>
         <source>The temporary files directory is on a FAT formatted drive.
 Resetting to default location.</source>
         <extracomment>FAT is a filesystem type name</extracomment>
-        <translation>一時ファイルディレクトリにFATフォーマットのドライブが指定されています。
+        <translation>一時ファイルディレクトリに FAT フォーマットのドライブが指定されています。
 デフォルトの場所にリセットします。</translation>
     </message>
     <message>
@@ -12531,7 +12258,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <extracomment>Label of the button that starts the export</extracomment>
-        <translation>書き出す</translation>
+        <translation>エクスポート</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="81"/>
@@ -12546,7 +12273,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="114"/>
         <source>Select all</source>
-        <translation>すべてを選択</translation>
+        <translation>すべて選択</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
@@ -12570,7 +12297,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
         <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
-        <translation>ミリ秒</translation>
+        <translation>ms</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="31"/>
@@ -12804,7 +12531,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
         <source>Expand</source>
         <extracomment>Expand a tree item</extracomment>
-        <translation>広げる</translation>
+        <translation>展開</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="118"/>
@@ -12829,7 +12556,9 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
         <source>%n day(s) ago</source>
-        <translation><numerusform>%n日前</numerusform></translation>
+        <translation>
+            <numerusform>%n 日前</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
@@ -12839,7 +12568,9 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
         <source>%n week(s) ago</source>
-        <translation><numerusform>%n週前</numerusform></translation>
+        <translation>
+            <numerusform>%n 週前</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
@@ -12849,12 +12580,16 @@ For tips on suitable drives, click the help button.</source>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
         <source>%n month(s) ago</source>
-        <translation><numerusform>%nか月前</numerusform></translation>
+        <translation>
+            <numerusform>%n か月前</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
         <source>%n year(s) ago</source>
-        <translation><numerusform>%n年前</numerusform></translation>
+        <translation>
+            <numerusform>%n 年前</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
@@ -12881,7 +12616,9 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
         <source>%Ln byte(s)</source>
         <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
-        <translation><numerusform>%Lnバイト</numerusform></translation>
+        <translation>
+            <numerusform>%Ln バイト</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
@@ -12946,7 +12683,7 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
         <source>Continue</source>
-        <translation>続ける</translation>
+        <translation>続行</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
@@ -12956,12 +12693,12 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
         <source>Downloading %1…</source>
-        <translation>%1をダウンロード中…</translation>
+        <translation>%1 をダウンロード中…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
         <source>Unpacking %1…</source>
-        <translation>%1を展開中…</translation>
+        <translation>%1 を展開中…</translation>
     </message>
 </context>
 <context>
@@ -14183,7 +13920,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="134"/>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="168"/>
         <source>Loop tempo detected at %1 BPM. What would you like to do?</source>
-        <translation>ループテンポは%1 BPMと検出されました。どの操作を行いますか?</translation>
+        <translation>ループテンポは %1 BPM と検出されました。どの操作を行いますか?</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="138"/>
@@ -14220,13 +13957,13 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
         <extracomment>Title of the export progress dialog</extracomment>
-        <translation>書き出す</translation>
+        <translation>エクスポート</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="70"/>
         <source>Importing %1</source>
         <extracomment>%1 is the description of the file format being imported</extracomment>
-        <translation>%1を読み込み中</translation>
+        <translation>%1 を読み込み中</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="485"/>
@@ -14245,19 +13982,19 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../au3/libraries/au3-import-export/ExportPlugin.cpp" line="43"/>
         <source>Unable to export.
 Error %1</source>
-        <translation>書き出しできません。
+        <translation>エクスポートできません。
 エラー %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="92"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.h" line="49"/>
         <source>Export error</source>
-        <translation>書き出しエラー</translation>
+        <translation>エクスポートエラー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="93"/>
         <source>Export completed with error.</source>
-        <translation>エラーにより書き出しが終了しました。</translation>
+        <translation>エラーによりエクスポートが終了しました。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="215"/>
@@ -14283,7 +14020,7 @@ Audacity cannot open this type of file.</source>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
         <source>Importing %1…</source>
         <extracomment>%1 is the name of the file being imported</extracomment>
-        <translation>%1を読み込み中…</translation>
+        <translation>%1 を読み込み中…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="631"/>
@@ -14294,7 +14031,7 @@ Audacity cannot open this type of file.</source>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
         <extracomment>%1 is the name of an audio file format, such as &quot;MP3&quot;</extracomment>
-        <translation>このバージョンのAudacityは、%1に対応するようコンパイルされていません。</translation>
+        <translation>このバージョンの Audacity は、%1 に対応するようコンパイルされていません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="697"/>
@@ -14304,9 +14041,9 @@ Extract (rip) the CD tracks to an audio format that
 Audacity can import, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
         <translation>“%1”はオーディオCDのトラックです。
-AudacityはオーディオCDを直接開くことはできません。
-Audacityが読み込みできるWAVやAIFFのようなオーディオフォーマットに
-CDトラックを展開（リッピング）してください。</translation>
+Audacity はオーディオ CD を直接開くことはできません。
+Audacity が読み込みできる WAV や AIFF のようなオーディオフォーマットに
+CD トラックを展開 (リッピング)してください。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="705"/>
@@ -14315,7 +14052,7 @@ Audacity cannot open this file because it only contains links to other files.
 You may be able to open it in a text editor and download the actual audio files.</source>
         <extracomment>%s will be the filename</extracomment>
         <translation>“%1”はプレイリストファイルです。
-ほかのファイルへのリンクのみのため、Audacityはこのファイルを開くことができません。
+ほかのファイルへのリンクのみのため、Audacity はこのファイルを開くことができません。
 テキストエディタで開いて実際のオーディオファイルをダウンロードしてください。</translation>
     </message>
     <message>
@@ -14324,9 +14061,9 @@ You may be able to open it in a text editor and download the actual audio files.
 Audacity cannot open this type of file due to patent restrictions. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>“%1”はWindows Media Audioファイルです。
-特許により保護されているためAudacityはこの種類のファイルを開くことができません。
-WAVやAIFFのような対応しているオーディオフォーマットに変換する必要があります。</translation>
+        <translation>“%1”は Windows Media Audio ファイルです。
+特許により保護されているため Audacity はこの種類のファイルを開くことができません。
+WAV や AIFF のような対応しているオーディオフォーマットに変換する必要があります。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="722"/>
@@ -14334,9 +14071,9 @@ WAVやAIFFのような対応しているオーディオフォーマットに変�
 Without the optional FFmpeg library, Audacity cannot open this type of file.
 Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>”%1”はAdvanced Audio Codingファイルです。
-オプションのFFmpegライブラリを使用しないと、Audacityはこの種類のファイルを開けません。
-または、WAVやAIFFのような対応しているオーディオフォーマットに変換する必要があります。</translation>
+        <translation>“%1”は Advanced Audio Coding ファイルです。
+オプションの FFmpeg ライブラリを使用しないと、Audacity はこの種類のファイルを開けません。
+または、WAV や AIFF のような対応しているオーディオフォーマットに変換する必要があります。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="729"/>
@@ -14348,8 +14085,8 @@ extract the CD track to a supported audio format such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
         <translation>“%1”は暗号化されたオーディオファイルです。
 これらは一般的にオンラインのミュージックストアから入手したものです。
-暗号化されているため、Audacityはこの種類のファイルを開くことができません。
-Audacityで録音するか、オーディオCDに焼いからCDトラックをWAVやAIFFのような
+暗号化されているため、Audacity はこの種類のファイルを開くことができません。
+Audacity で録音するか、オーディオ CD に焼いてから CD トラックを WAV や AIFF のような
 対応しているオーディオフォーマットに展開してください。</translation>
     </message>
     <message>
@@ -14358,9 +14095,9 @@ Audacityで録音するか、オーディオCDに焼いからCDトラックをWA
 Audacity cannot open this proprietary format. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>”%1”はRealPlayerメディアファイルです。
-Audacityはこの商用形式を開くことができません。
-WAVやAIFFのような対応しているオーディオフォーマットに変換する必要があります。</translation>
+        <translation>“%1”は RealPlayer メディアファイルです。
+Audacity はこの商用形式を開くことができません。
+WAV や AIFF のような対応しているオーディオフォーマットに変換する必要があります。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="744"/>
@@ -14369,10 +14106,10 @@ Audacity cannot open this type of file.
 Try converting it to an audio file such as WAV or AIFF and 
 then import it, or record it into Audacity.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>”%1”はオーディオファイルではなく、メモ形式のファイルです。
-Audacityはこの種類のファイルを開くことはできません。
-WAVやAIFFのようなオーディオファイルに変換してから読み込むか、
-Audacityで録音してください。</translation>
+        <translation>“%1”はオーディオファイルではなく、メモ形式のファイルです。
+Audacity はこの種類のファイルを開くことはできません。
+WAV や AIFF のようなオーディオファイルに変換してから読み込むか、
+Audacity で録音してください。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="752"/>
@@ -14382,10 +14119,10 @@ If you think it might be an mp3 file, rename it to end with “.mp3”
 and try importing it again. Otherwise you need to convert it to a supported audio 
 format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>”%1”はMusepackオーディオファイルです。
-Audacityではこの種類のファイルを開くことはできません。
-mp3ファイルの可能性がある場合は、”.mp3”で終わるよう名称変更し、
-読み込み直してください。そうでない場合は、WAVやAIFFのような
+        <translation>“%1”はMusepackオーディオファイルです。
+Audacity ではこの種類のファイルを開くことはできません。
+mp3 ファイルの可能性がある場合は、”.mp3”で終わるよう名称変更し、
+読み込み直してください。そうでない場合は、WAV や AIFF のような
 対応しているオーディオフォーマットに変換する必要があります。</translation>
     </message>
     <message>
@@ -14394,9 +14131,9 @@ mp3ファイルの可能性がある場合は、”.mp3”で終わるよう名�
 Audacity cannot open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>”%1”は Wavpackオーディオファイルです。
-Audacityはこのファイルタイプを開くことができません。
-WAVやAIFFのような対応しているオーディオフォーマットに変換する必要があります。</translation>
+        <translation>“%1”は Wavpack オーディオファイルです。
+Audacity はこのファイルタイプを開くことができません。
+WAV や AIFF のような対応しているオーディオフォーマットに変換する必要があります。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="768"/>
@@ -14404,9 +14141,9 @@ WAVやAIFFのような対応しているオーディオフォーマットに変�
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>”%1”はDolby Digitalオーディオファイルです。
-Audacityは現在このファイルタイプを開くことができません。
-WAVやAIFFのような対応しているオーディオフォーマットに変換する必要があります。</translation>
+        <translation>“%1”は Dolby Digital オーディオファイルです。
+Audacity は現在このファイルタイプを開くことができません。
+WAV や AIFF のような対応しているオーディオフォーマットに変換する必要があります。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="776"/>
@@ -14414,9 +14151,9 @@ WAVやAIFFのような対応しているオーディオフォーマットに変�
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>”%1”はOgg Speexオーディオファイルです。
-Audacityは現在このファイルタイプを開くことができません。
-WAVやAIFFのような対応しているオーディオフォーマットに変換する必要があります。</translation>
+        <translation>“%1”は Ogg Speex オーディオファイルです。
+Audacity は現在このファイルタイプを開くことができません。
+WAV や AIFF のような対応しているオーディオフォーマットに変換する必要があります。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="789"/>
@@ -14424,14 +14161,14 @@ WAVやAIFFのような対応しているオーディオフォーマットに変�
 Audacity cannot currently open this type of file. 
 You need to extract the audio to a supported format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>”%1”はビデオファイルです。
-Audacityは現在このファイルタイプを開くことができません。
-WAVやAIFFのような対応しているフォーマットでオーディオを取り出す必要があります。</translation>
+        <translation>“%1”はビデオファイルです。
+Audacity は現在このファイルタイプを開くことができません。
+WAV や AIFF のような対応しているフォーマットでオーディオを取り出す必要があります。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="795"/>
         <source>File “%1” not found.</source>
-        <translation>”%1”ファイルが見つかりません。</translation>
+        <translation>“%1”ファイルが見つかりません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="810"/>
@@ -14439,15 +14176,15 @@ WAVやAIFFのような対応しているフォーマットでオーディオを�
 
 %2For uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>Audacityはファイル”%1”の形式を認識できませんでした。
+        <translation>Audacity はファイル“%1”の形式を認識できませんでした。
 
-%2圧縮されていないファイルの場合は、
-”ファイル &gt; 読み込む &gt; Rawデータ”も試してください。</translation>
+%2 圧縮されていないファイルの場合は、
+”ファイル &gt; インポート &gt; Raw データ”も試してください。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
         <source>%1, %2</source>
-        <extracomment>%1 is the list of importers so far, %2 is the next importer's format name being appended</extracomment>
+        <extracomment>%1 is the list of importers so far, %2 is the next importer&apos;s format name being appended</extracomment>
         <translation>%1、%2</translation>
     </message>
     <message>
@@ -14457,15 +14194,15 @@ Importers supposedly supporting such files are:
 %2,
 but none of them understood this file format.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation>Audacityはファイル”%1”の形式を認識しました。
+        <translation>Audacity はファイル“%1”の形式を認識しました。
 このファイルタイプに対応していると思われる読み込み用アプリは
-%2ですが、
+%2 ですが、
 いずれもこのファイルフォーマットを認識できませんでした。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ImportUtils.h" line="42"/>
         <source>Import Project</source>
-        <translation>プロジェクトを読み込む</translation>
+        <translation>プロジェクトをインポート</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
@@ -14486,32 +14223,32 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="360"/>
         <source>M4A (AAC) Files (FFmpeg)</source>
-        <translation>M4A（AAC）ファイル（FFmpeg）</translation>
+        <translation>M4A (AAC)ファイル (FFmpeg)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="362"/>
         <source>AC3 Files (FFmpeg)</source>
-        <translation>AC3ファイル（FFmpeg）</translation>
+        <translation>AC3 ファイル (FFmpeg)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="364"/>
         <source>AMR (narrow band) Files (FFmpeg)</source>
-        <translation>AMR（狭帯域）ファイル（FFmpeg）</translation>
+        <translation>AMR (狭帯域)ファイル (FFmpeg)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="368"/>
         <source>Opus (OggOpus) Files (FFmpeg)</source>
-        <translation>Opus（OggOpus）ファイル（FFmpeg）</translation>
+        <translation>Opus (OggOpus)ファイル (FFmpeg)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="373"/>
         <source>WMA (version 2) Files (FFmpeg)</source>
-        <translation>WMA（バージョン2）ファイル（FFmpeg）</translation>
+        <translation>WMA (バージョン2)ファイル (FFmpeg)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="376"/>
         <source>Custom FFmpeg Export</source>
-        <translation>FFmpeg書き出しをカスタマイズ</translation>
+        <translation>FFmpeg エクスポートをカスタマイズ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="468"/>
@@ -14536,32 +14273,31 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="472"/>
         <source>Full search</source>
-        <translation>フル探索</translation>
+        <translation>すべて検索</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
         <source>Log search</source>
         <extracomment>&quot;Log&quot; is short for &quot;logarithmic&quot;</extracomment>
-        <translation>ログ探索</translation>
+        <translation>ログ検索</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="30"/>
         <source>FFmpeg-compatible files</source>
-        <translation>FFmpeg互換ファイル</translation>
+        <translation>FFmpeg 互換ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="165"/>
         <source>Try installing FFmpeg.
 </source>
-        <translation>FFmpegをインストールしてください。
-
+        <translation>FFmpeg をインストールしてください。
 </translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
-        <translation>インデックス[%1] コーデック[%2]、言語[%3]、ビットレート[%4]、チャンネル[%5]、デュレーション[%6]</translation>
+        <translation>インデックス[%1] コーデック[%2]、言語[%3]、ビットレート[%4]、チャンネル[%5]、長さ[%6]</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="96"/>
@@ -14588,7 +14324,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="166"/>
         <source>Quality (kbps)</source>
-        <translation>品質（kbps）</translation>
+        <translation>品質 (kbps)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="262"/>
@@ -14611,7 +14347,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="283"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="102"/>
         <source>5 ms</source>
-        <translation>5ミリ秒</translation>
+        <translation>5 ミリ秒</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="284"/>
@@ -14641,7 +14377,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
         <source>Vbr Mode</source>
         <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
-        <translation>VBRモード</translation>
+        <translation>VBR モード</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
@@ -14729,7 +14465,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="698"/>
         <source>FFmpeg : ERROR - Can’t determine format description for file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>FFmpeg : エラー - ファイル”%1”のフォーマットを特定することができません。</translation>
+        <translation>FFmpeg : エラー - ファイル“%1”のフォーマットを特定することができません。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="706"/>
@@ -14740,37 +14476,37 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="717"/>
         <source>FFmpeg : ERROR - Can’t add audio stream to output file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>FFmpeg : エラー - 出力ファイル”%1”にオーディオストリームを追加できません。</translation>
+        <translation>FFmpeg : エラー - 出力ファイル“%1”にオーディオストリームを追加できません。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="744"/>
         <source>FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation>FFmpeg : エラー - 出力ファイル“%1”を書き込み用に開くことができません。エラーコードは%2です。</translation>
+        <translation>FFmpeg : エラー - 出力ファイル“%1”を書き込み用に開くことができません。エラーコードは %2 です。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="779"/>
         <source>FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation>FFmpeg : エラー - 出力ファイル”%1”にヘッダを書き込むことができません。エラーコードは%2です。</translation>
+        <translation>FFmpeg : エラー - 出力ファイル“%1”にヘッダを書き込むことができません。エラーコードは %2 です。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
-        <translation>FFmpegはオーディオコーデック0x%1を見つけられません。
+        <translation>FFmpeg はオーディオコーデック 0x%1 を見つけられません。
 コーデックへの対応がコンパイル時に組み込まれていないと思われます。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1075"/>
         <source>The codec reported a generic error (EPERM)</source>
-        <translation>コーデックが一般エラーを報告しました（EPERM）</translation>
+        <translation>コーデックが一般エラーを報告しました (EPERM)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1078"/>
         <source>The codec reported an invalid parameter (EINVAL)</source>
-        <translation>コーデックが正しくないパラメータを報告しました（EINVAL）</translation>
+        <translation>コーデックが正しくないパラメータを報告しました (EINVAL)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1088"/>
@@ -14778,14 +14514,14 @@ Support for this codec is probably not compiled in.</source>
 
 %3</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
-        <translation>オーディオコーデック“%1”（0x%2）を開くことができません
+        <translation>オーディオコーデック“%1” (0x%2)を開くことができません
 
 %3</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1112"/>
         <source>FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.</source>
-        <translation>FFmpeg : エラー - オーディオFIFOから読み込むためのバッファを割り当てることができません。</translation>
+        <translation>FFmpeg : エラー - オーディオ FIFO から読み込むためのバッファを割り当てることができません。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1141"/>
@@ -14826,27 +14562,27 @@ Support for this codec is probably not compiled in.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1409"/>
         <source>Properly configured FFmpeg is required to proceed.
 You can configure it at Preferences &gt; General.</source>
-        <translation>続行するにはFFmpegを正しく構成しておく必要があります。
-“設定 &gt; 一般”で構成を行うことができます。</translation>
+        <translation>続行するには FFmpeg を正しく構成しておく必要があります。
+“設定 &gt; 全般”で構成を行うことができます。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1417"/>
         <source>Attempted to export %1 channels, but maximum number of channels for selected output format is %2</source>
         <extracomment>%1 is the requested channel count, %2 is the maximum supported</extracomment>
-        <translation>%1チャンネルを書き出そうとしましたが、選択している出力フォーマットは最大%2チャンネルです</translation>
+        <translation>%1 チャンネルを書き出そうとしましたが、選択している出力フォーマットは最大 %2 チャンネルです</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1451"/>
         <source>Exporting selected audio as %1</source>
         <extracomment>%1 is format description</extracomment>
-        <translation>選択したオーディオを%1として書き出し中</translation>
+        <translation>選択したオーディオを %1 としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1454"/>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="592"/>
         <source>Exporting the audio as %1</source>
         <extracomment>%1 is format description</extracomment>
-        <translation>オーディオを%1として書き出し中</translation>
+        <translation>オーディオを %1 としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1566"/>
@@ -14862,14 +14598,14 @@ You can configure it at Preferences &gt; General.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1582"/>
         <source>The project sample rate (%1) is not supported by the current output
 file format. </source>
-        <translation>プロジェクトのサンプルレート（%1）は現在の出力ファイルフォーマットでは
+        <translation>プロジェクトのサンプルレート (%1)は現在の出力ファイルフォーマットでは
 サポートされていません。 </translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1585"/>
         <source>The project sample rate (%1) and bit rate (%2 kbps) combination is not
 supported by the current output file format. </source>
-        <translation>プロジェクトのサンプルレート（%1）とビットレート（%2 kbps）の組み合わせは
+        <translation>プロジェクトのサンプルレート (%1)とビットレート (%2 kbps)の組み合わせは
 現在のファイルフォーマットではサポートされていません。 </translation>
     </message>
     <message>
@@ -14885,7 +14621,7 @@ supported by the current output file format. </source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/FFmpeg.cpp" line="74"/>
         <source>FFmpeg library not found</source>
-        <translation>FFmpegライブラリが見つかりません</translation>
+        <translation>FFmpeg ライブラリが見つかりません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="34"/>
@@ -14916,7 +14652,7 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="58"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="88"/>
         <source>0 (fastest)</source>
-        <translation>0（最高速）</translation>
+        <translation>0 (最高速)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="59"/>
@@ -14964,50 +14700,50 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="66"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="96"/>
         <source>8 (best)</source>
-        <translation>8（最高品質）</translation>
+        <translation>8 (最高品質)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="159"/>
         <source>FLAC Files</source>
-        <translation>FLACファイル</translation>
+        <translation>FLAC ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="303"/>
         <source>FLAC export couldn’t open %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>FLAC書き出しで%1を開けませんでした</translation>
+        <translation>FLAC エクスポートで %1 を開けませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="313"/>
         <source>FLAC encoder failed to initialize
 Status: %1</source>
-        <translation>FLACエンコーダを初期化できませんでした
-ステータス: %1</translation>
+        <translation>FLAC エンコーダを初期化できませんでした
+ステータス : %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="326"/>
         <source>Exporting the selected audio as FLAC</source>
-        <translation>選択したオーディオをFLACとして書き出し中</translation>
+        <translation>選択したオーディオを FLAC としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="327"/>
         <source>Exporting the audio as FLAC</source>
-        <translation>オーディオをFLACとして書き出し中</translation>
+        <translation>オーディオを FLAC としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ImportFLAC.h" line="20"/>
         <source>FLAC files</source>
-        <translation>FLACファイル</translation>
+        <translation>FLAC ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="161"/>
         <source>MP2 Files</source>
-        <translation>MP2ファイル</translation>
+        <translation>MP2 ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="220"/>
         <source>Cannot export MP2 with this sample rate and bit rate</source>
-        <translation>このサンプルレートとビットレートではMP2を書き出しできません</translation>
+        <translation>このサンプルレートとビットレートでは MP2 をエクスポートできません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="230"/>
@@ -15021,12 +14757,12 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="245"/>
         <source>Exporting selected audio at %1 kbps</source>
-        <translation>選択したオーディオを%1 kbpsで書き出し中</translation>
+        <translation>選択したオーディオを %1 kbps でエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="247"/>
         <source>Exporting the audio at %1 kbps</source>
-        <translation>オーディオを%1 kbpsで書き出し中</translation>
+        <translation>オーディオを %1 kbps でエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="66"/>
@@ -15046,7 +14782,7 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="165"/>
         <source>220-260 kbps (Best Quality)</source>
-        <translation>220～260 kbps（高品質）</translation>
+        <translation>220～260 kbps (高品質)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="166"/>
@@ -15091,7 +14827,7 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="174"/>
         <source>45-85 kbps (Smaller files)</source>
-        <translation>45～85 kbps（ファイルサイズ小）</translation>
+        <translation>45～85 kbps (ファイルサイズ小)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="183"/>
@@ -15174,28 +14910,28 @@ Status: %1</source>
         <source>You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.
 Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>%1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version</extracomment>
-        <translation>lame_enc.dll v%1.%2が参照されています。このバージョンはAudacity %3.%4.%5との互換性がありません。
+        <translation>lame_enc.dll v%1.%2 が参照されています。このバージョンは Audacity %3.%4.%5 との互換性がありません。
 ’LAME for Audacity’の最新版をダウンロードしてください。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
         <source>Only lame_enc.dll</source>
-        <translation>lame_enc.dllのみ</translation>
+        <translation>lame_enc.dll のみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1063"/>
         <source>Only libmp3lame64bit.dylib</source>
-        <translation>libmp3lame64bit.dylibのみ</translation>
+        <translation>libmp3lame64bit.dylib のみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1066"/>
         <source>Only libmp3lame.dylib</source>
-        <translation>libmp3lame.dylibのみ</translation>
+        <translation>libmp3lame.dylib のみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1090"/>
         <source>Only libmp3lame.so</source>
-        <translation>libmp3lame.soのみ</translation>
+        <translation>libmp3lame.so のみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1091"/>
@@ -15212,18 +14948,18 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1113"/>
         <source>Only libmp3lame.so.0</source>
-        <translation>libmp3lame.so.0のみ</translation>
+        <translation>libmp3lame.so.0 のみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1234"/>
         <source>MP3 Files</source>
-        <translation>MP3ファイル</translation>
+        <translation>MP3 ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1334"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1373"/>
         <source>Could not open MP3 encoding library!</source>
-        <translation>MP3エンコーディングライブラリを開けません。</translation>
+        <translation>MP3 エンコーディングライブラリを開けません!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1337"/>
@@ -15233,67 +14969,67 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1367"/>
         <source>Could not initialize MP3 encoding library!</source>
-        <translation>MP3エンコーディングライブラリを初期化できません!</translation>
+        <translation>MP3 エンコーディングライブラリを初期化できません!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1379"/>
         <source>Not a valid or supported MP3 encoding library!</source>
-        <translation>対応しているMP3エンコーディングライブラリではありません!</translation>
+        <translation>対応している MP3 エンコーディングライブラリではありません!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1464"/>
         <source>Unable to initialize MP3 stream</source>
-        <translation>MP3ストリームを初期化できません</translation>
+        <translation>MP3 ストリームを初期化できません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1498"/>
         <source>Exporting selected audio with %1 preset</source>
-        <translation>選択したオーディオをプリセット%1で書き出し中</translation>
+        <translation>選択したオーディオをプリセット %1 でエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1499"/>
         <source>Exporting the audio with %1 preset</source>
-        <translation>オーディオをプリセット%1で書き出し中</translation>
+        <translation>オーディオをプリセット %1 でエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1503"/>
         <source>Exporting selected audio with VBR quality %1</source>
-        <translation>選択したオーディオをVBR品質%1で書き出し中</translation>
+        <translation>選択したオーディオを VBR 品質 %1 でエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1504"/>
         <source>Exporting the audio with VBR quality %1</source>
-        <translation>オーディオをVBR品質%1で書き出し中</translation>
+        <translation>オーディオを VBR 品質 %1 でエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1508"/>
         <source>Exporting selected audio at %1 Kbps</source>
-        <translation>選択したオーディオを%1 kbpsで書き出し中</translation>
+        <translation>選択したオーディオを %1 kbps でエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1509"/>
         <source>Exporting the audio at %1 Kbps</source>
-        <translation>オーディオを%1 kbpsで書き出し中</translation>
+        <translation>オーディオを %1 kbps でエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1556"/>
         <source>Error %1 returned from MP3 encoder</source>
-        <translation>MP3エンコーダからエラー %1が返されました</translation>
+        <translation>MP3 エンコーダからエラー %1 が返されました</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1736"/>
         <source>MP3 export library not found</source>
-        <translation>MP3書き出しライブラリが見つかりません</translation>
+        <translation>MP3 エクスポートライブラリが見つかりません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1743"/>
         <source>(Built-in)</source>
-        <translation>（内蔵）</translation>
+        <translation>(内蔵)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mpg123/ImportMP3_MPG123.cpp" line="21"/>
         <source>MP3 files</source>
-        <translation>MP3ファイル</translation>
+        <translation>MP3 ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
@@ -15302,47 +15038,47 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
-        <translation>%1 kビット/秒</translation>
+        <translation>%1 kbit/秒</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="128"/>
         <source>Ogg Vorbis Files</source>
-        <translation>Ogg Vorbisファイル</translation>
+        <translation>Ogg Vorbis ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="173"/>
         <source>Unable to export - rate or quality problem</source>
-        <translation>書き出しできません - ビットレートまたは品質に問題</translation>
+        <translation>エクスポートできません - ビットレートまたは品質に問題</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="186"/>
         <source>Unable to export - problem initialising</source>
-        <translation>書き出しできません - 初期化に問題</translation>
+        <translation>エクスポートできません - 初期化に問題</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="198"/>
         <source>Unable to export - problem creating stream</source>
-        <translation>書き出しできません - ストリーム作成に問題</translation>
+        <translation>エクスポートできません - ストリーム作成に問題</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="219"/>
         <source>Unable to export - problem with packets</source>
-        <translation>書き出しできません - パケットに問題</translation>
+        <translation>エクスポートできません - パケットに問題</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="227"/>
         <source>Unable to export - problem with file</source>
-        <translation>書き出しできません - ファイルに問題</translation>
+        <translation>エクスポートできません - ファイルに問題</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="236"/>
         <source>Exporting the selected audio as Ogg Vorbis</source>
-        <translation>選択したオーディオをOgg Vorbisファイルに書き出し中</translation>
+        <translation>選択したオーディオを Ogg Vorbis ファイルにエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="237"/>
         <source>Exporting the audio as Ogg Vorbis</source>
-        <translation>オーディオをOgg Vorbisファイルに書き出し中</translation>
+        <translation>オーディオを Ogg Vorbis ファイルにエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="69"/>
@@ -15357,17 +15093,17 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="356"/>
         <source>Not an Ogg Vorbis file</source>
-        <translation>Ogg Vorbisファイルではありません</translation>
+        <translation>Ogg Vorbis ファイルではありません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="359"/>
         <source>Vorbis version mismatch</source>
-        <translation>Vorbisバージョンが一致しません</translation>
+        <translation>Vorbis バージョンが一致しません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="362"/>
         <source>Invalid Vorbis bitstream header</source>
-        <translation>無効なVorbisビットストリームヘッダです</translation>
+        <translation>無効な Vorbis ビットストリームヘッダです</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="365"/>
@@ -15377,7 +15113,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.h" line="18"/>
         <source>Ogg Vorbis files</source>
-        <translation>Ogg Vorbisファイル</translation>
+        <translation>Ogg Vorbis ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="82"/>
@@ -15393,12 +15129,12 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="112"/>
         <source>VBR Mode</source>
-        <translation>VBRモード</translation>
+        <translation>VBR モード</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="121"/>
         <source>Optimize for</source>
-        <translation>最適化用途</translation>
+        <translation>最適化対象</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
@@ -15408,7 +15144,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="195"/>
         <source>Opus Files</source>
-        <translation>Opusファイル</translation>
+        <translation>Opus ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="316"/>
@@ -15418,17 +15154,17 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="343"/>
         <source>Exporting selected audio as Opus</source>
-        <translation>選択したオーディオをOpusとして書き出し中</translation>
+        <translation>選択したオーディオを Opus としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="344"/>
         <source>Exporting the audio as Opus</source>
-        <translation>オーディオをOpusとして書き出し中</translation>
+        <translation>オーディオを Opus としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="376"/>
         <source>Unable to create Opus encoder</source>
-        <translation>Opusエンコーダを作成できません</translation>
+        <translation>Opus エンコーダを作成できません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="383"/>
@@ -15448,12 +15184,12 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="404"/>
         <source>Unable to set VBR mode</source>
-        <translation>VBRモードを設定できません</translation>
+        <translation>VBR モードを設定できません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="412"/>
         <source>Unable to set CVBR mode</source>
-        <translation>CVBRモードを設定できません</translation>
+        <translation>CVBR モードを設定できません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="423"/>
@@ -15480,7 +15216,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="35"/>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="293"/>
         <source>invalid argument</source>
-        <translation>無効なサンプルレート</translation>
+        <translation>無効な引数</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="37"/>
@@ -15523,22 +15259,22 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="119"/>
         <source>Buffer overflow in OGG packet</source>
-        <translation>OGGパケットのバッファオーバーフロー</translation>
+        <translation>OGG パケットのバッファオーバーフロー</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="249"/>
         <source>Unable to write OGG page header</source>
-        <translation>OGGページヘッダを書き込めません</translation>
+        <translation>OGG ページヘッダを書き込めません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="253"/>
         <source>Unable to write OGG page</source>
-        <translation>OGGページを書き込めません</translation>
+        <translation>OGG ページを書き込めません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="22"/>
         <source>Opus files</source>
-        <translation>Opusファイル</translation>
+        <translation>Opus ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="152"/>
@@ -15548,12 +15284,12 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="287"/>
         <source>IO error reading from file</source>
-        <translation>ファイル読み込み中のIOエラー</translation>
+        <translation>ファイル読み込み中の IO エラー</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="295"/>
         <source>not an Opus file</source>
-        <translation>Opusファイルではありません</translation>
+        <translation>Opus ファイルではありません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="297"/>
@@ -15584,17 +15320,17 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="337"/>
         <source>Failed to decode Opus file: %1</source>
         <extracomment>%1 is the error message</extracomment>
-        <translation>Opusファイルをデコードできませんでした: %1</translation>
+        <translation>Opus ファイルをデコードできませんでした : %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="57"/>
         <source>AIFF (Apple/SGI)</source>
-        <translation>AIFF（Apple/SGI）</translation>
+        <translation>AIFF (Apple/SGI)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="61"/>
         <source>WAV (Microsoft)</source>
-        <translation>WAV（Microsoft）</translation>
+        <translation>WAV (Microsoft)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="129"/>
@@ -15615,12 +15351,12 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="517"/>
         <source>GSM 6.10 requires mono</source>
-        <translation>GSM 6.10はモノラルのみです</translation>
+        <translation>GSM 6.10 はモノラルのみです</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="521"/>
         <source>WAVEX and GSM 6.10 formats are not compatible</source>
-        <translation>WAVEXとGSM 6.10フォーマットとは互換性がありません</translation>
+        <translation>WAVEX と GSM 6.10 フォーマットとは互換性がありません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="534"/>
@@ -15631,27 +15367,27 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="548"/>
         <source>Cannot export audio to %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>オーディオを%1に書き出せません</translation>
+        <translation>オーディオを %1 に書き出せません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="581"/>
         <source>You have attempted to Export a WAV or AIFF file which would be greater than 4GB.
 Audacity cannot do this, the Export was abandoned.</source>
-        <translation>4 GBを超えるWAVファイルまたはAIFFファイルを書き出そうとしました。
-Audacityでは処理できないので、書き出しを中断しました。</translation>
+        <translation>4 GBを超える WAV ファイルまたは AIFF ファイルを書き出そうとしました。
+Audacity では処理できないので、エクスポートを中断しました。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="590"/>
         <source>Exporting the selected audio as %1</source>
         <extracomment>%1 is a format description</extracomment>
-        <translation>選択したオーディオを%1として書き出し中</translation>
+        <translation>選択したオーディオを %1 としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
         <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
-        <translation>%1ファイルを書き込み中にエラーが起きました（空きがない?）。
+        <translation>%1 ファイルを書き込み中にエラーが起きました (空きがない?)。
 Libsndfileは“%2”を返しています</translation>
     </message>
     <message>
@@ -15662,7 +15398,7 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="163"/>
         <source>WavPack Files</source>
-        <translation>WavPackファイル</translation>
+        <translation>WavPack ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="316"/>
@@ -15672,17 +15408,17 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="334"/>
         <source>Exporting selected audio as WavPack</source>
-        <translation>選択したオーディオをWavPackとして書き出し中</translation>
+        <translation>選択したオーディオを WavPack としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="335"/>
         <source>Exporting the audio as WavPack</source>
-        <translation>オーディオをWavPackとして書き出し中</translation>
+        <translation>オーディオを WavPack としてエクスポート中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="21"/>
         <source>Low Quality (Fast)</source>
-        <translation>低品質（最速）</translation>
+        <translation>低品質 (最速)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="22"/>
@@ -15692,12 +15428,12 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="23"/>
         <source>High Quality (Slow)</source>
-        <translation>高品質（低速）</translation>
+        <translation>高品質 (低速)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="24"/>
         <source>Very High Quality (Slowest)</source>
-        <translation>最高品質（最低速）</translation>
+        <translation>最高品質 (最低速)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="30"/>
@@ -15718,18 +15454,20 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="70"/>
         <source>Create Correction(.wvc) File</source>
-        <translation>コレクション（.wvc）ファイルを作成</translation>
+        <translation>補正 (.wvc)ファイルを作成</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="39"/>
         <source>WavPack files</source>
-        <translation>WavPackファイル</translation>
+        <translation>WavPack ファイル</translation>
     </message>
     <message numerus="yes">
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation><numerusform>WavPackファイルをデコード中に%1エラーが起きました。</numerusform></translation>
+        <translation>
+            <numerusform>WavPack ファイルをデコード中に %1 エラーが起きました!</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -15737,17 +15475,17 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../src/importexport/labels/internal/labelsconfiguration.cpp" line="23"/>
         <source>Text file (*.txt)</source>
-        <translation>テキストファイル（*.txt）</translation>
+        <translation>テキストファイル (*.txt)</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/internal/labelsconfiguration.cpp" line="24"/>
         <source>SubRip text file (*.srt)</source>
-        <translation>SubRipテキストファイル（*.srt）</translation>
+        <translation>SubRip テキストファイル (*.srt)</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/internal/labelsconfiguration.cpp" line="25"/>
         <source>WebVTT file (*.vtt)</source>
-        <translation>WebVTTファイル（*.vtt）</translation>
+        <translation>WebVTT ファイル (*.vtt)</translation>
     </message>
 </context>
 <context>
@@ -15755,47 +15493,47 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="27"/>
         <source>Cut and leave gap</source>
-        <translation>カット（ギャップを残す）</translation>
+        <translation>切り取ってギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="29"/>
         <source>Cut and close gap on this track</source>
-        <translation>カット（このトラックのギャップを閉じる）</translation>
+        <translation>このトラックのギャップを切り取って閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="31"/>
         <source>Cut and close gap on all tracks</source>
-        <translation>カット（すべてのトラックのギャップを閉じる）</translation>
+        <translation>すべてのトラックのギャップを切り取って閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="36"/>
         <source>Paste and overlap</source>
-        <translation>ペースト（オーバーラップ）</translation>
+        <translation>貼り付けてオーバーラップ</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="38"/>
         <source>Paste and make room on this track</source>
-        <translation>ペースト（このトラックに空きを確保）</translation>
+        <translation>貼り付けてこのトラックに空き領域を確保</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="40"/>
         <source>Paste and make room on all tracks</source>
-        <translation>ペースト（すべてのトラックに空きを確保）</translation>
+        <translation>貼り付けてすべてのトラックに空き領域を確保</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
         <source>Delete and leave gap</source>
-        <translation>削除（ギャップを残す）</translation>
+        <translation>削除してギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="47"/>
         <source>Delete and close gap on this track</source>
-        <translation>削除（このトラックのギャップを閉じる）</translation>
+        <translation>このトラックで削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="49"/>
         <source>Delete and close gap on all tracks</source>
-        <translation>削除（すべてのトラックのギャップを閉じる）</translation>
+        <translation>すべてのトラックで削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="53"/>
@@ -15805,12 +15543,12 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="59"/>
         <source>Cut and…</source>
-        <translation>カットして…</translation>
+        <translation>切り取って…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="60"/>
         <source>Paste and…</source>
-        <translation>ペーストして…</translation>
+        <translation>貼り付けて…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="61"/>
@@ -15823,12 +15561,12 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="48"/>
         <source>SubRip text file</source>
-        <translation>SubRipテキストファイル</translation>
+        <translation>SubRip テキストファイル</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="49"/>
         <source>WebVTT file</source>
-        <translation>WebVTTファイル</translation>
+        <translation>WebVTT ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="54"/>
@@ -15838,7 +15576,7 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="56"/>
         <source>E&amp;xtended (with frequency ranges)</source>
-        <translation>拡張（周波数範囲付き）(&amp;X)</translation>
+        <translation>拡張 (周波数範囲付き)(&amp;X)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="126"/>
@@ -15853,12 +15591,12 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="758"/>
         <source>Importing WebVTT files is not currently supported.</source>
-        <translation>WebVTTファイルの読み込みは、現時点ではサポートしていません。</translation>
+        <translation>WebVTT ファイルの読み込みは、現時点ではサポートしていません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="782"/>
         <source>One or more saved labels could not be read.</source>
-        <translation>保存した1個以上のラベルが読み込めません。</translation>
+        <translation>保存した 1個以上のラベルが読み込めません。</translation>
     </message>
 </context>
 <context>
@@ -15904,7 +15642,7 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/ClassesPage.qml" line="199"/>
         <source>Open %1</source>
-        <translation>%1を開く</translation>
+        <translation>%1 を開く</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
@@ -15952,7 +15690,7 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
         <source>Creator, Mastering MuseScore</source>
-        <translation>Mastering MuseScore作成者</translation>
+        <translation>Mastering MuseScore 作成者</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
@@ -15963,13 +15701,13 @@ Whether you are just getting started with music notation software, or are a powe
 In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
 
 (Note: Mastering MuseScore is available in English only)</source>
-        <translation>世界で最も人気がある楽譜作成ソフトMuseScoreを学ぶための最も包括的なリソース、 Mastering MuseScoreへようこそ! 私はマーク・サバテッラです。10年以上前にMuseScoreをリリースして以来、開発、サポート、プロモーションに携わってきました。
+        <translation>世界で最も人気がある楽譜作成ソフト MuseScore を学ぶための最も包括的なリソース、 Mastering MuseScore へようこそ! 私はマーク・サバテッラです。10年以上前に MuseScore をリリースして以来、開発、サポート、プロモーションに携わってきました。
 
-楽譜作成ソフトを使い始めたばかりの方も、高度な浄書や再生テクニックを探求したいパワーユーザーの方も、私の代表的なオンラインコースMastering MuseScoreでは、MuseScoreを最大限に活用するために必要な知識をすべて網羅しています。
+楽譜作成ソフトを使い始めたばかりの方も、高度な浄書や再生テクニックを探求したいパワーユーザーの方も、私の代表的なオンラインコース Mastering MuseScore では、MuseScore を最大限に活用するために必要な知識をすべて網羅しています。
 
-さらに、 Mastering MuseScoreには、ミュージシャンによるサポートコミュニティ、ディスカッションスペース、ライブストリーム、そのほかの関連コースやサービスがあり、あなたの最高の音楽制作をサポートします。この機会に、最も有名な専門家の1人からMuseScore を学びましょう!
+さらに、 Mastering MuseScore には、ミュージシャンによるサポートコミュニティ、ディスカッションスペース、ライブストリーム、そのほかの関連コースやサービスがあり、あなたの最高の音楽制作をサポートします。この機会に、最も有名な専門家の 1人から MuseScore を学びましょう!
 
-（注: Mastering MuseScoreは英語だけでの提供です）</translation>
+ (注 : Mastering MuseScore は英語だけでの提供です)</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
@@ -15987,7 +15725,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="370"/>
         <source>Rectangle</source>
-        <translation>長方形</translation>
+        <translation>矩形</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="371"/>
@@ -15998,7 +15736,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="372"/>
         <source>Shaped</source>
-        <translation>シェープド</translation>
+        <translation>シェイプ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="58"/>
@@ -16149,7 +15887,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="52"/>
         <source>Low Quality (Fastest)</source>
-        <translation>低品質（最高速）</translation>
+        <translation>低品質 (最高速)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="53"/>
@@ -16164,19 +15902,19 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="55"/>
         <source>Best Quality (Slowest)</source>
-        <translation>最高品質（最低速）</translation>
+        <translation>最高品質 (最低速)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="63"/>
         <source>16-bit PCM</source>
         <extracomment>Audio data bit depth (precision): 16-bit integers</extracomment>
-        <translation>16ビットPCM</translation>
+        <translation>16ビット PCM</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="66"/>
         <source>24-bit PCM</source>
         <extracomment>Audio data bit depth (precision): 24-bit integers</extracomment>
-        <translation>24ビットPCM</translation>
+        <translation>24ビット PCM</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="69"/>
@@ -16206,7 +15944,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="121"/>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="150"/>
         <source>XML files</source>
-        <translation>XMLファイル</translation>
+        <translation>XML ファイル</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="133"/>
@@ -16316,7 +16054,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
 
 Error: %2</source>
         <extracomment>%1 is the module name, %2 is the system error message</extracomment>
-        <translation>”%1”モジュールを読み込むことができません。
+        <translation>“%1”モジュールを読み込むことができません。
 
 エラー: %2</translation>
     </message>
@@ -16325,9 +16063,9 @@ Error: %2</source>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
-        <translation>モジュール”%1”にはバージョン文字列がありません。
+        <translation>モジュール“%1”にはバージョン文字列がありません。
 
-このモジュールは読み込まれません</translation>
+このモジュールは読み込まれません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
@@ -16335,7 +16073,7 @@ It will not be loaded.</source>
 
 It will not be loaded.</source>
         <extracomment>%1 is the module name, %2 is the Audacity version string the module targets</extracomment>
-        <translation>モジュール“%1”はAudacityバージョン“%2”用です。
+        <translation>モジュール“%1”は Audacity バージョン“%2”用です。
 
 このモジュールは読み込まれません。</translation>
     </message>
@@ -16344,14 +16082,14 @@ It will not be loaded.</source>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
-        <translation>モジュール”%1”を初期化できませんでした。
+        <translation>モジュール“%1”を初期化できませんでした。
 
 このモジュールは読み込まれません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
         <source>Module “%1” found.</source>
-        <translation>モジュール”%1”が見つかりました。</translation>
+        <translation>モジュール“%1”が見つかりました。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
@@ -16375,7 +16113,7 @@ Only use modules from trusted sources</source>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="325"/>
         <source>Audacity Module Loader</source>
-        <translation>Audacityモジュールローダー</translation>
+        <translation>Audacity モジュールローダー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="328"/>
@@ -16387,14 +16125,14 @@ Only use modules from trusted sources</source>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
-        <translation>モジュール”%1”には必要な機能がまったく含まれていません。
+        <translation>モジュール“%1”には必要な機能がまったく含まれていません。
 
 このモジュールは読み込まれません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
         <source>Overwrite the plug-in file %1?</source>
-        <translation>プラグインファイル%1を上書きしますか?</translation>
+        <translation>プラグインファイル %1 を上書きしますか?</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="424"/>
@@ -16411,16 +16149,8 @@ It will not be loaded.</source>
         <source>Failed to register:
 %1</source>
         <extracomment>%1 is the error message explaining why registration failed</extracomment>
-        <translation>登録できませんでした:
+        <translation>登録できませんでした :
 %1</translation>
-    </message>
-    <message numerus="yes">
-        <source>Enable this plug-in?
-</source>
-        <comment>plug-ins</comment>
-        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation type="vanished"><numerusform>このプラグインを有効にしますか?
-</numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -16433,37 +16163,37 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="26"/>
         <source>Cut and leave gap</source>
-        <translation>カット（ギャップを残す）</translation>
+        <translation>切り取ってギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="28"/>
         <source>Cut and close gap on this track</source>
-        <translation>カット（このトラックのギャップを閉じる）</translation>
+        <translation>このトラックのギャップを切り取って閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="30"/>
         <source>Cut and close gap on all tracks</source>
-        <translation>カット（すべてのトラックのギャップを閉じる）</translation>
+        <translation>すべてのトラックのギャップを切り取って閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="35"/>
         <source>Delete and leave gap</source>
-        <translation>削除（ギャップを残す）</translation>
+        <translation>削除してギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="37"/>
         <source>Delete and close gap on this track</source>
-        <translation>削除（このトラックのギャップを閉じる）</translation>
+        <translation>このトラックで削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="39"/>
         <source>Delete and close gap on all tracks</source>
-        <translation>削除（すべてのトラックのギャップを閉じる）</translation>
+        <translation>すべてのトラックで削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="47"/>
         <source>Cut and…</source>
-        <translation>カットして…</translation>
+        <translation>切り取って…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="48"/>
@@ -16482,12 +16212,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation>複数インスタンスを起動</translation>
+        <translation>マルチインスタンス</translation>
     </message>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation>複数ウインドウの情報を表示</translation>
+        <translation>マルチウィンドウ情報を表示</translation>
     </message>
 </context>
 <context>
@@ -16687,7 +16417,7 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-network-manager/MultipartData.cpp" line="102"/>
         <location filename="../../au3/libraries/au3-network-manager/MultipartData.cpp" line="109"/>
         <source>Failed to open the file for upload: %1</source>
-        <translation>アップロードするファイルを開けませんでした: %1</translation>
+        <translation>アップロードするファイルを開けませんでした : %1</translation>
     </message>
 </context>
 <context>
@@ -16716,19 +16446,19 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="393"/>
         <source>bar:beat</source>
         <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements.</extracomment>
-        <translation>小節: ビート</translation>
+        <translation>小節:ビート</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="398"/>
         <source>bar:beat:tick</source>
         <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements. &quot;tick&quot; corresponds to a 16th note.</extracomment>
-        <translation>小節: ビート: ティック</translation>
+        <translation>小節:ビート:ティック</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="688"/>
         <source>01000,01000 seconds</source>
-        <extracomment>Format string for displaying time in seconds. Change the comma * in the middle to the 1000s separator for your locale, and the 'seconds' * on the end to the word for seconds. Don't change the numbers.</extracomment>
-        <translation>0100万010000秒</translation>
+        <extracomment>Format string for displaying time in seconds. Change the comma * in the middle to the 1000s separator for your locale, and the &apos;seconds&apos; * on the end to the word for seconds. Don&apos;t change the numbers.</extracomment>
+        <translation>01000,01000 秒</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="694"/>
@@ -16739,7 +16469,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="700"/>
         <source>01000,01000&gt;01000 seconds</source>
-        <extracomment>Format string for displaying time in seconds and milliseconds * as fractional seconds. Change the comma in the middle to the 1000s separator * for your locale, and the 'seconds' on the end to the word for seconds. * Don't change the numbers. The decimal separator is specified using '&lt;' if * your languages uses a ',' or to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in seconds and milliseconds * as fractional seconds. Change the comma in the middle to the 1000s separator * for your locale, and the &apos;seconds&apos; on the end to the word for seconds. * Don&apos;t change the numbers. The decimal separator is specified using &apos;&lt;&apos; if * your languages uses a &apos;,&apos; or to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
         <translation>01000,01000&gt;01000 秒</translation>
     </message>
     <message>
@@ -16751,26 +16481,26 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="711"/>
         <source>0100 h 060 m 060 s</source>
-        <extracomment>Format string for displaying time in hours, minutes and * seconds. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes and 's' to the abbreviation for seconds. Don't * change the numbers unless there aren't 60 seconds in a minute in your * locale</extracomment>
-        <translation>0100時間060分060秒</translation>
+        <extracomment>Format string for displaying time in hours, minutes and * seconds. Change the &apos;h&apos; to the abbreviation for hours, &apos;m&apos; to the * abbreviation for minutes and &apos;s&apos; to the abbreviation for seconds. Don&apos;t * change the numbers unless there aren&apos;t 60 seconds in a minute in your * locale</extracomment>
+        <translation>0100時間 060分 060秒</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="717"/>
         <source>dd:hh:mm:ss</source>
         <extracomment>Name of time display format that shows time in days, hours, * minutes and seconds</extracomment>
-        <translation>日: 時: 分: 秒</translation>
+        <translation>日:時:分:秒</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="723"/>
         <source>0100 days 024 h 060 m 060 s</source>
-        <extracomment>Format string for displaying time in days, hours, minutes and * seconds. Change the 'days' to the word for days, 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes and 's' to the * abbreviation for seconds. Don't change the numbers unless there aren't * 24 hours in a day in your locale</extracomment>
-        <translation>0100日024時間060分060秒</translation>
+        <extracomment>Format string for displaying time in days, hours, minutes and * seconds. Change the &apos;days&apos; to the word for days, &apos;h&apos; to the abbreviation * for hours, &apos;m&apos; to the abbreviation for minutes and &apos;s&apos; to the * abbreviation for seconds. Don&apos;t change the numbers unless there aren&apos;t * 24 hours in a day in your locale</extracomment>
+        <translation>0100日 024時間 060分 060秒</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="735"/>
         <source>0100 h 060 m 060&gt;0100 s</source>
-        <extracomment>Format string for displaying time in hours, minutes, seconds * and hundredths of a second. Change the 'h' to the abbreviation for hours, * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds * (the hundredths are shown as decimal seconds). Don't change the numbers * unless there aren't 60 minutes in an hour in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100時間060分060&gt;0100秒</translation>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and hundredths of a second. Change the &apos;h&apos; to the abbreviation for hours, * &apos;m&apos; to the abbreviation for minutes and &apos;s&apos; to the abbreviation for seconds * (the hundredths are shown as decimal seconds). Don&apos;t change the numbers * unless there aren&apos;t 60 minutes in an hour in your locale. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>0100時間 060分 060&gt;0100秒</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="736"/>
@@ -16780,14 +16510,14 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="748"/>
         <source>0100 h 060 m 060&gt;01000 s</source>
-        <extracomment>Format string for displaying time in hours, minutes, seconds * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes and 's' to the abbreviation for seconds (the * milliseconds are shown as decimal seconds) . Don't change the numbers * unless there aren't 60 minutes in an hour in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100時間060分060&gt;01000秒</translation>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and milliseconds. Change the &apos;h&apos; to the abbreviation for hours, &apos;m&apos; to the * abbreviation for minutes and &apos;s&apos; to the abbreviation for seconds (the * milliseconds are shown as decimal seconds) . Don&apos;t change the numbers * unless there aren&apos;t 60 minutes in an hour in your locale. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>0100時間 060分 060&gt;01000秒</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="761"/>
         <source>0100 h 060 m 060 s+&gt;# samples</source>
-        <extracomment>Format string for displaying time in hours, minutes, seconds * and samples. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes, 's' to the abbreviation for seconds and * translate samples . Don't change the numbers * unless there aren't 60 seconds in a minute in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100時間060分060秒+&gt;#サンプル</translation>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and samples. Change the &apos;h&apos; to the abbreviation for hours, &apos;m&apos; to the * abbreviation for minutes, &apos;s&apos; to the abbreviation for seconds and * translate samples . Don&apos;t change the numbers * unless there aren&apos;t 60 seconds in a minute in your locale. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>0100時間 060分 060秒+&gt;#サンプル</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="769"/>
@@ -16798,122 +16528,122 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="774"/>
         <source>01000,01000,01000 samples|#</source>
-        <extracomment>Format string for displaying time in samples (lots of samples). * Change the ',' to the 1000s separator for your locale, and translate * samples. If 1000s aren't a base multiple for your number system, then you * can change the numbers to an appropriate one, and put a 0 on the front</extracomment>
-        <translation>010億010000万010000サンプル|#</translation>
+        <extracomment>Format string for displaying time in samples (lots of samples). * Change the &apos;,&apos; to the 1000s separator for your locale, and translate * samples. If 1000s aren&apos;t a base multiple for your number system, then you * can change the numbers to an appropriate one, and put a 0 on the front</extracomment>
+        <translation>01000,01000,01000 サンプル|#</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="780"/>
         <source>hh:mm:ss + film frames (24 fps)</source>
         <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at 24 frames per second (commonly used for films)</extracomment>
-        <translation>時: 分: 秒 + フィルムフレーム（24 fps）</translation>
+        <translation>時:分:秒 + フィルムフレーム (24 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="788"/>
         <source>0100 h 060 m 060 s+&gt;24 frames</source>
-        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames at 24 frames per second. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames' . Don't change the numbers * unless there aren't 60 seconds in a minute in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100時間060分060秒+&gt;24フレーム</translation>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames at 24 frames per second. Change the &apos;h&apos; to the abbreviation * for hours, &apos;m&apos; to the abbreviation for minutes, &apos;s&apos; to the abbreviation * for seconds and translate &apos;frames&apos; . Don&apos;t change the numbers * unless there aren&apos;t 60 seconds in a minute in your locale. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>0100時間 060分 060秒+&gt;24フレーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="794"/>
         <source>film frames (24 fps)</source>
         <extracomment>Name of time display format that shows time in frames (lots of * frames) at 24 frames per second (commonly used for films)</extracomment>
-        <translation>フィルムフレーム（24 fps）</translation>
+        <translation>フィルムフレーム (24 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="799"/>
         <source>01000,01000 frames|24</source>
-        <extracomment>Format string for displaying time in frames at 24 frames per * second. Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone</extracomment>
-        <translation>0100万010000フレーム|24</translation>
+        <extracomment>Format string for displaying time in frames at 24 frames per * second. Change the comma * in the middle to the 1000s separator for your locale, * translate &apos;frames&apos; and leave the rest alone</extracomment>
+        <translation>01000,01000 フレーム|24</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="806"/>
         <source>hh:mm:ss + NTSC drop frames</source>
         <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at NTSC TV drop-frame rate (used for American / * Japanese TV, and very odd)</extracomment>
-        <translation>時: 分: 秒 + NTSCドロップフレーム</translation>
+        <translation>時:分:秒 + NTSCドロップフレーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="813"/>
         <source>0100 h 060 m 060 s+&gt;30 frames|N</source>
-        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Leave the |N alone, it's important! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100時間060分060秒+&gt;30フレーム|N</translation>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the &apos;h&apos; to the abbreviation * for hours, &apos;m&apos; to the abbreviation for minutes, &apos;s&apos; to the abbreviation * for seconds and translate &apos;frames&apos;. Leave the |N alone, it&apos;s important! * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>0100時間 060分 060秒+&gt;30フレーム|N</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="820"/>
         <source>hh:mm:ss + NTSC non-drop frames</source>
-        <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at NTSC TV non-drop-frame rate (used for American / * Japanese TV, and doesn't quite match wall time</extracomment>
-        <translation>時: 分: 秒 + NTSCノンドロップフレーム</translation>
+        <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at NTSC TV non-drop-frame rate (used for American / * Japanese TV, and doesn&apos;t quite match wall time</extracomment>
+        <translation>時:分:秒 + NTSC ノンドロップフレーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="828"/>
         <source>0100 h 060 m 060 s+&gt;030 frames| .999000999</source>
-        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Leave the | .999000999 alone, * the whole things really is slightly off-speed! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100時間060分060秒+&gt;030フレーム| .999000999</translation>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the &apos;h&apos; to the abbreviation * for hours, &apos;m&apos; to the abbreviation for minutes, &apos;s&apos; to the abbreviation * for seconds and translate &apos;frames&apos;. Leave the | .999000999 alone, * the whole things really is slightly off-speed! * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>0100時間 060分 060秒+&gt;030 フレーム| .999000999</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="834"/>
         <source>NTSC frames</source>
         <extracomment>Name of time display format that shows time in frames at NTSC * TV frame rate (used for American / Japanese TV</extracomment>
-        <translation>NTSCフレーム</translation>
+        <translation>NTSC フレーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="840"/>
         <source>01000,01000 frames|29.97002997</source>
-        <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone. That really is the frame * rate!</extracomment>
-        <translation>0100万010000フレーム|29.97002997</translation>
+        <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate &apos;frames&apos; and leave the rest alone. That really is the frame * rate!</extracomment>
+        <translation>01000,01000 フレーム|29.97002997</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="846"/>
         <source>hh:mm:ss + PAL frames (25 fps)</source>
         <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at PAL TV frame rate (used for European TV)</extracomment>
-        <translation>時: 分: 秒 + PALフレーム（25 fps）</translation>
+        <translation>時:分:秒 + PALフレーム (25 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="853"/>
         <source>0100 h 060 m 060 s+&gt;25 frames</source>
-        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with PAL TV frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Nice simple time code! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100時間060分060秒+&gt;25フレーム</translation>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with PAL TV frames. Change the &apos;h&apos; to the abbreviation * for hours, &apos;m&apos; to the abbreviation for minutes, &apos;s&apos; to the abbreviation * for seconds and translate &apos;frames&apos;. Nice simple time code! * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>0100時間 060分 060秒+&gt;25フレーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="859"/>
         <source>PAL frames (25 fps)</source>
         <extracomment>Name of time display format that shows time in frames at PAL * TV frame rate (used for European TV)</extracomment>
-        <translation>PALフレーム（25 fps）</translation>
+        <translation>PAL フレーム (25 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="864"/>
         <source>01000,01000 frames|25</source>
-        <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone.</extracomment>
-        <translation>0100万010000フレーム|25</translation>
+        <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate &apos;frames&apos; and leave the rest alone.</extracomment>
+        <translation>01000,01000 フレーム|25</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="870"/>
         <source>hh:mm:ss + CDDA frames (75 fps)</source>
         <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at CD Audio frame rate (75 frames per second)</extracomment>
-        <translation>時:分:秒 + CDDA フレーム（75 fps）</translation>
+        <translation>時:分:秒 + CDDA フレーム (75 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="877"/>
         <source>0100 h 060 m 060 s+&gt;75 frames</source>
-        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with CD Audio frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100時間060分060秒+&gt;75フレーム</translation>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with CD Audio frames. Change the &apos;h&apos; to the abbreviation * for hours, &apos;m&apos; to the abbreviation for minutes, &apos;s&apos; to the abbreviation * for seconds and translate &apos;frames&apos;. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>0100時間 060分 060秒+&gt;75フレーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="883"/>
         <source>CDDA frames (75 fps)</source>
         <extracomment>Name of time display format that shows time in frames at CD * Audio frame rate (75 frames per second)</extracomment>
-        <translation>CDDAフレーム（75 fps）</translation>
+        <translation>CDDA フレーム (75 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="888"/>
         <source>01000,01000 frames|75</source>
-        <extracomment>Format string for displaying time in frames with CD Audio * frames. Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone</extracomment>
-        <translation>0100万010000フレーム|75</translation>
+        <extracomment>Format string for displaying time in frames with CD Audio * frames. Change the comma * in the middle to the 1000s separator for your locale, * translate &apos;frames&apos; and leave the rest alone</extracomment>
+        <translation>01000,01000 フレーム|75</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="908"/>
         <source>010,01000&gt;0100 Hz</source>
-        <extracomment>Format string for displaying frequency in hertz. Change * the decimal point for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>010000&gt;0100Hz</translation>
+        <extracomment>Format string for displaying frequency in hertz. Change * the decimal point for your locale. Don&apos;t change the numbers. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>010,01000&gt;0100 Hz</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="909"/>
@@ -16929,7 +16659,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="921"/>
         <source>01000&gt;01000 kHz|0.001</source>
-        <extracomment>Format string for displaying frequency in kilohertz. Change * the decimal point for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying frequency in kilohertz. Change * the decimal point for your locale. Don&apos;t change the numbers. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
         <translation>01000&gt;01000kHz|0.001</translation>
     </message>
     <message>
@@ -16940,8 +16670,8 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="943"/>
         <source>100&gt;01000 octaves|1.442695041</source>
-        <extracomment>Format string for displaying log of frequency in octaves. * Change the decimal points for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>100&gt;01000オクターブ|1.442695041</translation>
+        <extracomment>Format string for displaying log of frequency in octaves. * Change the decimal points for your locale. Don&apos;t change the numbers. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>100&gt;01000 オクターブ|1.442695041</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="945"/>
@@ -16958,8 +16688,8 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="959"/>
         <source>1000 semitones &gt;0100 cents|17.312340491</source>
-        <extracomment>Format string for displaying log of frequency in semitones * and cents. * Change the decimal points for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>1000半音&gt;0100セント|17.312340491</translation>
+        <extracomment>Format string for displaying log of frequency in semitones * and cents. * Change the decimal points for your locale. Don&apos;t change the numbers. * The decimal separator is specified using &apos;&lt;&apos; if your language uses a &apos;,&apos; or * to &apos;&gt;&apos; if your language uses a &apos;.&apos;.</extracomment>
+        <translation>1000 半音 &gt;0100 セント|17.312340491</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="961"/>
@@ -16976,14 +16706,14 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="972"/>
         <source>10&gt;01000 decades|0.434294482</source>
-        <extracomment>Format string for displaying log of frequency in decades. * Change the decimal points for your locale. Don't change the numbers.</extracomment>
-        <translation>10&gt;01000ディケイド|0.434294482</translation>
+        <extracomment>Format string for displaying log of frequency in decades. * Change the decimal points for your locale. Don&apos;t change the numbers.</extracomment>
+        <translation>10&gt;01000 ディケイド|0.434294482</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="974"/>
         <source>thousandths of decades</source>
         <extracomment>a decade is a tenfold increase of frequency</extracomment>
-        <translation>千分の一ディケイド</translation>
+        <translation>千分の一 ディケイド</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="86"/>
@@ -17061,12 +16791,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="47"/>
         <source>Top bar (horizontal)</source>
-        <translation>トップバー（水平）</translation>
+        <translation>トップバー (水平)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="51"/>
         <source>Side bar (vertical)</source>
-        <translation>サイドバー（垂直）</translation>
+        <translation>サイドバー (垂直)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="85"/>
@@ -17086,22 +16816,22 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="121"/>
         <source>Logarithmic (dB)</source>
-        <translation>対数（dB）</translation>
+        <translation>対数 (dB)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="125"/>
         <source>Linear (dB)</source>
-        <translation>リニア（dB）</translation>
+        <translation>リニア (dB)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="129"/>
         <source>Linear (amp)</source>
-        <translation>リニア（振幅）</translation>
+        <translation>リニア (振幅)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="162"/>
         <source>dB range</source>
-        <translation>dBレンジ</translation>
+        <translation>dB レンジ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
@@ -17131,17 +16861,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Rectangle</source>
-        <translation>矩形ディザ</translation>
+        <translation>矩形</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Triangle</source>
-        <translation>三角形ディザ</translation>
+        <translation>三角波</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Shaped</source>
-        <translation>シェイプドディザ</translation>
+        <translation>シェイプ</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml" line="44"/>
@@ -17206,12 +16936,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="49"/>
         <source>No usable audio API is available.</source>
-        <translation>使用できるオーディオAPIがありません。</translation>
+        <translation>使用できるオーディオ API がありません。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="51"/>
         <source>No ASIO device is available.</source>
-        <translation>ASIOデバイスがありません。</translation>
+        <translation>ASIO デバイスがありません。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="53"/>
@@ -17335,7 +17065,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="55"/>
         <source>Dragging on the center line may adjust the height of the channel:</source>
-        <translation>センターラインをドラッグしてチャンネルの高さを調整: </translation>
+        <translation>センターラインをドラッグしてチャンネルの高さを調整 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
@@ -17388,7 +17118,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="38"/>
         <source>Clip style</source>
-        <translation>クリップのスタイル</translation>
+        <translation>クリップスタイル</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="69"/>
@@ -17448,22 +17178,22 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="34"/>
         <source>Group effects</source>
-        <translation>エフェクトをグループ表示</translation>
+        <translation>グループエフェクト</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="47"/>
         <source>Display effects in one flat list</source>
-        <translation>すべてのエフェクトを一覧表示</translation>
+        <translation>エフェクトを一覧表示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="26"/>
         <source>FFmpeg library version:</source>
-        <translation>FFmpegライブラリバージョン: </translation>
+        <translation>FFmpeg ライブラリバージョン :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="42"/>
         <source>FFmpeg library not found</source>
-        <translation>FFmpegライブラリが見つかりません</translation>
+        <translation>FFmpeg ライブラリが見つかりません</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="44"/>
@@ -17483,7 +17213,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="67"/>
         <source>Language %1</source>
-        <translation>言語%1</translation>
+        <translation>言語 %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="80"/>
@@ -17493,12 +17223,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="15"/>
         <source>Meter dB range</source>
-        <translation>メーターdBレンジ</translation>
+        <translation>メーター dB レンジ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="27"/>
         <source>dB range</source>
-        <translation>dBレンジ</translation>
+        <translation>dB レンジ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="11"/>
@@ -17523,12 +17253,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="70"/>
         <source>Example: 1,000,000.99</source>
-        <translation>例: 1,000,000.99</translation>
+        <translation>例 : 1,000,000.99</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PasteBehaviorSection.qml" line="58"/>
         <source>Always paste audio as a new clip</source>
-        <translation>オーディオを常に新規クリップとしてペースト</translation>
+        <translation>オーディオを常に新規クリップとして貼り付け</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="14"/>
@@ -17548,12 +17278,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="14"/>
         <source>Recording behavior</source>
-        <translation>録音時の動作</translation>
+        <translation>録音動作</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="27"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
-        <translation>入力モニタリングをオンにする（録音中にオーディオを再生）</translation>
+        <translation>入力モニタリングをオンにする (録音中に音声を再生)</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="45"/>
@@ -17603,7 +17333,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TemporaryFilesSection.qml" line="73"/>
         <source>Folder in which unsaved projects and other data are kept</source>
-        <translation>保存していないプロジェクトやその他のデータを含むフォルダ</translation>
+        <translation>保存していないプロジェクトやその他のデータを含むフォルダー</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemeAdditionalOptionsSection.qml" line="40"/>
@@ -17623,17 +17353,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="80"/>
         <source>Follow system theme</source>
-        <translation>システム設定</translation>
+        <translation>システムのテーマに従う</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="95"/>
         <source>Enable high-contrast</source>
-        <translation>ハイコントラストを有効にする</translation>
+        <translation>高コントラストを有効にする</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="34"/>
         <source>UI colors</source>
-        <translation>UIカラー</translation>
+        <translation>UI カラー</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
@@ -17691,7 +17421,7 @@ It will not be loaded.</source>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="139"/>
         <source>Please select a path that contains “%1”</source>
         <extracomment>%1 is the FFmpeg avformat library file name (e.g. libavformat.dylib)</extracomment>
-        <translation>”%1”を含むパスを選択してください</translation>
+        <translation>“%1”を含むパスを選択してください</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
@@ -17713,7 +17443,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="155"/>
         <source>Audacity already has detected a valid FFmpeg version. Do you want to choose another FFmpeg installation instead?</source>
-        <translation>Audacityはすでに有効なFFmpegのバージョンを検出しています。ほかのFFmpegをインストールしてもよろしいですか?</translation>
+        <translation>Audacity はすでに有効な FFmpeg のバージョンを検出しています。ほかの FFmpeg をインストールしますか?</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="160"/>
@@ -17728,24 +17458,24 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="166"/>
         <source>FFmpeg has already been found</source>
-        <translation>FFmpegはすでに検出されています</translation>
+        <translation>FFmpeg はすでに検出されています</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
         <source>Locate %1</source>
-        <translation>%1を探す</translation>
+        <translation>%1 を探す</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="44"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation>%1（モノラル）録音チャンネル</translation>
+        <translation>%1 (モノラル)録音チャンネル</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="47"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation>%1（ステレオ）録音チャンネル</translation>
+        <translation>%1 (ステレオ)録音チャンネル</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
@@ -17766,12 +17496,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="61"/>
         <source>No usable audio API is available.</source>
-        <translation>使用できるオーディオAPIがありません。</translation>
+        <translation>使用できるオーディオ API がありません。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="63"/>
         <source>No ASIO device is available.</source>
-        <translation>ASIOデバイスがありません。</translation>
+        <translation>ASIO デバイスがありません。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
@@ -17782,12 +17512,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="67"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation>オーディオ設定の変更中に内エラーが起きました。</translation>
+        <translation>オーディオ設定の変更中に内部エラーが起きました。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="93"/>
         <source>System default: %1</source>
-        <translation>システムデフォルト: %1</translation>
+        <translation>システムデフォルト : %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="161"/>
@@ -17809,24 +17539,24 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="265"/>
         <source>The audio stream could not be restored after closing the ASIO settings.</source>
-        <translation>ASIO設定を閉じた後にオーディオストリームを復元できませんでした。</translation>
+        <translation>ASIO 設定を閉じた後にオーディオストリームを復元できませんでした。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="275"/>
         <source>Unable to open ASIO settings</source>
-        <translation>ASIO設定を開くことができません</translation>
+        <translation>ASIO 設定を開くことができません</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="535"/>
         <source>Other</source>
-        <translation>その他…</translation>
+        <translation>その他</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
         <source>Your version of “%1” is up to date.</source>
         <extracomment>%1 is the name of the language whose translation files are up to date</extracomment>
-        <translation>このバージョン”%1”は最新の状態です。</translation>
+        <translation>このバージョン“%1”は最新の状態です。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="91"/>
@@ -17847,12 +17577,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="205"/>
         <source>Changes to temporary directory will not take effect until Audacity is restarted</source>
-        <translation>一時ディレクトリの変更はAudacityを再起動するまで有効になりません</translation>
+        <translation>一時ディレクトリの変更は Audacity を再起動するまで有効になりません</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="195"/>
         <source>General</source>
-        <translation>一般</translation>
+        <translation>全般</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="164"/>
@@ -17896,11 +17626,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
         <source>Export</source>
-        <translation>書き出し</translation>
-    </message>
-    <message>
-        <source>Cloud</source>
-        <translation type="vanished">クラウド</translation>
+        <translation>エクスポート</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="225"/>
@@ -17911,10 +17637,6 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
         <source>Plugins</source>
         <translation>プラグイン</translation>
-    </message>
-    <message>
-        <source>Advanced options</source>
-        <translation type="vanished">詳細オプション</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
@@ -17944,12 +17666,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="29"/>
         <source>Music imports</source>
-        <translation>ミュージックの読み込み</translation>
+        <translation>ミュージックをインポート</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
         <source>Detect tempo in imported files:</source>
-        <translation>読み込んだファイルからテンポを検出:</translation>
+        <translation>次の読み込んだファイルからテンポを検出 :</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="121"/>
@@ -17969,7 +17691,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
         <source>Remove</source>
-        <translation>消去</translation>
+        <translation>削除</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="80"/>
@@ -17989,22 +17711,22 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Custom LV2 plugins location</source>
-        <translation>LV2プラグインの場所をカスタマイズ</translation>
+        <translation>LV2 プラグインの場所をカスタマイズ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="53"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation>カスタムLV2プラグインの場所を選択</translation>
+        <translation>カスタム LV2 プラグインの場所を選択</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="87"/>
         <source>Custom VST3 plugins location</source>
-        <translation>カスタムVST3プラグインの場所</translation>
+        <translation>カスタム VST3 プラグインの場所</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="88"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation>カスタムVST3プラグインの場所を選択</translation>
+        <translation>カスタム VST3 プラグインの場所を選択</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
@@ -18019,17 +17741,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
         <source>Export behavior</source>
-        <translation>書き出し時の動作</translation>
+        <translation>エクスポート動作</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation>’どのように書き出ししますか?’ダイアログを表示</translation>
+        <translation>’どのようにエクスポートしますか?’ダイアログを表示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
         <source>Save behavior</source>
-        <translation>保存時の動作</translation>
+        <translation>保存動作</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="29"/>
@@ -18259,7 +17981,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="154"/>
         <source>New &amp; recent</source>
-        <translation>新規・最近</translation>
+        <translation>新規・履歴</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="162"/>
@@ -18300,7 +18022,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="416"/>
         <source>Project manager (online)</source>
-        <translation>プロジェクトマネージャ（オンライン）</translation>
+        <translation>プロジェクトマネージャ (オンライン)</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="435"/>
@@ -18320,7 +18042,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="158"/>
         <source>Publish your finished projects on Audio.com</source>
-        <translation>完了したプロジェクトをaudio.comで公開</translation>
+        <translation>完了したプロジェクトを audio.com で公開</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
@@ -18387,7 +18109,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/audacityproject.cpp" line="135"/>
         <source>Import</source>
         <extracomment>Name of the undo history entry created by importing files</extracomment>
-        <translation>読み込む</translation>
+        <translation>インポート</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/audacityproject.cpp" line="103"/>
@@ -18403,7 +18125,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
         <source>Could not open file: %1</source>
-        <translation>このファイルを開けません: %1</translation>
+        <translation>このファイルを開けません : %1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
@@ -18417,23 +18139,23 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
         <source>Upload project to audio.com…</source>
-        <translation>audio.comへプロジェクトをアップロード…</translation>
+        <translation>audio.com へプロジェクトをアップロード…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
         <source>Audacity project files</source>
-        <translation>Audacityプロジェクトファイル</translation>
+        <translation>Audacity プロジェクトファイル</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
         <source>Audacity 3 files</source>
-        <translation>Audacity 3のファイル</translation>
+        <translation>Audacity 3 のファイル</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
         <source>Audacity 4 files</source>
-        <translation>Audacity 4のファイル</translation>
+        <translation>Audacity 4 のファイル</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
@@ -18463,12 +18185,12 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Visit audio.com</source>
-        <translation>audio.comに接続</translation>
+        <translation>audio.com に接続</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
         <source>Load latest</source>
-        <translation>最新版を読み込む</translation>
+        <translation>最新版を読み込み</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
@@ -18487,7 +18209,7 @@ It will not be loaded.</source>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>保存された変更内容はすべてクラウドにアップデートされます。
-audio.comのアップデートされたプロジェクトページから、このファイルを管理できます。</translation>
+audio.com のアップデートされたプロジェクトページから、このファイルを管理できます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
@@ -18529,17 +18251,17 @@ audio.comのアップデートされたプロジェクトページから、こ�
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
         <source>Raw files</source>
-        <translation>RAWファイル</translation>
+        <translation>RAW ファイル</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
         <source>Do you want to save changes to the project before closing?</source>
-        <translation>プロジェクトを閉じる前に、変更内容を保存してもよろしいですか?</translation>
+        <translation>プロジェクトを閉じる前に、変更内容を保存しますか?</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
-        <translation>プロジェクト“%1”を閉じる前に、変更内容を保存してもよろしいですか?</translation>
+        <translation>プロジェクト“%1”を閉じる前に、変更内容を保存しますか?</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
@@ -18554,7 +18276,7 @@ audio.comのアップデートされたプロジェクトページから、こ�
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
         <source>Resuming sync to audio.com…</source>
-        <translation>audio.comとの同期を再開中…</translation>
+        <translation>audio.com との同期を再開中…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
@@ -18567,7 +18289,7 @@ audio.comのアップデートされたプロジェクトページから、こ�
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
-        <translation>ファイル%1を読み込めません</translation>
+        <translation>ファイル %1 を読み込めません</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
@@ -18591,13 +18313,13 @@ audio.comのアップデートされたプロジェクトページから、こ�
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="40"/>
         <source>Audacity exception occurred</source>
-        <translation>Audacityに例外処理が発生しました</translation>
+        <translation>Audacity に例外処理が発生しました</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="41"/>
         <source>An Audacity exception occurred while trying to open the project file:
 “%1”</source>
-        <translation>次のプロジェクトファイルを開いた際に、Audacityに例外処理が発生しました。
+        <translation>次のプロジェクトファイルを開いた際に、Audacity に例外処理が発生しました。
 “%1”</translation>
     </message>
     <message>
@@ -18610,7 +18332,7 @@ audio.comのアップデートされたプロジェクトページから、こ�
         <source>An error occurred while trying to access the project database.
 Failed to load project: “%1”</source>
         <translation>プロジェクトデータベースへのアクセス時にエラーが起きました。
-読み込めなかったプロジェクト: “%1”</translation>
+読み込めなかったプロジェクト : “%1”</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="52"/>
@@ -18633,7 +18355,7 @@ Cannot be found or accessed at this location. If it’s stored on an external or
 Please check the file’s properties and permissions, ensure it is not stored on a drive or folder with restricted access, or try running Audacity as an administrator.</source>
         <translation>このファイルを開く場合は: 
 “%1”
-ファイルのプロパティとアクセス権を確認し、アクセスが制限されているドライブやフォルダに保存していないかを確認してください。また、管理者としてAudacityを実行してください。</translation>
+ファイルのプロパティとアクセス権を確認し、アクセスが制限されているドライブやフォルダーに保存していないかを確認してください。また、管理者として Audacity を実行してください。</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="63"/>
@@ -18645,9 +18367,9 @@ Please check the file’s properties and permissions, ensure it is not stored on
         <source>To open this file:
 “%1”
 Please remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.</source>
-        <translation>このファイルを開く場合は: 
+        <translation>このファイルを開く場合は : 
 “%1”
-ファイルのプロパティを確認し、書き込み保護を解除するか、書き込み保護されていないドライブやフォルダに保存されていることを確認するか、管理者としてAudacityを実行してください。</translation>
+ファイルのプロパティを確認し、書き込み保護を解除するか、書き込み保護されていないドライブやフォルダーに保存されていることを確認するか、管理者として Audacity を実行してください。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
@@ -18660,7 +18382,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="374"/>
         <source>Connection to project file is null</source>
-        <translation>プロジェクトファイルとの接続はnullです</translation>
+        <translation>プロジェクトファイルとの接続は null です</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
@@ -18682,29 +18404,29 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
         <source>Discarding undo/redo history</source>
-        <translation>取り消す/やり直すの履歴を破棄</translation>
+        <translation>元に戻す/やり直すの履歴を破棄</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="92"/>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="120"/>
         <source>(%1): %2</source>
         <extracomment>%1 is the SQLite error code, %2 is the error message</extracomment>
-        <translation>（%1）: %2</translation>
+        <translation>(%1): %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="186"/>
         <source>Failed to set page size for database %1</source>
-        <translation>データベース%1のページサイズを設定できませんでした</translation>
+        <translation>データベース %1 のページサイズを設定できませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="195"/>
         <source>Failed to set safe mode on primary connection to %1</source>
-        <translation>%1へのプライマリ接続に対してセーフモードを設定できませんでした</translation>
+        <translation>%1 へのプライマリ接続に対してセーフモードを設定できませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="213"/>
         <source>Failed to set safe mode on checkpoint connection to %1</source>
-        <translation>%1へのチェックポイント接続に対してセーフモードを設定できませんでした</translation>
+        <translation>%1 へのチェックポイント接続に対してセーフモードを設定できませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>
@@ -18715,7 +18437,7 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="248"/>
         <source>Checkpointing %1</source>
         <extracomment>%1 is the name of the project being checkpointed</extracomment>
-        <translation>%1のチェックポイントを作成中</translation>
+        <translation>%1 のチェックポイントを作成中</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="254"/>
@@ -18729,7 +18451,7 @@ Please remove the write protection by checking the file’s properties, ensuring
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>パスに書き込めませんでした: %1
+        <translation>%1 に書き込めませんでした。
 </translation>
     </message>
     <message>
@@ -18746,7 +18468,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 
 %1</source>
         <extracomment>%1 is the name of the savepoint</extracomment>
-        <translation>セーブポイントを作成できませんでした:
+        <translation>セーブポイントを作成できませんでした :
 
 %1</translation>
     </message>
@@ -18757,7 +18479,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 
 %1</source>
         <extracomment>%1 is the name of the savepoint</extracomment>
-        <translation>セーブポイントを解放できませんでした:
+        <translation>セーブポイントを解放できませんでした :
 
 %1</translation>
     </message>
@@ -18767,7 +18489,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 Please select a bigger temporary directory location in
 Directories Preferences.</source>
         <extracomment>%1 is the drive or volume name</extracomment>
-        <translation>%1ドライブのストレージに空きがほとんどありません。
+        <translation>%1 ドライブのストレージに空きがほとんどありません。
 もっと余裕のある一時ディレクトリの場所を
 設定で選択してください。</translation>
     </message>
@@ -18782,7 +18504,7 @@ Directories Preferences.</source>
 
 %1</source>
         <extracomment>%1 is the database file path</extracomment>
-        <translation>データベースファイルを開けません:
+        <translation>データベースファイルを開けません :
 
 %1</translation>
     </message>
@@ -18802,7 +18524,7 @@ Directories Preferences.</source>
 
 %1</source>
         <extracomment>%1 is the SQL command that failed to execute</extracomment>
-        <translation>プロジェクトファイルコマンドを実行できません:
+        <translation>プロジェクトファイルコマンドを実行できません :
 
 %1</translation>
     </message>
@@ -18812,21 +18534,21 @@ Directories Preferences.</source>
 (Unable to create the required temporary files)</source>
         <extracomment>An error message.</extracomment>
         <translation>プロジェクトが読み出し専用ディレクトリに置かれています
-（処理に必要な一時ファイルを作成できません）</translation>
+ (処理に必要な一時ファイルを作成できません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="794"/>
         <source>This is not an Audacity project file</source>
-        <translation>これはAudacityのプロジェクトファイルではありません</translation>
+        <translation>これは Audacity のプロジェクトファイルではありません</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="810"/>
         <source>This project was created with a newer version of Audacity.
 
 You will need to upgrade to open it.</source>
-        <translation>このファイルは、より新しいバージョンのAudacityで作成されました。
+        <translation>このファイルは、より新しいバージョンの Audacity で作成されました。
 
-開くためには、Audacityをアップグレードしてください。</translation>
+開くためには、Audacity をアップグレードしてください。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="824"/>
@@ -18845,76 +18567,76 @@ File might be corrupted or read only.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="899"/>
         <source>Unable to add ‘inset’ function (can’t verify blockids)</source>
-        <extracomment>An error message. Don't translate inset or blockids.</extracomment>
-        <translation>’inset’関数を追加できません（blockidsを確認できません）</translation>
+        <extracomment>An error message. Don&apos;t translate inset or blockids.</extracomment>
+        <translation>’inset’関数を追加できません (blockids を確認できません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="917"/>
         <source>Project is read only
 (Unable to work with the blockfiles)</source>
-        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <extracomment>An error message. Don&apos;t translate blockfiles.</extracomment>
         <translation>プロジェクトは読み出し専用です
-（blockfilesを取り扱えません）</translation>
+ (blockfiles を取り扱えません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="920"/>
         <source>Project is locked
 (Unable to work with the blockfiles)</source>
-        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <extracomment>An error message. Don&apos;t translate blockfiles.</extracomment>
         <translation>プロジェクトがロックされています
-（blockfilesを取り扱えません）</translation>
+ (blockfiles を取り扱えません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="923"/>
         <source>Project is busy
 (Unable to work with the blockfiles)</source>
-        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <extracomment>An error message. Don&apos;t translate blockfiles.</extracomment>
         <translation>プロジェクトがビジー状態です
-（blockfilesを取り扱えません）</translation>
+ (blockfilesを取り扱えません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="926"/>
         <source>Project is corrupt
 (Unable to work with the blockfiles)</source>
-        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <extracomment>An error message. Don&apos;t translate blockfiles.</extracomment>
         <translation>プロジェクトが破損しています
-（blockfilesを取り扱えません）</translation>
+ (blockfiles を取り扱えません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="929"/>
         <source>Some permissions issue
 (Unable to work with the blockfiles)</source>
-        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <extracomment>An error message. Don&apos;t translate blockfiles.</extracomment>
         <translation>権限に何らかの問題が生じています
-（blockfilesを取り扱えません）</translation>
+ (blockfiles を取り扱えません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="932"/>
         <source>A disk I/O error
 (Unable to work with the blockfiles)</source>
-        <extracomment>An error message. Don't translate blockfiles.</extracomment>
-        <translation>ストレージI/Oエラー
-（blockfilesを取り扱えません）</translation>
+        <extracomment>An error message. Don&apos;t translate blockfiles.</extracomment>
+        <translation>ストレージ I/O エラー
+ (blockfiles を取り扱えません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="935"/>
         <source>Not authorized
 (Unable to work with the blockfiles)</source>
-        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <extracomment>An error message. Don&apos;t translate blockfiles.</extracomment>
         <translation>オーサライズされていません
-（blockfilesを取り扱えません）</translation>
+ (blockfiles を取り扱えません)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="938"/>
         <source>Unable to work with the blockfiles</source>
-        <extracomment>An error message. Don't translate blockfiles.</extracomment>
-        <translation>blockfilesを取り扱えません</translation>
+        <extracomment>An error message. Don&apos;t translate blockfiles.</extracomment>
+        <translation>blockfiles を取り扱えません</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="948"/>
         <source>Total orphan blocks deleted %1</source>
         <extracomment>%1 is the number of deleted orphan blocks</extracomment>
-        <translation>%1個の孤立ブロックを削除しました</translation>
+        <translation>%1 個の孤立ブロックを削除しました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1029"/>
@@ -18929,7 +18651,7 @@ File might be corrupted or read only.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1064"/>
         <source>Unable to switch to fast journaling mode</source>
-        <translation>Fast Journalingモードへ切り替えができません</translation>
+        <translation>Fast Journaling モードへ切り替えができません</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1106"/>
@@ -18938,14 +18660,14 @@ File might be corrupted or read only.</source>
 
 %1</source>
         <extracomment>%1 is the SQL command that could not be prepared</extracomment>
-        <translation>プロジェクトファイルコマンドを準備できません:
+        <translation>プロジェクトファイルコマンドを準備できません :
 
 %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1139"/>
         <source>Failed to bind SQL parameter</source>
-        <translation>SQLパラメータをバインドできませんでした</translation>
+        <translation>SQL パラメータをバインドできませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1154"/>
@@ -18956,7 +18678,7 @@ The following command failed:
 %1</source>
         <extracomment>%1 is the SQL command that failed</extracomment>
         <translation>プロジェクトファイルをアップデートできませんでした。
-失敗したコマンドは次の通りです:
+失敗したコマンドは次の通りです :
 
 %1</translation>
     </message>
@@ -18986,7 +18708,7 @@ The following command failed:
 Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>ファイル%1に書き込めませんでした。
+        <translation>ファイル %1 に書き込めませんでした。
 ストレージに空きがないか、書き込み可能でないと思われます。
 空き容量を増やすヒントについては、ヘルプボタンをクリックしてください。</translation>
     </message>
@@ -19010,15 +18732,15 @@ For tips on freeing up space, click the help button.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1698"/>
         <source>(Recovered)</source>
         <extracomment>E.g this is recovered audio that had been lost.</extracomment>
-        <translation>（回復済）</translation>
+        <translation>(回復済)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1798"/>
         <source>This file was saved using Audacity %1.
 You are using Audacity %2. You may need to upgrade to a newer version to open this file.</source>
         <extracomment>%1 is the Audacity version that saved the file, %2 is the running version.</extracomment>
-        <translation>Audacity %1で保存されたファイルです。
-使用中のAudacityは%2です。このファイルを開くには、新しいバージョンにアップグレードしてください。</translation>
+        <translation>Audacity %1 で保存されたファイルです。
+使用中の Audacity は %2 です。このファイルを開くには、新しいバージョンにアップグレードしてください。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1802"/>
@@ -19036,7 +18758,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2042"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2055"/>
         <source>Unable to bind to blob</source>
-        <translation>blobにバインドできません</translation>
+        <translation>blob にバインドできません</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2155"/>
@@ -19109,8 +18831,8 @@ on the storage device.
         <location filename="../../au3/libraries/au3-project-file-io/ProjectSerializer.cpp" line="94"/>
         <source>This recovery file was saved by Audacity 2.3.0 or before.
 You need to run that version of Audacity to recover the project.</source>
-        <translation>この復元ファイルはAudacity 2.3.0以前で保存されたものです。
-プロジェクトを復元するには、そのバージョンのAudacityを使う必要があります。</translation>
+        <translation>この復元ファイルは Audacity 2.3.0 以前で保存されたものです。
+プロジェクトを復元するには、そのバージョンの Audacity を使う必要があります。</translation>
     </message>
 </context>
 <context>
@@ -19144,7 +18866,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="117"/>
         <source>Would you also like to share your music on Audio.com?</source>
-        <translation>ミュージックをaudio.comで共有してみませんか?</translation>
+        <translation>ミュージックを audio.com で共有してみませんか?</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="126"/>
@@ -19164,12 +18886,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation>audio.comと同期中</translation>
+        <translation>audio.com と同期中</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
         <source>Project is syncing with audio.com. Do you want to stop the sync process?</source>
-        <translation>プロジェクトをaudio.comと同期しています。同期プロセスを停止してもよろしいですか?</translation>
+        <translation>プロジェクトを audio.com と同期しています。同期プロセスを停止しますか?</translation>
     </message>
 </context>
 <context>
@@ -19177,33 +18899,34 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
         <source>Export audio</source>
-        <translation>オーディオを書き出す</translation>
+        <translation>オーディオをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
         <source>How would you like to export?</source>
-        <translation>どのように書き出ししますか?</translation>
+        <translation>どのようにエクスポートしますか?</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
         <source>Share to audio.com</source>
-        <translation>audio.comで共有</translation>
+        <translation>audio.com で共有</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
         <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
-        <translation>非圧縮オーディオファイルをアップロードし、共有リンクを作成します。このリンクから、ほかの人が WAV または MP3 形式のファイルをダウンロードできます。</translation>
+        <translation>非圧縮オーディオファイルをアップロードし、共有リンクを作成します。
+このリンクから、ほかの人が WAV または MP3 形式のファイルをダウンロードできます。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
         <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
-        <translation>MP3、WAV、FLAC そのほかの形式で自分のコンピュータに書き出しします。</translation>
+        <translation>MP3、WAV、FLAC そのほかの形式で自分のコンピューターにエクスポートします。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation>コンピュータに書き出す</translation>
+        <translation>コンピュータにエクスポート</translation>
     </message>
 </context>
 <context>
@@ -19232,12 +18955,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
         <source>Audacity 3 project</source>
-        <translation>Audacity 3のプロジェクト</translation>
+        <translation>Audacity 3 のプロジェクト</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
-        <translation>Audacity 3プロジェクトが開かれました。Audacity 4で使用する前に変換する必要があります。</translation>
+        <translation>Audacity 3 プロジェクトが開かれました。Audacity 4 で使用する前に変換する必要があります。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
@@ -19262,7 +18985,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
         <source>Continue</source>
-        <translation>続ける</translation>
+        <translation>続行</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
@@ -19277,7 +19000,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
-        <translation>このプロジェクトには、Audacity 4ではまだ対応していないタイムトラックが含まれているため、これを削除する必要があります。元のAudacity 3プロジェクトには影響しません。</translation>
+        <translation>このプロジェクトには、Audacity 4 ではまだ対応していないタイムトラックが含まれているため、これを削除する必要があります。元の Audacity 3 プロジェクトには影響しません。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
@@ -19290,22 +19013,22 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="51"/>
         <source>File path:</source>
-        <translation>ファイルパス:</translation>
+        <translation>ファイルパス :</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="81"/>
         <source>Audacity version:</source>
-        <translation>Audacityバージョン:</translation>
+        <translation>Audacity バージョン :</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="90"/>
         <source>Revision:</source>
-        <translation>リビジョン:</translation>
+        <translation>リビジョン :</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="104"/>
         <source>API-Level:</source>
-        <translation>APIレベル:</translation>
+        <translation>API レベル :</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="68"/>
@@ -19334,7 +19057,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
-        <translation>プロジェクトはaudio.comに非公開でバックアップされます。どのデバイスからでも自分の作品にアクセスしたり、プロジェクトの共同作業を行ったりできます。無料でクラウドに保存できるプロジェクト数には制限があります。</translation>
+        <translation>プロジェクトは audio.com に非公開でバックアップされます。どのデバイスからでも自分の作品にアクセスしたり、プロジェクトの共同作業を行ったりできます。無料でクラウドに保存できるプロジェクト数には制限があります。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
@@ -19344,7 +19067,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <source>Save to the cloud (free)</source>
-        <translation>クラウドに保存（無料）</translation>
+        <translation>クラウドに保存 (無料)</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="104"/>
@@ -19362,10 +19085,6 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
         <source>Save to computer</source>
         <translation>コンピュータに保存</translation>
-    </message>
-    <message>
-        <source>Save on your computer</source>
-        <translation type="vanished">コンピュータに保存</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
@@ -19389,7 +19108,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
-        <translation>ミュージックを共有する場合はaudio.comにサインインするか新規アカウントを作成してください。</translation>
+        <translation>ミュージックを共有する場合は audio.com にサインインするか新規アカウントを作成してください。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
@@ -19405,7 +19124,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
-        <translation>保存した変更内容は公開されます。一般公開用に新しいMP3ファイルを生成する必要があります。</translation>
+        <translation>保存した変更内容は公開されます。一般公開用に新しい MP3 ファイルを生成する必要があります。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
@@ -19423,7 +19142,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
         <source>Unable to connect to Audio.com</source>
-        <translation>audio.comに接続できません</translation>
+        <translation>audio.com に接続できません</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
@@ -19443,7 +19162,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="185"/>
         <source>Publish to MuseScore.com</source>
-        <translation>MuseScore.comに公開</translation>
+        <translation>MuseScore.com に公開</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
@@ -19459,7 +19178,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
         <source>Share on Audio.com</source>
-        <translation>audio.comで共有</translation>
+        <translation>Audio.com で共有</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
@@ -19488,29 +19207,29 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
-        <translation>audio.comのアカウントを認証する必要があります。メールに記載されているリンクから、アカウントをアクティベートしてください。</translation>
+        <translation>audio.com のアカウントを認証する必要があります。メールに記載されているリンクから、アカウントをアクティベートしてください。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
-        <translation>audio.comは不明なエラーコードを返しました: %1。</translation>
+        <translation>audio.com は不明なエラーコードを返しました : %1。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
         <source>Audio.com returned an unknown error code.</source>
-        <translation>audio.comは不明なエラーコードを返しました。</translation>
+        <translation>audio.com は不明なエラーコードを返しました。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
-        <translation>あとでやり直すか、audio.comにこの問題の助けを求めてください。</translation>
+        <translation>あとでやり直すか、audio.com にこの問題の助けを求めてください。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
-        <translation>audio.comに接続できません。インターネット接続を確認するか、あとでやり直してください。</translation>
+        <translation>audio.com に接続できません。インターネット接続を確認するか、あとでやり直してください。</translation>
     </message>
 </context>
 <context>
@@ -19541,12 +19260,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
         <source>Duration</source>
-        <translation>継続時間</translation>
+        <translation>長さ</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml" line="133"/>
         <source>Get it on MuseHub</source>
-        <translation>MuseHubから入手</translation>
+        <translation>MuseHub から入手</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>
@@ -19566,7 +19285,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="76"/>
         <source>Audacity is unable to connect to MuseHub.com. Please check your connection and try again.</source>
-        <translation>MuseHub.comに接続できません。接続を確認してやり直してください。</translation>
+        <translation>MuseHub.com に接続できません。接続を確認してやり直してください。</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="83"/>
@@ -19594,7 +19313,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="164"/>
         <source>Playback position:</source>
-        <translation>再生位置:</translation>
+        <translation>再生位置 :</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
@@ -19610,7 +19329,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap to</source>
-        <translation>次にスナップ:</translation>
+        <translation>次にスナップ :</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
@@ -19657,13 +19376,13 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="72"/>
         <source>Import</source>
         <extracomment>Label of the button that imports labels from a file</extracomment>
-        <translation>読み込む</translation>
+        <translation>インポート</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="90"/>
         <source>Export</source>
         <extracomment>Label of the button that exports labels to a file</extracomment>
-        <translation>書き出す</translation>
+        <translation>エクスポート</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="110"/>
@@ -19680,7 +19399,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="33"/>
         <source>General</source>
-        <translation>一般</translation>
+        <translation>全般</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="41"/>
@@ -19735,12 +19454,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="20"/>
         <source>Pan: 100R</source>
-        <translation>パン: 100R</translation>
+        <translation>パン : 100R</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="33"/>
         <source>Pan:</source>
-        <translation>パン:</translation>
+        <translation>パン :</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
@@ -19919,27 +19638,27 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
         <source>Video frames (24 fps)</source>
-        <translation>ビデオフレーム（24 fps）</translation>
+        <translation>ビデオフレーム (24 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="231"/>
         <source>NTSC frames (29.97 fps)</source>
-        <translation>NTSCフレーム（29.97 fps）</translation>
+        <translation>NTSC フレーム (29.97 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="232"/>
         <source>NTSC frames (30 fps)</source>
-        <translation>NTSCフレーム（30 fps）</translation>
+        <translation>NTSC フレーム (30 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="233"/>
         <source>PAL frames (25 fps)</source>
-        <translation>PALフレーム（25 fps）</translation>
+        <translation>PAL フレーム (25 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="242"/>
         <source>CDDA frames (75 fps)</source>
-        <translation>CDDAフレーム（75 fps）</translation>
+        <translation>CDDA フレーム (75 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="236"/>
@@ -19949,7 +19668,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="245"/>
         <source>CD frames</source>
-        <translation>CDフレーム</translation>
+        <translation>CD フレーム</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="67"/>
@@ -19984,7 +19703,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="29"/>
         <source>Remove effect</source>
-        <translation>プロジェクトを削除</translation>
+        <translation>エフェクトを削除</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
@@ -19999,12 +19718,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="159"/>
         <source>Clip: %1</source>
-        <translation>クリップ: %1</translation>
+        <translation>クリップ : %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
         <source>Clip name: %1</source>
-        <translation>クリップ名: %1</translation>
+        <translation>クリップ名 : %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
@@ -20014,12 +19733,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="103"/>
         <source>Label: %1</source>
-        <translation>ラベル: %1</translation>
+        <translation>ラベル : %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml" line="30"/>
         <source>Track name: %1</source>
-        <translation>トラック名: %1</translation>
+        <translation>トラック名 : %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="253"/>
@@ -20031,19 +19750,19 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="303"/>
         <source>Bypass %1</source>
         <extracomment>Tooltip of the effect power button; %1 is an effect name</extracomment>
-        <translation>バイパス%1</translation>
+        <translation>バイパス %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="323"/>
         <source>Open %1</source>
         <extracomment>Tooltip of the button that opens the effect dialog; %1 is an effect name</extracomment>
-        <translation>%1を開く</translation>
+        <translation>%1 を開く</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="365"/>
         <source>Replace %1</source>
         <extracomment>Tooltip of the button that replaces the effect; %1 is an effect name</extracomment>
-        <translation>%1を置き換える</translation>
+        <translation>%1 を置き換える</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackItem.qml" line="212"/>
@@ -20053,28 +19772,28 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track, selected</source>
-        <translation>トラック%1: %2、オーディオトラック、選択済み</translation>
+        <translation>トラック %1: %2、オーディオトラック、選択済み</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track</source>
-        <translation>トラック%1: %2、オーディオトラック</translation>
+        <translation>トラック %1: %2、オーディオトラック</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
         <source>Press Enter to select or deselect</source>
-        <translation>Enterを押して選択/選択解除</translation>
+        <translation>Enter を押して選択/選択解除</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track, selected</source>
-        <translation>トラック%1: %2、オーディオトラック</translation>
+        <translation>トラック %1: %2、ラベルトラック、選択済み</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track</source>
-        <translation>トラック%1: %2、ラベルトラック</translation>
+        <translation>トラック %1: %2、ラベルトラック</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
@@ -20137,12 +19856,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="15"/>
         <source>Silence</source>
-        <translation>無音部分</translation>
+        <translation>無音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="41"/>
         <source>Duration:</source>
-        <translation>録音時間:</translation>
+        <translation>録音時間 :</translation>
     </message>
 </context>
 <context>
@@ -20151,13 +19870,13 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="209"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation>%1（モノラル）録音チャンネル</translation>
+        <translation>%1 (モノラル)録音チャンネル</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="212"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation>%1（ステレオ）録音チャンネル</translation>
+        <translation>%1 (ステレオ)録音チャンネル</translation>
     </message>
 </context>
 <context>
@@ -20175,17 +19894,17 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="185"/>
         <source>Note: this control is tied to your computer’s main mic volume</source>
-        <translation>注意: このコントロールはコンピュータの主マイク音量に連動しています</translation>
+        <translation>注意 : このコントロールはコンピュータの主マイク音量に連動しています</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="213"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
-        <translation>入力モニタリングをオンにする（録音中に音声を再生します）</translation>
+        <translation>入力モニタリングをオンにする (録音中に音声を再生)</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="230"/>
         <source>Show mic metering when not recording</source>
-        <translation>録音していないときもマイクレベルを表示</translation>
+        <translation>録音中でない場合もマイクレベルメーターを表示</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
@@ -20218,7 +19937,7 @@ You need to run that version of Audacity to recover the project.</source>
         <source>Error opening recording device.
 Error code: %1</source>
         <translation>録音デバイスを開く際にエラーが起きました。
-エラーコード: %1</translation>
+エラーコード : %1</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="38"/>
@@ -20233,14 +19952,14 @@ Error code: %1</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="41"/>
         <source>The tracks selected for recording must all have the same sampling rate</source>
-        <translation>録音用に選択したトラックのサンプルレートは、すべて同一にする必要があります。</translation>
+        <translation>録音用に選択したトラックのサンプルレートは、すべて同一にする必要があります</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="44"/>
         <source>Too few tracks are selected for recording at this sample rate.
 (Audacity requires two channels at the same sample rate foreach stereo track)</source>
         <translation>このサンプルレートでの録音に、選択したトラック数が足りません。
-（ステレオトラックのそれぞれに、同じサンプルレートの2チャンネルが必要です）</translation>
+ (ステレオトラックのそれぞれに、同じサンプルレートの2チャンネルが必要です)</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="48"/>
@@ -20266,19 +19985,19 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="189"/>
         <source>Plug-in group at %1 was merged with a previously defined group</source>
         <extracomment>%1 is the registry path of the merged plug-in group</extracomment>
-        <translation>%1プラグイングループを、以前に定義したグループとマージしました。</translation>
+        <translation>%1 プラグイングループを、以前に定義したグループとマージしました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="197"/>
         <source>Plug-in item at %1 conflicts with a previously defined item and was discarded</source>
         <extracomment>%1 is the registry path of the conflicting plug-in item</extracomment>
-        <translation>%1プラグイン項目は、以前に定義した項目と競合しているため、破棄しました。</translation>
+        <translation>%1 プラグイン項目は、以前に定義した項目と競合しているため、破棄しました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="205"/>
         <source>Plug-in items at %1 specify conflicting placements</source>
         <extracomment>%1 is the registry path of the conflicting plug-in items</extracomment>
-        <translation>%1にあるプラグイン項目は、配置が競合しています</translation>
+        <translation>%1 にあるプラグイン項目は、配置が競合しています</translation>
     </message>
 </context>
 <context>
@@ -20299,67 +20018,67 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="26"/>
         <source>Cut and leave gap</source>
-        <translation>カット（ギャップを残す）</translation>
+        <translation>切り取ってギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="28"/>
         <source>Cut and close gap</source>
-        <translation>カット（ギャップを閉じる）</translation>
+        <translation>切り取ってギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="30"/>
         <source>Cut and close gap on this track</source>
-        <translation>カット（このトラックのギャップを閉じる）</translation>
+        <translation>このトラックのギャップを切り取って閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="32"/>
         <source>Cut and close gap on all tracks</source>
-        <translation>カット（すべてのトラックのギャップを閉じる）</translation>
+        <translation>すべてのトラックのギャップを切り取って閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="37"/>
         <source>Paste and overlap</source>
-        <translation>ペースト（オーバーラップ）</translation>
+        <translation>貼り付けてオーバーラップ</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="39"/>
         <source>Paste and make room on this track</source>
-        <translation>ペースト（このトラックに空きを確保）</translation>
+        <translation>貼り付けてこのトラックに空き領域を確保</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="41"/>
         <source>Paste and make room on all tracks</source>
-        <translation>ペースト（すべてのトラックに空きを確保）</translation>
+        <translation>貼り付けてすべてのトラックに空き領域を確保</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="46"/>
         <source>Delete and leave gap</source>
-        <translation>削除（ギャップを残す）</translation>
+        <translation>削除してギャップを残す</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="48"/>
         <source>Delete and close gap</source>
-        <translation>削除（ギャップを閉じる）</translation>
+        <translation>削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="50"/>
         <source>Delete and close gap on this track</source>
-        <translation>削除（このトラックのギャップを閉じる)</translation>
+        <translation>このトラックで削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="52"/>
         <source>Delete and close gap on all tracks</source>
-        <translation>削除（すべてのトラックのギャップを閉じる）</translation>
+        <translation>すべてのトラックで削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="62"/>
         <source>Cut and…</source>
-        <translation>カットして…</translation>
+        <translation>切り取って…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="63"/>
         <source>Paste and…</source>
-        <translation>ペーストして…</translation>
+        <translation>貼り付けて…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="64"/>
@@ -20383,12 +20102,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="98"/>
         <source>Old shortcut:</source>
-        <translation>古いショートカット:</translation>
+        <translation>古いショートカット :</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="109"/>
         <source>New shortcut:</source>
-        <translation>新しいショートカット:</translation>
+        <translation>新しいショートカット :</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="122"/>
@@ -20403,17 +20122,17 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
         <source>Import</source>
-        <translation>読み込む</translation>
+        <translation>インポート</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
         <source>Export</source>
-        <translation>書き出す</translation>
+        <translation>エクスポート</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
         <source>Reset to default</source>
-        <translation>デフォルトにリセット</translation>
+        <translation>デフォルトに戻す</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="32"/>
@@ -20453,12 +20172,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
         <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
-        <translation>このショートカットはすでに&lt;b&gt;%1&lt;/b&gt;に割り当てられています。</translation>
+        <translation>このショートカットはすでに&lt;b&gt;%1&lt;/b&gt;に割り当てられています</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
         <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
-        <translation>代わりにこれを&lt;b&gt;%1&lt;/b&gt;に割り当ててもよろしいですか?</translation>
+        <translation>代わりにこれを&lt;b&gt;%1&lt;/b&gt;に割り当てますか?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
@@ -20468,17 +20187,17 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
         <source>MuseScore Studio shortcuts file</source>
-        <translation>MuseScore Studioショートカットファイル</translation>
+        <translation>MuseScore Studio ショートカットファイル</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
         <source>Import shortcuts</source>
-        <translation>ショートカットを読み込む</translation>
+        <translation>ショートカットをインポート</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
         <source>Export shortcuts</source>
-        <translation>ショートカットを書き出す</translation>
+        <translation>ショートカットをエクスポート</translation>
     </message>
 </context>
 <context>
@@ -20539,37 +20258,37 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="82"/>
         <source>1/2 (triplets)</source>
-        <translation>1/2（3連符）</translation>
+        <translation>1/2 (3連符)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="84"/>
         <source>1/4 (triplets)</source>
-        <translation>1/4（3連符）</translation>
+        <translation>1/4 (3連符)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="86"/>
         <source>1/8 (triplets)</source>
-        <translation>1/8（3連符）</translation>
+        <translation>1/8 (3連符)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="88"/>
         <source>1/16 (triplets)</source>
-        <translation>1/16（3連符）</translation>
+        <translation>1/16 (3連符)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="90"/>
         <source>1/32 (triplets)</source>
-        <translation>1/32（3連符）</translation>
+        <translation>1/32 (3連符)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="92"/>
         <source>1/64 (triplets)</source>
-        <translation>1/64（3連符）</translation>
+        <translation>1/64 (3連符)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="94"/>
         <source>1/128 (triplets)</source>
-        <translation>1/128（3連符）</translation>
+        <translation>1/128 (3連符)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="18"/>
@@ -20579,32 +20298,32 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="20"/>
         <source>Film frames (24 fps)</source>
-        <translation>フィルムフレーム（24 fps）</translation>
+        <translation>フィルムフレーム (24 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="22"/>
         <source>NTSC frames (29.97 fps)</source>
-        <translation>NTSCフレーム（29.97 fps）</translation>
+        <translation>NTSC フレーム (29.97 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="24"/>
         <source>NTSC frames (30 fps)</source>
-        <translation>NTSCフレーム（30 fps）</translation>
+        <translation>NTSC フレーム (30 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="25"/>
         <source>PAL frames (25 fps)</source>
-        <translation>PALフレーム（25 fps）</translation>
+        <translation>PAL フレーム (25 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="27"/>
         <source>CD frames</source>
-        <translation>CDフレーム</translation>
+        <translation>CD フレーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="28"/>
         <source>CDDA frames (75 fps)</source>
-        <translation>CDDAフレーム（75 fps）</translation>
+        <translation>CDDA フレーム (75 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="24"/>
@@ -20706,7 +20425,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="72"/>
         <source>ERB</source>
-        <translation>ERB尺度</translation>
+        <translation>ERB 尺度</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="74"/>
@@ -20766,17 +20485,17 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="31"/>
         <source>Gaussian (a=0.25)</source>
-        <translation>ガウス窓（a=0.25）</translation>
+        <translation>ガウス窓 (a=0.25)</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="32"/>
         <source>Gaussian (a=0.35)</source>
-        <translation>ガウス窓（a=0.35）</translation>
+        <translation>ガウス窓 (a=0.35)</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="33"/>
         <source>Gaussian (a=0.45)</source>
-        <translation>ガウス窓（a=0.45）</translation>
+        <translation>ガウス窓 (a=0.45)</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="37"/>
@@ -20882,7 +20601,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="46"/>
         <source>SQLite3 error</source>
-        <translation>SQLite3エラー</translation>
+        <translation>SQLite3 エラー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="59"/>
@@ -20900,7 +20619,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="65"/>
         <source>Internal logic error in SQLite</source>
         <extracomment>database operation has failed due to the internal error</extracomment>
-        <translation>SQLiteの内部論理エラー</translation>
+        <translation>SQLite の内部論理エラー</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="68"/>
@@ -20930,7 +20649,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="80"/>
         <source>A malloc() failed</source>
         <extracomment>database operation has failed due to the lack of memory</extracomment>
-        <translation>malloc()に失敗しました</translation>
+        <translation>malloc() に失敗しました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="83"/>
@@ -20948,7 +20667,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="89"/>
         <source>I/O error occurred</source>
         <extracomment>database operation has failed due to the I/O failure</extracomment>
-        <translation>I/Oエラーが発生しました</translation>
+        <translation>I/O エラーが発生しました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="92"/>
@@ -20990,7 +20709,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="110"/>
         <source>String or BLOB exceeds size limit</source>
         <extracomment>database operation has failed because the string or BLOB exceeds size limit</extracomment>
-        <translation>文字列またはBLOBがサイズ制限を超過しました</translation>
+        <translation>文字列または BLOB がサイズ制限を超過しました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="113"/>
@@ -21032,7 +20751,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="131"/>
         <source>2nd parameter to sqlite3_bind out of range</source>
         <extracomment>database operation has failed because the parameter is out of range</extracomment>
-        <translation>sqlite3_bindの第2パラメータが範囲外です</translation>
+        <translation>sqlite3_bind の第2パラメータが範囲外です</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="134"/>
@@ -21052,13 +20771,13 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
-        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
-        <translation>カット/コピー/ペースト</translation>
+        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it&apos;s meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
+        <translation>切り取り/コピー/貼り付け</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="99"/>
         <source>&amp;Cut/Copy/Paste Toolbar</source>
-        <translation>カット/コピー/ペーストツールバー(&amp;C)</translation>
+        <translation>切り取り/コピー/貼り付け ツールバー(&amp;C)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="190"/>
@@ -21068,7 +20787,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="194"/>
         <source>%1 bytes</source>
-        <translation>%1バイト</translation>
+        <translation>%1 バイト</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="197"/>
@@ -21188,19 +20907,25 @@ Please connect an input device and rescan.</source>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>残り%n時間</numerusform></translation>
+        <translation>
+            <numerusform>残り %n 時間</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>残り%n分</numerusform></translation>
+        <translation>
+            <numerusform>残り %n 分</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>残り%n秒</numerusform></translation>
+        <translation>
+            <numerusform>残り %n 秒</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -21243,24 +20968,24 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="93"/>
         <source>Format:</source>
-        <translation>フォーマット:</translation>
+        <translation>フォーマット :</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="71"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="94"/>
         <source>Rate:</source>
-        <translation>サンプリング周波数:</translation>
+        <translation>サンプリング周波数 :</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
         <source>Format: %1</source>
-        <translation>フォーマット: %1</translation>
+        <translation>フォーマット : %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
         <source>Rate: %1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation>レート: %1 Hz</translation>
+        <translation>レート : %1 Hz</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
@@ -21272,13 +20997,13 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/trackedit/dom/track.h" line="52"/>
         <source>16-bit PCM</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation>16ビットPCM</translation>
+        <translation>16ビット PCM</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="54"/>
         <source>24-bit PCM</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation>24ビットPCM</translation>
+        <translation>24ビット PCM</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
@@ -21335,12 +21060,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1414"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
-        <translation>この操作では、1つ以上のクリップをモノラルに変換します。続けてもよろしいですか?</translation>
+        <translation>この操作では、1つ以上のクリップをモノラルに変換します。続行しますか?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1573"/>
         <source>Combine mono tracks to stereo</source>
-        <translation>モノラルトラックををステレオに結合</translation>
+        <translation>モノラルトラックをステレオに結合</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1574"/>
@@ -21351,9 +21076,9 @@ This causes any realtime effects to be applied to the waveform and hidden data t
 Do you wish to continue?</source>
         <translation>ステレオに結合しようとしているトラックには、異なる位置にあるクリップか、一致していないクリップが含まれています。これらを結合する場合には、トラックがレンダリングされます。
 
-これにより、波形にリアルタイムエフェクトが適用され、非表示のデータが削除されます。さらに、トラック全体が1つの大きなクリップになります。
+これにより、波形にリアルタイムエフェクトが適用され、非表示のデータが削除されます。さらに、トラック全体が 1つの大きなクリップになります。
 
-続けてもよろしいですか?</translation>
+続行しますか?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="21"/>
@@ -21368,7 +21093,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="904"/>
         <source>No audio selected</source>
         <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
-        <translation>オーディオ未選択</translation>
+        <translation>オーディオが未選択です</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
@@ -21385,7 +21110,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1354"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1368"/>
         <source>Paste error</source>
-        <translation>ペーストエラー</translation>
+        <translation>貼り付けエラー</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2091"/>
@@ -21402,7 +21127,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
         <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation>選択したオーディオトラックの%1秒から%2秒までをトリミング</translation>
+        <translation>選択したオーディオトラックの %1 秒から %2 秒までをトリミング</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
@@ -21413,13 +21138,13 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
         <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation>選択したオーディオトラックの%1秒から%2秒までを消音しました</translation>
+        <translation>選択したオーディオトラックの %1 秒から %2 秒までを消音しました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
         <source>Silence</source>
-        <translation>無音部分</translation>
+        <translation>無音</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
@@ -21501,7 +21226,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
         <source>Paste</source>
-        <translation>ペースト</translation>
+        <translation>貼り付け</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
@@ -21514,7 +21239,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
         <source>Cut</source>
-        <translation>カット</translation>
+        <translation>切り取り</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
@@ -21545,7 +21270,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
         <source>Delete and close gap</source>
-        <translation>削除（ギャップを閉じる）</translation>
+        <translation>削除してギャップを閉じる</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
@@ -21604,7 +21329,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <source>Split cut</source>
-        <translation>分割カット</translation>
+        <translation>分割切り取り</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
@@ -21636,7 +21361,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
         <source>Changed speed to: %1%</source>
-        <translation>速度を変更しました: %1%</translation>
+        <translation>速度を変更しました : %1%</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
@@ -21814,7 +21539,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
         <source>Cut label</source>
-        <translation>ラベルをカット</translation>
+        <translation>ラベルを切り取り</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
@@ -21880,7 +21605,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation>場所%2に%1秒を結合</translation>
+        <translation>場所 %2 に %1 秒を結合</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
@@ -21913,17 +21638,17 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation>場所%2で%1秒を削除</translation>
+        <translation>場所 %2 で %1 秒を削除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
         <source>Not enough space to paste clip into</source>
-        <translation>クリップをペーストするための十分な空きがありません</translation>
+        <translation>クリップを貼り付けるための十分なスペースがありません</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="366"/>
         <source>Tracks: Empty</source>
-        <translation>トラック: 空</translation>
+        <translation>トラック : 空</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
@@ -21933,12 +21658,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
         <source>Upper time signature changed</source>
-        <translation>拍子記号の上（拍数）を変更しました</translation>
+        <translation>拍子記号の上 (拍数)を変更しました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
         <source>Lower time signature changed</source>
-        <translation>拍子記号の下（音価）を変更しました</translation>
+        <translation>拍子記号の下 (音価)を変更しました</translation>
     </message>
 </context>
 <context>
@@ -21961,7 +21686,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="45"/>
         <source>Your delete behavior has been set</source>
-        <translation>削除時の動作を設定しました</translation>
+        <translation>削除動作を設定しました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="57"/>
@@ -21971,7 +21696,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="58"/>
         <source>You can change this at any time in %1.</source>
-        <translation>%1でいつでも変更することができます。</translation>
+        <translation>%1 でいつでも変更することができます。</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="60"/>
@@ -21981,27 +21706,27 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
         <source>There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</source>
-        <translation>削除時の異なる動作にすばやくアクセスできる新しいショートカットも多数用意されています。詳しくは、%2を参照してください。</translation>
+        <translation>各種の削除動作にすばやくアクセスできる新しいショートカットも多数用意されています。詳しくは、%2 を参照してください。</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when deleting a portion of a clip</source>
-        <translation>クリップの一部を削除するときの動作を選択</translation>
+        <translation>クリップの一部を削除する場合の動作を選択</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="82"/>
         <source>When closing the gap, do the following</source>
-        <translation>ギャップを閉じるときに行なう動作</translation>
+        <translation>ギャップを閉じる場合に行なう動作</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when pasting audio</source>
-        <translation>オーディオをペーストするときの動作を選択</translation>
+        <translation>オーディオを貼り付ける場合の動作を選択</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="82"/>
         <source>When making room for pasted audio, do the following</source>
-        <translation>ペーストするオーディオのスペースを作成するときの動作</translation>
+        <translation>貼り付けるオーディオのスペースを作成する場合の動作</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="61"/>
@@ -22026,27 +21751,27 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="79"/>
         <source>Close gap (ripple)</source>
-        <translation>ギャップを閉じる（リップル）</translation>
+        <translation>ギャップを閉じる (リップル)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="61"/>
         <source>Pasting audio pushes other clips on the same track</source>
-        <translation>ペーストしたオーディオが同じトラックのほかのクリップを押し出す</translation>
+        <translation>貼り付けたオーディオが同じトラックのほかのクリップを押し出す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="63"/>
         <source>Pasting audio pushes all clips on all tracks</source>
-        <translation>ペーストしたオーディオがすべてのトラックのすべてのクリップを押し出す</translation>
+        <translation>貼り付けたオーディオがすべてのトラックのすべてのクリップを押し出す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="74"/>
         <source>Paste overlaps other clips</source>
-        <translation>ペースト（ほかのクリップにオーバーラップ）</translation>
+        <translation>貼り付けてほかのクリップをオーバーラップ</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="77"/>
         <source>Paste pushes other clips</source>
-        <translation>ペースト（ほかのクリップを押し出す）</translation>
+        <translation>貼り付けてほかのクリップを押し出す</translation>
     </message>
 </context>
 <context>
@@ -22054,7 +21779,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="46"/>
         <source>New sample rate (Hz):</source>
-        <translation>新規サンプルレート（Hz）: </translation>
+        <translation>新規サンプルレート (Hz):</translation>
     </message>
 </context>
 <context>
@@ -22062,7 +21787,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="39"/>
         <source>Position:</source>
-        <translation>位置:</translation>
+        <translation>位置 :</translation>
     </message>
 </context>
 <context>
@@ -22107,7 +21832,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
         <source>Current path:</source>
-        <translation>現在のパス:</translation>
+        <translation>現在のパス :</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="131"/>
@@ -22152,7 +21877,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>checked</source>
         <comment>checkstate</comment>
-        <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
+        <extracomment>Describes the &apos;on&apos; state of a toggle-able ui item.</extracomment>
         <translation>チェックされた</translation>
     </message>
     <message>
@@ -22161,7 +21886,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
-        <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
+        <extracomment>Describes the &apos;off&apos; state of a toggle-able ui item.</extracomment>
         <translation>チェックされていない</translation>
     </message>
     <message>
@@ -22235,7 +21960,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation>その他…</translation>
+        <translation>その他</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
@@ -22301,12 +22026,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation>展開されました</translation>
+        <translation>展開された</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation>折りたたまれました</translation>
+        <translation>折りたたまれた</translation>
     </message>
 </context>
 <context>
@@ -22374,12 +22099,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="41"/>
         <source>hh:mm:ss + film frames (24 fps)</source>
-        <translation>時:分:秒 + フィルムフレーム（24 fps）</translation>
+        <translation>時:分:秒 + フィルムフレーム (24 fps)</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="44"/>
         <source>Film frames (24 fps)</source>
-        <translation>フィルムフレーム（24 fps）</translation>
+        <translation>フィルムフレーム (24 fps)</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="48"/>
@@ -22389,32 +22114,32 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="51"/>
         <source>hh:mm:ss + NTSC non-drop frames</source>
-        <translation>時:分:秒 + NTSCノンドロップフレーム</translation>
+        <translation>時:分:秒 + NTSC ノンドロップフレーム</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="54"/>
         <source>NTSC frames</source>
-        <translation>NTSCフレーム</translation>
+        <translation>NTSC フレーム</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="57"/>
         <source>hh:mm:ss + PAL frames (25 fps)</source>
-        <translation>時:分:秒 + PALフレーム（25 fps）</translation>
+        <translation>時:分:秒 + PALフレーム (25 fps)</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="60"/>
         <source>PAL frames (25 fps)</source>
-        <translation>PALフレーム（25 fps）</translation>
+        <translation>PAL フレーム (25 fps)</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="64"/>
         <source>hh:mm:ss + CDDA frames (25 fps)</source>
-        <translation>時:分:秒 + CDDAフレーム（75 fps）</translation>
+        <translation>時:分:秒 + CDDAフレーム (75 fps)</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="67"/>
         <source>CDDA frames (75 fps)</source>
-        <translation>CDDAフレーム（75 fps）</translation>
+        <translation>CDDA フレーム (75 fps)</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="71"/>
@@ -22444,7 +22169,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="139"/>
         <source>Save all</source>
-        <translation>すべてを保存</translation>
+        <translation>すべて保存</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="140"/>
@@ -22529,7 +22254,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="156"/>
         <source>Continue</source>
-        <translation>続ける</translation>
+        <translation>続行</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="157"/>
@@ -22539,7 +22264,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="158"/>
         <source>Back</source>
-        <translation>前へ</translation>
+        <translation>戻る</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="159"/>
@@ -22549,7 +22274,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="160"/>
         <source>Clear</source>
-        <translation>クリア</translation>
+        <translation>消去</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
@@ -22562,7 +22287,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
         <source>A new version of %1 is available!</source>
-        <translation>%1の新しいバージョンがあります!</translation>
+        <translation>%1 の新しいバージョンが入手可能です!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
@@ -22587,17 +22312,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
         <source>Read the %1 release notes</source>
-        <translation>%1のリリースノートを読む</translation>
+        <translation>%1 のリリースノートを読む</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
-        <translation>%1の最新バージョンを使用しています。今後の予定についての最新情報は&lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt;を参照してください。</translation>
+        <translation>%1 の最新バージョンを使っています。今後の予定についての最新情報は&lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt;を参照してください。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
         <source>You’re up to date!</source>
-        <translation>最新版を使用中です!</translation>
+        <translation>最新版を使っています!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
@@ -22619,7 +22344,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
-        <translation>インストールを完了するには%1を閉じる必要があります。保存していない変更があれば、%1を閉じる前に保存するよう求められます。</translation>
+        <translation>インストールを完了するには %1 を閉じる必要があります。保存していない変更があれば、%1 を閉じる前に保存するよう求められます。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
@@ -22629,13 +22354,13 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
         <source>Updating %1</source>
-        <translation>%1をアップデート中</translation>
+        <translation>%1 をアップデート中</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
         <source>Downloading %1 %2</source>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
-        <translation>%1 %2をダウンロード中</translation>
+        <translation>%1 %2 をダウンロード中</translation>
     </message>
 </context>
 <context>
@@ -22656,13 +22381,13 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation>FXエディタを開く</translation>
+        <translation>FX エディタを開く</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation>楽器エディタを開く</translation>
+        <translation>音源エディタを開く</translation>
     </message>
 </context>
 <context>
@@ -22676,42 +22401,42 @@ Do you wish to continue?</source>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectBase.cpp" line="60"/>
         <source>SubCategories: %1</source>
         <extracomment>VST3 effect description string</extracomment>
-        <translation>サブカテゴリ: %1</translation>
+        <translation>サブカテゴリ : %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
         <source>Searching VST3 in: %1</source>
-        <translation>VST3を検索中: %1</translation>
+        <translation>VST3 を検索中 : %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
         <source>VST3 Effects</source>
-        <translation>VST3エフェクト</translation>
+        <translation>VST3 エフェクト</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="166"/>
         <source>The Audacity Team</source>
-        <translation>Audacityチーム</translation>
+        <translation>Audacity チーム</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="176"/>
         <source>Adds the ability to use VST3 effects in Audacity.</source>
-        <translation>AudacityでVST3エフェクトを使用可能にします。</translation>
+        <translation>Audacity で VST3 エフェクトを使用可能にします。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
         <source>Looking in: %1</source>
-        <translation>確認中: %1</translation>
+        <translation>確認中 : %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
         <source>VST3 module error: %1</source>
-        <translation>VST3モジュールエラー: %1</translation>
+        <translation>VST3 モジュールエラー : %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="752"/>
         <source>Unable to apply VST3 preset file %1</source>
-        <translation>VST3プリセットファイル%1を適用できません</translation>
+        <translation>VST3 プリセットファイル %1 を適用できません</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="753"/>
@@ -22722,7 +22447,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="769"/>
         <source>Failed to save VST3 preset to file</source>
-        <translation>VST3プリセットをファイルに保存できませんでした</translation>
+        <translation>VST3 プリセットをファイルに保存できませんでした</translation>
     </message>
 </context>
 <context>
@@ -22731,7 +22456,7 @@ Do you wish to continue?</source>
         <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1011"/>
         <source>Sequence has block file exceeding maximum %1 samples per block.
 Truncating to this maximum length.</source>
-        <translation>シーケンスのブロックファイルが、ブロックあたりの最大サンプル数%1を
+        <translation>シーケンスのブロックファイルが、ブロックあたりの最大サンプル数 %1 を
 超えています。最大長に切り捨てます。</translation>
     </message>
     <message>
@@ -22742,7 +22467,7 @@ Truncating to this maximum length.</source>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="22"/>
         <source>Pre-processing</source>
-        <translation>前処理:</translation>
+        <translation>前処理 :</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="38"/>
@@ -22802,59 +22527,59 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="33"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="207"/>
         <source>Linear (amp)</source>
-        <translation>リニア（振幅）</translation>
+        <translation>リニア (振幅)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="34"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="208"/>
         <source>Logarithmic (dB)</source>
-        <translation>対数（dB）</translation>
+        <translation>対数 (dB)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="35"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="209"/>
         <source>Linear (dB)</source>
-        <translation>リニア（dB）</translation>
+        <translation>リニア (dB)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="227"/>
         <source>-36 dB (shallow range for high-amplitude editing)</source>
-        <translation>-36 dB（高増幅率編集向きの狭ダイナミックレンジ）</translation>
+        <translation>-36 dB (高増幅率編集向きの狭ダイナミックレンジ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
-        <translation>-48 dB（8ビットサンプリングのPCMレンジ）</translation>
+        <translation>-48 dB (8ビットサンプリングの PCM レンジ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
-        <translation>-60 dB（10ビットサンプリングのPCMレンジ）</translation>
+        <translation>-60 dB (10ビットサンプリングの PCM レンジ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
-        <translation>-72 dB（12ビットサンプリングのPCMレンジ）</translation>
+        <translation>-72 dB (12ビットサンプリングの PCM レンジ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
-        <translation>-84 dB（14ビットサンプリングのPCMレンジ）</translation>
+        <translation>-84 dB (14ビットサンプリングの PCM レンジ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
-        <translation>-96 dB（16ビットサンプリングのPCMレンジ）</translation>
+        <translation>-96 dB (16ビットサンプリングの PCM レンジ)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
         <source>-120 dB (approximate limit of human hearing)</source>
-        <translation>-120 dB（おおむねヒトの最大可聴範囲）</translation>
+        <translation>-120 dB (おおむねヒトの最大可聴範囲)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
-        <translation>-145 dB（24ビットサンプリングのPCMレンジ）</translation>
+        <translation>-145 dB (24ビットサンプリングの PCM レンジ)</translation>
     </message>
 </context>
 <context>
@@ -22878,7 +22603,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
         <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
-        <translation>ワークスペースを使用すると、%1インターフェースの異なる構成を選択できます。独自の構成を新しいワークスペースとして保存することも可能です。</translation>
+        <translation>ワークスペースを使用すると、%1 インターフェースの異なる構成を選択できます。独自の構成を新しいワークスペースとして保存することも可能です。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
@@ -22893,7 +22618,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
         <source>Workspace name:</source>
-        <translation>ワークスペース名:</translation>
+        <translation>ワークスペース名 :</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
@@ -22919,7 +22644,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
         <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
-        <translation>この操作により、ワークスペースはデフォルトのレイアウトにリセットされ、取り消すことはできません。続けてもよろしいですか?</translation>
+        <translation>この操作により、ワークスペースはデフォルトのレイアウトにリセットされ、元に戻すことはできません。続行しますか?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
@@ -22967,13 +22692,9 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>ワークスペースを選択</translation>
     </message>
     <message>
-        <source>Edit workspaces…</source>
-        <translation type="vanished">ワークスペースを編集…</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation>ワークスペースを編集…</translation>
+        <translation>ワークスペースの編集...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
@@ -22987,26 +22708,26 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
         <source>Could not open file: “%1”</source>
-        <translation>ファイルを開けません: “%1”</translation>
+        <translation>ファイルを開けません : “%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="266"/>
         <source>Error: %1 at line %2</source>
         <extracomment>%1 is the parser error message, %2 is the line number in the file</extracomment>
-        <translation>エラー: %1（%2 行目）</translation>
+        <translation>エラー : %1 (%2 行目)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
         <source>Could not load file: “%1”</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>ファイルを読み込めません: “%1”</translation>
+        <translation>ファイルを読み込めません : “%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="150"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
-        <translation>XMLを解釈できません</translation>
+        <translation>XML を解釈できません</translation>
     </message>
 </context>
 </TS>
