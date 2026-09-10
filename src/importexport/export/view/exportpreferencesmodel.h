@@ -45,6 +45,8 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(bool separateFilesByLabels READ separateFilesByLabels NOTIFY currentProcessChanged)
     Q_PROPERTY(QString fileNamePrefix READ fileNamePrefix WRITE setFileNamePrefix NOTIFY fileNamePrefixChanged)
     Q_PROPERTY(bool includeNumbers READ includeNumbers WRITE setIncludeNumbers NOTIFY includeNumbersChanged)
+    Q_PROPERTY(
+        bool includeAudioBeforeFirstLabel READ includeAudioBeforeFirstLabel WRITE setIncludeAudioBeforeFirstLabel NOTIFY includeAudioBeforeFirstLabelChanged)
     Q_PROPERTY(QString fileNamePreview READ fileNamePreview NOTIFY fileNamePreviewChanged)
 
     Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged)
@@ -88,6 +90,8 @@ public:
     void setFileNamePrefix(const QString& prefix);
     bool includeNumbers() const;
     void setIncludeNumbers(bool include);
+    bool includeAudioBeforeFirstLabel() const;
+    void setIncludeAudioBeforeFirstLabel(bool include);
     QString fileNamePreview() const;
 
     QString filename() const;
@@ -138,6 +142,7 @@ signals:
     void trimBlankSpaceChanged();
     void fileNamePrefixChanged();
     void includeNumbersChanged();
+    void includeAudioBeforeFirstLabelChanged();
     void fileNamePreviewChanged();
     void filenameChanged();
     void suggestedFilePathChanged();

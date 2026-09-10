@@ -456,7 +456,10 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::separateFiles(Au3Project& pr
                                 : exportConfiguration()->includeNumbers();
 
     if (processType == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE) {
-        return labelFiles(prefix, includeNumbers);
+        const bool includeAudioBeforeFirstLabel = options.count(OptionKey::IncludeAudioBeforeFirstLabel)
+                                                  ? options.at(OptionKey::IncludeAudioBeforeFirstLabel).toBool()
+                                                  : exportConfiguration()->includeAudioBeforeFirstLabel();
+        return labelFiles(prefix, includeNumbers, includeAudioBeforeFirstLabel);
     }
 
     return trackFiles(project, prefix, includeNumbers);
@@ -494,7 +497,8 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::trackFiles(Au3Project& proje
     return files;
 }
 
-std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(const std::string& prefix, bool includeNumbers) const
+std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(const std::string& prefix, bool includeNumbers,
+                                                               bool includeAudioBeforeFirstLabel) const
 {
     const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
     if (!trackeditProject) {
@@ -525,6 +529,18 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(const std::string
 
     std::vector<SeparateFile> files;
     std::vector<std::string> usedNames;
+
+    if (includeAudioBeforeFirstLabel && !labels.empty() && labels.front().startTime > 0.0) {
+        SeparateFile file;
+        file.number = 0;
+        file.title = muse::io::completeBasename(globalContext()->currentProject()->displayName()).toStdString();
+        file.t0 = 0.0;
+        file.t1 = labels.front().startTime;
+        file.name = separateFileName(prefix, includeNumbers ? std::optional<int>(0) : std::nullopt, file.title, usedNames);
+
+        files.push_back(std::move(file));
+    }
+
     int number = 1;
     for (size_t i = 0; i < labels.size(); ++i) {
         if (ranges[i].end <= ranges[i].start) {

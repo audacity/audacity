@@ -34,7 +34,8 @@ public:
         ExportSampleRate,
         Parameters,
         FileNamePrefix,
-        IncludeNumbers
+        IncludeNumbers,
+        IncludeAudioBeforeFirstLabel
     };
 
     using Options = std::map<OptionKey, muse::Val>;

@@ -74,7 +74,7 @@ private:
     std::string formatExtension(const Options& options) const;
     std::vector<SeparateFile> separateFiles(au::au3::Au3Project& project, const Options& options) const;
     std::vector<SeparateFile> trackFiles(au::au3::Au3Project& project, const std::string& prefix, bool includeNumbers) const;
-    std::vector<SeparateFile> labelFiles(const std::string& prefix, bool includeNumbers) const;
+    std::vector<SeparateFile> labelFiles(const std::string& prefix, bool includeNumbers, bool includeAudioBeforeFirstLabel) const;
     muse::Ret runExport(au::au3::Au3Project& project, const wxFileName& filename, muse::ProgressPtr progress);
 
     double m_t0 {};

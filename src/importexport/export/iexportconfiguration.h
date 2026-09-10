@@ -33,6 +33,10 @@ public:
     virtual void setIncludeNumbers(bool include) = 0;
     virtual muse::async::Notification includeNumbersChanged() const = 0;
 
+    virtual bool includeAudioBeforeFirstLabel() const = 0;
+    virtual void setIncludeAudioBeforeFirstLabel(bool include) = 0;
+    virtual muse::async::Notification includeAudioBeforeFirstLabelChanged() const = 0;
+
     virtual bool askExportLocationType() const = 0;
     virtual void setAskExportLocationType(bool ask) = 0;
     virtual muse::async::Notification askExportLocationTypeChanged() const = 0;

@@ -116,6 +116,10 @@ void ExportPreferencesModel::init()
         emit includeNumbersChanged();
         emit fileNamePreviewChanged();
     });
+
+    exportConfiguration()->includeAudioBeforeFirstLabelChanged().onNotify(this, [this] {
+        emit includeAudioBeforeFirstLabelChanged();
+    });
     if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
          && !playbackController()->loopRegion().isValid())
         || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
@@ -294,6 +298,20 @@ void ExportPreferencesModel::setIncludeNumbers(bool include)
     }
 
     exportConfiguration()->setIncludeNumbers(include);
+}
+
+bool ExportPreferencesModel::includeAudioBeforeFirstLabel() const
+{
+    return exportConfiguration()->includeAudioBeforeFirstLabel();
+}
+
+void ExportPreferencesModel::setIncludeAudioBeforeFirstLabel(bool include)
+{
+    if (include == exportConfiguration()->includeAudioBeforeFirstLabel()) {
+        return;
+    }
+
+    exportConfiguration()->setIncludeAudioBeforeFirstLabel(include);
 }
 
 QString ExportPreferencesModel::fileNamePreview() const
@@ -767,6 +785,7 @@ IExporter::Options ExportPreferencesModel::separateFilesOptions() const
     return {
         { IExporter::OptionKey::FileNamePrefix, muse::Val(m_fileNamePrefix.toStdString()) },
         { IExporter::OptionKey::IncludeNumbers, muse::Val(includeNumbers()) },
+        { IExporter::OptionKey::IncludeAudioBeforeFirstLabel, muse::Val(includeAudioBeforeFirstLabel()) },
     };
 }
 
