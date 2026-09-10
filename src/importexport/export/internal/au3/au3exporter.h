@@ -8,6 +8,7 @@
 #include "au3cloud/iau3cloudconfiguration.h"
 
 #include "au3-import-export/Export.h"
+#include "au3wrap/au3types.h"
 
 #include "../../iexporter.h"
 #include "internal/exportconfiguration.h"
@@ -34,6 +35,10 @@ public:
     muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr,
                          au::project::IAudacityProjectPtr project = nullptr) override;
 
+    std::vector<std::string> separateFileNames(const Options& options = {}) const override;
+    muse::Ret exportSeparateFiles(const muse::io::path_t& directory, const Options& options = {},
+                                  muse::ProgressPtr progress = nullptr) override;
+
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;
     std::vector<std::string> formatExtensions(const std::string& format) const override;
@@ -54,6 +59,20 @@ public:
     OptionsEditorUPtr optionsEditor() const;
 
 private:
+    struct SeparateFile {
+        std::string name;
+        std::string title;
+        int number = 0;
+        ::WaveTrack* track = nullptr;
+        double t0 = 0.0;
+        double t1 = 0.0;
+    };
+
+    muse::Ret prepareFormat(const Options& options);
+    std::string formatExtension(const Options& options) const;
+    std::vector<SeparateFile> separateFiles(au::au3::Au3Project& project, const Options& options) const;
+    muse::Ret runExport(au::au3::Au3Project& project, const wxFileName& filename, muse::ProgressPtr progress);
+
     double m_t0 {};
     double m_t1 {};
     bool m_selectedOnly{};

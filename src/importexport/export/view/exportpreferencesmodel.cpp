@@ -9,6 +9,10 @@
 #include "framework/global/defer.h"
 
 #include "trackedit/trackeditutils.h"
+#include "importexport/export/exportutils.h"
+
+#include <algorithm>
+#include <optional>
 
 using namespace au::importexport;
 
@@ -48,9 +52,8 @@ const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
     { ExportProcessType::FULL_PROJECT_AUDIO, QT_TRANSLATE_NOOP("export", "Export full project audio") },
     { ExportProcessType::SELECTED_AUDIO, QT_TRANSLATE_NOOP("export", "Export selected audio") },
     { ExportProcessType::AUDIO_IN_LOOP_REGION, QT_TRANSLATE_NOOP("export", "Export audio in loop region") },
+    { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES, QT_TRANSLATE_NOOP("export", "Export tracks as separate audio files") },
     //! NOTE: not implemented yet
-    // { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES,
-    //   QT_TRANSLATE_NOOP("export", "Export tracks as a separate audio files (Stems)") },
     // { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE,
     //   QT_TRANSLATE_NOOP("export", "Export each label as a separate audio file (Chapters)") },
     // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE,
@@ -108,6 +111,11 @@ void ExportPreferencesModel::init()
     exportConfiguration()->trimBlankSpaceChanged().onNotify(this, [this] {
         emit trimBlankSpaceChanged();
     });
+
+    exportConfiguration()->includeTrackNumbersChanged().onNotify(this, [this] {
+        emit includeTrackNumbersChanged();
+        emit fileNamePreviewChanged();
+    });
     if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
          && !playbackController()->loopRegion().isValid())
         || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
@@ -133,6 +141,7 @@ void ExportPreferencesModel::init()
         emit currentFormatChanged();
         emit fileExtensionChanged();
         emit suggestedFilePathChanged();
+        emit fileNamePreviewChanged();
 
         emit exportSampleRateListChanged();
         emit maxExportChannelsChanged();
@@ -228,6 +237,52 @@ void ExportPreferencesModel::setTrimBlankSpace(bool trim)
     }
 
     exportConfiguration()->setTrimBlankSpace(trim);
+}
+
+bool ExportPreferencesModel::separateFilesExport() const
+{
+    return exportConfiguration()->processType() == ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES;
+}
+
+QString ExportPreferencesModel::fileNamePrefix() const
+{
+    return m_fileNamePrefix;
+}
+
+void ExportPreferencesModel::setFileNamePrefix(const QString& prefix)
+{
+    if (m_fileNamePrefix == prefix) {
+        return;
+    }
+
+    m_fileNamePrefix = prefix;
+    emit fileNamePrefixChanged();
+    emit fileNamePreviewChanged();
+}
+
+bool ExportPreferencesModel::includeTrackNumbers() const
+{
+    return exportConfiguration()->includeTrackNumbers();
+}
+
+void ExportPreferencesModel::setIncludeTrackNumbers(bool include)
+{
+    if (include == exportConfiguration()->includeTrackNumbers()) {
+        return;
+    }
+
+    exportConfiguration()->setIncludeTrackNumbers(include);
+}
+
+QString ExportPreferencesModel::fileNamePreview() const
+{
+    //: Placeholder for a track's name in the export file name preview
+    const std::string trackName = muse::trc("export", "TrackName");
+    const std::optional<int> number = includeTrackNumbers() ? std::optional<int>(1) : std::nullopt;
+    const std::string name = utils::separateFileName(m_fileNamePrefix.toStdString(), number, trackName);
+
+    const std::vector<std::string> extensions = exporter()->formatExtensions(currentFormat().toStdString());
+    return QString::fromStdString(extensions.empty() ? name : name + "." + extensions.front());
 }
 
 QVariantList ExportPreferencesModel::processList() const
@@ -613,13 +668,27 @@ void ExportPreferencesModel::exportData()
     }
 
     bool restoreMasterFx = needToDisableMasterFx;
-
     const muse::Defer restoreMasterFxState([this, restoreMasterFx] {
         if (restoreMasterFx) {
             enableMasterFx();
         }
     });
 
+    const muse::Ret result = separateFilesExport() ? exportSeparateFiles() : exportSingleFile();
+    if (result.code() == static_cast<int>(muse::Ret::Code::Cancel)) {
+        return;
+    }
+
+    if (!result.success() && !result.text().empty()) {
+        interactive()->error(muse::trc("export", "Export error"), result.text());
+        return;
+    }
+
+    emit exportCompleted();
+}
+
+muse::Ret ExportPreferencesModel::exportSingleFile()
+{
     muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
     muse::io::path_t filePath = directoryPath.appendingComponent(filename());
 
@@ -629,30 +698,51 @@ void ExportPreferencesModel::exportData()
         if (!extensions.empty()) {
             defaultExtension = extensions.front();
         }
-
         filePath = filePath.appendingSuffix(defaultExtension);
     }
 
-    if (fileSystem()->exists(filePath)) {
-        const int overwriteBtn = int(muse::IInteractive::Button::CustomButton) + 1;
-        const auto question = muse::trc("export", "Do you want to overwrite?");
-        const auto btnText = muse::trc("export", "Overwrite");
-        muse::IInteractive::Result result = interactive()->questionSync("", question,
-                                                                        { muse::IInteractive::ButtonData(overwriteBtn, btnText),
-                                                                          interactive()->buttonData(muse::IInteractive::Button::Cancel)
-                                                                        });
-        if (result.button() != overwriteBtn) {
-            return;
-        }
+    if (fileSystem()->exists(filePath) && !confirmOverwrite(muse::trc("export", "Do you want to overwrite?"))) {
+        return muse::make_ret(muse::Ret::Code::Cancel);
     }
 
-    muse::Ret result = exporter()->exportData(filePath);
-    if (!result.success() && !result.text().empty()) {
-        interactive()->error(muse::trc("export", "Export error"), result.text());
-        return;
+    return exporter()->exportData(filePath);
+}
+
+muse::Ret ExportPreferencesModel::exportSeparateFiles()
+{
+    const IExporter::Options options = separateFilesOptions();
+    const muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
+
+    const std::vector<std::string> fileNames = exporter()->separateFileNames(options);
+    const bool anyFileExists = std::any_of(fileNames.begin(), fileNames.end(), [this, &directoryPath](const std::string& name) {
+        return fileSystem()->exists(directoryPath.appendingComponent(name));
+    });
+
+    if (anyFileExists
+        && !confirmOverwrite(muse::trc("export", "Some of the files already exist. Do you want to overwrite them?"))) {
+        return muse::make_ret(muse::Ret::Code::Cancel);
     }
 
-    emit exportCompleted();
+    return exporter()->exportSeparateFiles(directoryPath, options);
+}
+
+bool ExportPreferencesModel::confirmOverwrite(const std::string& question)
+{
+    const int overwriteBtn = int(muse::IInteractive::Button::CustomButton) + 1;
+    const auto btnText = muse::trc("export", "Overwrite");
+    muse::IInteractive::Result result = interactive()->questionSync("", question,
+                                                                    { muse::IInteractive::ButtonData(overwriteBtn, btnText),
+                                                                      interactive()->buttonData(muse::IInteractive::Button::Cancel)
+                                                                    });
+    return result.button() == overwriteBtn;
+}
+
+IExporter::Options ExportPreferencesModel::separateFilesOptions() const
+{
+    return {
+        { IExporter::OptionKey::FileNamePrefix, muse::Val(m_fileNamePrefix.toStdString()) },
+        { IExporter::OptionKey::IncludeTrackNumbers, muse::Val(includeTrackNumbers()) },
+    };
 }
 
 bool ExportPreferencesModel::customFFmpegOptionsVisible()

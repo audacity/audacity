@@ -4,6 +4,8 @@
 
 #include "au3exporter.h"
 
+#include <optional>
+
 #include "framework/global/async/asyncable.h"
 
 #include "au3-basic-ui/BasicUI.h"
@@ -13,6 +15,7 @@
 #include "au3-tags/Tags.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-strings/Internat.h"
 #include "au3-strings/TranslatableString.h"
 
 #include "RegisterExportPlugins.h"
@@ -64,6 +67,28 @@ std::vector<bool> prepareChannelMask(TrackList& trackList, bool selectedOnly)
 
     return channelMask;
 }
+
+class ExclusiveTrackSelection
+{
+public:
+    ExclusiveTrackSelection(TrackList& tracks, const Track* selectedTrack)
+    {
+        for (Track* track : tracks) {
+            m_previous.emplace_back(track, track->GetSelected());
+            track->SetSelected(track == selectedTrack);
+        }
+    }
+
+    ~ExclusiveTrackSelection()
+    {
+        for (const auto& [track, selected] : m_previous) {
+            track->SetSelected(selected);
+        }
+    }
+
+private:
+    std::vector<std::pair<Track*, bool> > m_previous;
+};
 }
 
 class ProgressDelegate : public ExportProcessorDelegate, public muse::async::Asyncable
@@ -145,35 +170,11 @@ void Au3Exporter::init()
     ExportPluginRegistry::Get().Initialize();
 }
 
-muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& options, muse::ProgressPtr progress,
-                                  au::project::IAudacityProjectPtr project)
+muse::Ret Au3Exporter::prepareFormat(const Options& options)
 {
-    auto exportProject = project ? project : globalContext()->currentProject();
-
-    IF_ASSERT_FAILED(exportProject) {
-        return muse::make_ret(muse::Ret::Code::InternalError);
-    }
-
     const std::string formatName = options.count(OptionKey::Format)
                                    ? options.at(OptionKey::Format).toString()
                                    : exportConfiguration()->currentFormat();
-
-    const ExportProcessType processType = options.count(OptionKey::ProcessType)
-                                          ? options.at(OptionKey::ProcessType).toEnum<ExportProcessType>()
-                                          : exportConfiguration()->processType();
-
-    const int exportChannelsType = options.count(OptionKey::ExportChannelsType)
-                                   ? options.at(OptionKey::ExportChannelsType).toInt()
-                                   : exportConfiguration()->exportChannelsType();
-
-    const int exportChannels = options.count(OptionKey::ExportChannels)
-                               ? options.at(OptionKey::ExportChannels).toInt()
-                               : exportConfiguration()->exportChannels();
-
-    const muse::Val exportCustomChannelMapping = options.count(OptionKey::ExportCustomChannelMapping)
-                                                 ? options.at(OptionKey::ExportCustomChannelMapping)
-                                                 : exportConfiguration()->exportCustomChannelMapping();
-
     const int exportSampleRate = options.count(OptionKey::ExportSampleRate)
                                  ? options.at(OptionKey::ExportSampleRate).toInt()
                                  : exportConfiguration()->exportSampleRate();
@@ -214,14 +215,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         }
     }
 
-    wxFileName wxfilename = wxFromPath(path);
-
-    Au3Project* au3Project = reinterpret_cast<Au3Project*>(exportProject->au3ProjectPtr());
-    IF_ASSERT_FAILED(au3Project) {
-        return muse::make_ret(muse::Ret::Code::InternalError);
-    }
-
-    int formatIdx = formatIndex(formatName);
+    const int formatIdx = formatIndex(formatName);
     if (formatIdx == -1) {
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
@@ -237,88 +231,25 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         m_parameters.emplace_back(id, std::visit([](auto v) -> ExportValue { return v; }, val));
     }
 
-    m_selectedOnly = false;
-    // TODO: implement other ExportProcessType's selections
-    if (processType == ExportProcessType::SELECTED_AUDIO) {
-        m_t0
-            = !selectionController()->timeSelectionIsEmpty() ? selectionController()->dataSelectedStartTime()
-              : selectionController()->leftMostSelectedClipStartTime().value_or(0.0);
-        m_t1
-            = !selectionController()->timeSelectionIsEmpty() ? selectionController()->dataSelectedEndTime()
-              : selectionController()->rightMostSelectedClipEndTime().value_or(0.0);
-        m_selectedOnly = true;
-    } else if (processType == ExportProcessType::AUDIO_IN_LOOP_REGION) {
-        auto region = playbackController()->loopRegion();
-        m_t0 = region.start;
-        m_t1 = region.end;
-    } else {
-        auto trackeditProject = exportProject->trackeditProject();
-
-        m_t0 = 0.0;
-        m_t1 = trackeditProject->totalTime().to_double();
-    }
-
-    m_tags = &Tags::Get(*au3Project);
-
-    auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(*au3Project), m_selectedOnly);
-    if (exportedTracks.empty()) {
-        //! NOTE: All selected audio is muted
-        return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "All selected audio is muted"));
-    }
-
-    if (exportConfiguration()->trimBlankSpace()) {
-        const double firstClipStart = exportedTracks.min(&Track::GetStartTime);
-        if (firstClipStart > m_t0 && firstClipStart < m_t1) {
-            m_t0 = firstClipStart;
-        }
-    }
-
-    int inputChannelsCount = 0;
-    for (const auto& exportedTrack : exportedTracks) {
-        inputChannelsCount += exportedTrack->NChannels();
-    }
-
-    auto downMix = std::make_unique<MixerOptions::Downmix>(inputChannelsCount, exportChannels);
-    if (ExportChannelsPref::ExportChannels(exportChannelsType) == ExportChannelsPref::ExportChannels::MONO) {
-        m_numChannels = 1;
-    } else if (ExportChannelsPref::ExportChannels(exportChannelsType)
-               == ExportChannelsPref::ExportChannels::STEREO) {
-        m_numChannels = 2;
-    } else {
-        //Figure out the final channel mapping: mixer dialog shows
-        //all tracks regardless of their mute/solo state, but
-        //muted channels should not be present in exported file -
-        //apply channel mask to exclude them
-        auto& trackList = TrackList::Get(*au3Project);
-        auto channelMask = prepareChannelMask(trackList, m_selectedOnly);
-        downMix = std::make_unique<MixerOptions::Downmix>(*downMix, channelMask);
-        m_mixerSpec = downMix.get();
-
-        const std::vector<std::vector<bool> > matrix = utils::valToMatrix(exportCustomChannelMapping);
-        m_numChannels = exportChannels;
-
-        for (int in = 0; in < inputChannelsCount; ++in) {
-            for (unsigned int out = 0; out < m_numChannels; ++out) {
-                m_mixerSpec->mMap[in][out] = false;
-            }
-        }
-
-        const int rows = std::min(inputChannelsCount, static_cast<int>(matrix.size()));
-        for (int in = 0; in < rows; ++in) {
-            const int cols = std::min(static_cast<int>(m_numChannels), static_cast<int>(matrix[in].size()));
-            for (int out = 0; out < cols; ++out) {
-                if (matrix[in][out]) {
-                    m_mixerSpec->mMap[in][out] = true;
-                }
-            }
-        }
-    }
-
     m_sampleRate = exportSampleRate;
 
+    return muse::make_ok();
+}
+
+std::string Au3Exporter::formatExtension(const Options& options) const
+{
+    const std::string formatName = options.count(OptionKey::Format)
+                                   ? options.at(OptionKey::Format).toString()
+                                   : exportConfiguration()->currentFormat();
+    const std::vector<std::string> extensions = formatExtensions(formatName);
+    return extensions.empty() ? std::string() : extensions.front();
+}
+
+muse::Ret Au3Exporter::runExport(Au3Project& project, const wxFileName& wxfilename, muse::ProgressPtr progress)
+{
     try {
         auto processor = m_plugin->CreateProcessor(m_format);
-        if (!processor->Initialize(*au3Project,
+        if (!processor->Initialize(project,
                                    m_parameters,
                                    wxfilename.GetFullPath(),
                                    m_t0, m_t1, m_selectedOnly,
@@ -376,6 +307,251 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
     }
 
     return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& options, muse::ProgressPtr progress,
+                                  au::project::IAudacityProjectPtr project)
+{
+    auto exportProject = project ? project : globalContext()->currentProject();
+    IF_ASSERT_FAILED(exportProject) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
+    Au3Project* au3Project = reinterpret_cast<Au3Project*>(exportProject->au3ProjectPtr());
+    IF_ASSERT_FAILED(au3Project) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
+    const muse::Ret prepared = prepareFormat(options);
+    if (!prepared) {
+        return prepared;
+    }
+
+    const ExportProcessType processType = options.count(OptionKey::ProcessType)
+                                          ? options.at(OptionKey::ProcessType).toEnum<ExportProcessType>()
+                                          : exportConfiguration()->processType();
+    const int exportChannelsType = options.count(OptionKey::ExportChannelsType)
+                                   ? options.at(OptionKey::ExportChannelsType).toInt()
+                                   : exportConfiguration()->exportChannelsType();
+    const int exportChannels = options.count(OptionKey::ExportChannels)
+                               ? options.at(OptionKey::ExportChannels).toInt()
+                               : exportConfiguration()->exportChannels();
+    const muse::Val exportCustomChannelMapping = options.count(OptionKey::ExportCustomChannelMapping)
+                                                 ? options.at(OptionKey::ExportCustomChannelMapping)
+                                                 : exportConfiguration()->exportCustomChannelMapping();
+
+    m_selectedOnly = false;
+    // TODO: implement other ExportProcessType's selections
+    if (processType == ExportProcessType::SELECTED_AUDIO) {
+        m_t0
+            = !selectionController()->timeSelectionIsEmpty() ? selectionController()->dataSelectedStartTime()
+              : selectionController()->leftMostSelectedClipStartTime().value_or(0.0);
+        m_t1
+            = !selectionController()->timeSelectionIsEmpty() ? selectionController()->dataSelectedEndTime()
+              : selectionController()->rightMostSelectedClipEndTime().value_or(0.0);
+        m_selectedOnly = true;
+    } else if (processType == ExportProcessType::AUDIO_IN_LOOP_REGION) {
+        auto region = playbackController()->loopRegion();
+        m_t0 = region.start;
+        m_t1 = region.end;
+    } else {
+        auto trackeditProject = exportProject->trackeditProject();
+
+        m_t0 = 0.0;
+        m_t1 = trackeditProject->totalTime().to_double();
+    }
+
+    m_tags = &Tags::Get(*au3Project);
+
+    auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(*au3Project), m_selectedOnly);
+    if (exportedTracks.empty()) {
+        //! NOTE: All selected audio is muted
+        return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "All selected audio is muted"));
+    }
+
+    if (exportConfiguration()->trimBlankSpace()) {
+        const double firstClipStart = exportedTracks.min(&Track::GetStartTime);
+        if (firstClipStart > m_t0 && firstClipStart < m_t1) {
+            m_t0 = firstClipStart;
+        }
+    }
+
+    int inputChannelsCount = 0;
+    for (const auto& exportedTrack : exportedTracks) {
+        inputChannelsCount += exportedTrack->NChannels();
+    }
+
+    auto downMix = std::make_unique<MixerOptions::Downmix>(inputChannelsCount, exportChannels);
+    m_mixerSpec = nullptr;
+    if (ExportChannelsPref::ExportChannels(exportChannelsType) == ExportChannelsPref::ExportChannels::MONO) {
+        m_numChannels = 1;
+    } else if (ExportChannelsPref::ExportChannels(exportChannelsType)
+               == ExportChannelsPref::ExportChannels::STEREO) {
+        m_numChannels = 2;
+    } else {
+        //Figure out the final channel mapping: mixer dialog shows
+        //all tracks regardless of their mute/solo state, but
+        //muted channels should not be present in exported file -
+        //apply channel mask to exclude them
+        auto& trackList = TrackList::Get(*au3Project);
+        auto channelMask = prepareChannelMask(trackList, m_selectedOnly);
+        downMix = std::make_unique<MixerOptions::Downmix>(*downMix, channelMask);
+        m_mixerSpec = downMix.get();
+
+        const std::vector<std::vector<bool> > matrix = utils::valToMatrix(exportCustomChannelMapping);
+        m_numChannels = exportChannels;
+
+        for (int in = 0; in < inputChannelsCount; ++in) {
+            for (unsigned int out = 0; out < m_numChannels; ++out) {
+                m_mixerSpec->mMap[in][out] = false;
+            }
+        }
+
+        const int rows = std::min(inputChannelsCount, static_cast<int>(matrix.size()));
+        for (int in = 0; in < rows; ++in) {
+            const int cols = std::min(static_cast<int>(m_numChannels), static_cast<int>(matrix[in].size()));
+            for (int out = 0; out < cols; ++out) {
+                if (matrix[in][out]) {
+                    m_mixerSpec->mMap[in][out] = true;
+                }
+            }
+        }
+    }
+
+    return runExport(*au3Project, wxFromPath(path), progress);
+}
+
+std::vector<Au3Exporter::SeparateFile> Au3Exporter::separateFiles(Au3Project& project, const Options& options) const
+{
+    const std::string prefix = options.count(OptionKey::FileNamePrefix)
+                               ? options.at(OptionKey::FileNamePrefix).toString()
+                               : std::string();
+    const bool includeTrackNumbers = options.count(OptionKey::IncludeTrackNumbers)
+                                     ? options.at(OptionKey::IncludeTrackNumbers).toBool()
+                                     : exportConfiguration()->includeTrackNumbers();
+    const bool trimBlankSpace = exportConfiguration()->trimBlankSpace();
+
+    auto& tracks = TrackList::Get(project);
+    const bool anySolo = !(tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty();
+    auto waveTracks = tracks.Any<WaveTrack>() - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
+
+    std::vector<SeparateFile> files;
+    std::vector<std::string> usedNames;
+    int number = 1;
+    for (WaveTrack* track : waveTracks) {
+        if (track->IsEmpty()) {
+            continue;
+        }
+
+        SeparateFile file;
+        file.track = track;
+        file.number = number;
+        file.title = wxToStdString(track->GetName());
+        file.t0 = trimBlankSpace ? track->GetStartTime() : 0.0;
+        file.t1 = track->GetEndTime();
+
+        const std::string trackName = file.title.empty() ? muse::trc("export", "untitled") : file.title;
+        const std::optional<int> fileNumber = includeTrackNumbers ? std::optional<int>(number) : std::nullopt;
+        wxString name = wxFromStdString(utils::separateFileName(prefix, fileNumber, trackName));
+        Internat::SanitiseFilename(name, wxT("_"));
+        file.name = utils::makeFileNameUnique(wxToStdString(name), usedNames);
+
+        files.push_back(std::move(file));
+        ++number;
+    }
+
+    return files;
+}
+
+std::vector<std::string> Au3Exporter::separateFileNames(const Options& options) const
+{
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return {};
+    }
+
+    Au3Project* au3Project = reinterpret_cast<Au3Project*>(project->au3ProjectPtr());
+    if (!au3Project) {
+        return {};
+    }
+
+    const std::string extension = formatExtension(options);
+    std::vector<std::string> names;
+    for (const SeparateFile& file : separateFiles(*au3Project, options)) {
+        names.push_back(extension.empty() ? file.name : file.name + "." + extension);
+    }
+
+    return names;
+}
+
+muse::Ret Au3Exporter::exportSeparateFiles(const muse::io::path_t& directory, const Options& options, muse::ProgressPtr progress)
+{
+    const auto exportProject = globalContext()->currentProject();
+    IF_ASSERT_FAILED(exportProject) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
+    Au3Project* au3Project = reinterpret_cast<Au3Project*>(exportProject->au3ProjectPtr());
+    IF_ASSERT_FAILED(au3Project) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
+    const muse::Ret prepared = prepareFormat(options);
+    if (!prepared) {
+        return prepared;
+    }
+
+    const std::vector<SeparateFile> files = separateFiles(*au3Project, options);
+    if (files.empty()) {
+        return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "There are no tracks to export"));
+    }
+
+    const auto exportChannelsType = ExportChannelsPref::ExportChannels(options.count(OptionKey::ExportChannelsType)
+                                                                       ? options.at(OptionKey::ExportChannelsType).toInt()
+                                                                       : exportConfiguration()->exportChannelsType());
+    const std::string extension = formatExtension(options);
+    const Tags& projectTags = Tags::Get(*au3Project);
+    auto& tracks = TrackList::Get(*au3Project);
+
+    m_selectedOnly = true;
+    m_mixerSpec = nullptr;
+
+    for (const SeparateFile& file : files) {
+        const ExclusiveTrackSelection selection(tracks, file.track);
+
+        m_t0 = file.t0;
+        m_t1 = file.t1;
+
+        switch (exportChannelsType) {
+        case ExportChannelsPref::ExportChannels::MONO:
+            m_numChannels = 1;
+            break;
+        case ExportChannelsPref::ExportChannels::STEREO:
+            m_numChannels = 2;
+            break;
+        default:
+            m_numChannels = file.track->NChannels();
+            break;
+        }
+
+        Tags tags = projectTags;
+        tags.SetTag(TAG_TITLE, wxFromStdString(file.title));
+        tags.SetTag(TAG_TRACK, wxString::Format(wxT("%d"), file.number));
+        m_tags = &tags;
+
+        muse::io::path_t path = directory.appendingComponent(file.name);
+        if (!extension.empty()) {
+            path = path.appendingSuffix(extension);
+        }
+
+        const muse::Ret ret = runExport(*au3Project, wxFromPath(path), progress);
+        m_tags = nullptr;
+        if (!ret) {
+            return ret;
+        }
+    }
+
+    return muse::make_ok();
 }
 
 std::vector<std::string> Au3Exporter::formatsList() const

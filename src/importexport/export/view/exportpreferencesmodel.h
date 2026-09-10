@@ -41,6 +41,11 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
 
     Q_PROPERTY(bool trimBlankSpace READ trimBlankSpace WRITE setTrimBlankSpace NOTIFY trimBlankSpaceChanged)
 
+    Q_PROPERTY(bool separateFilesExport READ separateFilesExport NOTIFY currentProcessChanged)
+    Q_PROPERTY(QString fileNamePrefix READ fileNamePrefix WRITE setFileNamePrefix NOTIFY fileNamePrefixChanged)
+    Q_PROPERTY(bool includeTrackNumbers READ includeTrackNumbers WRITE setIncludeTrackNumbers NOTIFY includeTrackNumbersChanged)
+    Q_PROPERTY(QString fileNamePreview READ fileNamePreview NOTIFY fileNamePreviewChanged)
+
     Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged)
     Q_PROPERTY(QString suggestedFilePath READ suggestedFilePath NOTIFY suggestedFilePathChanged)
 
@@ -75,6 +80,13 @@ public:
 
     bool trimBlankSpace() const;
     void setTrimBlankSpace(bool trim);
+
+    bool separateFilesExport() const;
+    QString fileNamePrefix() const;
+    void setFileNamePrefix(const QString& prefix);
+    bool includeTrackNumbers() const;
+    void setIncludeTrackNumbers(bool include);
+    QString fileNamePreview() const;
 
     QString filename() const;
     Q_INVOKABLE void setFilename(const QString& filename);
@@ -122,6 +134,9 @@ signals:
     void currentProcessChanged();
     void processListChanged();
     void trimBlankSpaceChanged();
+    void fileNamePrefixChanged();
+    void includeTrackNumbersChanged();
+    void fileNamePreviewChanged();
     void filenameChanged();
     void suggestedFilePathChanged();
     void fileExtensionChanged();
@@ -146,7 +161,13 @@ private:
     void openCustomSampleRateDialog();
     void updateExportChannels();
 
+    muse::Ret exportSingleFile();
+    muse::Ret exportSeparateFiles();
+    bool confirmOverwrite(const std::string& question);
+    IExporter::Options separateFilesOptions() const;
+
     QString m_filename;
+    QString m_fileNamePrefix;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
     bool m_resetSampleRate = true;
 };
