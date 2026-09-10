@@ -502,7 +502,7 @@ MenuItem* AppMenuModel::makeHelpMenu()
         // makeMenu(TranslatableString("appshell-menu-diagnostics", "Diagnostics"), makeDiagnosticsItems(), "menu-diagnostics", false),
         // makeSeparator(),
         // makeMenuItem("link-account"),
-        makeMenuItem("about-audacity"),
+        makeMenuItem("about-audacity", MenuItemRole::AboutRole),
         makeMenuItem("about-qt", MenuItemRole::AboutQtRole),
         makeSeparator(),
         makeMenuItem("revert-factory")
