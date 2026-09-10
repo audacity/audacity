@@ -14,7 +14,7 @@ static const std::string module_name("export");
 
 static const muse::Settings::Key EXPORT_PROCESS(module_name, "importexport/process");
 static const muse::Settings::Key EXPORT_TRIM_BLANK_SPACE(module_name, "importexport/trimBlankSpace");
-static const muse::Settings::Key EXPORT_INCLUDE_TRACK_NUMBERS(module_name, "importexport/includeTrackNumbers");
+static const muse::Settings::Key EXPORT_INCLUDE_NUMBERS(module_name, "importexport/includeNumbers");
 static const muse::Settings::Key EXPORT_ASK_LOCATION_TYPE(module_name, "importexport/askExportLocationType");
 static const muse::Settings::Key EXPORT_DIRECTORY_PATH(module_name, "importexport/directoryPath");
 static const muse::Settings::Key EXPORT_FORMAT(module_name, "importexport/format");
@@ -62,9 +62,9 @@ void ExportConfiguration::init()
         m_trimBlankSpaceChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(EXPORT_INCLUDE_TRACK_NUMBERS, muse::Val(false));
-    muse::settings()->valueChanged(EXPORT_INCLUDE_TRACK_NUMBERS).onReceive(nullptr, [this] (const muse::Val&) {
-        m_includeTrackNumbersChanged.notify();
+    muse::settings()->setDefaultValue(EXPORT_INCLUDE_NUMBERS, muse::Val(false));
+    muse::settings()->valueChanged(EXPORT_INCLUDE_NUMBERS).onReceive(nullptr, [this] (const muse::Val&) {
+        m_includeNumbersChanged.notify();
     });
 
     muse::settings()->setDefaultValue(EXPORT_ASK_LOCATION_TYPE, muse::Val(true));
@@ -246,19 +246,19 @@ muse::async::Notification ExportConfiguration::trimBlankSpaceChanged() const
     return m_trimBlankSpaceChanged;
 }
 
-bool ExportConfiguration::includeTrackNumbers() const
+bool ExportConfiguration::includeNumbers() const
 {
-    return muse::settings()->value(EXPORT_INCLUDE_TRACK_NUMBERS).toBool();
+    return muse::settings()->value(EXPORT_INCLUDE_NUMBERS).toBool();
 }
 
-void ExportConfiguration::setIncludeTrackNumbers(bool include)
+void ExportConfiguration::setIncludeNumbers(bool include)
 {
-    muse::settings()->setSharedValue(EXPORT_INCLUDE_TRACK_NUMBERS, muse::Val(include));
+    muse::settings()->setSharedValue(EXPORT_INCLUDE_NUMBERS, muse::Val(include));
 }
 
-muse::async::Notification ExportConfiguration::includeTrackNumbersChanged() const
+muse::async::Notification ExportConfiguration::includeNumbersChanged() const
 {
-    return m_includeTrackNumbersChanged;
+    return m_includeNumbersChanged;
 }
 
 bool ExportConfiguration::askExportLocationType() const

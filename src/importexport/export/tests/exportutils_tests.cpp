@@ -50,3 +50,33 @@ TEST(ExportUtilsTests, MakeFileNameUniqueIgnoresCase)
     utils::makeFileNameUnique("Vocals", used);
     EXPECT_EQ(utils::makeFileNameUnique("VOCALS", used), "VOCALS-2");
 }
+
+TEST(ExportUtilsTests, LabelExportRangesKeepRegionLabels)
+{
+    const std::vector<utils::TimeRange> ranges = utils::labelExportRanges({ { 1.0, 2.5 }, { 3.0, 4.0 } }, 10.0);
+
+    ASSERT_EQ(ranges.size(), 2u);
+    EXPECT_DOUBLE_EQ(ranges[0].start, 1.0);
+    EXPECT_DOUBLE_EQ(ranges[0].end, 2.5);
+    EXPECT_DOUBLE_EQ(ranges[1].start, 3.0);
+    EXPECT_DOUBLE_EQ(ranges[1].end, 4.0);
+}
+
+TEST(ExportUtilsTests, LabelExportRangesExtendPointLabelsToNextLabel)
+{
+    const std::vector<utils::TimeRange> ranges = utils::labelExportRanges({ { 1.0, 1.0 }, { 3.0, 3.0 }, { 6.0, 7.0 } }, 10.0);
+
+    ASSERT_EQ(ranges.size(), 3u);
+    EXPECT_DOUBLE_EQ(ranges[0].end, 3.0);
+    EXPECT_DOUBLE_EQ(ranges[1].end, 6.0);
+    EXPECT_DOUBLE_EQ(ranges[2].end, 7.0);
+}
+
+TEST(ExportUtilsTests, LabelExportRangesExtendLastPointLabelToProjectEnd)
+{
+    const std::vector<utils::TimeRange> ranges = utils::labelExportRanges({ { 4.0, 4.0 } }, 10.0);
+
+    ASSERT_EQ(ranges.size(), 1u);
+    EXPECT_DOUBLE_EQ(ranges[0].start, 4.0);
+    EXPECT_DOUBLE_EQ(ranges[0].end, 10.0);
+}

@@ -8,6 +8,7 @@
 #include "au3cloud/iau3cloudconfiguration.h"
 
 #include "au3-import-export/Export.h"
+#include "au3-mixer/MixerOptions.h"
 #include "au3wrap/au3types.h"
 
 #include "../../iexporter.h"
@@ -69,8 +70,11 @@ private:
     };
 
     muse::Ret prepareFormat(const Options& options);
+    muse::Ret prepareMix(au::au3::Au3Project& project, const Options& options);
     std::string formatExtension(const Options& options) const;
     std::vector<SeparateFile> separateFiles(au::au3::Au3Project& project, const Options& options) const;
+    std::vector<SeparateFile> trackFiles(au::au3::Au3Project& project, const std::string& prefix, bool includeNumbers) const;
+    std::vector<SeparateFile> labelFiles(const std::string& prefix, bool includeNumbers) const;
     muse::Ret runExport(au::au3::Au3Project& project, const wxFileName& filename, muse::ProgressPtr progress);
 
     double m_t0 {};
@@ -81,6 +85,7 @@ private:
     ExportProcessor::Parameters m_parameters;
     const ExportPlugin* m_plugin{};
     int m_format{};
+    std::unique_ptr<MixerOptions::Downmix> m_downMix;
     MixerOptions::Downmix* m_mixerSpec{};
     const Tags* m_tags{};
 };

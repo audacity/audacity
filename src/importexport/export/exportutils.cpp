@@ -92,3 +92,25 @@ std::string au::importexport::utils::makeFileNameUnique(const std::string& name,
     otherNames.push_back(result);
     return result;
 }
+
+std::vector<au::importexport::utils::TimeRange> au::importexport::utils::labelExportRanges(const std::vector<TimeRange>& labels,
+                                                                                           double projectEndTime)
+{
+    std::vector<TimeRange> ranges;
+    ranges.reserve(labels.size());
+
+    for (size_t i = 0; i < labels.size(); ++i) {
+        TimeRange range;
+        range.start = labels[i].start;
+        if (labels[i].end > labels[i].start) {
+            range.end = labels[i].end;
+        } else if (i + 1 < labels.size()) {
+            range.end = labels[i + 1].start;
+        } else {
+            range.end = projectEndTime;
+        }
+        ranges.push_back(range);
+    }
+
+    return ranges;
+}
