@@ -675,6 +675,23 @@ StyledDialogView {
 
                         onClicked: exportPreferencesModel.trimBlankSpace = !exportPreferencesModel.trimBlankSpace
                     }
+
+                    CheckBox {
+                        id: includeAudioBeforeFirstLabelCheckBox
+                        width: parent.width
+
+                        visible: exportPreferencesModel.separateFilesByLabels
+
+                        text: qsTrc("export", "Include audio before first label")
+                        checked: exportPreferencesModel.includeAudioBeforeFirstLabel
+
+                        navigation.name: "IncludeAudioBeforeFirstLabelBox"
+                        navigation.panel: renderingSection.navigation
+                        navigation.order: trimBlankSpaceCheckBox.navigation.order + 1
+                        navigation.accessible.name: text
+
+                        onClicked: exportPreferencesModel.includeAudioBeforeFirstLabel = !exportPreferencesModel.includeAudioBeforeFirstLabel
+                    }
                 }
             }
         }
