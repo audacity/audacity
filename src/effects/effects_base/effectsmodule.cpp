@@ -6,6 +6,8 @@
 #include "au3-module-manager/PluginManager.h"
 #include "au3-files/FileNames.h"
 
+#include "au3wrap/internal/wxtypes_convert.h"
+
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/diagnostics/idiagnosticspathsregister.h"
 
@@ -102,7 +104,7 @@ void EffectsModule::registerUiTypes()
 void EffectsModule::onPreInit(const muse::IApplication::RunMode&)
 {
     auto configFactory = [](const FilePath& localFileName) -> std::unique_ptr<audacity::BasicSettings> {
-        return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
+        return std::make_unique<au3::EffectConfigSettings>(au::au3::wxToStdString(localFileName));
     };
 
     PluginManager::Get().Initialize(std::move(configFactory), std::make_unique<EffectIdResolver>());
@@ -115,7 +117,7 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     //! --- Diagnostics ---
     auto pr = globalIoc()->resolve<muse::diagnostics::IDiagnosticsPathsRegister>(mname);
     if (pr) {
-        pr->reg("pluginsettings", FileNames::PluginSettings().ToStdString());
+        pr->reg("pluginsettings", au::au3::wxToStdString(FileNames::PluginSettings()));
     }
 }
 
