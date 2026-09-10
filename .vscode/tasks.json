@@ -18,7 +18,7 @@
             "problemMatcher": []
         },
         {
-            // Pre-launch for the Linux configs: install as before, then deploy the rebuilt
+            // Pre-launch for the Linux and macOS configs: install as before, then deploy the rebuilt
             // test plugin so editing it and pressing F5 shows the change in Audacity.
             "label": "CMake: install + deploy test VST3",
             "dependsOrder": "sequence",
