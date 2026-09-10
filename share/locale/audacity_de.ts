@@ -234,7 +234,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="231"/>
         <source>&amp;Enter</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Eingabe</translation>
     </message>
     <message>
         <source>Trigger the focused control or select the focused track item</source>
@@ -347,7 +347,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
         <source>Play selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Auswahl abspielen</translation>
     </message>
     <message>
         <source>Play the selected time range</source>
@@ -745,13 +745,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
         <source>Previous clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vorheriger Clip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
         <source>Next clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nächster Clip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
@@ -829,7 +829,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="347"/>
         <source>Show history</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Verlauf anzeigen</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
@@ -2559,13 +2559,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
         <source>Previous clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vorheriger Clip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="274"/>
         <source>Next clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nächster Clip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="282"/>
@@ -2619,7 +2619,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
         <source>Show history</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Verlauf anzeigen</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
@@ -17714,7 +17714,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="535"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation>Andere</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
@@ -17785,7 +17785,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>Musik</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
@@ -21895,12 +21895,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="76"/>
         <source>Leave gap</source>
-        <translation type="unfinished"/>
+        <translation>Lücke lassen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="79"/>
         <source>Close gap (ripple)</source>
-        <translation type="unfinished"/>
+        <translation>Lücke schließen (ripple)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="61"/>
@@ -21936,7 +21936,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="39"/>
         <source>Position:</source>
-        <translation type="unfinished"/>
+        <translation>Position:</translation>
     </message>
 </context>
 <context>
@@ -22109,7 +22109,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation>Andere</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
@@ -22488,7 +22488,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
-        <translation type="unfinished"/>
+        <translation>Nach update suchen</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
@@ -22503,7 +22503,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
         <source>Updating %1</source>
-        <translation type="unfinished"/>
+        <translation>Hochladen %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
@@ -22530,7 +22530,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation type="unfinished"/>
+        <translation>Effekteditor öffnen</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
@@ -22555,7 +22555,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
         <source>Searching VST3 in: %1</source>
-        <translation type="unfinished"/>
+        <translation>Suche nach VST3 in: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
@@ -22832,7 +22832,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../src/shared/types/workspacetitles.h" line="28"/>
         <source>Music</source>
         <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
-        <translation type="unfinished"/>
+        <translation>Musik</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>

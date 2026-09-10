@@ -5956,7 +5956,7 @@ Kód chyby: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
         <source>Realtime effect error</source>
-        <translation type="unfinished"/>
+        <translation>Chyba v efektoch v reálnom čase</translation>
     </message>
 </context>
 <context>
