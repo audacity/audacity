@@ -60,7 +60,7 @@ std::string au::importexport::utils::separateFileName(const std::string& prefix,
             return;
         }
         if (!result.empty()) {
-            result += "-";
+            result += ".";
         }
         result += part;
     };

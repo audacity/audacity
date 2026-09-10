@@ -14,13 +14,13 @@ TEST(ExportUtilsTests, SeparateFileNameUsesTrackNameAlone)
 
 TEST(ExportUtilsTests, SeparateFileNamePutsNumberBeforeName)
 {
-    EXPECT_EQ(utils::separateFileName("", 3, "Vocals"), "03-Vocals");
+    EXPECT_EQ(utils::separateFileName("", 3, "Vocals"), "03.Vocals");
 }
 
 TEST(ExportUtilsTests, SeparateFileNamePutsPrefixFirst)
 {
-    EXPECT_EQ(utils::separateFileName("Song", std::nullopt, "Vocals"), "Song-Vocals");
-    EXPECT_EQ(utils::separateFileName("Song", 12, "Vocals"), "Song-12-Vocals");
+    EXPECT_EQ(utils::separateFileName("Song", std::nullopt, "Vocals"), "Song.Vocals");
+    EXPECT_EQ(utils::separateFileName("Song", 12, "Vocals"), "Song.12.Vocals");
 }
 
 TEST(ExportUtilsTests, SeparateFileNameSkipsEmptyParts)
