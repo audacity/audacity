@@ -47,6 +47,19 @@ void TrackItemsMoveController::init()
     tracksViewRequestsService()->itemMoveRequested().onReceive(this, [this](secs_t timeOffset, int trackOffset) {
         moveByKeyboard(timeOffset, trackOffset);
     }, muse::async::Asyncable::Mode::SetReplace);
+    const auto observeTrackRemoval = [this]() {
+        const auto project = globalContext()->currentTrackeditProject();
+        if (!project) {
+            return;
+        }
+        project->trackRemoved().onReceive(this, [this](const Track&) {
+            if (active() && !m_updating) {
+                cancel();
+            }
+        }, muse::async::Asyncable::Mode::SetReplace);
+    };
+    observeTrackRemoval();
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, observeTrackRemoval, muse::async::Asyncable::Mode::SetReplace);
     projectHistory()->historyChanged().onReceive(this, [this](HistoryEvent) {
         if (keyboardActive() && !m_updating) {
             endInteraction();
