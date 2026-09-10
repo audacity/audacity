@@ -3,7 +3,8 @@
 #
 # Developer tool: a VST3 effect whose module load is controlled by a validation gate file, for
 # testing plugin validation and loading (see README.md), plus a small Qt controller
-# app. Opt in with -DAU_BUILD_VST3_TEST_PLUGIN=ON.
+# app. Opt in with -DAU_BUILD_VST3_TEST_PLUGIN=ON. The plugin builds on Linux and macOS;
+# the controller everywhere.
 #
 
 option(AU_BUILD_VST3_TEST_PLUGIN
@@ -41,9 +42,9 @@ set_target_properties(au_vst3_test_plugin_validation_controller PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test-plugins
 )
 
-# ---- The plugin itself (Linux only for now) ----
-if (NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(WARNING "[vst3-test-plugin] plugin only implemented for Linux, skipping it (controller still built)")
+# ---- The plugin itself (Linux and macOS; not implemented for Windows) ----
+if (NOT CMAKE_SYSTEM_NAME MATCHES "^(Linux|Darwin)$")
+    message(WARNING "[vst3-test-plugin] plugin only implemented for Linux and macOS, skipping it (controller still built)")
     au_test_vst3_noop_deploy_target("plugin not built on this platform")
     return()
 endif()
@@ -53,11 +54,20 @@ if (NOT VST3_SDK_PATH)
     message(FATAL_ERROR "[vst3-test-plugin] vst3sdk not populated - the dependency manifest must run first")
 endif()
 
+# The platform half of the SDK's module entry: ModuleEntry/ModuleExit (dlopen) on
+# Linux, bundleEntry/bundleExit (CFBundle) on macOS. Both call the plugin's
+# InitModule/DeinitModule, where the validation gate lives.
+if (APPLE)
+    set(SDK_PLATFORM_MAIN ${VST3_SDK_PATH}/public.sdk/source/main/macmain.cpp)
+else()
+    set(SDK_PLATFORM_MAIN ${VST3_SDK_PATH}/public.sdk/source/main/linuxmain.cpp)
+endif()
+
 # The SDK sources are compiled into the module (the in-tree vst_sdk_3 static
 # library isn't built as position-independent code).
 set(SDK_PLUGIN_SRC
     ${VST3_SDK_PATH}/public.sdk/source/main/pluginfactory.cpp
-    ${VST3_SDK_PATH}/public.sdk/source/main/linuxmain.cpp
+    ${SDK_PLATFORM_MAIN}
     ${VST3_SDK_PATH}/public.sdk/source/common/commoniids.cpp
     ${VST3_SDK_PATH}/public.sdk/source/common/commonstringconvert.cpp
     ${VST3_SDK_PATH}/public.sdk/source/common/pluginview.cpp
@@ -95,15 +105,47 @@ target_compile_options(au_vst3_test_plugin_validation_gate PRIVATE -w)
 find_package(Threads REQUIRED)
 target_link_libraries(au_vst3_test_plugin_validation_gate PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
 
-# VST3 bundle layout: <Name>.vst3/Contents/<arch>-linux/<Name>.so
 set_target_properties(au_vst3_test_plugin_validation_gate PROPERTIES
     OUTPUT_NAME ${AU_VST3_TEST_PLUGIN_NAME}
-    PREFIX ""
-    SUFFIX ".so"
     CXX_STANDARD 17
     POSITION_INDEPENDENT_CODE ON
-    LIBRARY_OUTPUT_DIRECTORY ${AU_VST3_TEST_PLUGIN_BUNDLE}/Contents/${CMAKE_SYSTEM_PROCESSOR}-linux
 )
+
+if (APPLE)
+    # VST3 bundle layout: <Name>.vst3/Contents/MacOS/<Name> + Contents/Info.plist (+ PkgInfo).
+    # CMake's CFBundle support builds that from the MODULE library: LIBRARY_OUTPUT_DIRECTORY
+    # is where the .vst3 lands, and Info.plist.in is configured with the MACOSX_BUNDLE_*
+    # properties (CMake fills in MACOSX_BUNDLE_EXECUTABLE_NAME). On arm64 the linker
+    # ad-hoc signs the binary, which is all a locally loaded bundle needs.
+    target_link_libraries(au_vst3_test_plugin_validation_gate PRIVATE "-framework CoreFoundation")
+    set_target_properties(au_vst3_test_plugin_validation_gate PROPERTIES
+        BUNDLE TRUE
+        BUNDLE_EXTENSION vst3
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test-plugins
+        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in
+        MACOSX_BUNDLE_BUNDLE_NAME ${AU_VST3_TEST_PLUGIN_NAME}
+        MACOSX_BUNDLE_GUI_IDENTIFIER org.audacityteam.${AU_VST3_TEST_PLUGIN_NAME}
+        MACOSX_BUNDLE_BUNDLE_VERSION 1.0.0
+        MACOSX_BUNDLE_SHORT_VERSION_STRING 1.0.0
+        MACOSX_BUNDLE_COPYRIGHT "Audacity Team"
+    )
+    # CMake only writes PkgInfo for app bundles; hosts read the type from Info.plist, but a
+    # complete bundle is what the VST3 SDK's own build produces, so match it.
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/PkgInfo "BNDL????")
+    add_custom_command(TARGET au_vst3_test_plugin_validation_gate POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${CMAKE_CURRENT_BINARY_DIR}/PkgInfo
+                $<TARGET_BUNDLE_CONTENT_DIR:au_vst3_test_plugin_validation_gate>/PkgInfo
+        VERBATIM
+    )
+else()
+    # VST3 bundle layout: <Name>.vst3/Contents/<arch>-linux/<Name>.so
+    set_target_properties(au_vst3_test_plugin_validation_gate PROPERTIES
+        PREFIX ""
+        SUFFIX ".so"
+        LIBRARY_OUTPUT_DIRECTORY ${AU_VST3_TEST_PLUGIN_BUNDLE}/Contents/${CMAKE_SYSTEM_PROCESSOR}-linux
+    )
+endif()
 
 # Deploy into the user's VST3 folder as an explicit, opt-in target.
 configure_file(deploy.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/deploy_test_vst3.cmake @ONLY)

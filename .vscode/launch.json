@@ -37,7 +37,7 @@
             "type": "cppdbg",
             "MIMode": "lldb",
             "request": "launch",
-            "preLaunchTask": "CMake: install",
+            "preLaunchTask": "CMake: install + deploy test VST3",
             "cwd": "${fileDirname}",
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
@@ -47,6 +47,22 @@
             "sourceFileMap": {
                 "/Users/qt/work/qt": "${env:QTDIR}/../Src"
             }
+        },
+        {
+            // Requires CodeLLDB extension. Runs the plugin-validation subprocess directly on the
+            // deployed test VST3 (see tools/vst3-test-plugin), so a crash while loading it is
+            // caught in the debugger instead of being reported by the parent app.
+            "name": "run audacity (MacOS, CodeLLDB, validate test VST3)",
+            "type": "lldb",
+            "request": "launch",
+            "preLaunchTask": "CMake: install + deploy test VST3",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [
+                // "--register-audio-plugin", "${userHome}/Library/Audio/Plug-Ins/VST3/AuVst3TestPlugin.vst3",
+                // "--register-audio-plugin-out", "${userHome}/Downloads/validation_result.json"
+            ],
+            "sourceMap": { "/Users/qt/work/qt": "${env:QTDIR}/../Src" }
         },
         {
             // Requires CodeLLDB extension

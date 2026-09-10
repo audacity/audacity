@@ -17,7 +17,7 @@
  *    1  (or missing/unreadable file)  load normally
  *    0                                 wait, polling the file, until it changes
  *   -1                                 crash (null dereference) while loading
- *    2                                 refuse to load (ModuleEntry returns false)
+ *    2                                 refuse to load (ModuleEntry / bundleEntry returns false)
  *    3                                 load, then abort the host process when it exits (see ExitRace)
  * e.g. `1 180` loads after 3 minutes, `-1 180` crashes after 3 minutes.
  * While waiting, a heartbeat line is written to stderr about once a second.
@@ -96,8 +96,9 @@ void say(const char* message, const std::filesystem::path& path, const Validatio
 // starts a worker thread on load and only cleans up in static destructors: at exit()
 // one destructor destroys a mutex the worker still uses, then joins it; the worker's
 // next lock fails, the exception is uncaught, and std::terminate aborts the process -
-// after the validation result was written. A pthread mutex rather than std::mutex,
-// whose libstdc++ destructor is a no-op, so the lock fails on Linux too.
+// after the validation result was written. A pthread mutex rather than std::mutex:
+// pthread_mutex_destroy() really invalidates it on Linux and macOS alike, so the lock
+// reliably fails, whereas libstdc++'s std::mutex destructor is a no-op.
 struct ExitRace {
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     std::thread worker;
@@ -128,9 +129,10 @@ void exitRaceWork()
     }
 }
 
-// The host dlcloses the module as soon as discovery is done, which would run the
-// static destructors (and the abort) before the result is written. Keep the module
-// resident so they run at exit() instead, as they do for a bundle on macOS.
+// On Linux the host dlcloses the module as soon as discovery is done, which would run
+// the static destructors (and the abort) before the result is written. Keep the module
+// resident so they run at exit() instead. On macOS the SDK's host side never unloads
+// a bundle (module_mac.mm only calls bundleExit), so this is a harmless no-op there.
 void pinModuleInMemory()
 {
     Dl_info info {};
@@ -149,7 +151,8 @@ void startExitRace()
 }
 }
 
-// Called from ModuleEntry (linuxmain.cpp) right after the host dlopen'ed us.
+// Called from ModuleEntry (linuxmain.cpp) right after the host dlopen'ed us, or from
+// bundleEntry (macmain.cpp) once the host has loaded the bundle.
 bool InitModule()
 {
     using Clock = std::chrono::steady_clock;
