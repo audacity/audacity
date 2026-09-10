@@ -665,6 +665,8 @@ StyledDialogView {
                         id: trimBlankSpaceCheckBox
                         width: parent.width
 
+                        enabled: exportPreferencesModel.trimBlankSpaceEnabled
+
                         text: qsTrc("export", "Trim blank space before first clip")
                         checked: exportPreferencesModel.trimBlankSpace
 

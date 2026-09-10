@@ -106,6 +106,7 @@ void ExportPreferencesModel::init()
 
     exportConfiguration()->processTypeChanged().onNotify(this, [this] {
         emit currentProcessChanged();
+        emit trimBlankSpaceEnabledChanged();
     });
 
     exportConfiguration()->trimBlankSpaceChanged().onNotify(this, [this] {
@@ -119,6 +120,7 @@ void ExportPreferencesModel::init()
 
     exportConfiguration()->includeAudioBeforeFirstLabelChanged().onNotify(this, [this] {
         emit includeAudioBeforeFirstLabelChanged();
+        emit trimBlankSpaceEnabledChanged();
     });
     if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
          && !playbackController()->loopRegion().isValid())
@@ -256,6 +258,11 @@ void ExportPreferencesModel::setTrimBlankSpace(bool trim)
     }
 
     exportConfiguration()->setTrimBlankSpace(trim);
+}
+
+bool ExportPreferencesModel::trimBlankSpaceEnabled() const
+{
+    return !separateFilesByLabels() || includeAudioBeforeFirstLabel();
 }
 
 bool ExportPreferencesModel::separateFilesExport() const

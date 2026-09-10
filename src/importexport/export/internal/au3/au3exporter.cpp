@@ -459,7 +459,7 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::separateFiles(Au3Project& pr
         const bool includeAudioBeforeFirstLabel = options.count(OptionKey::IncludeAudioBeforeFirstLabel)
                                                   ? options.at(OptionKey::IncludeAudioBeforeFirstLabel).toBool()
                                                   : exportConfiguration()->includeAudioBeforeFirstLabel();
-        return labelFiles(prefix, includeNumbers, includeAudioBeforeFirstLabel);
+        return labelFiles(project, prefix, includeNumbers, includeAudioBeforeFirstLabel);
     }
 
     return trackFiles(project, prefix, includeNumbers);
@@ -497,7 +497,7 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::trackFiles(Au3Project& proje
     return files;
 }
 
-std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(const std::string& prefix, bool includeNumbers,
+std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(Au3Project& project, const std::string& prefix, bool includeNumbers,
                                                                bool includeAudioBeforeFirstLabel) const
 {
     const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
@@ -530,15 +530,26 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(const std::string
     std::vector<SeparateFile> files;
     std::vector<std::string> usedNames;
 
-    if (includeAudioBeforeFirstLabel && !labels.empty() && labels.front().startTime > 0.0) {
-        SeparateFile file;
-        file.number = 0;
-        file.title = muse::io::completeBasename(globalContext()->currentProject()->displayName()).toStdString();
-        file.t0 = 0.0;
-        file.t1 = labels.front().startTime;
-        file.name = separateFileName(prefix, includeNumbers ? std::optional<int>(0) : std::nullopt, file.title, usedNames);
+    if (includeAudioBeforeFirstLabel && !labels.empty()) {
+        double start = 0.0;
+        if (exportConfiguration()->trimBlankSpace()) {
+            const auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(project), false);
+            if (!exportedTracks.empty()) {
+                start = std::max(0.0, exportedTracks.min(&Track::GetStartTime));
+            }
+        }
 
-        files.push_back(std::move(file));
+        const double end = labels.front().startTime;
+        if (start < end) {
+            SeparateFile file;
+            file.number = 0;
+            file.title = muse::io::completeBasename(globalContext()->currentProject()->displayName()).toStdString();
+            file.t0 = start;
+            file.t1 = end;
+            file.name = separateFileName(prefix, includeNumbers ? std::optional<int>(0) : std::nullopt, file.title, usedNames);
+
+            files.push_back(std::move(file));
+        }
     }
 
     int number = 1;

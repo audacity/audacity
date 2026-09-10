@@ -40,6 +40,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)
 
     Q_PROPERTY(bool trimBlankSpace READ trimBlankSpace WRITE setTrimBlankSpace NOTIFY trimBlankSpaceChanged)
+    Q_PROPERTY(bool trimBlankSpaceEnabled READ trimBlankSpaceEnabled NOTIFY trimBlankSpaceEnabledChanged)
 
     Q_PROPERTY(bool separateFilesExport READ separateFilesExport NOTIFY currentProcessChanged)
     Q_PROPERTY(bool separateFilesByLabels READ separateFilesByLabels NOTIFY currentProcessChanged)
@@ -83,6 +84,7 @@ public:
 
     bool trimBlankSpace() const;
     void setTrimBlankSpace(bool trim);
+    bool trimBlankSpaceEnabled() const;
 
     bool separateFilesExport() const;
     bool separateFilesByLabels() const;
@@ -140,6 +142,7 @@ signals:
     void currentProcessChanged();
     void processListChanged();
     void trimBlankSpaceChanged();
+    void trimBlankSpaceEnabledChanged();
     void fileNamePrefixChanged();
     void includeNumbersChanged();
     void includeAudioBeforeFirstLabelChanged();
