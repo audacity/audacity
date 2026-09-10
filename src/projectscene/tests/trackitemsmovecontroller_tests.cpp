@@ -99,6 +99,7 @@ protected:
         ON_CALL(*m_selection, selectedClips()).WillByDefault([this] { return m_selectedClips; });
         ON_CALL(*m_selection, selectedLabels()).WillByDefault([this] { return m_selectedLabels; });
         ON_CALL(*m_trackeditProject, trackList()).WillByDefault([this] { return m_tracks; });
+        ON_CALL(*m_trackeditProject, trackRemoved()).WillByDefault(Return(m_trackRemoved));
         ON_CALL(*m_trackeditProject, track(_)).WillByDefault([this](trackedit::TrackId id) -> std::optional<trackedit::Track> {
             for (const auto& track : m_tracks) {
                 if (track.id == id) {
@@ -201,6 +202,7 @@ protected:
     trackedit::ClipKeyList m_selectedClips;
     trackedit::TrackItemKey m_focusedItem;
     muse::async::Channel<trackedit::HistoryEvent> m_historyChanged;
+    muse::async::Channel<trackedit::Track> m_trackRemoved;
     std::shared_ptr<NiceMock<trackedit::TrackNavigationControllerMock> > m_navigation;
     std::shared_ptr<trackedit::TracksViewRequestsService> m_requests;
     std::shared_ptr<NiceMock<context::GlobalContextMock> > m_globalContext;
@@ -549,6 +551,19 @@ TEST_F(TrackItemsMoveControllerTests, HistoryChangeCancelsKeyboardPreview)
     EXPECT_CALL(*m_tracksInteraction, removeDragAddedTracks(_, _)).Times(0);
     m_historyChanged.send(trackedit::HistoryEvent::RestoredState);
     m_viewState->modifiersReleased().notify();
+    expectFinished();
+}
+
+TEST_F(TrackItemsMoveControllerTests, TrackDeletionCancelsDrag)
+{
+    selectLabel();
+    m_controller->start(TrackItemKey(m_label.key));
+    movePointer(20.0, 150.0);
+    m_controller->update();
+
+    EXPECT_CALL(*m_tracksInteraction, removeDragAddedTracks(2, true));
+    m_trackRemoved.send(m_tracks.back());
+
     expectFinished();
 }
 
