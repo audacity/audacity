@@ -618,7 +618,7 @@ muse::Ret Au3Exporter::exportSeparateFiles(const muse::io::path_t& directory, co
     const std::vector<SeparateFile> files = separateFiles(*au3Project, options);
     if (files.empty()) {
         return muse::make_ret(muse::Ret::Code::InternalError,
-                              byLabels ? muse::trc("export", "There are no labels to export")
+                              byLabels ? muse::trc("export", "No labels to export.")
                               : muse::trc("export", "There are no tracks to export"));
     }
 
