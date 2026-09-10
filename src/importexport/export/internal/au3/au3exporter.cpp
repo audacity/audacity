@@ -71,12 +71,12 @@ std::vector<bool> prepareChannelMask(TrackList& trackList, bool selectedOnly)
 }
 
 std::string separateFileName(const std::string& prefix, std::optional<int> number, const std::string& title,
-                             std::vector<std::string>& usedNames)
+                             au::importexport::utils::UniqueFileNames& usedNames)
 {
     const std::string itemName = title.empty() ? muse::trc("export", "untitled") : title;
     wxString name = wxFromStdString(au::importexport::utils::separateFileName(prefix, number, itemName));
     Internat::SanitiseFilename(name, wxT("_"));
-    return au::importexport::utils::makeFileNameUnique(wxToStdString(name), usedNames);
+    return usedNames.registerName(wxToStdString(name));
 }
 
 class ExclusiveTrackSelection
@@ -475,7 +475,7 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::trackFiles(Au3Project& proje
     auto waveTracks = tracks.Any<WaveTrack>() - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
 
     std::vector<SeparateFile> files;
-    std::vector<std::string> usedNames;
+    utils::UniqueFileNames usedNames;
     int number = 1;
     for (WaveTrack* track : waveTracks) {
         if (track->IsEmpty()) {
@@ -528,7 +528,7 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(Au3Project& proje
     const std::vector<utils::TimeRange> ranges = utils::labelExportRanges(labelRanges, trackeditProject->totalTime().to_double());
 
     std::vector<SeparateFile> files;
-    std::vector<std::string> usedNames;
+    utils::UniqueFileNames usedNames;
 
     if (includeAudioBeforeFirstLabel && !labels.empty()) {
         double start = 0.0;
