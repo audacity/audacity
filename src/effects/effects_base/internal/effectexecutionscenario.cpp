@@ -34,6 +34,7 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/progressdialog.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "trackedit/trackeditutils.h"
 
 #include "../effecterrors.h"
@@ -121,7 +122,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! ============================================================================
 
     // common things used below
-    PluginID ID = effectId.toStdString();
+    PluginID ID = au::au3::wxFromString(effectId);
     EffectManager& em = EffectManager::Get();
     Effect* effect = nullptr;
 

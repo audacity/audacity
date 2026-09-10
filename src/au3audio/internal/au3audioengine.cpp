@@ -146,7 +146,7 @@ void Au3AudioEngine::stopStream()
 std::shared_ptr<RealtimeEffectState> Au3AudioEngine::addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                             const std::string& effectId)
 {
-    return AudioIO::Get()->AddState(project, group, effectId);
+    return AudioIO::Get()->AddState(project, group, au::au3::wxFromStdString(effectId));
 }
 
 void Au3AudioEngine::removeRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
@@ -158,7 +158,7 @@ void Au3AudioEngine::removeRealtimeEffectState(AudacityProject& project, Channel
 std::shared_ptr<RealtimeEffectState> Au3AudioEngine::replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                                 size_t effectListIndex, const std::string& newEffectId)
 {
-    return AudioIO::Get()->ReplaceState(project, group, effectListIndex, newEffectId);
+    return AudioIO::Get()->ReplaceState(project, group, effectListIndex, au::au3::wxFromStdString(newEffectId));
 }
 
 void Au3AudioEngine::pauseStream(const bool pause)
