@@ -52,7 +52,7 @@ set(CONFIG
     -DINSTALL_SUFFIX=${APP_SUFFIX}
     -DCRASH_REPORT_URL=${CRASH_REPORT_URL}
     -DENABLE_CRASHPAD_CLIENT=${ENABLE_CRASHPAD_CLIENT}
-    # Developer/QA test VST3 plugin (Linux-only today); built so QA can pick it up from CI.
+    # Developer/QA test VST3 plugin (Linux and macOS; only Linux publishes it); built so QA can pick it up from CI.
     -DBUILD_VST3_TEST_PLUGIN=ON
 )
 
