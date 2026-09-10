@@ -127,7 +127,7 @@ void ExportPreferencesModel::init()
         || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
             && selectionController()->timeSelectionIsEmpty())
         || (exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE
-            && !hasLabels())) {
+            && !hasLabelsToExport())) {
         setCurrentProcess(processName(ExportProcessType::FULL_PROJECT_AUDIO));
     }
 
@@ -230,7 +230,7 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
         return;
     }
 
-    if (type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE && !hasLabels()) {
+    if (type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE && !hasLabelsToExport()) {
         interactive()->error(muse::trc("export", "No labels"),
                              muse::trc("export",
                                        "Export each label as a separate audio file requires at least one label in the project. Please return to the project, add labels and then try again."));
@@ -240,10 +240,12 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
     exportConfiguration()->setProcessType(type);
 }
 
-bool ExportPreferencesModel::hasLabels() const
+bool ExportPreferencesModel::hasLabelsToExport() const
 {
-    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
-    return project && project->hasLabels().val;
+    const IExporter::Options options {
+        { IExporter::OptionKey::ProcessType, muse::Val(ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE) },
+    };
+    return !exporter()->separateFileNames(options).empty();
 }
 
 bool ExportPreferencesModel::trimBlankSpace() const

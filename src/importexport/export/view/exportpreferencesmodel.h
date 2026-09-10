@@ -171,7 +171,7 @@ private:
     void openCustomSampleRateDialog();
     void updateExportChannels();
 
-    bool hasLabels() const;
+    bool hasLabelsToExport() const;
     muse::Ret exportSingleFile();
     muse::Ret exportSeparateFiles();
     bool confirmOverwrite(const std::string& question);

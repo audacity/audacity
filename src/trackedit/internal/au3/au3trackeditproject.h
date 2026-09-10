@@ -80,7 +80,9 @@ private:
     au::trackedit::Clips getClips(const TrackId& trackId) const;
     au::trackedit::Labels getLabels(const TrackId& trackId) const;
     void updateHasAudioContent();
+    void setHasAudioContent(bool has);
     void updateHasLabels();
+    void setHasLabels(bool has);
 
     struct Au3Impl;
     std::shared_ptr<Au3Impl> m_impl;
