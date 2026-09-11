@@ -128,7 +128,7 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
         au3Options.pStartTime = *options.streamStartTime;
     }
     auto& audioIO = *AudioIO::Get();
-    const int token = audioIO.StartStream(sequences, startTime, endTime, mixerEndTime, au3Options);
+    const int token = audioIO.StartBufferExchange(sequences, startTime, endTime, mixerEndTime, au3Options);
     if (token > 0) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);
         LOGI() << "PortAudio latency report (ms): outputLatency=" << audioIO.GetHardwarePlaybackLatencyMs() <<
