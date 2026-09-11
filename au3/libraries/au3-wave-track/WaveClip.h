@@ -265,9 +265,9 @@ private:
      */
     WaveClip(const WaveClip& orig, const SampleBlockFactoryPtr& factory, bool copyCutlines, double t0, double t1);
 
+public:
     static int64_t NewID();
 
-public:
     static const char* WaveClip_tag;
 
     using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;

@@ -706,6 +706,9 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
     std::vector<Au3WaveTrack*> waveCopies;
     for (const auto& copy : copies) {
         if (auto waveCopy = dynamic_cast<Au3WaveTrack*>(copy.get())) {
+            for (const auto& clip : DomAccessor::waveClipsAsList(waveCopy)) {
+                clip->SetId(Au3WaveClip::NewID());
+            }
             waveCopies.push_back(waveCopy);
         }
     }
