@@ -17,6 +17,7 @@ Paul Licameli split from AudioIO.h
 #include <functional>
 #include <map>
 #include <optional>
+#include <tuple>
 #include <vector>
 #include <utility>
 #include <wx/string.h>
@@ -77,6 +78,10 @@ struct AudioIOStartStreamOptions
 
     bool loopEnabled{ false };
     bool variableSpeed{ false };
+
+    // Zero-based physical input channels grouped by destination track.  A
+    // one-element group is mono; a two-element group is a stereo pair.
+    std::vector<std::vector<unsigned int> > inputChannelSelection;
 };
 
 struct AudioIODiagnostics {
@@ -182,7 +187,7 @@ public:
      * give it, the currently selected device from the preferences will be used.
      *
      */
-    static std::vector<long> GetSupportedCaptureRates(int devIndex = -1);
+    static std::vector<long> GetSupportedCaptureRates(int devIndex = -1, int captureChannels = -1);
 
     /** \brief Find the closest supported sample rate for given
      *         recording device.
@@ -199,7 +204,7 @@ public:
      *
      * returns 0 if none is found or the input rate is invalid.
      */
-    static long GetClosestSupportedCaptureRate(int devIndex, long rate);
+    static long GetClosestSupportedCaptureRate(int devIndex, long rate, int captureChannels = -1);
 
     /** \brief Get a list of sample rates the current input/output device
      * combination supports.
@@ -213,7 +218,7 @@ public:
      * If you don't give them, the selected devices from the preferences
      * will be used.
      */
-    static std::vector<long> GetSupportedSampleRates(int playDevice = -1, int recDevice = -1);
+    static std::vector<long> GetSupportedSampleRates(int playDevice = -1, int recDevice = -1, int captureChannels = -1);
 
     /** \brief Find the closest supported sample rate for given
      *         playback and recording devices.
@@ -230,7 +235,7 @@ public:
      *
      * returns 0 if none is found or the input rate is invalid.
      */
-    static long GetClosestSupportedSampleRate(int playDevice, int recDevice, long rate);
+    static long GetClosestSupportedSampleRate(int playDevice, int recDevice, long rate, int captureChannels = -1);
 
     /** \brief Get a supported sample rate which can be used a an optimal
      * default.
@@ -254,7 +259,7 @@ public:
      * Verifies if a recording device supports a given rate.
      * If no device index is specified (devIndex == -1), the preferred device is used.
      */
-    static bool IsCaptureRateSupported(int devIndex, long rate);
+    static bool IsCaptureRateSupported(int devIndex, long rate, int captureChannels = -1);
 
     /** \brief Array of common audio sample rates
      *
@@ -354,8 +359,8 @@ protected:
 
     // For cacheing supported sample rates
     static std::map<int, std::vector<long> > mCachedPlaybackRates;
-    static std::map<int, std::vector<long> > mCachedCaptureRates;
-    static std::map<std::pair<int, int>, std::vector<long> > mCachedSampleRates;
+    static std::map<std::pair<int, int>, std::vector<long> > mCachedCaptureRates;
+    static std::map<std::tuple<int, int, int>, std::vector<long> > mCachedSampleRates;
     static int mCurrentPlaybackIndex;
     static int mCurrentCaptureIndex;
     static double mCachedBestRateIn;

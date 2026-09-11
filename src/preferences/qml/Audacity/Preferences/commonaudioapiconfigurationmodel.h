@@ -53,8 +53,8 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     Q_PROPERTY(bool automaticCompensationEnabled READ automaticCompensationEnabled NOTIFY automaticCompensationEnabledChanged)
     Q_PROPERTY(double latencyCompensation READ latencyCompensation NOTIFY latencyCompensationChanged)
 
-    Q_PROPERTY(QString currentInputChannelsSelected READ currentInputChannelsSelected NOTIFY currentInputChannelsSelectedChanged)
-    Q_PROPERTY(QVariantList inputChannelsList READ inputChannelsList NOTIFY inputChannelsListChanged)
+    Q_PROPERTY(QString inputChannelSelectionSummary READ inputChannelSelectionSummary NOTIFY inputChannelSelectionChanged)
+    Q_PROPERTY(QVariantList inputChannelGroups READ inputChannelGroups NOTIFY inputChannelSelectionChanged)
 
     Q_PROPERTY(QString defaultSampleRate READ defaultSampleRate NOTIFY defaultSampleRateChanged)
     Q_PROPERTY(uint64_t defaultSampleRateValue READ defaultSampleRateValue NOTIFY defaultSampleRateValueChanged)
@@ -102,9 +102,9 @@ public:
     double latencyCompensation() const;
     Q_INVOKABLE void latencyCompensationSelected(const QString& latencyCompensationStr);
 
-    QString currentInputChannelsSelected() const;
-    QVariantList inputChannelsList() const;
-    Q_INVOKABLE void inputChannelsSelected(const int index);
+    QString inputChannelSelectionSummary() const;
+    QVariantList inputChannelGroups() const;
+    Q_INVOKABLE void toggleInputChannelGroup(int firstChannel, int channelCount);
 
     // used for dropdown
     QString defaultSampleRate() const;
@@ -143,8 +143,7 @@ signals:
     void latencyCompensationChanged();
     void automaticCompensationEnabledChanged();
 
-    void currentInputChannelsSelectedChanged();
-    void inputChannelsListChanged();
+    void inputChannelSelectionChanged();
 
     void defaultSampleRateChanged();
     void defaultSampleRateValueChanged();
@@ -163,7 +162,7 @@ private:
     audio::AudioDeviceSelection effectiveOutputDevice() const;
     audio::AudioDeviceSelection effectiveInputDevice() const;
     int effectiveInputChannelsAvailable() const;
-    int effectiveInputChannels() const;
+    audio::InputChannelSelection effectiveInputChannelSelection() const;
     void setPendingSampleRate(uint64_t rateValue);
     void clearPendingValues();
     void notifyDeviceContextChanged();

@@ -9,6 +9,7 @@ set(MODULE_TEST_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/../../au3audio/tests/mocks/audioenginemock.h
     ${CMAKE_CURRENT_LIST_DIR}/../../audio/tests/mocks/audiodrivercontrollermock.h
+    ${CMAKE_CURRENT_LIST_DIR}/../../trackedit/tests/mocks/tracksinteractionmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/recordconfigurationmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/recordcontrollermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/recordmock.h

@@ -16,6 +16,19 @@
 
 using namespace au::au3audio;
 
+namespace {
+std::vector<std::vector<unsigned int> > toAu3InputChannelSelection(
+    const au::audio::InputChannelSelection& selection)
+{
+    std::vector<std::vector<unsigned int> > result;
+    result.reserve(selection.size());
+    for (const auto& group : selection) {
+        result.emplace_back(group.channels.begin(), group.channels.end());
+    }
+    return result;
+}
+}
+
 std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
 
 static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
@@ -121,6 +134,7 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
     au3Options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     au3Options.rate = options.sampleRate;
     au3Options.leadInTime = options.leadInTime;
+    au3Options.inputChannelSelection = toAu3InputChannelSelection(options.inputChannelSelection);
     if (options.crossfadeData) {
         au3Options.pCrossfadeData = options.crossfadeData;
     }
@@ -171,10 +185,12 @@ void Au3AudioEngine::seekStream(double time)
     AudioIO::Get()->SeekStream(time - AudioIO::Get()->GetStreamTime());
 }
 
-void Au3AudioEngine::startMonitoring(AudacityProject& project)
+void Au3AudioEngine::startMonitoring(
+    AudacityProject& project, const au::audio::InputChannelSelection& inputChannelSelection)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
+    options.inputChannelSelection = toAu3InputChannelSelection(inputChannelSelection);
     AudioIO::Get()->StartMonitoring(options);
 }
 

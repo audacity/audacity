@@ -385,7 +385,8 @@ muse::Ret Au3Record::start()
     }
 
     if (appendRecord) {
-        const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+        const int recordingChannels = static_cast<int>(audio::inputChannelCount(
+                                                           audioDriverController()->configuration().inputChannelSelection));
 
         // Try to find wave tracks to record into.  (If any are selected,
         // try to choose only from them; else if wave tracks exist, may record into any.)
@@ -512,7 +513,8 @@ muse::Ret Au3Record::leadInRecording()
     }
 
     // Find tracks to record into (must be selected)
-    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+    const int recordingChannels = static_cast<int>(audio::inputChannelCount(
+                                                       audioDriverController()->configuration().inputChannelSelection));
     auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
     if (tracks.empty()) {
         return make_ret(Err::LeadInRecordingNoTracksSelected);
@@ -829,7 +831,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         // Count the tracks.
         auto numTracks = trackList.Any<const Au3WaveTrack>().size();
 
-        const auto recordingChannels = std::max(1, audioDriverController()->configuration().inputChannels);
+        const auto& inputChannelSelection = audioDriverController()->configuration().inputChannelSelection;
 
         const RecordingTrackNameOptions nameOptions = recordConfiguration()->recordingTrackNameOptions();
         const wxString defaultTrackName = trackList.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference());
@@ -838,12 +840,8 @@ Ret Au3Record::doRecord(Au3Project& project,
                                        : defaultTrackName;
 
         std::vector<WaveTrack::Holder> newTracks;
-        if (recordingChannels == 2) {
-            newTracks.push_back(WaveTrackFactory::Get(*p).Create(2));
-        } else {
-            for (int i = 0; i < recordingChannels; ++i) {
-                newTracks.push_back(WaveTrackFactory::Get(*p).Create(1));
-            }
+        for (const auto& group : inputChannelSelection) {
+            newTracks.push_back(WaveTrackFactory::Get(*p).Create(group.channels.size()));
         }
 
         std::vector<std::pair<WaveTrack::Holder, Au3WaveTrack::IntervalHolder> > newTrackHolders;
@@ -940,6 +938,7 @@ Ret Au3Record::doRecord(Au3Project& project,
     options.sampleRate = audioStreamSampleRate;
     options.leadInTime = leadInTime;
     options.crossfadeData = crossfadeData;
+    options.inputChannelSelection = audioDriverController()->configuration().inputChannelSelection;
 
     int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, options);
 

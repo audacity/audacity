@@ -21,6 +21,8 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "inputchannelselectionsettings.h"
+
 #include "au3-audio-devices/AudioIOBase.h"
 #include "au3-audio-devices/DeviceManager.h"
 #include "au3-project-rate/ProjectRate.h"
@@ -36,6 +38,7 @@ const muse::Settings::Key AUDIO_HOST("au3audio", "AudioIO/Host");
 const muse::Settings::Key PLAYBACK_DEVICE("au3audio", "AudioIO/PlaybackDevice");
 const muse::Settings::Key RECORDING_DEVICE("au3audio", "AudioIO/RecordingDevice");
 const muse::Settings::Key INPUT_CHANNELS("au3audio", "AudioIO/RecordChannels");
+const muse::Settings::Key INPUT_CHANNEL_SELECTION("au3audio", "AudioIO/RecordChannelSelectionV1");
 const muse::Settings::Key AUTOMATIC_LATENCY_COMPENSATION("au3audio", "AudioIO/AutomaticLatencyCompensation");
 const muse::Settings::Key LATENCY_DURATION("au3audio", "AudioIO/LatencyDuration");
 const muse::Settings::Key LATENCY_COMPENSATION("au3audio", "AudioIO/LatencyCompensation");
@@ -176,12 +179,13 @@ void Au3AudioDriverController::init()
     const auto inputDevice = selectionFromSetting(settings()->value(RECORDING_DEVICE).toString());
     refreshInputDeviceSettings(api, inputDevice);
     const auto availableChannels = inputChannelsAvailable(api, inputDevice);
-    const auto inputChannels
-        = availableChannels > 0
-          ? std::clamp(settings()->value(INPUT_CHANNELS).toInt(), 1,
-                       availableChannels)
-          : 0;
-    settings()->setLocalValue(INPUT_CHANNELS, muse::Val(inputChannels));
+    auto inputChannelSelection = details::inputChannelSelectionFromSettings(
+        settings()->value(INPUT_CHANNEL_SELECTION),
+        settings()->value(INPUT_CHANNELS).toInt(), availableChannels);
+    settings()->setLocalValue(
+        INPUT_CHANNEL_SELECTION,
+        details::inputChannelSelectionToVal(inputChannelSelection));
+    settings()->setLocalValue(INPUT_CHANNELS, muse::Val(static_cast<int>(inputChannelCount(inputChannelSelection))));
     m_configuration = configurationFromSettings();
 
     systemAudioDevicesListener()->systemDevicesChanged().onNotify(this, [this]() {
@@ -236,6 +240,7 @@ void Au3AudioDriverController::initDefaults()
     settings()->setDefaultValue(PLAYBACK_DEVICE, muse::Val(std::string()));
     settings()->setDefaultValue(RECORDING_DEVICE, muse::Val(std::string()));
     settings()->setDefaultValue(INPUT_CHANNELS, muse::Val(1));
+    settings()->setDefaultValue(INPUT_CHANNEL_SELECTION, muse::Val(muse::ValList {}));
     settings()->setDefaultValue(LATENCY_DURATION, muse::Val(100.0));
     settings()->setDefaultValue(AUTOMATIC_LATENCY_COMPENSATION, muse::Val(false));
     settings()->setDefaultValue(LATENCY_COMPENSATION, muse::Val(-130.0));
@@ -251,7 +256,10 @@ AudioConfiguration Au3AudioDriverController::configurationFromSettings() const
     result.api = settings()->value(AUDIO_HOST).toString();
     result.outputDevice = selectionFromSetting(settings()->value(PLAYBACK_DEVICE).toString());
     result.inputDevice = selectionFromSetting(settings()->value(RECORDING_DEVICE).toString());
-    result.inputChannels = settings()->value(INPUT_CHANNELS).toInt();
+    const int availableChannels = inputChannelsAvailable(result.api, result.inputDevice);
+    result.inputChannelSelection = details::inputChannelSelectionFromSettings(
+        settings()->value(INPUT_CHANNEL_SELECTION),
+        settings()->value(INPUT_CHANNELS).toInt(), availableChannels);
     result.bufferLength = settings()->value(LATENCY_DURATION).toDouble();
     result.automaticLatencyCompensation = settings()->value(AUTOMATIC_LATENCY_COMPENSATION).toBool();
     result.latencyCompensation = settings()->value(LATENCY_COMPENSATION).toDouble();
@@ -378,11 +386,8 @@ std::optional<AudioConfiguration> Au3AudioDriverController::normalizedConfigurat
     result.inputDevice = change.inputDevice.value_or(result.inputDevice);
 
     const int channels = inputChannelsAvailable(result.api, result.inputDevice);
-    if (channels > 0) {
-        result.inputChannels = std::clamp(change.inputChannels.value_or(result.inputChannels), 1, channels);
-    } else {
-        result.inputChannels = 0;
-    }
+    result.inputChannelSelection = normalizeInputChannelSelection(
+        change.inputChannelSelection.value_or(result.inputChannelSelection), channels);
 
     if (change.bufferLength) {
         result.bufferLength = muse::RealIsEqualOrMore(*change.bufferLength, 0.0)
@@ -428,8 +433,8 @@ AudioConfigurationDelta Au3AudioDriverController::makeDelta(const AudioConfigura
     if (before.inputDevice != after.inputDevice) {
         add(AudioConfigurationField::InputDevice);
     }
-    if (before.inputChannels != after.inputChannels) {
-        add(AudioConfigurationField::InputChannels);
+    if (before.inputChannelSelection != after.inputChannelSelection) {
+        add(AudioConfigurationField::InputChannelSelection);
     }
     if (!muse::RealIsEqual(before.bufferLength, after.bufferLength)) {
         add(AudioConfigurationField::BufferLength);
@@ -484,10 +489,10 @@ bool Au3AudioDriverController::streamNeedsSuspension(
     case AudioStreamKind::Playback:
         return false;
     case AudioStreamKind::Monitoring:
-        return delta.contains(AudioConfigurationField::InputChannels)
+        return delta.contains(AudioConfigurationField::InputChannelSelection)
                || sampleRateChanged;
     case AudioStreamKind::Recording:
-        return delta.contains(AudioConfigurationField::InputChannels)
+        return delta.contains(AudioConfigurationField::InputChannelSelection)
                || delta.contains(AudioConfigurationField::AutomaticLatencyCompensation)
                || delta.contains(AudioConfigurationField::LatencyCompensation)
                || sampleRateChanged;
@@ -567,8 +572,14 @@ void Au3AudioDriverController::writeConfiguration(const AudioConfiguration& valu
     if (delta.contains(AudioConfigurationField::InputDevice)) {
         settings()->setLocalValue(RECORDING_DEVICE, muse::Val(value.inputDevice.value_or(std::string())));
     }
-    if (delta.contains(AudioConfigurationField::InputChannels)) {
-        settings()->setLocalValue(INPUT_CHANNELS, muse::Val(value.inputChannels));
+    if (delta.contains(AudioConfigurationField::InputChannelSelection)) {
+        settings()->setLocalValue(
+            INPUT_CHANNEL_SELECTION,
+            details::inputChannelSelectionToVal(value.inputChannelSelection));
+        // Preserve the logical channel-count meaning for legacy readers. The
+        // physical route and its PortAudio prefix width are carried separately.
+        settings()->setLocalValue(INPUT_CHANNELS,
+                                  muse::Val(static_cast<int>(inputChannelCount(value.inputChannelSelection))));
     }
     if (delta.contains(AudioConfigurationField::BufferLength)) {
         settings()->setLocalValue(LATENCY_DURATION, muse::Val(value.bufferLength));
@@ -792,7 +803,7 @@ ApplyResult Au3AudioDriverController::reload(const muse::modularity::ContextPtr&
     change.api = fromSettings.api;
     change.outputDevice = fromSettings.outputDevice;
     change.inputDevice = fromSettings.inputDevice;
-    change.inputChannels = fromSettings.inputChannels;
+    change.inputChannelSelection = fromSettings.inputChannelSelection;
     change.bufferLength = fromSettings.bufferLength;
     change.automaticLatencyCompensation = fromSettings.automaticLatencyCompensation;
     change.latencyCompensation = fromSettings.latencyCompensation;

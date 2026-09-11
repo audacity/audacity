@@ -7,6 +7,8 @@
 #include <optional>
 #include <string>
 
+#include "inputchannelselection.h"
+
 class AudacityProject;
 
 namespace au::audio {
@@ -16,7 +18,7 @@ struct AudioConfiguration {
     std::string api;
     AudioDeviceSelection outputDevice;
     AudioDeviceSelection inputDevice;
-    int inputChannels = 1;
+    InputChannelSelection inputChannelSelection { { { 0 } } };
     double bufferLength = 0.0;
     bool automaticLatencyCompensation = false;
     double latencyCompensation = 0.0;
@@ -29,7 +31,7 @@ struct AudioConfigurationChange {
     std::optional<std::string> api;
     std::optional<AudioDeviceSelection> outputDevice;
     std::optional<AudioDeviceSelection> inputDevice;
-    std::optional<int> inputChannels;
+    std::optional<InputChannelSelection> inputChannelSelection;
     std::optional<double> bufferLength;
     std::optional<bool> automaticLatencyCompensation;
     std::optional<double> latencyCompensation;
@@ -43,7 +45,7 @@ enum class AudioConfigurationField : uint32_t {
     Api = 1 << 0,
     OutputDevice = 1 << 1,
     InputDevice = 1 << 2,
-    InputChannels = 1 << 3,
+    InputChannelSelection = 1 << 3,
     BufferLength = 1 << 4,
     AutomaticLatencyCompensation = 1 << 5,
     LatencyCompensation = 1 << 6,

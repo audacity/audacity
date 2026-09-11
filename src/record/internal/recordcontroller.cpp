@@ -5,6 +5,8 @@
 
 #include "framework/global/translation.h"
 
+#include "record/recorderrors.h"
+
 using namespace muse;
 using namespace au::record;
 using namespace muse::async;
@@ -130,15 +132,15 @@ void RecordController::startWithNewTrack()
 
     stopPlaybackIfPaused();
 
-    const int recordingChannels = std::max(1, audioDriverController()->configuration().inputChannels);
+    const auto& inputChannelSelection = audioDriverController()->configuration().inputChannelSelection;
+    if (inputChannelSelection.empty()) {
+        interactive()->error(muse::trc("record", "Recording error"), make_ret(Err::NoRecordingDevice).text());
+        return;
+    }
 
     au::trackedit::TrackIdList newTracks;
-    if (recordingChannels == 2) {
-        newTracks.push_back(tracksInteraction()->addWaveTrack(2));
-    } else {
-        for (int i = 0; i < recordingChannels; ++i) {
-            newTracks.push_back(tracksInteraction()->addWaveTrack(1));
-        }
+    for (const auto& group : inputChannelSelection) {
+        newTracks.push_back(tracksInteraction()->addWaveTrack(static_cast<int>(group.channels.size())));
     }
 
     selectionController()->setSelectedTracks(newTracks);

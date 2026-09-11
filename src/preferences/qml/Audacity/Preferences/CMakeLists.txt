@@ -85,6 +85,7 @@ qt_add_qml_module(preferences_qml
         internal/PreferencesMenu.qml
         internal/ProgramStartSection.qml
         internal/RecordingBehaviorSection.qml
+        internal/RecordingChannelListModel.qml
         internal/RemoteControlSection.qml
         internal/SampleRateSection.qml
         internal/SaveBehaviorSection.qml

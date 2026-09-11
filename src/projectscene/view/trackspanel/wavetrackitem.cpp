@@ -53,10 +53,11 @@ void WaveTrackItem::init(const trackedit::Track& track)
     }, muse::async::Asyncable::Mode::SetReplace);
 
     audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta& delta) {
-        if (!delta.contains(audio::AudioConfigurationField::InputChannels)) {
+        if (!delta.contains(audio::AudioConfigurationField::InputChannelSelection)) {
             return;
         }
-        const int inputChannelsCount = audioDriverController()->configuration().inputChannels;
+        const int inputChannelsCount = static_cast<int>(audio::inputChannelCount(
+                                                            audioDriverController()->configuration().inputChannelSelection));
         m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
                                       || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
         checkMainAudioInput();
@@ -80,7 +81,8 @@ void WaveTrackItem::init(const trackedit::Track& track)
         muteOrSoloChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    const int inputChannelsCount = audioDriverController()->configuration().inputChannels;
+    const int inputChannelsCount = static_cast<int>(audio::inputChannelCount(
+                                                        audioDriverController()->configuration().inputChannelSelection));
     m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
                                   || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
 
