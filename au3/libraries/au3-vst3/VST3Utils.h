@@ -68,6 +68,13 @@ public:
     static bool ParseFactoryPresetID(const wxString& presetId, Steinberg::Vst::UnitID& unitId, Steinberg::int32& programIndex);
 
     static wxString GetFactoryPresetsPath(const VST3::Hosting::ClassInfo& effectClassInfo);
+
+    //Counts the channels of the component's buses matching the given
+    //media type, direction and bus type, e.g. the main audio input channels.
+    static unsigned CountChannels(Steinberg::Vst::IComponent* component,
+                                  Steinberg::Vst::MediaTypes mediaType,
+                                  Steinberg::Vst::BusDirection busDirection,
+                                  Steinberg::Vst::BusType busType);
 };
 
 class PresetsBufferStream : public Steinberg::Vst::BufferStream
