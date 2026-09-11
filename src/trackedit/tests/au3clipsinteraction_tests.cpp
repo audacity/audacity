@@ -1288,4 +1288,49 @@ TEST_F(Au3ClipsInteractionTests, RemoveOverlapsClearsAlreadyOverlappingTrack)
 
     removeTrack(trackId);
 }
+
+TEST_F(Au3ClipsInteractionTests, DragStereoClipOntoNonEmptyMonoTrackMidDragKeepsResidentClipMono)
+{
+    //! [GIVEN] A stereo track with one clip, directly above a mono track with its own resident clip
+    auto& waveFactory = Au3WaveTrackFactory::Get(projectRef());
+    const auto stereoTrack = waveFactory.Create(2, sampleFormat::floatSample, DEFAULT_SAMPLE_RATE);
+    Au3TrackList::Get(projectRef()).Add(stereoTrack, ::TrackList::DoAssignId::Yes, ::TrackList::EventPublicationSynchrony::Synchronous);
+
+    const auto stereoClip = stereoTrack->CreateClip(0.0, "stereoClip");
+    std::vector<float> left(10, 0.5f);
+    std::vector<float> right(10, -0.5f);
+    constSamplePtr buffers[2] = {
+        reinterpret_cast<constSamplePtr>(left.data()),
+        reinterpret_cast<constSamplePtr>(right.data())
+    };
+    stereoClip->Append(buffers, sampleFormat::floatSample, 10, 1, sampleFormat::floatSample);
+    stereoClip->Flush();
+    stereoTrack->InsertInterval(stereoClip, true);
+    const TrackId stereoTrackId = TrackId(stereoTrack->GetId());
+    const auto stereoClipId = stereoClip->GetId();
+
+    const TrackId monoTrackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(monoTrackId, INVALID_TRACK) << "Failed to create mono track";
+    Au3WaveTrack* monoTrackBefore = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(monoTrackId));
+    ASSERT_EQ(monoTrackBefore->NChannels(), 1u) << "Precondition: destination track is mono";
+    const auto residentClipId = monoTrackBefore->GetSortedClipByIndex(0)->GetId();
+
+    //! [WHEN] The stereo clip is dragged down onto the (non-empty) mono track, but the drag
+    //! is not yet released (completed=false), mimicking the mid-drag preview state
+    bool clipsMovedToOtherTracks = false;
+    ClipKeyList selected = { { stereoTrackId, stereoClipId } };
+    m_clipsInteraction->moveClips(selected, 0.0, 1, false, clipsMovedToOtherTracks);
+
+    //! [THEN] The destination track's own channel count, and the untouched resident
+    //! clip's channel count, should not have changed just from the clip hovering over it
+    Au3WaveTrack* monoTrackAfter = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(monoTrackId));
+    ASSERT_TRUE(monoTrackAfter);
+    EXPECT_EQ(monoTrackAfter->NChannels(), 1u) << "Destination track should remain mono mid-drag";
+
+    const auto residentClipAfter = DomAccessor::findWaveClip(monoTrackAfter, residentClipId);
+    ASSERT_TRUE(residentClipAfter) << "Resident clip should still be present";
+    EXPECT_EQ(residentClipAfter->NChannels(), 1u) << "Resident clip should remain mono mid-drag";
+
+    removeTrack(monoTrackId);
+}
 }

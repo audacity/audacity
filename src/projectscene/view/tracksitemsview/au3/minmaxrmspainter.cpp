@@ -2,6 +2,7 @@
 
 #include "au3wrap/internal/domaccessor.h"
 #include "wavepainterutils.h"
+#include "samplespainterutils.h"
 #include "WaveformPainter.h"
 
 using namespace au::au3;
@@ -49,10 +50,9 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
     const float dbRange = std::abs(params.dbRange);
     const bool dB = !params.isLinear;
 
-    const std::vector<double> channelHeight {
-        params.geometry.height * params.channelHeightRatio,
-        params.geometry.height * (1 - params.channelHeightRatio),
-    };
+    const size_t displayedChannels = samplespainterutils::displayedChannelCount(*track);
+    const std::vector<double> channelHeight
+        = samplespainterutils::channelHeights(params.geometry.height, params.channelHeightRatio, displayedChannels);
 
     const float zoomMin = dB ? getDBValue(params.displayBounds.first, dbRange) : params.displayBounds.first;
     const float zoomMax = dB ? getDBValue(params.displayBounds.second, dbRange) : params.displayBounds.second;
@@ -62,7 +62,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
 
     auto metrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), clipKey, params);
 
-    for (size_t index = 0; index < waveClip->NChannels(); index++) {
+    for (size_t index = 0; index < displayedChannels; index++) {
         metrics.height = channelHeight[index];
         paintParameters
         .SetDisplayParameters(
@@ -93,7 +93,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
 
         metrics.top += static_cast<int>(metrics.height);
 
-        waveformPainter.Draw(index, painter, paintParameters, _metrics);
+        waveformPainter.Draw(samplespainterutils::paintChannelIndex(*waveClip, index), painter, paintParameters, _metrics);
     }
 }
 }
