@@ -327,11 +327,16 @@ void TrackItemsMoveController::update()
 
 void TrackItemsMoveController::updatePreview(double timeOffset, int trackOffset)
 {
+    double endTime = 0.0;
     for (const trackedit::ClipKey& key : m_clips) {
-        timeOffset = std::max(timeOffset, -m_project->clip(key).startTime);
+        const Clip clip = m_project->clip(key);
+        timeOffset = std::max(timeOffset, -clip.startTime);
+        endTime = std::max(endTime, clip.endTime);
     }
     for (const trackedit::LabelKey& key : m_labels) {
-        timeOffset = std::max(timeOffset, -m_project->label(key).startTime);
+        const Label label = m_project->label(key);
+        timeOffset = std::max(timeOffset, -label.startTime);
+        endTime = std::max(endTime, label.endTime);
     }
 
     const auto tracks = m_project->trackList();
@@ -359,6 +364,7 @@ void TrackItemsMoveController::updatePreview(double timeOffset, int trackOffset)
     }
     m_timeOffset = timeOffset;
     m_trackOffset = trackOffset;
+    m_viewState->setMovePreviewEndTime(endTime + timeOffset);
     emit previewChanged();
 }
 
@@ -459,6 +465,7 @@ void TrackItemsMoveController::endInteraction()
         m_viewState->setKeyboardMoveActive(false);
     }
     m_viewState->setMoveInitiated(false);
+    m_viewState->setMovePreviewEndTime(0.0);
     m_viewState->setItemEditStartTimeOffset(-1.0);
     m_viewState->setItemEditEndTimeOffset(-1.0);
     m_viewState->setEditedItem({});

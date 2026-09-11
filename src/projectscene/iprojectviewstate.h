@@ -87,6 +87,10 @@ public:
     virtual void setMoveInitiated(bool val) = 0;
     virtual bool moveInitiated() const = 0;
 
+    //! During item movement end time is used to calculate available view scoll range
+    virtual void setMovePreviewEndTime(double time) = 0;
+    virtual double movePreviewEndTime() const = 0;
+
     virtual void setLastEditedClip(const trackedit::ClipKey& clipKey) = 0;
     virtual trackedit::ClipKey lastEditedClip() const = 0;
 

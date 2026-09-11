@@ -191,6 +191,7 @@ protected:
         EXPECT_FALSE(m_viewState->keyboardMoveActive().val);
         EXPECT_FALSE(m_controller->isDragged(m_label.key));
         EXPECT_FALSE(m_viewState->moveInitiated());
+        EXPECT_DOUBLE_EQ(m_viewState->movePreviewEndTime(), 0.0);
         EXPECT_DOUBLE_EQ(m_viewState->itemEditStartTimeOffset(), -1.0);
         EXPECT_TRUE(m_controller->itemsOnTrack(2).empty());
     }
@@ -311,6 +312,20 @@ TEST_F(TrackItemsMoveControllerTests, CancelRemovesOnlyTracksAddedForPreview)
     EXPECT_CALL(*m_tracksInteraction, removeDragAddedTracks(2, true));
     m_controller->cancel();
     expectFinished();
+}
+
+TEST_F(TrackItemsMoveControllerTests, PreviewExtendsScrollableTimelineUntilDragEnds)
+{
+    selectClip();
+    m_controller->start(TrackItemKey(m_clip.key));
+    EXPECT_DOUBLE_EQ(SnapTestAccess::maxFrameEndTime(m_context.get()), 0.0);
+
+    movePointer(100.0, 50.0);
+    m_controller->update();
+    EXPECT_DOUBLE_EQ(SnapTestAccess::maxFrameEndTime(m_context.get()), m_clip.endTime + m_controller->timeOffset());
+
+    m_controller->cancel();
+    EXPECT_DOUBLE_EQ(SnapTestAccess::maxFrameEndTime(m_context.get()), 0.0);
 }
 
 TEST_F(TrackItemsMoveControllerTests, MixedSelectionClampsTogetherAtZeroAndTopAudioTrack)

@@ -517,7 +517,9 @@ void TimelineContext::shiftFrameTime(double shift)
 
 double TimelineContext::maxFrameEndTime() const
 {
-    const double totalTime = trackEditProject()->totalTime().to_double();
+    const auto vs = viewState();
+    const double previewEndTime = vs ? vs->movePreviewEndTime() : 0.0;
+    const double totalTime = std::max(trackEditProject()->totalTime().to_double(), previewEndTime);
     return std::max(m_lastZoomEndTime, totalTime + (m_frameEndTime - m_frameStartTime) * 3 / 4);
 }
 
@@ -1189,14 +1191,11 @@ void TimelineContext::updateTimeSignature()
 
 qreal TimelineContext::horizontalScrollableSize() const
 {
-    auto project = trackEditProject();
-    if (!project) {
+    if (!trackEditProject()) {
         return 0.0;
     }
 
-    double totalTime = project->totalTime().to_double();
-    double maxEndTime = std::max(m_lastZoomEndTime, totalTime + (m_frameEndTime - m_frameStartTime) * 3 / 4);
-    return timeToContentPosition(maxEndTime);
+    return timeToContentPosition(maxFrameEndTime());
 }
 
 qreal TimelineContext::verticalScrollableSize() const

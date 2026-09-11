@@ -1015,6 +1015,16 @@ bool ProjectViewState::moveInitiated() const
     return m_moveInitiated;
 }
 
+void ProjectViewState::setMovePreviewEndTime(double time)
+{
+    m_movePreviewEndTime = time;
+}
+
+double ProjectViewState::movePreviewEndTime() const
+{
+    return m_movePreviewEndTime;
+}
+
 void ProjectViewState::setLastEditedClip(const trackedit::ClipKey& clipKey)
 {
     if (m_lastEditedClip == clipKey) {
