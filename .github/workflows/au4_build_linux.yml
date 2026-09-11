@@ -4,6 +4,11 @@ on:
   pull_request:
     branches:
     - master
+    paths-ignore:
+    - 'docs/**'
+    - '**.md'
+    - '.github/ISSUE_TEMPLATE/**'
+    - 'LICENSE*'
 
   schedule:
     - cron: '0 3 */1 */1 *' # At 03:00 on every day-of-month for master
@@ -55,7 +60,43 @@ env:
   CI_DIR: buildscripts/ci
 
 jobs:
+  nightly_gate:
+    # Scheduled builds check out muse_framework@main, so a nightly is only redundant when
+    # neither this repo's master nor muse_framework's main has moved since the last one.
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.decide.outputs.should_build }}
+      stamp_key: ${{ steps.inputs.outputs.stamp_key }}
+    steps:
+    - name: Resolve nightly inputs
+      id: inputs
+      run: |
+        MUSE_SHA=$(git ls-remote https://github.com/musescore/muse_framework.git refs/heads/main | cut -f1)
+        echo "muse_sha=${MUSE_SHA}" >> $GITHUB_OUTPUT
+        echo "stamp_key=nightly-stamp-au4_build_linux-${{ github.sha }}-${MUSE_SHA}" >> $GITHUB_OUTPUT
+
+    - name: Look up whether these inputs were already built
+      id: stamp
+      uses: actions/cache/restore@v5
+      with:
+        path: .nightly-stamp
+        key: ${{ steps.inputs.outputs.stamp_key }}
+        lookup-only: true
+
+    - name: Decide
+      id: decide
+      run: |
+        if [ "${{ steps.stamp.outputs.cache-hit }}" == "true" ]; then
+          echo "should_build=false" >> $GITHUB_OUTPUT
+          echo "::notice::Nightly skipped: master ${{ github.sha }} + muse_framework@main ${{ steps.inputs.outputs.muse_sha }} were already built."
+        else
+          echo "should_build=true" >> $GITHUB_OUTPUT
+        fi
+
   au4_build_linux:
+    needs: nightly_gate
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.nightly_gate.outputs.should_build != 'false') }}
     strategy:
       fail-fast: false
       matrix:
@@ -230,6 +271,20 @@ jobs:
       with:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache
+
+  nightly_stamp:
+    # Record the (master, muse_framework@main) pair as built, on success or failure (a deterministic
+    # failure would just go red again tomorrow; re-run by hand or via workflow_dispatch if it was flaky).
+    needs: [nightly_gate, au4_build_linux]
+    if: ${{ !cancelled() && github.event_name == 'schedule' && needs.nightly_gate.outputs.should_build == 'true' && contains(fromJSON('["success","failure"]'), needs.au4_build_linux.result) }}
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "${{ needs.au4_build_linux.result }}" > .nightly-stamp
+
+    - uses: actions/cache/save@v5
+      with:
+        path: .nightly-stamp
+        key: ${{ needs.nightly_gate.outputs.stamp_key }}
 
   plugin-registration-self-test:
     needs: au4_build_linux
