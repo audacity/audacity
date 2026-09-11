@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "effects/builtin/view/builtineffectinstanceaccess.h"
+#include "effects/builtin/qml/Audacity/BuiltinEffects/builtineffectinstanceaccess.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"

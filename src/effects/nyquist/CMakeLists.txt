@@ -35,6 +35,7 @@ set(MODULE_LINK
         au3wrap
         au3-effects
         effects_builtin
+        effects_builtin_qml
         au3-nyquist-effects
 )
 

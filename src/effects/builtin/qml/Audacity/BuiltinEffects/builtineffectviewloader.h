@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QQmlComponent>
 #include <QQuickItem>
+#include <QtQml/qqmlregistration.h>
 
 #include "global/async/asyncable.h"
 #include "modularity/ioc.h"
@@ -19,8 +20,9 @@ namespace au::effects {
 class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable, muse::Contextable
 {
     Q_OBJECT
+    QML_ELEMENT
 
-    Q_PROPERTY(QQuickItem * contentItem READ contentItem NOTIFY contentItemChanged FINAL)
+    Q_PROPERTY(QQuickItem* contentItem READ contentItem NOTIFY contentItemChanged FINAL)
 
     muse::GlobalInject<IBuiltinEffectsViewRegister> viewRegister;
     muse::GlobalInject<IEffectInstancesRegister> instancesRegister;

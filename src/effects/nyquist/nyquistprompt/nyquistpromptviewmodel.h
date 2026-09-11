@@ -11,7 +11,7 @@
 #include "framework/interactive/iinteractive.h"
 
 #include "effects/effects_base/iparameterextractorregistry.h"
-#include "effects/builtin/view/builtineffectmodel.h"
+#include "effects/builtin/qml/Audacity/BuiltinEffects/builtineffectmodel.h"
 
 namespace au::effects {
 class NyquistParameterExtractorService;
