@@ -63,7 +63,7 @@ jobs:
           echo "DO_PUSH_TO_S3=$DO_PUSH_TO_S3" | tee -a $GITHUB_OUTPUT
 
       - name: Clone repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install Qt for lrelease
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'

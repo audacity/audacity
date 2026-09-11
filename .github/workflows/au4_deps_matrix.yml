@@ -45,7 +45,7 @@ jobs:
           - { os: macos,   mode: source,   runner: macos-26, arch: x86_64,    osx_arch: x86_64, qt_host: mac, qt_arch: clang_64 }
     steps:
       - name: Clone repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -58,7 +58,7 @@ jobs:
       # Qt's arm64 install needs an x64 python (no arm64 aqtinstall wheels)
       - name: Setup x64 Python (WoA)
         if: matrix.runner == 'windows-11-arm'
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           architecture: x64
