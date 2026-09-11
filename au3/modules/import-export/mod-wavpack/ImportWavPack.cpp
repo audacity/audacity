@@ -72,7 +72,7 @@ std::unique_ptr<ImportFileHandle> WavPackImportPlugin::Open(const FilePath& file
     WavpackContext* wavpackContext = WavpackOpenFileInput(filename.ToUTF8(), errMessage, flags, 0);
 
     if (!wavpackContext) {
-        // Some error occured(e.g. File not found or is invalid)
+        // Some error occurred (e.g. File not found or is invalid)
         wxLogDebug("WavpackOpenFileInput() failed on file %s, error = %s", filename, errMessage);
         return nullptr;
     }
