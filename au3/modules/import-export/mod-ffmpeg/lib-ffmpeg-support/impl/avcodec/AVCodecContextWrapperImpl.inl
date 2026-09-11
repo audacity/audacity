@@ -343,6 +343,22 @@ public:
          mAVCodecContext->sample_fmt = static_cast<AVSampleFormat>(value);
    }
 
+   int GetVideoWidth() const noexcept override
+   {
+      if (mAVCodecContext != nullptr)
+         return mAVCodecContext->width;
+
+      return {};
+   }
+
+   int GetVideoHeight() const noexcept override
+   {
+      if (mAVCodecContext != nullptr)
+         return mAVCodecContext->height;
+
+      return {};
+   }
+
    int GetSampleRate() const noexcept override
    {
       if (mAVCodecContext != nullptr)

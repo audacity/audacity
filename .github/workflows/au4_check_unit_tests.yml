@@ -21,7 +21,10 @@ env:
 
 jobs:
   run_tests:
-    runs-on: ubuntu-22.04
+    # 24.04 rather than 22.04 because generating the video fixtures needs an
+    # ffmpeg built with SVT-AV1, which jammy's 4.4.2 is not. See
+    # tools/videosync/make_fixtures.py.
+    runs-on: ubuntu-24.04
     steps:
     - name: Clone repository
       uses: actions/checkout@v6
@@ -69,6 +72,35 @@ jobs:
     - name: Setup environment
       run: |
         bash ./buildscripts/ci/linux/setup.sh
+
+    # The video tests decode real files. Without them roughly half of
+    # au_video_tests skips itself and the job still reports green, so the
+    # fixtures are generated here rather than left to chance. They are large,
+    # so they are cached on the generator and the ffmpeg build that made them.
+    - name: Hash the fixture inputs
+      id: fixture-key
+      run: |
+        echo "hash=$(ffmpeg -version | head -n1 | sha1sum | cut -c1-12)-$(sha1sum tools/videosync/make_fixtures.py | cut -c1-12)" | tee -a $GITHUB_OUTPUT
+
+    - name: Restore video fixtures
+      id: restore-fixtures
+      uses: actions/cache/restore@v5
+      with:
+        path: tools/videosync/fixtures
+        key: video-fixtures-${{ runner.arch }}-${{ steps.fixture-key.outputs.hash }}
+
+    - name: Generate video fixtures
+      if: steps.restore-fixtures.outputs.cache-hit != 'true'
+      run: |
+        python3 tools/videosync/make_fixtures.py
+        python3 tools/videosync/make_fixtures.py --verify
+
+    - name: Save video fixtures
+      if: steps.restore-fixtures.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5
+      with:
+        path: tools/videosync/fixtures
+        key: video-fixtures-${{ runner.arch }}-${{ steps.fixture-key.outputs.hash }}
 
     - name: Build
       env:

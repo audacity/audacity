@@ -22,3 +22,7 @@ if (NOT MUSE_MODULE_EXTENSIONS)
     add_subdirectory(extensions)
     add_subdirectory(effects_extensions)
 endif()
+
+if (NOT AU_BUILD_VIDEO_MODULE)
+    add_subdirectory(video)
+endif()
