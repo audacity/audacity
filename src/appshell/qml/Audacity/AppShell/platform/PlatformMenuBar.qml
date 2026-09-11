@@ -85,6 +85,7 @@ Item {
         menu.title = menuInfo.title
         menu.enabled = menuInfo.enabled
         menu.subitems = menuInfo.subitems
+        menu.menuItem.role = PLATFORM.MenuItem.NoRole
 
         menuInfo.subitemsChanged.connect(function (subitems, menuId) {
             if (menu.id === menuId) {
