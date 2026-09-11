@@ -21,12 +21,43 @@ PluginRegistrationApp::PluginRegistrationApp(const std::shared_ptr<AudacityCmdOp
     makeProcessBackground();
 }
 
+void PluginRegistrationApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& options)
+{
+    BaseApplication::applyCommandLineOptions(options);
+
+    if (!crashHandler()) {
+        // By default only available on non-development CI builds.
+        return;
+    }
+
+    const auto audacityOptions = std::dynamic_pointer_cast<AudacityCmdOptions>(options);
+    IF_ASSERT_FAILED(audacityOptions) {
+        return;
+    }
+
+    const auto& task = audacityOptions->audioPluginRegistration;
+    if (task.pluginPath.empty()) {
+        LOGE() << "plugin path arg not provided";
+        return;
+    }
+
+    // Only keep the plugin name: the full path could reveal the user's name or folder layout
+    crashHandler()->addSessionTag(muse::String{"plugin-validation"}, io::filename(task.pluginPath).toString());
+}
+
 void PluginRegistrationApp::startupScenario(const muse::modularity::ContextPtr& ctxId)
 {
     std::shared_ptr<AudacityCmdOptions> options = std::dynamic_pointer_cast<AudacityCmdOptions>(m_appOptions);
     IF_ASSERT_FAILED(options) {
         qApp->exit(1);
         return;
+    }
+
+    // Keep the system crash reporter out of it plugin registration: on macOS it would show
+    // one "Audacity quit unexpectedly" dialog per crashing plugin. The dump for our own
+    // crash server is still written.
+    if (crashHandler()) {
+        crashHandler()->setSystemCrashReporterForwardingEnabled(false);
     }
 
     QMetaObject::invokeMethod(qApp, [this, ctxId, options]() {

@@ -197,6 +197,13 @@ std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const s
 {
     std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(options);
 
+    //! NOTE `diagnostics` must be first, because it installs the crash handler. Without it
+    //! a crashing validation only produces a dump on macOS, where the child happens to
+    //! inherit the parent's exception port, and that dump then carries the parent's
+    //! annotations.
+    app->addModule(new muse::diagnostics::DiagnosticsModule());
+    app->addModule(new muse::rcommand::RCommandModule()); // needed by diagnostics module
+
     app->addModule(new muse::audioplugins::AudioPluginsModule());
     app->addModule(new muse::actions::ActionsModule());
 
