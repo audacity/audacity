@@ -1,6 +1,6 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
@@ -28,7 +28,7 @@ StyledPopupView {
     signal toggleHalfWaveRequested
 
     contentWidth: uiModel.popupWidth - 2 * uiModel.popupMargins
-    contentHeight: uiModel.popupHeight - 2 * uiModel.popupMargins
+    contentHeight: -1  // dynamic implicit height, enables scrolling if needed
 
     margins: uiModel.popupMargins
 
@@ -36,7 +36,7 @@ StyledPopupView {
         id: uiModel
 
         readonly property int popupWidth: 200
-        readonly property int popupHeight: 260
+        readonly property real popupHeight: 350  // increased to accommodate scrolling area
 
         readonly property int popupMargins: 12
         readonly property int itemsSpacing: 12
@@ -48,99 +48,108 @@ StyledPopupView {
         readonly property int formatGroupBoxHeight: 120
     }
 
-    ColumnLayout {
+    ScrollView {
         anchors.fill: parent
-        spacing: uiModel.itemsSpacing
+        ScrollBar.vertical.policy: ScrollBar.AsNeeded
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        clip: true
 
-        Row {
-            Layout.preferredHeight: uiModel.btnHeight
-            Layout.fillWidth: true
+        ColumnLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: uiModel.itemsSpacing
 
-            spacing: uiModel.btnSpacing
+            Row {
+                Layout.preferredHeight: uiModel.btnHeight
+                Layout.fillWidth: true
 
-            FlatButton {
-                id: zoomInBtn
+                spacing: uiModel.btnSpacing
 
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: uiModel.zoomBtnWidth
+                FlatButton {
+                    id: zoomInBtn
 
-                normalColor: ui.theme.buttonColor
-                icon: IconCode.ZOOM_IN
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    width: uiModel.zoomBtnWidth
 
-                enabled: !isMaxZoom
+                    normalColor: ui.theme.buttonColor
+                    icon: IconCode.ZOOM_IN
 
-                onClicked: {
-                    root.zoomInRequested()
+                    enabled: !isMaxZoom
+
+                    onClicked: {
+                        root.zoomInRequested()
+                    }
+                }
+
+                FlatButton {
+                    id: zoomOutBtn
+
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    width: uiModel.zoomBtnWidth
+
+                    normalColor: ui.theme.buttonColor
+                    icon: IconCode.ZOOM_OUT
+
+                    enabled: !isMinZoom
+
+                    onClicked: {
+                        root.zoomOutRequested()
+                    }
+                }
+
+                FlatButton {
+                    id: resetBtn
+
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    width: uiModel.resetBtnWidth
+
+                    normalColor: ui.theme.buttonColor
+                    icon: IconCode.UNDO
+
+                    orientation: Qt.Horizontal
+
+                    text: qsTrc("trackruler", "Reset")
+
+                    enabled: !isDefaultZoom
+
+                    onClicked: {
+                        root.zoomResetRequested()
+                    }
                 }
             }
 
-            FlatButton {
-                id: zoomOutBtn
+            StyledGroupBox {
+                Layout.fillWidth: true
+                Layout.preferredHeight: uiModel.formatGroupBoxHeight
 
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: uiModel.zoomBtnWidth
+                title: qsTrc("trackruler", "Ruler format")
 
-                normalColor: ui.theme.buttonColor
-                icon: IconCode.ZOOM_OUT
+                titleSpacing: 4
 
-                enabled: !isMinZoom
+                value: root.rulerType
 
-                onClicked: {
-                    root.zoomOutRequested()
+                model: root.availableRulerTypes
+
+                onValueChangeRequested: function (value) {
+                    root.rulerTypeChangeRequested(value)
                 }
             }
 
-            FlatButton {
-                id: resetBtn
+            CheckBox {
+                id: halfwave
 
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: uiModel.resetBtnWidth
+                text: qsTrc("trackruler", "Half wave")
 
-                normalColor: ui.theme.buttonColor
-                icon: IconCode.UNDO
-
-                orientation: Qt.Horizontal
-
-                text: qsTrc("trackruler", "Reset")
-
-                enabled: !isDefaultZoom
+                checked: root.isHalfWave
 
                 onClicked: {
-                    root.zoomResetRequested()
+                    root.toggleHalfWaveRequested()
                 }
-            }
-        }
-
-        StyledGroupBox {
-            Layout.fillWidth: true
-            Layout.preferredHeight: uiModel.formatGroupBoxHeight
-
-            title: qsTrc("trackruler", "Ruler format")
-
-            titleSpacing: 4
-
-            value: root.rulerType
-
-            model: root.availableRulerTypes
-
-            onValueChangeRequested: function (value) {
-                root.rulerTypeChangeRequested(value)
-            }
-        }
-
-        CheckBox {
-            id: halfwave
-
-            text: qsTrc("trackruler", "Half wave")
-
-            checked: root.isHalfWave
-
-            onClicked: {
-                root.toggleHalfWaveRequested()
             }
         }
     }
 }
+
