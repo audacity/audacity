@@ -303,6 +303,68 @@ TEST_F(TrackNavigationModelTests, TrackAddedAppendsPanels)
 }
 
 /**
+ * Adding the first track to an empty project keeps navigation state in sync
+ */
+TEST_F(TrackNavigationModelTests, FirstAddedTrackFocusWaitsForNavigationControl)
+{
+    //! [GIVEN] An empty project with the fallback control
+    makeFallbackControl();
+    loadWithTracks({});
+
+    //! [WHEN] The first track is added before its control
+    m_trackAdded.send(makeTrack(20));
+
+    //! [AND] The tracks controller focuses it
+    m_focusedTrackChanged.send(20, false);
+
+    //! [THEN] Creating the control synchronizes navigation with the focused track
+    EXPECT_CALL(*m_navigationController,
+                requestActivateByName(std::string(SECTION_NAME), trackPanelName(20).toStdString(), std::string("track-20"))).Times(1);
+
+    addItemControl(m_model->trackItemPanels().at(0), "track-20", 0);
+}
+
+/**
+ * Inserting the first track to an empty project keeps navigation state in sync
+ */
+TEST_F(TrackNavigationModelTests, FirstInsertedTrackFocusWaitsForNavigationControl)
+{
+    //! [GIVEN] An empty project with the fallback control
+    makeFallbackControl();
+    loadWithTracks({});
+
+    //! [WHEN] The first track is inserted
+    m_trackInserted.send(makeTrack(20), 0);
+
+    //! [AND] The tracks controller focuses it before its control exists
+    m_focusedTrackChanged.send(20, false);
+
+    //! [THEN] Creating the control synchronizes navigation with the focused track
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), trackPanelName(20).toStdString(), std::string("track-20"))).Times(1);
+
+    addItemControl(m_model->trackItemPanels().at(0), "track-20", 0);
+}
+
+/**
+ * Item focus is retained until QML creates the matching item control.
+ */
+TEST_F(TrackNavigationModelTests, FocusedItemWaitsForNavigationControl)
+{
+    //! [GIVEN] Without a navigation control
+    loadWithTracks({ makeTrack(20) });
+
+    //! [WHEN] An item is focused
+    m_focusedItemChanged.send({ 20, 200 }, false);
+
+    //! [THEN] Creating the navigation control executes pending navigation request
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), itemsPanelName(20).toStdString(), std::string("200"))).Times(1);
+
+    addItemControl(m_model->viewItemPanels().at(0), "200", 0);
+}
+
+/**
  * Inserting a track places its panels at the position, the orders follow the
  * (new) track order rather than the insertion history.
  */
