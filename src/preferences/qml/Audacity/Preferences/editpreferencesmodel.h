@@ -40,6 +40,7 @@ class EditPreferencesModel : public QObject, public muse::async::Asyncable, publ
     Q_PROPERTY(int zoomPreset1 READ zoomPreset1 NOTIFY zoomPreset1Changed)
     Q_PROPERTY(int zoomPreset2 READ zoomPreset2 NOTIFY zoomPreset2Changed)
     Q_PROPERTY(QVariantList zoomPresetList READ zoomPresetList CONSTANT)
+    Q_PROPERTY(int mouseZoomPrecision READ mouseZoomPrecision NOTIFY mouseZoomPrecisionChanged)
 
 public:
     explicit EditPreferencesModel(QObject* parent = nullptr);
@@ -79,6 +80,8 @@ public:
     int zoomPreset2() const;
     Q_INVOKABLE void setZoomPreset2(int preset);
     QVariantList zoomPresetList() const;
+    int mouseZoomPrecision() const;
+    Q_INVOKABLE void setMouseZoomPrecision(int precision);
 
     void asymmetricStereoHeightWorkspacesCleanUp();
 
@@ -94,5 +97,6 @@ signals:
     void askBeforeConvertingToMonoOrStereoChanged();
     void zoomPreset1Changed();
     void zoomPreset2Changed();
+    void mouseZoomPrecisionChanged();
 };
 }
