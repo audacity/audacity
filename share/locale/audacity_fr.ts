@@ -9018,12 +9018,12 @@ ou, pour LISP, commencez par une parenthèse ouvrante telle que :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="84"/>
         <source>Alternating Out / In</source>
-        <translation>Alternance sortie / entrée</translation>
+        <translation>Intervertir Sortie / Entrée</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="85"/>
         <source>Alternating In / Out</source>
-        <translation>Alternance entrée / sortie</translation>
+        <translation>Intervertir Entrée / Sortie</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="86"/>
@@ -15357,7 +15357,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="69"/>
         <source>Index[%1] Version[%2], Channels[%3], Rate[%4]</source>
-        <translation>Index[%1] Version[%2], Canaux[%3], Durée[%4]</translation>
+        <translation>Index[%1] Version[%2], Canaux[%3], Taux[%4]</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="353"/>
@@ -15583,7 +15583,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="305"/>
         <source>stream is not seekable</source>
-        <translation>flux n&apos;est pas cherchable</translation>
+        <translation>flux n&apos;est pas à accès direct</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="307"/>
@@ -15692,7 +15692,7 @@ Information Libsndfile “%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="21"/>
         <source>Low Quality (Fast)</source>
-        <translation>Basse qualité (rapide)</translation>
+        <translation>Basse qualité (Rapide)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="22"/>
@@ -15702,12 +15702,12 @@ Information Libsndfile “%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="23"/>
         <source>High Quality (Slow)</source>
-        <translation>Haute qualité (lent)</translation>
+        <translation>Haute qualité (Lent)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="24"/>
         <source>Very High Quality (Slowest)</source>
-        <translation>Très haute qualité (le plus lent)</translation>
+        <translation>Très haute qualité (Le plus lent)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="30"/>
@@ -15848,7 +15848,7 @@ Information Libsndfile “%2”</translation>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="56"/>
         <source>E&amp;xtended (with frequency ranges)</source>
-        <translation>Étendue (avec plages de fréquences) (&amp;x)</translation>
+        <translation>É&amp;tendue (avec plages de fréquences)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="126"/>
@@ -15947,7 +15947,7 @@ Information Libsndfile “%2”</translation>
     <message>
         <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
         <source>The received playlist is empty.</source>
-        <translation>La liste de lecture reçue est vide.</translation>
+        <translation>La playlist reçue est vide.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
@@ -16159,7 +16159,7 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="52"/>
         <source>Low Quality (Fastest)</source>
-        <translation>Basse qualité (le plus rapide)</translation>
+        <translation>Basse qualité (Le plus rapide)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="53"/>
@@ -16174,7 +16174,7 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="55"/>
         <source>Best Quality (Slowest)</source>
-        <translation>Meilleure qualité (le plus lent)</translation>
+        <translation>Meilleure qualité (Le plus lent)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="63"/>
@@ -16931,7 +16931,7 @@ Il ne sera pas chargé.</translation>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="909"/>
         <source>centihertz</source>
-        <translation>centihertz</translation>
+        <translation>centièmes de hertz</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="915"/>
