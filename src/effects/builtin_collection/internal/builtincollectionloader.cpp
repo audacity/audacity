@@ -3,7 +3,7 @@
  */
 #include "builtincollectionloader.h"
 
-#include <QtQml>
+#include <QtQml/QtQml>
 
 #include "global/translation.h"
 #include "global/log.h"

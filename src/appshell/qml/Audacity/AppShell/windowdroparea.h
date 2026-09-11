@@ -23,7 +23,7 @@
 #ifndef AU_APPSHELL_WINDOWDROPAREA_H
 #define AU_APPSHELL_WINDOWDROPAREA_H
 
-#include <QQuickItem>
+#include <QtQuick/QQuickItem>
 #include <QtQml/qqmlregistration.h>
 
 #include "modularity/ioc.h"

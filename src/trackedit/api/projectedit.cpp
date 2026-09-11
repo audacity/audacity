@@ -12,7 +12,7 @@
 #include <thread>
 #include <utility>
 
-#include <QJSEngine>
+#include <QtQml/QJSEngine>
 
 #include "au3-label-track/LabelTrack.h"
 #include "au3-project/Project.h"

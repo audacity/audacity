@@ -13,7 +13,7 @@
 #include "framework/ui/iuiconfiguration.h"
 
 #include <QObject>
-#include <QQmlParserStatus>
+#include <QtQml/QQmlParserStatus>
 #include <QVariantList>
 
 namespace au::spectrogram {

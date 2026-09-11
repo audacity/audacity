@@ -18,7 +18,8 @@
 #include "modularity/ioc.h"
 
 #include <QObject>
-#include <QQuickItem>
+#include <QtQuick/QQuickItem>
+#include <QTimer>
 
 class LV2PortUIStates;
 struct LV2EffectOutputs;

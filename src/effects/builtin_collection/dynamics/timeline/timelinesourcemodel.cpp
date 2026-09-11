@@ -8,7 +8,7 @@
 
 #include "global/log.h"
 
-#include <QSGGeometryNode>
+#include <QtQuick/QSGGeometryNode>
 #include <QTimer>
 #include <QtQuick/qsgflatcolormaterial.h>
 

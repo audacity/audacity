@@ -6,7 +6,7 @@
 
 #include <limits>
 
-#include <QJSEngine>
+#include <QtQml/QJSEngine>
 #include <QStringList>
 
 #include "extensions/native/bytebuffer.h"

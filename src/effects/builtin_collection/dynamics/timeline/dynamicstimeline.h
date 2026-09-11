@@ -6,9 +6,9 @@
 #include "dynamicstimelinetypes.h"
 #include "painters/abstractsequencepainter.h"
 
-#include <QQmlParserStatus>
-#include <QQuickItem>
-#include <QSGGeometryNode>
+#include <QtQml/QQmlParserStatus>
+#include <QtQuick/QQuickItem>
+#include <QtQuick/QSGGeometryNode>
 #include <QTimer>
 
 #include <atomic>

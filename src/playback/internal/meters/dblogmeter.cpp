@@ -4,6 +4,7 @@
 
 #include "dblogmeter.h"
 
+#include <array>
 #include <cmath>
 #include <sstream>
 #include <iomanip>

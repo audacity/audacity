@@ -13,7 +13,7 @@
 #include "framework/global/async/asyncable.h"
 
 #include <QObject>
-#include <QQmlParserStatus>
+#include <QtQml/QQmlParserStatus>
 
 #include <utility>
 

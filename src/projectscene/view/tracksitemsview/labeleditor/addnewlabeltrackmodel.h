@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include <qqmlintegration.h>
+#include <QtQmlIntegration/qqmlintegration.h>
 
 #include "modularity/ioc.h"
 #include "trackedit/itrackeditinteraction.h"

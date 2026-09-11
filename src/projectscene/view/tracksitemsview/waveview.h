@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include <QQuickPaintedItem>
+#include <QtQuick/QQuickPaintedItem>
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"

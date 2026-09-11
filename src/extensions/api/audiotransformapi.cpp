@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include <QJSEngine>
+#include <QtQml/QJSEngine>
 #include <QPointer>
 
 #include "extensions/native/nativeextension.h"

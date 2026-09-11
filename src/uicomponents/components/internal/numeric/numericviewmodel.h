@@ -4,7 +4,7 @@
 #pragma once
 
 #include <QAbstractListModel>
-#include <QQuickItem>
+#include <QtQuick/QQuickItem>
 
 #include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
 

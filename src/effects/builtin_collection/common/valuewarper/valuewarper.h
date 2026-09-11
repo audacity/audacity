@@ -6,7 +6,7 @@
 #include "valuewarpertypes.h"
 
 #include <QObject>
-#include <QQmlParserStatus>
+#include <QtQml/QQmlParserStatus>
 #include <QVariant>
 
 namespace au::effects {

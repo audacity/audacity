@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include <QJSValue>
+#include <QtQml/QJSValue>
 #include <QVariantMap>
 
 #include "framework/extensions/iextensionsession.h"

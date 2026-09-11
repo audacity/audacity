@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QPixmap>
 
 #include "framework/global/async/asyncable.h"
 

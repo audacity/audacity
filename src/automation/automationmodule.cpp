@@ -4,6 +4,8 @@
 
 #include "view/clipgainmodel.h"
 
+#include <QtQml/qqml.h>
+
 using namespace au::automation;
 
 static const std::string mname("automation");

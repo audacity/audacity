@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QPointer>
-#include <QQuickItem>
+#include <QtQuick/QQuickItem>
 
 #include "ui/qml/Muse/Ui/navigationsection.h"
 #include "ui/qml/Muse/Ui/navigationpanel.h"

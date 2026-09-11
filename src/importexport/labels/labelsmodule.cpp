@@ -14,6 +14,8 @@
 
 #include "view/exportlabelsmodel.h"
 
+#include <QtQml/qqml.h>
+
 using namespace au::importexport;
 
 static const std::string mname("iex_labels");

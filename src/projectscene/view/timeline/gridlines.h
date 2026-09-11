@@ -2,7 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "qquickpainteditem.h"
+#include <QtQuick/qquickpainteditem.h>
 #include "view/timeline/timelineruler.h"
 
 class QPainter;

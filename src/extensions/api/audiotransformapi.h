@@ -4,7 +4,7 @@
  */
 #pragma once
 
-#include <QJSValue>
+#include <QtQml/QJSValue>
 #include <QObject>
 #include <QString>
 

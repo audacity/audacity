@@ -2,8 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include <QQmlEngine>
-#include <QtQml>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QtQml>
 
 #include "iapplication.h"
 

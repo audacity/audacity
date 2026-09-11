@@ -9,7 +9,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
 
-#include <QQmlParserStatus>
+#include <QtQml/QQmlParserStatus>
 
 namespace au::spectrogram {
 class AbstractSpectrogramSettingsModel;

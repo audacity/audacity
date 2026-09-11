@@ -8,7 +8,7 @@
 #include "global/log.h"
 #include "global/types/number.h"
 
-#include <QSGTransformNode>
+#include <QtQuick/QSGTransformNode>
 #include <QTimer>
 #include <QtQuick/qsgflatcolormaterial.h>
 
