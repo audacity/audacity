@@ -2,47 +2,40 @@
 # Audacity: A Digital Audio Editor
 #
 
-declare_module(record)
+muse_create_module(record NO_UNITY)
 
-set(MODULE_QRC record.qrc)
-set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
-
-set(MODULE_SRC
+target_sources(record PRIVATE
     #public
-    ${CMAKE_CURRENT_LIST_DIR}/recordmodule.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/recordmodule.h
-    ${CMAKE_CURRENT_LIST_DIR}/recorderrors.h
-    ${CMAKE_CURRENT_LIST_DIR}/irecordconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/irecordcontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/irecordmetercontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/irecord.h
-    ${CMAKE_CURRENT_LIST_DIR}/iaudioinput.h
+    recordmodule.cpp
+    recordmodule.h
+    recorderrors.h
+    irecordconfiguration.h
+    irecordcontroller.h
+    irecordmetercontroller.h
+    irecord.h
+    iaudioinput.h
 
     #internal
-    ${CMAKE_CURRENT_LIST_DIR}/internal/recordconfiguration.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/recordconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/recordcontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/recordcontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/recordmetercontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/recordmetercontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/recorduiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/recorduiactions.h
+    internal/recordconfiguration.cpp
+    internal/recordconfiguration.h
+    internal/recordcontroller.cpp
+    internal/recordcontroller.h
+    internal/recordmetercontroller.cpp
+    internal/recordmetercontroller.h
+    internal/recorduiactions.cpp
+    internal/recorduiactions.h
 
     #internal/au3
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audioinput.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audioinput.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3record.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3record.h
+    internal/au3/au3audioinput.cpp
+    internal/au3/au3audioinput.h
+    internal/au3/au3record.cpp
+    internal/au3/au3record.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarrecordlevelitem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarrecordlevelitem.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/recordmetermodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/recordmetermodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/leadinrecordingindicatormodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/leadinrecordingindicatormodel.h
+    view/toolbars/playbacktoolbarrecordlevelitem.cpp
+    view/toolbars/playbacktoolbarrecordlevelitem.h
     )
 
-set(MODULE_LINK
+target_link_libraries(record PRIVATE
         au3wrap
         au3-audio-devices
         au3-audio-io
@@ -54,9 +47,7 @@ set(MODULE_LINK
         au3-wave-track
 )
 
-set(MODULE_USE_UNITY OFF)
-
-setup_module()
+add_subdirectory(qml/Audacity/Record)
 
 if (AU_BUILD_RECORD_TESTS)
     add_subdirectory(tests)
