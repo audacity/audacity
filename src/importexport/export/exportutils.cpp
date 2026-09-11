@@ -4,6 +4,8 @@
 
 #include "exportutils.h"
 
+#include "framework/global/stringutils.h"
+
 muse::Val au::importexport::utils::matrixToVal(const std::vector<std::vector<bool> >& matrix)
 {
     muse::ValList rows;
@@ -46,4 +48,62 @@ std::vector<std::vector<bool> > au::importexport::utils::valToMatrix(const muse:
     }
 
     return matrix;
+}
+
+std::string au::importexport::utils::separateFileName(const std::string& prefix, std::optional<int> number, const std::string& name)
+{
+    std::string result;
+    const auto append = [&result](const std::string& part) {
+        if (part.empty()) {
+            return;
+        }
+        if (!result.empty()) {
+            result += ".";
+        }
+        result += part;
+    };
+
+    append(prefix);
+    if (number.has_value()) {
+        const std::string digits = std::to_string(number.value());
+        append(digits.size() < 2 ? "0" + digits : digits);
+    }
+    append(name);
+
+    return result;
+}
+
+std::string au::importexport::utils::UniqueFileNames::registerName(const std::string& name)
+{
+    std::string result = name;
+    std::string lowered = muse::strings::toLower(result);
+    for (int i = 2; m_loweredNames.count(lowered) > 0; ++i) {
+        result = name + "-" + std::to_string(i);
+        lowered = muse::strings::toLower(result);
+    }
+
+    m_loweredNames.insert(lowered);
+    return result;
+}
+
+std::vector<au::importexport::utils::TimeRange> au::importexport::utils::labelExportRanges(const std::vector<TimeRange>& labels,
+                                                                                           double projectEndTime)
+{
+    std::vector<TimeRange> ranges;
+    ranges.reserve(labels.size());
+
+    for (size_t i = 0; i < labels.size(); ++i) {
+        TimeRange range;
+        range.start = labels[i].start;
+        if (labels[i].end > labels[i].start) {
+            range.end = labels[i].end;
+        } else if (i + 1 < labels.size()) {
+            range.end = labels[i + 1].start;
+        } else {
+            range.end = projectEndTime;
+        }
+        ranges.push_back(range);
+    }
+
+    return ranges;
 }

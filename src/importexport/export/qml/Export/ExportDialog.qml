@@ -134,13 +134,45 @@ StyledDialogView {
                 navigation.order: typeSection.navigation.order + 1
 
                 RowLayout {
+                    visible: exportPreferencesModel.separateFilesExport
+
+                    Item {
+                        width: root.labelColumnWidth
+                        StyledTextLabel {
+                            id: fileNamePreviewLabel
+
+                            text: qsTrc("export", "File name preview")
+
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    TextInputField {
+                        id: fileNamePreviewField
+
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: implicitWidth
+
+                        readOnly: true
+                        currentText: exportPreferencesModel.fileNamePreview
+
+                        implicitWidth: root.dropdownWidth
+
+                        navigation.name: "FileNamePreviewFieldBox"
+                        navigation.panel: fileSection.navigation
+                        navigation.order: 1
+                        navigation.accessible.name: fileNamePreviewLabel.text + ": " + currentText
+                    }
+                }
+
+                RowLayout {
 
                     Item {
                         width: root.labelColumnWidth
                         StyledTextLabel {
                             id: filenameLabel
 
-                            text: qsTrc("export", "File name")
+                            text: exportPreferencesModel.separateFilesExport ? qsTrc("export", "File name prefix") : qsTrc("export", "File name")
 
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -152,18 +184,46 @@ StyledDialogView {
                         Layout.fillWidth: true
                         Layout.minimumWidth: implicitWidth
 
-                        currentText: exportPreferencesModel.filename
+                        currentText: exportPreferencesModel.separateFilesExport ? exportPreferencesModel.fileNamePrefix : exportPreferencesModel.filename
 
                         implicitWidth: root.dropdownWidth
 
                         navigation.name: "FileNameFieldBox"
                         navigation.panel: fileSection.navigation
-                        navigation.order: 1
+                        navigation.order: fileNamePreviewField.navigation.order + 1
                         navigation.accessible.name: filenameLabel.text + ": " + currentText
 
                         onTextChanged: function (newTextValue) {
-                            exportPreferencesModel.setFilename(newTextValue)
+                            if (exportPreferencesModel.separateFilesExport) {
+                                exportPreferencesModel.fileNamePrefix = newTextValue
+                            } else {
+                                exportPreferencesModel.setFilename(newTextValue)
+                            }
                         }
+                    }
+                }
+
+                RowLayout {
+                    visible: exportPreferencesModel.separateFilesExport
+
+                    Item {
+                        width: root.labelColumnWidth
+                    }
+
+                    CheckBox {
+                        id: includeNumbersCheckBox
+
+                        Layout.fillWidth: true
+
+                        text: exportPreferencesModel.separateFilesByLabels ? qsTrc("export", "Include label numbers") : qsTrc("export", "Include track numbers")
+                        checked: exportPreferencesModel.includeNumbers
+
+                        navigation.name: "IncludeNumbersBox"
+                        navigation.panel: fileSection.navigation
+                        navigation.order: filenameField.navigation.order + 1
+                        navigation.accessible.name: text
+
+                        onClicked: exportPreferencesModel.includeNumbers = !exportPreferencesModel.includeNumbers
                     }
                 }
 
@@ -204,7 +264,7 @@ StyledDialogView {
 
                             navigation.name: "FolderFieldBox"
                             navigation.panel: fileSection.navigation
-                            navigation.order: filenameField.navigation.order + 1
+                            navigation.order: includeNumbersCheckBox.navigation.order + 1
                             navigation.accessible.name: folderLabel.text + ": " + currentText
 
                             onTextEditingFinished: function (newTextValue) {
@@ -605,6 +665,8 @@ StyledDialogView {
                         id: trimBlankSpaceCheckBox
                         width: parent.width
 
+                        enabled: exportPreferencesModel.trimBlankSpaceEnabled
+
                         text: qsTrc("export", "Trim blank space before first clip")
                         checked: exportPreferencesModel.trimBlankSpace
 
@@ -614,6 +676,23 @@ StyledDialogView {
                         navigation.accessible.name: text
 
                         onClicked: exportPreferencesModel.trimBlankSpace = !exportPreferencesModel.trimBlankSpace
+                    }
+
+                    CheckBox {
+                        id: includeAudioBeforeFirstLabelCheckBox
+                        width: parent.width
+
+                        visible: exportPreferencesModel.separateFilesByLabels
+
+                        text: qsTrc("export", "Include audio before first label")
+                        checked: exportPreferencesModel.includeAudioBeforeFirstLabel
+
+                        navigation.name: "IncludeAudioBeforeFirstLabelBox"
+                        navigation.panel: renderingSection.navigation
+                        navigation.order: trimBlankSpaceCheckBox.navigation.order + 1
+                        navigation.accessible.name: text
+
+                        onClicked: exportPreferencesModel.includeAudioBeforeFirstLabel = !exportPreferencesModel.includeAudioBeforeFirstLabel
                     }
                 }
             }

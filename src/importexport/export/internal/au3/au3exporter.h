@@ -8,6 +8,8 @@
 #include "au3cloud/iau3cloudconfiguration.h"
 
 #include "au3-import-export/Export.h"
+#include "au3-mixer/MixerOptions.h"
+#include "au3wrap/au3types.h"
 
 #include "../../iexporter.h"
 #include "internal/exportconfiguration.h"
@@ -34,6 +36,10 @@ public:
     muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr,
                          au::project::IAudacityProjectPtr project = nullptr) override;
 
+    std::vector<std::string> separateFileNames(const Options& options = {}) const override;
+    muse::Ret exportSeparateFiles(const muse::io::path_t& directory, const Options& options = {},
+                                  muse::ProgressPtr progress = nullptr) override;
+
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;
     std::vector<std::string> formatExtensions(const std::string& format) const override;
@@ -54,6 +60,24 @@ public:
     OptionsEditorUPtr optionsEditor() const;
 
 private:
+    struct SeparateFile {
+        std::string name;
+        std::string title;
+        int number = 0;
+        ::WaveTrack* track = nullptr;
+        double t0 = 0.0;
+        double t1 = 0.0;
+    };
+
+    muse::Ret prepareFormat(const Options& options);
+    muse::Ret prepareMix(au::au3::Au3Project& project, const Options& options);
+    std::string formatExtension(const Options& options) const;
+    std::vector<SeparateFile> separateFiles(au::au3::Au3Project& project, const Options& options) const;
+    std::vector<SeparateFile> trackFiles(au::au3::Au3Project& project, const std::string& prefix, bool includeNumbers) const;
+    std::vector<SeparateFile> labelFiles(au::au3::Au3Project& project, const std::string& prefix, bool includeNumbers,
+                                         bool includeAudioBeforeFirstLabel) const;
+    muse::Ret runExport(au::au3::Au3Project& project, const wxFileName& filename, muse::ProgressPtr progress);
+
     double m_t0 {};
     double m_t1 {};
     bool m_selectedOnly{};
@@ -62,6 +86,7 @@ private:
     ExportProcessor::Parameters m_parameters;
     const ExportPlugin* m_plugin{};
     int m_format{};
+    std::unique_ptr<MixerOptions::Downmix> m_downMix;
     MixerOptions::Downmix* m_mixerSpec{};
     const Tags* m_tags{};
 };

@@ -1,6 +1,8 @@
 #include "au3trackeditproject.h"
 
+#include "au3-label-track/LabelTrack.h"
 #include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-stretching-sequence/TempoChange.h"
@@ -47,6 +49,7 @@ Au3TrackeditProject::Au3TrackeditProject(const muse::modularity::ContextPtr& ctx
     });
 
     updateHasAudioContent();
+    updateHasLabels();
 }
 
 Au3TrackeditProject::~Au3TrackeditProject()
@@ -101,18 +104,48 @@ muse::ValCh<bool> Au3TrackeditProject::hasAudioContent() const
     return m_hasAudioContent;
 }
 
+muse::ValCh<bool> Au3TrackeditProject::hasLabels() const
+{
+    return m_hasLabels;
+}
+
 void Au3TrackeditProject::updateHasAudioContent()
 {
     bool has = false;
-    for (const TrackId& trackId : trackIdList()) {
-        if (!getClips(trackId).empty()) {
+    for (const Au3WaveTrack* track : m_impl->trackList->Any<const Au3WaveTrack>()) {
+        if (!track->IsEmpty()) {
             has = true;
             break;
         }
     }
 
+    setHasAudioContent(has);
+}
+
+void Au3TrackeditProject::setHasAudioContent(bool has)
+{
     if (m_hasAudioContent.val != has) {
         m_hasAudioContent.set(has);
+    }
+}
+
+void Au3TrackeditProject::updateHasLabels()
+{
+    bool has = false;
+    for (const Au3LabelTrack* track : m_impl->trackList->Any<const Au3LabelTrack>()) {
+        if (track->GetNumLabels() > 0) {
+            has = true;
+            break;
+        }
+    }
+
+    setHasLabels(has);
+}
+
+void Au3TrackeditProject::setHasLabels(bool has)
+{
+    if (m_hasLabels.val != has) {
+        m_hasLabels.set(has);
     }
 }
 
@@ -285,27 +318,34 @@ std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId
 
 void Au3TrackeditProject::reload()
 {
+    updateHasAudioContent();
+    updateHasLabels();
     m_tracksChanged.send(trackList());
 }
 
 void Au3TrackeditProject::notifyAboutTrackAdded(const Track& track)
 {
     m_trackAdded.send(track);
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutTrackChanged(const Track& track)
 {
     m_trackChanged.send(track);
+    updateHasAudioContent();
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutTrackRemoved(const Track& track)
 {
     m_trackRemoved.send(track);
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutTrackInserted(const Track& track, int pos)
 {
     m_trackInserted.send(track, pos);
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutTrackMoved(const Track& track, int pos)
@@ -367,7 +407,7 @@ void Au3TrackeditProject::notifyAboutClipAdded(const Clip& clip)
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
     notifier.itemAdded(clip);
 
-    updateHasAudioContent();
+    setHasAudioContent(true);
 }
 
 void Au3TrackeditProject::notifyAboutLabelChanged(const Label& label)
@@ -380,12 +420,16 @@ void Au3TrackeditProject::notifyAboutLabelRemoved(const Label& label)
 {
     async::ChangedNotifier<Label>& notifier = m_labelsChanged[label.key.trackId];
     notifier.itemRemoved(label);
+
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutLabelAdded(const Label& label)
 {
     async::ChangedNotifier<Label>& notifier = m_labelsChanged[label.key.trackId];
     notifier.itemAdded(label);
+
+    setHasLabels(true);
 }
 
 au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const

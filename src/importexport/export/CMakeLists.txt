@@ -62,3 +62,7 @@ set(MODULE_LINK
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (AU_BUILD_EXPORT_TESTS)
+    add_subdirectory(tests)
+endif()

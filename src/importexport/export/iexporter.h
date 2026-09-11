@@ -32,7 +32,10 @@ public:
         ExportChannels,
         ExportCustomChannelMapping,
         ExportSampleRate,
-        Parameters
+        Parameters,
+        FileNamePrefix,
+        IncludeNumbers,
+        IncludeAudioBeforeFirstLabel
     };
 
     using Options = std::map<OptionKey, muse::Val>;
@@ -42,6 +45,10 @@ public:
     virtual void init() = 0;
     virtual muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr,
                                  au::project::IAudacityProjectPtr project = nullptr) = 0;
+
+    virtual std::vector<std::string> separateFileNames(const Options& options = {}) const = 0;
+    virtual muse::Ret exportSeparateFiles(const muse::io::path_t& directory, const Options& options = {},
+                                          muse::ProgressPtr progress = nullptr) = 0;
 
     virtual std::vector<std::string> formatsList() const = 0;
     virtual int formatIndex(const std::string& format) const = 0;

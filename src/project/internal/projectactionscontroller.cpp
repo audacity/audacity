@@ -118,12 +118,21 @@ const std::unordered_set<muse::actions::ActionCode>& prohibitedOnNonCloudProject
     return codes;
 }
 
-const std::unordered_set<muse::actions::ActionCode>& prohibitedWithoutAudio()
+const muse::actions::ActionCodeList& prohibitedWithoutAudio()
 {
-    static const std::unordered_set<muse::actions::ActionCode> codes {
+    static const muse::actions::ActionCodeList codes {
         "file-share-audio",
         "audacity://cloud/update-audio-preview",
         "export-audio",
+    };
+
+    return codes;
+}
+
+const muse::actions::ActionCodeList& prohibitedWithoutLabels()
+{
+    static const muse::actions::ActionCodeList codes {
+        "export-labels",
     };
 
     return codes;
@@ -200,10 +209,15 @@ void ProjectActionsController::listenTrackeditProjectChanges()
     }
 
     prj->hasAudioContent().ch.onReceive(this, [this](bool) {
-        m_actionEnabledChanged.send({ "file-share-audio" });
+        m_actionEnabledChanged.send(prohibitedWithoutAudio());
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    m_actionEnabledChanged.send({ "file-share-audio" });
+    prj->hasLabels().ch.onReceive(this, [this](bool) {
+        m_actionEnabledChanged.send(prohibitedWithoutLabels());
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    m_actionEnabledChanged.send(prohibitedWithoutAudio());
+    m_actionEnabledChanged.send(prohibitedWithoutLabels());
 }
 
 void ProjectActionsController::listenCloudProjectChanges()
@@ -236,11 +250,13 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
         return false;
     }
 
-    if (muse::contains(prohibitedWithoutAudio(), code)) {
-        const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
-        if (!trackeditProject || !trackeditProject->hasAudioContent().val) {
-            return false;
-        }
+    const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
+    if (muse::contains(prohibitedWithoutAudio(), code) && (!trackeditProject || !trackeditProject->hasAudioContent().val)) {
+        return false;
+    }
+
+    if (muse::contains(prohibitedWithoutLabels(), code) && (!trackeditProject || !trackeditProject->hasLabels().val)) {
+        return false;
     }
 
     if (muse::contains(prohibitedWhileRecording(), code) && recordController()->isRecording()) {
