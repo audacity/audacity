@@ -196,6 +196,39 @@ TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
     EXPECT_DOUBLE_EQ(captured.param("end").toDouble(), 10.0);
 }
 
+TEST_F(PlayCursorControllerTests, PositionTickWhilePaused_DoesNotScrollView)
+{
+    //! CASE Residual engine ticks after pausing must not scroll a view the
+    //! user scrolled/zoomed away; the cursor position itself still updates.
+    ON_CALL(*m_playbackState, playbackStatus())
+    .WillByDefault(Return(playback::PlaybackStatus::Paused));
+
+    m_context->onResizeFrameWidth(100.0); // frame = [0, 100]s at zoom 1
+
+    SnapTestAccess::updatePositionX(m_controller, muse::secs_t(500.0)); // play head far off-screen
+
+    EXPECT_DOUBLE_EQ(m_context->frameStartTime(), 0.0);
+    EXPECT_DOUBLE_EQ(m_controller->positionX(), 500.0);
+}
+
+TEST_F(PlayCursorControllerTests, PositionChangeWhileStopped_BringsViewToCursor)
+{
+    //! CASE Position changes from stop/seek still scroll the cursor into view.
+    ON_CALL(*m_playbackState, playbackStatus())
+    .WillByDefault(Return(playback::PlaybackStatus::Stopped));
+    // no view state: moving the frame would persist zoom into the au3 project
+    ON_CALL(*m_project, viewState())
+    .WillByDefault(Return(nullptr));
+
+    m_context->onResizeFrameWidth(100.0); // frame = [0, 100]s at zoom 1
+
+    SnapTestAccess::updatePositionX(m_controller, muse::secs_t(500.0));
+
+    EXPECT_GT(m_context->frameStartTime(), 0.0);
+    EXPECT_LE(m_context->frameStartTime(), 500.0);
+    EXPECT_GE(m_context->frameEndTime(), 500.0);
+}
+
 //! Seek gesture: pressing in the track area must never move the playhead by
 //! itself — the seek is deferred to the release, and dropped entirely when the
 //! press turned into a drag of something other than the play cursor.
