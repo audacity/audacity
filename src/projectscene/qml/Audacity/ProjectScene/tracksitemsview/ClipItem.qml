@@ -609,6 +609,12 @@ Rectangle {
                     root.headerHovered = containsMouse
                 }
 
+				// during dragging, the clip is hidden, and do not receive mouse events
+				// we need to restore hover state when the clip become visible again
+                onVisibleChanged: {
+                    root.headerHovered = containsMouse
+                }
+
                 visible: root.enableCursorInteraction
 
                 acceptedButtons: Qt.LeftButton

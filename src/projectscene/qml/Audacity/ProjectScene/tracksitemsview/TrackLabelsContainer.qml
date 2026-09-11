@@ -194,6 +194,14 @@ TrackItemsContainer {
                             active: !itemData.dragged
                             enabled: !itemData.isDragGhost
 
+                            onActiveChanged: {
+                                if (!active) {
+                                    // The dragged label is destroyed before it can report that it is no longer hovered
+                                    root.itemHeaderHoveredChanged(false)
+                                    root.hover = labelsContainer.checkIfAnyLabel(labelItem => labelItem.hover)
+                                }
+                            }
+
                             visible: y < root.height
 
                             sourceComponent: {
