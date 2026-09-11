@@ -21,6 +21,7 @@ public:
     MOCK_METHOD(Label, label, (const LabelKey& key), (const, override));
     MOCK_METHOD(muse::async::NotifyList<Clip>, clipList, (const TrackId& trackId), (const, override));
     MOCK_METHOD(muse::async::NotifyList<Label>, labelList, (const TrackId& trackId), (const, override));
+    MOCK_METHOD(ItemWithTimeList, itemList, (const TrackId& trackId), (const, override));
     MOCK_METHOD(std::vector<int64_t>, groupsIdsList, (), (const, override));
     MOCK_METHOD(std::optional<std::string>, trackName, (const TrackId& trackId), (const, override));
 

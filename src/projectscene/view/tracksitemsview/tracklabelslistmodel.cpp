@@ -266,11 +266,14 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const LabelKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
-        if (!rangeKeys.empty()) {
+        const ClipAndLabelKeys box = m_context
+                                     ? selectionController()->itemsTouchingSelectionBox(
+            m_context->mousePositionTime(), m_trackId)
+                                     : ClipAndLabelKeys();
+        if (!box.empty()) {
             selectionController()->resetDataSelection();
-            selectionController()->resetSelectedClips();
-            selectionController()->setSelectedLabels(rangeKeys, true);
+            selectionController()->setSelectedClips(box.clips, true);
+            selectionController()->setSelectedLabels(box.labels, true);
             m_needToSelectTracksData = false;
             return;
         }
@@ -279,6 +282,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         selectionController()->resetSelectedClips();
         selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
         setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         m_needToSelectTracksData = false;
         return;
     }
@@ -303,6 +309,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     }
 
     setFocusedItem(key);
+    if (m_context) {
+        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+    }
     m_needToSelectTracksData = false;
 }
 
