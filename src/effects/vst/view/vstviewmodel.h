@@ -42,10 +42,17 @@ private:
     void settingsFromView();
     void checkSettingChangesFromUiWhileIdle();
     void checkSettingChangesFromUi(bool forceCommitting);
+    void deliverPendingUiMessages();
 
     std::shared_ptr<VST3Instance> m_auVst3Instance;
     std::shared_ptr<EffectSettingsAccess> m_settingsAccess;
     QTimer m_settingUpdateTimer;
+
+    // Unlike m_settingUpdateTimer (which only does anything while inactive/idle), this
+    // runs regardless of active state: it delivers the data a plugin sends to its own
+    // editor while audio is being processed. See VST3Wrapper::DeliverPendingUiMessages
+    // for why it must run on this (UI) thread rather than the audio thread.
+    QTimer m_pluginUiUpdateTimer;
 };
 
 class VstViewModelFactory : public EffectViewModelFactory<VstViewModel>

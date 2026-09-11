@@ -22,6 +22,9 @@ VstViewModel::~VstViewModel()
     m_settingUpdateTimer.stop();
     QObject::disconnect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUiWhileIdle);
 
+    m_pluginUiUpdateTimer.stop();
+    QObject::disconnect(&m_pluginUiUpdateTimer, &QTimer::timeout, this, &VstViewModel::deliverPendingUiMessages);
+
     // The wrapper is owned by the effect instance and outlives this view model
     // (e.g. when the vendor UI is swapped for the fallback UI). Clear the
     // handler so a later endEdit doesn't invoke a lambda capturing a freed this.
@@ -76,6 +79,20 @@ void VstViewModel::doInit()
 
     // When playback is idle (see VstViewModel::event), no need for setting updates to be low-latency. Every 100ms is plenty.
     m_settingUpdateTimer.start(std::chrono::milliseconds { 100 });
+
+    // Unlike the settings timer above, this runs regardless of idle/active state: it
+    // hands the plugin the live data its own editor draws from. ~60fps, which is what
+    // vendor GUIs expect for smooth meter and analyser animation.
+    QObject::connect(&m_pluginUiUpdateTimer, &QTimer::timeout, this, &VstViewModel::deliverPendingUiMessages);
+    m_pluginUiUpdateTimer.start(std::chrono::milliseconds { 16 });
+}
+
+void VstViewModel::deliverPendingUiMessages()
+{
+    if (!m_auVst3Instance) {
+        return;
+    }
+    m_auVst3Instance->GetWrapper().DeliverPendingUiMessages();
 }
 
 void VstViewModel::checkSettingChangesFromUiWhileIdle()
