@@ -6,6 +6,7 @@
 #include <functional>
 
 #include <QAbstractListModel>
+#include <QPointer>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/iapplication.h"
@@ -26,6 +27,7 @@
 
 #include "projectscene/types/projectscenetypes.h"
 #include "viewtrackitem.h"
+#include "trackitemsmovecontroller.h"
 
 namespace au::projectscene {
 class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable,
@@ -35,6 +37,7 @@ class TrackItemsListModel : public QAbstractListModel, public muse::async::Async
 
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
+    Q_PROPERTY(TrackItemsMoveController * moveController READ moveController WRITE setMoveController NOTIFY moveControllerChanged FINAL)
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
 protected:
@@ -56,6 +59,9 @@ public:
     void setTimelineContext(TimelineContext* newContext);
     QVariant trackId() const;
     void setTrackId(const QVariant& newTrackId);
+
+    TrackItemsMoveController* moveController() const;
+    void setMoveController(TrackItemsMoveController* controller);
 
     static int cacheBufferPx();
 
@@ -81,6 +87,7 @@ public:
 
 signals:
     void trackIdChanged();
+    void moveControllerChanged();
     void timelineContextChanged();
     void itemTitleEditRequested(const TrackItemKey& key);
 
@@ -119,17 +126,8 @@ protected:
 
     QVariant neighbor(const TrackItemKey& key, int offset) const;
 
-    struct MoveOffset {
-        muse::secs_t timeOffset = 0.0;
-        int trackOffset = 0;
-    };
-    MoveOffset calculateMoveOffset(const ViewTrackItem* item, const TrackItemKey& key,
-                                   const std::vector<trackedit::TrackType>& trackTypesAllowedToMove, bool completed,
-                                   bool applySnap = true) const;
-    trackedit::secs_t calculateTimePositionOffset(const ViewTrackItem* item, bool applySnap = true) const;
-
-    int calculateTrackPositionOffset(const TrackItemKey& key, const std::vector<trackedit::TrackType>& trackTypesAllowedToMove) const;
-    bool isAllowedToMoveToTracks(const std::vector<trackedit::TrackType>& allowedTrackTypes, const trackedit::TrackId& movedTrackId) const;
+    virtual ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) = 0;
+    double moveTimeOffset() const;
 
     trackedit::SelectionMode selectionMode() const;
 
@@ -144,5 +142,12 @@ protected:
     QList<ViewTrackItem*> m_items;
     QList<ViewTrackItem*> m_selectedItems;
     QMetaObject::Connection m_autoScrollConnection;
+
+private:
+    void onItemsMoveChanged();
+    void updateDragGhostsMetrics();
+
+    QList<ViewTrackItem*> m_dragGhostItems;
+    QPointer<TrackItemsMoveController> m_moveController;
 };
 }

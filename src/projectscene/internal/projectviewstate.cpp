@@ -1015,6 +1015,16 @@ bool ProjectViewState::moveInitiated() const
     return m_moveInitiated;
 }
 
+void ProjectViewState::setMovePreviewEndTime(double time)
+{
+    m_movePreviewEndTime = time;
+}
+
+double ProjectViewState::movePreviewEndTime() const
+{
+    return m_movePreviewEndTime;
+}
+
 void ProjectViewState::setLastEditedClip(const trackedit::ClipKey& clipKey)
 {
     if (m_lastEditedClip == clipKey) {
@@ -1069,7 +1079,7 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
     for (const auto& trackId : prj->trackIdList()) {
         // Add clips boundaries
         for (const auto& clip : prj->clipList(trackId)) {
-            if (excludeCurrentSelection && muse::contains(selectedClips, clip.key)) {
+            if ((excludeCurrentSelection || m_moveInitiated) && muse::contains(selectedClips, clip.key)) {
                 continue;
             }
 
@@ -1083,7 +1093,7 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
 
         // Add labels boundaries
         for (const auto& label : prj->labelList(trackId)) {
-            if (excludeCurrentSelection && muse::contains(selectedLabels, label.key)) {
+            if ((excludeCurrentSelection || m_moveInitiated) && muse::contains(selectedLabels, label.key)) {
                 continue;
             }
 

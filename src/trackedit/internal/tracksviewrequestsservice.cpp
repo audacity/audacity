@@ -5,6 +5,16 @@
 
 using namespace au::trackedit;
 
+void TracksViewRequestsService::requestItemMove(secs_t timeOffset, int trackOffset)
+{
+    m_itemMoveRequested.send(timeOffset, trackOffset);
+}
+
+muse::async::Channel<secs_t, int> TracksViewRequestsService::itemMoveRequested() const
+{
+    return m_itemMoveRequested;
+}
+
 void TracksViewRequestsService::requestLabelTitleEdit(const LabelKey& labelKey)
 {
     m_pendingLabelTitleEdit = labelKey;

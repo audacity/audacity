@@ -129,7 +129,7 @@ Item {
         name: "LabelNavigationPanel"
         enabled: navCtrl.active
         direction: NavigationPanel.Horizontal
-        section: navigation.panel.section
+        section: navigation.panel ? navigation.panel.section : null
         onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()

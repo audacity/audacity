@@ -22,6 +22,7 @@ Item {
     property bool isTrackFocused: false
     property bool isMultiSelectionActive: false
     property bool isTrackAudible: true
+    property TrackItemsMoveController moveController: null
     property bool moveActive: false
     property bool altPressed: false
     property bool ctrlPressed: false
@@ -51,8 +52,6 @@ Item {
     signal selectionResetRequested
     signal requestSelectionContextMenu(real x, real y)
     signal selectionResize(var x1, var x2, var completed)
-
-    signal updateMouseMoveActive(bool completed)
 
     signal insureVerticallyVisible
 

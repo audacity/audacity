@@ -26,6 +26,14 @@ TrackClipsListModel::TrackClipsListModel(QObject* parent)
 
 void TrackClipsListModel::onInit()
 {
+    if (moveController()) {
+        connect(moveController(), &TrackItemsMoveController::activeChanged, this, [this] {
+            if (!moveController()->active()) {
+                m_pendingToggleDeselect.clear();
+            }
+        });
+    }
+
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList& keyList) {
         if (keyList.empty()) {
             resetSelectedClips();
@@ -168,7 +176,9 @@ void TrackClipsListModel::update()
     }
 
     QList<TrackClipItem*> newList;
-    bool isStereo = false;
+    const auto prj = globalContext()->currentTrackeditProject();
+    const auto track = prj ? prj->track(m_trackId) : std::nullopt;
+    const bool isStereo = track && track->type == TrackType::Stereo;
 
     // Building a new list, reusing exiting clips
     for (const au::trackedit::Clip& c : m_allClipList) {
@@ -184,7 +194,6 @@ void TrackClipsListModel::update()
 
         item->setClip(c);
         newList.append(item);
-        isStereo |= c.stereo;
     }
 
     // Removing deleted or moved clips
@@ -234,9 +243,9 @@ void TrackClipsListModel::update()
         emit isStereoChanged();
     }
 
-    muse::async::Async::call(this, [cleanupList]() {
-        qDeleteAll(cleanupList);
-    });
+    for (TrackClipItem* item : cleanupList) {
+        item->deleteLater();
+    }
 }
 
 void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
@@ -251,6 +260,11 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     trackedit::Clip clip = prj->clip(item->key().key);
     if (!clip.isValid()) {
         return;
+    }
+
+    if (item->isDragGhost()) {
+        clip.startTime += moveTimeOffset();
+        clip.endTime += moveTimeOffset();
     }
 
     // Pin the recording clip's visual boundary to the smooth playhead: data is
@@ -286,6 +300,13 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
     item->setLeftVisibleMargin(std::max(m_context->frameStartTime() - time.itemStartTime, 0.0) * m_context->zoom());
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
+}
+
+ViewTrackItem* TrackClipsListModel::createDragGhost(const trackedit::TrackItemKey& key)
+{
+    TrackClipItem* item = new TrackClipItem(this);
+    item->setClip(globalContext()->currentTrackeditProject()->clip(key));
+    return item;
 }
 
 bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
@@ -365,99 +386,6 @@ bool TrackClipsListModel::asymmetricStereoHeightsPossible() const
 bool TrackClipsListModel::isContrastFocusBorderEnabled() const
 {
     return !uiConfiguration()->isDarkMode();
-}
-
-au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) const
-{
-    ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
-    if (!trackeditPrj) {
-        return clipKey;
-    }
-
-    auto allTracks = trackeditPrj->trackIdList();
-
-    for (const auto& trackId : allTracks) {
-        auto clips = trackeditPrj->clipList(trackId);
-
-        for (const auto& clip : clips) {
-            if (clip.key.itemId == clipKey.key.itemId) {
-                ClipKey updatedKey;
-                updatedKey.key.trackId = trackId;
-                updatedKey.key.itemId = clip.key.itemId;
-                return updatedKey;
-            }
-        }
-    }
-
-    return clipKey;
-}
-
-/*!
- * \brief Moves all selected clips
- * \param key - the key from which the offset will be calculated to move all clips
-
-    Calculate offset of clip that's being grabbed
-    and apply it to all selected clips
- */
-bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
-{
-    TrackClipItem* item = clipItemByKey(key.key);
-    if (!item) {
-        return false;
-    }
-
-    m_pendingToggleDeselect.clear();
-
-    auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        return false;
-    }
-
-    auto vs = project->viewState();
-    IF_ASSERT_FAILED(vs) {
-        return false;
-    }
-
-    bool clipsMovedToOtherTrack = false;
-    // Clips can only be moved to audio tracks (Mono and Stereo)
-    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, {
-        trackedit::TrackType::Mono,
-        trackedit::TrackType::Stereo
-    }, completed);
-
-    if (vs->moveInitiated()) {
-        if (!selectionController()->timeSelectionIsEmpty()) {
-            trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
-        } else {
-            ClipKeyList selectedClips = selectionController()->selectedClipsInTrackOrder();
-            muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(selectedClips, moveOffset.timeOffset,
-                                                                                 moveOffset.trackOffset,
-                                                                                 completed, clipsMovedToOtherTrack);
-            if (result.ret) {
-                selectionController()->setSelectedClips(result.val, completed);
-            }
-        }
-    }
-
-    // Update key if clip moved to another track
-    ClipKey updatedKey = key;
-    if (clipsMovedToOtherTrack && !completed) {
-        updatedKey = updateClipTrack(key);
-
-        // Reconnect with updated key
-        if (m_autoScrollConnection) {
-            disconnectAutoScroll();
-        }
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, updatedKey](){
-            moveSelectedClips(updatedKey, false);
-        });
-    } else if ((completed && m_autoScrollConnection)) {
-        disconnectAutoScroll();
-    } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });
-    }
-
-    return clipsMovedToOtherTrack;
 }
 
 ClipKeyList TrackClipsListModel::clipsForInteraction(const ClipKey& key) const

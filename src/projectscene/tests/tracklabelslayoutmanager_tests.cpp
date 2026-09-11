@@ -438,4 +438,37 @@ TEST_F(TrackLabelsLayoutManagerTests, ChainOfLinkedLabels)
     leftLinkedLabel = leftLinkedLabelKey(key3);
     ASSERT_EQ(leftLinkedLabel, key2) << "Label 3's left link should point to Label 2";
 }
+
+TEST_F(TrackLabelsLayoutManagerTests, DragPreviewsStackWithoutHiddenOriginals)
+{
+    m_layoutManager->setLabelsModel(m_labelsModel);
+    addItem(1, u"Original", 10.0, 20.0);
+    addItem(2, u"Preview one", 10.0, 20.0);
+    addItem(3, u"Preview two", 10.0, 20.0);
+    item(0)->setDragged(true);
+    item(1)->setDragGhost(true);
+    item(2)->setDragGhost(true);
+    m_layoutManager->init();
+
+    EXPECT_EQ(item(1)->level(), 0);
+    EXPECT_EQ(item(2)->level(), 1);
+
+    // Moving a preview away releases its level for the other visible labels.
+    item(1)->setX(40.0);
+    relayout();
+    EXPECT_EQ(item(1)->level(), 0);
+    EXPECT_EQ(item(2)->level(), 0);
+}
+
+TEST_F(TrackLabelsLayoutManagerTests, PreviewsDoNotBecomeEditableLinkedLabels)
+{
+    m_layoutManager->setLabelsModel(m_labelsModel);
+    addItem(1, u"Label", 0.0, 10.0);
+    addItem(2, u"Preview", 10.0, 20.0);
+    item(1)->setDragGhost(true);
+    m_layoutManager->init();
+
+    EXPECT_FALSE(rightLinkedLabelKey(item(0)->key()).isValid());
+    EXPECT_FALSE(leftLinkedLabelKey(item(1)->key()).isValid());
+}
 }

@@ -53,5 +53,10 @@ struct SnapTestAccess {
         controller->dispatcher.set(dispatcher);
         controller->selectionController.set(selectionController);
     }
+
+    static double maxFrameEndTime(const TimelineContext* ctx)
+    {
+        return ctx->maxFrameEndTime();
+    }
 };
 }

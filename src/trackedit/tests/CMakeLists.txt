@@ -16,6 +16,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditinteractionmock.h
 
     ${CMAKE_CURRENT_LIST_DIR}/trackeditactionscontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/trackeditoperationcontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tracknavigationcontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tracknavigationmodel_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3tracksinteraction_tests.cpp
@@ -30,7 +31,11 @@ set(MODULE_TEST_LINK
         trackedit
         spectrogram
         au3wrap
+        effects_base
         au3-label-track
+        au3-project-file-io
+        au3-project-history
+        au3-realtime-effects
         au3-time-frequency-selection
         au3-wave-track
 
@@ -41,5 +46,11 @@ set(MODULE_TEST_LINK
 )
 
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})
+
+set(MODULE_TEST_INCLUDE
+    ${CMAKE_CURRENT_LIST_DIR}/..
+    ${PROJECT_SOURCE_DIR}/src/effects/effects_base
+    ${PROJECT_SOURCE_DIR}/src/spectrogram
+)
 
 include(SetupGTest)

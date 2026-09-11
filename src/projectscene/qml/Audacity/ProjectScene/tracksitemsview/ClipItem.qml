@@ -609,6 +609,12 @@ Rectangle {
                     root.headerHovered = containsMouse
                 }
 
+				// during dragging, the clip is hidden, and do not receive mouse events
+				// we need to restore hover state when the clip become visible again
+                onVisibleChanged: {
+                    root.headerHovered = containsMouse
+                }
+
                 visible: root.enableCursorInteraction
 
                 acceptedButtons: Qt.LeftButton
@@ -972,8 +978,10 @@ Rectangle {
 
                     defaultValue: clipGainModel.defaultValue
 
-                    xRangeFrom: waveView.itemStartTime
-                    xRangeTo: waveView.itemEndTime
+                    // Offset the envelope display to follow the drag preview while its point times remain unchanged.
+                    readonly property real timeOffset: waveView.startTime - clipGainModel.clipStartTime
+                    xRangeFrom: waveView.itemStartTime - timeOffset
+                    xRangeTo: waveView.itemEndTime - timeOffset
 
                     yRangeFrom: clipGainModel.minValue
                     yRangeTo: clipGainModel.maxValue
