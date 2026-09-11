@@ -32,6 +32,7 @@
 #include "playback/playbacktypes.h"
 #include "thirdparty/kors_logger/src/log_base.h"
 #include "trackediterrors.h"
+#include "tracklistchangeguard.h"
 
 #include "au3interactionutils.h"
 #include "trackeditutils.h"
@@ -188,6 +189,8 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
     if (data.empty()) {
         return make_ret(trackedit::Err::TrackEmpty);
     }
+
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
 
     std::vector<std::shared_ptr<Au3TrackData> > copiedData(data.size());
     for (size_t i = 0; i < data.size(); ++i) {
@@ -414,7 +417,6 @@ muse::Ret Au3TracksInteraction::pasteLabels(const std::vector<Au3TrackDataPtr>& 
 
         if (!targetLabelTrack) {
             targetLabelTrack = ::LabelTrack::Create(tracks);
-            prj->notifyAboutTrackAdded(DomConverter::labelTrack(targetLabelTrack));
         }
 
         const auto trackToPaste = std::static_pointer_cast<Au3LabelTrack>(copiedData.at(i)->track());
@@ -626,6 +628,8 @@ bool Au3TracksInteraction::splitRangeSelectionAtSilences(const TrackIdList& trac
 
 bool Au3TracksInteraction::splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     for (const auto& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -657,7 +661,6 @@ bool Au3TracksInteraction::splitRangeSelectionIntoNewTracks(const TrackIdList& t
         projectTracks.Add(newTrack);
 
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-        prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
         for (const auto& clip : prj->clipList(newTrack->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }
@@ -683,6 +686,7 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
     auto& tracks = Au3TrackList::Get(projectRef());
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    const TrackListChangeGuard guard(prj);
 
     std::vector<std::shared_ptr<Au3Track> > copies;
     copies.reserve(tracksIds.size());
@@ -713,8 +717,6 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
 
     for (const auto& dest : copies) {
         tracks.Add(dest);
-
-        prj->notifyAboutTrackAdded(DomConverter::track(dest.get()));
 
         if (dynamic_cast<Au3WaveTrack*>(dest.get())) {
             for (const auto& clip : prj->clipList(dest->GetId())) {
@@ -773,11 +775,10 @@ bool Au3TracksInteraction::newStereoTrack()
 
 muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::newLabelTrack(const muse::String& title)
 {
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     auto& tracks = Au3TrackList::Get(projectRef());
     Au3LabelTrack* track = !title.empty() ? ::LabelTrack::Create(tracks, wxFromString(title)) : ::LabelTrack::Create(tracks);
-
-    const auto prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackAdded(DomConverter::labelTrack(track));
 
     selectionController()->setSelectedTracks({ track->GetId() });
     trackNavigationController()->setFocusedTrack(track->GetId());
@@ -790,44 +791,20 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
 
-    TrackId focusedTrack = trackNavigationController()->focusedTrack();
     const auto prj = globalContext()->currentTrackeditProject();
-    const auto indexFocusedTrack = muse::indexOf(prj->trackIdList(), focusedTrack);
+    const TrackListChangeGuard guard(prj);
 
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
         IF_ASSERT_FAILED(au3Track) {
             continue;
         }
-        auto track = DomConverter::track(au3Track);
         const auto clips = prj->clipList(trackId);
 
         tracks.Remove(*au3Track);
         for (const auto& clip : clips) {
             prj->notifyAboutClipRemoved(clip);
         }
-        prj->notifyAboutTrackRemoved(track);
-    }
-
-    if (!muse::contains(trackIds, focusedTrack)) {
-        return true;
-    }
-
-    if (indexFocusedTrack == muse::nidx) {
-        return true;
-    }
-
-    const auto notRemovedTracks = prj->trackIdList();
-    if (notRemovedTracks.empty()) {
-        trackNavigationController()->setFocusedTrack(-1);
-        return true;
-    }
-
-    const auto maxIndex = notRemovedTracks.size() - 1;
-    if (maxIndex < indexFocusedTrack) {
-        trackNavigationController()->setFocusedTrack(notRemovedTracks.back());
-    } else {
-        trackNavigationController()->setFocusedTrack(notRemovedTracks[indexFocusedTrack]);
     }
 
     return true;
@@ -843,6 +820,7 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
     auto& tracks = Au3TrackList::Get(project);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    const TrackListChangeGuard guard(prj);
 
     std::vector<std::shared_ptr<Au3Track> > clones;
     clones.reserve(trackIds.size());
@@ -869,10 +847,6 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
 
     for (const auto& au3Clone : clones) {
         tracks.Add(au3Clone, ::TrackList::DoAssignId::Yes);
-
-        auto clone = DomConverter::track(au3Clone.get());
-
-        prj->notifyAboutTrackInserted(clone, static_cast<int>(utils::getTrackIndex(tracks, *au3Clone)));
 
         if (dynamic_cast<Au3WaveTrack*>(au3Clone.get())) {
             for (const auto& clip : prj->clipList(au3Clone->GetId())) {
@@ -938,8 +912,9 @@ bool Au3TracksInteraction::moveTracksTo(const TrackIdList& trackIds, int to)
 
 bool Au3TracksInteraction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
 {
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     if (trackIds.empty()) {
-        const auto prj = globalContext()->currentTrackeditProject();
         auto& tracks = Au3TrackList::Get(projectRef());
         auto& trackFactory = ::WaveTrackFactory::Get(projectRef());
 
@@ -950,7 +925,6 @@ bool Au3TracksInteraction::insertSilence(const TrackIdList& trackIds, secs_t beg
         track->SetName(tracks.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
         tracks.Add(track, ::TrackList::DoAssignId::Yes,
                    ::TrackList::EventPublicationSynchrony::Synchronous);
-        prj->notifyAboutTrackAdded(DomConverter::track(track.get()));
         doInsertSilence({ track->GetId() }, begin, end, duration);
     } else {
         doInsertSilence(trackIds, begin, end, duration);
@@ -1064,6 +1038,8 @@ bool Au3TracksInteraction::swapStereoChannels(const TrackIdList& tracksIds)
 
 bool Au3TracksInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksIds)
 {
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     for (const TrackId& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1085,11 +1061,9 @@ bool Au3TracksInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksId
         unlinkedTracks[1]->SetPan(1.0f);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[0].get()));
         for (const auto& clip : prj->clipList(unlinkedTracks[0]->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }
-        prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[1].get()));
         for (const auto& clip : prj->clipList(unlinkedTracks[1]->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }
@@ -1105,14 +1079,12 @@ bool Au3TracksInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksId
 
         moveTracksTo({ unlinkedTracks[0]->GetId(), unlinkedTracks[1]->GetId() }, trackPosition(trackId));
 
-        const auto originalTrack = DomConverter::track(waveTrack);
         const auto originalClips = prj->clipList(trackId);
         auto& tracks = Au3TrackList::Get(projectRef());
         tracks.Remove(*waveTrack);
         for (const auto& clip : originalClips) {
             prj->notifyAboutClipRemoved(clip);
         }
-        prj->notifyAboutTrackRemoved(originalTrack);
     }
 
     return true;
@@ -1120,6 +1092,8 @@ bool Au3TracksInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksId
 
 bool Au3TracksInteraction::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
 {
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     for (const TrackId& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1138,11 +1112,9 @@ bool Au3TracksInteraction::splitStereoTracksToCenterMono(const TrackIdList& trac
         }
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[0].get()));
         for (const auto& clip : prj->clipList(unlinkedTracks[0]->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }
-        prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[1].get()));
         for (const auto& clip : prj->clipList(unlinkedTracks[1]->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }
@@ -1159,13 +1131,11 @@ bool Au3TracksInteraction::splitStereoTracksToCenterMono(const TrackIdList& trac
         moveTracksTo({ unlinkedTracks[0]->GetId(), unlinkedTracks[1]->GetId() }, trackPosition(trackId));
 
         auto& tracks = Au3TrackList::Get(projectRef());
-        const auto originalTrack = DomConverter::track(waveTrack);
         const auto originalClips = prj->clipList(trackId);
         tracks.Remove(*waveTrack);
         for (const auto& clip : originalClips) {
             prj->notifyAboutClipRemoved(clip);
         }
-        prj->notifyAboutTrackRemoved(originalTrack);
     }
 
     return true;
@@ -1173,6 +1143,8 @@ bool Au3TracksInteraction::splitStereoTracksToCenterMono(const TrackIdList& trac
 
 bool Au3TracksInteraction::makeStereoTrack(const TrackId left, const TrackId right)
 {
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     const auto au3LeftTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(left));
     IF_ASSERT_FAILED(au3LeftTrack) {
         return false;
@@ -1225,15 +1197,11 @@ bool Au3TracksInteraction::makeStereoTrack(const TrackId left, const TrackId rig
     const projectscene::IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
     const int newTrackHeight = viewState->trackHeight(left).val + viewState->trackHeight(right).val;
 
-    const Track leftTrack = DomConverter::track(au3LeftTrack);
-    const Track rightTrack = DomConverter::track(au3RightTrack);
-
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     const auto leftClips = prj->clipList(left);
     const auto rightClips = prj->clipList(right);
 
     tracks.Append(mix, true);
-    prj->notifyAboutTrackAdded(DomConverter::track(mix.get()));
     for (const auto& clip : prj->clipList(mix->GetId())) {
         prj->notifyAboutClipAdded(clip);
     }
@@ -1248,11 +1216,9 @@ bool Au3TracksInteraction::makeStereoTrack(const TrackId left, const TrackId rig
     for (const auto& clip : leftClips) {
         prj->notifyAboutClipRemoved(clip);
     }
-    prj->notifyAboutTrackRemoved(leftTrack);
     for (const auto& clip : rightClips) {
         prj->notifyAboutClipRemoved(clip);
     }
-    prj->notifyAboutTrackRemoved(rightTrack);
 
     return true;
 }
@@ -1413,6 +1379,9 @@ void Au3TracksInteraction::removeDragAddedTracks(size_t numTracksWhenDragStarted
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     const auto tracks = prj->trackList();
+
+    const TrackListChangeGuard guard(prj);
+
     for (auto i = numTracksWhenDragStarted; i < tracks.size(); ++i) {
         const auto& track = tracks[i];
         Au3WaveTrack* const waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track.id));
@@ -1422,7 +1391,6 @@ void Au3TracksInteraction::removeDragAddedTracks(size_t numTracksWhenDragStarted
             for (const auto& clip : clips) {
                 prj->notifyAboutClipRemoved(clip);
             }
-            prj->notifyAboutTrackRemoved(track);
         }
     }
 }
@@ -1443,9 +1411,6 @@ TrackIdList Au3TracksInteraction::pasteIntoNewTracks(const std::vector<Au3TrackD
             pFirstNewTrack = pNewTrack.get();
         }
 
-        auto newTrack = DomConverter::track(pNewTrack.get());
-        prj->notifyAboutTrackAdded(newTrack);
-
         // Handle wave track clips
         if (dynamic_cast<Au3WaveTrack*>(pNewTrack.get())) {
             for (const auto& clip : prj->clipList(pNewTrack->GetId())) {
@@ -1460,7 +1425,7 @@ TrackIdList Au3TracksInteraction::pasteIntoNewTracks(const std::vector<Au3TrackD
             }
         }
 
-        tracksIdsPastedInto.push_back(newTrack.id);
+        tracksIdsPastedInto.push_back(pNewTrack->GetId());
     }
 
     return tracksIdsPastedInto;
@@ -1973,10 +1938,9 @@ void Au3TracksInteraction::moveTrackTo(const TrackId trackId, int to)
 
 au::trackedit::TrackId Au3TracksInteraction::addWaveTrack(int numChannels)
 {
-    const auto track = utils::appendWaveTrack(Au3TrackList::Get(projectRef()), numChannels);
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
 
-    const auto prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackAdded(DomConverter::track(track));
+    const auto track = utils::appendWaveTrack(Au3TrackList::Get(projectRef()), numChannels);
 
     return track->GetId();
 }

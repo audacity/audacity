@@ -67,12 +67,8 @@ public:
 
         ON_CALL(*m_trackeditProject, tracksChanged())
         .WillByDefault(Return(m_tracksChanged));
-        ON_CALL(*m_trackeditProject, trackAdded())
-        .WillByDefault(Return(m_trackAdded));
-        ON_CALL(*m_trackeditProject, trackRemoved())
-        .WillByDefault(Return(m_trackRemoved));
-        ON_CALL(*m_trackeditProject, trackInserted())
-        .WillByDefault(Return(m_trackInserted));
+        ON_CALL(*m_trackeditProject, trackListChanged())
+        .WillByDefault(Return(m_trackListChanged));
         ON_CALL(*m_trackeditProject, trackMoved())
         .WillByDefault(Return(m_trackMoved));
 
@@ -237,9 +233,7 @@ public:
     muse::async::Notification m_projectChanged;
     muse::async::Notification m_navigationChanged;
     muse::async::Channel<std::vector<Track> > m_tracksChanged;
-    muse::async::Channel<Track> m_trackAdded;
-    muse::async::Channel<Track> m_trackRemoved;
-    muse::async::Channel<Track, int> m_trackInserted;
+    muse::async::Channel<TrackListChange> m_trackListChanged;
     muse::async::Channel<Track, int> m_trackMoved;
     muse::async::Channel<TrackId, bool> m_focusedTrackChanged;
     muse::async::Channel<TrackItemKey, bool> m_focusedItemChanged;
@@ -293,7 +287,7 @@ TEST_F(TrackNavigationModelTests, TrackAddedAppendsPanels)
     ASSERT_EQ(m_model->trackItemPanels().size(), 1);
 
     //! [WHEN] A second track is added
-    m_trackAdded.send(makeTrack(20));
+    m_trackListChanged.send(TrackListChange({ 10 }, { 10, 20 }));
 
     //! [THEN] Its panels are appended after the first track
     ASSERT_EQ(m_model->trackItemPanels().size(), 2);
@@ -312,7 +306,7 @@ TEST_F(TrackNavigationModelTests, TrackInsertedPlacesPanelsAtPosition)
     loadWithTracks({ makeTrack(10), makeTrack(20) });
 
     //! [WHEN] A track is inserted between them
-    m_trackInserted.send(makeTrack(15), 1);
+    m_trackListChanged.send(TrackListChange({ 10, 20 }, { 10, 15, 20 }));
 
     //! [THEN] The middle position holds the inserted track's panels
     ASSERT_EQ(m_model->trackItemPanels().size(), 3);
@@ -334,7 +328,7 @@ TEST_F(TrackNavigationModelTests, TrackRemovedRemovesTrackPanels)
     loadWithTracks({ makeTrack(10), makeTrack(20), makeTrack(30) });
 
     //! [WHEN] The middle track is removed
-    m_trackRemoved.send(makeTrack(20));
+    m_trackListChanged.send(TrackListChange({ 10, 20, 30 }, { 10, 30 }));
 
     //! [THEN] Only the remaining tracks keep their panels
     ASSERT_EQ(m_model->trackItemPanels().size(), 2);
@@ -547,13 +541,13 @@ TEST_F(TrackNavigationModelTests, DefaultNavigationControlFollowsTracksList)
     trackDefaultNavigationControl();
 
     //! [WHEN] The first track is removed
-    m_trackRemoved.send(makeTrack(10));
+    m_trackListChanged.send(TrackListChange({ 10, 20 }, { 20 }));
 
     //! [THEN] The default control is the control of the track that became first
     EXPECT_EQ(m_defaultNavigationControl, secondTrackControl);
 
     //! [WHEN] The last track is removed
-    m_trackRemoved.send(makeTrack(20));
+    m_trackListChanged.send(TrackListChange({ 20 }, {}));
 
     //! [THEN] The default control is the fallback one again
     EXPECT_EQ(m_defaultNavigationControl, fallbackControl);

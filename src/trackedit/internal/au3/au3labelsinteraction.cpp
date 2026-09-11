@@ -16,6 +16,7 @@
 #include "au3trackdata.h"
 
 #include "trackediterrors.h"
+#include "tracklistchangeguard.h"
 
 #include "defer.h"
 #include "log.h"
@@ -85,10 +86,9 @@ muse::RetVal<LabelKey> Au3LabelsInteraction::addLabelToSelection()
 
     // If no label track exists, create a new one
     if (!labelTrack) {
-        labelTrack = ::LabelTrack::Create(tracks);
+        const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
 
-        const auto prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
+        labelTrack = ::LabelTrack::Create(tracks);
     }
 
     wxString title = wxEmptyString;

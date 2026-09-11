@@ -536,7 +536,7 @@ TEST_F(Au3TracksInteractionTests, SplitTracksAtEmptyList)
     //! [EXPECT] The project is not notified about track changed
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(0);
 
     //! [WHEN] Split an empty list
     m_tracksInteraction->splitTracksAt({}, { 0.0 });
@@ -722,7 +722,7 @@ TEST_F(Au3TracksInteractionTests, DuplicateTracksOnEmptyList)
     ASSERT_EQ(projectTracks.Size(), 0) << "Precondition failed: The number of tracks is not 0";
 
     //! [EXPECT] Notify about track inserted is not called
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, _)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(0);
 
     //! [WHEN] Duplicate the tracks with an empty list
     EXPECT_EQ(m_tracksInteraction->duplicateTracks({}), false);
@@ -740,7 +740,7 @@ TEST_F(Au3TracksInteractionTests, DuplicateTracks)
     ASSERT_EQ(projectTracks.Size(), 1) << "Precondition failed: The number of tracks is not 1";
 
     //! [EXPECT] Notify about track added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, _)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
 
     //! [WHEN] Duplicate the track
     const TrackIdList trackList { trackId };
@@ -997,7 +997,7 @@ TEST_F(Au3TracksInteractionTests, DuplicateRangeSelectionOnNewTrack)
     ASSERT_EQ(projectTracks.Size(), 1) << "Precondition failed: The number of tracks is not 1";
 
     //! [EXPECT] Notify about track added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
 
     //! [WHEN] Duplicate the range selection
     m_tracksInteraction->duplicateSelectedOnTracks({ track->GetId() }, TRACK_THREE_CLIPS_CLIP2_START, TRACK_THREE_CLIPS_CLIP2_END);
@@ -1268,7 +1268,7 @@ TEST_F(Au3TracksInteractionTests, MoveTrackToSameIndexDoNothing)
 TEST_F(Au3TracksInteractionTests, InsertSilenceWithEmptyTrackCreatesNewTrack)
 {
     //! [EXPECT] The project is notified about track changed
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
 
     //! [WHEN] Insert silence on the empty track
     const secs_t begin = 0;
@@ -1542,7 +1542,7 @@ TEST_F(Au3TracksInteractionTests, PasteLabelTrackCreatesNewTrack)
     EXPECT_CALL(*m_playbackState, playbackPosition()).Times(1).WillOnce(Return(5.0));
 
     //! [EXPECT] The project is notified about track added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
 
     //! [WHEN] Paste from clipboard
     constexpr auto moveClips = false;
@@ -1582,7 +1582,7 @@ TEST_F(Au3TracksInteractionTests, AddNewMonoTrack)
     ASSERT_EQ(projectTracks.Size(), 0) << "The number of tracks before the add new mono track operation is not 0";
 
     //! [EXPECT] The project is notified about track added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
 
     //! [EXPECT] The new track is selected
     EXPECT_CALL(*m_selectionController, setSelectedTracks(_, true)).Times(1);
@@ -1609,7 +1609,7 @@ TEST_F(Au3TracksInteractionTests, AddNewStereoTrack)
     ASSERT_EQ(projectTracks.Size(), 0) << "The number of tracks before the add new stereo track operation is not 0";
 
     //! [EXPECT] The project is notified about track added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
 
     //! [EXPECT] The new track is selected
     EXPECT_CALL(*m_selectionController, setSelectedTracks(_, true)).Times(1);

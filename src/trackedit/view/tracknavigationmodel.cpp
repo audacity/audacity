@@ -141,30 +141,23 @@ void TrackNavigationModel::load()
         }
     });
 
-    prj->trackAdded().onReceive(this, [this](const Track& track) {
-        if (m_panels.isEmpty()) {
-            disableDefaultNavigation();
+    prj->trackListChanged().onReceive(this, [this](const TrackListChange& change) {
+        for (const TrackId& trackId : change.removed()) {
+            removePanels(trackId);
         }
-        addPanels(track.id, m_panels.size());
-        resetPanelOrder();
-    });
 
-    prj->trackRemoved().onReceive(this, [this](const Track& track) {
-        removePanels(track.id);
+        disableDefaultNavigation();
+
+        for (const TrackId& trackId : change.added()) {
+            const size_t pos = change.indexAfter(trackId).value_or(m_panels.size());
+            addPanels(trackId, static_cast<int>(pos));
+        }
 
         resetPanelOrder();
 
         if (m_panels.isEmpty()) {
             addDefaultNavigation();
         }
-    });
-
-    prj->trackInserted().onReceive(this, [this](const Track& track, int pos) {
-        if (m_panels.isEmpty()) {
-            disableDefaultNavigation();
-        }
-        addPanels(track.id, pos);
-        resetPanelOrder();
     });
 
     prj->trackMoved().onReceive(this, [this](const Track& track, int pos) {

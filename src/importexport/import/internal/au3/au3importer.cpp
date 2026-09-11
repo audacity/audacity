@@ -25,6 +25,7 @@
 #include "au3wrap/internal/domconverter.h"
 #include "projectscene/view/tracksitemsview/dropcontroller.h"
 #include "trackedit/internal/au3/au3trackdata.h"
+#include "trackedit/tracklistchangeguard.h"
 
 #include "tempodetection.h"
 using au::trackedit::ITrackDataPtr;
@@ -225,6 +226,8 @@ bool au::importexport::Au3Importer::importLegacyAup(const muse::io::path_t& file
     auto& tracks = Au3TrackList::Get(*project);
     const auto trackeditProject = globalContext()->currentTrackeditProject();
 
+    const trackedit::TrackListChangeGuard guard(trackeditProject);
+
     for (const LegacyAupImporter::LabelTrack& track : legacyProject.labelTracks) {
         Au3LabelTrack* labelTrack = !track.title.empty()
                                     ? ::LabelTrack::Create(tracks, wxFromString(muse::String::fromUtf8(track.title)))
@@ -236,8 +239,6 @@ bool au::importexport::Au3Importer::importLegacyAup(const muse::io::path_t& file
         }
 
         if (trackeditProject) {
-            trackeditProject->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
-
             const auto& labels = labelTrack->GetLabels();
             for (size_t i = 0; i < labels.size(); ++i) {
                 trackeditProject->notifyAboutLabelAdded(DomConverter::label(labelTrack, &labels[i]));
@@ -435,9 +436,10 @@ bool au::importexport::Au3Importer::isProjectEmpty() const
 void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks,
                                                       std::vector<WaveTrack*>* outWaveTracks)
 {
+    const trackedit::TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     auto& tracks = TrackList::Get(*project);
-    auto& projectFileIO = ProjectFileIO::Get(*project);
 
     std::vector<Track*> results;
 
@@ -507,7 +509,6 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
     }
 
     for (const auto& newTrack : results) {
-        prj->notifyAboutTrackAdded(DomConverter::track(newTrack));
         for (const auto& clip : prj->clipList(newTrack->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }

@@ -84,7 +84,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneE
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] The project is notified about a new track and a new label being added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
@@ -128,7 +128,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesExistingLabelTrack)
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] The project is notified about a new label being added but NOT about a new track
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
@@ -175,7 +175,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesFocusedLabelTrack)
     .WillByDefault(Return(selectionEnd));
 
     //! [EXPECT] The project is notified about a new label being added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
@@ -219,7 +219,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     .WillByDefault(Return(playbackPosition));
 
     //! [EXPECT] The project is notified about a new track and a new label being added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
@@ -254,7 +254,7 @@ TEST_F(Au3LabelsInteractionsTests, AddMultipleLabelsToSameLabelTrack)
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] Notifications for track and labels
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(3);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(AtLeast(1));
 
@@ -321,7 +321,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithAudioTrackPresent)
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] The project is notified about a new label track and a new label being added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
@@ -377,7 +377,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenPlaybackIsActive)
     .WillByDefault(Return(playbackPosition));
 
     //! [EXPECT] The project is notified about a new label being added but NOT about a new track
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
@@ -432,7 +432,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenRecordingIsActive)
     .WillByDefault(Return(recordPosition));
 
     //! [EXPECT] The project is notified about a new label being added but NOT about a new track
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 

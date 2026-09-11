@@ -394,7 +394,7 @@ TEST_F(Au3ClipsInteractionTests, DuplicateClipsOnEmptyList)
     ASSERT_EQ(projectTracks.Size(), 0) << "Precondition failed: The number of tracks is not 0";
 
     //! [EXPECT] Notify about track inserted is not called
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, _)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(0);
 
     //! [WHEN] Duplicate the clips with an empty list
     EXPECT_EQ(m_clipsInteraction->duplicateClips({}), false);
@@ -415,10 +415,10 @@ TEST_F(Au3ClipsInteractionTests, DuplicateSingleClip)
     ASSERT_EQ(projectTracks.Size(), 1) << "Precondition failed: The number of tracks is not 1";
 
     //! [EXPECT] The trackList is requested
-    EXPECT_CALL(*m_trackEditProject, trackIdList()).Times(1).WillOnce(Return(std::vector<trackedit::TrackId> { track->GetId() }));
+    EXPECT_CALL(*m_trackEditProject, trackIdList()).Times(3).WillRepeatedly(Return(std::vector<trackedit::TrackId> { track->GetId() }));
 
     //! [EXPECT] Notify about track added
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackListChanged(_)).Times(1);
 
     //! [WHEN] Duplicate the clip
     m_clipsInteraction->duplicateClip({ track->GetId(), clip->GetId() });

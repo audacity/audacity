@@ -26,10 +26,8 @@ public:
 
     MOCK_METHOD(void, reload, (), (override));
 
-    MOCK_METHOD(void, notifyAboutTrackAdded, (const Track& track), (override));
     MOCK_METHOD(void, notifyAboutTrackChanged, (const Track& track), (override));
-    MOCK_METHOD(void, notifyAboutTrackRemoved, (const Track& track), (override));
-    MOCK_METHOD(void, notifyAboutTrackInserted, (const Track& track, int pos), (override));
+    MOCK_METHOD(void, notifyAboutTrackListChanged, (const TrackListChange& change), (override));
     MOCK_METHOD(void, notifyAboutTrackMoved, (const Track& track, int pos), (override));
 
     MOCK_METHOD(void, notifyAboutTrackClipListChanged, (const Track& track), (override));
@@ -47,11 +45,9 @@ public:
     MOCK_METHOD(muse::async::Channel<TimeSignature>, timeSignatureChanged, (), (const, override));
 
     MOCK_METHOD(muse::async::Channel<std::vector<au::trackedit::Track> >, tracksChanged, (), (const, override));
-    MOCK_METHOD(muse::async::Channel<trackedit::Track>, trackAdded, (), (const, override));
+    MOCK_METHOD(muse::async::Channel<trackedit::TrackListChange>, trackListChanged, (), (const, override));
     MOCK_METHOD(muse::async::Channel<trackedit::Track>, trackChanged, (), (const, override));
     MOCK_METHOD(muse::async::Channel<trackedit::Track>, trackClipListChanged, (), (const, override));
-    MOCK_METHOD(muse::async::Channel<trackedit::Track>, trackRemoved, (), (const, override));
-    MOCK_METHOD((muse::async::Channel<trackedit::Track, int>), trackInserted, (), (const, override));
     MOCK_METHOD((muse::async::Channel<trackedit::Track, int>), trackMoved, (), (const, override));
 
     MOCK_METHOD(secs_t, totalTime, (), (const, override));
