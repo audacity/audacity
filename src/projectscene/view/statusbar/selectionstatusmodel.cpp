@@ -37,9 +37,11 @@ void SelectionStatusModel::init()
     });
 
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
-        emit timeSignatureChanged();
         emit isEnabledChanged();
+        onProjectChanged();
     });
+
+    onProjectChanged();
 
     configuration()->selectionTimecodeFormatChanged().onNotify(this, [this](){
         setCurrentFormat(configuration()->selectionTimecodeFormat());
@@ -48,6 +50,18 @@ void SelectionStatusModel::init()
     configuration()->durationTimecodeFormatChanged().onNotify(this, [this](){
         setDurationFormat(configuration()->durationTimecodeFormat());
     });
+}
+
+void SelectionStatusModel::onProjectChanged()
+{
+    auto project = globalContext()->currentTrackeditProject();
+    if (project) {
+        project->timeSignatureChanged().onReceive(this, [this](const trackedit::TimeSignature&) {
+            emit timeSignatureChanged();
+        });
+    }
+
+    emit timeSignatureChanged();
 }
 
 double SelectionStatusModel::startTime() const
@@ -139,7 +153,7 @@ int SelectionStatusModel::lowerTimeSignature() const
 {
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
-        return 0.0;
+        return 0;
     }
 
     return project->timeSignature().lower;

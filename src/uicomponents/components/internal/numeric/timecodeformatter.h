@@ -51,9 +51,9 @@ protected:
 
     double m_sampleRate = 1.0;
 
-    double m_tempo = 0;
-    int m_upperTimeSignature = -1;
-    int m_lowerTimeSignature = -1;
+    double m_tempo = 120;
+    int m_upperTimeSignature = 4;
+    int m_lowerTimeSignature = 4;
 
     QString m_format;
 };
