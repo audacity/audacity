@@ -9,6 +9,7 @@
 #include "../RequestPayload.h"
 
 #include <QNetworkAccessManager>
+#include <QNetworkInformation>
 #include <QNetworkProxy>
 #include <QThread>
 #include <QCoreApplication>
@@ -131,6 +132,14 @@ ResponseFactory::ResponseFactory()
     mNetworkManager->moveToThread(mNetworkThread);
 
     mNetworkThread->start();
+
+    if (QNetworkInformation::loadBackendByFeatures(
+            QNetworkInformation::Feature::Reachability)) {
+        QObject::connect(
+            QNetworkInformation::instance(),
+            &QNetworkInformation::reachabilityChanged,
+            mNetworkManager, &QNetworkAccessManager::clearConnectionCache);
+    }
 }
 
 ResponseFactory::~ResponseFactory()
