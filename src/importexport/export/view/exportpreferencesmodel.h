@@ -142,6 +142,8 @@ signals:
     void exportCompleted();
 
 private:
+    bool isProcessTypeAvailable(ExportProcessType type) const;
+    ExportProcessType effectiveProcessType() const;
     void updateCurrentSampleRate();
     void openCustomSampleRateDialog();
     void updateExportChannels();

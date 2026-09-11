@@ -4,6 +4,8 @@
 
 #include "exportpreferencesmodel.h"
 
+#include <optional>
+
 #include "framework/global/io/fileinfo.h"
 #include "framework/global/translation.h"
 #include "framework/global/defer.h"
@@ -108,12 +110,6 @@ void ExportPreferencesModel::init()
     exportConfiguration()->trimBlankSpaceChanged().onNotify(this, [this] {
         emit trimBlankSpaceChanged();
     });
-    if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
-         && !playbackController()->loopRegion().isValid())
-        || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
-            && selectionController()->timeSelectionIsEmpty())) {
-        setCurrentProcess(processName(ExportProcessType::FULL_PROJECT_AUDIO));
-    }
 
     muse::io::path_t displayName = globalContext()->currentProject()->displayName();
     if (muse::io::suffix(displayName) == "aup4unsaved") {
@@ -178,42 +174,67 @@ void ExportPreferencesModel::cancel()
 
 QString ExportPreferencesModel::currentProcess() const
 {
-    return processName(exportConfiguration()->processType());
+    return processName(effectiveProcessType());
+}
+
+bool ExportPreferencesModel::isProcessTypeAvailable(ExportProcessType type) const
+{
+    if (type == ExportProcessType::AUDIO_IN_LOOP_REGION) {
+        return playbackController()->loopRegion().isValid();
+    }
+
+    if (type == ExportProcessType::SELECTED_AUDIO) {
+        const bool timeEmpty = selectionController()->timeSelectionIsEmpty();
+        const bool noClips = !selectionController()->hasSelectedClips();
+        const bool moreThanOneClip = selectionController()->selectedClips().size() > 1;
+        return !(timeEmpty && (noClips || moreThanOneClip));
+    }
+
+    return true;
+}
+
+ExportProcessType ExportPreferencesModel::effectiveProcessType() const
+{
+    //! NOTE The stored preference may not be satisfiable in the current project state
+    //! (e.g. "Export selected audio" without a selection). Fall back for this session
+    //! without overwriting the preference, so the user's choice reappears once
+    //! a selection/loop exists again.
+    const ExportProcessType type = exportConfiguration()->processType();
+    return isProcessTypeAvailable(type) ? type : ExportProcessType::FULL_PROJECT_AUDIO;
 }
 
 void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
 {
-    ExportProcessType type;
+    std::optional<ExportProcessType> type;
     for (const auto& process : EXPORT_PROCESS_MAPPING) {
         if (newProcess == processName(process.first)) {
             type = process.first;
         }
     }
 
-    if (newProcess == currentProcess()) {
+    if (!type.has_value()) {
         return;
     }
 
-    if (type == ExportProcessType::AUDIO_IN_LOOP_REGION && !playbackController()->loopRegion().isValid()) {
+    if (*type == ExportProcessType::AUDIO_IN_LOOP_REGION && !isProcessTypeAvailable(*type)) {
         interactive()->error(muse::trc("export", "No loop region"),
                              muse::trc("export",
                                        "Export audio in loop region requires a loop in the project. Please go back, create a loop and try again."));
         return;
     }
 
-    const bool timeEmpty = selectionController()->timeSelectionIsEmpty();
-    const bool noClips = !selectionController()->hasSelectedClips();
-    const bool moreThanOneClip = selectionController()->selectedClips().size() > 1;
-    if (type == ExportProcessType::SELECTED_AUDIO
-        && timeEmpty
-        && (noClips || moreThanOneClip)) {
+    if (*type == ExportProcessType::SELECTED_AUDIO && !isProcessTypeAvailable(*type)) {
         interactive()->error(muse::trc("export", "No selected audio"),
                              muse::trc("export",
                                        "Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again."));
         return;
     }
 
-    exportConfiguration()->setProcessType(type);
+    if (*type == exportConfiguration()->processType()) {
+        return;
+    }
+
+    exportConfiguration()->setProcessType(*type);
 }
 
 bool ExportPreferencesModel::trimBlankSpace() const
@@ -646,7 +667,9 @@ void ExportPreferencesModel::exportData()
         }
     }
 
-    muse::Ret result = exporter()->exportData(filePath);
+    //! NOTE Export what the dialog displays: the stored process type preference may be
+    //! currently unsatisfiable, in which case the effective type falls back to full project
+    muse::Ret result = exporter()->exportData(filePath, { { IExporter::OptionKey::ProcessType, muse::Val(effectiveProcessType()) } });
     if (!result.success() && !result.text().empty()) {
         interactive()->error(muse::trc("export", "Export error"), result.text());
         return;
