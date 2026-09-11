@@ -74,8 +74,8 @@ muse::RetVal<muse::audioplugins::PluginMetaList> Au3AudioPluginMetaReader::readM
             desc.SetVersion(ident->GetVersion());
             desc.SetEffectFamily(provider->GetOptionalFamilySymbol().Internal());
 
-            desc.SetID(utils::effectId(effect).toStdString());
-            desc.SetDescription(effect->GetDescription().translated().toStdString());
+            desc.SetID(au::au3::wxFromString(utils::effectId(effect)));
+            desc.SetDescription(::au3::qtToWx(effect->GetDescription().translated()));
             desc.SetEffectType(effect->GetClassification());
             desc.SetEffectFamily(effect->GetFamily().Internal());
             desc.SetEffectGroup(effect->GetGroup());
@@ -103,7 +103,7 @@ muse::RetVal<muse::audioplugins::PluginMetaList> Au3AudioPluginMetaReader::readM
             desc.SetValid(!failed);
 
             if (failed) {
-                LOGW() << "Plugin failed validation: " << ident->GetPath().ToStdString()
+                LOGW() << "Plugin failed validation: " << au::au3::wxToStdString(ident->GetPath())
                        << " reason: " << reason;
             }
 

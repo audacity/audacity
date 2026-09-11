@@ -145,7 +145,7 @@ bool Au3CommonSettings::Read(const wxString& key, wxString* value) const
         return false;
     }
 
-    *value = val.toString();
+    *value = wxString::FromUTF8(val.toString());
     return true;
 }
 

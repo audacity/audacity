@@ -2,6 +2,7 @@
 #include "log.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-effects/Effect.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 namespace au::effects {
 namespace {
@@ -25,7 +26,7 @@ void AbstractViewLauncher::doShowRealtimeEffect(const RealtimeEffectStatePtr& st
     }
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
     if (!instance) {
-        LOGW() << "Could not get instance for " << state->GetID().ToStdString();
+        LOGW() << "Could not get instance for " << au::au3::wxToStdString(state->GetID());
         return;
     }
 
@@ -51,7 +52,7 @@ void AbstractViewLauncher::hideRealtimeEffect(const RealtimeEffectStatePtr& stat
     }
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
     if (!instance) {
-        LOGW() << "Could not get instance for " << state->GetID().ToStdString();
+        LOGW() << "Could not get instance for " << au::au3::wxToStdString(state->GetID());
         return;
     }
     const auto instanceId = instance->id();

@@ -46,7 +46,7 @@ void EffectPresetsBarModel::load()
             return;
         }
 
-        const QString presetId = au3::wxToString(info.presetId).toQString();
+        const QString presetId = QString::fromStdString(info.presetId);
         if (presetId.isEmpty() || m_currentPreset == presetId) {
             return;
         }

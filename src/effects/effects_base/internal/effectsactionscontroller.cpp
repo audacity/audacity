@@ -10,6 +10,7 @@
 #include "wx/string.h"
 
 #include "au3-components/EffectAutomationParameters.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "log.h"
 
@@ -128,7 +129,7 @@ void EffectsActionsController::applyPreset(const muse::actions::ActionQuery& q)
     }
 
     EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
-    PresetId presetId = q.param("presetId").toString();
+    PresetId presetId = au::au3::wxFromStdString(q.param("presetId").toString());
     presetsScenario()->loadPreset(effectInstanceId, presetId);
 }
 
@@ -149,7 +150,7 @@ void EffectsActionsController::savePreset(const ActionQuery& q)
     }
 
     const EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
-    const PresetId presetId = q.param("presetId").toString();
+    const PresetId presetId = au::au3::wxFromStdString(q.param("presetId").toString());
     presetsScenario()->savePreset(effectInstanceId, presetId);
 }
 
@@ -160,7 +161,7 @@ void EffectsActionsController::deletePreset(const ActionQuery& q)
     }
 
     EffectId effectId = EffectId::fromStdString(q.param("effectId").toString());
-    PresetId presetId = q.param("presetId").toString();
+    PresetId presetId = au::au3::wxFromStdString(q.param("presetId").toString());
     presetsScenario()->deletePreset(effectId, presetId);
 }
 

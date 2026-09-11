@@ -140,7 +140,7 @@ std::shared_ptr<VST3::Hosting::Module> VST3EffectsModule::GetModule(const wxStri
     std::string moduleCreateError;
     //VST sdk provides platform-specific module loading routines as well,
     //implementation is conditionally included (see CMakeLists.txt)
-    auto module = VST3::Hosting::Module::create(path.ToStdString(), moduleCreateError);
+    auto module = VST3::Hosting::Module::create(path.ToStdString(wxConvUTF8), moduleCreateError);
     if (!module) {
         throw std::runtime_error(moduleCreateError.c_str());
     }
@@ -366,7 +366,7 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
     }
     catch (std::exception& e)
     {
-        wxLogError("VST3 Module was not loaded: %s", e.what());
+        wxLogError(wxT("VST3 Module was not loaded: %s"), wxString::FromUTF8(e.what()));
     }
     return nullptr;
 }
