@@ -81,6 +81,9 @@ public:
     ZoomPresets::Preset zoomPreset2() const override;
     void setZoomPreset2(ZoomPresets::Preset preset) override;
 
+    trackedit::TrackRulerType defaultTrackRulerType() const override;
+    void setDefaultTrackRulerType(trackedit::TrackRulerType type) override;
+
 private:
     muse::ByteArray labelEditorColumnFormatJson() const;
 

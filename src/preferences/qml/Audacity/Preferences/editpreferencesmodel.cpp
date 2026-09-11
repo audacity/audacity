@@ -240,6 +240,32 @@ void EditPreferencesModel::setZoomPreset2(int preset)
     emit zoomPreset2Changed();
 }
 
+int EditPreferencesModel::defaultTrackRulerType() const
+{
+    return static_cast<int>(projectsceneConfiguration()->defaultTrackRulerType());
+}
+
+void EditPreferencesModel::setDefaultTrackRulerType(int type)
+{
+    if (defaultTrackRulerType() == type) {
+        return;
+    }
+    projectsceneConfiguration()->setDefaultTrackRulerType(static_cast<au::trackedit::TrackRulerType>(type));
+    emit defaultTrackRulerTypeChanged();
+}
+
+QVariantList EditPreferencesModel::trackRulerTypeList() const
+{
+    QVariantList list;
+    list << QVariantMap { { "title", muse::qtrc("appshell/preferences", "Logarithmic (dB)") },
+        { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLog) } };
+    list << QVariantMap { { "title", muse::qtrc("appshell/preferences", "Linear (dB)") },
+        { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLinear) } };
+    list << QVariantMap { { "title", muse::qtrc("appshell/preferences", "Linear (amp)") },
+        { "value", static_cast<int>(au::trackedit::TrackRulerType::Linear) } };
+    return list;
+}
+
 QVariantList EditPreferencesModel::zoomPresetList() const
 {
     QVariantList list;
