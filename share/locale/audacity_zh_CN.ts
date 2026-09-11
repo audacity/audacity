@@ -1366,7 +1366,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="293"/>
         <source>Pitch and speed</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>音调和速度</translation>
+        <translation>音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
@@ -1472,7 +1472,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="95"/>
         <source>Cut and leave gap</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>剪切并留出间隙</translation>
+        <translation>剪切并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="104"/>
@@ -1700,13 +1700,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="413"/>
         <source>Open pitch and speed dialog</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>打开音调和速度对话框</translation>
+        <translation>打开音高和速度对话框</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="421"/>
         <source>Render pitch and speed</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>渲染音调和速度</translation>
+        <translation>渲染音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="429"/>
@@ -3112,7 +3112,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="295"/>
         <source>Pitch and speed</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>音调和速度</translation>
+        <translation>音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="303"/>
@@ -3230,7 +3230,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="97"/>
         <source>Cut and leave gap</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>剪切并留出间隙</translation>
+        <translation>剪切并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="106"/>
@@ -3440,13 +3440,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="415"/>
         <source>Open pitch and speed dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>打开音调和速度对话框</translation>
+        <translation>打开音高和速度对话框</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="423"/>
         <source>Render pitch and speed</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>渲染音调和速度</translation>
+        <translation>渲染音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="431"/>
@@ -4959,12 +4959,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="44"/>
         <source>Check to see if a new version of Audacity is available</source>
-        <translation>检查是否有新版本的 Audacity 可用。</translation>
+        <translation>检查是否有新版本的 Audacity 可用</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
         <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>更新检查需要网络连接。为了保护您的隐私，Audacity 不会存储任何个人信息。请参阅我们的&lt;a href=&quot;%1&quot;&gt;隐私政策&lt;/a&gt;了解更多信息。</translation>
+        <translation>更新检查需要网络连接。为了保护您的隐私，Audacity 不会存储任何个人信息。请参阅我们的 &lt;a href=&quot;%1&quot;&gt;隐私政策&lt;/a&gt; 了解更多信息。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -5246,7 +5246,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>为了帮助我们了解用户使用 Audacity 的频率，我们会为每次安装生成一个随机 ID（UUID）。此 ID 不包含任何个人身份信息。想了解更多信息？请查看我们的&lt;a href=&quot;%1&quot;&gt;隐私政策&lt;/a&gt;。</translation>
+        <translation>为了帮助我们了解用户使用 Audacity 的频率，我们会为每次安装生成一个随机 ID（UUID）。此 ID 不包含任何个人身份信息。想了解更多信息？请查看我们的 &lt;a href=&quot;%1&quot;&gt;隐私政策&lt;/a&gt;。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
@@ -5474,7 +5474,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>节拍：%1/%2</translation>
     </message>
 </context>
 <context>
@@ -6449,7 +6449,7 @@ Error message says:
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="80"/>
         <source>Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.
 Try resetting any stretched clips, or mixing and rendering the tracks before analyzing</source>
-        <translation>无法分析音频。这可能是因为片段被拉伸或改变了音调。
+        <translation>无法分析音频。这可能是因为片段被拉伸或改变了音高。
 请在分析前尝试重置被拉伸的片段，或者混合与渲染轨道。</translation>
     </message>
     <message>
@@ -6609,7 +6609,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="30"/>
         <source>Paste and make room on all tracks</source>
-        <translation>粘贴并腾出所有音轨的空间</translation>
+        <translation>粘贴并腾出所有音轨空间</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="35"/>
@@ -6622,7 +6622,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="57"/>
         <source>Cut and leave gap</source>
-        <translation>剪切并留出间隙</translation>
+        <translation>剪切并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
@@ -6637,7 +6637,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="66"/>
         <source>Delete and leave gap</source>
-        <translation>删除并留空隙</translation>
+        <translation>删除并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
@@ -7802,7 +7802,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="130"/>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="54"/>
         <source>OK</source>
-        <translation>确定</translation>
+        <translation>好的</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
@@ -10711,7 +10711,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
         <source>Allows continuous changes to the tempo and/or pitch</source>
-        <translation>连续性地改变速度或者/且改变音调</translation>
+        <translation>连续性地改变速度或者/且改变音高</translation>
     </message>
 </context>
 <context>
@@ -15755,7 +15755,7 @@ Libsndfile 提示：“%2”</translation>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="27"/>
         <source>Cut and leave gap</source>
-        <translation>剪切并留出间隙</translation>
+        <translation>剪切并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="29"/>
@@ -15780,12 +15780,12 @@ Libsndfile 提示：“%2”</translation>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="40"/>
         <source>Paste and make room on all tracks</source>
-        <translation>粘贴并腾出所有音轨的空间</translation>
+        <translation>粘贴并腾出所有音轨空间</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
         <source>Delete and leave gap</source>
-        <translation>删除并留空隙</translation>
+        <translation>删除并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="47"/>
@@ -16433,7 +16433,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="26"/>
         <source>Cut and leave gap</source>
-        <translation>剪切并留出间隙</translation>
+        <translation>剪切并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="28"/>
@@ -16448,7 +16448,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="35"/>
         <source>Delete and leave gap</source>
-        <translation>删除并留空隙</translation>
+        <translation>删除并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="37"/>
@@ -19690,7 +19690,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml" line="17"/>
         <source>Pitch and speed</source>
-        <translation>音调和速度</translation>
+        <translation>音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="46"/>
@@ -20299,7 +20299,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="26"/>
         <source>Cut and leave gap</source>
-        <translation>剪切并留出间隙</translation>
+        <translation>剪切并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="28"/>
@@ -20329,12 +20329,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="41"/>
         <source>Paste and make room on all tracks</source>
-        <translation>粘贴并腾出所有音轨的空间</translation>
+        <translation>粘贴并腾出所有音轨空间</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="46"/>
         <source>Delete and leave gap</source>
-        <translation>删除并留空隙</translation>
+        <translation>删除并保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="48"/>
@@ -21325,7 +21325,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="277"/>
         <source>Rendering pitch and speed…</source>
-        <translation>渲染音调和速度…</translation>
+        <translation>渲染音高和速度…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1413"/>
@@ -21454,7 +21454,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
         <source>Changed Pitch Shift</source>
-        <translation>更改音调</translation>
+        <translation>更改音高位移</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="112"/>
