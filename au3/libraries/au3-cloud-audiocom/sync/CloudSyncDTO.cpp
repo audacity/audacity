@@ -916,8 +916,13 @@ wxString SafeName(wxString name)
         L'&', '$',   L'%', L'^', L';', L'~', L'`',  L'[', L']', L'{', L'}',
     };
 
+    const auto isNonPrintable = [](wxUniChar c) {
+        const auto value = c.GetValue();
+        return value < 0x20 || value == 0x7F || value == 0x2028 || value == 0x2029;
+    };
+
     for (size_t i = 0; i < name.length(); ++i) {
-        if (invalidChars.find(name[i]) != invalidChars.end()) {
+        if (isNonPrintable(name[i]) || invalidChars.find(name[i]) != invalidChars.end()) {
             name[i] = wxT('_');
         }
     }
