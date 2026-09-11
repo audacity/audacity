@@ -15,7 +15,6 @@ struct PFFFT_Setup;
 #include <memory>
 #include <type_traits>
 #include <vector>
-#include <pffft.h>
 
 struct FFT_API PffftSetupDeleter {
     void operator ()(PFFFT_Setup* p)

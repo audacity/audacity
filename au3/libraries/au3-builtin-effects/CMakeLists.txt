@@ -98,9 +98,6 @@ PUBLIC
    au3-utility
    au3-wave-track
    au3-xml
-   # SBSMSBase.h includes <sbsms.h>; making it PRIVATE again is tracked in
-   # https://github.com/audacity/audacity/issues/11803
-   $<$<BOOL:${AU_USE_SBSMS}>:libsbsms>
 PRIVATE
    au3-basic-ui
    au3-exceptions
@@ -115,6 +112,7 @@ PRIVATE
    au3-realtime-effects
    au3-time-frequency-selection
    au3-wave-track-fft
+   $<$<BOOL:${AU_USE_SBSMS}>:libsbsms>
    $<$<BOOL:${AU_USE_SOUNDTOUCH}>:soundtouch>
    wxBase
 )

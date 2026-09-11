@@ -17,9 +17,6 @@
 #if USE_SBSMS
 
 #include "au3-effects/StatefulEffect.h"
-#include <sbsms.h>
-
-using namespace _sbsms_;
 
 class LabelTrack;
 class TimeWarper;
@@ -27,6 +24,19 @@ class TimeWarper;
 class BUILTIN_EFFECTS_API SBSMSBase /* not final */ : public StatefulEffect
 {
 public:
+    //! Mirrors _sbsms_::SlideType so that <sbsms.h> stays out of this header;
+    //! SBSMSBase.cpp checks that the values match.
+    enum SlideType {
+        SlideIdentity = 0,
+        SlideConstant,
+        SlideLinearInputRate,
+        SlideLinearOutputRate,
+        SlideLinearInputStretch,
+        SlideLinearOutputStretch,
+        SlideGeometricInput,
+        SlideGeometricOutput
+    };
+
     bool Process(EffectInstance& instance, EffectSettings& settings) override;
     void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd, SlideType rateSlideType,
                        SlideType pitchSlideType, bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);
