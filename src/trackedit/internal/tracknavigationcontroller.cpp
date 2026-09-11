@@ -627,20 +627,25 @@ void TrackNavigationController::replaceSelection()
     bool isSelect = false;
 
     if (!isTrackPanel) {
+        //! NOTE: reset the other item type first: setSelectedClips/setSelectedLabels
+        //! with an empty list also clears the track selection, which would undo
+        //! the track selection made along with the item selection below
         if (isFocusedItemLabel()) {
             LabelKeyList selectedLabels = selectionController()->selectedLabels();
             isSelect = !muse::contains(selectedLabels, m_focusedItemKey);
-            selectionController()->setSelectedLabels(isSelect ? LabelKeyList { m_focusedItemKey } : LabelKeyList {});
 
             //! reset clips
-            selectionController()->setSelectedClips({ });
+            selectionController()->resetSelectedClips();
+
+            selectionController()->setSelectedLabels(isSelect ? LabelKeyList { m_focusedItemKey } : LabelKeyList {});
         } else {
             ClipKeyList selectedClips = selectionController()->selectedClips();
             isSelect = !muse::contains(selectedClips, m_focusedItemKey);
-            selectionController()->setSelectedClips(isSelect ? ClipKeyList { m_focusedItemKey } : ClipKeyList {});
 
             //! reset labels
-            selectionController()->setSelectedLabels({});
+            selectionController()->resetSelectedLabels();
+
+            selectionController()->setSelectedClips(isSelect ? ClipKeyList { m_focusedItemKey } : ClipKeyList {});
         }
     } else {
         TrackIdList selectedTracks = selectionController()->selectedTracks();
@@ -700,12 +705,14 @@ void TrackNavigationController::rangeSelection()
             range.push_back(m_focusedItemKey);
         }
 
+        //! NOTE: same as in replaceSelection: reset the other item type first,
+        //! so the track selection made below is not cleared again
         if (isFocusedItemLabel()) {
+            selectionController()->resetSelectedClips();
             selectionController()->setSelectedLabels(range);
-            selectionController()->setSelectedClips({});
         } else {
+            selectionController()->resetSelectedLabels();
             selectionController()->setSelectedClips(range);
-            selectionController()->setSelectedLabels({});
         }
 
         return;
