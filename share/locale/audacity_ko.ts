@@ -238,7 +238,7 @@
     </message>
     <message>
         <source>Trigger the focused control or select the focused track item</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">포커스가 맞춰진 컨트롤을 작동시키거나 포커스가 맞춰진 트랙 항목을 선택합니다.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
@@ -341,7 +341,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>커서로 재생/일시정지</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
@@ -351,7 +351,7 @@
     </message>
     <message>
         <source>Play the selected time range</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">선택된 시간 영역을 재생</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
@@ -391,7 +391,7 @@
     </message>
     <message>
         <source>Toggle ‘Loop playback’</source>
-        <translation type="vanished">‘루프 재생’ 전환</translation>
+        <translation type="vanished">‘루프 재생’ 토글</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
@@ -583,7 +583,7 @@
     </message>
     <message>
         <source>Open recent project</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">최근 프로젝트 열기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
@@ -895,7 +895,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Align start to playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>시작을 재생헤드에 맞추기</translation>
+        <translation>시작을 플레이헤드에 맞추기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
@@ -907,7 +907,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
         <source>Align end to playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>끝을 재생헤드에 맞추기</translation>
+        <translation>끝을 플레이헤드에 맞추기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="456"/>
@@ -961,19 +961,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="46"/>
         <source>Show in Finder</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>파인더에서 보기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="51"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"/>
+        <translation>탐색기로 표시</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
         <source>Show in File Manager</source>
-        <translation type="unfinished"/>
+        <translation>파일 관리자에 표시</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="101"/>
@@ -1137,7 +1137,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
         <source>Crash report</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>충돌 보고서</translation>
+        <translation>크래시 보고서</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="707"/>
@@ -1195,13 +1195,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="773"/>
         <source>Update cloud audio preview</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>클라우드 오디오 미리듣기 업데이트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="781"/>
         <source>Update audio preview</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>오디오 미리듣기 업데이트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="790"/>
@@ -1235,7 +1235,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="94"/>
         <source>Center view on playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>보기를 재생헤드에 맞춤</translation>
+        <translation>보기를 플레이헤드에 맞춤</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="102"/>
@@ -1312,19 +1312,19 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="183"/>
         <source>Pinned playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드 고정</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="229"/>
         <source>Move playhead left</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드를 왼쪽으로 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="237"/>
         <source>Move playhead right</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드를 오른쪽으로 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
@@ -1354,13 +1354,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="277"/>
         <source>Move playhead to selection start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드를 선택영역의 시작으로 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="285"/>
         <source>Move playhead to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드를 선택 영역의 끝으로 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="293"/>
@@ -1712,7 +1712,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="429"/>
         <source>Reset pitch and speed</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>피치 및 속도 재설정</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="437"/>
@@ -1844,7 +1844,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="628"/>
         <source>Add track or track item to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>선택 항목에 트랙 또는 트랙 항목을 추가</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="636"/>
@@ -1988,12 +1988,12 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
         <source>Show &amp;rcommands list</source>
-        <translation type="unfinished"/>
+        <translation>&amp;rcommand 리스트 표시</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
         <source>Show rcommands list</source>
-        <translation type="unfinished"/>
+        <translation>rcommand 리스트 표시</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
@@ -2043,22 +2043,22 @@
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
         <source>Select workspace</source>
-        <translation>작업공간 선택</translation>
+        <translation>워크스페이스 선택</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
         <source>Edit workspaces…</source>
-        <translation>작업공간 편집…</translation>
+        <translation>워크스페이스 편집…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
         <source>Edit workspaces</source>
-        <translation>작업공간 편집</translation>
+        <translation>워크스페이스 편집</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
         <source>Create new workspace</source>
-        <translation>새 작업공간 만들기</translation>
+        <translation>새 워크스페이스 만들기</translation>
     </message>
 </context>
 <context>
@@ -2176,7 +2176,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
         <source>Trigger the focused control or select the focused track item</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>포커스가 맞춰진 컨트롤을 작동시키거나 포커스가 맞춰진 트랙 항목을 선택합니다.</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
@@ -2224,13 +2224,13 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>커서로 재생/일시정지</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
         <source>Play the selected time range</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>선택된 시간 영역을 재생</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
@@ -2405,13 +2405,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
         <source>Show in Finder</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>파인더에서 보기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="63"/>
         <source>Open recent project</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>최근 프로젝트 열기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
@@ -2673,7 +2673,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="434"/>
         <source>Align start to playhead</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>시작을 재생헤드에 맞추기</translation>
+        <translation>시작을 플레이헤드에 맞추기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="442"/>
@@ -2685,7 +2685,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="450"/>
         <source>Align end to playhead</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>끝을 재생헤드에 맞추기</translation>
+        <translation>끝을 플레이헤드에 맞추기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
@@ -2865,7 +2865,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="701"/>
         <source>Crash report</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>충돌 보고서</translation>
+        <translation>크래시 리포트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="709"/>
@@ -2919,13 +2919,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
         <source>Update cloud audio preview</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>클라우드 오디오 미리듣기 업데이트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="783"/>
         <source>Update audio preview</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>오디오 미리듣기 업데이트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="792"/>
@@ -2985,7 +2985,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="96"/>
         <source>Center view on playhead</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>보기를 재생헤드에 맞춤</translation>
+        <translation>보기를 플레이헤드에 맞춤</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
@@ -3040,7 +3040,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="185"/>
         <source>Pinned playhead</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드 고정</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="194"/>
@@ -3064,13 +3064,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
         <source>Move playhead left</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드를 왼쪽으로 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
         <source>Move playhead right</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드를 오른쪽으로 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="247"/>
@@ -3100,13 +3100,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="279"/>
         <source>Move playhead to selection start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드를 선택영역의 시작으로 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="287"/>
         <source>Move playhead to selection end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>플레이헤드를 선택 영역의 끝으로 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="295"/>
@@ -3452,7 +3452,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="431"/>
         <source>Reset pitch and speed</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>피치 및 속도 재설정</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="439"/>
@@ -3596,7 +3596,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="630"/>
         <source>Add track or track item to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>선택 항목에 트랙 또는 트랙 항목을 추가</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="638"/>
@@ -3697,7 +3697,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="183"/>
         <source>Workspaces toolbar</source>
-        <translation>작업공간 도구모음</translation>
+        <translation>워크스페이스 도구모음</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="206"/>
@@ -3739,7 +3739,7 @@
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation>이 작업은 모든 앱 환경설정과 사용자 지정 UI 구성을 재설정합니다. 사용자 지정 작업공간과 단축키도 삭제합니다. 또한 모든 서드파티 플러그인을 다시 스캔해야 합니다.
+        <translation>이 작업은 모든 앱 환경설정과 사용자 지정 UI 구성을 재설정합니다. 사용자 지정 워크스페이스과 단축키도 삭제합니다. 또한 모든 서드파티 플러그인을 다시 스캔해야 합니다.
 
 이 작업은 프로젝트를 삭제하지 않습니다.</translation>
     </message>
@@ -3771,7 +3771,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
         <source>Restart Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Audacity를 다시 시작</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="54"/>
@@ -3801,12 +3801,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
         <source>Validate audio plugins</source>
-        <translation type="unfinished"/>
+        <translation>오디오 플러그인 유효성 검증</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation type="unfinished"/>
+        <translation>Audacity에서 사용 전에 유효성 검사가 필요한 플러그인을 발견했습니다. 지금 유효성 검사를 진행할까요, 아니면 건너뛸까요?</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
@@ -3816,27 +3816,27 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="38"/>
         <source>Validate</source>
-        <translation type="unfinished"/>
+        <translation>검증</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
         <source>Audio plugin validation</source>
-        <translation type="unfinished"/>
+        <translation>오디오 플러그인 유효성 검증</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="296"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="325"/>
         <source>The previous session quit unexpectedly.</source>
         <translation>이전 세션이 예기치 않게 종료되었습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="297"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="326"/>
         <source>Do you want to restore the session?</source>
         <translation>세션을 복원하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="300"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="329"/>
         <source>Restore session</source>
-        <translation type="unfinished"/>
+        <translation>세션 복구</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="94"/>
@@ -3857,17 +3857,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>%1 %2 - %3</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 - %3</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
-        <translation type="unfinished"/>
+        <translation>*</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectStatusBar.qml" line="43"/>
         <source>Selection status</source>
-        <translation type="unfinished"/>
+        <translation>선택 상태</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
@@ -4228,7 +4228,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="359"/>
         <source>W&amp;orkspaces</source>
-        <translation>작업공간(&amp;O)</translation>
+        <translation>워크스페이스(&amp;O)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
@@ -4259,17 +4259,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="329"/>
         <source>Audacity Team Members</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 팀 멤버</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
         <source>Emeritus</source>
-        <translation type="unfinished"/>
+        <translation>명예</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
         <source>Distinguished Audacity Team members, not currently active</source>
-        <translation type="unfinished"/>
+        <translation>현재 활동 중이 아닌, Audacity 팀 멤버</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
@@ -4299,12 +4299,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="347"/>
         <source>Audacity includes code from the following projects:</source>
-        <translation type="unfinished"/>
+        <translation>Audacity에는 다음 프로젝트의 코드가 포함되어 있습니다:</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
         <source>Special Thanks</source>
-        <translation type="unfinished"/>
+        <translation>특별히 감사드립니다</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
@@ -4370,12 +4370,12 @@ This action will not delete any of your projects.</source>
         <translation>닫기</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
         <source>Dock</source>
         <translation>도킹(고정)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
         <source>Undock</source>
         <translation>분리</translation>
     </message>
@@ -4408,7 +4408,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
         <source>Preferences → General</source>
-        <translation type="unfinished"/>
+        <translation>환경설정 → 일반</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
@@ -4418,12 +4418,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="41"/>
         <source>Crash reports</source>
-        <translation type="unfinished"/>
+        <translation>크래시 리포트</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
         <source>Audacity automatically sends crash reports to help us improve product quality.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity는 제품 품질 향상을 돕기 위해 크래시 리포트를 자동으로 전송합니다.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="44"/>
@@ -4491,63 +4491,62 @@ This action will not delete any of your projects.</source>
         <translation>audio.com 계정에 연결</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
         <source>Continue with Google</source>
         <translation>Google로 계속</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="31"/>
         <source>Continue with Facebook</source>
-        <translation>페이스북으로 계속</translation>
+        <translation type="vanished">페이스북으로 계속</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="32"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
         <source>Or use email and password</source>
         <translation>또는 이메일과 암호 사용</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="36"/>
         <source>Email</source>
         <translation>이메일</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="39"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="37"/>
         <source>Password</source>
         <translation>비밀번호</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
         <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;%1&quot;&gt;비밀번호를 잊으셨나요?&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
         <source>Don’t have an account?</source>
         <translation>계정이 없으신가요?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="41"/>
         <source>Create new account</source>
         <translation>새 계정 만들기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="44"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
         <source>Already have an account?</source>
         <translation>이미 계정이 있으신가요?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="45"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="49"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="47"/>
         <source>Sign in</source>
         <translation>로그인</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="46"/>
         <source>Loading…</source>
         <translation>불러오는 중…</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="50"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
         <source>Create account</source>
         <translation>계정 만들기</translation>
     </message>
@@ -4557,33 +4556,33 @@ This action will not delete any of your projects.</source>
         <translation>소셜 로그인 옵션</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="199"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="164"/>
         <source>Email field</source>
         <translation>이메일 필드</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="259"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="224"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="231"/>
         <source>Forgot password</source>
         <translation>비밀번호 찾기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="301"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
         <source>Password field</source>
         <translation>비밀번호 필드</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="346"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="311"/>
         <source>Form action</source>
         <translation>양식 동작</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Sign in link</source>
         <translation>로그인 링크</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Create account link</source>
         <translation>계정 만들기 링크</translation>
     </message>
@@ -4695,17 +4694,17 @@ This action will not delete any of your projects.</source>
         <translation>사용 가능한 옵션</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="121"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="122"/>
         <source>Getting started</source>
         <translation>시작하기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Accept &amp; continue</source>
         <translation>수락 후 계속(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="145"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="146"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
         <translation>%1 / %2</translation>
@@ -4833,37 +4832,37 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="99"/>
         <source>What UI layout (workspace) do you want?</source>
-        <translation>어떤 UI 레이아웃(작업공간)을 원하시나요?</translation>
+        <translation>어떤 UI 레이아웃(워크스페이스)을 원하시나요?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="124"/>
         <source>Workspace layout options</source>
-        <translation>작업공간 레이아웃 옵션</translation>
+        <translation>워크스페이스 레이아웃 옵션</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="129"/>
         <source>Choose your preferred workspace layout for the Audacity interface</source>
-        <translation>Audacity 인터페이스에 사용할 작업공간 레이아웃을 선택하십시오.</translation>
+        <translation>Audacity 인터페이스에 사용할 워크스페이스 레이아웃을 선택하십시오.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="134"/>
         <source>Select a workspace layout that suits your workflow. You can change this later.</source>
-        <translation>작업 방식에 맞는 작업공간 레이아웃을 선택하십시오. 나중에 변경할 수 있습니다.</translation>
+        <translation>작업 방식에 맞는 워크스페이스 레이아웃을 선택하십시오. 나중에 변경할 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="144"/>
         <source>Click to select this workspace</source>
-        <translation>이 작업공간을 선택하려면 클릭</translation>
+        <translation>이 워크스페이스을 선택하려면 클릭</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="149"/>
         <source>Available workspace</source>
-        <translation>사용 가능한 작업공간</translation>
+        <translation>사용 가능한 워크스페이스</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="154"/>
         <source>You can change between these layouts at any time using our new ‘workspaces’ feature.</source>
-        <translation>새 ‘작업공간’ 기능을 사용하면 언제든지 이 레이아웃들 사이에서 전환할 수 있습니다.</translation>
+        <translation>새 ‘워크스페이스’ 기능을 사용하면 언제든지 이 레이아웃들 사이에서 전환할 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="159"/>
@@ -4873,12 +4872,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="164"/>
         <source>Workspace layout preview</source>
-        <translation>작업공간 레이아웃 미리보기</translation>
+        <translation>워크스페이스 레이아웃 미리보기</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="169"/>
         <source>Preview of the selected workspace layout showing the arrangement of interface elements</source>
-        <translation>선택한 작업공간 레이아웃에서 인터페이스 요소의 배치를 미리 보여줍니다.</translation>
+        <translation>선택한 워크스페이스 레이아웃에서 인터페이스 요소의 배치를 미리 보여줍니다.</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="49"/>
@@ -4972,7 +4971,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="78"/>
         <source>Auto save every %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 마다 자동 저장</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
@@ -5032,7 +5031,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="49"/>
         <source>Keyboard layout %1</source>
-        <translation type="unfinished"/>
+        <translation>키보드 레이아웃 %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeiSection.qml" line="32"/>
@@ -5244,7 +5243,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
         <source>Zoom toggle (magnifying glass)</source>
-        <translation>확대/축소 전환(돋보기)</translation>
+        <translation>줌 토글 (돋보기)</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
@@ -5339,21 +5338,21 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="14"/>
         <source>Automatic crash reports</source>
-        <translation type="unfinished"/>
+        <translation>자동 크래시 리포트</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="25"/>
         <source>Send crash reports</source>
-        <translation type="unfinished"/>
+        <translation>크래시 리포트 전송</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="39"/>
         <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="unfinished"/>
+        <translation>크래시 리포트를 보내려면 네트워크 접속이 필요합니다. Audacity가 충돌하면, 원인을 파악하고 해결하는 데 도움이 되는 보고서가 전송됩니다. 이 보고서에는 사용자의 오디오 파일이나 개인정보가 포함되지 않습니다. 자세한 내용은 당사의 &lt;a href=&quot;%1&quot;&gt;개인정보 처리방침을&lt;/a&gt; 참조하십시오.</translation>
     </message>
     <message>
         <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don&apos;t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">크래시 리포트를 보내려면 네트워크 접속이 필요합니다. Audacity가 충돌하면, 원인을 파악하고 해결하는 데 도움이 되는 보고서가 전송됩니다. 이 보고서에는 사용자의 오디오 파일이나 개인 정보가 포함되지 않습니다. 자세한 내용은 당사의 &lt;a href=&quot;%1&quot;&gt;개인정보 처리방침을&lt;/a&gt; 참조하십시오.</translation>
     </message>
 </context>
 <context>
@@ -5404,7 +5403,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="47"/>
         <source>Video: find out what’s new in Audacity 4</source>
-        <translation type="unfinished"/>
+        <translation>동영상: Audacity 4의 새로운 기능을 확인해 보세요</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="50"/>
@@ -5417,22 +5416,22 @@ This action will not delete any of your projects.</source>
         <translation>Audio.com으로 Audacity 클라우드 설정을 완료합니다.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="75"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="77"/>
         <source>Help us decide the future of Audacity</source>
         <translation>Audacity의 미래를 결정하도록 도와주세요</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="78"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="80"/>
         <source>Take part in survey</source>
         <translation>설문조사 참여</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="84"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="86"/>
         <source>Soap Voice Cleaner: studio-quality voice-over sound</source>
         <translation>Soap Voice Cleaner: 스튜디오 품질의 음성 해설 사운드</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="87"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="89"/>
         <source>Get it on MuseHub</source>
         <translation>MuseHub에서 가져오기</translation>
     </message>
@@ -5442,12 +5441,12 @@ This action will not delete any of your projects.</source>
         <translation>계속</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="66"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="67"/>
         <source>Explore free plugins for sculpting your audio</source>
         <translation>오디오 조작을 위한 무료 플러그인 살펴보기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="70"/>
         <source>View free plugins</source>
         <translation>무료 플러그인 보기</translation>
     </message>
@@ -5457,12 +5456,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="47"/>
         <source>Increase BPM</source>
-        <translation type="unfinished"/>
+        <translation>BPM 증가</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="66"/>
         <source>Decrease BPM</source>
-        <translation type="unfinished"/>
+        <translation>BPM 감소</translation>
+    </message>
+    <message>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
+        <source>Time Signature: %1/%2</source>
+        <translation>박자표: %1/%2</translation>
     </message>
 </context>
 <context>
@@ -5480,19 +5484,19 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>Audio plugins scan completed</source>
-        <translation type="unfinished"/>
+        <translation>오디오 플러그인 스캔 완료</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>All audio plugins are up to date.</source>
-        <translation type="unfinished"/>
+        <translation>모든 오디오 플러그인이 최신 버전으로 업데이트되어 있습니다.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
         <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
         <source>Validating audio plugins</source>
-        <translation type="unfinished"/>
+        <translation>오디오 플러그인 검증</translation>
     </message>
 </context>
 <context>
@@ -5528,7 +5532,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="120"/>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="170"/>
         <source>System default: %1</source>
-        <translation type="unfinished"/>
+        <translation>시스템 기본값: %1</translation>
     </message>
 </context>
 <context>
@@ -5537,7 +5541,8 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="833"/>
         <source>Stream is active … unable to gather information.
 </source>
-        <translation type="unfinished"/>
+        <translation>스트림이 활성화되어 있습니다… 정보를 수집할 수 없습니다.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="846"/>
@@ -5659,7 +5664,8 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="928"/>
         <source>No recording device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>“%1”에 해당하는 녹음 장치가 없습니다.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="933"/>
@@ -5673,7 +5679,8 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="935"/>
         <source>No playback device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>“%1”에 대한 재생 장치를 찾을 수 없습니다.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="943"/>
@@ -5736,21 +5743,21 @@ This action will not delete any of your projects.</source>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1039"/>
         <source>Available playback volumes:
 </source>
-        <translation>사용 가능한 재생 음량:
+        <translation>사용 가능한 재생 볼륨:
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1066"/>
         <source>Recording volume is emulated
 </source>
-        <translation>녹음 음량을 에뮬레이팅합니다
+        <translation>녹음 볼륨을 에뮬레이팅합니다
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1067"/>
         <source>Recording volume is native
 </source>
-        <translation>녹음 음량은 네이티브입니다
+        <translation>녹음 볼륨은 네이티브입니다
 </translation>
     </message>
 </context>
@@ -5812,7 +5819,7 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="56"/>
         <source>Failed to encode preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”의 프리셋 인코딩에 실패함</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="61"/>
@@ -5830,19 +5837,19 @@ Error code: %1</source>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="547"/>
         <source>Couldn’t open “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”을(를) 열 수 없습니다</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="533"/>
         <source>Failed to write XML preset to “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”에 XML 프리셋을 쓰기 실패함</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="555"/>
         <source>Unable to read the preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”에서 프리셋을 읽을 수 없음</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
@@ -5870,12 +5877,12 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="195"/>
         <source>Audio Unit Generators</source>
-        <translation type="unfinished"/>
+        <translation>오디오 유닛 생성기</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="196"/>
         <source>Audio Unit Mixers</source>
-        <translation type="unfinished"/>
+        <translation>오디오 유닛 믹서</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="197"/>
@@ -5885,7 +5892,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="198"/>
         <source>Audio Unit Panners</source>
-        <translation type="unfinished"/>
+        <translation>오디오 유닛 패너</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="223"/>
@@ -5900,22 +5907,22 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="352"/>
         <source>Failed to decode “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 프리셋을 디코딩하지 못함</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="361"/>
         <source>Failed to convert “%1” preset to internal format</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 프리셋을 내부 형식으로 변환하는 데 실패함</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="373"/>
         <source>Failed to create property list for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 프리셋에 대한 속성 목록을 생성하지 못함</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="379"/>
         <source>Failed to set class info for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 프리셋에 대한 클래스 정보를 설정하지 못함</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="484"/>
@@ -5940,12 +5947,12 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
         <source>The plugin “%1” does not support the required block size</source>
-        <translation type="unfinished"/>
+        <translation>플러그인 “%1”은 필요한 블록 크기를 지원하지 않습니다</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
         <source>The plugin “%1” has crashed while processing audio</source>
-        <translation type="unfinished"/>
+        <translation>오디오 처리 중 “%1” 플러그인이 중단되었습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
@@ -5979,7 +5986,7 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="82"/>
         <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation type="unfinished"/>
+        <translation>지정한 &quot;제어&quot; 트랙의 볼륨이 특정 레벨에 도달할 때마다 한 개 이상 트랙의 (ducks) 볼륨을 줄입니다</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
@@ -6261,7 +6268,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="80"/>
         <source>Adjusts the volume levels of particular frequencies</source>
-        <translation>특정 주파수의 음량 레벨을 조정합니다</translation>
+        <translation>특정 주파수의 볼륨 레벨을 조정합니다</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="180"/>
@@ -6316,7 +6323,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="280"/>
         <source>To apply Equalization, select one or more audio tracks.</source>
-        <translation type="unfinished"/>
+        <translation>이퀄라이제이션을 적용하려면 하나 이상의 오디오 트랙을 선택하십시오.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="291"/>
@@ -6354,7 +6361,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurvesList.cpp" line="280"/>
         <source>Requested curve not found, using ‘unnamed’</source>
-        <translation type="unfinished"/>
+        <translation>요청한 곡선을 찾을 수 없습니다. ‘unnamed’를 사용합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
@@ -6565,7 +6572,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="123"/>
         <source>Automatically reduces the length of passages where the volume is below a specified level</source>
-        <translation>음량이 지정한 레벨 이하인 패시지의길이를 자동으로 줄입니다</translation>
+        <translation>볼륨이 지정한 레벨 이하인 패시지의길이를 자동으로 줄입니다</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="32"/>
@@ -6575,7 +6582,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="57"/>
         <source>Rapid tone quality variations, like that guitar sound so popular in the 1970’s</source>
-        <translation type="unfinished"/>
+        <translation>1970년대에 큰 인기를 끌었던 그 기타 사운드처럼, 음색이 급격하게 변함</translation>
     </message>
 </context>
 <context>
@@ -6656,12 +6663,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="87"/>
         <source>Split at silences</source>
-        <translation type="unfinished"/>
+        <translation>묵음 영역에서 분할</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="268"/>
         <source>Same as track color</source>
-        <translation type="unfinished"/>
+        <translation>트랙 색상과 동일</translation>
     </message>
 </context>
 <context>
@@ -6771,17 +6778,17 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="587"/>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="593"/>
         <source>Project is not saved to the cloud</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트가 클라우드에 저장되지 않음</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
         <source>Project is not synced with the cloud</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트가 클라우드와 동기화되지 않음</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="707"/>
         <source>Failed to get audio preview upload URLs</source>
-        <translation type="unfinished"/>
+        <translation>오디오 미리 듣기 업로드 URL을 가져오지 못함</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="857"/>
@@ -6791,22 +6798,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="924"/>
         <source>Project not found in cloud database</source>
-        <translation>클라우드 데이터베이스에서 프로젝트를 찾을 수 없습니다.</translation>
+        <translation>클라우드 데이터베이스에서 프로젝트를 찾을 수 없음</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1007"/>
         <source>No valid current project</source>
-        <translation>유효한 현재 프로젝트가 없습니다.</translation>
+        <translation>유효한 현재 프로젝트가 없음</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1070"/>
         <source>Upload succeeded but payload is missing</source>
-        <translation>업로드에는 성공했지만 페이로드가 없습니다.</translation>
+        <translation>업로드에는 성공했지만 페이로드가 없음</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1095"/>
         <source>Failed to delete cloud project from database</source>
-        <translation type="unfinished"/>
+        <translation>데이터베이스에서 클라우드 프로젝트를 삭제하지 못함</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="188"/>
@@ -6816,7 +6823,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="200"/>
         <source>Sign in failed. Please return to Audacity and try again.</source>
-        <translation type="unfinished"/>
+        <translation>로그인에 실패했습니다. Audacity로 돌아가서 다시 시도해 주세요.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
@@ -6843,7 +6850,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
         <source>Audio shared to audio.com</source>
-        <translation>오디오가 audio.com에 공유되었습니다.</translation>
+        <translation>오디오가 audio.com에 공유되었습니다</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
@@ -6858,17 +6865,17 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
         <source>The project must be saved before updating the audio preview</source>
-        <translation type="unfinished"/>
+        <translation>오디오 미리듣기를 업데이트하기 전에 프로젝트를 저장해야 합니다</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
         <source>Save your changes to continue, or cancel the update.</source>
-        <translation type="unfinished"/>
+        <translation>변경 사항을 저장하고 계속하거나, 업데이트를 취소하십시오.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
         <source>Unsaved changes</source>
-        <translation type="unfinished"/>
+        <translation>저장하지 않은 변경사항</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
@@ -6879,37 +6886,37 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
-        <translation type="unfinished"/>
+        <translation>오디오 미리듣기 생성</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
-        <translation type="unfinished"/>
+        <translation>클라우드 오디오 미리듣기가 업데이트됨</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
-        <translation type="unfinished"/>
+        <translation>오디오 미리듣기 파일이 audio.com에 업로드됨</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
         <source>Audio preview is up to date</source>
-        <translation type="unfinished"/>
+        <translation>오디오 미리듣기가 업데이트됨</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 미리 듣기 내용은 이미 이 프로젝트의 가장 최근 저장된 버전과 일치합니다.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
         <source>Updating cloud audio preview…</source>
-        <translation type="unfinished"/>
+        <translation>클라우드 오디오 미리 듣기 업데이트 중…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
         <source>Could not determine the local path of the downloaded project</source>
-        <translation type="unfinished"/>
+        <translation>다운로드된 프로젝트의 로컬 경로를 확인할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
@@ -6921,7 +6928,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
         <source>Audio download failed</source>
-        <translation type="unfinished"/>
+        <translation>오디오 다운로드 실패함</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="849"/>
@@ -6931,7 +6938,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
         <source>Create an account on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>audio.com에 계정을 만드세요</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
@@ -6942,7 +6949,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="246"/>
         <source>Sign in buttons</source>
-        <translation type="unfinished"/>
+        <translation>로그인 버튼</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
@@ -7036,85 +7043,109 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>이 작업은 개발자의 문제 진단을 돕기 위해 MuseScore Studio 설정 정보가 담긴 .zip 파일을 만들기합니다. 파일을 보내기 전 내용을 직접 확인할 수 있습니다.</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>진단 파일 저장</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
         <source>Show paths…</source>
-        <translation type="unfinished"/>
+        <translation>경로 표시...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
         <source>Show paths</source>
-        <translation type="vanished">경로 표시</translation>
+        <translation>경로 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
-        <translation type="unfinished"/>
+        <translation>프로파일러 표시...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation type="vanished">프로파일러 표시</translation>
+        <translation>프로파일러 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
-        <translation type="unfinished"/>
+        <translation>그래픽스 정보 표시...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation type="vanished">그래픽 정보 표시</translation>
+        <translation>그래픽 정보 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
         <source>Show navigation tree…</source>
-        <translation type="unfinished"/>
+        <translation>탐색 트리 표시…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
         <source>Show navigation tree</source>
-        <translation type="vanished">탐색 트리 표시</translation>
+        <translation>탐색 트리 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
         <source>Show accessibility tree…</source>
-        <translation type="unfinished"/>
+        <translation>접근성 트리 표시…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
         <source>Show accessibility tree</source>
-        <translation type="vanished">접근성 트리 표시</translation>
+        <translation>접근성 트리 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
         <source>Dump accessibility tree to console</source>
-        <translation type="vanished">콘솔에 접근성 트리 덤프</translation>
+        <translation>콘솔에 접근성 트리 덤프</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation type="vanished">기보 요소 표시</translation>
+        <translation>기보 요소 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation type="vanished">기보 실행 취소 스택 표시</translation>
+        <translation>기보 실행 취소 스택 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation type="vanished">기보 스타일 옵션 목록 표시</translation>
+        <translation>기보 스타일 옵션 목록 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
         <source>Show actions list</source>
-        <translation type="vanished">동작 목록 표시</translation>
+        <translation>동작 목록 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show rcommands list</source>
-        <translation type="unfinished"/>
+        <translation>rcommand 리스트 표시</translation>
     </message>
     <message>
         <source>Test query action</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">쿼리 동작 테스트</translation>
     </message>
     <message>
         <source>Test query action with params 1</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">매개변수 1을 사용하여 쿼리 동작 테스트</translation>
     </message>
     <message>
         <source>Test query action with params 2</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">매개변수 2를 사용하여 쿼리 동작 테스트</translation>
     </message>
 </context>
 <context>
@@ -7341,7 +7372,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="321"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
-        <translation>미리보기</translation>
+        <translation>미리듣기</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="89"/>
@@ -7353,13 +7384,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="180"/>
         <source>Reset preset</source>
         <extracomment>Tooltip of a button in the effect presets bar</extracomment>
-        <translation type="unfinished"/>
+        <translation>프리셋 초기화</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="218"/>
         <source>Preset options</source>
         <extracomment>Tooltip of a button in the effect presets bar</extracomment>
-        <translation type="unfinished"/>
+        <translation>프리셋 옵션</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="462"/>
@@ -7378,7 +7409,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="24"/>
         <source>Preset name cannot contain %1 or %2</source>
         <extracomment>%1 is a forward slash, %2 is a backslash; neither character is allowed in a preset name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>프리셋 이름에는 %1 or %2가 포함될 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="69"/>
@@ -7588,19 +7619,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
         <source>Effect preview</source>
-        <translation>이펙트 미리보기</translation>
+        <translation>이펙트 미리듣기</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
         <source>Use vendor UI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>제공 UI 사용</translation>
+        <translation>벤더 UI 사용</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="84"/>
         <source>Toggle between vendor UI and fallback UI</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>제공 UI와 대체 UI 간 전환</translation>
+        <translation>벤더 UI와 대체 UI 간 토글</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
@@ -7611,49 +7642,49 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1을 %2에 추가함</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 추가</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%2에서 %1 f을(를) 삭제함</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 삭제</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1을 %2로 대체함</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1을 대체</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%2에서 %1 위로 이동함</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%2에서 %1 아래로 이동함</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
@@ -7734,28 +7765,28 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation type="unfinished"/>
+        <translation>플러그인 관리</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="91"/>
         <source>Rescan plugins</source>
-        <translation type="unfinished"/>
+        <translation>플러그인 재스캔</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="107"/>
         <source>Include plugins with errors</source>
-        <translation type="unfinished"/>
+        <translation>오류가 있는 플러그인 포함</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation type="unfinished"/>
+        <translation>누락된 플러그인</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
         <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
-        <translation type="unfinished"/>
+        <translation>이 프로젝트에서 사용된 일부 플러그인을 찾을 수 없습니다. 항목을 두 번 클릭하면 해당 위치를 확인할 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
@@ -7767,12 +7798,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
         <source>Plugin details</source>
-        <translation type="unfinished"/>
+        <translation>플러그인 상세정보</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
         <source>Vendor:</source>
-        <translation type="unfinished"/>
+        <translation>벤더:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
@@ -7783,7 +7814,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>경로:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="242"/>
@@ -7814,23 +7845,23 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="76"/>
         <source>Status:</source>
-        <translation type="unfinished"/>
+        <translation>상태:</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation>초기 템포 변화</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation>마지막 템포 변화</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>초기 피치 변조</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -7842,13 +7873,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>최종 피치 변조</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="57"/>
         <source>Not validated</source>
         <extracomment>The plugin was found but the user chose to validate it later</extracomment>
-        <translation type="unfinished"/>
+        <translation>검증되지 않음</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="59"/>
@@ -7858,7 +7889,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="63"/>
         <source>Broken</source>
-        <translation type="unfinished"/>
+        <translation>깨짐</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="155"/>
@@ -7883,7 +7914,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="312"/>
         <source>Status</source>
-        <translation type="unfinished"/>
+        <translation>상태</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
@@ -7894,7 +7925,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="314"/>
         <source>Vendor</source>
-        <translation type="unfinished"/>
+        <translation>벤더</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
@@ -7911,7 +7942,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="64"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
-        <translation type="unfinished"/>
+        <translation>누락됨 - “%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="55"/>
@@ -7980,12 +8011,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="55"/>
         <location filename="../../src/effects/extensions/internal/extensioneffect.cpp" line="387"/>
         <source>Extension</source>
-        <translation type="unfinished"/>
+        <translation>확장</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="341"/>
         <source>Volume and compression</source>
-        <translation type="unfinished"/>
+        <translation>볼륨과 컴프레션</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="343"/>
@@ -7995,27 +8026,27 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="345"/>
         <source>Pitch and tempo</source>
-        <translation type="unfinished"/>
+        <translation>피치와 템포</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="347"/>
         <source>EQ and filters</source>
-        <translation type="unfinished"/>
+        <translation>EQ 및 필터</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="349"/>
         <source>Noise removal and repair</source>
-        <translation type="unfinished"/>
+        <translation>노이즈 제거 및 보정</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="351"/>
         <source>Delay and reverb</source>
-        <translation type="unfinished"/>
+        <translation>지연과 리버브</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="353"/>
         <source>Distortion and modulation</source>
-        <translation type="unfinished"/>
+        <translation>왜곡 및 변조</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="355"/>
@@ -8025,7 +8056,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="357"/>
         <source>Spectral tools</source>
-        <translation type="unfinished"/>
+        <translation>스펙트럼 도구</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="359"/>
@@ -8065,7 +8096,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="125"/>
         <source>Generated audio duration</source>
-        <translation type="unfinished"/>
+        <translation>생성된 오디오 재생 시간</translation>
     </message>
 </context>
 <context>
@@ -8083,7 +8114,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="222"/>
         <source>The selected audio is silent, so there is nothing to amplify.</source>
-        <translation type="unfinished"/>
+        <translation>선택한 오디오에는 소리가 없기 때문에 증폭할 내용이 없습니다.</translation>
     </message>
 </context>
 <context>
@@ -8104,7 +8135,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="75"/>
         <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation>클릭 제거는 오디오 트랙의 클릭음을 제거하도록 설계되었습니다.</translation>
+        <translation>클릭 제거는 오디오 트랙의 클릭음을 제거하도록 설계되었습니다</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
@@ -8114,7 +8145,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
         <source>Selection must be larger than 4096 samples.</source>
-        <translation type="unfinished"/>
+        <translation>선택한 샘플 수는 4096개보다 커야 합니다.</translation>
     </message>
 </context>
 <context>
@@ -8140,7 +8171,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="58"/>
         <source>Reduces “dynamic range”, or differences between loud and quiet parts.</source>
-        <translation type="unfinished"/>
+        <translation>“다이나믹 레인지”, 즉 소리가 큰 부분과 작은 부분 간의 차이를 줄여줍니다.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitereffect.cpp" line="13"/>
@@ -8158,7 +8189,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
         <source>Preparing preview</source>
-        <translation>미리보기 준비 중</translation>
+        <translation>미리듣기 준비 중</translation>
     </message>
 </context>
 <context>
@@ -8229,7 +8260,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="88"/>
         <source>Normalizing Loudness…
 </source>
-        <translation type="unfinished"/>
+        <translation>음량 정규화…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
@@ -8322,25 +8354,29 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="97"/>
         <source>Removing DC offset and Normalizing…
 </source>
-        <translation type="unfinished"/>
+        <translation>DC 오프셋 제거 및 정규화…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="99"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>DC 오프셋 제거…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="101"/>
         <source>Normalizing without removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>DC 오프셋을 제거하지 않고 정규화하기…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="103"/>
         <source>Not doing anything…
 </source>
-        <translation type="unfinished"/>
+        <translation>아무것도 안함…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="129"/>
@@ -8443,13 +8479,16 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>To use ‘Spectral effects’, enable ‘Spectral Selection’
 in the track Spectrogram settings and select the
 frequency range for the effect to act on.</source>
-        <translation type="unfinished"/>
+        <translation>&apos;스펙트럼 이펙트&apos;를 사용하려면, 
+트랙 스펙트로그램 설정의 &apos;스펙트럼 선택&apos;을 활성화하고
+이펙트가 작용할 주파수 범위를 선택하세요</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation type="unfinished"/>
+        <translation>오류: 헤더에 “%1” 파일이 지정되었으나 플러그인 경로에서 해당 파일을 찾을 수 없습니다.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="823"/>
@@ -8467,14 +8506,16 @@ frequency range for the effect to act on.</source>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>‘;type tool’ 이펙트는 Nyquist에서 오디오를 반환할 수 없습니다.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1400"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>‘;type tool’ 이펙트는 Nyquist의 레이블을 반환할 수 없습니다.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1410"/>
@@ -8551,7 +8592,12 @@ For SAL, use a return statement such as:
 or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation type="unfinished"/>
+        <translation>코드가 SAL 문법처럼 보이지만 ‘return’ 문이 없습니다.
+SAL의 경우 다음과 같은 return 문을 사용하세요:
+  return *track* * 0.1
+또는 LISP의 경우 다음과 같이 괄호를 열어 시작하세요:
+  (mult *track* 0.1)
+ .</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
@@ -8561,7 +8607,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
         <source>Shelf filter</source>
-        <translation type="unfinished"/>
+        <translation>쉘프 필터</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
@@ -8606,7 +8652,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="17"/>
         <source>Delete selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>선택한 중심 주파수 삭제</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="18"/>
@@ -8632,7 +8678,9 @@ or for LISP, begin with an open parenthesis such as:
         <source>~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~
                       or reduce the filter ‘Width’.</source>
-        <translation type="unfinished"/>
+        <translation>~a노치 필터 매개변수를 적용할 수 없습니다.~%~
+저주파수 하한값을 높여 보십시오~%~
+또는 필터의 ‘폭’을 줄여 보십시오.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="22"/>
@@ -8642,7 +8690,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="23"/>
         <source>Amplify selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>선택 주파수의 중심 주파수 증폭</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="24"/>
@@ -8685,7 +8733,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="30"/>
         <source>Amplify selection</source>
-        <translation type="unfinished"/>
+        <translation>선택 항목 증폭</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="31"/>
@@ -8695,7 +8743,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
         <source>Studio fade out</source>
-        <translation type="unfinished"/>
+        <translation>스튜디오 페이드 아웃</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
@@ -8705,7 +8753,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
         <source>Adjustable fade</source>
-        <translation type="unfinished"/>
+        <translation>조절 가능한 페이드</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
@@ -8859,7 +8907,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
         <source>Beat finder</source>
-        <translation type="unfinished"/>
+        <translation>비트 검색기</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
@@ -8869,7 +8917,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished"/>
+        <translation>클립 수정</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -8889,7 +8937,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation type="unfinished"/>
+        <translation>클립 크로스페이드</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
@@ -8909,7 +8957,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation type="unfinished"/>
+        <translation>트랙 크로스페이드</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -9194,7 +9242,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
         <source>High-pass filter</source>
-        <translation type="unfinished"/>
+        <translation>하이패스 필터</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
@@ -9339,7 +9387,8 @@ or for LISP, begin with an open parenthesis such as:
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="160"/>
         <source>No sounds found.~%~
                  Try lowering ‘Threshold level (dB)’.</source>
-        <translation type="unfinished"/>
+        <translation>소리가 발견되지 않았습니다.~%~
+               ‘임계 레벨(dB)’을 낮춰 보세요.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="161"/>
@@ -9353,7 +9402,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
         <source>Legacy limiter</source>
-        <translation type="unfinished"/>
+        <translation>레거시 리미터</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
@@ -9412,12 +9461,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
         <source>Low-pass filter</source>
-        <translation type="unfinished"/>
+        <translation>로우패스 필터</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="174"/>
         <source>Noise gate</source>
-        <translation type="unfinished"/>
+        <translation>노이즈 게이트</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="175"/>
@@ -9447,7 +9496,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="180"/>
         <source>Don’t Link Stereo</source>
-        <translation type="unfinished"/>
+        <translation>스테레오 연결하지 않음</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="181"/>
@@ -9509,7 +9558,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
         <source>Notch filter</source>
-        <translation type="unfinished"/>
+        <translation>노치 필터</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
@@ -9543,7 +9592,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="196"/>
         <source>Browse…</source>
-        <translation type="unfinished"/>
+        <translation>탐색...</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
@@ -9593,22 +9642,22 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="206"/>
         <source>Error~%</source>
-        <translation type="unfinished"/>
+        <translation>오류~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="207"/>
         <source>Success~%Files written to:~%~s~%</source>
-        <translation type="unfinished"/>
+        <translation>성공~%파일이 기록됨:~%~s~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="208"/>
         <source>Warning~%Failed to copy some files:~%</source>
-        <translation type="unfinished"/>
+        <translation>경고~%일부 파일을 복사에 실패함:~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
         <source>Error~%No file selected.</source>
-        <translation type="unfinished"/>
+        <translation>오류~%선택된 파일이 없습니다.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
@@ -9638,7 +9687,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
         <source>Files already installed (‘Allow Overwriting’ disabled):</source>
-        <translation type="unfinished"/>
+        <translation>이미 설치된 파일 (‘덮어쓰기 허용’이 비활성화됨):</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
@@ -9683,7 +9732,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
         <source>Rhythm track</source>
-        <translation type="unfinished"/>
+        <translation>리듬 트랙</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="225"/>
@@ -9723,7 +9772,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
         <source>Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.</source>
-        <translation type="unfinished"/>
+        <translation>‘마디 수’를 0으로 설정하면 ‘리듬 트랙 시간’이 활성화됩니다.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
@@ -9743,7 +9792,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
         <source>Used if ‘Number of bars’ = 0</source>
-        <translation type="unfinished"/>
+        <translation>‘마디 수’가 0인 경우에 사용됩니다.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="237"/>
@@ -9819,12 +9868,13 @@ Right channel</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Set either ‘Number of bars’ or~%~
                     ‘Rhythm track duration’ to greater than zero.</source>
-        <translation type="unfinished"/>
+        <translation>‘마디 수’ 또는 ~%~
+ ‘리듬 트랙 시간’ 중 하나를 0보다 큰 값으로 설정하십시오.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
         <source>Risset drum</source>
-        <translation type="unfinished"/>
+        <translation>리싯 드럼</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="253"/>
@@ -9859,12 +9909,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
         <source>Measure RMS</source>
-        <translation type="unfinished"/>
+        <translation>RMS 측정</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation>왼쪽</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -9874,7 +9924,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation>오른쪽</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
@@ -10214,12 +10264,12 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
         <source>Error.~%“~a” cannot be written.</source>
-        <translation type="unfinished"/>
+        <translation>오류. ~%“~a”를 기록할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
         <source>Sample data Import</source>
-        <translation type="unfinished"/>
+        <translation>샘플 데이터 가져오기</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
@@ -10246,21 +10296,27 @@ Daulton</source>
         <source>Error~%~
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
-        <translation type="unfinished"/>
+        <translation>오류~%~
+                ‘~a’ 파일을 열 수 없습니다.~%~
+                파일이 있는지 확인해 주세요.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="335"/>
         <source>Error:~%~
               The file must contain only plain ASCII text.~%~
               (Invalid byte ‘~a’ at byte number: ~a)</source>
-        <translation type="unfinished"/>
+        <translation>오류:~%~
+          파일에는 일반 ASCII 텍스트만 포함되어야 합니다.~%~
+          (유효하지 않은 바이트 ‘~a’가 발견됨 바이트 번호: ~a)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
         <source>Error~%~
               Data must be numbers in plain ASCII text.~%~
               ‘~a’ is not a numeric value.</source>
-        <translation type="unfinished"/>
+        <translation>오류~%~
+              데이터는 일반 ASCII 텍스트 형식의 숫자여야 합니다.~%~
+              ‘~a’는 숫자 값이 아닙니다.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
@@ -10270,7 +10326,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
         <source>Delete selection</source>
-        <translation type="unfinished"/>
+        <translation>선택영역 삭제</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
@@ -10393,7 +10449,7 @@ Daulton</source>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation type="unfinished"/>
+        <translation>극단적인 시간-늘리기나 &quot;stasis (음지속)&quot; 이펙트에만 폴스트레치를 사용하세요</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
@@ -10407,7 +10463,10 @@ Daulton</source>
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>선택한 오디오가 너무 짧아 미리 듣기를 할 수 없습니다.
+
+선택한 오디오 길이를 최소 %1 초로 늘리거나,
+‘시간 해상도’를 %2 초 미만으로 줄여 보세요.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="233"/>
@@ -10416,7 +10475,10 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
 For the current audio selection, the maximum
 ‘Time Resolution’ is %1 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>미리보기를 할 수 없습니다.
+
+현재 선택된 오디오의 최대
+‘시간 해상도’는 %1 초입니다.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="242"/>
@@ -10425,7 +10487,10 @@ For the current audio selection, the maximum
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>선택한 구간에 대해 ‘시간 해상도’가 너무 깁니다.
+
+오디오 선택 구간을 최소 %1 초로 늘리거나,
+‘시간 해상도’를 %2 초 미만으로 줄여 보십시오.</translation>
     </message>
 </context>
 <context>
@@ -10433,18 +10498,19 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="30"/>
         <source>Remove DC offset</source>
-        <translation type="unfinished"/>
+        <translation>DC 오프셋 제거</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="49"/>
         <source>Removes DC offset (centers audio on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation>DC 오프셋을 제거합니다(오디오를 수직 방향으로 0.0에 정렬)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="67"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>DC 오프셋 제거…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
@@ -10474,14 +10540,14 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="71"/>
         <source>The Repair effect cannot be applied within stretched or shrunk clips</source>
-        <translation>보정 이펙트는 늘이거나 줄인 클립에는 적용할 수 없습니다</translation>
+        <translation>복구 이펙트는 늘이거나 줄인 클립에는 적용할 수 없습니다</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="77"/>
         <source>The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).
 
 Zoom in and select a tiny fraction of a second to repair.</source>
-        <translation>보정 이펙트는 손상된 오디오의 매우 짧은 부분에 사용하기 위한 것입니다 (최대 128 샘플).
+        <translation>복구 이펙트는 손상된 오디오의 매우 짧은 부분에 사용하기 위한 것입니다 (최대 128 샘플).
 
 수리할 아주 작은 구간을 확대하고 선택하세요.</translation>
     </message>
@@ -10490,7 +10556,9 @@ Zoom in and select a tiny fraction of a second to repair.</source>
         <source>The Repair effect needs some data to go on.
 
 Please select an area to repair with some audio on at least one side (the more the better).</source>
-        <translation type="unfinished"/>
+        <translation>복구 이펙트를 적용하려면 일부 데이터가 필요합니다.
+
+적어도 한쪽 면에 오디오가 포함된 복원할 영역을 선택해 주세요(오디오가 많을수록 좋습니다).</translation>
     </message>
 </context>
 <context>
@@ -10611,7 +10679,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="120"/>
         <source>Adds ambience or a “hall effect”</source>
-        <translation type="unfinished"/>
+        <translation>배경음이나 “홀 이펙트”를 더해줍니다</translation>
     </message>
 </context>
 <context>
@@ -10632,7 +10700,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>슬라이딩 스트레칭</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -10694,7 +10762,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="60"/>
         <source>Auto-adjust volume to preserve loudness</source>
-        <translation type="unfinished"/>
+        <translation>볼륨을 자동으로 조정하여 볼륨 일관성을 유지합니다</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="37"/>
@@ -10709,7 +10777,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="55"/>
         <source>Output volume</source>
-        <translation type="unfinished"/>
+        <translation>출력 볼륨</translation>
     </message>
 </context>
 <context>
@@ -10929,12 +10997,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
         <source>Linear frequency scale</source>
-        <translation type="unfinished"/>
+        <translation>선형 주파수 스케일</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="85"/>
         <source>Grid lines</source>
-        <translation type="unfinished"/>
+        <translation>격자선</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="113"/>
@@ -10979,7 +11047,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"/>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 <context>
@@ -11035,27 +11103,28 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/lv2/qml/Audacity/Lv2/Lv2Viewer.qml" line="97"/>
         <source>No available UI:
 %1</source>
-        <translation type="unfinished"/>
+        <translation>사용 가능한 UI 없음:
+%1</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
         <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
-        <translation type="unfinished"/>
+        <translation>이 플러그인은 UI를 제공하지 않습니다 (AU3에서 이 플러그인에 대한 UI를 제공하는 경우 알려 주시기 바랍니다).</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
         <source>X11 UI refusing to be externalized</source>
-        <translation type="unfinished"/>
+        <translation>X11 UI가 외부화되지 않음</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
         <source>Unknown reason (please report)</source>
-        <translation type="unfinished"/>
+        <translation>알 수 없는 이유 (신고해 주세요)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="256"/>
         <source>Idle UI creation failed</source>
-        <translation type="unfinished"/>
+        <translation>유휴 UI 생성 실패</translation>
     </message>
 </context>
 <context>
@@ -11281,7 +11350,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="29"/>
         <source>Semitones (%1 → %2)</source>
-        <translation type="unfinished"/>
+        <translation>반음 (%1 → %2)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="61"/>
@@ -11291,27 +11360,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>슬라이딩 스트레칭</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation>초기 템포 변경</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation>최종 템포 변경</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>초기 피치 변조</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>최종 피치 변조</translation>
     </message>
 </context>
 <context>
@@ -11579,7 +11648,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="65"/>
         <source>Channel count %1</source>
-        <translation type="unfinished"/>
+        <translation>채널 수 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
@@ -11696,7 +11765,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="73"/>
         <source>Compression %1</source>
-        <translation type="unfinished"/>
+        <translation>압축률 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="86"/>
@@ -11706,7 +11775,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="105"/>
         <source>LPC %1</source>
-        <translation type="unfinished"/>
+        <translation>LPC %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="118"/>
@@ -11716,7 +11785,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="137"/>
         <source>Min. PdO %1</source>
-        <translation type="unfinished"/>
+        <translation>최소 PdO %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="150"/>
@@ -11726,7 +11795,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="169"/>
         <source>Min. PtO %1</source>
-        <translation type="unfinished"/>
+        <translation>최소 PtO %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="193"/>
@@ -11736,7 +11805,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="212"/>
         <source>Frame %1</source>
-        <translation type="unfinished"/>
+        <translation>프레임 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="222"/>
@@ -11746,7 +11815,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="238"/>
         <source>PdO method %1</source>
-        <translation type="unfinished"/>
+        <translation>PdO 방법 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="248"/>
@@ -11756,7 +11825,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="267"/>
         <source>Max. PdO %1</source>
-        <translation type="unfinished"/>
+        <translation>최대 PdO %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="277"/>
@@ -11766,7 +11835,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="296"/>
         <source>Max. PtO %1</source>
-        <translation type="unfinished"/>
+        <translation>최대 PtO %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="62"/>
@@ -11809,7 +11878,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="128"/>
         <source>Quality %1</source>
-        <translation type="unfinished"/>
+        <translation>품질 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="141"/>
@@ -11819,7 +11888,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="160"/>
         <source>Cutoff %1</source>
-        <translation type="unfinished"/>
+        <translation>컷오프 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="184"/>
@@ -11829,7 +11898,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="203"/>
         <source>Bit rate %1</source>
-        <translation type="unfinished"/>
+        <translation>비트 레이트 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="213"/>
@@ -11845,7 +11914,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="239"/>
         <source>Sample rate %1</source>
-        <translation type="unfinished"/>
+        <translation>샘플 레이트 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="249"/>
@@ -11855,7 +11924,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="265"/>
         <source>Profile %1</source>
-        <translation type="unfinished"/>
+        <translation>프로필 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
@@ -11902,7 +11971,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="72"/>
         <source>Mux rate %1</source>
-        <translation type="unfinished"/>
+        <translation>Mux 비율 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="95"/>
@@ -11912,7 +11981,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="114"/>
         <source>Packet size %1</source>
-        <translation type="unfinished"/>
+        <translation>패킷 크기 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
@@ -11957,7 +12026,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
         <source>%1 Hz (custom)</source>
-        <translation type="unfinished"/>
+        <translation>%1 Hz (사용자 지정)</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
@@ -11997,12 +12066,12 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
         <source>Set sample rate</source>
-        <translation type="unfinished"/>
+        <translation>샘플 레이트 설정</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
-        <translation type="unfinished"/>
+        <translation>“%1”으로 내보낼 수 없습니다. 대상 폴더를 만들 수 없습니다. 경로가 올바른지, 해당 폴더에 쓰기 권한이 있는지 확인하십시오.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
@@ -12043,34 +12112,33 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
-        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
         <source>Disabled</source>
         <translation>비활성화됨</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="187"/>
         <source>Version:</source>
         <translation>버전:</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
         <source>Shortcut:</source>
         <extracomment>Keyboard shortcut</extracomment>
         <translation>단축키:</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="54"/>
         <source>Edit shortcut</source>
         <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
         <translation>단축키 편집</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="99"/>
         <source>Enable</source>
         <translation>활성화</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="99"/>
         <source>Disable</source>
         <translation>비활성화</translation>
     </message>
@@ -12090,9 +12158,8 @@ Master effects will be turned back on after export.</source>
         <translation>올바른 플러그인 형식이 아님</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
         <source>Manually</source>
-        <translation>수동</translation>
+        <translation type="vanished">수동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
@@ -12137,58 +12204,63 @@ Master effects will be turned back on after export.</source>
         <translation>오류 코드: %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="74"/>
         <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
         <translation>플러그인 &quot;%1&quot;이(가) 현재 비활성화됨. 지금 활성화하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="75"/>
         <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
         <translation>또는 홈 &gt; 플러그인 메뉴에서 언제든지 활성화할 수 있습니다.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="101"/>
         <source>Composing/arranging tools</source>
         <translation>작곡/편곡 도구</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="102"/>
         <source>Color notes</source>
         <translation>음표 색상 지정</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="103"/>
         <source>Playback</source>
         <translation>재생</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="47"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="104"/>
         <source>Lyrics</source>
         <translation>가사</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
         <source>Run plugin %1</source>
         <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation>%1 플러그인 실행</translation>
+        <translation type="vanished">%1 플러그인 실행</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
         <source>Run plugin %1: %2</source>
         <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation>%1 플러그인 실행: %2</translation>
+        <translation type="vanished">%1 플러그인 실행: %2</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="118"/>
         <source>Not specified</source>
         <extracomment>No version is specified for this plugin.</extracomment>
         <translation>(미지정)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="124"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="133"/>
         <source>Not defined</source>
         <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
         <translation>(미정의)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="35"/>
+        <source>Show API dump</source>
+        <translation>API 덤프 표시</translation>
     </message>
 </context>
 <context>
@@ -12391,7 +12463,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
         <source>OK</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>확인</translation>
@@ -12435,7 +12507,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>취소</translation>
@@ -12446,7 +12518,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
         <source>Apply</source>
         <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>적용</translation>
@@ -12463,7 +12535,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Close</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>닫기</translation>
@@ -12549,19 +12621,19 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>인터넷 연결을 확인하거나 나중에 다시 시도하십시오.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="125"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="127"/>
         <source>Back</source>
         <translation>뒤로</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="136"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Next</source>
         <translation>다음</translation>
     </message>
@@ -12576,7 +12648,7 @@ For tips on suitable drives, click the help button.</source>
         <translation>성공!</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="137"/>
         <source>Skip</source>
         <translation>건너뛰기</translation>
     </message>
@@ -12610,13 +12682,13 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
         <source>Save</source>
         <translation>저장</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>열기</translation>
@@ -12809,67 +12881,67 @@ For tips on suitable drives, click the help button.</source>
         <translation><numerusform>%Ln 바이트</numerusform></translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
         <source>Save all</source>
         <translation>모두 저장</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Don’t save</source>
         <translation>저장하지 않음</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
         <source>Yes</source>
         <translation>예</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
         <source>Yes to all</source>
         <translation>모두 예</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
         <source>No</source>
         <translation>아니요</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
         <source>No to all</source>
         <translation>모두 아니요</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
         <source>Abort</source>
         <translation>중단</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
         <source>Retry</source>
         <translation>재시도</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Ignore</source>
         <translation>무시</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
         <source>Discard</source>
         <translation>변경사항 폐기</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Help</source>
         <translation>도움말</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
         <source>Reset</source>
         <translation>재설정</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
         <source>Continue</source>
         <translation>계속</translation>
     </message>
@@ -12881,12 +12953,12 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
         <source>Downloading %1…</source>
-        <translation type="unfinished"/>
+        <translation>%1 다운로드 중…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
         <source>Unpacking %1…</source>
-        <translation type="unfinished"/>
+        <translation>%1을 압축 해제 중…</translation>
     </message>
 </context>
 <context>
@@ -14158,7 +14230,7 @@ For tips on suitable drives, click the help button.</source>
         <source>%1 %2</source>
         <comment>clip name template</comment>
         <extracomment>Name default name assigned to a clip on track import</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="135"/>
@@ -14195,7 +14267,9 @@ Error %1</source>
 is a not an audio file. 
 Audacity cannot open this type of file.</source>
         <extracomment>%1 is the name of the file</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 
+은 오디오 파일이 아닙니다. 
+Audacity는 이 유형의 파일을 열 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="624"/>
@@ -14206,7 +14280,7 @@ Audacity cannot open this type of file.</source>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
         <source>Importing %1…</source>
         <extracomment>%1 is the name of the file being imported</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 가져오기 중…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="631"/>
@@ -14226,7 +14300,10 @@ Audacity cannot open audio CDs directly.
 Extract (rip) the CD tracks to an audio format that 
 Audacity can import, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 오디오 CD 트랙입니다. 
+Audacity는 오디오 CD를 직접 열 수 없습니다. 
+CD 트랙을 WAV나 AIFF와 같이 
+Audacity에서 가져올 수 있는 오디오 형식으로 추출(리핑)하십시오.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="705"/>
@@ -14234,7 +14311,9 @@ Audacity can import, such as WAV or AIFF.</source>
 Audacity cannot open this file because it only contains links to other files. 
 You may be able to open it in a text editor and download the actual audio files.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 재생 목록 파일입니다. 
+이 파일에는 다른 파일에 대한 링크만 포함되어 있으므로 Audacity에서는 이 파일을 열 수 없습니다. 
+텍스트 편집기로 열어 실제 오디오 파일을 다운로드할 수 있을 것입니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="712"/>
@@ -14242,7 +14321,9 @@ You may be able to open it in a text editor and download the actual audio files.
 Audacity cannot open this type of file due to patent restrictions. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 Windows Media Audio 파일입니다. 
+특허 제한으로 인해 Audacity에서는 이 유형의 파일을 열 수 없습니다. 
+WAV나 AIFF와 같이 지원되는 오디오 형식으로 변환해야 합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="722"/>
@@ -14250,7 +14331,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Without the optional FFmpeg library, Audacity cannot open this type of file.
 Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 Advanced Audio Coding(AAC) 파일입니다.
+선택 사항인 FFmpeg 라이브러리가 없으면 Audacity에서 이 유형의 파일을 열 수 없습니다.
+그렇지 않은 경우, WAV나 AIFF와 같이 지원되는 오디오 형식으로 변환해야 합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="729"/>
@@ -14260,7 +14343,11 @@ Audacity cannot open this type of file due to the encryption.
 Try recording the file into Audacity, or burn it to audio CD then 
 extract the CD track to a supported audio format such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 암호화된 오디오 파일입니다. 
+이러한 파일은 대개 온라인 음악 스토어에서 다운로드한 것입니다. 
+Audacity는 암호화되어 있기 때문에 이 유형의 파일을 열 수 없습니다. 
+해당 파일을 Audacity로 직접 녹음해 보거나, 오디오 CD로 구운 다음 
+CD 트랙을 WAV나 AIFF와 같은 지원되는 오디오 형식으로 추출해 보십시오.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="736"/>
@@ -14268,7 +14355,9 @@ extract the CD track to a supported audio format such as WAV or AIFF.</source>
 Audacity cannot open this proprietary format. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 RealPlayer 미디어 파일입니다. 
+Audacity는 이 독점 형식을 열 수 없습니다. 
+이 파일을 WAV나 AIFF와 같은 지원되는 오디오 형식으로 변환해야 합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="744"/>
@@ -14277,7 +14366,10 @@ Audacity cannot open this type of file.
 Try converting it to an audio file such as WAV or AIFF and 
 then import it, or record it into Audacity.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 오디오 파일이 아닌 메모 기반 파일입니다. 
+Audacity는 이 유형의 파일을 열 수 없습니다. 
+이 파일을 WAV나 AIFF와 같은 오디오 파일로 변환한 후 
+Audacity로 가져오거나, Audacity에서 직접 녹음해 보십시오.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="752"/>
@@ -14287,7 +14379,11 @@ If you think it might be an mp3 file, rename it to end with “.mp3”
 and try importing it again. Otherwise you need to convert it to a supported audio 
 format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 Musepack 오디오 파일입니다. 
+Audacity는 이 유형의 파일을 열 수 없습니다. 
+이 파일이 mp3 파일일 가능성이 있다고 생각되면, 파일 이름을 “.mp3”로 끝나는 이름으로 변경한 후 
+다시 가져오기를 시도해 보세요. 그렇지 않은 경우, WAV나 AIFF와 같이 지원되는 오디오 
+형식으로 변환해야 합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="760"/>
@@ -14295,7 +14391,9 @@ format, such as WAV or AIFF.</source>
 Audacity cannot open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 Wavpack 오디오 파일입니다. 
+Audacity에서는 이 유형의 파일을 열 수 없습니다. 
+WAV나 AIFF와 같이 지원되는 오디오 형식으로 변환해야 합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="768"/>
@@ -14303,7 +14401,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 Dolby Digital 오디오 파일입니다. 
+Audacity는 현재 이 유형의 파일을 열 수 없습니다. 
+WAV나 AIFF와 같이 지원되는 오디오 형식으로 변환해야 합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="776"/>
@@ -14311,7 +14411,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 Ogg Speex 오디오 파일입니다. 
+현재 Audacity에서는 이 유형의 파일을 열 수 없습니다. 
+WAV나 AIFF와 같이 지원되는 오디오 형식으로 변환해야 합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="789"/>
@@ -14319,12 +14421,14 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to extract the audio to a supported format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”은 동영상 파일입니다. 
+현재 Audacity에서는 이 유형의 파일을 열 수 없습니다. 
+오디오를 WAV나 AIFF와 같은 지원되는 형식으로 추출해야 합니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="795"/>
         <source>File “%1” not found.</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 파일을 찾을 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="810"/>
@@ -14332,7 +14436,9 @@ You need to extract the audio to a supported format, such as WAV or AIFF.</sourc
 
 %2For uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity에서 “%1” 파일의 형식을 인식하지 못했습니다.
+
+%2압축되지 않은 파일의 경우, ‘파일’ &gt; ‘가져오기’ &gt; ‘원시 데이터’를 시도해 보십시오.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
@@ -14347,7 +14453,10 @@ Importers supposedly supporting such files are:
 %2,
 but none of them understood this file format.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity가 “%1” 파일의 유형을 인식했습니다.
+이 파일을 지원하는 것으로 알려진 임포터는 다음과 같습니다:
+%2,
+그러나 이들 중 어느 것도 이 파일 형식을 인식하지 못했습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ImportUtils.h" line="42"/>
@@ -14615,30 +14724,30 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="698"/>
         <source>FFmpeg : ERROR - Can’t determine format description for file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 오류 - 파일 “%1”의 형식 설명을 확인할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="706"/>
         <source>FFmpeg : ERROR - Can’t allocate output format context.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 오류 - 출력 형식 컨텍스트를 할당할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="717"/>
         <source>FFmpeg : ERROR - Can’t add audio stream to output file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 오류 - 출력 파일 “%1”에 오디오 스트림을 추가할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="744"/>
         <source>FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 오류 - 출력 파일 “%1”을 열어서 쓰기를 할 수 없습니다. 오류 코드는 %2입니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="779"/>
         <source>FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 오류 - 출력 파일 “%1”에 헤더를 쓸 수 없습니다. 오류 코드는 %2입니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
@@ -14664,17 +14773,19 @@ Support for this codec is probably not compiled in.</source>
 
 %3</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>오디오 코덱 “%1” (0x%2)을(를) 열 수 없습니다.
+
+%3</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1112"/>
         <source>FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 오류 - 오디오 FIFO에서 데이터를 읽어들일 버퍼를 할당할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1141"/>
         <source>FFmpeg : ERROR - Couldn’t write audio frame to output file.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 오류 - 오디오 프레임을 출력 파일에 기록할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1172"/>
@@ -14710,7 +14821,8 @@ Support for this codec is probably not compiled in.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1409"/>
         <source>Properly configured FFmpeg is required to proceed.
 You can configure it at Preferences &gt; General.</source>
-        <translation type="unfinished"/>
+        <translation>계속 진행하려면 FFmpeg가 올바르게 설정되어 있어야 합니다.
+‘환경 설정’ &gt; ‘일반’에서 설정할 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1417"/>
@@ -14858,7 +14970,7 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="303"/>
         <source>FLAC export couldn’t open %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FLAC 내보내기 과정에서 %1을(를) 열 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="313"/>
@@ -15057,7 +15169,8 @@ Status: %1</source>
         <source>You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.
 Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>%1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version</extracomment>
-        <translation type="unfinished"/>
+        <translation>lame_enc.dll v%1.%2를 참조하고 있습니다. 이 버전은 Audacity %3.%4.%5와 호환되지 않습니다.
+‘LAME for Audacity’의 최신 버전을 다운로드해 주십시오.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
@@ -15184,7 +15297,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="128"/>
@@ -15533,7 +15646,8 @@ Audacity가 지원하지 않습니다. 내보내기 중단되었습니다.</tran
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
         <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 f파일을 쓰던 중 오류가 발생했습니다 (디스크가 꽉 찼나요?).
+Libsndfile에서 “%2”라고 표시됩니다.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="57"/>
@@ -15610,7 +15724,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>WavPack 파일 디코딩 중 %1개의 오류가 발생했습니다!</numerusform></translation>
     </message>
 </context>
 <context>
@@ -15788,7 +15902,7 @@ Libsndfile says “%2”</source>
         <translation>%1 열기</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
         <source>Sorry, we are unable to load these videos right now</source>
         <translation>죄송합니다. 현재 비디오를 불러올 수 없습니다.</translation>
     </message>
@@ -15799,19 +15913,19 @@ Libsndfile says “%2”</source>
         <translation>학습</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
         <source>Learn tab bar</source>
         <translation>학습 탭 막대</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
         <source>Get started</source>
         <translation>시작하기</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
         <source>Classes</source>
         <translation>강의</translation>
     </message>
@@ -15821,22 +15935,22 @@ Libsndfile says “%2”</source>
         <translation>수신된 재생 목록이 비어 있습니다.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
         <source>Marc Sabatella</source>
         <translation>Marc Sabatella</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
         <source>Instructor</source>
         <translation>강사</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
         <source>Creator, Mastering MuseScore</source>
         <translation>Mastering MuseScore 제작자</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -15853,7 +15967,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
 (참고: Mastering MuseScore 강좌는 영어로만 제공됩니다.)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Mastering MuseScore</source>
         <translation>Mastering MuseScore</translation>
     </message>
@@ -16197,14 +16311,18 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
 
 Error: %2</source>
         <extracomment>%1 is the module name, %2 is the system error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 모듈을 불러올 수 없습니다.
+
+오류: %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="125"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 모듈은 버전 문자열을 제공하지 않습니다.
+
+이 모듈은 로드되지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
@@ -16212,19 +16330,23 @@ It will not be loaded.</source>
 
 It will not be loaded.</source>
         <extracomment>%1 is the module name, %2 is the Audacity version string the module targets</extracomment>
-        <translation type="unfinished"/>
+        <translation>모듈 “%1”은 Audacity 버전 “%2”와 일치합니다.
+
+이 모듈은 로드되지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="159"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 모듈의 초기화에 실패했습니다.
+
+이 모듈은 로드되지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
         <source>Module “%1” found.</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 모듈이 발견됨.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
@@ -16260,7 +16382,9 @@ Only use modules from trusted sources</source>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>“%1” 모듈은 필요한 함수를 하나도 제공하지 않습니다.
+
+이 모듈은 로드되지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
@@ -16290,7 +16414,8 @@ It will not be loaded.</source>
 </source>
         <comment>plug-ins</comment>
         <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation type="vanished"><numerusform>이 플러그인을 활성화?
+</numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -16350,12 +16475,14 @@ It will not be loaded.</source>
 <context>
     <name>multiwindows</name>
     <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation type="unfinished"/>
+        <translation>다중 인스턴스</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation type="unfinished"/>
+        <translation>다중 창 정보 표시</translation>
     </message>
 </context>
 <context>
@@ -16363,32 +16490,32 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="33"/>
         <source>Escape</source>
-        <translation type="unfinished"/>
+        <translation>나가기</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="34"/>
         <source>Navigate escape</source>
-        <translation type="unfinished"/>
+        <translation>네비게이트 나가기</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
         <source>Next section</source>
-        <translation type="unfinished"/>
+        <translation>다음 섹션</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
         <source>Navigate next section</source>
-        <translation type="unfinished"/>
+        <translation>다음 섹션으로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
         <source>Previous section</source>
-        <translation type="unfinished"/>
+        <translation>이전 섹션</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
         <source>Navigate previous section</source>
-        <translation type="unfinished"/>
+        <translation>이전 섹션으로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
@@ -16398,7 +16525,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
         <source>Navigate next panel</source>
-        <translation type="unfinished"/>
+        <translation>다음 패널로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
@@ -16408,47 +16535,47 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
         <source>Navigate previous panel</source>
-        <translation type="unfinished"/>
+        <translation>이전 패널로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
         <source>Next tab</source>
-        <translation type="unfinished"/>
+        <translation>다음 탭</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
         <source>Navigate next tab</source>
-        <translation type="unfinished"/>
+        <translation>다음 탭으로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
         <source>Previous tab</source>
-        <translation type="unfinished"/>
+        <translation>이전 탭</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
         <source>Navigate previous tab</source>
-        <translation type="unfinished"/>
+        <translation>이전 탭으로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation>오른쪽</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
         <source>Navigate right</source>
-        <translation type="unfinished"/>
+        <translation>오른쪽으로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation>왼쪽</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
         <source>Navigate left</source>
-        <translation type="unfinished"/>
+        <translation>왼쪽으로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
@@ -16458,7 +16585,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
         <source>Navigate up</source>
-        <translation type="unfinished"/>
+        <translation>위쪽으로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
@@ -16468,57 +16595,57 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
         <source>Navigate down</source>
-        <translation type="unfinished"/>
+        <translation>아래로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
         <source>First control</source>
-        <translation type="unfinished"/>
+        <translation>첫 번째 컨트롤</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
         <source>Navigate first control</source>
-        <translation type="unfinished"/>
+        <translation>첫 번째 컨트롤로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
         <source>Last control</source>
-        <translation type="unfinished"/>
+        <translation>마지막 컨트롤</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
         <source>Navigate last control</source>
-        <translation type="unfinished"/>
+        <translation>이전 컨트롤로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
         <source>Next row control</source>
-        <translation type="unfinished"/>
+        <translation>다음 행 컨트롤</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
         <source>Navigate next row control</source>
-        <translation type="unfinished"/>
+        <translation>다음 행 컨트롤로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
         <source>Previous row control</source>
-        <translation type="unfinished"/>
+        <translation>이전 행 컨트롤</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
         <source>Navigate previous row control</source>
-        <translation type="unfinished"/>
+        <translation>이전 행 컨트롤로 이동</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
         <source>Trigger control</source>
-        <translation type="unfinished"/>
+        <translation>크리거 컨트롤</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
         <source>Navigate trigger control</source>
-        <translation type="unfinished"/>
+        <translation>크리거 컨트롤로 이동</translation>
     </message>
 </context>
 <context>
@@ -17019,13 +17146,13 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="39"/>
         <source>Moved volume slider</source>
-        <translation>음량 슬라이더를 움직임</translation>
+        <translation>볼륨 슬라이더를 움직임</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="40"/>
         <source>Volume</source>
-        <translation>음량</translation>
+        <translation>볼륨</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="66"/>
@@ -17042,7 +17169,7 @@ It will not be loaded.</source>
         <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
         <source>Playback volume</source>
-        <translation type="unfinished"/>
+        <translation>재생 볼륨</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/panels/PlaybackMeterPanel.qml" line="27"/>
@@ -17054,103 +17181,103 @@ It will not be loaded.</source>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="61"/>
         <source>Playback meter settings</source>
         <extracomment>Tooltip of the playback meter settings button</extracomment>
-        <translation type="unfinished"/>
+        <translation>재생 미터 설정</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="43"/>
         <source>Audio settings are already being changed.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정이 이미 변경되고 있습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="45"/>
         <source>The selected audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>선택한 오디오 설정이 유효하지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="47"/>
         <source>The selected audio routing is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>선택된 오디오 라우팅이 유효하지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="49"/>
         <source>No usable audio API is available.</source>
-        <translation type="unfinished"/>
+        <translation>사용 가능한 오디오 API가 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="51"/>
         <source>No ASIO device is available.</source>
-        <translation type="unfinished"/>
+        <translation>사용 가능한 ASIO 장치가 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="53"/>
         <source>The active audio stream could not be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>실행 중인 오디오 스트림을 중지할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="55"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 변경하는 동안 내부 오류가 발생했습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
         <source>No playback device is available.</source>
-        <translation type="unfinished"/>
+        <translation>재생할 수 있는 기기가 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
         <source>“%1” is now used for playback.</source>
-        <translation type="unfinished"/>
+        <translation>이제 “%1”이 재생에 사용됩니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
         <source>Playback device changed</source>
-        <translation type="unfinished"/>
+        <translation>재생 장치가 변경되었습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
         <source>No recording device is available.</source>
-        <translation type="unfinished"/>
+        <translation>녹음 장치가 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
         <source>“%1” is now used for recording.</source>
-        <translation type="unfinished"/>
+        <translation>이제 “%1”이 레코딩에 사용됩니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="151"/>
         <source>Recording device changed</source>
-        <translation type="unfinished"/>
+        <translation>레코딩 장치가 변경되었습니다</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
         <source>The previous audio state could not be restored.</source>
-        <translation type="unfinished"/>
+        <translation>이전 오디오 상태를 복원할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
         <source>Unable to rescan audio devices</source>
-        <translation type="unfinished"/>
+        <translation>오디오 장치를 다시 스캔할 수 없습니다</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 장치를 다시 스캔한 후에도 오디오 스트림을 복원할 수 없었습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
         <source>Audio devices</source>
-        <translation type="unfinished"/>
+        <translation>오디오 장치</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
         <source>Unable to change audio settings</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 변경할 수 없음</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 변경한 후 오디오 스트림을 복원할 수 없었습니다.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
@@ -17215,7 +17342,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="88"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="76"/>
         <source>Depending on workspace</source>
-        <translation>작업공간에 따라</translation>
+        <translation>워크스페이스에 따라</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="114"/>
@@ -17386,7 +17513,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="58"/>
         <source>Number format %1</source>
-        <translation type="unfinished"/>
+        <translation>숫자 형식 %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="70"/>
@@ -17559,7 +17686,7 @@ It will not be loaded.</source>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="139"/>
         <source>Please select a path that contains “%1”</source>
         <extracomment>%1 is the FFmpeg avformat library file name (e.g. libavformat.dylib)</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”이 포함된 경로를 선택해 주세요.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
@@ -17576,7 +17703,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="154"/>
         <source>Installation found</source>
-        <translation type="unfinished"/>
+        <translation>설치 항목이 발견되었습니다.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="155"/>
@@ -17596,7 +17723,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="166"/>
         <source>FFmpeg has already been found</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg은 이미 발견되었습니다</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
@@ -17619,70 +17746,70 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="38"/>
         <source>Audio settings are already being changed.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정이 이미 변경되고 있습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="57"/>
         <source>The selected audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>선택한 오디오 설정이 유효하지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="59"/>
         <source>The selected audio routing is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>선택된 오디오 라우팅이 유효하지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="61"/>
         <source>No usable audio API is available.</source>
-        <translation type="unfinished"/>
+        <translation>사용 가능한 오디오 API가 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="63"/>
         <source>No ASIO device is available.</source>
-        <translation type="unfinished"/>
+        <translation>사용 가능한 ASIO 장치가 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="42"/>
         <source>The active audio stream could not be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>실행 중인 오디오 스트림을 중지할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="67"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 변경하는 동안 내부 오류가 발생했습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="93"/>
         <source>System default: %1</source>
-        <translation type="unfinished"/>
+        <translation>시스템 기본값: %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="161"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 변경한 후 오디오 스트림을 복원할 수 없었습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="252"/>
         <source>The previous audio state could not be restored.</source>
-        <translation type="unfinished"/>
+        <translation>이전 오디오 상태를 복원할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="174"/>
         <source>Unable to apply audio settings</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 적용할 수 없음</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="265"/>
         <source>The audio stream could not be restored after closing the ASIO settings.</source>
-        <translation type="unfinished"/>
+        <translation>ASIO 설정을 닫은 후 오디오 스트림을 복원할 수 없었습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="275"/>
         <source>Unable to open ASIO settings</source>
-        <translation type="unfinished"/>
+        <translation>ASIO 설정을 열 수 없습니다</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
@@ -17694,7 +17821,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
         <source>Your version of “%1” is up to date.</source>
         <extracomment>%1 is the name of the language whose translation files are up to date</extracomment>
-        <translation type="unfinished"/>
+        <translation>사용자님의 “%1” 버전은 최신 버전입니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="91"/>
@@ -17734,12 +17861,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
         <source>The default audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>기본 오디오 설정이 유효하지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="47"/>
         <source>An internal error occurred while resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 재설정하는 과정에서 내부 오류가 발생했습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="204"/>
@@ -17787,12 +17914,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
         <source>Unable to reset audio settings</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 재설정할 수 없음</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정을 재설정한 후 오디오 스트림을 복원할 수 없었습니다.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
@@ -17832,7 +17959,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation type="unfinished"/>
+        <translation>플러그인 위치 선택</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
@@ -17842,12 +17969,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="80"/>
         <source>Remove location</source>
-        <translation type="unfinished"/>
+        <translation>위치 삭제</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="100"/>
         <source>The directory does not exist</source>
-        <translation type="unfinished"/>
+        <translation>디렉터리가 없습니다</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="111"/>
@@ -17857,32 +17984,32 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>사용자 정의 LV2 플러그인 위치</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="53"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>사용자 지정 LV2 플러그인 위치 선택</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="87"/>
         <source>Custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>사용자 정의 VST3 플러그인 위치</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="88"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>사용자 지정 VST3 플러그인 위치 선택</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
         <source>Use device sample rate</source>
-        <translation type="unfinished"/>
+        <translation>장치 샘플링 속도 사용</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
         <source>Driver settings</source>
-        <translation type="unfinished"/>
+        <translation>드라이버 설정</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
@@ -17892,7 +18019,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>‘어떻게 내보내시겠습니까?’ 대화 상자 표시</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -17907,12 +18034,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>항상 클라우드에 저장하세요</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>항상 컴퓨터에 저장하기</translation>
     </message>
 </context>
 <context>
@@ -18002,7 +18129,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="366"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="217"/>
         <source>Project item menu</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트 항목 메뉴</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="471"/>
@@ -18307,12 +18434,12 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
         <source>Cloud sync failed</source>
-        <translation type="unfinished"/>
+        <translation>클라우드 동기화에 실패함</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
         <source>Project unavailable</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트를 사용할 수 없습니다</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
@@ -18342,7 +18469,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
         <source>Project incomplete</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트 불완전</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
@@ -18417,7 +18544,7 @@ audio.com의 업데이트된 프로젝트 페이지에서 이 파일을 관리�
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
         <source>Unsaved changes</source>
-        <translation type="unfinished"/>
+        <translation>저장하지 않은 변경사항</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
@@ -18520,7 +18647,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
         <source>Cloud project indicator</source>
-        <translation type="unfinished"/>
+        <translation>클라우드 프로젝트 지표</translation>
     </message>
 </context>
 <context>
@@ -18642,7 +18769,7 @@ Directories Preferences.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="487"/>
         <source>Failed to open the project’s database</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트 데이터베이스를 여는데 실패함</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="547"/>
@@ -18701,7 +18828,9 @@ You will need to upgrade to open it.</source>
         <source>Failed to upgrade the project schema.
 
 File might be corrupted or read only.</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트 스키마를 업그레이드하지 못했습니다.
+
+파일이 손상되었거나 읽기 전용일 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="845"/>
@@ -18712,7 +18841,7 @@ File might be corrupted or read only.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="899"/>
         <source>Unable to add ‘inset’ function (can’t verify blockids)</source>
         <extracomment>An error message. Don't translate inset or blockids.</extracomment>
-        <translation type="unfinished"/>
+        <translation>‘inset’ 함수를 추가할 수 없음 (블록 ID를 확인할 수 없음)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="917"/>
@@ -18829,7 +18958,7 @@ The following command failed:
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1185"/>
         <source>Failed to copy the project history.</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트 내역을 복사하지 못했습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
@@ -18864,7 +18993,7 @@ For tips on freeing up space, click the help button.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1685"/>
         <source>[Project %1] Audacity “%2”</source>
         <extracomment>%1 is the project number, %2 is the project name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>[프로젝트 %1] Audacity “%2”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1687"/>
@@ -18888,7 +19017,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1802"/>
         <source>Can’t open project file</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트 파일을 열 수 없습니다</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1918"/>
@@ -18906,7 +19035,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2155"/>
         <source>The project file is read-only</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트 파일은 읽기 전용입니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
@@ -18916,7 +19045,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2291"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="unfinished"/>
+        <translation>저장 장치의 용량 부족으로 인해 프로젝트 데이터베이스를 다시 열 수 없었습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2307"/>
@@ -19029,7 +19158,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation type="unfinished"/>
+        <translation>audio.com과 동기화</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
@@ -19117,7 +19246,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
         <source>Legacy project</source>
-        <translation type="unfinished"/>
+        <translation>레거시 프로젝트</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
@@ -19132,7 +19261,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
         <source>Project saved</source>
-        <translation type="unfinished"/>
+        <translation>프로젝트 저장됨</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
@@ -19459,7 +19588,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="164"/>
         <source>Playback position:</source>
-        <translation type="unfinished"/>
+        <translation>재생 위치:</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
@@ -19475,7 +19604,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap to</source>
-        <translation type="unfinished"/>
+        <translation>다음에 스냅</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
@@ -19485,12 +19614,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="21"/>
         <source>Workspace selection</source>
-        <translation type="unfinished"/>
+        <translation>워크스페이스 선택</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="60"/>
         <source>Workspace</source>
-        <translation>작업공간</translation>
+        <translation>워크스페이스</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="15"/>
@@ -19676,7 +19805,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="80"/>
         <source>Track volume</source>
-        <translation type="unfinished"/>
+        <translation>트랙 볼륨</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="17"/>
@@ -19854,27 +19983,27 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
         <source>Audio setup and sharing</source>
-        <translation type="unfinished"/>
+        <translation>오디오 설정 및 공유</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
         <source>Undo and redo</source>
-        <translation type="unfinished"/>
+        <translation>실행 취소 및 다시 실행</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="159"/>
         <source>Clip: %1</source>
-        <translation type="unfinished"/>
+        <translation>클립: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
         <source>Clip name: %1</source>
-        <translation type="unfinished"/>
+        <translation>클립 이름: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
         <source>Clip menu</source>
-        <translation type="unfinished"/>
+        <translation>클립 메뉴</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="103"/>
@@ -19884,7 +20013,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml" line="30"/>
         <source>Track name: %1</source>
-        <translation type="unfinished"/>
+        <translation>트랙 이름: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="253"/>
@@ -19896,7 +20025,7 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="303"/>
         <source>Bypass %1</source>
         <extracomment>Tooltip of the effect power button; %1 is an effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 건너뛰기</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="323"/>
@@ -19908,28 +20037,28 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="365"/>
         <source>Replace %1</source>
         <extracomment>Tooltip of the button that replaces the effect; %1 is an effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1을 대체</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackItem.qml" line="212"/>
         <source>Track menu</source>
-        <translation type="unfinished"/>
+        <translation>트랙 메뉴</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track, selected</source>
-        <translation type="unfinished"/>
+        <translation>트랙 %1: %2, 오디오 트랙, 선택됨</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track</source>
-        <translation type="unfinished"/>
+        <translation>트랙 %1: %2, 오디오 트랙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
         <source>Press Enter to select or deselect</source>
-        <translation type="unfinished"/>
+        <translation>Enter 키를 눌러 선택하거나 선택을 해제하세요</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
@@ -19959,12 +20088,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="198"/>
         <source>Violet</source>
-        <translation type="unfinished"/>
+        <translation>바이올렛</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="199"/>
         <source>Magenta</source>
-        <translation type="unfinished"/>
+        <translation>마젠타</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="200"/>
@@ -19974,12 +20103,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="201"/>
         <source>Orange</source>
-        <translation type="unfinished"/>
+        <translation>오렌지</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="202"/>
         <source>Yellow</source>
-        <translation type="unfinished"/>
+        <translation>노랑</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="203"/>
@@ -19989,12 +20118,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="204"/>
         <source>Turquoise</source>
-        <translation type="unfinished"/>
+        <translation>청록색</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="205"/>
         <source>Cyan</source>
-        <translation type="unfinished"/>
+        <translation>시안</translation>
     </message>
 </context>
 <context>
@@ -20035,7 +20164,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="156"/>
         <source>Recording level</source>
-        <translation type="unfinished"/>
+        <translation>녹음 레벨</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="185"/>
@@ -20093,7 +20222,7 @@ Error code: %1</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="39"/>
         <source>Cannot resume recording</source>
-        <translation type="unfinished"/>
+        <translation>녹화를 재개할 수 없습니다</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="41"/>
@@ -20111,7 +20240,8 @@ Error code: %1</source>
         <location filename="../../src/record/recorderrors.h" line="48"/>
         <source>No recording device available.
 Please connect an input device and rescan.</source>
-        <translation type="unfinished"/>
+        <translation>사용 가능한 녹음 장치가 없습니다.
+입력 장치를 연결한 후 다시 스캔해 주십시오.</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="52"/>
@@ -20233,7 +20363,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="68"/>
         <source>Split at silences</source>
-        <translation type="unfinished"/>
+        <translation>무음 영역에서 분할</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="71"/>
@@ -20330,17 +20460,17 @@ Please connect an input device and rescan.</source>
         <translation>단축키 재지정</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="38"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>MuseScore Studio 단축키 파일</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="193"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
         <source>Import shortcuts</source>
         <translation>단축키 가져오기</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="205"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
         <source>Export shortcuts</source>
         <translation>단축키 내보내기</translation>
     </message>
@@ -21019,12 +21149,14 @@ Please connect an input device and rescan.</source>
 <context>
     <name>testflow</name>
     <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
         <source>Show scripts</source>
-        <translation type="vanished">스크립트 표시</translation>
+        <translation>스크립트 표시</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
         <source>Show scripts…</source>
-        <translation type="unfinished"/>
+        <translation>스크립트 표시…</translation>
     </message>
 </context>
 <context>
@@ -21045,6 +21177,27 @@ Please connect an input device and rescan.</source>
     </message>
 </context>
 <context>
+    <name>toast</name>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
+        <source>%n hour(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>%n 시간 남음</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
+        <source>%n minute(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>%n 분 남음</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
+        <source>%n second(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>%n 초 남음</numerusform></translation>
+    </message>
+</context>
+<context>
     <name>track</name>
     <message>
         <location filename="../../au3/libraries/au3-track/Track.cpp" line="879"/>
@@ -21059,26 +21212,26 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="85"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="108"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>트랙 이동</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="86"/>
         <source>Track visualization</source>
-        <translation type="unfinished"/>
+        <translation>트랙 시각화</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="62"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="87"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="109"/>
         <source>Track color</source>
-        <translation type="unfinished"/>
+        <translation>트랙 색상</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Meters &amp;&amp; monitoring</source>
-        <translation type="unfinished"/>
+        <translation>미터 &amp;&amp; 모니터링</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
@@ -21095,19 +21248,19 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
         <source>Format: %1</source>
-        <translation type="unfinished"/>
+        <translation>형식: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
         <source>Rate: %1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>주파수: %1 Hz</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
         <source>%1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 Hz</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="52"/>
@@ -21125,7 +21278,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
         <source>32-bit Float</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation type="unfinished"/>
+        <translation>32비트 부동소수점</translation>
     </message>
 </context>
 <context>
@@ -21199,7 +21352,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="21"/>
         <source>Playback position</source>
-        <translation type="unfinished"/>
+        <translation>재생 위치</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
@@ -21237,13 +21390,13 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2250"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
         <source>Resample track</source>
-        <translation type="unfinished"/>
+        <translation>트랙 재샘플링</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
         <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>선택한 오디오 트랙을 %1초에서 %2초까지 잘라내세요</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
@@ -21254,7 +21407,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
         <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1초부터 %2초까지 선택한 트랙의 소리를 음소거함</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
@@ -21265,7 +21418,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
         <source>Silenced selected clips</source>
-        <translation type="unfinished"/>
+        <translation>선택한 클립의 소리 제거</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
@@ -21322,7 +21475,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="160"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="161"/>
         <source>Reset Clip Pitch and Speed</source>
-        <translation type="unfinished"/>
+        <translation>클립 간격 및 속도 재설정</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
@@ -21361,12 +21514,12 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
         <source>Remove multiple items</source>
-        <translation type="unfinished"/>
+        <translation>여러 항목 제거하기</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
         <source>Remove multiple clips</source>
-        <translation type="unfinished"/>
+        <translation>여러 클립 제거하기</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
@@ -21392,24 +21545,24 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
         <source>Items moved</source>
-        <translation type="unfinished"/>
+        <translation>아이템 이동함</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
         <source>Clip moved</source>
-        <translation type="unfinished"/>
+        <translation>클립 이동됨</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
         <source>Move clip</source>
-        <translation type="unfinished"/>
+        <translation>클립 이동</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
         <source>Move items</source>
-        <translation type="unfinished"/>
+        <translation>항목 이동</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
@@ -21421,13 +21574,13 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
         <source>Split clips at silence</source>
-        <translation type="unfinished"/>
+        <translation>무음 부분에서 클립 분할</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
         <source>Split at silence</source>
-        <translation type="unfinished"/>
+        <translation>무음 부분에서 클립 분할</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
@@ -21445,17 +21598,17 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <source>Split cut</source>
-        <translation type="unfinished"/>
+        <translation>스플릿 컷</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
         <source>Trim items left</source>
-        <translation type="unfinished"/>
+        <translation>왼쪽 항목 트림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
         <source>Trim clip left</source>
-        <translation type="unfinished"/>
+        <translation>클립 왼쪽 트림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
@@ -21467,54 +21620,54 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
         <source>Trim items right</source>
-        <translation type="unfinished"/>
+        <translation>오른쪽 항목 트림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
         <source>Trim clip right</source>
-        <translation type="unfinished"/>
+        <translation>클립 오른쪽 트림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
         <source>Changed speed to: %1%</source>
-        <translation type="unfinished"/>
+        <translation>속도를 %1%으로 변경함</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
         <source>Stretch Left</source>
-        <translation type="unfinished"/>
+        <translation>왼쪽으로 늘리기</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
         <source>Stretch items left</source>
-        <translation type="unfinished"/>
+        <translation>항목을 왼쪽으로 늘림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
         <source>Stretch clips left</source>
-        <translation type="unfinished"/>
+        <translation>클립을 왼쪽으로 늘림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
         <source>Stretch Right</source>
-        <translation type="unfinished"/>
+        <translation>오른쪽으로 늘림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
         <source>Stretch items right</source>
-        <translation type="unfinished"/>
+        <translation>항목을 오른쪽으로 늘리기</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
         <source>Stretch clips right</source>
-        <translation type="unfinished"/>
+        <translation>클립을 오른쪽으로 늘리기</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
         <source>Created new mono track</source>
-        <translation type="unfinished"/>
+        <translation>새로운 모노 트랙을 생성함</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
@@ -21524,7 +21677,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Created new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>새로운 스테레오 트랙을 생성함</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
@@ -21555,7 +21708,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>트랙 이동</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
@@ -21565,40 +21718,40 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
         <source>Clips grouped</source>
-        <translation type="unfinished"/>
+        <translation>클립 그룹화</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
         <source>Clips ungrouped</source>
-        <translation type="unfinished"/>
+        <translation>클립 그룹 해제됨</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
         <source>Changed track format</source>
-        <translation type="unfinished"/>
+        <translation>트랙 형식 변경</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
         <source>Changed track rate</source>
-        <translation type="unfinished"/>
+        <translation>트랙 속도 변경</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
         <source>Swapped stereo channels</source>
-        <translation type="unfinished"/>
+        <translation>스테레오 채널이 바뀜</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
         <source>Split stereo tracks to L/R mono</source>
-        <translation type="unfinished"/>
+        <translation>스테레오 트랙을 L/R 모노로 분할</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
         <source>Split stereo tracks to center mono</source>
-        <translation type="unfinished"/>
+        <translation>스테레오 트랙을 센터 모노로 분할</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
@@ -21635,22 +21788,22 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
         <source>Label low frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>라벨의 저주파수 변경됨</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
         <source>Change label low frequency</source>
-        <translation type="unfinished"/>
+        <translation>저주파 라벨 변경</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
         <source>Label high frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>라벨의 고주파 변경됨</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
         <source>Change label high frequency</source>
-        <translation type="unfinished"/>
+        <translation>라벨의 고주파 변경</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
@@ -21689,17 +21842,17 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
         <source>Label stretched</source>
-        <translation type="unfinished"/>
+        <translation>라벨이 늘림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
         <source>Stretch label left</source>
-        <translation type="unfinished"/>
+        <translation>왼쪽으로 라벨 늘림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
         <source>Stretch labels left</source>
-        <translation type="unfinished"/>
+        <translation>왼쪽으로 라벨 늘림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
@@ -21710,18 +21863,18 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
         <source>Stretch label right</source>
-        <translation type="unfinished"/>
+        <translation>오른쪽으로 라벨 늘림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
         <source>Stretch labels right</source>
-        <translation type="unfinished"/>
+        <translation>오늘쪽으로 라벨 늘림</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>%2에서 %1초 동안 참여함</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
@@ -21743,18 +21896,18 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split-deleted clips</source>
-        <translation type="unfinished"/>
+        <translation>분할 및 삭제된 클립</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split delete</source>
-        <translation type="unfinished"/>
+        <translation>분할 삭제</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>%2에서 %1초 삭제</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
@@ -21774,12 +21927,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
         <source>Upper time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>상단 박자표 변경됨</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
         <source>Lower time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>하단 박자표 변경됨</translation>
     </message>
 </context>
 <context>
@@ -21929,7 +22082,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="30"/>
         <source>Database error.  Sorry, but we don’t have more details.</source>
-        <translation type="unfinished"/>
+        <translation>데이터베이스 오류가 발생했습니다. 죄송하지만, 자세한 내용은 확인되지 않습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="31"/>
@@ -21990,7 +22143,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -21999,7 +22152,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -22074,17 +22227,18 @@ Do you wish to continue?</source>
         <translation>값</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation type="vanished">기타</translation>
+        <translation>기타</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="160"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
         <translation>값 목록 헤더 패널</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="254"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
         <translation>값 목록 패널</translation>
@@ -22139,12 +22293,14 @@ Do you wish to continue?</source>
         <translation>양방향</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation type="vanished">펼침</translation>
+        <translation>펼침</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation type="vanished">접음</translation>
+        <translation>접음</translation>
     </message>
 </context>
 <context>
@@ -22400,7 +22556,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
         <source>A new version of %1 is available!</source>
-        <translation type="unfinished"/>
+        <translation>%1의 새 버전이 출시되었습니다!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
@@ -22430,7 +22586,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
-        <translation type="unfinished"/>
+        <translation>이미 %1의 최신 버전을 사용 중입니다. 향후 업데이트 소식은 &lt;a href=&quot;%2&quot;&gt;%3에서&lt;/a&gt; 확인해 주세요.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
@@ -22449,13 +22605,15 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
-        <translation type="unfinished"/>
+        <translation>업데이트 확인</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
-        <translation type="unfinished"/>
+        <translation>설치를 완료하려면 %1을(를) 닫아야 합니다. 저장하지 않은 변경 사항이 있는 경우, %1 c이(가) 닫히기 전에 해당 변경 사항을 저장하라는 메시지가 표시됩니다.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
@@ -22465,32 +22623,40 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
         <source>Updating %1</source>
-        <translation type="unfinished"/>
+        <translation>%1 업데이트 중</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
         <source>Downloading %1 %2</source>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
-        <translation type="unfinished"/>
+        <translation>다운로드 중 %1 %2</translation>
     </message>
 </context>
 <context>
     <name>vst</name>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
         <source>Use old view</source>
-        <translation type="vanished">이전 보기 사용</translation>
+        <translation>이전 보기 사용</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
         <source>Use new view</source>
-        <translation type="vanished">새 보기 사용</translation>
+        <translation>새 보기 사용</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation type="vanished">FX 편집기 열기</translation>
+        <translation>FX 편집기 열기</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation type="unfinished"/>
+        <translation>악기 편집기 열기</translation>
     </message>
 </context>
 <context>
@@ -22509,7 +22675,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
         <source>Searching VST3 in: %1</source>
-        <translation type="unfinished"/>
+        <translation>%1에서 VST3 검색 중</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
@@ -22529,7 +22695,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
         <source>Looking in: %1</source>
-        <translation type="unfinished"/>
+        <translation>내부 살펴보기: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
@@ -22688,7 +22854,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
 <context>
     <name>workspace</name>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="79"/>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
         <source>Remove</source>
         <translation>제거</translation>
@@ -22696,17 +22862,17 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
         <source>Workspaces</source>
-        <translation>작업공간</translation>
+        <translation>워크스페이스</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
         <source>Save layout as new workspace</source>
-        <translation>레이아웃을 새 작업공간으로 저장</translation>
+        <translation>레이아웃을 새 워크스페이스으로 저장</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
         <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
-        <translation>작업공간 기능을 통해 %1 인터페이스의 다양한 구성을 선택할 수 있습니다. 사용자만의 고유한 설정을 새 작업공간으로 저장할 수도 있습니다.</translation>
+        <translation>워크스페이스 기능을 통해 %1 인터페이스의 다양한 구성을 선택할 수 있습니다. 사용자만의 고유한 설정을 새 워크스페이스으로 저장할 수도 있습니다.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
@@ -22716,17 +22882,18 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
         <source>New workspace</source>
-        <translation type="unfinished"/>
+        <translation>새 워크스페이스</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
         <source>Workspace name:</source>
-        <translation>작업공간 이름:</translation>
+        <translation>워크스페이스 이름:</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces</source>
-        <translation>작업공간 편집</translation>
+        <translation>워크스페이스 편집</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
@@ -22736,28 +22903,28 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="75"/>
         <source>A workspace with the name “%1” already exists. Please choose a different name.</source>
-        <translation>“%1”이라는 이름의 작업공간이 이미 존재합니다. 다른 이름을 사용해 주세요.</translation>
+        <translation>“%1”이라는 이름의 워크스페이스이 이미 존재합니다. 다른 이름을 사용해 주세요.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="82"/>
         <source>“%1” cannot be used as a workspace name. Please choose a different name.</source>
-        <translation>“%1”은 작업공간 이름으로 사용할 수 없습니다. 다른 이름을 사용해 주세요.</translation>
+        <translation>“%1”은 워크스페이스 이름으로 사용할 수 없습니다. 다른 이름을 사용해 주세요.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
         <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
-        <translation>이 작업은 작업공간을 기본 레이아웃으로 재설정하며 실행 취소할 수 없습니다. 계속하시겠습니까?</translation>
+        <translation>이 작업은 워크스페이스을 기본 레이아웃으로 재설정하며 실행 취소할 수 없습니다. 계속하시겠습니까?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
         <source>Resetting workspaces</source>
-        <translation>작업공간 재설정 중</translation>
+        <translation>워크스페이스 재설정 중</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="232"/>
         <source>Reset workspace</source>
-        <translation>작업공간 재설정</translation>
+        <translation>워크스페이스 재설정</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="263"/>
@@ -22788,20 +22955,25 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>음악</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
         <source>Select workspace</source>
-        <translation type="vanished">작업공간 선택</translation>
+        <translation>워크스페이스 선택</translation>
     </message>
     <message>
         <source>Edit workspaces…</source>
         <translation type="vanished">작업공간 편집…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation type="unfinished"/>
+        <translation>워크스페이스 편집...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
         <source>Create new workspace</source>
-        <translation type="vanished">새 작업공간 만들기</translation>
+        <translation>새 워크스페이스 만들기</translation>
     </message>
 </context>
 <context>
@@ -22809,7 +22981,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
         <source>Could not open file: “%1”</source>
-        <translation type="unfinished"/>
+        <translation>파일 “%1”을(를) 열 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
@@ -22822,7 +22994,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
         <source>Could not load file: “%1”</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 파일을 로딩할 수 없습니다.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="150"/>

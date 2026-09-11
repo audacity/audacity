@@ -252,12 +252,14 @@ void WaveTrackItem::setPan(int pan, bool completed)
 
 void WaveTrackItem::setSolo(bool solo)
 {
-    trackPlaybackControl()->setSolo(trackId(), solo);
+    const bool exclusive = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
+    trackPlaybackControl()->setSolo(trackId(), solo, exclusive);
 }
 
 void WaveTrackItem::setMuted(bool mute)
 {
-    trackPlaybackControl()->setMuted(trackId(), mute);
+    const bool exclusive = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
+    trackPlaybackControl()->setMuted(trackId(), mute, exclusive);
 }
 
 void WaveTrackItem::setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue)

@@ -137,7 +137,7 @@ public:
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
     muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) override;
-    bool addLabelToSelection() override;
+    muse::RetVal<LabelKey> addLabelToSelection() override;
 
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
     bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) override;

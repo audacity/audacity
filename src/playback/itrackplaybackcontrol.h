@@ -5,7 +5,8 @@
 #pragma once
 
 #include "audio/audiotypes.h"
-#include "async/channel.h"
+#include "trackedit/trackedittypes.h"
+#include "framework/global/async/channel.h"
 #include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::playback {
@@ -22,10 +23,11 @@ public:
     virtual void setPan(long trackId, au::audio::pan_t pan, bool completed) = 0;
     virtual au::audio::pan_t pan(long trackId) const = 0;
 
-    virtual void setSolo(long trackId, bool solo) = 0;
+    virtual void setSolo(long trackId, bool solo, bool exclusive = false) = 0;
     virtual bool solo(long trackId) const = 0;
 
-    virtual void setMuted(long trackId, bool mute) = 0;
+    virtual void setMuted(long trackId, bool mute, bool exclusive = false) = 0;
+    virtual void setMuted(const trackedit::TrackIdList& trackIds, bool mute) = 0;
     virtual bool muted(long trackId) const = 0;
 
     virtual muse::async::Channel<long> muteOrSoloChanged() const = 0;

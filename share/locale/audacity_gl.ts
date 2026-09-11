@@ -1598,7 +1598,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="282"/>
         <source>Split stereo to L/R mono</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>División estéreo a mono L/R</translation>
+        <translation>División estéreo a mono E/D</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="290"/>
@@ -3356,7 +3356,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
         <source>Split stereo to L/R mono</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>División estéreo a mono L/R</translation>
+        <translation>División estéreo a mono E/D</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="292"/>
@@ -3824,17 +3824,17 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <translation>Validación do complemento de son</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="296"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="325"/>
         <source>The previous session quit unexpectedly.</source>
         <translation>A sesión anterior rematou inesperadamente.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="297"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="326"/>
         <source>Do you want to restore the session?</source>
         <translation>Queres restaurar a sesión?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="300"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="329"/>
         <source>Restore session</source>
         <translation>Restaurar sesión</translation>
     </message>
@@ -4372,12 +4372,12 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <translation>Pechar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
         <source>Dock</source>
         <translation>Doca</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
         <source>Undock</source>
         <translation>Soltar</translation>
     </message>
@@ -4493,63 +4493,62 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <translation>Conectar coa túa conta de audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
         <source>Continue with Google</source>
         <translation>Continúa con Google</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="31"/>
         <source>Continue with Facebook</source>
-        <translation>Continúa con Facebook</translation>
+        <translation type="vanished">Continúa con Facebook</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="32"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
         <source>Or use email and password</source>
         <translation>Ou usa o correo electrónico e o contrasinal</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="36"/>
         <source>Email</source>
         <translation>Correo electrónico</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="39"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="37"/>
         <source>Password</source>
         <translation>Contrasinal</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
         <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;%1&quot;&gt;Esqueciches o teu contrasinal?&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
         <source>Don’t have an account?</source>
         <translation>Non tes unha conta?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="41"/>
         <source>Create new account</source>
         <translation>Crear unha nova conta</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="44"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
         <source>Already have an account?</source>
         <translation>Xa tes unha conta?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="45"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="49"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="47"/>
         <source>Sign in</source>
         <translation>Acceder</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="46"/>
         <source>Loading…</source>
         <translation>Cargando...</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="50"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
         <source>Create account</source>
         <translation>Crear conta</translation>
     </message>
@@ -4559,33 +4558,33 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <translation>Opcións de acceso social</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="199"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="164"/>
         <source>Email field</source>
         <translation>Campo de correo electrónico</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="259"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="224"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="231"/>
         <source>Forgot password</source>
         <translation>Esquecín o contrasinal</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="301"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
         <source>Password field</source>
         <translation>Campo de contrasinal</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="346"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="311"/>
         <source>Form action</source>
         <translation>Acción do formulario</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Sign in link</source>
         <translation>Ligazón de acceso</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Create account link</source>
         <translation>Crear ligazón de conta</translation>
     </message>
@@ -4697,17 +4696,17 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <translation>Opcións dispoñíbeis</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="121"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="122"/>
         <source>Getting started</source>
         <translation>Primeiros pasos</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Accept &amp; continue</source>
         <translation>Aceptar e continuar</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="145"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="146"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
         <translation>%1 de %2</translation>
@@ -5419,22 +5418,22 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <translation>Completa a túa configuración na nube de Audacity con Audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="75"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="77"/>
         <source>Help us decide the future of Audacity</source>
         <translation>Axúdanos a decidir o futuro de Audacity</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="78"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="80"/>
         <source>Take part in survey</source>
         <translation>Participa na enquisa</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="84"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="86"/>
         <source>Soap Voice Cleaner: studio-quality voice-over sound</source>
         <translation>Soap Voice Cleaner: son de voz en off con calidade de estudo</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="87"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="89"/>
         <source>Get it on MuseHub</source>
         <translation>Conseguilo en MuseHub</translation>
     </message>
@@ -5444,12 +5443,12 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <translation>Continuar</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="66"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="67"/>
         <source>Explore free plugins for sculpting your audio</source>
         <translation>Explora complementos gratuítos para modelar o teu son</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="70"/>
         <source>View free plugins</source>
         <translation>Ver complementos gratuítos</translation>
     </message>
@@ -5465,6 +5464,11 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="66"/>
         <source>Decrease BPM</source>
         <translation>Diminuír os BPM</translation>
+    </message>
+    <message>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
+        <source>Time Signature: %1/%2</source>
+        <translation>Sinatura de tempo: %1/%2</translation>
     </message>
 </context>
 <context>
@@ -5693,7 +5697,7 @@ Esta acción non eliminará ningún dos teus proxectos.</translation>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="948"/>
         <source>Cannot check mutual sample rates without both devices.
 </source>
-        <translation>Non se poden comprobar as taxas de mostraxe mutuas sen ambos dispositivos.
+        <translation>Non é posíbel comprobar as taxas de mostraxe mutuas sen ambos dispositivos.
 </translation>
     </message>
     <message>
@@ -5956,7 +5960,7 @@ Código de erro: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
         <source>The plugin “%1” has crashed while processing audio</source>
-        <translation>O plugin &quot;%1&quot; quebrou ao procesar o son</translation>
+        <translation>O complemento &quot;%1&quot; quebrou ao procesar o son</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
@@ -6896,12 +6900,12 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
-        <translation type="unfinished"/>
+        <translation>Vista previa de son na nube actualizada</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Subiuse a vista previa do son a audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
@@ -6916,12 +6920,12 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
         <source>Updating cloud audio preview…</source>
-        <translation type="unfinished"/>
+        <translation>Actualizando a vista previa de son na nube…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
         <source>Could not determine the local path of the downloaded project</source>
-        <translation type="unfinished"/>
+        <translation>Non se puido determinar a ruta local do proxecto descargado</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
@@ -7024,7 +7028,7 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="616"/>
         <source>Cannot proceed to upload.</source>
-        <translation>Non se pode continuar coa carga.</translation>
+        <translation>Non é posíbel continuar coa carga.</translation>
     </message>
 </context>
 <context>
@@ -7048,85 +7052,109 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
         <translation>Isto creará un ficheiro .zip con información sobre a configuración de MuseScore Studio para axudar aos desenvolvedores a diagnosticar calquera problema que esteas a ter. Podes inspeccionar o contido deste ficheiro antes de enviárllo a alguén.</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>Gardar ficheiros de diagnóstico</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
         <source>Show paths…</source>
-        <translation type="vanished">Amosar rutas...</translation>
+        <translation>Amosar rutas...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
         <source>Show paths</source>
-        <translation type="vanished">Amosar rutas</translation>
+        <translation>Amosar rutas</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
-        <translation type="vanished">Amosar perfilador...</translation>
+        <translation>Amosar perfilador...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation type="vanished">Amosar perfilador</translation>
+        <translation>Amosar perfilador</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
-        <translation type="vanished">Amosar información gráfica...</translation>
+        <translation>Amosar información gráfica...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation type="vanished">Amosar información gráfica</translation>
+        <translation>Amosar información gráfica</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
         <source>Show navigation tree…</source>
-        <translation type="vanished">Amosar árbore de navegación...</translation>
+        <translation>Amosar árbore de navegación...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
         <source>Show navigation tree</source>
-        <translation type="vanished">Amosar árbore de navegación</translation>
+        <translation>Amosar árbore de navegación</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
         <source>Show accessibility tree…</source>
-        <translation type="vanished">Amosar árbore de accesibilidade...</translation>
+        <translation>Amosar árbore de accesibilidade...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
         <source>Show accessibility tree</source>
-        <translation type="vanished">Amosar árbore de accesibilidade</translation>
+        <translation>Amosar árbore de accesibilidade</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
         <source>Dump accessibility tree to console</source>
-        <translation type="vanished">Volcar a árbore de accesibilidade na consola</translation>
+        <translation>Volcar a árbore de accesibilidade na consola</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation type="vanished">Amosar elementos de gravado</translation>
+        <translation>Amosar elementos de gravado</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation type="vanished">Amosar a pila de desfacer gravados</translation>
+        <translation>Amosar a pila de desfacer gravados</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation type="vanished">Amosar a lista de opcións de estilo de gravado</translation>
+        <translation>Amosar a lista de opcións de estilo de gravado</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
         <source>Show actions list</source>
-        <translation type="vanished">Amosar a lista de accións</translation>
+        <translation>Amosar a lista de accións</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show rcommands list</source>
-        <translation type="vanished">Amosar a lista de rcommands</translation>
+        <translation>Amosar a lista de rcommands</translation>
     </message>
     <message>
         <source>Test query action</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Acción de consulta de proba</translation>
     </message>
     <message>
         <source>Test query action with params 1</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Acción de consulta de proba cos parámetros 1</translation>
     </message>
     <message>
         <source>Test query action with params 2</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Acción de consulta de proba cos parámetros 2</translation>
     </message>
 </context>
 <context>
@@ -7365,13 +7393,13 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="180"/>
         <source>Reset preset</source>
         <extracomment>Tooltip of a button in the effect presets bar</extracomment>
-        <translation type="unfinished"/>
+        <translation>Restablecer predefinido</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="218"/>
         <source>Preset options</source>
         <extracomment>Tooltip of a button in the effect presets bar</extracomment>
-        <translation type="unfinished"/>
+        <translation>Opcións predefinidas</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="462"/>
@@ -7600,7 +7628,7 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
         <source>Effect preview</source>
-        <translation type="unfinished"/>
+        <translation>Vista previa do efecto</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
@@ -7647,25 +7675,25 @@ Tenta restablecer calquera clip estirado ou mesturar e renderizar as pistas ante
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Substituíuse %1 por %2</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Substituir %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Movido %1 cara arriba en %2</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Movido %1 cara abaixo en %2</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
@@ -8573,7 +8601,11 @@ For SAL, use a return statement such as:
 or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation type="unfinished"/>
+        <translation>O teu código parécese á sintaxe de SAL, pero non hai ningunha sentenza &quot;return&quot;.
+Para SAL, usa unha sentenza return como:
+	return *track* * 0.1
+ou para LISP, comeza cunha paréntese aberta como:
+	(mult *track* 0.1)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
@@ -9623,17 +9655,17 @@ Canle dereito</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="207"/>
         <source>Success~%Files written to:~%~s~%</source>
-        <translation type="unfinished"/>
+        <translation>Éxito~%Ficheiros escritos en:~%~s~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="208"/>
         <source>Warning~%Failed to copy some files:~%</source>
-        <translation type="unfinished"/>
+        <translation>Aviso~%Produciuse un erro ao copiar algúns ficheiros:~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
         <source>Error~%No file selected.</source>
-        <translation type="unfinished"/>
+        <translation>Erro~%Non se seleccionou ningún ficheiro.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
@@ -9653,7 +9685,7 @@ Canle dereito</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
         <source>Not found or cannot be read:</source>
-        <translation>Non se atopou ou non se pode ler:</translation>
+        <translation>Non se atopou ou non foi posíbel ler:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
@@ -9668,7 +9700,7 @@ Canle dereito</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
         <source>Cannot be written to plug-ins folder:</source>
-        <translation>Non se pode escribir no cartafol de complementos:</translation>
+        <translation>Non é posíbel escribir no cartafol de complementos:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
@@ -9885,7 +9917,7 @@ Canle dereito</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
         <source>Measure RMS</source>
-        <translation type="unfinished"/>
+        <translation>Medir RMS</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
@@ -10240,7 +10272,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
         <source>Error.~%“~a” cannot be written.</source>
-        <translation>Erro. ​​Non se pode escribir ~%“~a”.</translation>
+        <translation>Erro. ​​Non é posíbel escribir ~%“~a”.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
@@ -11078,27 +11110,28 @@ Selecciona unha zona para reparar con algo de son polo menos nun dos lados (cant
         <location filename="../../src/effects/lv2/qml/Audacity/Lv2/Lv2Viewer.qml" line="97"/>
         <source>No available UI:
 %1</source>
-        <translation type="unfinished"/>
+        <translation>Non hai UI dispoñíbel:
+%1</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
         <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
-        <translation type="unfinished"/>
+        <translation>O complemento non proporciona unha UI (informe se AU3 proporciona unha UI para este complemento)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
         <source>X11 UI refusing to be externalized</source>
-        <translation type="unfinished"/>
+        <translation>A IU de X11 rexeita ser externalizada</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
         <source>Unknown reason (please report)</source>
-        <translation type="unfinished"/>
+        <translation>Motivo descoñecido (infórmao)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="256"/>
         <source>Idle UI creation failed</source>
-        <translation type="unfinished"/>
+        <translation>Fallou a creación da UI inactiva</translation>
     </message>
 </context>
 <context>
@@ -11622,7 +11655,7 @@ Por favor, informa ao equipo de Audacity en https://forum.audacityteam.org/.</tr
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="65"/>
         <source>Channel count %1</source>
-        <translation type="unfinished"/>
+        <translation>Número de canles %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
@@ -11759,7 +11792,7 @@ Por favor, informa ao equipo de Audacity en https://forum.audacityteam.org/.</tr
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="137"/>
         <source>Min. PdO %1</source>
-        <translation type="unfinished"/>
+        <translation>Mín. OdP (PdO) %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="150"/>
@@ -11769,7 +11802,7 @@ Por favor, informa ao equipo de Audacity en https://forum.audacityteam.org/.</tr
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="169"/>
         <source>Min. PtO %1</source>
-        <translation type="unfinished"/>
+        <translation>Mín. PtO %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="193"/>
@@ -11779,7 +11812,7 @@ Por favor, informa ao equipo de Audacity en https://forum.audacityteam.org/.</tr
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="212"/>
         <source>Frame %1</source>
-        <translation type="unfinished"/>
+        <translation>Fotograma %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="222"/>
@@ -11789,7 +11822,7 @@ Por favor, informa ao equipo de Audacity en https://forum.audacityteam.org/.</tr
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="238"/>
         <source>PdO method %1</source>
-        <translation type="unfinished"/>
+        <translation>Método de orde de predición (PdO) %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="248"/>
@@ -11799,7 +11832,7 @@ Por favor, informa ao equipo de Audacity en https://forum.audacityteam.org/.</tr
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="267"/>
         <source>Max. PdO %1</source>
-        <translation type="unfinished"/>
+        <translation>Máx. OdP (PdO)</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="277"/>
@@ -11809,7 +11842,7 @@ Por favor, informa ao equipo de Audacity en https://forum.audacityteam.org/.</tr
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="296"/>
         <source>Max. PtO %1</source>
-        <translation type="unfinished"/>
+        <translation>Max. PtO %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="62"/>
@@ -12045,7 +12078,7 @@ Algúns códecs só poden aceptar valores específicos (128k, 192k, 256k, etc.).
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro ao exportar a “%1”: produciuse un erro ao crear o cartafol de destino. Comprobe que a ruta sexa válida e que teña permiso para escribir nela.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
@@ -12086,34 +12119,33 @@ Os efectos mestres volverán activarse despois da exportación.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
-        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
         <source>Disabled</source>
         <translation>Desactivado</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="187"/>
         <source>Version:</source>
         <translation>Versión:</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
         <source>Shortcut:</source>
         <extracomment>Keyboard shortcut</extracomment>
         <translation>Atallo:</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="54"/>
         <source>Edit shortcut</source>
         <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
         <translation>Editar atallo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="99"/>
         <source>Enable</source>
         <translation>Activar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="99"/>
         <source>Disable</source>
         <translation>Desactivar</translation>
     </message>
@@ -12125,7 +12157,7 @@ Os efectos mestres volverán activarse despois da exportación.</translation>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
         <source>Could not load plugin</source>
-        <translation>Non foi posíbel cargar o engadido</translation>
+        <translation>Non foi posíbel cargar o complemento</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
@@ -12133,9 +12165,8 @@ Os efectos mestres volverán activarse despois da exportación.</translation>
         <translation>O complemento non ten o formato correcto</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
         <source>Manually</source>
-        <translation>Manualmente</translation>
+        <translation type="vanished">Manualmente</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
@@ -12180,58 +12211,63 @@ Os efectos mestres volverán activarse despois da exportación.</translation>
         <translation>Código de erro: %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="74"/>
         <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
         <translation>O complemento “%1” está desactivado actualmente. Queres activalo agora?</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="75"/>
         <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
-        <translation>Como alternativa, podes activalo en calquera momento en Inicio &gt; Engadidos</translation>
+        <translation>Como alternativa, podes activalo en calquera momento en Inicio &gt; Complementos</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="101"/>
         <source>Composing/arranging tools</source>
         <translation>Ferramentas de composición/arranxo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="102"/>
         <source>Color notes</source>
         <translation>Notas de cor</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="103"/>
         <source>Playback</source>
         <translation>Reprodución</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="47"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="104"/>
         <source>Lyrics</source>
         <translation>Letra</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
         <source>Run plugin %1</source>
         <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation>Executar plugin %1</translation>
+        <translation type="vanished">Executar complemento %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
         <source>Run plugin %1: %2</source>
         <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation>Executar o complemento %1: %2</translation>
+        <translation type="vanished">Executar o complemento %1: %2</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="118"/>
         <source>Not specified</source>
         <extracomment>No version is specified for this plugin.</extracomment>
         <translation>Non especificado</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="124"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="133"/>
         <source>Not defined</source>
         <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
         <translation>Sen definir</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="35"/>
+        <source>Show API dump</source>
+        <translation>Amosar volcado da API</translation>
     </message>
 </context>
 <context>
@@ -12434,7 +12470,7 @@ Para obter consellos sobre as unidades axeitadas, fai clic no botón de axuda.</
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
         <source>OK</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Aceptar</translation>
@@ -12478,7 +12514,7 @@ Para obter consellos sobre as unidades axeitadas, fai clic no botón de axuda.</
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Cancelar</translation>
@@ -12489,7 +12525,7 @@ Para obter consellos sobre as unidades axeitadas, fai clic no botón de axuda.</
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
         <source>Apply</source>
         <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>Aplicar</translation>
@@ -12506,7 +12542,7 @@ Para obter consellos sobre as unidades axeitadas, fai clic no botón de axuda.</
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Close</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Pechar</translation>
@@ -12592,19 +12628,19 @@ Para obter consellos sobre as unidades axeitadas, fai clic no botón de axuda.</
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Comproba a túa conexión a internet ou téntao de novo máis tarde.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="125"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="127"/>
         <source>Back</source>
         <translation>Atrás</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="136"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Next</source>
         <translation>Seguinte</translation>
     </message>
@@ -12619,7 +12655,7 @@ Para obter consellos sobre as unidades axeitadas, fai clic no botón de axuda.</
         <translation>Éxito!</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="137"/>
         <source>Skip</source>
         <translation>Saltar</translation>
     </message>
@@ -12653,13 +12689,13 @@ Para obter consellos sobre as unidades axeitadas, fai clic no botón de axuda.</
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
         <source>Save</source>
         <translation>Gardar</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Aberto</translation>
@@ -12852,67 +12888,67 @@ Para obter consellos sobre as unidades axeitadas, fai clic no botón de axuda.</
         <translation><numerusform>%Ln byte(s)</numerusform><numerusform>%Ln byte(s)</numerusform></translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
         <source>Save all</source>
         <translation>Gardar todo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Don’t save</source>
         <translation>Non gardar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
         <source>Yes</source>
         <translation>Si</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
         <source>Yes to all</source>
         <translation>Si a todo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
         <source>No to all</source>
         <translation>Non a todo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
         <source>Abort</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
         <source>Retry</source>
         <translation>Tentar de novo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Ignore</source>
         <translation>Ignorar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
         <source>Discard</source>
         <translation>Desbotar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Help</source>
         <translation>Axuda</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
         <source>Reset</source>
         <translation>Restaurar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
         <source>Continue</source>
         <translation>Continuar</translation>
     </message>
@@ -15871,7 +15907,7 @@ Libsndfile di “%2”</translation>
         <translation>Abrir %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
         <source>Sorry, we are unable to load these videos right now</source>
         <translation>Sentímolo, non podemos cargar estes vídeos neste momento.</translation>
     </message>
@@ -15882,19 +15918,19 @@ Libsndfile di “%2”</translation>
         <translation>Aprender</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
         <source>Learn tab bar</source>
         <translation>Aprender a barra de lapelas</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
         <source>Get started</source>
         <translation>Comezar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
         <source>Classes</source>
         <translation>Clases</translation>
     </message>
@@ -15904,22 +15940,22 @@ Libsndfile di “%2”</translation>
         <translation>A lista de reprodución recibida está baleira.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
         <source>Marc Sabatella</source>
         <translation>Marc Sabatella</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
         <source>Instructor</source>
         <translation>Instrutor</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
         <source>Creator, Mastering MuseScore</source>
         <translation>Creador, Mastering MuseScore</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -15936,7 +15972,7 @@ Ademais, Mastering MuseScore conta cunha comunidade de músicos que apoia o teu 
 (Nota: Mastering MuseScore só está dispoñíbel en inglés)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Mastering MuseScore</source>
         <translation>Dominando MuseScore</translation>
     </message>
@@ -16445,12 +16481,14 @@ Non se cargará.</translation>
 <context>
     <name>multiwindows</name>
     <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation type="unfinished"/>
+        <translation>Multiinstancias</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation type="vanished">Amosar información de varias ventás</translation>
+        <translation>Amosar información de varias ventás</translation>
     </message>
 </context>
 <context>
@@ -16458,32 +16496,32 @@ Non se cargará.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="33"/>
         <source>Escape</source>
-        <translation type="unfinished"/>
+        <translation>Escape</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="34"/>
         <source>Navigate escape</source>
-        <translation type="unfinished"/>
+        <translation>Navegar polo escape</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
         <source>Next section</source>
-        <translation type="unfinished"/>
+        <translation>Seguinte sección</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
         <source>Navigate next section</source>
-        <translation type="unfinished"/>
+        <translation>Navegar pola seguinte sección</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
         <source>Previous section</source>
-        <translation type="unfinished"/>
+        <translation>Sección anterior</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
         <source>Navigate previous section</source>
-        <translation type="unfinished"/>
+        <translation>Navegar pola anterior sección</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
@@ -16493,7 +16531,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
         <source>Navigate next panel</source>
-        <translation type="unfinished"/>
+        <translation>Navegar polo seguinte panel</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
@@ -16503,27 +16541,27 @@ Non se cargará.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
         <source>Navigate previous panel</source>
-        <translation type="unfinished"/>
+        <translation>Navegar polo panel anterior</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
         <source>Next tab</source>
-        <translation type="unfinished"/>
+        <translation>Lapela seguinte</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
         <source>Navigate next tab</source>
-        <translation type="unfinished"/>
+        <translation>Navegar pola seguinte lapela</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
         <source>Previous tab</source>
-        <translation type="unfinished"/>
+        <translation>Lapela anterior</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
         <source>Navigate previous tab</source>
-        <translation type="unfinished"/>
+        <translation>Navegar pola anterior lapela</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
@@ -16533,7 +16571,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
         <source>Navigate right</source>
-        <translation type="unfinished"/>
+        <translation>Navegar á dereita</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
@@ -16543,7 +16581,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
         <source>Navigate left</source>
-        <translation type="unfinished"/>
+        <translation>Navegar á esquerda</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
@@ -16553,7 +16591,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
         <source>Navigate up</source>
-        <translation type="unfinished"/>
+        <translation>Navegar cara arriba</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
@@ -16563,57 +16601,57 @@ Non se cargará.</translation>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
         <source>Navigate down</source>
-        <translation type="unfinished"/>
+        <translation>Navegar cara abaixo</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
         <source>First control</source>
-        <translation type="unfinished"/>
+        <translation>Primeiro control</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
         <source>Navigate first control</source>
-        <translation type="unfinished"/>
+        <translation>Navegar primeiro control</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
         <source>Last control</source>
-        <translation type="unfinished"/>
+        <translation>Último control</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
         <source>Navigate last control</source>
-        <translation type="unfinished"/>
+        <translation>Navegar último control</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
         <source>Next row control</source>
-        <translation type="unfinished"/>
+        <translation>Control da seguinte fila</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
         <source>Navigate next row control</source>
-        <translation type="unfinished"/>
+        <translation>Control de navegación da seguinte fila</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
         <source>Previous row control</source>
-        <translation type="unfinished"/>
+        <translation>Control da fila anterior</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
         <source>Navigate previous row control</source>
-        <translation type="unfinished"/>
+        <translation>Control de navegación da fila anterior</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
         <source>Trigger control</source>
-        <translation type="unfinished"/>
+        <translation>Control do activador</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
         <source>Navigate trigger control</source>
-        <translation type="unfinished"/>
+        <translation>Navegar polo control do activador</translation>
     </message>
 </context>
 <context>
@@ -17149,57 +17187,57 @@ Non se cargará.</translation>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="61"/>
         <source>Playback meter settings</source>
         <extracomment>Tooltip of the playback meter settings button</extracomment>
-        <translation type="unfinished"/>
+        <translation>Axustes do medidor de reprodución</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="43"/>
         <source>Audio settings are already being changed.</source>
-        <translation type="unfinished"/>
+        <translation>A configuración de son xa se está a cambiar.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="45"/>
         <source>The selected audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>A configuración de son seleccionada non é válida.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="47"/>
         <source>The selected audio routing is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>O enrutamento de son seleccionado non é válido.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="49"/>
         <source>No usable audio API is available.</source>
-        <translation type="unfinished"/>
+        <translation>Non hai ningunha API de son utilizable dispoñíbel.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="51"/>
         <source>No ASIO device is available.</source>
-        <translation type="unfinished"/>
+        <translation>Non hai ningún dispositivo ASIO dispoñíbel.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="53"/>
         <source>The active audio stream could not be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>Non se puido deter a transmisión de son activa.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="55"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro interno ao cambiar a configuración de son.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
         <source>No playback device is available.</source>
-        <translation type="unfinished"/>
+        <translation>Non hai ningún dispositivo de reprodución dispoñíbel.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
         <source>“%1” is now used for playback.</source>
-        <translation type="unfinished"/>
+        <translation>Agora úsase «%1» para a reprodución.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
         <source>Playback device changed</source>
-        <translation type="unfinished"/>
+        <translation>Dispositivo de reprodución modificado</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
@@ -17220,32 +17258,32 @@ Non se cargará.</translation>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
         <source>The previous audio state could not be restored.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro ao restaurar o estado anterior do son.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
         <source>Unable to rescan audio devices</source>
-        <translation type="unfinished"/>
+        <translation>Non foi posíbel escanear de novo os dispositivos de son</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro ao restaurar a transmisión de son despois de volver escanear os dispositivos de son.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
         <source>Audio devices</source>
-        <translation type="unfinished"/>
+        <translation>Dispositivos de son</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
         <source>Unable to change audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Non foi posíbel cambiar a configuración de son</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro ao restaurar a transmisión de son despois de cambiar a configuración de son.</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
@@ -17431,7 +17469,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="44"/>
         <source>FFmpeg library path</source>
-        <translation type="unfinished"/>
+        <translation>Ruta da biblioteca FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
@@ -17481,7 +17519,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="58"/>
         <source>Number format %1</source>
-        <translation type="unfinished"/>
+        <translation>Formato de número %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="70"/>
@@ -17671,7 +17709,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="154"/>
         <source>Installation found</source>
-        <translation type="unfinished"/>
+        <translation>Instalación atopada</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="155"/>
@@ -17691,7 +17729,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="166"/>
         <source>FFmpeg has already been found</source>
-        <translation type="unfinished"/>
+        <translation>Xa se atopou FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
@@ -17714,38 +17752,38 @@ Non se cargará.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="38"/>
         <source>Audio settings are already being changed.</source>
-        <translation type="unfinished"/>
+        <translation>A configuración de son xa se está a cambiar.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="57"/>
         <source>The selected audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>A configuración de son seleccionada non é válida.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="59"/>
         <source>The selected audio routing is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>O enrutamento de son seleccionado non é válido.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="61"/>
         <source>No usable audio API is available.</source>
-        <translation type="unfinished"/>
+        <translation>Non hai ningunha API de son utilizable dispoñíbel.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="63"/>
         <source>No ASIO device is available.</source>
-        <translation type="unfinished"/>
+        <translation>Non hai ningún dispositivo ASIO dispoñíbel.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="42"/>
         <source>The active audio stream could not be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>Non se puido deter a transmisión de audio activa.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="67"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro interno ao cambiar a configuración de son.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="93"/>
@@ -17755,29 +17793,29 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="161"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Non se puido restaurar a transmisión de son despois de cambiar a configuración de son.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="252"/>
         <source>The previous audio state could not be restored.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro ao restaurar o estado anterior do son.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="174"/>
         <source>Unable to apply audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Non foi posíbel aplicar a configuración de son</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="265"/>
         <source>The audio stream could not be restored after closing the ASIO settings.</source>
-        <translation type="unfinished"/>
+        <translation>Non foi posíbel restaurar a transmisión de son despois de pechar a configuración de ASIO.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="275"/>
         <source>Unable to open ASIO settings</source>
-        <translation type="unfinished"/>
+        <translation>Non foi posíbel abrir a configuración de ASIO</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
@@ -17834,7 +17872,7 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="47"/>
         <source>An internal error occurred while resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro interno ao restablecer a configuración de son.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="204"/>
@@ -17882,12 +17920,12 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
         <source>Unable to reset audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Non é posíbel restablecer a configuración de son</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Non foi posíbel restaurar a transmisión de son despois de restablecer a configuración de son.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
@@ -17972,12 +18010,12 @@ Non se cargará.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
         <source>Use device sample rate</source>
-        <translation type="unfinished"/>
+        <translation>Usar a frecuencia de mostraxe do dispositivo</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
         <source>Driver settings</source>
-        <translation type="unfinished"/>
+        <translation>Configuración do controlador</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
@@ -18402,25 +18440,25 @@ Non se cargará.</translation>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
         <source>Cloud sync failed</source>
-        <translation type="unfinished"/>
+        <translation>Fallou a sincronización na nube</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
         <source>Project unavailable</source>
-        <translation type="unfinished"/>
+        <translation>Proxecto non dispoñíbel</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
         <source>Access denied</source>
-        <translation type="unfinished"/>
+        <translation>Acceso denegado</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
         <source>Version conflict</source>
-        <translation type="unfinished"/>
+        <translation>Conflito de versións</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
@@ -18437,12 +18475,12 @@ Non se cargará.</translation>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
         <source>Project incomplete</source>
-        <translation type="unfinished"/>
+        <translation>Proxecto incompleto</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
         <source>Network error</source>
-        <translation type="unfinished"/>
+        <translation>Erro de rede</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
@@ -18530,7 +18568,7 @@ Podes xestionar este ficheiro dende a páxina dos teus proxectos cargados en aud
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
-        <translation>Non se pode ler o ficheiro %1</translation>
+        <translation>Non é posíbel ler o ficheiro %1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
@@ -18582,7 +18620,7 @@ Non se puido cargar o proxecto: “%1”</translation>
 Cannot be found or accessed at this location. If it’s stored on an external or cloud drive, please verify that the drive is connected and syncing properly.</source>
         <translation>O ficheiro:
 “%1”
-Non se pode atopar nin acceder a el nesta localización. Estase almacenado nunha unidade externa ou na nube, comproba que a unidade estea conectada e sincronizada correctamente.</translation>
+Non é posíbel atopar nin acceder a el nesta localización. Estase almacenado nunha unidade externa ou na nube, comproba que a unidade estea conectada e sincronizada correctamente.</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="57"/>
@@ -18795,7 +18833,9 @@ You will need to upgrade to open it.</source>
         <source>Failed to upgrade the project schema.
 
 File might be corrupted or read only.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro ao actualizar o esquema do proxecto.
+
+O ficheiro pode estar danado ou ser de só lectura.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="845"/>
@@ -18921,7 +18961,7 @@ O seguinte comando fallou:
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1185"/>
         <source>Failed to copy the project history.</source>
-        <translation type="unfinished"/>
+        <translation>Produciuse un erro ao copiar o historial do proxecto.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
@@ -18962,7 +19002,7 @@ Para obter consellos sobre como liberar espazo, fai clic no botón de axuda.</tr
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1687"/>
         <source>&lt;untitled&gt;</source>
-        <translation>&lt;sen título&gt;</translation>
+        <translation>&lt;untitled&gt;</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1698"/>
@@ -18999,7 +19039,7 @@ Está a usar Audacity %2. Precisa actualizar a unha versión máis moderna para 
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2155"/>
         <source>The project file is read-only</source>
-        <translation type="unfinished"/>
+        <translation>O ficheiro do proxecto é de só lectura</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
@@ -19161,7 +19201,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>Exportar ao ordenador</translation>
     </message>
 </context>
 <context>
@@ -19190,7 +19230,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
         <source>Audacity 3 project</source>
-        <translation type="unfinished"/>
+        <translation>Proxecto de Audacity 3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
@@ -19210,7 +19250,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
         <source>Legacy project</source>
-        <translation type="unfinished"/>
+        <translation>Proxecto herdado</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
@@ -19552,7 +19592,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="164"/>
         <source>Playback position:</source>
-        <translation type="unfinished"/>
+        <translation>Posición de reprodución:</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
@@ -19568,7 +19608,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap to</source>
-        <translation type="unfinished"/>
+        <translation>Axustar a</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
@@ -19578,7 +19618,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="21"/>
         <source>Workspace selection</source>
-        <translation type="unfinished"/>
+        <translation>Selección do espazo de traballo</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="60"/>
@@ -19704,13 +19744,13 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
         <source>Toggle all master effects</source>
-        <translation type="unfinished"/>
+        <translation>Activar/desactivar todos os efectos mestres</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
         <source>Toggle all effects</source>
-        <translation type="unfinished"/>
+        <translation>Activar/desactivar todos os efectos</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
@@ -19736,7 +19776,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
         <source>Real-time effects panel</source>
-        <translation type="unfinished"/>
+        <translation>Panel de efectos en tempo real</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
@@ -19747,7 +19787,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
         <source>Close real-time effects panel</source>
         <extracomment>Tooltip of the button that closes the panel</extracomment>
-        <translation type="unfinished"/>
+        <translation>Pechar o panel de efectos en tempo real</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
@@ -19780,7 +19820,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="105"/>
         <source>Opens effects panel</source>
-        <translation type="unfinished"/>
+        <translation>Abre o panel de efectos</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="251"/>
@@ -19947,12 +19987,12 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
         <source>Audio setup and sharing</source>
-        <translation type="unfinished"/>
+        <translation>Configuración e compartición de son</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
         <source>Undo and redo</source>
-        <translation type="unfinished"/>
+        <translation>Desfacer e refacer</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="159"/>
@@ -19972,18 +20012,18 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="103"/>
         <source>Label: %1</source>
-        <translation type="unfinished"/>
+        <translation>Etiqueta: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml" line="30"/>
         <source>Track name: %1</source>
-        <translation type="unfinished"/>
+        <translation>Nome da pista: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="253"/>
         <source>Reorder effect</source>
         <extracomment>Tooltip of the drag handle used to reorder effects</extracomment>
-        <translation type="unfinished"/>
+        <translation>Reordenar efecto</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="303"/>
@@ -20001,38 +20041,38 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="365"/>
         <source>Replace %1</source>
         <extracomment>Tooltip of the button that replaces the effect; %1 is an effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Substituir %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackItem.qml" line="212"/>
         <source>Track menu</source>
-        <translation type="unfinished"/>
+        <translation>Menú de pistas</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track, selected</source>
-        <translation type="unfinished"/>
+        <translation>Pista %1: %2, pista de son, seleccionada</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track</source>
-        <translation type="unfinished"/>
+        <translation>Pista %1: %2, pista de son</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
         <source>Press Enter to select or deselect</source>
-        <translation type="unfinished"/>
+        <translation>Prema Intro para seleccionar ou deseleccionar</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track, selected</source>
-        <translation type="unfinished"/>
+        <translation>Pista %1: %2, etiqueta da pista, seleccionada</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track</source>
-        <translation type="unfinished"/>
+        <translation>Pista %1: %2, etiqueta da pista</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
@@ -20052,12 +20092,12 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="198"/>
         <source>Violet</source>
-        <translation type="unfinished"/>
+        <translation>Violeta</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="199"/>
         <source>Magenta</source>
-        <translation type="unfinished"/>
+        <translation>Maxenta</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="200"/>
@@ -20067,12 +20107,12 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="201"/>
         <source>Orange</source>
-        <translation type="unfinished"/>
+        <translation>Laranxa</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="202"/>
         <source>Yellow</source>
-        <translation type="unfinished"/>
+        <translation>Amarelo</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="203"/>
@@ -20082,12 +20122,12 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="204"/>
         <source>Turquoise</source>
-        <translation type="unfinished"/>
+        <translation>Turquesa</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="205"/>
         <source>Cyan</source>
-        <translation type="unfinished"/>
+        <translation>Cian</translation>
     </message>
 </context>
 <context>
@@ -20128,7 +20168,7 @@ Necesitas executar esa versión de Audacity para recuperar o proxecto.</translat
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="156"/>
         <source>Recording level</source>
-        <translation type="unfinished"/>
+        <translation>Nivel de gravación</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="185"/>
@@ -20181,12 +20221,12 @@ Código de erro: %1</translation>
     <message>
         <location filename="../../src/record/recorderrors.h" line="38"/>
         <source>Cannot stop recording</source>
-        <translation>Non se pode deter a gravación</translation>
+        <translation>Non foi posíbel deter a gravación</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="39"/>
         <source>Cannot resume recording</source>
-        <translation type="unfinished"/>
+        <translation>Non foi posíbel retomar a gravación</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="41"/>
@@ -20204,7 +20244,8 @@ Código de erro: %1</translation>
         <location filename="../../src/record/recorderrors.h" line="48"/>
         <source>No recording device available.
 Please connect an input device and rescan.</source>
-        <translation type="unfinished"/>
+        <translation>Non hai ningún dispositivo de gravación dispoñíbel.
+Conecta un dispositivo de entrada e volve escanear.</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="52"/>
@@ -20423,17 +20464,17 @@ Please connect an input device and rescan.</source>
         <translation>Reasignar atallo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="38"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>Ficheiro de atallos de MuseScore Studio</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="193"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
         <source>Import shortcuts</source>
         <translation>Importar atallos</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="205"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
         <source>Export shortcuts</source>
         <translation>Exportar atallos</translation>
     </message>
@@ -21112,12 +21153,14 @@ Please connect an input device and rescan.</source>
 <context>
     <name>testflow</name>
     <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
         <source>Show scripts</source>
-        <translation type="vanished">Amosar scripts</translation>
+        <translation>Amosar scripts</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
         <source>Show scripts…</source>
-        <translation type="vanished">Amosar sripts...</translation>
+        <translation>Amosar sripts...</translation>
     </message>
 </context>
 <context>
@@ -21138,6 +21181,27 @@ Please connect an input device and rescan.</source>
     </message>
 </context>
 <context>
+    <name>toast</name>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
+        <source>%n hour(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>%n hora(s) restante</numerusform><numerusform>%n hora(s) restante</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
+        <source>%n minute(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>%n minuto(s) restante</numerusform><numerusform>%n minuto(s) restante</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
+        <source>%n second(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>%n segundo(s) restante</numerusform><numerusform>%n segundo(s) restante</numerusform></translation>
+    </message>
+</context>
+<context>
     <name>track</name>
     <message>
         <location filename="../../au3/libraries/au3-track/Track.cpp" line="879"/>
@@ -21152,26 +21216,26 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="85"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="108"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>Desprazar pista</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="86"/>
         <source>Track visualization</source>
-        <translation type="unfinished"/>
+        <translation>Visualización de pistas</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="62"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="87"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="109"/>
         <source>Track color</source>
-        <translation type="unfinished"/>
+        <translation>Cor da pista</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Meters &amp;&amp; monitoring</source>
-        <translation type="unfinished"/>
+        <translation>Medidores e monitorización</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
@@ -21188,13 +21252,13 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
         <source>Format: %1</source>
-        <translation type="unfinished"/>
+        <translation>Formato: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
         <source>Rate: %1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Frecuencia: %1 Hz</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
@@ -21218,7 +21282,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
         <source>32-bit Float</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation type="unfinished"/>
+        <translation>32 bits flotante</translation>
     </message>
 </context>
 <context>
@@ -21292,7 +21356,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="21"/>
         <source>Playback position</source>
-        <translation type="unfinished"/>
+        <translation>Posición de reprodución</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
@@ -21330,13 +21394,13 @@ Desexas continuar?</translation>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2250"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
         <source>Resample track</source>
-        <translation type="unfinished"/>
+        <translation>Nova mostraxe da pista</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
         <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>Recortar as pistas de son seleccionadas de %1 segundos a %2 segundos</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
@@ -21347,7 +21411,7 @@ Desexas continuar?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
         <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>Pistas seleccionadas silenciadas de %1 segundos a %2 segundos</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
@@ -21368,7 +21432,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
         <source>Changed Track Title</source>
-        <translation type="unfinished"/>
+        <translation>Título da pista modificado</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
@@ -21409,7 +21473,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
         <source>Changed track color</source>
-        <translation type="unfinished"/>
+        <translation>Cor da pista modificada</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="160"/>
@@ -21485,7 +21549,7 @@ Desexas continuar?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
         <source>Items moved</source>
-        <translation type="unfinished"/>
+        <translation>Elementos movidos</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
@@ -21502,7 +21566,7 @@ Desexas continuar?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
         <source>Move items</source>
-        <translation type="unfinished"/>
+        <translation>Mover elementos</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
@@ -21520,7 +21584,7 @@ Desexas continuar?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
         <source>Split at silence</source>
-        <translation type="unfinished"/>
+        <translation>Dividir nos silencios</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
@@ -21538,12 +21602,12 @@ Desexas continuar?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <source>Split cut</source>
-        <translation type="unfinished"/>
+        <translation>Dividir e cortar</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
         <source>Trim items left</source>
-        <translation type="unfinished"/>
+        <translation>Recortar o elemento á esquerda</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
@@ -21560,7 +21624,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
         <source>Trim items right</source>
-        <translation type="unfinished"/>
+        <translation>Recortar o elemento á dereita</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
@@ -21570,18 +21634,18 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
         <source>Changed speed to: %1%</source>
-        <translation type="unfinished"/>
+        <translation>Velocidade cambiada a: %1%</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
         <source>Stretch Left</source>
-        <translation type="unfinished"/>
+        <translation>Estirar á esquerda</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
         <source>Stretch items left</source>
-        <translation type="unfinished"/>
+        <translation>Estirar os elementos á esquerda</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
@@ -21591,13 +21655,13 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
         <source>Stretch Right</source>
-        <translation type="unfinished"/>
+        <translation>Estirar á dereita</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
         <source>Stretch items right</source>
-        <translation type="unfinished"/>
+        <translation>Estirar os elementos á dereita</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
@@ -21607,7 +21671,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
         <source>Created new mono track</source>
-        <translation type="unfinished"/>
+        <translation>Creouse unha nova pista mono</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
@@ -21617,7 +21681,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Created new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Creouse unha nova pista estéreo</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
@@ -21627,7 +21691,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
         <source>Created label track</source>
-        <translation type="unfinished"/>
+        <translation>Creouse unha etiqueta de pista</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
@@ -21648,7 +21712,7 @@ Desexas continuar?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>Desprazar pista</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
@@ -21668,30 +21732,30 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
         <source>Changed track format</source>
-        <translation type="unfinished"/>
+        <translation>Formato da pista modificado</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
         <source>Changed track rate</source>
-        <translation type="unfinished"/>
+        <translation>Velocidade da pista modificada</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
         <source>Swapped stereo channels</source>
-        <translation type="unfinished"/>
+        <translation>Canles estéreo intercambiadas</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
         <source>Split stereo tracks to L/R mono</source>
-        <translation type="unfinished"/>
+        <translation>Dividir pistas estéreo a mono E/D</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
         <source>Split stereo tracks to center mono</source>
-        <translation type="unfinished"/>
+        <translation>Dividir pistas estéreo a mono central</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
@@ -21718,37 +21782,37 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Label title changed</source>
-        <translation type="unfinished"/>
+        <translation>O título da etiqueta cambiou</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Changed label title</source>
-        <translation type="unfinished"/>
+        <translation>Cambiouse o título da etiqueta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
         <source>Label low frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Etiqueta de baixa frecuencia modificada</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
         <source>Change label low frequency</source>
-        <translation type="unfinished"/>
+        <translation>Cambiar etiqueta de baixa frecuencia</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
         <source>Label high frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Etiqueta de alta frecuencia modificada</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
         <source>Change label high frequency</source>
-        <translation type="unfinished"/>
+        <translation>Cambiar etiqueta de alta frecuencia</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
         <source>Cut label</source>
-        <translation type="unfinished"/>
+        <translation>Cortar etiqueta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
@@ -21776,23 +21840,23 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
         <source>Labels moved</source>
-        <translation type="unfinished"/>
+        <translation>Etiquetas movidas</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
         <source>Label stretched</source>
-        <translation type="unfinished"/>
+        <translation>Etiqueta estirada</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
         <source>Stretch label left</source>
-        <translation type="unfinished"/>
+        <translation>Estirar a etiqueta á esquerda</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
         <source>Stretch labels left</source>
-        <translation type="unfinished"/>
+        <translation>Estirar as etiquetas á esquerda</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
@@ -21803,18 +21867,18 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
         <source>Stretch label right</source>
-        <translation type="unfinished"/>
+        <translation>Estirar a etiqueta á dereita</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
         <source>Stretch labels right</source>
-        <translation type="unfinished"/>
+        <translation>Estirar as etiquetas á dereita</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>Uniuse %1 segundos ás %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
@@ -21841,13 +21905,13 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split delete</source>
-        <translation type="unfinished"/>
+        <translation>Dividir e eliminar</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eliminar %1 segundos ás %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
@@ -21862,17 +21926,17 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
         <source>Tempo changed</source>
-        <translation type="unfinished"/>
+        <translation>Tempo cambiado</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
         <source>Upper time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Compás superior modificado</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
         <source>Lower time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Compás inferior modificado</translation>
     </message>
 </context>
 <context>
@@ -22083,7 +22147,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -22092,7 +22156,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -22167,17 +22231,18 @@ Desexas continuar?</translation>
         <translation>Valor</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation type="vanished">Outro</translation>
+        <translation>Outro</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="160"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
         <translation>Cabeceira da lista de valores</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="254"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
         <translation>Panel de lista de valores</translation>
@@ -22232,12 +22297,14 @@ Desexas continuar?</translation>
         <translation>dirección é ambas</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation type="unfinished"/>
+        <translation>expandido</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation type="unfinished"/>
+        <translation>colapsado</translation>
     </message>
 </context>
 <context>
@@ -22542,8 +22609,10 @@ Desexas continuar?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
-        <translation type="unfinished"/>
+        <translation>Comprobar se hai actualizacións</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
@@ -22558,7 +22627,7 @@ Desexas continuar?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
         <source>Updating %1</source>
-        <translation type="unfinished"/>
+        <translation>Actualizando %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
@@ -22570,20 +22639,28 @@ Desexas continuar?</translation>
 <context>
     <name>vst</name>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
         <source>Use old view</source>
-        <translation type="vanished">Usar a vista antiga</translation>
+        <translation>Usar a vista antiga</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
         <source>Use new view</source>
-        <translation type="vanished">Usar a nova vista</translation>
+        <translation>Usar a nova vista</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation type="unfinished"/>
+        <translation>Abrir o editor FX</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation type="unfinished"/>
+        <translation>Abrir o editor de instrumentos</translation>
     </message>
 </context>
 <context>
@@ -22781,7 +22858,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
 <context>
     <name>workspace</name>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="79"/>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
         <source>Remove</source>
         <translation>Eliminar</translation>
@@ -22809,7 +22886,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
         <source>New workspace</source>
-        <translation type="unfinished"/>
+        <translation>Novo espazo de traballo</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
@@ -22818,6 +22895,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces</source>
         <translation>Editar os espazos de traballo</translation>
     </message>
@@ -22881,20 +22959,25 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Música</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
         <source>Select workspace</source>
-        <translation type="vanished">Seleccionar o espazo de traballo</translation>
+        <translation>Seleccionar o espazo de traballo</translation>
     </message>
     <message>
         <source>Edit workspaces…</source>
         <translation type="vanished">Editar os espazos de traballo...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation type="unfinished"/>
+        <translation>Editar os espazos de traballo...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
         <source>Create new workspace</source>
-        <translation type="vanished">Crear novo espazo de traballo</translation>
+        <translation>Crear novo espazo de traballo</translation>
     </message>
 </context>
 <context>

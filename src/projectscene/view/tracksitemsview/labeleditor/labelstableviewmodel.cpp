@@ -325,6 +325,10 @@ void LabelsTableViewModel::exportLabels()
 void LabelsTableViewModel::importLabels()
 {
     muse::io::path_t importPath = selectFileForImport();
+    if (importPath.empty()) {
+        return;
+    }
+
     Ret ret = labelsImporter()->importData(importPath);
     if (!ret) {
         LOGE() << ret.toString();

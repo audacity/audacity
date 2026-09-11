@@ -5,6 +5,8 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.UiComponents
+
 StyledSlider {
     id: root
 
@@ -44,11 +46,14 @@ StyledSlider {
         }
     }
 
-    VolumeTooltip {
+    ValueTooltip {
         id: tooltip
 
         parent: root.handle
-        volume: root.value
+
+        unitText: "dB"
+        sizingText: "-60.0dB"
+        value: root.value
     }
 
     // We have to reimplement dragging to allow the tooltip

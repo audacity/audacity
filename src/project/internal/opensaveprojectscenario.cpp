@@ -260,60 +260,6 @@ RetVal<CloudProjectInfo> OpenSaveProjectScenario::askPublishLocation(IAudacityPr
     return doAskCloudLocation(project, SaveMode::Save, true);
 }
 
-RetVal<CloudAudioInfo> OpenSaveProjectScenario::askShareAudioLocation(IAudacityProjectPtr project) const
-{
-    bool isCloudAvailable = audioComService()->authorization()->checkCloudIsAvailable();
-    if (!isCloudAvailable) {
-        return warnCloudNotAvailableForSharingAudio();
-    }
-
-    std::string dialogText = muse::trc("project/save", "Log in or create a new account on Audio.com to share your music.");
-    Ret ret = audioComService()->authorization()->ensureAuthorization(false, dialogText).ret;
-    if (!ret) {
-        return ret;
-    }
-
-    QString defaultName = project->displayName();
-    //! TODO AU4
-    // QUrl uploadUrl = project->cloudAudioInfo().url;
-    QUrl uploadUrl = QUrl();
-    cloud::Visibility defaultVisibility = cloud::Visibility::Public;
-
-    UriQuery query("audacity://project/savetocloud");
-    query.addParam("isPublishShare", Val(true));
-    query.addParam("name", Val(defaultName));
-    query.addParam("visibility", Val(defaultVisibility));
-    query.addParam("cloudCode", Val(cloud::AUDIO_COM_CLOUD_CODE));
-
-    //! TODO AU4
-    // if (!uploadUrl.isEmpty()) {
-    //     query.addParam("existingScoreOrAudioUrl", Val(uploadUrl.toString()));
-    // }
-
-    RetVal<Val> rv = interactive()->openSync(query);
-    if (!rv.ret) {
-        return rv.ret;
-    }
-
-    QVariantMap vals = rv.val.toQVariant().toMap();
-    using Response = cloud::SaveToCloudResponse::SaveToCloudResponse;
-    auto response = static_cast<Response>(vals["response"].toInt());
-    switch (response) {
-    case Response::Cancel:
-    case Response::SaveLocallyInstead:
-        return make_ret(Ret::Code::Cancel);
-    case Response::Ok:
-        break;
-    }
-
-    CloudAudioInfo result;
-    result.name = vals["name"].toString();
-    result.visibility = static_cast<cloud::Visibility>(vals["visibility"].toInt());
-    result.replaceExisting = vals["replaceExisting"].toBool() && !uploadUrl.isEmpty();
-
-    return RetVal<CloudAudioInfo>::make_ok(result);
-}
-
 //! TODO AU4
 RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityProjectPtr project, SaveMode mode, bool isPublishShare) const
 {

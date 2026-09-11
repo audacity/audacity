@@ -104,6 +104,13 @@ void PlaybackController::init()
 
     dispatcher()->reg(this, "rescan-devices", this, &PlaybackController::rescanAudioDevices);
 
+    dispatcher()->reg(this, "track-mute", this, &PlaybackController::toggleMuteFocusedTrack);
+    dispatcher()->reg(this, "track-solo", this, &PlaybackController::toggleSoloFocusedTrack);
+    dispatcher()->reg(this, "mute-all-tracks", this, &PlaybackController::muteAllTracks);
+    dispatcher()->reg(this, "unmute-all-tracks", this, &PlaybackController::unmuteAllTracks);
+    dispatcher()->reg(this, "mute-tracks", this, &PlaybackController::muteSelectedTracks);
+    dispatcher()->reg(this, "unmute-tracks", this, &PlaybackController::unmuteSelectedTracks);
+
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
@@ -749,6 +756,48 @@ void PlaybackController::toggleAutomaticallyPan()
     // configuration()->setIsAutomaticallyPanEnabled(!panEnabled);
 
     notifyActionCheckedChanged(PAN_CODE);
+}
+
+void PlaybackController::toggleMuteFocusedTrack()
+{
+    const trackedit::TrackId trackId = trackNavigationController()->focusedTrack();
+    trackPlaybackControl()->setMuted(trackId, !trackPlaybackControl()->muted(trackId));
+}
+
+void PlaybackController::toggleSoloFocusedTrack()
+{
+    const trackedit::TrackId trackId = trackNavigationController()->focusedTrack();
+    trackPlaybackControl()->setSolo(trackId, !trackPlaybackControl()->solo(trackId));
+}
+
+void PlaybackController::muteAllTracks()
+{
+    trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
+    }
+
+    trackPlaybackControl()->setMuted(project->trackIdList(), true);
+}
+
+void PlaybackController::unmuteAllTracks()
+{
+    trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
+    }
+
+    trackPlaybackControl()->setMuted(project->trackIdList(), false);
+}
+
+void PlaybackController::muteSelectedTracks()
+{
+    trackPlaybackControl()->setMuted(selectionController()->selectedTracks(), true);
+}
+
+void PlaybackController::unmuteSelectedTracks()
+{
+    trackPlaybackControl()->setMuted(selectionController()->selectedTracks(), false);
 }
 
 void PlaybackController::toggleLoopPlayback()

@@ -32,6 +32,8 @@ public:
     void setCrossfadeDuration(double milliseconds) override;
     muse::async::Notification crossfadeDurationChanged() const override;
 
+    RecordingTrackNameOptions recordingTrackNameOptions() const override;
+
 private:
     muse::async::Notification m_isMicMeteringOnChanged;
     muse::async::Notification m_isInputMonitoringOnChanged;
