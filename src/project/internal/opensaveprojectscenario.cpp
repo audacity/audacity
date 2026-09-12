@@ -21,6 +21,7 @@
  */
 
 #include "opensaveprojectscenario.h"
+#include "projectpathutils.h"
 
 #include "cloud/clouderrors.h"
 #include "interactive/iinteractive.h"
@@ -198,20 +199,7 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
         return make_ret(Ret::Code::Cancel);
     }
 
-    // force save to aup4 format
-    std::string suffix = muse::io::suffix(selectedPath);
-    std::string correctedPath = selectedPath.toStdString();
-    if (!suffix.empty()) {
-        correctedPath = correctedPath.substr(0, correctedPath.size() - (suffix.size() + 1));
-    }
-
-    // check if there's a dot at the end; add one if not
-    if (!correctedPath.empty() && correctedPath.back() != '.') {
-        correctedPath += ".";
-    }
-    correctedPath += "aup4";
-
-    selectedPath = correctedPath;
+    selectedPath = forceAup4Extension(selectedPath.toStdString());
 
     configuration()->setLastSavedProjectsPath(io::dirpath(selectedPath));
 
