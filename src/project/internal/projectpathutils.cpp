@@ -47,3 +47,8 @@ std::string au::project::forceAup4Extension(const std::string& path)
 
     return correctedPath;
 }
+
+std::string au::project::aup4SaveFilter(const std::string& label)
+{
+    return label + " (*.aup4)";
+}

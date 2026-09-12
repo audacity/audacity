@@ -6,6 +6,12 @@
 #include "internal/projectpathutils.h"
 
 using au::project::forceAup4Extension;
+using au::project::aup4SaveFilter;
+
+TEST(ProjectPathUtilsTests, CreatesAValidProjectFileFilter)
+{
+    EXPECT_EQ(aup4SaveFilter("Audacity 4 files"), "Audacity 4 files (*.aup4)");
+}
 
 TEST(ProjectPathUtilsTests, ReplacesMissingOrDifferentExtension)
 {

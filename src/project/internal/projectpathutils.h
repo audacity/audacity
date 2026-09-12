@@ -7,4 +7,5 @@
 
 namespace au::project {
 std::string forceAup4Extension(const std::string& path);
+std::string aup4SaveFilter(const std::string& label);
 }
