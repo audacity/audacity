@@ -63,7 +63,7 @@ Column {
 
             navigation.panel: root.navigationPanel
             navigation.order: slider.navigation.order + 1
-            navigation.accessible.name: root.text + " " + currentValue + " " + measureUnitsSymbol
+            navigation.accessible.name: root.text
 
             width: parent.width * .35
 
