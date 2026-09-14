@@ -13,6 +13,8 @@ Rectangle {
     property ViewTracksListModel model: null
     property var context: null
 
+    property var navPanels: null
+
     readonly property int listHeaderHeight: 2
 
     width: 32
@@ -79,7 +81,16 @@ Rectangle {
 
         model: root.model
 
+        function insureVerticallyVisible(item) {
+            let itemViewY = item.mapToItem(verticalRulersListView.contentItem, Qt.point(0, 0)).y
+            tracksViewState.insureVerticallyVisible(verticalRulersListView.contentY + root.listHeaderHeight, verticalRulersListView.height, itemViewY + root.listHeaderHeight, item.height)
+        }
+
         delegate: Loader {
+            id: rulerLoader
+
+            property int index: model.index
+
             width: root.width
             height: trackViewState.trackHeight
 
@@ -104,7 +115,33 @@ Rectangle {
                 id: waveComp
 
                 Rectangle {
+                    id: rulerItem
+
                     color: ui.theme.backgroundQuarternaryColor
+
+                    NavigationControl {
+                        id: navCtrl
+
+                        name: "VerticalRuler"
+                        enabled: root.enabled && root.visible
+                        panel: root.navPanels && root.navPanels[rulerLoader.index] ? root.navPanels[rulerLoader.index] : null
+                        order: 0
+
+                        accessible.role: MUAccessible.Information
+                        accessible.name: qsTrc("projectscene", "Track %1: %2, vertical ruler").arg(rulerLoader.index + 1).arg(model.trackTitle)
+
+                        onActiveChanged: function (active) {
+                            if (active) {
+                                rulerItem.forceActiveFocus()
+                                verticalRulersListView.insureVerticallyVisible(rulerLoader)
+                            }
+                        }
+                    }
+
+                    NavigationFocusBorder {
+                        navigationCtrl: navCtrl
+                        drawOutsideParent: false
+                    }
 
                     MouseArea {
                         id: mouseClickBlocker // to prevent clicks from reaching and modifying the viewport

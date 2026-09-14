@@ -453,6 +453,7 @@ DockPage {
         id: tracksItemsView
 
         navPanels: tracksNavModel.viewItemPanels
+        rulerNavPanels: tracksNavModel.rulerPanels
         navDefaultControl: tracksNavModel.defaultNavigationControl
 
         timelineNavigationSection: root.timelineKeyNavSec
