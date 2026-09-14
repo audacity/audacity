@@ -152,6 +152,7 @@ public:
     static QString trackPanelName(TrackId id) { return QString("Track %1 Panel").arg(id); }
     static QString headerPanelName(TrackId id) { return QString("Track %1 Header Panel").arg(id); }
     static QString itemsPanelName(TrackId id) { return QString("Track %1 Items Panel").arg(id); }
+    static QString rulerPanelName(TrackId id) { return QString("Track %1 Ruler Panel").arg(id); }
 
     //! NOTE Add an item control (a clip/label) to a panel, ordered by column, as QML does
     muse::ui::NavigationControl* addItemControl(muse::ui::NavigationPanel* panel, const QString& name, int column)
@@ -214,11 +215,13 @@ public:
         return event->data.value("controlName").toString();
     }
 
-    //! NOTE Deliver a navigation event (e.g. Escape) to a panel, as navigation system would
-    static void sendPanelEvent(muse::ui::NavigationPanel* panel, muse::ui::INavigation::Event::Type type)
+    //! NOTE Deliver a navigation event (e.g. Escape) to a panel, as navigation system would,
+    //! and return whether the panel accepted it
+    static bool sendPanelEvent(muse::ui::NavigationPanel* panel, muse::ui::INavigation::Event::Type type)
     {
         auto event = muse::ui::INavigation::Event::make(type);
         panel->onEvent(event);
+        return event->accepted;
     }
 
     QQmlEngine m_engine;
@@ -251,25 +254,27 @@ public:
 };
 
 /**
- * Every track exposes three panels (track, header, clips/labels), the lists are
- * kept per track and the panel orders are laid out in blocks after the reserved
- * order 0 of the empty-project default panel.
+ * Every track exposes four panels (track, header, clips/labels, vertical ruler), the
+ * lists are kept per track and the panel orders are laid out in blocks after the
+ * reserved order 0 of the empty-project default panel.
  */
-TEST_F(TrackNavigationModelTests, InitialLoadCreatesThreePanelsPerTrack)
+TEST_F(TrackNavigationModelTests, InitialLoadCreatesFourPanelsPerTrack)
 {
     //! [GIVEN] A project with two tracks
     //! [WHEN] The model is loaded
     loadWithTracks({ makeTrack(10), makeTrack(20) });
 
-    //! [THEN] There are three panel lists, one panel per track in each
+    //! [THEN] There are four panel lists, one panel per track in each
     ASSERT_EQ(m_model->trackItemPanels().size(), 2);
     ASSERT_EQ(m_model->trackHeaderPanels().size(), 2);
     ASSERT_EQ(m_model->viewItemPanels().size(), 2);
+    ASSERT_EQ(m_model->rulerPanels().size(), 2);
 
     //! [AND] The panels are named after their tracks
     EXPECT_EQ(m_model->trackItemPanels().at(0)->name(), trackPanelName(10));
     EXPECT_EQ(m_model->trackHeaderPanels().at(0)->name(), headerPanelName(10));
     EXPECT_EQ(m_model->viewItemPanels().at(0)->name(), itemsPanelName(10));
+    EXPECT_EQ(m_model->rulerPanels().at(0)->name(), rulerPanelName(10));
 
     EXPECT_EQ(m_model->trackItemPanels().at(1)->name(), trackPanelName(20));
 
@@ -277,14 +282,16 @@ TEST_F(TrackNavigationModelTests, InitialLoadCreatesThreePanelsPerTrack)
     EXPECT_EQ(m_model->trackItemPanels().at(0)->order(), 1);
     EXPECT_EQ(m_model->trackHeaderPanels().at(0)->order(), 2);
     EXPECT_EQ(m_model->viewItemPanels().at(0)->order(), 3);
+    EXPECT_EQ(m_model->rulerPanels().at(0)->order(), 4);
 
     EXPECT_EQ(m_model->trackItemPanels().at(1)->order(), 5);
     EXPECT_EQ(m_model->trackHeaderPanels().at(1)->order(), 6);
     EXPECT_EQ(m_model->viewItemPanels().at(1)->order(), 7);
+    EXPECT_EQ(m_model->rulerPanels().at(1)->order(), 8);
 }
 
 /**
- * Adding a track appends its three panels after the existing ones.
+ * Adding a track appends its four panels after the existing ones.
  */
 TEST_F(TrackNavigationModelTests, TrackAddedAppendsPanels)
 {
@@ -300,6 +307,7 @@ TEST_F(TrackNavigationModelTests, TrackAddedAppendsPanels)
     EXPECT_EQ(m_model->trackItemPanels().at(1)->name(), trackPanelName(20));
     EXPECT_EQ(m_model->trackItemPanels().at(1)->order(), 5);
     EXPECT_EQ(m_model->viewItemPanels().at(1)->order(), 7);
+    EXPECT_EQ(m_model->rulerPanels().at(1)->order(), 8);
 }
 
 /**
@@ -388,7 +396,7 @@ TEST_F(TrackNavigationModelTests, TrackInsertedPlacesPanelsAtPosition)
 }
 
 /**
- * Removing a track drops its three panels and reorders the rest.
+ * Removing a track drops its four panels and reorders the rest.
  */
 TEST_F(TrackNavigationModelTests, TrackRemovedRemovesTrackPanels)
 {
@@ -401,6 +409,7 @@ TEST_F(TrackNavigationModelTests, TrackRemovedRemovesTrackPanels)
     //! [THEN] Only the remaining tracks keep their panels
     ASSERT_EQ(m_model->trackItemPanels().size(), 2);
     ASSERT_EQ(m_model->viewItemPanels().size(), 2);
+    ASSERT_EQ(m_model->rulerPanels().size(), 2);
     EXPECT_EQ(m_model->trackItemPanels().at(0)->name(), trackPanelName(10));
     EXPECT_EQ(m_model->trackItemPanels().at(1)->name(), trackPanelName(30));
 
@@ -481,6 +490,101 @@ TEST_F(TrackNavigationModelTests, NavigationOnTrackPanelFocusesTrackWithoutItem)
 
     //! [WHEN] The navigation changes
     m_navigationChanged.notify();
+}
+
+/**
+ * Landing on a vertical ruler panel focuses its track with no item and, like the header
+ * panel, turns the general navigation on: the arrows are handled by navigation system
+ * (and the ruler panel itself) rather than by the project's track/item navigation.
+ */
+TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesTrackWithGeneralNavigation)
+{
+    //! [GIVEN] A project with one track
+    loadWithTracks({ makeTrack(10) });
+
+    muse::ui::NavigationPanel* rulerPanel = m_model->rulerPanels().at(0);
+
+    //! [AND] An active ruler control on the track's ruler panel
+    muse::ui::NavigationControl* rulerControl = addItemControl(rulerPanel, "VerticalRuler", 0);
+
+    ON_CALL(*m_navigationController, activePanel())
+    .WillByDefault(Return(rulerPanel));
+    ON_CALL(*m_navigationController, activeControl())
+    .WillByDefault(Return(rulerControl));
+
+    //! [EXPECT] The track is focused, without an item, and the general navigation is on
+    EXPECT_CALL(*m_tracksNavigationController, setFocusedItem(TrackItemKey { 10, INVALID_TRACK_ITEM }, _)).Times(1);
+    EXPECT_CALL(*m_tracksNavigationController, setIsNavigationActive(true)).Times(1);
+
+    //! [WHEN] The navigation changes
+    m_navigationChanged.notify();
+}
+
+/**
+ * Down on a vertical ruler moves the navigation to the ruler of the next track,
+ * Up to the ruler of the previous one, with the highlight kept on.
+ */
+TEST_F(TrackNavigationModelTests, UpDownOnRulerMoveToAdjacentRuler)
+{
+    //! [GIVEN] A project with two tracks, each with a ruler control
+    loadWithTracks({ makeTrack(10), makeTrack(20) });
+
+    muse::ui::NavigationPanel* firstRuler = m_model->rulerPanels().at(0);
+    muse::ui::NavigationPanel* secondRuler = m_model->rulerPanels().at(1);
+    addItemControl(firstRuler, "VerticalRuler", 0);
+    addItemControl(secondRuler, "VerticalRuler", 0);
+
+    //! [EXPECT] Down activates the ruler of the second track, Up the ruler of the first one
+    EXPECT_CALL(*m_navigationController, setIsHighlight(true)).Times(2);
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), rulerPanelName(20).toStdString(), std::string("VerticalRuler"))).Times(1);
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), rulerPanelName(10).toStdString(), std::string("VerticalRuler"))).Times(1);
+
+    //! [WHEN] Down is pressed on the first ruler, then Up on the second one
+    EXPECT_TRUE(sendPanelEvent(firstRuler, muse::ui::INavigation::Event::Down));
+    EXPECT_TRUE(sendPanelEvent(secondRuler, muse::ui::INavigation::Event::Up));
+}
+
+/**
+ * A track without a ruler control (a label track) stops the ruler navigation: Down towards
+ * it does nothing, but the event is still consumed so navigation system does not move either.
+ */
+TEST_F(TrackNavigationModelTests, DownOnRulerTowardsTrackWithoutRulerIsNoOp)
+{
+    //! [GIVEN] A wave track followed by a label track, only the wave track has a ruler control
+    loadWithTracks({ makeTrack(10), makeTrack(20, TrackType::Label) });
+
+    muse::ui::NavigationPanel* firstRuler = m_model->rulerPanels().at(0);
+    addItemControl(firstRuler, "VerticalRuler", 0);
+
+    //! [EXPECT] Nothing is activated
+    EXPECT_CALL(*m_navigationController, requestActivateByName(_, _, _)).Times(0);
+
+    //! [WHEN] Down is pressed on the wave track's ruler
+    //! [THEN] The event is accepted
+    EXPECT_TRUE(sendPanelEvent(firstRuler, muse::ui::INavigation::Event::Down));
+}
+
+/**
+ * Up on the first ruler and Down on the last one have no neighbour to go to: nothing is
+ * activated, the event is still consumed.
+ */
+TEST_F(TrackNavigationModelTests, UpOnFirstRulerIsNoOp)
+{
+    //! [GIVEN] A project with one track with a ruler control
+    loadWithTracks({ makeTrack(10) });
+
+    muse::ui::NavigationPanel* ruler = m_model->rulerPanels().at(0);
+    addItemControl(ruler, "VerticalRuler", 0);
+
+    //! [EXPECT] Nothing is activated
+    EXPECT_CALL(*m_navigationController, requestActivateByName(_, _, _)).Times(0);
+
+    //! [WHEN] Up, then Down, is pressed on the only ruler
+    //! [THEN] Both events are accepted
+    EXPECT_TRUE(sendPanelEvent(ruler, muse::ui::INavigation::Event::Up));
+    EXPECT_TRUE(sendPanelEvent(ruler, muse::ui::INavigation::Event::Down));
 }
 
 /**

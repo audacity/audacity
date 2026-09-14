@@ -30,9 +30,14 @@ static const QString makeTrackItemsPanelName(const TrackId& trackId)
     return QString("Track %1 Items Panel").arg(trackId);
 }
 
+static const QString makeTrackRulerPanelName(const TrackId& trackId)
+{
+    return QString("Track %1 Ruler Panel").arg(trackId);
+}
+
 //! NOTE: the default (no tracks) panel takes the order 0, tracks start right after it.
 //! Every track takes a block of orders: the track itself, its header controls,
-//! its clips/labels and one slot reserved for the per-track vertical ruler
+//! its clips/labels and its vertical ruler
 static constexpr int TRACK_PANELS_ORDER_START = 1;
 static constexpr int TRACK_PANELS_ORDER_STRIDE = 4;
 
@@ -277,7 +282,28 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
         }
     });
 
-    m_panels.insert(pos, { trackId, trackPanel, headerPanel, itemsPanel });
+    muse::ui::NavigationPanel* rulerPanel = makePanel(makeTrackRulerPanelName(trackId), orderBase + 3);
+
+    connect(rulerPanel, &muse::ui::NavigationPanel::navigationEvent, this,
+            [this, trackId](muse::ui::NavigationEvent* event) {
+        const muse::ui::NavigationEvent::Type type = event->type();
+        if (type != muse::ui::NavigationEvent::Up && type != muse::ui::NavigationEvent::Down) {
+            return;
+        }
+
+        //! NOTE: Up/Down on a vertical ruler move to the ruler of the adjacent track. A track
+        //! without a ruler control (a label track, hidden rulers) stops the navigation
+        event->setAccepted(true);
+
+        const int adjacentPos = indexOfTrack(trackId) + (type == muse::ui::NavigationEvent::Up ? -1 : 1);
+        if (adjacentPos < 0 || adjacentPos >= m_panels.size()) {
+            return;
+        }
+
+        activateNavigation(findFirstEnabledControl(m_panels.at(adjacentPos).ruler), true /*highlight*/);
+    });
+
+    m_panels.insert(pos, { trackId, trackPanel, headerPanel, itemsPanel, rulerPanel });
 
     emit panelsChanged();
 }
@@ -303,6 +329,7 @@ void TrackNavigationModel::resetPanelOrder()
         panels.track->setOrder(orderBase);
         panels.header->setOrder(orderBase + 1);
         panels.items->setOrder(orderBase + 2);
+        panels.ruler->setOrder(orderBase + 3);
     }
 
     emit panelsChanged();
@@ -322,7 +349,8 @@ bool TrackNavigationModel::isNavigationOnTrack(const TrackId& trackId) const
 
     const TrackPanels& panels = m_panels.at(pos);
 
-    return activePanel == panels.track || activePanel == panels.header || activePanel == panels.items;
+    return activePanel == panels.track || activePanel == panels.header || activePanel == panels.items
+           || activePanel == panels.ruler;
 }
 
 int TrackNavigationModel::indexOfTrack(const TrackId& trackId) const
@@ -477,13 +505,14 @@ void TrackNavigationModel::updateDefaultNavigationControl()
 
 void TrackNavigationModel::updateNavigationActive(const muse::ui::INavigationPanel* activePanel)
 {
-    //! NOTE: only the header controls panel is navigated as a usual panel (general navigation):
-    //! Left/Right move between the controls and the trigger (Space) presses the focused control.
+    //! NOTE: the header controls panel and the ruler panel are navigated as usual panels (general
+    //! navigation): Left/Right move between the controls, Up/Down on the ruler move to the adjacent
+    //! ruler and the trigger (Space) presses the focused control.
     //! The track panel and the clips/labels panel belong to the project: Left/Right move the play
     //! cursor, Up/Down navigate the tracks, the trigger starts the playback.
     bool navigationActive = false;
     for (const TrackPanels& panels : m_panels) {
-        if (panels.header == activePanel) {
+        if (panels.header == activePanel || panels.ruler == activePanel) {
             navigationActive = true;
             break;
         }
@@ -523,11 +552,10 @@ void TrackNavigationModel::syncFocusedItem(const muse::ui::INavigationPanel* act
             return;
         }
 
-        if (panels.track == activePanel || panels.header == activePanel) {
+        if (panels.track == activePanel || panels.header == activePanel || panels.ruler == activePanel) {
             m_lastActivePanelOrder = activePanel->index().order();
 
-            MYLOG() << "the " << (panels.track == activePanel ? "track" : "header") << " panel is active, track: "
-                    << panels.trackId;
+            MYLOG() << "the " << activePanel->name().toStdString() << " is active, track: " << panels.trackId;
 
             tracksNavigationController()->setFocusedItem({ panels.trackId, INVALID_TRACK_ITEM });
             return;
@@ -645,7 +673,7 @@ void TrackNavigationModel::removePanels(const TrackId& trackId)
 
 void TrackNavigationModel::deletePanels(const TrackPanels& panels)
 {
-    for (muse::ui::NavigationPanel* panel : { panels.track, panels.header, panels.items }) {
+    for (muse::ui::NavigationPanel* panel : { panels.track, panels.header, panels.items, panels.ruler }) {
         panel->setSection(nullptr);
         panel->deleteLater();
     }
@@ -664,6 +692,11 @@ QList<muse::ui::NavigationPanel*> TrackNavigationModel::trackHeaderPanels() cons
 QList<muse::ui::NavigationPanel*> TrackNavigationModel::viewItemPanels() const
 {
     return panelsList(&TrackPanels::items);
+}
+
+QList<muse::ui::NavigationPanel*> TrackNavigationModel::rulerPanels() const
+{
+    return panelsList(&TrackPanels::ruler);
 }
 
 QList<muse::ui::NavigationPanel*> TrackNavigationModel::panelsList(muse::ui::NavigationPanel* TrackPanels::* panel) const
