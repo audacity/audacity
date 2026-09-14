@@ -97,6 +97,7 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "action://cancel", this, &ApplicationActionController::doGlobalCancel);
     dispatcher()->reg(this, "action://trigger", this, &ApplicationActionController::doGlobalTrigger);
     dispatcher()->reg(this, "action://enter", this, &ApplicationActionController::doGlobalEnter);
+    dispatcher()->reg(this, "action://shift-enter", this, &ApplicationActionController::doGlobalShiftEnter);
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -333,11 +334,23 @@ bool ApplicationActionController::quit(const muse::io::path_t& installerPath)
     }
 
     if (!installerPath.empty()) {
+        //! NOTE: All windows are quitting to complete the update, apply it
+        //! in-place, falling back to handing the package to the user.
+        bool applied = false;
+        if (appUpdateService()->canAutoInstall()) {
+            const muse::RetVal<muse::io::path_t> prepared = appUpdateService()->prepareUpdate(installerPath);
+            if (prepared.ret) {
+                applied = bool(appUpdateService()->finalizeUpdate(prepared.val));
+            }
+        }
+
+        if (!applied) {
 #if defined(Q_OS_LINUX)
-        platformInteractive()->revealInFileBrowser(installerPath);
+            platformInteractive()->revealInFileBrowser(installerPath);
 #else
-        platformInteractive()->openUrl(QUrl::fromLocalFile(installerPath.toQString()));
+            platformInteractive()->openUrl(QUrl::fromLocalFile(installerPath.toQString()));
 #endif
+        }
     }
 
     QCoreApplication::exit();
@@ -573,6 +586,22 @@ void ApplicationActionController::doGlobalEnter()
 
     if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("track-view-replace-selection");
+        return;
+    }
+
+    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+}
+
+void ApplicationActionController::doGlobalShiftEnter()
+{
+    const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
+    if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
+        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+        return;
+    }
+
+    if (isProjectOpenedAndFocused()) {
+        dispatcher()->dispatch("track-view-range-selection");
         return;
     }
 

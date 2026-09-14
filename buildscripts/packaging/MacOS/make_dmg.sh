@@ -112,15 +112,13 @@ function change_rpath() {
 rm ${WORKING_DIRECTORY}/${COMPRESSEDDMGNAME}
 
 #tip: increase the size if error on copy or macdeployqt
-hdiutil create -size 750m -fs HFS+ -volname ${VOLNAME} ${WORKING_DIRECTORY}/${DMGNAME}
+hdiutil create -size 800m -fs APFS -volname ${VOLNAME} ${WORKING_DIRECTORY}/${DMGNAME}
 
 # Mount the disk image
-hdiutil attach ${WORKING_DIRECTORY}/${DMGNAME}
-
-# Obtain device information
-DEVS=$(hdiutil attach ${WORKING_DIRECTORY}/${DMGNAME} | cut -f 1)
-DEV=$(echo $DEVS | cut -f 1 -d ' ')
-VOLUME=$(mount |grep ${DEV} | cut -f 3 -d ' ')
+VOLUME="/Volumes/${VOLNAME}"
+ATTACH_OUTPUT=$(hdiutil attach "${WORKING_DIRECTORY}/${DMGNAME}" -mountpoint "${VOLUME}")
+echo "${ATTACH_OUTPUT}"
+DEV=$(echo "${ATTACH_OUTPUT}" | head -n1 | awk '{print $1}')
 
 # copy in the application bundle
 cp -Rp ${APP_PATH} ${VOLUME}/${APPNAME}.app
@@ -212,7 +210,7 @@ echo "Unmount"
 hdiutil detach $DEV -force || true
 
 # Convert the disk image to read-only
-hdiutil convert ${WORKING_DIRECTORY}/${DMGNAME} -format UDBZ -o ${WORKING_DIRECTORY}/${COMPRESSEDDMGNAME}
+hdiutil convert ${WORKING_DIRECTORY}/${DMGNAME} -format ULFO -o ${WORKING_DIRECTORY}/${COMPRESSEDDMGNAME}
 
 shasum -a 256 ${WORKING_DIRECTORY}/${COMPRESSEDDMGNAME}
 

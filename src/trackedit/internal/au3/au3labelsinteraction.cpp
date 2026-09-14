@@ -60,7 +60,7 @@ muse::RetVal<LabelKey> Au3LabelsInteraction::addLabel(const TrackId& toTrackId)
     return muse::RetVal<LabelKey>::make_ok({ labelTrack->GetId(), newLabelId });
 }
 
-bool Au3LabelsInteraction::addLabelToSelection()
+muse::RetVal<LabelKey> Au3LabelsInteraction::addLabelToSelection()
 {
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
@@ -102,8 +102,14 @@ bool Au3LabelsInteraction::addLabelToSelection()
         muse::secs_t recordPos = playbackState->playbackPosition();
         selectedRegion.setTimes(recordPos, recordPos);
     } else {
-        selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),
-                                selectionController()->dataSelectedEndTime());
+        const double selectionStart = selectionController()->dataSelectedStartTime();
+        const double selectionEnd = selectionController()->dataSelectedEndTime();
+        if (muse::RealIsEqualOrLess(selectionEnd, selectionStart)) {
+            muse::secs_t playbackPos = playbackState->playbackPosition();
+            selectedRegion.setTimes(playbackPos, playbackPos);
+        } else {
+            selectedRegion.setTimes(selectionStart, selectionEnd);
+        }
     }
 
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
@@ -116,7 +122,7 @@ bool Au3LabelsInteraction::addLabelToSelection()
 
     selectionController()->setSelectedLabels({ { labelTrack->GetId(), newLabel->GetId() } });
 
-    return true;
+    return muse::RetVal<LabelKey>::make_ok({ labelTrack->GetId(), newLabel->GetId() });
 }
 
 bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)

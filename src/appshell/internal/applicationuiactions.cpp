@@ -232,6 +232,12 @@ const UiActionList ApplicationUiActions::m_actions = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Trigger the focused control or select the focused track item")
              ),
+    UiAction("action://shift-enter",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Shift+&Enter"),
+             TranslatableString("action", "Trigger the focused control or make a range selection of track items")
+             ),
 };
 
 ApplicationUiActions::ApplicationUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ApplicationActionController> controller)

@@ -835,13 +835,13 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
         <source>Record on current track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>ჩაწერა მიმდინარე ტრეკზე</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
         <source>Record on new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>ჩაწერა ახალ ტრეკზე</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
@@ -1278,7 +1278,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="165"/>
         <source>Show master track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>მთავარი ბილიკის ჩვენება</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
@@ -1407,12 +1407,12 @@
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="372"/>
         <source>Change clip color</source>
-        <translation type="unfinished"/>
+        <translation>კლიპის ფერის შეცვლა</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="384"/>
         <source>Change track color</source>
-        <translation type="unfinished"/>
+        <translation>ტრეკის ფერის შეცვლა</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
@@ -3028,7 +3028,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
         <source>Show master track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>მთავარი ბილიკის ჩვენება</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="176"/>
@@ -3153,12 +3153,12 @@
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="371"/>
         <source>Change clip color</source>
-        <translation type="unfinished"/>
+        <translation>კლიპის ფერის შეცვლა</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="383"/>
         <source>Change track color</source>
-        <translation type="unfinished"/>
+        <translation>ტრეკის ფერის შეცვლა</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
@@ -3200,13 +3200,13 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="95"/>
         <source>Record on current track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>ჩაწერა მიმდინარე ტრეკზე</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="103"/>
         <source>Record on new track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>ჩაწერა ახალ ტრეკზე</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="21"/>
@@ -4262,7 +4262,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
         <source>Emeritus</source>
-        <translation type="unfinished"/>
+        <translation>საპატიო წევრი</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
@@ -4302,7 +4302,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
         <source>Special Thanks</source>
-        <translation type="unfinished"/>
+        <translation>განსაკუთრებული მადლობა</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
@@ -4406,7 +4406,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
         <source>Preferences → General</source>
-        <translation type="unfinished"/>
+        <translation>მორგება → ზოგადი</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
@@ -4416,7 +4416,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="41"/>
         <source>Crash reports</source>
-        <translation type="unfinished"/>
+        <translation>ავარიის ანგარიშები</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
@@ -5018,7 +5018,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ImportStyleSection.qml" line="77"/>
         <source>Use style file:</source>
-        <translation type="unfinished"/>
+        <translation>გამოყენებული სტილის ფაილი:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="33"/>
@@ -5028,7 +5028,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="49"/>
         <source>Keyboard layout %1</source>
-        <translation type="unfinished"/>
+        <translation>კლავიატურის განლაგება %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeiSection.qml" line="32"/>
@@ -7642,7 +7642,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1-ის დამატება</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
@@ -7654,7 +7654,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1-ის წაშლა</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
@@ -8025,7 +8025,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="347"/>
         <source>EQ and filters</source>
-        <translation type="unfinished"/>
+        <translation>EQ და ფილტრები</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="349"/>
@@ -8060,7 +8060,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="361"/>
         <source>Third-party</source>
-        <translation type="unfinished"/>
+        <translation>მესამე-პირი</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="385"/>
@@ -17243,7 +17243,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="45"/>
         <source>Buffer length</source>
-        <translation type="unfinished"/>
+        <translation>ბუფერის სიგრძე</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="71"/>
@@ -17603,7 +17603,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
         <source>Locate %1</source>
-        <translation>% 1-ის პოვნა</translation>
+        <translation>%1-ის პოვნა</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="44"/>
@@ -17909,7 +17909,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>შენახვა ყოველთვის ღრუბელში</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
@@ -19953,12 +19953,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="198"/>
         <source>Violet</source>
-        <translation type="unfinished"/>
+        <translation>იისფერი</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="199"/>
         <source>Magenta</source>
-        <translation type="unfinished"/>
+        <translation>ალისფერი</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="200"/>
@@ -19968,12 +19968,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="201"/>
         <source>Orange</source>
-        <translation type="unfinished"/>
+        <translation>ნარინჯისფერი</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="202"/>
         <source>Yellow</source>
-        <translation type="unfinished"/>
+        <translation>ყვითელი</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="203"/>
@@ -19988,7 +19988,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="205"/>
         <source>Cyan</source>
-        <translation type="unfinished"/>
+        <translation>ცისფერი</translation>
     </message>
 </context>
 <context>
@@ -21111,7 +21111,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
         <source>Format: %1</source>
-        <translation type="unfinished"/>
+        <translation>ფორმატი: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
@@ -21312,7 +21312,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="112"/>
         <source>Reset Clip Pitch</source>
-        <translation type="unfinished"/>
+        <translation>კლიპის ტონის ჩამოყრა</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
@@ -21672,7 +21672,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
         <source>Remove label</source>
-        <translation type="unfinished"/>
+        <translation>ჭდის წაშლა</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
@@ -21690,7 +21690,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
         <source>Move</source>
-        <translation type="unfinished"/>
+        <translation>გადატანა</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
@@ -22159,7 +22159,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation type="unfinished"/>
+        <translation>აკეცილი</translation>
     </message>
 </context>
 <context>

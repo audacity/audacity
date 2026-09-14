@@ -20,8 +20,10 @@
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
 #include "playback/iplayer.h"
+#include "playback/itrackplaybackcontrol.h"
 #include "record/irecordcontroller.h"
 #include "record/irecord.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::playback {
@@ -42,6 +44,8 @@ public:
     muse::ContextInject<record::IRecordController> recordController{ this };
     muse::ContextInject<record::IRecord> record{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<ITrackPlaybackControl> trackPlaybackControl{ this };
 
 public:
     PlaybackController(const muse::modularity::ContextPtr& ctx)
@@ -150,6 +154,12 @@ private:
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
+    void toggleMuteFocusedTrack();
+    void toggleSoloFocusedTrack();
+    void muteAllTracks();
+    void unmuteAllTracks();
+    void muteSelectedTracks();
+    void unmuteSelectedTracks();
 
     void setLoopRegionToSelection();
     void setSelectionToLoop();

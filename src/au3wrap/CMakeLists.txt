@@ -64,24 +64,13 @@ set(MODULE_SRC
 include(${CMAKE_CURRENT_LIST_DIR}/au3wrapDefs.cmake)
 
 # Third-party libraries (not part of au3/libraries)
-add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/sqlite au3-sqlite)
-add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/soxr au3-soxr)
 add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/pffft au3-pffft)
 add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/portmixer au3-portmixer)
-add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/twolame au3-twolame)
 tft_add_to_build()
 
-# Conditional time-stretching and pitch-shifting libraries
-if (AU_USE_SOUNDTOUCH)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/soundtouch au3-soundtouch)
-endif()
-
-if (AU_USE_SBSMS)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/sbsms au3-sbsms)
-endif()
-
 # Conditional third-party SDKs (must be set up before AU3 libraries)
-if (AU_MODULE_EFFECTS_LV2)
+# lv2sdk target may be already provided by the system, then skip it
+if (AU_MODULE_EFFECTS_LV2 AND NOT TARGET lv2sdk)
     add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/lv2sdk lv2sdk)
 endif()
 

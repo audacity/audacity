@@ -70,15 +70,6 @@ StyledDialogView {
                 Layout.fillWidth: true
                 Layout.fillHeight: false
 
-                border: Border {
-                    color: ui.theme.strokeColor
-                    width: 1
-                }
-
-                arrowSpacing: -2
-                backgroundColor: ui.theme.backgroundSecondaryColor
-                textColor: ui.theme.fontPrimaryColor
-
                 value: start
                 mode: TimecodeModeSelector.Duration
                 currentFormat: selectionModel.currentFormat
@@ -115,15 +106,6 @@ StyledDialogView {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: false
-
-                border: Border {
-                    color: ui.theme.strokeColor
-                    width: 1
-                }
-
-                arrowSpacing: -2
-                backgroundColor: ui.theme.backgroundSecondaryColor
-                textColor: ui.theme.fontPrimaryColor
 
                 value: end
                 mode: TimecodeModeSelector.Duration

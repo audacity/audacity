@@ -8270,7 +8270,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="59"/>
         <source>Sets the loudness of one or more tracks</source>
-        <translation>Paramètre le niveau sonore d’une ou plusieurs pistes</translation>
+        <translation>Définit le niveau sonore d’une ou plusieurs pistes</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="88"/>
@@ -8593,7 +8593,7 @@ plage de fréquences sur laquelle l&apos;effet doit agir.</translation>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2062"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
-        <translation>Cette version d’Audacity ne supporte pas la version %1 de plugin Nyquist.</translation>
+        <translation>Cette version d’Audacity ne supporte pas la version %1 de plugin Nyquist</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
@@ -8613,7 +8613,7 @@ Pour SAL, utilisez une instruction de retour telle que :
 	return *track* * 0.1
 ou, pour LISP, commencez par une parenthèse ouvrante telle que :
 	(mult *track* 0.1)
-</translation>
+.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
@@ -8988,12 +8988,12 @@ ou, pour LISP, commencez par une parenthèse ouvrante telle que :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="78"/>
         <source>Constant Power 1</source>
-        <translation>Puissance de 1 constante</translation>
+        <translation>Puissance constante 1</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="79"/>
         <source>Constant Power 2</source>
-        <translation>Puissance de 2 constante</translation>
+        <translation>Puissance constante 2</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="80"/>
@@ -9018,12 +9018,12 @@ ou, pour LISP, commencez par une parenthèse ouvrante telle que :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="84"/>
         <source>Alternating Out / In</source>
-        <translation>Alternance sortie / entrée</translation>
+        <translation>Intervertir Sortie / Entrée</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="85"/>
         <source>Alternating In / Out</source>
-        <translation>Alternance entrée / sortie</translation>
+        <translation>Intervertir Entrée / Sortie</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="86"/>
@@ -9312,7 +9312,7 @@ ou, pour LISP, commencez par une parenthèse ouvrante telle que :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished"/>
+        <translation>Placer un label aux sons</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -9411,7 +9411,7 @@ ou, pour LISP, commencez par une parenthèse ouvrante telle que :
         <source>Labelling regions between sounds requires~%~
                  at least two sounds.~%~
                  Only one sound detected.</source>
-        <translation>Mettre un label aux régions entre les sons nécessite~%~
+        <translation>Placer un label aux régions entre les sons nécessite~%~
                  au moins deux sons.~%~
                  Un seul son détecté.</translation>
     </message>
@@ -10312,21 +10312,27 @@ Daulton</translation>
         <source>Error~%~
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
-        <translation type="unfinished"/>
+        <translation>Erreur~%~
+                        ‘~a’ n&apos;a pas pu être ouvert.~%~
+                        Vérifiez que le fichier existe.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="335"/>
         <source>Error:~%~
               The file must contain only plain ASCII text.~%~
               (Invalid byte ‘~a’ at byte number: ~a)</source>
-        <translation type="unfinished"/>
+        <translation>Erreur :~%~
+              Le fichier ne doit contenir que du texte ASCII brut.~%~
+              (Octet invalide ‘~a’ à l&apos;octet numéro : ~a)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
         <source>Error~%~
               Data must be numbers in plain ASCII text.~%~
               ‘~a’ is not a numeric value.</source>
-        <translation type="unfinished"/>
+        <translation>Erreur~%~
+              Les données doivent être des nombres au format texte ASCII brut.~%~
+              ‘~a’ n’est pas une valeur numérique.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
@@ -10459,7 +10465,7 @@ Daulton</translation>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation>Paulstretch est réservé à un effet d&apos;étirement temporel extrême ou de &quot;stase&quot;.</translation>
+        <translation>Paulstretch est réservé à un effet d&apos;étirement temporel extrême ou de &quot;stase&quot;</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
@@ -10497,7 +10503,10 @@ Pour la sélection audio courante, la
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>La &apos;résolution temporelle&apos; est trop longue pour la sélection.
+
+Essayez d’augmenter la sélection audio pour au moins %1 secondes,
+ou de réduire la &apos;résolution temporelle&apos; à moins de %2 secondes.</translation>
     </message>
 </context>
 <context>
@@ -10707,7 +10716,7 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>Étirement glissant</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -11367,7 +11376,7 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>Étirement glissant</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
@@ -11942,12 +11951,12 @@ Recommandé - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
         <source>Load template</source>
-        <translation>Charger un modèle</translation>
+        <translation>Charger modèle</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="61"/>
         <source>Save template</source>
-        <translation>Enregistrer un modèle</translation>
+        <translation>Enregistr. modèle</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="76"/>
@@ -11963,7 +11972,7 @@ Recommandé - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="111"/>
         <source>Add tag</source>
-        <translation>Ajouter un tag</translation>
+        <translation>Ajout tag</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="37"/>
@@ -14649,7 +14658,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
         <source>Off</source>
-        <translation>Éteint</translation>
+        <translation>Inactif</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
@@ -14892,7 +14901,7 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="34"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="58"/>
         <source>Bit Depth</source>
-        <translation>Profondeur binaire</translation>
+        <translation>Format d’échantillonnage</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="38"/>
@@ -14911,7 +14920,7 @@ supported by the current output file format. </source>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="43"/>
         <source>Level</source>
-        <translation>Volume</translation>
+        <translation>Niveau</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="58"/>
@@ -15196,13 +15205,13 @@ Veuillez télécharger la dernière version de &apos;LAME pour Audacity&apos;.</
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1090"/>
         <source>Only libmp3lame.so</source>
-        <translation>Uniquement libmp3lame.so</translation>
+        <translation>Seulement libmp3lame.so</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1091"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1114"/>
         <source>Primary shared object files</source>
-        <translation>Fichiers primaires d’objets partagés</translation>
+        <translation>Fichiers d&apos;objets partagés primaires</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1092"/>
@@ -15348,7 +15357,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="69"/>
         <source>Index[%1] Version[%2], Channels[%3], Rate[%4]</source>
-        <translation>Index[%1] Version[%2], Canaux[%3], Durée[%4]</translation>
+        <translation>Index[%1] Version[%2], Canaux[%3], Taux[%4]</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="353"/>
@@ -15554,7 +15563,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="295"/>
         <source>not an Opus file</source>
-        <translation>pas un fichier Opus</translation>
+        <translation>n&apos;est pas un fichier Opus</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="297"/>
@@ -15574,7 +15583,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="305"/>
         <source>stream is not seekable</source>
-        <translation>flux n&apos;est pas cherchable</translation>
+        <translation>flux n&apos;est pas à accès direct</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="307"/>
@@ -15611,7 +15620,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="398"/>
         <source>Other uncompressed files</source>
-        <translation>Autres formats non-compressés</translation>
+        <translation>Autres fichiers non-compressés</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="517"/>
@@ -15683,7 +15692,7 @@ Information Libsndfile “%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="21"/>
         <source>Low Quality (Fast)</source>
-        <translation>Basse qualité (rapide)</translation>
+        <translation>Basse qualité (Rapide)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="22"/>
@@ -15693,12 +15702,12 @@ Information Libsndfile “%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="23"/>
         <source>High Quality (Slow)</source>
-        <translation>Haute qualité (lent)</translation>
+        <translation>Haute qualité (Lent)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="24"/>
         <source>Very High Quality (Slowest)</source>
-        <translation>Très haute qualité (le plus lent)</translation>
+        <translation>Très haute qualité (Le plus lent)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="30"/>
@@ -15839,7 +15848,7 @@ Information Libsndfile “%2”</translation>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="56"/>
         <source>E&amp;xtended (with frequency ranges)</source>
-        <translation>Étendue (avec plages de fréquences) (&amp;x)</translation>
+        <translation>É&amp;tendue (avec plages de fréquences)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="126"/>
@@ -15938,7 +15947,7 @@ Information Libsndfile “%2”</translation>
     <message>
         <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
         <source>The received playlist is empty.</source>
-        <translation>La liste de lecture reçue est vide.</translation>
+        <translation>La playlist reçue est vide.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
@@ -16150,7 +16159,7 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="52"/>
         <source>Low Quality (Fastest)</source>
-        <translation>Basse qualité (le plus rapide)</translation>
+        <translation>Basse qualité (Le plus rapide)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="53"/>
@@ -16165,7 +16174,7 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../au3/libraries/au3-math/Resample.cpp" line="55"/>
         <source>Best Quality (Slowest)</source>
-        <translation>Meilleure qualité (le plus lent)</translation>
+        <translation>Meilleure qualité (Le plus lent)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="63"/>
@@ -16922,7 +16931,7 @@ Il ne sera pas chargé.</translation>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="909"/>
         <source>centihertz</source>
-        <translation>centihertz</translation>
+        <translation>centièmes de hertz</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="915"/>
@@ -19798,7 +19807,7 @@ Vous devez utiliser cette version d’Audacity pour récupérer le projet.</tran
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="159"/>
         <source>Add track</source>
-        <translation>Ajouter une piste</translation>
+        <translation>Ajout piste</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="139"/>
@@ -22299,17 +22308,17 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
         <source>direction is both</source>
-        <translation>la direction est a la fois verticale et horizontale</translation>
+        <translation>la direction est verticale et horizontale</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation>Développé</translation>
+        <translation>développé</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation>Réduit</translation>
+        <translation>réduit</translation>
     </message>
 </context>
 <context>
@@ -22735,12 +22744,12 @@ Souhaitez-vous continuer ?</translation>
         <source>Sequence has block file exceeding maximum %1 samples per block.
 Truncating to this maximum length.</source>
         <translation>La séquence a un fichier de bloc excédant un maximum de %1 échantillons par bloc.
-Tronquage à cette longueur maximum.</translation>
+Troncature à cette longueur maximum.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1017"/>
         <source>Warning - Truncating Overlong Block File</source>
-        <translation>Attention - Tronquage un fichier de bloc top long</translation>
+        <translation>Attention - Troncature d&apos;un fichier de bloc trop long</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="22"/>

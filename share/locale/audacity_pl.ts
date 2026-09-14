@@ -4284,7 +4284,7 @@ Ta czynność nie usunie żadnego z Twoich projektów.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
-        <translation>Polskie tłumaczenie Audacity: Grzegorz Pruchniakowski, Grzegorz Wojciechowski.</translation>
+        <translation>Polskie tłumaczenie Audacity: Grzegorz Wojciechowski.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>
@@ -22957,7 +22957,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../src/shared/types/workspacetitles.h" line="28"/>
         <source>Music</source>
         <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
-        <translation>Muzyka</translation>
+        <translation>Muzyczny</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>

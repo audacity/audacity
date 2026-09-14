@@ -895,13 +895,13 @@ muse::RetVal<LabelKey> TrackeditOperationController::addLabel(const TrackId& toT
     return retVal;
 }
 
-bool TrackeditOperationController::addLabelToSelection()
+muse::RetVal<LabelKey> TrackeditOperationController::addLabelToSelection()
 {
-    if (labelsInteraction()->addLabelToSelection()) {
+    const muse::RetVal<LabelKey> result = labelsInteraction()->addLabelToSelection();
+    if (result.ret) {
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Label added"), muse::trc("trackedit", "Add label"));
-        return true;
     }
-    return false;
+    return result;
 }
 
 bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)

@@ -39,7 +39,6 @@ public:
     virtual muse::RetVal<muse::io::path_t> askLocalPath(IAudacityProjectPtr project, SaveMode mode) const = 0;
     virtual muse::RetVal<CloudProjectInfo> askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const = 0;
     virtual muse::RetVal<CloudProjectInfo> askPublishLocation(IAudacityProjectPtr project) const = 0;
-    virtual muse::RetVal<CloudAudioInfo> askShareAudioLocation(IAudacityProjectPtr project) const = 0;
 
     virtual muse::RetVal<muse::io::path_t> resolveLegacyProjectFormat(const muse::io::path_t& path) const = 0;
 

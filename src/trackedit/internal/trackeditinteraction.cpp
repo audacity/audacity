@@ -443,7 +443,7 @@ muse::RetVal<LabelKey> TrackeditInteraction::addLabel(const TrackId& toTrackId)
     return m_interaction->addLabel(toTrackId);
 }
 
-bool TrackeditInteraction::addLabelToSelection()
+muse::RetVal<LabelKey> TrackeditInteraction::addLabelToSelection()
 {
     return m_interaction->addLabelToSelection();
 }
