@@ -34,5 +34,6 @@ public:
     virtual void resetNavigation() = 0;
 
     virtual muse::async::Channel<TrackItemKey> openContextMenuRequested() const = 0;
+    virtual muse::async::Channel<TrackId> openRulerContextMenuRequested() const = 0;
 };
 }

@@ -44,6 +44,7 @@ static const muse::actions::ActionCode TRACK_VIEW_ABOVE_ITEM_CODE("track-view-ab
 static const muse::actions::ActionCode TRACK_VIEW_BELOW_ITEM_CODE("track-view-below-item");
 
 static const muse::actions::ActionCode TRACK_VIEW_ITEM_CONTEXT_MENU_CODE("track-view-item-context-menu");
+static const muse::actions::ActionCode TRACK_VIEW_RULER_CONTEXT_MENU_CODE("track-view-ruler-context-menu");
 
 static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
@@ -66,6 +67,7 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, TRACK_VIEW_TRACK_SELECTION_NEXT_CODE, this, &TrackNavigationController::multiSelectionDown);
 
     dispatcher()->reg(this, TRACK_VIEW_ITEM_CONTEXT_MENU_CODE, this, &TrackNavigationController::openContextMenuForFocusedItem);
+    dispatcher()->reg(this, TRACK_VIEW_RULER_CONTEXT_MENU_CODE, this, &TrackNavigationController::openContextMenuForFocusedRuler);
 
     dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, [this] {
         m_selectionStart = std::nullopt;
@@ -197,6 +199,11 @@ muse::async::Channel<TrackItemKey, bool> TrackNavigationController::focusedItemC
 muse::async::Channel<TrackItemKey> TrackNavigationController::openContextMenuRequested() const
 {
     return m_openContextMenuRequested;
+}
+
+muse::async::Channel<au::trackedit::TrackId> TrackNavigationController::openRulerContextMenuRequested() const
+{
+    return m_openRulerContextMenuRequested;
 }
 
 TrackItemKey TrackNavigationController::focusedItemKey() const
@@ -837,6 +844,17 @@ void TrackNavigationController::openContextMenuForFocusedItem()
     }
 
     m_openContextMenuRequested.send(m_focusedItemKey);
+}
+
+void TrackNavigationController::openContextMenuForFocusedRuler()
+{
+    MYLOG() << "track: " << m_focusedItemKey.trackId;
+
+    if (m_focusedItemKey.trackId == INVALID_TRACK) {
+        return;
+    }
+
+    m_openRulerContextMenuRequested.send(m_focusedItemKey.trackId);
 }
 
 void TrackNavigationController::au3SetTrackFocused(const TrackId& trackId)

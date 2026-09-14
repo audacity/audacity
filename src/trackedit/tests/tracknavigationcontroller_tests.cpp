@@ -406,6 +406,32 @@ TEST_F(TrackNavigationControllerTests, ContextMenuRequestedForFocusedTrack)
 }
 
 /**
+ * track-view-ruler-context-menu (routed from Shift+F10 while a vertical ruler is focused)
+ * requests the ruler context menu of the focused track.
+ */
+TEST_F(TrackNavigationControllerTests, RulerContextMenuRequestedForFocusedTrack)
+{
+    //! [GIVEN] One track, focus on the track (its ruler is a track focus without item)
+    setupTracks({ { 1, {} } });
+
+    initController();
+    m_controller->setFocusedTrack(1);
+
+    //! [GIVEN] A listener on the ruler context-menu request channel
+    TrackId requested = INVALID_TRACK;
+    muse::async::Channel<TrackId> channel = m_controller->openRulerContextMenuRequested();
+    channel.onReceive(m_controller.get(), [&requested](const TrackId& trackId) {
+        requested = trackId;
+    });
+
+    //! [WHEN] Shift+F10 is pressed
+    invokeAction("track-view-ruler-context-menu");
+
+    //! [THEN] The ruler context menu is requested for the focused track
+    EXPECT_EQ(requested, 1);
+}
+
+/**
  * track-view-item-context-menu is a no-op when nothing is focused.
  */
 TEST_F(TrackNavigationControllerTests, ContextMenuNotRequestedWithoutFocus)
