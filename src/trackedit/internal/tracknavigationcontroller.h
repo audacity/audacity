@@ -56,6 +56,7 @@ public:
     void resetNavigation() override;
 
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
+    muse::async::Channel<TrackId> openRulerContextMenuRequested() const override;
 
 private:
     friend class TrackNavigationControllerTests;
@@ -99,6 +100,7 @@ private:
     void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
 
     void openContextMenuForFocusedItem();
+    void openContextMenuForFocusedRuler();
 
     void au3SetTrackFocused(const TrackId& trackId);
 
@@ -118,5 +120,6 @@ private:
     muse::async::Channel<TrackId, bool /*highlight*/> m_focusedTrackChanged;
 
     muse::async::Channel<TrackItemKey> m_openContextMenuRequested;
+    muse::async::Channel<TrackId> m_openRulerContextMenuRequested;
 };
 }

@@ -28,5 +28,6 @@ public:
     MOCK_METHOD(void, resetNavigation, (), (override));
 
     MOCK_METHOD(muse::async::Channel<TrackItemKey>, openContextMenuRequested, (), (const, override));
+    MOCK_METHOD(muse::async::Channel<TrackId>, openRulerContextMenuRequested, (), (const, override));
 };
 }
