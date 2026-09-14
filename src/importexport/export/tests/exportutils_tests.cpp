@@ -7,26 +7,37 @@
 
 using namespace au::importexport;
 
-TEST(ExportUtilsTests, SeparateFileNameUsesTrackNameAlone)
+TEST(ExportUtilsTests, FormatFileNameUsesTrackNameAlone)
 {
-    EXPECT_EQ(utils::separateFileName("", std::nullopt, "Vocals"), "Vocals");
+    EXPECT_EQ(utils::formatFileName("", std::nullopt, "Vocals"), "Vocals");
 }
 
-TEST(ExportUtilsTests, SeparateFileNamePutsNumberBeforeName)
+TEST(ExportUtilsTests, FormatFileNamePutsNumberBeforeName)
 {
-    EXPECT_EQ(utils::separateFileName("", 3, "Vocals"), "03.Vocals");
+    EXPECT_EQ(utils::formatFileName("", 3, "Vocals"), "03.Vocals");
 }
 
-TEST(ExportUtilsTests, SeparateFileNamePutsPrefixFirst)
+TEST(ExportUtilsTests, FormatFileNamePutsPrefixFirst)
 {
-    EXPECT_EQ(utils::separateFileName("Song", std::nullopt, "Vocals"), "Song.Vocals");
-    EXPECT_EQ(utils::separateFileName("Song", 12, "Vocals"), "Song.12.Vocals");
+    EXPECT_EQ(utils::formatFileName("Song", std::nullopt, "Vocals"), "Song.Vocals");
+    EXPECT_EQ(utils::formatFileName("Song", 12, "Vocals"), "Song.12.Vocals");
 }
 
-TEST(ExportUtilsTests, SeparateFileNameSkipsEmptyParts)
+TEST(ExportUtilsTests, FormatFileNameSkipsEmptyParts)
 {
-    EXPECT_EQ(utils::separateFileName("", 1, ""), "01");
-    EXPECT_EQ(utils::separateFileName("Song", std::nullopt, ""), "Song");
+    EXPECT_EQ(utils::formatFileName("", 1, ""), "01");
+    EXPECT_EQ(utils::formatFileName("Song", std::nullopt, ""), "Song");
+}
+
+TEST(ExportUtilsTests, SanitizeFileNameReplacesInvalidCharacters)
+{
+    EXPECT_EQ(utils::sanitizeFileName("a/b\\c:d*e?f\"g<h>i|j"), "a_b_c_d_e_f_g_h_i_j");
+    EXPECT_EQ(utils::sanitizeFileName("tab\there"), "tab_here");
+}
+
+TEST(ExportUtilsTests, SanitizeFileNameKeepsUnicodeAndPunctuation)
+{
+    EXPECT_EQ(utils::sanitizeFileName("Ärger & Éclat's (take 2).wav"), "Ärger & Éclat's (take 2).wav");
 }
 
 TEST(ExportUtilsTests, UniqueFileNamesKeepFirstOccurrence)
@@ -56,6 +67,29 @@ TEST(ExportUtilsTests, UniqueFileNamesSkipTakenSuffixes)
     names.registerName("Vocals");
     names.registerName("Vocals-2");
     EXPECT_EQ(names.registerName("Vocals"), "Vocals-3");
+}
+
+TEST(ExportUtilsTests, UniqueFileNamesIgnoreUnicodeCase)
+{
+    utils::UniqueFileNames names;
+    names.registerName("Ä");
+    EXPECT_EQ(names.registerName("ä"), "ä-2");
+    names.registerName("Ünïcødé");
+    EXPECT_EQ(names.registerName("ünïcødé"), "ünïcødé-2");
+}
+
+TEST(ExportUtilsTests, UniqueFileNamesTreatCanonicallyEquivalentNamesAsDuplicates)
+{
+    utils::UniqueFileNames names;
+    names.registerName("\u00e9");
+    EXPECT_EQ(names.registerName("e\u0301"), "e\u0301-2");
+}
+
+TEST(ExportUtilsTests, MakeFileNameFormatsSanitizesAndDeduplicates)
+{
+    utils::UniqueFileNames names;
+    EXPECT_EQ(utils::makeFileName("Song", 1, "A/B", names), "Song.01.A_B");
+    EXPECT_EQ(utils::makeFileName("Song", 1, "a\\b", names), "Song.01.a_b-2");
 }
 
 TEST(ExportUtilsTests, LabelExportRangesKeepRegionLabels)

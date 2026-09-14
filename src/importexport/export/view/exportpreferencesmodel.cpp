@@ -245,7 +245,7 @@ bool ExportPreferencesModel::hasLabelsToExport() const
     const IExporter::Options options {
         { IExporter::OptionKey::ProcessType, muse::Val(ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE) },
     };
-    return !exporter()->separateFileNames(options).empty();
+    return exporter()->prepareSeparateFiles(options).success();
 }
 
 bool ExportPreferencesModel::trimBlankSpace() const
@@ -330,8 +330,8 @@ QString ExportPreferencesModel::fileNamePreview() const
     //: Placeholder for a track's name in the export file name preview
     const std::string trackName = muse::trc("export", "TrackName");
     const std::optional<int> number = includeNumbers() ? std::optional<int>(1) : std::nullopt;
-    const std::string name = utils::separateFileName(m_fileNamePrefix.toStdString(), number,
-                                                     separateFilesByLabels() ? labelName : trackName);
+    const std::string name = utils::sanitizeFileName(utils::formatFileName(m_fileNamePrefix.toStdString(), number,
+                                                                           separateFilesByLabels() ? labelName : trackName));
 
     const std::vector<std::string> extensions = exporter()->formatExtensions(currentFormat().toStdString());
     return QString::fromStdString(extensions.empty() ? name : name + "." + extensions.front());
@@ -763,10 +763,13 @@ muse::Ret ExportPreferencesModel::exportSingleFile()
 
 muse::Ret ExportPreferencesModel::exportSeparateFiles()
 {
-    const IExporter::Options options = separateFilesOptions();
-    const muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
+    const muse::Ret prepared = exporter()->prepareSeparateFiles(separateFilesOptions());
+    if (!prepared) {
+        return prepared;
+    }
 
-    const std::vector<std::string> fileNames = exporter()->separateFileNames(options);
+    const muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
+    const std::vector<std::string> fileNames = exporter()->separateFileNames();
     const bool anyFileExists = std::any_of(fileNames.begin(), fileNames.end(), [this, &directoryPath](const std::string& name) {
         return fileSystem()->exists(directoryPath.appendingComponent(name));
     });
@@ -776,7 +779,7 @@ muse::Ret ExportPreferencesModel::exportSeparateFiles()
         return muse::make_ret(muse::Ret::Code::Cancel);
     }
 
-    return exporter()->exportSeparateFiles(directoryPath, options);
+    return exporter()->exportSeparateFiles(directoryPath);
 }
 
 bool ExportPreferencesModel::confirmOverwrite(const std::string& question)

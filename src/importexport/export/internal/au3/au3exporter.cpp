@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <optional>
+#include <utility>
 
 #include "framework/global/async/asyncable.h"
 
@@ -16,7 +17,6 @@
 #include "au3-tags/Tags.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "au3-strings/Internat.h"
 #include "au3-strings/TranslatableString.h"
 
 #include "RegisterExportPlugins.h"
@@ -60,15 +60,6 @@ std::vector<bool> prepareChannelMask(TrackList& trackList, bool selectedOnly)
     }
 
     return channelMask;
-}
-
-std::string separateFileName(const std::string& prefix, std::optional<int> number, const std::string& title,
-                             au::importexport::utils::UniqueFileNames& usedNames)
-{
-    const std::string itemName = title.empty() ? muse::trc("export", "untitled") : title;
-    wxString name = wxFromStdString(au::importexport::utils::separateFileName(prefix, number, itemName));
-    Internat::SanitiseFilename(name, wxT("_"));
-    return usedNames.registerName(wxToStdString(name));
 }
 
 class ExclusiveTrackSelection
@@ -439,28 +430,6 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
     return runExport(*au3Project, wxFromPath(path), progress);
 }
 
-std::vector<Au3Exporter::SeparateFile> Au3Exporter::separateFiles(Au3Project& project, const Options& options) const
-{
-    const ExportProcessType processType = options.count(OptionKey::ProcessType)
-                                          ? options.at(OptionKey::ProcessType).toEnum<ExportProcessType>()
-                                          : exportConfiguration()->processType();
-    const std::string prefix = options.count(OptionKey::FileNamePrefix)
-                               ? options.at(OptionKey::FileNamePrefix).toString()
-                               : std::string();
-    const bool includeNumbers = options.count(OptionKey::IncludeNumbers)
-                                ? options.at(OptionKey::IncludeNumbers).toBool()
-                                : exportConfiguration()->includeNumbers();
-
-    if (processType == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE) {
-        const bool includeAudioBeforeFirstLabel = options.count(OptionKey::IncludeAudioBeforeFirstLabel)
-                                                  ? options.at(OptionKey::IncludeAudioBeforeFirstLabel).toBool()
-                                                  : exportConfiguration()->includeAudioBeforeFirstLabel();
-        return labelFiles(project, prefix, includeNumbers, includeAudioBeforeFirstLabel);
-    }
-
-    return trackFiles(project, prefix, includeNumbers);
-}
-
 std::vector<Au3Exporter::SeparateFile> Au3Exporter::trackFiles(Au3Project& project, const std::string& prefix,
                                                                bool includeNumbers) const
 {
@@ -481,10 +450,11 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::trackFiles(Au3Project& proje
         SeparateFile file;
         file.track = track;
         file.number = number;
-        file.title = wxToStdString(track->GetName());
+        const std::string title = wxToStdString(track->GetName());
+        file.title = title.empty() ? muse::trc("export", "untitled") : title;
         file.t0 = trimBlankSpace ? track->GetStartTime() : 0.0;
         file.t1 = track->GetEndTime();
-        file.name = separateFileName(prefix, includeNumbers ? std::optional<int>(number) : std::nullopt, file.title, usedNames);
+        file.name = utils::makeFileName(prefix, includeNumbers ? std::optional<int>(number) : std::nullopt, file.title, usedNames);
 
         files.push_back(std::move(file));
         ++number;
@@ -542,7 +512,7 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(Au3Project& proje
             file.title = muse::io::completeBasename(globalContext()->currentProject()->displayName()).toStdString();
             file.t0 = start;
             file.t1 = end;
-            file.name = separateFileName(prefix, includeNumbers ? std::optional<int>(0) : std::nullopt, file.title, usedNames);
+            file.name = utils::makeFileName(prefix, includeNumbers ? std::optional<int>(0) : std::nullopt, file.title, usedNames);
 
             files.push_back(std::move(file));
         }
@@ -556,10 +526,11 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(Au3Project& proje
 
         SeparateFile file;
         file.number = number;
-        file.title = labels[i].title.toStdString();
+        const std::string title = labels[i].title.toStdString();
+        file.title = title.empty() ? muse::trc("export", "untitled") : title;
         file.t0 = ranges[i].start;
         file.t1 = ranges[i].end;
-        file.name = separateFileName(prefix, includeNumbers ? std::optional<int>(number) : std::nullopt, file.title, usedNames);
+        file.name = utils::makeFileName(prefix, includeNumbers ? std::optional<int>(number) : std::nullopt, file.title, usedNames);
 
         files.push_back(std::move(file));
         ++number;
@@ -568,29 +539,69 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(Au3Project& proje
     return files;
 }
 
-std::vector<std::string> Au3Exporter::separateFileNames(const Options& options) const
+muse::Ret Au3Exporter::prepareSeparateFiles(const Options& options)
 {
+    m_separateFiles.clear();
+    m_separateFilesOptions = options;
+
     const auto project = globalContext()->currentProject();
-    if (!project) {
-        return {};
+    IF_ASSERT_FAILED(project) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
     Au3Project* au3Project = reinterpret_cast<Au3Project*>(project->au3ProjectPtr());
-    if (!au3Project) {
-        return {};
+    IF_ASSERT_FAILED(au3Project) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    const std::string extension = formatExtension(options);
+    const ExportProcessType processType = options.count(OptionKey::ProcessType)
+                                          ? options.at(OptionKey::ProcessType).toEnum<ExportProcessType>()
+                                          : exportConfiguration()->processType();
+    const std::string prefix = options.count(OptionKey::FileNamePrefix)
+                               ? options.at(OptionKey::FileNamePrefix).toString()
+                               : std::string();
+    const bool includeNumbers = options.count(OptionKey::IncludeNumbers)
+                                ? options.at(OptionKey::IncludeNumbers).toBool()
+                                : exportConfiguration()->includeNumbers();
+
+    if (processType == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE) {
+        const bool includeAudioBeforeFirstLabel = options.count(OptionKey::IncludeAudioBeforeFirstLabel)
+                                                  ? options.at(OptionKey::IncludeAudioBeforeFirstLabel).toBool()
+                                                  : exportConfiguration()->includeAudioBeforeFirstLabel();
+        m_separateFiles = labelFiles(*au3Project, prefix, includeNumbers, includeAudioBeforeFirstLabel);
+        if (m_separateFiles.empty()) {
+            return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "No labels to export."));
+        }
+    } else {
+        m_separateFiles = trackFiles(*au3Project, prefix, includeNumbers);
+        if (m_separateFiles.empty()) {
+            return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "There are no tracks to export"));
+        }
+    }
+
+    return muse::make_ok();
+}
+
+std::vector<std::string> Au3Exporter::separateFileNames() const
+{
+    const std::string extension = formatExtension(m_separateFilesOptions);
     std::vector<std::string> names;
-    for (const SeparateFile& file : separateFiles(*au3Project, options)) {
+    names.reserve(m_separateFiles.size());
+    for (const SeparateFile& file : m_separateFiles) {
         names.push_back(extension.empty() ? file.name : file.name + "." + extension);
     }
 
     return names;
 }
 
-muse::Ret Au3Exporter::exportSeparateFiles(const muse::io::path_t& directory, const Options& options, muse::ProgressPtr progress)
+muse::Ret Au3Exporter::exportSeparateFiles(const muse::io::path_t& directory, muse::ProgressPtr progress)
 {
+    const std::vector<SeparateFile> files = std::exchange(m_separateFiles, {});
+    const Options options = std::exchange(m_separateFilesOptions, {});
+    IF_ASSERT_FAILED(!files.empty()) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
     const auto exportProject = globalContext()->currentProject();
     IF_ASSERT_FAILED(exportProject) {
         return muse::make_ret(muse::Ret::Code::InternalError);
@@ -610,13 +621,6 @@ muse::Ret Au3Exporter::exportSeparateFiles(const muse::io::path_t& directory, co
                                           ? options.at(OptionKey::ProcessType).toEnum<ExportProcessType>()
                                           : exportConfiguration()->processType();
     const bool byLabels = processType == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
-
-    const std::vector<SeparateFile> files = separateFiles(*au3Project, options);
-    if (files.empty()) {
-        return muse::make_ret(muse::Ret::Code::InternalError,
-                              byLabels ? muse::trc("export", "No labels to export.")
-                              : muse::trc("export", "There are no tracks to export"));
-    }
 
     const auto exportChannelsType = ExportChannelsPref::ExportChannels(options.count(OptionKey::ExportChannelsType)
                                                                        ? options.at(OptionKey::ExportChannelsType).toInt()

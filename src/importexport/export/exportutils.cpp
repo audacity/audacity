@@ -4,7 +4,7 @@
 
 #include "exportutils.h"
 
-#include "framework/global/stringutils.h"
+#include <QString>
 
 muse::Val au::importexport::utils::matrixToVal(const std::vector<std::vector<bool> >& matrix)
 {
@@ -50,7 +50,7 @@ std::vector<std::vector<bool> > au::importexport::utils::valToMatrix(const muse:
     return matrix;
 }
 
-std::string au::importexport::utils::separateFileName(const std::string& prefix, std::optional<int> number, const std::string& name)
+std::string au::importexport::utils::formatFileName(const std::string& prefix, std::optional<int> number, const std::string& name)
 {
     std::string result;
     const auto append = [&result](const std::string& part) {
@@ -73,17 +73,42 @@ std::string au::importexport::utils::separateFileName(const std::string& prefix,
     return result;
 }
 
-std::string au::importexport::utils::UniqueFileNames::registerName(const std::string& name)
+std::string au::importexport::utils::sanitizeFileName(const std::string& name)
 {
+    static const std::string invalidChars = "\\/:*?\"<>|";
+
     std::string result = name;
-    std::string lowered = muse::strings::toLower(result);
-    for (int i = 2; m_loweredNames.count(lowered) > 0; ++i) {
-        result = name + "-" + std::to_string(i);
-        lowered = muse::strings::toLower(result);
+    for (char& ch : result) {
+        const unsigned char code = static_cast<unsigned char>(ch);
+        if (code < 0x20 || code == 0x7F || invalidChars.find(ch) != std::string::npos) {
+            ch = '_';
+        }
     }
 
-    m_loweredNames.insert(lowered);
     return result;
+}
+
+std::string au::importexport::utils::UniqueFileNames::registerName(const std::string& name)
+{
+    const auto fold = [](const std::string& value) {
+        return QString::fromStdString(value).normalized(QString::NormalizationForm_C).toCaseFolded().toStdString();
+    };
+
+    std::string result = name;
+    std::string folded = fold(result);
+    for (int i = 2; m_foldedNames.count(folded) > 0; ++i) {
+        result = name + "-" + std::to_string(i);
+        folded = fold(result);
+    }
+
+    m_foldedNames.insert(folded);
+    return result;
+}
+
+std::string au::importexport::utils::makeFileName(const std::string& prefix, std::optional<int> number, const std::string& name,
+                                                  UniqueFileNames& usedNames)
+{
+    return usedNames.registerName(sanitizeFileName(formatFileName(prefix, number, name)));
 }
 
 std::vector<au::importexport::utils::TimeRange> au::importexport::utils::labelExportRanges(const std::vector<TimeRange>& labels,
