@@ -36,9 +36,9 @@ public:
     muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr,
                          au::project::IAudacityProjectPtr project = nullptr) override;
 
-    std::vector<std::string> separateFileNames(const Options& options = {}) const override;
-    muse::Ret exportSeparateFiles(const muse::io::path_t& directory, const Options& options = {},
-                                  muse::ProgressPtr progress = nullptr) override;
+    muse::Ret prepareSeparateFiles(const Options& options = {}) override;
+    std::vector<std::string> separateFileNames() const override;
+    muse::Ret exportSeparateFiles(const muse::io::path_t& directory, muse::ProgressPtr progress = nullptr) override;
 
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;
@@ -72,7 +72,6 @@ private:
     muse::Ret prepareFormat(const Options& options);
     muse::Ret prepareMix(au::au3::Au3Project& project, const Options& options);
     std::string formatExtension(const Options& options) const;
-    std::vector<SeparateFile> separateFiles(au::au3::Au3Project& project, const Options& options) const;
     std::vector<SeparateFile> trackFiles(au::au3::Au3Project& project, const std::string& prefix, bool includeNumbers) const;
     std::vector<SeparateFile> labelFiles(au::au3::Au3Project& project, const std::string& prefix, bool includeNumbers,
                                          bool includeAudioBeforeFirstLabel) const;
@@ -89,5 +88,7 @@ private:
     std::unique_ptr<MixerOptions::Downmix> m_downMix;
     MixerOptions::Downmix* m_mixerSpec{};
     const Tags* m_tags{};
+    Options m_separateFilesOptions;
+    std::vector<SeparateFile> m_separateFiles;
 };
 }
