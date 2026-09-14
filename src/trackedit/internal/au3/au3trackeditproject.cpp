@@ -204,6 +204,9 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
     case TrackListEvent::DELETION: {
         if (e.mExtra == 1) {
             m_impl->trackReplacing = true;
+        } else {
+            updateHasAudioContent();
+            updateHasLabels();
         }
     } break;
     case TrackListEvent::ADDITION: {
@@ -211,6 +214,8 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
             onTrackDataChanged(trackId);
             m_impl->trackReplacing = false;
         }
+        updateHasAudioContent();
+        updateHasLabels();
     } break;
     default:
         break;
