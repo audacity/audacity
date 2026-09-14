@@ -26,6 +26,7 @@
 #include "au3-module-manager/ModuleManager.h"
 
 #include "au3-strings/wxArrayStringEx.h"
+#include "au3-files/FileNames.h"
 #include "au3-files/PlatformCompatibility.h"
 #include "au3-module-manager/PluginInterface.h"
 #include "au3-components/PluginProvider.h"
@@ -256,6 +257,9 @@ VST3EffectsModule::FindModulePaths(PluginManagerInterface& pluginManager,
         auto customPaths = pluginManager.ReadCustomPaths(*this);
         std::copy(customPaths.begin(), customPaths.end(), std::back_inserter(pathList));
     }
+
+    // VST3 paths are filesystem paths: we can use this helper to remove duplicates.
+    FileNames::RemoveDuplicatesFromPathList(pathList);
 
     PluginPaths result;
 
