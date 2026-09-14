@@ -75,6 +75,7 @@ void EffectsActionsController::registerActions()
     m_uiActions->reload();
     uiActionsRegister()->unreg(m_uiActions);
     uiActionsRegister()->reg(m_uiActions);
+    shortcutsRegister()->reload();
 }
 
 void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuery& q)
