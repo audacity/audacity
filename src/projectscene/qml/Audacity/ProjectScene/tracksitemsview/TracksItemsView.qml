@@ -14,6 +14,7 @@ Rectangle {
     id: root
 
     property var navPanels: null
+    property var rulerNavPanels: null
 
     //! NOTE: the control of the empty project, it has no item of its own,
     //! so the tracks area draws the navigation focus border for it
@@ -1305,6 +1306,7 @@ Rectangle {
 
             model: tracksModel
             context: timeline.context
+            navPanels: root.rulerNavPanels
 
             height: parent.height
             width: verticalRulerPanelHeader.width
