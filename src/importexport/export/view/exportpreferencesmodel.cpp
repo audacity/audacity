@@ -233,7 +233,7 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
     if (type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE && !hasLabelsToExport()) {
         interactive()->error(muse::trc("export", "No labels"),
                              muse::trc("export",
-                                       "Export each label as a separate audio file requires at least one label in the project. Please return to the project, add labels and then try again."));
+                                       "Export each label as a separate audio file requires at least one label on the first label track. Please return to the project, add labels and then try again."));
         return;
     }
 
@@ -731,8 +731,9 @@ void ExportPreferencesModel::exportData()
         return;
     }
 
-    if (!result.success() && !result.text().empty()) {
-        interactive()->error(muse::trc("export", "Export error"), result.text());
+    if (!result.success()) {
+        const std::string message = result.text().empty() ? muse::trc("export", "Export failed") : result.text();
+        interactive()->error(muse::trc("export", "Export error"), message);
         return;
     }
 
