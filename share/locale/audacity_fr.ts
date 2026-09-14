@@ -8593,7 +8593,7 @@ plage de fréquences sur laquelle l&apos;effet doit agir.</translation>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2062"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
-        <translation>Cette version d’Audacity ne supporte pas la version %1 de plugin Nyquist.</translation>
+        <translation>Cette version d’Audacity ne supporte pas la version %1 de plugin Nyquist</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
@@ -8613,7 +8613,7 @@ Pour SAL, utilisez une instruction de retour telle que :
 	return *track* * 0.1
 ou, pour LISP, commencez par une parenthèse ouvrante telle que :
 	(mult *track* 0.1)
-</translation>
+.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
@@ -10465,7 +10465,7 @@ Daulton</translation>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation>Paulstretch est réservé à un effet d&apos;étirement temporel extrême ou de &quot;stase&quot;.</translation>
+        <translation>Paulstretch est réservé à un effet d&apos;étirement temporel extrême ou de &quot;stase&quot;</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
@@ -22308,17 +22308,17 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
         <source>direction is both</source>
-        <translation>la direction est a la fois verticale et horizontale</translation>
+        <translation>la direction est verticale et horizontale</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation>Développé</translation>
+        <translation>développé</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation>Réduit</translation>
+        <translation>réduit</translation>
     </message>
 </context>
 <context>
