@@ -45,25 +45,17 @@ ExportPlugin* formatPlugin(const std::string& format)
 
 std::vector<bool> prepareChannelMask(TrackList& trackList, bool selectedOnly)
 {
-    auto tracks = trackList.Any<WaveTrack>();
+    const auto tracks = trackList.Any<WaveTrack>();
+    const bool anySolo = !(tracks + &WaveTrack::GetSolo).empty();
     std::vector<bool> channelMask(
         tracks.sum([](const auto track) { return track->NChannels(); }),
         false);
     unsigned trackIndex = 0;
     for (const auto track : tracks) {
-        if (track->GetSolo()) {
-            channelMask.assign(channelMask.size(), false);
-            for (unsigned i = 0; i < track->NChannels(); ++i) {
-                channelMask[trackIndex++] = true;
-            }
-            break;
-        }
-        if (!track->GetMute() && (!selectedOnly || track->GetSelected())) {
-            for (unsigned i = 0; i < track->NChannels(); ++i) {
-                channelMask[trackIndex++] = true;
-            }
-        } else {
-            trackIndex += track->NChannels();
+        const bool audible = anySolo ? track->GetSolo() : !track->GetMute();
+        const bool exported = audible && (!selectedOnly || track->GetSelected());
+        for (unsigned i = 0; i < track->NChannels(); ++i) {
+            channelMask[trackIndex++] = exported;
         }
     }
 
@@ -308,6 +300,10 @@ muse::Ret Au3Exporter::runExport(Au3Project& project, const wxFileName& wxfilena
                 delegate.UpdateUI();
             }
             result = f.get();
+        }
+
+        if (result == ExportResult::Cancelled || result == ExportResult::Stopped) {
+            return muse::make_ret(muse::Ret::Code::Cancel);
         }
 
         if (result != ExportResult::Success) {
