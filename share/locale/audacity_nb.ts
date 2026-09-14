@@ -3639,12 +3639,12 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="64"/>
         <source>Cloud account</source>
-        <translation type="unfinished"/>
+        <translation>Skykonto</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="54"/>
         <source>Home menu</source>
-        <translation type="unfinished"/>
+        <translation>Hjem-meny</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
@@ -3660,12 +3660,12 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="97"/>
         <source>Plugins</source>
-        <translation type="unfinished"/>
+        <translation>Tillegg</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="110"/>
         <source>Plugins search</source>
-        <translation type="unfinished"/>
+        <translation>Søk i tillegg</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
@@ -3682,7 +3682,7 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/MainToolBar.qml" line="64"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WindowContent.qml" line="61"/>
         <source>Main toolbar</source>
-        <translation type="unfinished"/>
+        <translation>Hovedverktøyslinje</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="59"/>
@@ -4132,7 +4132,7 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="480"/>
         <source>Scriptables1</source>
-        <translation type="unfinished"/>
+        <translation>Skriptbare1</translation>
     </message>
 </context>
 <context>
@@ -4324,7 +4324,7 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
         <source>Audacity the free, open source, cross-platform software for recording and editing sounds.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity er en gratis, åpen kildekode-programvare for opptak og redigering av lyd på tvers av plattformer.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
@@ -4334,32 +4334,32 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
         <source>Audacity website: %1</source>
-        <translation type="unfinished"/>
+        <translation>Audacity-nettsted: %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Audacity®&lt;/b&gt;-programvaren  er opphavsrettslig beskyttet © 1999-%1 Audacity-teamet.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
-        <translation type="unfinished"/>
+        <translation>Navnet &lt;b&gt;Audacity&lt;/b&gt; er et registrert varemerke.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="27"/>
         <source>Privacy</source>
-        <translation type="unfinished"/>
+        <translation>Personvern</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="28"/>
         <source>App update checking and error reporting require network access. These features are optional.&lt;br&gt;See our %1 for more info.</source>
-        <translation type="unfinished"/>
+        <translation>Oppdateringssjekk og feilinnmelding krever nettverkstilgang. Disse funksjonene er valgfrie.&lt;br&gt;Se vår %1 for mer informasjon.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="54"/>
         <source>privacy policy</source>
-        <translation type="unfinished"/>
+        <translation>personvernregler</translation>
     </message>
 </context>
 <context>
@@ -4384,31 +4384,31 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <name>appshell/gettingstarted</name>
     <message>
         <source>Preferences → Application</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Innstillinger → Programvare</translation>
     </message>
     <message>
         <source>App Updates</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Programoppdateringer</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="39"/>
         <source>Audacity notifies you in-app when a new version is available to download.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity varsler deg når en ny versjon kan lastes ned.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="40"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
-        <translation type="unfinished"/>
+        <translation>Du kan skru dette av i %1.</translation>
     </message>
     <message>
         <source>Usage Info</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Bruksinfo</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
         <source>Preferences → General</source>
-        <translation type="unfinished"/>
+        <translation>Innstillinger → Generelt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
@@ -4418,12 +4418,12 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="41"/>
         <source>Crash reports</source>
-        <translation type="unfinished"/>
+        <translation>Krasjrapporter</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
         <source>Audacity automatically sends crash reports to help us improve product quality.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity sender automatisk krasjrapporter for å hjelpe oss med å forbedre produktet.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="44"/>
@@ -4433,17 +4433,17 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="46"/>
         <source>privacy policy</source>
-        <translation type="unfinished"/>
+        <translation>personvernregler</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="47"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.</source>
-        <translation type="unfinished"/>
+        <translation>For å hjelpe oss med å forstå hvordan folk bruker Audacity, lager vi en tilfeldig ID (UUID) for hver installasjon. ID-en inneholder ingen personlig identifiserbar informasjon. Vil du vite mer? Sjekk vår %1.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="48"/>
         <source>You can disable this anytime in %1.</source>
-        <translation type="unfinished"/>
+        <translation>Du kan skru dette av i %1.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="49"/>
@@ -4473,7 +4473,7 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
 %1 is the workspace description, %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this workspace&quot;)
 ----------
 %1 is the workspace description, %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available workspace&quot;)</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. %2</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/PlaybackPage.qml" line="31"/>
@@ -4488,7 +4488,7 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="16"/>
         <source>Connect to your audio.com account</source>
-        <translation type="unfinished"/>
+        <translation>Koble til din audio.com-konto</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
@@ -4517,22 +4517,22 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
         <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=&quot;%1&quot;&gt;Glemt passordet?&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
         <source>Don’t have an account?</source>
-        <translation type="unfinished"/>
+        <translation>Har du ingen konto?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="41"/>
         <source>Create new account</source>
-        <translation type="unfinished"/>
+        <translation>Opprett konto</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
         <source>Already have an account?</source>
-        <translation type="unfinished"/>
+        <translation>Har du allerede konto?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
@@ -4543,7 +4543,7 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="46"/>
         <source>Loading…</source>
-        <translation type="unfinished"/>
+        <translation>Laster...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
@@ -4553,87 +4553,88 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="99"/>
         <source>Social sign-in options</source>
-        <translation type="unfinished"/>
+        <translation>Innloggingsvalg for sosiale medier</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="164"/>
         <source>Email field</source>
-        <translation type="unfinished"/>
+        <translation>E-post-felt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="224"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="231"/>
         <source>Forgot password</source>
-        <translation type="unfinished"/>
+        <translation>Glemt passord</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
         <source>Password field</source>
-        <translation type="unfinished"/>
+        <translation>Passordfelt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="311"/>
         <source>Form action</source>
-        <translation type="unfinished"/>
+        <translation>Skjemahandling</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Sign in link</source>
-        <translation type="unfinished"/>
+        <translation>Innloggingslenke</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Create account link</source>
-        <translation type="unfinished"/>
+        <translation>Lag kontolenke</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/TutorialsPage.qml" line="31"/>
         <source>Video tutorials</source>
-        <translation type="unfinished"/>
+        <translation>Videoveiledninger</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/TutorialsPage.qml" line="32"/>
         <source>Behind this dialog is the ‘Learn’ section, where you’ll find tutorials to get you started
 (Video tutorials require an internet connection)</source>
-        <translation type="unfinished"/>
+        <translation>Bak denne dialogen finner du opplærings-seksjonen. Der finner du veiledninger
+(videoveiledninger krever internett-tilkobling)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/UnderConstructionPage.qml" line="12"/>
         <source>Pre-alpha build</source>
-        <translation type="unfinished"/>
+        <translation>Pre-alfa bygg</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/UnderConstructionPage.qml" line="13"/>
         <source>Many features are currently unavailable, but our team is actively developing and implementing them for future releases.</source>
-        <translation type="unfinished"/>
+        <translation>Mange funksjoner er foreløpig utilgjengelige, men teamet utvikler og implementerer dem for kommende versjoner.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
         <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1-tema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
         <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
-        <translation type="unfinished"/>
+        <translation>Velg %1-tema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="97"/>
         <source>%1. Currently selected</source>
         <extracomment>%1 is the base description with theme selection</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. Valgt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="26"/>
         <source>Colorful</source>
-        <translation type="unfinished"/>
+        <translation>Fargerik</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="27"/>
         <source>Each track gets a new color</source>
-        <translation type="unfinished"/>
+        <translation>Hvert spor får en ny farge</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="34"/>
@@ -4644,48 +4645,48 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="35"/>
         <source>The clips you know and love</source>
-        <translation type="unfinished"/>
+        <translation>Klippene du kjenner og elsker</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="85"/>
         <source>Clip visualization</source>
-        <translation type="unfinished"/>
+        <translation>Klippvisualisering</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="90"/>
         <source>Clip visualization options</source>
-        <translation type="unfinished"/>
+        <translation>Klippvisualiseringsvalg</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="95"/>
         <source>Choose how audio clips are displayed in the timeline</source>
-        <translation type="unfinished"/>
+        <translation>Velg hvordan lydklipp vises i tidslinja</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="100"/>
         <source>Select your preferred clip visualization style. Preview is shown on the right.</source>
-        <translation type="unfinished"/>
+        <translation>Velg din foretrukne klippvisualiseringsstil. Forhåndsvisning vises til høyre.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="105"/>
         <source>Clip visualization preview</source>
-        <translation type="unfinished"/>
+        <translation>Klippvisualiseringsvisning</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="110"/>
         <source>Preview of how audio clips will appear with the selected visualization style</source>
-        <translation type="unfinished"/>
+        <translation>Visning av hvordan lydklipp vil framstå med den valgte visualiseringsstilen</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="115"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="139"/>
         <source>Currently selected</source>
-        <translation type="unfinished"/>
+        <translation>Nåværende valg</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="120"/>
         <source>Click to select this style</source>
-        <translation type="unfinished"/>
+        <translation>Klikk for å velge denne stilen</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="125"/>
@@ -4695,84 +4696,84 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="122"/>
         <source>Getting started</source>
-        <translation type="unfinished"/>
+        <translation>Kom i gang</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Accept &amp; continue</source>
-        <translation type="unfinished"/>
+        <translation>Godta og fortsett</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="146"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 av %2</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="164"/>
         <source>Select a theme</source>
-        <translation type="unfinished"/>
+        <translation>Velg et tema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="169"/>
         <source>Choose your preferred theme, follow system theme option, and accent color</source>
-        <translation type="unfinished"/>
+        <translation>Velg ditt foretrukne tema, følg systemtemavalg og framhevingsfarge</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="174"/>
         <source>Theme options</source>
-        <translation type="unfinished"/>
+        <translation>Temavalg</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="179"/>
         <source>Additional theme configuration options</source>
-        <translation type="unfinished"/>
+        <translation>Flere tematilpasningsvalg</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="184"/>
         <source>Theme selection</source>
-        <translation type="unfinished"/>
+        <translation>Temavalg</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="189"/>
         <source>Choose between light, dark, or system theme</source>
-        <translation type="unfinished"/>
+        <translation>Velg mellom lyst, mørkt eller systemtema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="194"/>
         <source>Follow system theme</source>
-        <translation type="unfinished"/>
+        <translation>Følg systemtema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="199"/>
         <source>When enabled, the theme will automatically match your system’s theme setting</source>
-        <translation type="unfinished"/>
+        <translation>Når dette er skrudd på, vil temaet automatisk følge systeminnstillingene dine</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="204"/>
         <source>Enable high-contrast</source>
-        <translation type="unfinished"/>
+        <translation>Skru på høykontrast</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
         <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Skru på høykontrast for bedre synlighet. %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="220"/>
         <source>Choose an accent color for the interface</source>
-        <translation type="unfinished"/>
+        <translation>Velg en aksentfarge for grensesnittet</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="225"/>
         <source>Further options for high contrast mode can be found in Preferences</source>
-        <translation type="unfinished"/>
+        <translation>Du finner flere valg for høykontrastmodus i Innstillinger</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="230"/>
         <source>Theme configuration</source>
-        <translation type="unfinished"/>
+        <translation>Temakonfigurasjon</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="237"/>
@@ -4793,25 +4794,25 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="245"/>
         <source>Current theme: %1</source>
         <extracomment>%1 is the current theme name (Light, Dark, or System)</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nåværende tema: %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="249"/>
         <source>%1. Following system theme</source>
         <extracomment>%1 is the base description with current theme</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. Følger systemtema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="254"/>
         <source>%1. High contrast enabled</source>
         <extracomment>%1 is the base description with current theme and system theme status</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. Høykontrast er skrudd på</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="257"/>
         <source>%1. Accent color selected</source>
         <extracomment>%1 is the base description with current theme and system theme status</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. Aksentfarge er valgt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="34"/>
@@ -4821,27 +4822,27 @@ Denne handlingen vil ikke slette noen av prosjektene dine.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="35"/>
         <source>A clearer interface. Ideal for new users</source>
-        <translation type="unfinished"/>
+        <translation>Et renere grensesnitt. Bra for nye brukere</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="46"/>
         <source>Closely matches the layout of Audacity 3</source>
-        <translation type="unfinished"/>
+        <translation>Veldig likt utseendet på Audacity 3</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="99"/>
         <source>What UI layout (workspace) do you want?</source>
-        <translation type="unfinished"/>
+        <translation>Hva slags grensesnittlayout (arbeidsområde) vil du ha?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="124"/>
         <source>Workspace layout options</source>
-        <translation type="unfinished"/>
+        <translation>Valg for arbeidsområdeutforming</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="129"/>
         <source>Choose your preferred workspace layout for the Audacity interface</source>
-        <translation type="unfinished"/>
+        <translation>Velg din foretrukne arbeidsområdeutforming for Audacitys grensesnitt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="134"/>
@@ -6395,7 +6396,7 @@ Feilmeldingen sier:
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="186"/>
         <source>%1 of %2</source>
         <comment>find clipping</comment>
-        <translation type="unfinished"/>
+        <translation>%1 av %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/Generator.cpp" line="51"/>
@@ -17279,7 +17280,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="69"/>
         <source>Colorful</source>
-        <translation type="unfinished"/>
+        <translation>Fargerik</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="100"/>
@@ -17509,12 +17510,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="80"/>
         <source>Follow system theme</source>
-        <translation type="unfinished"/>
+        <translation>Følg systemtema</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="95"/>
         <source>Enable high-contrast</source>
-        <translation type="unfinished"/>
+        <translation>Skru på høykontrast</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="34"/>
@@ -17796,7 +17797,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
         <source>Plugins</source>
-        <translation type="unfinished"/>
+        <translation>Tillegg</translation>
     </message>
     <message>
         <source>Advanced options</source>
