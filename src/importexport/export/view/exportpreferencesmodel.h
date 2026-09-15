@@ -40,6 +40,15 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)
 
     Q_PROPERTY(bool trimBlankSpace READ trimBlankSpace WRITE setTrimBlankSpace NOTIFY trimBlankSpaceChanged)
+    Q_PROPERTY(bool trimBlankSpaceEnabled READ trimBlankSpaceEnabled NOTIFY trimBlankSpaceEnabledChanged)
+
+    Q_PROPERTY(bool separateFilesExport READ separateFilesExport NOTIFY currentProcessChanged)
+    Q_PROPERTY(bool separateFilesByLabels READ separateFilesByLabels NOTIFY currentProcessChanged)
+    Q_PROPERTY(QString fileNamePrefix READ fileNamePrefix WRITE setFileNamePrefix NOTIFY fileNamePrefixChanged)
+    Q_PROPERTY(bool includeNumbers READ includeNumbers WRITE setIncludeNumbers NOTIFY includeNumbersChanged)
+    Q_PROPERTY(
+        bool includeAudioBeforeFirstLabel READ includeAudioBeforeFirstLabel WRITE setIncludeAudioBeforeFirstLabel NOTIFY includeAudioBeforeFirstLabelChanged)
+    Q_PROPERTY(QString fileNamePreview READ fileNamePreview NOTIFY fileNamePreviewChanged)
 
     Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged)
     Q_PROPERTY(QString suggestedFilePath READ suggestedFilePath NOTIFY suggestedFilePathChanged)
@@ -75,6 +84,17 @@ public:
 
     bool trimBlankSpace() const;
     void setTrimBlankSpace(bool trim);
+    bool trimBlankSpaceEnabled() const;
+
+    bool separateFilesExport() const;
+    bool separateFilesByLabels() const;
+    QString fileNamePrefix() const;
+    void setFileNamePrefix(const QString& prefix);
+    bool includeNumbers() const;
+    void setIncludeNumbers(bool include);
+    bool includeAudioBeforeFirstLabel() const;
+    void setIncludeAudioBeforeFirstLabel(bool include);
+    QString fileNamePreview() const;
 
     QString filename() const;
     Q_INVOKABLE void setFilename(const QString& filename);
@@ -122,6 +142,11 @@ signals:
     void currentProcessChanged();
     void processListChanged();
     void trimBlankSpaceChanged();
+    void trimBlankSpaceEnabledChanged();
+    void fileNamePrefixChanged();
+    void includeNumbersChanged();
+    void includeAudioBeforeFirstLabelChanged();
+    void fileNamePreviewChanged();
     void filenameChanged();
     void suggestedFilePathChanged();
     void fileExtensionChanged();
@@ -146,7 +171,14 @@ private:
     void openCustomSampleRateDialog();
     void updateExportChannels();
 
+    bool hasLabelsToExport() const;
+    muse::Ret exportSingleFile();
+    muse::Ret exportSeparateFiles();
+    bool confirmOverwrite(const std::string& question);
+    IExporter::Options separateFilesOptions() const;
+
     QString m_filename;
+    QString m_fileNamePrefix;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
     bool m_resetSampleRate = true;
 };
