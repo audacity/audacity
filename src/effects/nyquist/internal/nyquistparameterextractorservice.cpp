@@ -43,8 +43,8 @@ double niceStep(double raw)
     return niceFrac * mag;
 }
 
-//! Number of digits after the decimal point in a numeric token (0 for integers
-//! or non-numeric tokens such as "nil").
+//! Digits after the decimal point in a token (0 for ints or "nil").
+//! Tokens are .ny source text, so '.' is never localized.
 int fractionalDigits(const wxString& str)
 {
     const int dot = str.Find(wxT('.'));
@@ -148,10 +148,12 @@ ParameterInfo convertControl(const NyqControl& ctrl)
         } else {
             info.stepSize = 1.0;
         }
-        // Keep the precision declared in the .ny values, decoupled from the
-        // rounded step, so e.g. Frequency still accepts 4.5 even though the
-        // arrows move by 1.
-        info.numDecimalsOverride = maxFractionalDigits(ctrl.valStr, ctrl.lowStr, ctrl.highStr);
+        // Floor at 3 so integer-declared floats accept fractions and use
+        // the double validator, whose bounds survive nil (+/-FLT_MAX).
+        // Keep the step-derived precision (numDecimals() while the override
+        // is still unset) so a fine step such as 0.0001 stays displayable.
+        info.numDecimalsOverride = std::max({ 3, info.numDecimals(),
+                                              maxFractionalDigits(ctrl.valStr, ctrl.lowStr, ctrl.highStr) });
     }
 
     // For choice controls, extract enum values
