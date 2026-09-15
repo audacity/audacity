@@ -88,6 +88,18 @@ protected:
         m_viewState->setSnapType(type);
     }
 
+    //! NOTE Frame moves persist the zoom state into the AU3 project, which the mocks do not provide
+    muse::async::Channel<muse::secs_t> usePositionUpdatesWithoutViewState()
+    {
+        ON_CALL(*m_project, viewState())
+        .WillByDefault(Return(IProjectViewStatePtr()));
+        muse::async::Channel<muse::secs_t> positionChanged;
+        ON_CALL(*m_playbackState, playbackPositionChanged())
+        .WillByDefault(Return(positionChanged));
+        m_controller->init();
+        return positionChanged;
+    }
+
     std::shared_ptr<NiceMock<context::GlobalContextMock> > m_globalContext;
     std::shared_ptr<NiceMock<project::AudacityProjectMock> > m_project;
     std::shared_ptr<NiceMock<trackedit::TrackeditProjectMock> > m_trackeditProject;
@@ -177,6 +189,49 @@ TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_AlreadyAtStart_DoesNot
     .Times(0);
 
     m_controller->seekToTime(-3.0);
+}
+
+TEST_F(PlayCursorControllerTests, SeekToTime_TargetOutsideFrame_MovesFrame)
+{
+    //! CASE A plain seek to a time outside the visible frame scrolls the frame to keep the cursor visible.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    m_controller->seekToTime(30.0);
+    positionChanged.send(30.0);
+
+    EXPECT_NE(m_context->frameStartTime(), frameStart);
+}
+
+TEST_F(PlayCursorControllerTests, SeekToTimeKeepingView_TargetOutsideFrame_LeavesFrame)
+{
+    //! CASE Seeking with the view kept dispatches the seek but leaves the frame where it was.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    muse::actions::ActionQuery captured;
+    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    .WillOnce(SaveArg<0>(&captured));
+
+    m_controller->seekToTimeKeepingView(30.0);
+    positionChanged.send(30.0);
+
+    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 30.0);
+    EXPECT_DOUBLE_EQ(m_context->frameStartTime(), frameStart);
+}
+
+TEST_F(PlayCursorControllerTests, SeekToTimeKeepingView_AffectsOnlyTheNextSeek)
+{
+    //! CASE The view is kept for that one seek only; a following plain seek scrolls again.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    m_controller->seekToTimeKeepingView(30.0);
+    positionChanged.send(30.0);
+    m_controller->seekToTime(60.0);
+    positionChanged.send(60.0);
+
+    EXPECT_NE(m_context->frameStartTime(), frameStart);
 }
 
 TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
