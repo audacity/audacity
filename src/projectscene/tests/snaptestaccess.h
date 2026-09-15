@@ -44,6 +44,12 @@ struct SnapTestAccess {
         }
     }
 
+    //! Feeds a playback position tick to the private handler
+    static void updatePositionX(PlayCursorController* cursor, muse::secs_t secs)
+    {
+        cursor->updatePositionX(secs);
+    }
+
     static void wirePlayPosition(PlayPositionActionController* controller,
                                  const std::shared_ptr<context::IGlobalContext>& globalContext,
                                  const std::shared_ptr<muse::actions::IActionsDispatcher>& dispatcher,
