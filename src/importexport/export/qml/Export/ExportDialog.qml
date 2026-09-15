@@ -204,6 +204,7 @@ StyledDialogView {
                 }
 
                 RowLayout {
+                    width: parent.width
                     visible: exportPreferencesModel.separateFilesExport
 
                     Item {
@@ -417,7 +418,7 @@ StyledDialogView {
 
                                 checked: exportPreferencesModel.exportChannelsType == ExportChannels.CUSTOM
                                 text: qsTrc("export", "Custom mapping")
-                                enabled: exportPreferencesModel.maxExportChannels > 2
+                                enabled: exportPreferencesModel.maxExportChannels > 2 && !exportPreferencesModel.separateFilesExport
 
                                 spacing: 8
 
