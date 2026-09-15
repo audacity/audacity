@@ -144,7 +144,7 @@ void StartupScenario::runAfterSplashScreen()
     m_startupCompleted = true;
 
     StartupModeType modeType = resolveStartupModeType();
-    const bool canOverrideStartupMode = multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
+    const bool canOverrideStartupMode = allowsStartupModeOverride();
     if (canOverrideStartupMode && sessionsManager()->hasProjectsForRestore()) {
         modeType = StartupModeType::Recovery;
     }
@@ -165,6 +165,11 @@ void StartupScenario::runAfterSplashScreen()
 bool StartupScenario::startupCompleted() const
 {
     return m_startupCompleted;
+}
+
+bool StartupScenario::allowsStartupModeOverride() const
+{
+    return multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
 }
 
 bool StartupScenario::hasExplicitStartupTarget() const

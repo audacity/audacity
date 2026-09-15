@@ -12,6 +12,8 @@
 #include "framework/multiwindows/singleinstance.h"
 #include "framework/ui/internal/guiapplication.h"
 
+#include "muse_framework_config.h"
+
 #include "appshell/iappshellconfiguration.h"
 
 #include "cmdoptions.h"
