@@ -53,7 +53,7 @@ Row {
 
         navigation.panel: root.navigationPanel
         navigation.order: slider.navigation.order + 1
-        navigation.accessible.name: root.accessibleName + " " + currentValue + " " + measureUnitsSymbol
+        navigation.accessible.name: root.accessibleName
 
         decimals: root.isInt ? 0 : 2
         minValue: root.from

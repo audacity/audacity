@@ -768,7 +768,7 @@ StyledDialogView {
 
             navigation.panel: audioSection.navigation
             navigation.order: sampleRateDropdown.navigation.order + 1 + option.index
-            navigation.accessible.name: option.title + " " + currentValue
+            navigation.accessible.name: option.title
 
             onValueEdited: function (newValue) {
                 dynamicOptionsModel.setData(dynamicOptionsModel.index(option.index, 0), newValue, ExportOptionType.ValueRole)
