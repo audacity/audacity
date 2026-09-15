@@ -32,6 +32,8 @@ class PixmapProjectThumbnailView : public muse::uicomponents::QuickPaintedView
     Q_OBJECT
 
     Q_PROPERTY(QPixmap thumbnail READ thumbnail WRITE setThumbnail NOTIFY thumbnailChanged)
+    Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor NOTIFY borderColorChanged)
+    Q_PROPERTY(qreal radius READ radius WRITE setRadius NOTIFY radiusChanged)
 
 public:
     PixmapProjectThumbnailView(QQuickItem* parent = nullptr);
@@ -39,14 +41,24 @@ public:
     QPixmap thumbnail() const;
     void setThumbnail(QPixmap pixmap);
 
+    QColor borderColor() const;
+    void setBorderColor(const QColor& color);
+
+    qreal radius() const;
+    void setRadius(qreal r);
+
 signals:
     void thumbnailChanged();
+    void borderColorChanged();
+    void radiusChanged();
 
 protected:
     void paint(QPainter* painter) override;
 
 private:
     QPixmap m_thumbnail;
+    QColor m_borderColor;
+    qreal m_radius = 0.0;
 };
 }
 

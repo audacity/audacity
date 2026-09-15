@@ -36,7 +36,6 @@ class ThumbnailLoader : public QObject, public muse::Contextable
 
     Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
     Q_PROPERTY(QColor lineColor READ lineColor WRITE setLineColor)
-    Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
 
 public:
     ThumbnailLoader(QObject* parent = nullptr);
@@ -61,9 +60,6 @@ public:
     QColor lineColor() const;
     void setLineColor(const QColor& color);
 
-    QColor borderColor() const;
-    void setBorderColor(const QColor& color);
-
 signals:
     void pathChanged();
     void thumbnailChanged();
@@ -80,7 +76,6 @@ private:
     QPixmap renderFromProject(const muse::io::path_t& source);
     QPixmap renderWaveformToPixmap(const muse::io::path_t& source);
     QPixmap renderFromImage(const muse::io::path_t& source);
-    void drawBorder(QPainter& painter) const;
 
     muse::io::path_t m_path;
     muse::io::path_t m_placeholder;
@@ -92,6 +87,5 @@ private:
 
     QColor m_backgroundColor;
     QColor m_lineColor;
-    QColor m_borderColor;
 };
 }
