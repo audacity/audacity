@@ -20,6 +20,7 @@ set(MODULE_TEST_LINK
     project
     au3wrap
     au3-project
+    au3-project-file-io
     au3-realtime-effects
     trackedit
     muse::actions

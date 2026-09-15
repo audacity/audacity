@@ -109,6 +109,7 @@ list(REMOVE_ITEM LINK_LIB
     Qt::Xml
 )
 
+add_to_link_if_exists(video)
 add_to_link_if_exists(muse::accessibility)
 add_to_link_if_exists(muse::actions)
 add_to_link_if_exists(muse::rcommand)

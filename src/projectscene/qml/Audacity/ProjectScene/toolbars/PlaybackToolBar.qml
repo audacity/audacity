@@ -9,6 +9,7 @@ import Muse.UiComponents
 import Audacity.Playback 1.0
 import Audacity.Record 1.0
 import Audacity.ProjectScene 1.0
+import Audacity.Video 1.0
 import Audacity.UiComponents 1.0
 
 import "internal"
@@ -37,6 +38,18 @@ Item {
         property int customizeButtonSpaceWidth: 8 /* spacing */ + customizeButton.width + customizeButton.anchors.rightMargin
     }
 
+    //! Exists only to read the thumbnail size the user chose. init() is
+    //! deliberately not called - that wires up the video service, which this
+    //! instance has no use for; the size is a setting and the model
+    //! subscribes to it in its constructor.
+    VideoPanelModel {
+        id: videoSizeModel
+
+        onToolbarHeightChanged: {
+            root.relayoutRequested()
+        }
+    }
+
     StyledToolBarView {
         id: view
 
@@ -47,7 +60,17 @@ Item {
 
         spacing: 2
 
-        rowHeight: isMultiline ? 32 : 48
+        //! The row grows to fit the video thumbnail when that item is in the
+        //! toolbar, and returns to its usual height when it is switched off in
+        //! "Customize toolbar". Read from a model of its own rather than from
+        //! the loaded delegate, which would be a binding loop.
+        rowHeight: {
+            var base = isMultiline ? 32 : 48
+            if (!toolBarModel.hasVideoItem) {
+                return base
+            }
+            return Math.max(base, videoSizeModel.toolbarHeight + 4)
+        }
         topPadding: isMultiline ? 8 : 0
         bottomPadding: isMultiline ? 8 : 0
 
@@ -55,6 +78,8 @@ Item {
         maximumWidth: root.maximumWidth - prv.customizeButtonSpaceWidth
 
         model: PlaybackToolBarModel {
+            id: toolBarModel
+
             onItemsChanged: {
                 root.relayoutRequested()
             }
@@ -78,9 +103,25 @@ Item {
                 return projectControlComp
             case PlaybackToolBarModel.SNAP:
                 return snapComp
+            case PlaybackToolBarModel.VIDEO:
+                return videoComp
             }
 
             return null
+        }
+
+        //! Not a button: it shows the frame at the playhead, sized by the
+        //! toolbar's own height and by the video's aspect ratio so it never
+        //! stretches. The dockable panel remains the place to actually watch.
+        Component {
+            id: videoComp
+
+            VideoToolBar {
+                // Both follow the size chosen from the item's own right-click
+                // menu; neither reads its own value back, so there is no cycle.
+                height: implicitHeight
+                width: implicitWidth
+            }
         }
 
         Component {
