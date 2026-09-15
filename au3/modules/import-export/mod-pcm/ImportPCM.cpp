@@ -32,7 +32,7 @@
 #endif
 
 #include "au3-file-formats/FileFormats.h"
-#include "au3-import-export/GetAcidizerTags.h"
+#include "au3-file-formats/GetAcidizerTags.h"
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportProgressListener.h"
 #include "au3-import-export/ImportUtils.h"
@@ -53,6 +53,33 @@ id3_length_t id3_latin1_length(id3_latin1_t const*);
 void id3_latin1_decode(id3_latin1_t const*, id3_ucs4_t*);
 }
 #endif
+
+class PCMImportFileHandle final : public ImportFileHandleEx
+{
+public:
+    PCMImportFileHandle(const FilePath& name, SFFile&& file, SF_INFO info);
+    ~PCMImportFileHandle();
+
+    TranslatableString GetFileDescription() override;
+    double GetDuration() const override;
+    int GetRequiredTrackCount() const override;
+    ByteCount GetFileUncompressedBytes() override;
+    void Import(
+        ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
+        std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
+
+    wxInt32 GetStreamCount() override;
+
+    const TranslatableStrings& GetStreamInfo() override;
+
+    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override;
+
+private:
+    SFFile mFile;
+    const SF_INFO mInfo;
+    sampleFormat mEffectiveFormat;
+    sampleFormat mFormat;
+};
 
 #define DESC TranslatableString("import-export", "WAV, AIFF, and other uncompressed types")
 
@@ -425,7 +452,7 @@ void PCMImportFileHandle::Import(
     // To begin with, only trust the Muse Hub, with whom we collaborate and can
     // ensure they comply. In the future we may extend this list.
     const std::vector<std::string> trustedDistributors { "Muse Hub" };
-    if (const auto acidTags = LibImportExport::GetAcidizerTags(*mFile, trustedDistributors)) {
+    if (const auto acidTags = LibFileFormats::GetAcidizerTags(*mFile, trustedDistributors)) {
         outAcidTags.emplace(*acidTags);
     }
 

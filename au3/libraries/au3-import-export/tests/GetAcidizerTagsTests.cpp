@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "au3-file-formats/AcidizerTags.h"
-#include "GetAcidizerTags.h"
+#include "au3-file-formats/GetAcidizerTags.h"
 #include "LibsndfileTagger.h"
 
 #include "au3-file-formats/FileFormats.h"
@@ -30,7 +30,7 @@ TEST_CASE("GetAcidizerTags")
         SECTION("there is no loop info")
         {
             Test::LibsndfileTagger tagger;
-            const auto actual = GetAcidizerTags(tagger.ReopenInReadMode(), {});
+            const auto actual = LibFileFormats::GetAcidizerTags(tagger.ReopenInReadMode(), {});
             REQUIRE(!actual.has_value());
         }
         SECTION("tempo is set but the distributor isn't whitelisted")
@@ -38,7 +38,7 @@ TEST_CASE("GetAcidizerTags")
             Test::LibsndfileTagger tagger;
             tagger.AddAcidizerTags(AcidizerTags::Loop { 120. });
             tagger.AddDistributorInfo("Distributor Zen");
-            const auto actual = GetAcidizerTags(
+            const auto actual = LibFileFormats::GetAcidizerTags(
                 tagger.ReopenInReadMode(),
                 { "foo", "Distributor Z", "Distributor Zen 2" });
             REQUIRE(!actual.has_value());
@@ -51,7 +51,7 @@ TEST_CASE("GetAcidizerTags")
         {
             Test::LibsndfileTagger tagger;
             tagger.AddAcidizerTags(AcidizerTags::OneShot {});
-            const auto actual = GetAcidizerTags(tagger.ReopenInReadMode(), {});
+            const auto actual = LibFileFormats::GetAcidizerTags(tagger.ReopenInReadMode(), {});
             REQUIRE(actual.has_value());
             REQUIRE(actual->isOneShot);
         }
@@ -62,7 +62,7 @@ TEST_CASE("GetAcidizerTags")
             constexpr auto numBeats = 20;
             tagger.AddAcidizerTags(Test::AcidizerTags::Beats { numBeats });
             auto& file = tagger.ReopenInReadMode();
-            const auto actual = GetAcidizerTags(file, {});
+            const auto actual = LibFileFormats::GetAcidizerTags(file, {});
             REQUIRE(actual.has_value());
             SF_INFO info;
             sf_command(&file, SFC_GET_CURRENT_SF_INFO, &info, sizeof(SF_INFO));
@@ -76,7 +76,7 @@ TEST_CASE("GetAcidizerTags")
             Test::LibsndfileTagger tagger;
             tagger.AddAcidizerTags(AcidizerTags::Loop { 120. });
             tagger.AddDistributorInfo("Trusted Distributor");
-            const auto actual = GetAcidizerTags(
+            const auto actual = LibFileFormats::GetAcidizerTags(
                 tagger.ReopenInReadMode(), { "Trusted Distributor" });
             REQUIRE(actual.has_value());
             REQUIRE(actual->bpm == 120.);
