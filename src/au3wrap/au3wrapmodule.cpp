@@ -10,6 +10,7 @@
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-project/Project.h"
+#include "au3-strings/Internat.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-module-manager/ModuleManager.h"
 
@@ -92,6 +93,12 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
 void Au3WrapModule::onAllInited(const muse::IApplication::RunMode& mode)
 {
+    // AU4 never calls Internat::Init, so hand it the effective separator
+    const QString decimalPoint = QLocale().decimalPoint();
+    if (!decimalPoint.isEmpty()) {
+        Internat::SetDecimalSeparator(decimalPoint.at(0).unicode());
+    }
+
     ModuleManager::Get().Initialize();
     Importer::Get().Initialize();
     ExportPluginRegistry::Get().Initialize();

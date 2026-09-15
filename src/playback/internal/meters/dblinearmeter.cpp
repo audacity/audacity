@@ -4,6 +4,8 @@
 
 #include "dblinearmeter.h"
 
+#include <QLocale>
+
 #include "global/types/number.h"
 
 #include <cmath>
@@ -114,9 +116,7 @@ double DbLinearMeter::positionToSample(double position) const
 
 std::string DbLinearMeter::sampleToText(double sample) const
 {
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(0) << std::abs(sample);
-    return ss.str();
+    return QLocale().toString(std::abs(sample), 'f', 0).toStdString();
 }
 
 std::vector<double> DbLinearMeter::fullSteps(int meterSize) const

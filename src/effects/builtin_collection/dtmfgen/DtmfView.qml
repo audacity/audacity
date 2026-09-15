@@ -196,7 +196,7 @@ BuiltinEffectBase {
                         navigation.order: 0
 
                         onNewValueRequested: function (value) {
-                            let newValue = +(value.toFixed(1))
+                            let newValue = ui.df.roundReal(value, 1)
                             if (newValue !== dtmf.dutyCycle) {
                                 dtmf.dutyCycle = newValue
                             }
@@ -231,7 +231,7 @@ BuiltinEffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf", "%1%").arg(dtmf.dutyCycle.toFixed(1))
+                        text: qsTrc("effects/dtmf", "%1%").arg(dtmf.dutyCycle.toLocaleString(Qt.locale(), 'f', 1))
                         font.bold: true
                     }
                 }
@@ -245,7 +245,7 @@ BuiltinEffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.toneDuration * 1000))
+                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.toneDuration * 1000).toLocaleString(Qt.locale(), 'f', 0))
                         font.bold: true
                     }
                 }
@@ -259,7 +259,7 @@ BuiltinEffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.silenceDuration * 1000))
+                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.silenceDuration * 1000).toLocaleString(Qt.locale(), 'f', 0))
                         font.bold: true
                     }
                 }

@@ -64,7 +64,7 @@ Column {
         decimals: 0
         step: 1
 
-        navigation.accessible.name: titleLabel.text + " " + currentValue + " " + measureUnitsSymbol
+        navigation.accessible.name: titleLabel.text + " " + ui.df.formatRealForEdit(control.currentValue, control.decimals) + " " + measureUnitsSymbol
 
         onValueEdited: function (newValue) {
             root.valueEdited(newValue)

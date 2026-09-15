@@ -77,7 +77,6 @@ qt_add_qml_module(preferences_qml
         internal/MixerSection.qml
         MusicPreferencesPage.qml
         internal/MonoStereoConversionSection.qml
-        internal/NumberFormatSection.qml
         internal/PasteBehaviorSection.qml
         internal/PlaybackPerformanceSection.qml
         internal/PluginLocationsSection.qml
