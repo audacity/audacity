@@ -124,17 +124,59 @@ ClipKeyList Au3SelectionController::findClipsIntersectingRangeSelection() const
 
     ClipKeyList clipsIntersectingRangeSelection = {};
     for (const auto& trackId : m_selectedTracks.val) {
-        WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-        if (!waveTrack) {
-            continue;
-        }
-
-        for (const auto& clip : waveTrack->GetSortedClipsIntersecting(m_selectedStartTime.val, m_selectedEndTime.val)) {
-            clipsIntersectingRangeSelection.push_back(DomConverter::clip(waveTrack, clip.get()).key);
-        }
+        muse::join(clipsIntersectingRangeSelection, clipKeysIntersecting(trackId, m_selectedStartTime.val, m_selectedEndTime.val));
     }
 
     return clipsIntersectingRangeSelection;
+}
+
+ClipKeyList Au3SelectionController::clipKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const
+{
+    WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    if (!waveTrack) {
+        return {};
+    }
+
+    ClipKeyList result;
+    for (const auto& clip : waveTrack->GetSortedClipsIntersecting(startTime, endTime)) {
+        result.push_back(DomConverter::clip(waveTrack, clip.get()).key);
+    }
+
+    return result;
+}
+
+LabelKeyList Au3SelectionController::labelKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const
+{
+    Au3LabelTrack* labelTrack = au3::DomAccessor::findLabelTrack(projectRef(), ::TrackId(trackId));
+    if (!labelTrack) {
+        return {};
+    }
+
+    LabelKeyList result;
+    for (int i = 0; i < labelTrack->GetNumLabels(); ++i) {
+        const Au3Label* label = labelTrack->GetLabel(i);
+        if (!label) {
+            continue;
+        }
+
+        double t0 = label->getT0();
+        double t1 = label->getT1();
+
+        bool intersects = false;
+        if (muse::RealIsEqual(t0, t1)) {
+            // point label
+            intersects = muse::RealIsEqualOrMore(t0, startTime) && muse::RealIsEqualOrLess(t0, endTime);
+        } else {
+            // range label
+            intersects = t0 < endTime && t1 > startTime;
+        }
+
+        if (intersects) {
+            result.push_back(LabelKey(trackId, label->GetId()));
+        }
+    }
+
+    return result;
 }
 
 void Au3SelectionController::resetSelectedTracks()
@@ -201,6 +243,7 @@ void Au3SelectionController::resetSelectedClips()
     //! NOTE: sync clip deselection with au3 persistence
     au3::DomAccessor::clearAllClipSelection(projectRef());
     m_selectedClips.set(au::trackedit::ClipKeyList(), true);
+    resetItemSelectionAnchorIfNoSelection();
 }
 
 bool Au3SelectionController::hasSelectedClips() const
@@ -228,6 +271,147 @@ ClipKeyList Au3SelectionController::selectedClipsInTrackOrder() const
     return sortedSelectedClips;
 }
 
+namespace {
+std::optional<au::trackedit::ItemWithTime> findItem(const au::trackedit::ItemWithTimeList& items, const au::trackedit::TrackItemKey& key)
+{
+    for (const au::trackedit::ItemWithTime& item : items) {
+        if (item.key == key) {
+            return item;
+        }
+    }
+    return std::nullopt;
+}
+
+int trackIndexOf(const std::vector<au::trackedit::Track>& tracks, const au::trackedit::TrackId& trackId)
+{
+    for (int i = 0; i < static_cast<int>(tracks.size()); ++i) {
+        if (tracks.at(i).id == trackId) {
+            return i;
+        }
+    }
+    return -1;
+}
+}
+
+ClipAndLabelKeys Au3SelectionController::itemKeysInRange(const TrackItemKey& target) const
+{
+    if (!m_itemSelectionAnchor.has_value() || !target.isValid()) {
+        return {};
+    }
+
+    const TrackItemKey anchor = m_itemSelectionAnchor->itemKey;
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return {};
+    }
+
+    const std::vector<Track> tracks = prj->trackList();
+    const int anchorTrackIndex = trackIndexOf(tracks, anchor.trackId);
+    const int targetTrackIndex = trackIndexOf(tracks, target.trackId);
+    if (anchorTrackIndex < 0 || targetTrackIndex < 0) {
+        return {};
+    }
+
+    const int firstTrackIndex = std::min(anchorTrackIndex, targetTrackIndex);
+    const int lastTrackIndex = std::max(anchorTrackIndex, targetTrackIndex);
+
+    std::vector<ItemWithTimeList> itemsPerTrack(lastTrackIndex - firstTrackIndex + 1);
+    for (int trackIndex = firstTrackIndex; trackIndex <= lastTrackIndex; ++trackIndex) {
+        itemsPerTrack[trackIndex - firstTrackIndex] = prj->itemList(tracks.at(trackIndex).id);
+    }
+
+    const std::optional<ItemWithTime> anchorItem = findItem(itemsPerTrack.at(anchorTrackIndex - firstTrackIndex), anchor);
+    const std::optional<ItemWithTime> targetItem = findItem(itemsPerTrack.at(targetTrackIndex - firstTrackIndex), target);
+    if (!anchorItem.has_value() || !targetItem.has_value()) {
+        return {};
+    }
+
+    //! NOTE Only items that fit entirely between the leftmost item's start
+    //! and the rightmost item's end make it into the selection
+    const double rangeStartTime = std::min(anchorItem->startTime, targetItem->startTime);
+    const double rangeEndTime = std::max(anchorItem->endTime, targetItem->endTime);
+
+    ClipAndLabelKeys range;
+    for (int trackIndex = firstTrackIndex; trackIndex <= lastTrackIndex; ++trackIndex) {
+        const bool isLabelTrack = tracks.at(trackIndex).type == TrackType::Label;
+
+        for (const ItemWithTime& item : itemsPerTrack.at(trackIndex - firstTrackIndex)) {
+            if (item.startTime < rangeStartTime || item.endTime > rangeEndTime) {
+                continue;
+            }
+
+            if (isLabelTrack) {
+                range.labels.push_back(item.key);
+            } else {
+                range.clips.push_back(item.key);
+            }
+        }
+    }
+
+    return range;
+}
+
+void Au3SelectionController::setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey)
+{
+    m_itemSelectionAnchor = ItemSelectionAnchor { time, itemKey };
+}
+
+void Au3SelectionController::resetItemSelectionAnchorIfNoSelection()
+{
+    if (m_selectedClips.val.empty() && m_selectedLabels.val.empty()) {
+        m_itemSelectionAnchor = std::nullopt;
+    }
+}
+
+ClipAndLabelKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const
+{
+    if (!m_itemSelectionAnchor.has_value()) {
+        return {};
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return {};
+    }
+
+    const std::vector<Track> tracks = prj->trackList();
+    const int anchorTrackIndex = trackIndexOf(tracks, m_itemSelectionAnchor->itemKey.trackId);
+    const int targetTrackIndex = trackIndexOf(tracks, trackId);
+    if (anchorTrackIndex < 0 || targetTrackIndex < 0) {
+        return {};
+    }
+
+    const std::optional<ItemWithTime> anchorItem
+        = findItem(prj->itemList(m_itemSelectionAnchor->itemKey.trackId), m_itemSelectionAnchor->itemKey);
+
+    //! NOTE A leftward box reaches the anchor item's end rather than the anchor
+    //! point, so items sharing the anchor's time span are included as well
+    const double anchorTime = m_itemSelectionAnchor->time.raw();
+    double boxStartTime = anchorTime;
+    double boxEndTime = time.raw();
+    if (boxEndTime < boxStartTime) {
+        boxStartTime = time.raw();
+        boxEndTime = anchorItem.has_value() ? anchorItem->endTime : anchorTime;
+    }
+
+    const int firstTrackIndex = std::min(anchorTrackIndex, targetTrackIndex);
+    const int lastTrackIndex = std::max(anchorTrackIndex, targetTrackIndex);
+
+    //! NOTE Every item that at least touches the box joins the selection
+    ClipAndLabelKeys selection;
+    for (int trackIndex = firstTrackIndex; trackIndex <= lastTrackIndex; ++trackIndex) {
+        const Track& track = tracks.at(trackIndex);
+        if (track.type == TrackType::Label) {
+            muse::join(selection.labels, labelKeysIntersecting(track.id, boxStartTime, boxEndTime));
+        } else {
+            muse::join(selection.clips, clipKeysIntersecting(track.id, boxStartTime, boxEndTime));
+        }
+    }
+
+    return selection;
+}
+
 void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)
 {
     //! NOTE: sync clip selection with au3 persistence
@@ -237,6 +421,7 @@ void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool 
     }
 
     m_selectedClips.set(clipKeys, complete);
+    resetItemSelectionAnchorIfNoSelection();
 
     //! NOTE: when selecting a clip, we also need to select
     //! the track on which the clip is located
@@ -282,6 +467,7 @@ void Au3SelectionController::removeClipSelection(const ClipKey& clipKey)
         );
 
     m_selectedClips.set(selectedClips, true);
+    resetItemSelectionAnchorIfNoSelection();
 
     //! NOTE: update selected tracks
     TrackIdList selectedTracks;
@@ -404,6 +590,7 @@ void Au3SelectionController::resetSelectedLabels()
     MYLOG() << "[SELECTION] resetSelectedLabels";
     au3::DomAccessor::clearAllLabelSelection(projectRef());
     m_selectedLabels.set(au::trackedit::LabelKeyList(), true);
+    resetItemSelectionAnchorIfNoSelection();
 }
 
 bool Au3SelectionController::hasSelectedLabels() const
@@ -439,6 +626,7 @@ void Au3SelectionController::setSelectedLabels(const LabelKeyList& labelKeys, bo
     }
 
     m_selectedLabels.set(labelKeys, complete);
+    resetItemSelectionAnchorIfNoSelection();
 
     //! NOTE: when selecting a label, we also need to select
     //! the track on which the label is located
@@ -484,6 +672,7 @@ void Au3SelectionController::removeLabelSelection(const LabelKey& labelKey)
         );
 
     m_selectedLabels.set(selectedLabels, true);
+    resetItemSelectionAnchorIfNoSelection();
 
     //! NOTE: update selected tracks
     TrackIdList selectedTracks;
@@ -787,33 +976,7 @@ LabelKeyList Au3SelectionController::findLabelsIntersectingRangeSelection() cons
 
     LabelKeyList result;
     for (const auto& trackId : m_selectedTracks.val) {
-        Au3LabelTrack* labelTrack = au3::DomAccessor::findLabelTrack(projectRef(), ::TrackId(trackId));
-        if (!labelTrack) {
-            continue;
-        }
-
-        for (int i = 0; i < labelTrack->GetNumLabels(); ++i) {
-            const Au3Label* label = labelTrack->GetLabel(i);
-            if (!label) {
-                continue;
-            }
-
-            double t0 = label->getT0();
-            double t1 = label->getT1();
-
-            bool intersects = false;
-            if (muse::RealIsEqual(t0, t1)) {
-                // point label
-                intersects = muse::RealIsEqualOrMore(t0, startTime) && muse::RealIsEqualOrLess(t0, endTime);
-            } else {
-                // range label
-                intersects = t0 < endTime && t1 > startTime;
-            }
-
-            if (intersects) {
-                result.push_back(LabelKey(trackId, label->GetId()));
-            }
-        }
+        muse::join(result, labelKeysIntersecting(trackId, startTime, endTime));
     }
 
     return result;

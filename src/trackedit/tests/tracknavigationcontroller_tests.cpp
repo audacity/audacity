@@ -1,6 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <algorithm>
+
 #include <gtest/gtest.h>
 
 #include "../internal/tracknavigationcontroller.h"
@@ -115,13 +117,16 @@ public:
 
         ON_CALL(*m_trackeditProject, track(trackId))
         .WillByDefault(Return(track));
-        ON_CALL(*m_trackeditProject, clipList(trackId))
+        ON_CALL(*m_trackeditProject, itemList(trackId))
         .WillByDefault([clips](const TrackId&) {
-            muse::async::NotifyList<Clip> list;
+            ItemWithTimeList items;
             for (const Clip& clip : clips) {
-                list.push_back(clip);
+                items.push_back({ clip.key, clip.startTime, clip.endTime });
             }
-            return list;
+            std::sort(items.begin(), items.end(), [](const ItemWithTime& a, const ItemWithTime& b) {
+                return a.startTime < b.startTime;
+            });
+            return items;
         });
     }
 
@@ -132,12 +137,11 @@ public:
     };
 
     //! NOTE Set up a project with several mono tracks, each with its own clips.
-    //! Wires trackList(), per-track track()/clipList() and a clip(key) lookup so
-    //! the start-time based navigation (above/below item) can be exercised.
+    //! Wires trackList() and per-track track()/itemList() so the start-time
+    //! based navigation (above/below item) can be exercised.
     void setupTracks(const std::vector<TrackSpec>& specs)
     {
         std::vector<Track> trackList;
-        std::vector<Clip> allClips;
 
         for (const TrackSpec& spec : specs) {
             setupTrackWithClips(spec.id, spec.clips);
@@ -146,24 +150,10 @@ public:
             track.id = spec.id;
             track.type = TrackType::Mono;
             trackList.push_back(track);
-
-            for (const Clip& clip : spec.clips) {
-                allClips.push_back(clip);
-            }
         }
 
         ON_CALL(*m_trackeditProject, trackList())
         .WillByDefault(Return(trackList));
-
-        ON_CALL(*m_trackeditProject, clip(_))
-        .WillByDefault([allClips](const ClipKey& key) {
-            for (const Clip& clip : allClips) {
-                if (clip.key.trackId == key.trackId && clip.key.itemId == key.itemId) {
-                    return clip;
-                }
-            }
-            return Clip {};
-        });
     }
 
     //! NOTE Matcher for a framework panel-navigation command dispatch

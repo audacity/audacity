@@ -42,6 +42,8 @@ public:
     virtual Label label(const LabelKey& key) const = 0;
     virtual muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const = 0;
     virtual muse::async::NotifyList<Label> labelList(const TrackId& trackId) const = 0;
+    //! NOTE Items are sorted by start time
+    virtual ItemWithTimeList itemList(const TrackId& trackId) const = 0;
     virtual std::vector<int64_t> groupsIdsList() const = 0;
     virtual std::optional<std::string> trackName(const TrackId& trackId) const = 0;
 
