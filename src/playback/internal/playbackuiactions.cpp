@@ -24,6 +24,10 @@ static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
 static const ActionQuery PLAYBACK_REWIND_START_QUERY("action://playback/rewind-start");
 static const ActionQuery PLAYBACK_REWIND_END_QUERY("action://playback/rewind-end");
+static const ActionCode SEEK_LEFT_SHORT_CODE("seek-left-short");
+static const ActionCode SEEK_RIGHT_SHORT_CODE("seek-right-short");
+static const ActionCode SEEK_LEFT_LONG_CODE("seek-left-long");
+static const ActionCode SEEK_RIGHT_LONG_CODE("seek-right-long");
 
 static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
 static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
@@ -86,6 +90,30 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Stop playback"),
              IconCode::Code::STOP_FILL
+             ),
+    UiAction(SEEK_LEFT_SHORT_CODE,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Short seek left during playback"),
+             TranslatableString("action_description", "Seek left by the short period during playback")
+             ),
+    UiAction(SEEK_RIGHT_SHORT_CODE,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Short seek right during playback"),
+             TranslatableString("action_description", "Seek right by the short period during playback")
+             ),
+    UiAction(SEEK_LEFT_LONG_CODE,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Long seek left during playback"),
+             TranslatableString("action_description", "Seek left by the long period during playback")
+             ),
+    UiAction(SEEK_RIGHT_LONG_CODE,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Long seek right during playback"),
+             TranslatableString("action_description", "Seek right by the long period during playback")
              ),
     UiAction(PLAYBACK_REWIND_START_QUERY.toString(),
              au::context::UiCtxProjectOpened,
@@ -378,6 +406,10 @@ void PlaybackUiActions::init()
             PLAYBACK_TOGGLE_PLAY_FROM_CURSOR_QUERY.toString(),
             PLAYBACK_PLAY_SELECTION_QUERY.toString(),
             PLAYBACK_PAUSE_QUERY.toString(),
+            SEEK_LEFT_SHORT_CODE,
+            SEEK_RIGHT_SHORT_CODE,
+            SEEK_LEFT_LONG_CODE,
+            SEEK_RIGHT_LONG_CODE,
             PLAYBACK_REWIND_START_QUERY.toString(),
             PLAYBACK_REWIND_END_QUERY.toString()
         };

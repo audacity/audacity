@@ -144,6 +144,7 @@ private:
     void rewindToEndAction();
     void onSeekAction(const muse::actions::ActionQuery& q);
     void doSeek(const muse::secs_t secs, bool applyIfPlaying);
+    void seekBy(muse::secs_t delta);
     void onChangePlaybackRegionAction(const muse::actions::ActionQuery& q);
     void doChangePlaybackRegion(const PlaybackRegion& region);
     void pauseAction();
