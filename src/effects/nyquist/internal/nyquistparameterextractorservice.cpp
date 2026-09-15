@@ -178,7 +178,7 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
         for (const auto& fileType : ctrl.fileTypes) {
             // Convert FileType to filter string format: "Description (*.ext1 *.ext2)"
-            wxString filterStr = fileType.description.translated().toStdString();
+            wxString filterStr = ::au3::qtToWx(fileType.description.translated());
 
             if (!fileType.extensions.empty()) {
                 wxString extList;
