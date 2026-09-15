@@ -107,6 +107,7 @@ void ExportPreferencesModel::init()
     exportConfiguration()->processTypeChanged().onNotify(this, [this] {
         emit currentProcessChanged();
         emit trimBlankSpaceEnabledChanged();
+        emit fileNamePreviewChanged();
         if (separateFilesExport() && customMappingEnabled()) {
             updateExportChannels();
         }
