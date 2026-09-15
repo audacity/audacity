@@ -4,6 +4,8 @@
 
 #include "exportutils.h"
 
+#include <cctype>
+
 #include <QString>
 
 muse::Val au::importexport::utils::matrixToVal(const std::vector<std::vector<bool> >& matrix)
@@ -73,9 +75,27 @@ std::string au::importexport::utils::formatFileName(const std::string& prefix, s
     return result;
 }
 
+namespace {
+bool isReservedDeviceName(const std::string& stem)
+{
+    static const std::set<std::string> reserved = {
+        "CON", "PRN", "AUX", "NUL",
+        "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "COM\u00b9", "COM\u00b2", "COM\u00b3",
+        "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9", "LPT\u00b9", "LPT\u00b2", "LPT\u00b3",
+    };
+
+    std::string upper = stem;
+    for (char& ch : upper) {
+        ch = static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
+    }
+
+    return reserved.count(upper) > 0;
+}
+}
+
 std::string au::importexport::utils::sanitizeFileName(const std::string& name)
 {
-    static const std::string invalidChars = "\\/:*?\"<>|";
+    static const std::string invalidChars = "\\/:*?\"<>|~";
 
     std::string result = name;
     for (char& ch : result) {
@@ -83,6 +103,11 @@ std::string au::importexport::utils::sanitizeFileName(const std::string& name)
         if (code < 0x20 || code == 0x7F || invalidChars.find(ch) != std::string::npos) {
             ch = '_';
         }
+    }
+
+    const size_t stemEnd = result.find('.');
+    if (isReservedDeviceName(result.substr(0, stemEnd))) {
+        result.insert(stemEnd == std::string::npos ? result.size() : stemEnd, "_");
     }
 
     return result;

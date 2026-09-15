@@ -31,8 +31,18 @@ TEST(ExportUtilsTests, FormatFileNameSkipsEmptyParts)
 
 TEST(ExportUtilsTests, SanitizeFileNameReplacesInvalidCharacters)
 {
-    EXPECT_EQ(utils::sanitizeFileName("a/b\\c:d*e?f\"g<h>i|j"), "a_b_c_d_e_f_g_h_i_j");
+    EXPECT_EQ(utils::sanitizeFileName("a/b\\c:d*e?f\"g<h>i|j~k"), "a_b_c_d_e_f_g_h_i_j_k");
     EXPECT_EQ(utils::sanitizeFileName("tab\there"), "tab_here");
+}
+
+TEST(ExportUtilsTests, SanitizeFileNameNormalizesWindowsReservedDeviceNames)
+{
+    EXPECT_EQ(utils::sanitizeFileName("CON"), "CON_");
+    EXPECT_EQ(utils::sanitizeFileName("nul"), "nul_");
+    EXPECT_EQ(utils::sanitizeFileName("COM1.Vocals"), "COM1_.Vocals");
+    EXPECT_EQ(utils::sanitizeFileName("LPT\u00b9"), "LPT\u00b9_");
+    EXPECT_EQ(utils::sanitizeFileName("Song.CON"), "Song.CON");
+    EXPECT_EQ(utils::sanitizeFileName("CONSOLE"), "CONSOLE");
 }
 
 TEST(ExportUtilsTests, SanitizeFileNameKeepsUnicodeAndPunctuation)
@@ -90,6 +100,13 @@ TEST(ExportUtilsTests, MakeFileNameFormatsSanitizesAndDeduplicates)
     utils::UniqueFileNames names;
     EXPECT_EQ(utils::makeFileName("Song", 1, "A/B", names), "Song.01.A_B");
     EXPECT_EQ(utils::makeFileName("Song", 1, "a\\b", names), "Song.01.a_b-2");
+}
+
+TEST(ExportUtilsTests, MakeFileNameDeduplicatesNormalizedReservedNames)
+{
+    utils::UniqueFileNames names;
+    EXPECT_EQ(utils::makeFileName("", std::nullopt, "CON", names), "CON_");
+    EXPECT_EQ(utils::makeFileName("", std::nullopt, "con", names), "con_-2");
 }
 
 TEST(ExportUtilsTests, LabelExportRangesKeepRegionLabels)
