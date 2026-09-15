@@ -10,6 +10,7 @@
 #include "context/tests/mocks/globalcontextmock.h"
 #include "interactive/tests/mocks/interactivemock.h"
 #include "mocks/playbackmock.h"
+#include "mocks/playbackconfigurationmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "record/tests/mocks/recordcontrollermock.h"
@@ -71,6 +72,9 @@ public:
 
         m_playback = std::make_shared<PlaybackMock>();
         m_controller->playback.set(m_playback);
+
+        m_playbackConfiguration = std::make_shared<NiceMock<PlaybackConfigurationMock> >();
+        m_controller->playbackConfiguration.set(m_playbackConfiguration);
 
         m_player = std::make_shared<PlayerMock>();
 
@@ -157,6 +161,11 @@ public:
         m_controller->onSeekAction(q);
     }
 
+    void seekBy(const secs_t delta)
+    {
+        m_controller->seekBy(delta);
+    }
+
     void rewindToStart()
     {
         m_controller->rewindToStartAction();
@@ -215,10 +224,54 @@ public:
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
 
     std::shared_ptr<PlaybackMock> m_playback;
+    std::shared_ptr<PlaybackConfigurationMock> m_playbackConfiguration;
     std::shared_ptr<PlayerMock> m_player;
 
     muse::async::Channel<muse::secs_t> m_playbackPositionChanged;
 };
+
+TEST_F(PlaybackControllerTests, SeekBy_WhilePlayingMovesTheActiveStream)
+{
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition()).WillByDefault(Return(secs_t(20.0)));
+
+    EXPECT_CALL(*m_player, seek(secs_t(15.0), true));
+    seekBy(secs_t(-5.0));
+
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(15.0));
+}
+
+TEST_F(PlaybackControllerTests, SeekBy_ClampsToProjectBounds)
+{
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackPosition()).WillByDefault(Return(secs_t(98.0)));
+
+    EXPECT_CALL(*m_player, seek(secs_t(100.0), true));
+    seekBy(secs_t(15.0));
+}
+
+TEST_F(PlaybackControllerTests, SeekBy_WhenStoppedDoesNothing)
+{
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
+    EXPECT_CALL(*m_player, playbackPosition()).Times(0);
+    EXPECT_CALL(*m_player, seek(_, _)).Times(0);
+
+    seekBy(secs_t(5.0));
+}
+
+TEST_F(PlaybackControllerTests, SeekShortcutsAreEnabledOnlyForActivePlayback)
+{
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Running));
+    EXPECT_TRUE(m_controller->canReceiveAction("seek-left-short"));
+    EXPECT_TRUE(m_controller->canReceiveAction("seek-right-long"));
+
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Paused));
+    EXPECT_TRUE(m_controller->canReceiveAction("seek-left-short"));
+
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
+    EXPECT_FALSE(m_controller->canReceiveAction("seek-left-short"));
+    EXPECT_FALSE(m_controller->canReceiveAction("seek-right-long"));
+}
 
 /**
  * @brief Toggle play when stopped without selection or loop

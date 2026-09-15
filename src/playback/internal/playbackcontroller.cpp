@@ -5,6 +5,8 @@
 #include "playbackuiactions.h"
 #include "../playbacktypes.h"
 
+#include <algorithm>
+
 using namespace muse;
 using namespace au::audio;
 using namespace au::playback;
@@ -21,6 +23,10 @@ static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 static const ActionQuery PLAYBACK_REWIND_START_QUERY("action://playback/rewind-start");
 static const ActionQuery PLAYBACK_REWIND_END_QUERY("action://playback/rewind-end");
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
+static const ActionCode SEEK_LEFT_SHORT_CODE("seek-left-short");
+static const ActionCode SEEK_RIGHT_SHORT_CODE("seek-right-short");
+static const ActionCode SEEK_LEFT_LONG_CODE("seek-left-long");
+static const ActionCode SEEK_RIGHT_LONG_CODE("seek-right-long");
 static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
 static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
 static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
@@ -86,6 +92,10 @@ void PlaybackController::init()
     dispatcher()->reg(this, PLAYBACK_REWIND_START_QUERY, this, &PlaybackController::rewindToStartAction);
     dispatcher()->reg(this, PLAYBACK_REWIND_END_QUERY, this, &PlaybackController::rewindToEndAction);
     dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, this, &PlaybackController::onSeekAction);
+    dispatcher()->reg(this, SEEK_LEFT_SHORT_CODE, [this]() { seekBy(-playbackConfiguration()->shortSkip()); });
+    dispatcher()->reg(this, SEEK_RIGHT_SHORT_CODE, [this]() { seekBy(playbackConfiguration()->shortSkip()); });
+    dispatcher()->reg(this, SEEK_LEFT_LONG_CODE, [this]() { seekBy(-playbackConfiguration()->longSkip()); });
+    dispatcher()->reg(this, SEEK_RIGHT_LONG_CODE, [this]() { seekBy(playbackConfiguration()->longSkip()); });
     dispatcher()->reg(this, PLAYBACK_CHANGE_PLAY_REGION_QUERY, this, &PlaybackController::onChangePlaybackRegionAction);
     dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
     dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
@@ -580,6 +590,16 @@ void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
     setLastPlaybackSeekTime(secs);
     m_lastPlaybackRegion = { secs, secs };
     m_pauseShouldStopPlayback = false;
+}
+
+void PlaybackController::seekBy(const muse::secs_t delta)
+{
+    if (isStopped() || recordController()->isRecording()) {
+        return;
+    }
+
+    const muse::secs_t target = std::clamp(playbackPosition() + delta, muse::secs_t(0.0), totalPlayTime());
+    doSeek(target, isPlaying());
 }
 
 void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionQuery& q)
@@ -1167,6 +1187,11 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
 
     if (code == PLAYBACK_REWIND_START_QUERY.toString() || code == PLAYBACK_REWIND_END_QUERY.toString()) {
         return !isPlaying() && !recordController()->isRecording();
+    }
+
+    if (code == SEEK_LEFT_SHORT_CODE || code == SEEK_RIGHT_SHORT_CODE
+        || code == SEEK_LEFT_LONG_CODE || code == SEEK_RIGHT_LONG_CODE) {
+        return !isStopped() && !recordController()->isRecording();
     }
 
     return true;
