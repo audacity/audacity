@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <QQmlParserStatus>
+#include <QtQml/QQmlParserStatus>
 
 #include "spectrogram/view/abstractspectrogramsettingsmodel.h"
 #include "spectrogram/iglobalspectrogramconfiguration.h"

@@ -10,6 +10,8 @@
 
 #include "effects/effects_base/ieffectviewlaunchregister.h"
 
+#include <QtQml/qqml.h>
+
 using namespace au::effects;
 
 static const std::string mname("builtin_effects_collection");

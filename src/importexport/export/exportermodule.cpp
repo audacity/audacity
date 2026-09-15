@@ -16,6 +16,8 @@
 
 #include "exportermodule.h"
 
+#include <QtQml/qqml.h>
+
 using namespace au::importexport;
 using namespace muse;
 

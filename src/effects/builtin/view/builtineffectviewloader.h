@@ -4,8 +4,8 @@
 #pragma once
 
 #include <QObject>
-#include <QQmlComponent>
-#include <QQuickItem>
+#include <QtQml/QQmlComponent>
+#include <QtQuick/QQuickItem>
 
 #include "global/async/asyncable.h"
 #include "modularity/ioc.h"

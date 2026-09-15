@@ -4,7 +4,7 @@
 #pragma once
 
 #include <QAbstractListModel>
-#include <QQmlParserStatus>
+#include <QtQml/QQmlParserStatus>
 
 #include "async/asyncable.h"
 

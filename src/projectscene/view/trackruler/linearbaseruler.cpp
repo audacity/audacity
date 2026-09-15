@@ -4,6 +4,8 @@
 #include <cassert>
 #include <iomanip>
 #include <sstream>
+#include <array>
+#include <utility>
 
 #include "framework/global/realfn.h"
 

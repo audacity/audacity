@@ -3,8 +3,8 @@
 */
 #include "effectsuiengine.h"
 
-#include <QQmlEngine>
-#include <QQmlContext>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
 
 using namespace au::effects;
 

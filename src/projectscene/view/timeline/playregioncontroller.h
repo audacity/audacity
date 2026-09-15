@@ -5,6 +5,7 @@
 #pragma once
 
 #include <QObject>
+#include <QCursor>
 
 #include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"

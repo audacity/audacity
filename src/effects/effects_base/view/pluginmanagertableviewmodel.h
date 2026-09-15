@@ -11,7 +11,7 @@
 #include "framework/interactive/iinteractive.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/abstracttableviewmodel.h"
 
-#include <QQmlParserStatus>
+#include <QtQml/QQmlParserStatus>
 #include <QObject>
 
 #include <functional>

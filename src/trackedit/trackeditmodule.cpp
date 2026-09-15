@@ -21,7 +21,7 @@
  */
 #include "trackeditmodule.h"
 
-#include <QtQml>
+#include <QtQml/QtQml>
 
 #include "framework/global/modularity/ioc.h"
 

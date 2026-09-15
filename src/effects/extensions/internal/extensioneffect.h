@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-#include <QJSValue>
+#include <QtQml/QJSValue>
 
 #include "au3-effects/StatefulEffect.h"
 

@@ -22,7 +22,7 @@
 
 #include "appshellmodule.h"
 
-#include <QQmlEngine>
+#include <QtQml/QQmlEngine>
 
 #include "framework/global/iapplicationeventcontroller.h"
 #include "framework/global/modularity/ioc.h"

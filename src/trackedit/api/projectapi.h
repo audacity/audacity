@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <QJSValue>
+#include <QtQml/QJSValue>
 
 #include "api/apiobject.h"
 #include "context/iglobalcontext.h"

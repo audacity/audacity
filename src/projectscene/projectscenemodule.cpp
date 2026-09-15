@@ -3,7 +3,7 @@
 */
 #include "projectscenemodule.h"
 
-#include <QtQml>
+#include <QtQml/QtQml>
 
 #include "types/projectscenetypes.h"
 

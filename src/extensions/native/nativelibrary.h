@@ -10,8 +10,8 @@
 #include <vector>
 
 #include <QByteArray>
-#include <QJSEngine>
-#include <QJSValue>
+#include <QtQml/QJSEngine>
+#include <QtQml/QJSValue>
 #if !defined(Q_OS_WIN)
 #include <QLibrary>
 #endif

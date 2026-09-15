@@ -6,7 +6,7 @@
 
 #include <QObject>
 #include <QString>
-#include <QQuickItem>
+#include <QtQuick/QQuickItem>
 #include <QCursor>
 
 namespace au::projectscene {
