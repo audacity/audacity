@@ -1428,11 +1428,11 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
         <source>Record level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Rekam level</translation>
+        <translation>Level rekam</translation>
     </message>
     <message>
         <source>Set record level</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Atur level rekam</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
@@ -1496,25 +1496,25 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="131"/>
         <source>Delete and leave gap</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hapus dan biarkan celah</translation>
+        <translation>Buang dan biarkan celah</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hapus dan tutup celah (per klip)</translation>
+        <translation>Buang dan tutup celah (per klip)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="149"/>
         <source>Delete and close gap (per track)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hapus dan tutup celah (per trek)</translation>
+        <translation>Buang dan tutup celah (per trek)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="158"/>
         <source>Delete and close gap (all tracks)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hapus dan tutup celah (semua trek)</translation>
+        <translation>Buang dan tutup celah (semua trek)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="167"/>
@@ -1550,7 +1550,7 @@
     </message>
     <message>
         <source>Delete track</source>
-        <translation type="vanished">Hapus trek</translation>
+        <translation type="vanished">Buang trek</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="225"/>
@@ -3176,7 +3176,7 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="59"/>
         <source>Set record level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Atur level rekam</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="68"/>
@@ -17718,29 +17718,29 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="163"/>
         <source>Change FFmpeg</source>
-        <translation type="unfinished"/>
+        <translation>Ubah FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="166"/>
         <source>FFmpeg has already been found</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg telah ditemukan</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
         <source>Locate %1</source>
-        <translation type="unfinished"/>
+        <translation>Temukan %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="44"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 (Mono) Saluran perekaman</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="47"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation>2 (Stereo) Saluran Perekaman</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
@@ -17799,17 +17799,17 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="174"/>
         <source>Unable to apply audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Tidak dapat menerapkan pengaturan suara</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="265"/>
         <source>The audio stream could not be restored after closing the ASIO settings.</source>
-        <translation type="unfinished"/>
+        <translation>Stream audio tidak dapat dipulihkan setelah menutup pengaturan ASIO.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="275"/>
         <source>Unable to open ASIO settings</source>
-        <translation type="unfinished"/>
+        <translation>Tidak dapat membuka pengaturan ASIO</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
@@ -17821,7 +17821,7 @@ Modul ini tidak akan dimuat.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
         <source>Your version of “%1” is up to date.</source>
         <extracomment>%1 is the name of the language whose translation files are up to date</extracomment>
-        <translation type="unfinished"/>
+        <translation>Versi “%1” Anda sudah yang paling baru.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="91"/>
@@ -17837,7 +17837,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="204"/>
         <source>Temp directory update</source>
-        <translation type="unfinished"/>
+        <translation>Pembaruan direktori sementara</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="205"/>
@@ -17861,17 +17861,17 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
         <source>The default audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>Pengaturan suara bawaan tidak valid.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="47"/>
         <source>An internal error occurred while resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Kesalahan internal terjadi ketika mengatur ulang pengaturan suara.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="204"/>
         <source>Audio editing</source>
-        <translation type="unfinished"/>
+        <translation>Pengeditan suara</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="207"/>
@@ -17881,7 +17881,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="211"/>
         <source>Spectral display</source>
-        <translation type="unfinished"/>
+        <translation>Tampilan spektral</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
@@ -17909,27 +17909,27 @@ Modul ini tidak akan dimuat.</translation>
     </message>
     <message>
         <source>Advanced options</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Pilihan lanjutan</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
         <source>Unable to reset audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Tidak dapat mengatur ulang pengaturan suara</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>Stream audio tidak dapat dipulihkan setelah mengatur ulang pengaturan suara.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
         <source>Recording lead-in time</source>
-        <translation type="unfinished"/>
+        <translation>Jeda waktu sebelum merekam</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="22"/>
         <source>Lead-in time before recording starts</source>
-        <translation type="unfinished"/>
+        <translation>Jeda waktu sebelum rekaman dimulai</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
@@ -17939,7 +17939,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="29"/>
         <source>Music imports</source>
-        <translation type="unfinished"/>
+        <translation>Impor musik</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
@@ -17959,7 +17959,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation type="unfinished"/>
+        <translation>Pilih lokasi plugin</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
@@ -17969,12 +17969,12 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="80"/>
         <source>Remove location</source>
-        <translation type="unfinished"/>
+        <translation>Hapus lokasi</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="100"/>
         <source>The directory does not exist</source>
-        <translation type="unfinished"/>
+        <translation>Direktorinya tidak ada</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="111"/>
@@ -17984,32 +17984,32 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Lokasi plugin LV2 kustom</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="53"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Pilih lokasi plugin LV2 kustom</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="87"/>
         <source>Custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Lokasi plugin VST3 kustom</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="88"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>Pilih lokasi plugin VST3 kustom</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
         <source>Use device sample rate</source>
-        <translation type="unfinished"/>
+        <translation>Gunakan laju sampel perangkat</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
         <source>Driver settings</source>
-        <translation type="unfinished"/>
+        <translation>Pengaturan driver</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
@@ -18019,7 +18019,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>Tampilkan dialog ‘Bagaimana cara Anda ingin mengekspor?’</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -18034,12 +18034,12 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Selalu simpan ke awan</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>Selalu simpan ke komputer</translation>
     </message>
 </context>
 <context>
@@ -18062,7 +18062,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="22"/>
         <source>Enable spectral selection</source>
-        <translation type="unfinished"/>
+        <translation>Aktifkan pilihan spektral</translation>
     </message>
 </context>
 <context>
@@ -18094,7 +18094,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="84"/>
         <source>Composer / arranger</source>
-        <translation type="unfinished"/>
+        <translation>Komposer / penggubah</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="108"/>
@@ -18160,7 +18160,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectIndicatorButton.qml" line="44"/>
         <source>Stop download</source>
-        <translation type="unfinished"/>
+        <translation>Berhenti mengunduh</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectIndicatorButton.qml" line="44"/>
@@ -18217,7 +18217,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectPropertiesDialog.qml" line="112"/>
         <source>New property</source>
-        <translation type="unfinished"/>
+        <translation>Properti baru</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="86"/>
@@ -18249,7 +18249,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="143"/>
         <source>Projects tab bar</source>
-        <translation type="unfinished"/>
+        <translation>Bar tab proyek</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="154"/>
@@ -18269,7 +18269,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="197"/>
         <source>View buttons</source>
-        <translation type="unfinished"/>
+        <translation>Tampilkan tombol</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="209"/>
@@ -18279,12 +18279,12 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="223"/>
         <source>Grid view</source>
-        <translation type="unfinished"/>
+        <translation>Tampilan kisi</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="228"/>
         <source>List view</source>
-        <translation type="unfinished"/>
+        <translation>Tampilan daftar</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="401"/>
@@ -18310,7 +18310,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="116"/>
         <source>All saved changes will now update to the cloud</source>
-        <translation type="unfinished"/>
+        <translation>Semua perubahan yang tersimpan akan diperbarui di awan</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="158"/>
@@ -18320,7 +18320,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Create a portfolio to showcase your music</source>
-        <translation type="unfinished"/>
+        <translation>Buat portofolio untuk menunjukkan musik Anda</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
@@ -18345,7 +18345,7 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/UploadProgressDialog.qml" line="48"/>
         <source>Saving online…</source>
-        <translation type="unfinished"/>
+        <translation>Menyimpan secara daring...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="215"/>
@@ -18434,7 +18434,7 @@ Modul ini tidak akan dimuat.</translation>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
         <source>Cloud sync failed</source>
-        <translation type="unfinished"/>
+        <translation>Sinkronisasi awan gagal</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
@@ -18446,13 +18446,13 @@ Modul ini tidak akan dimuat.</translation>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
         <source>Access denied</source>
-        <translation type="unfinished"/>
+        <translation>Akses ditolak</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
         <source>Version conflict</source>
-        <translation type="unfinished"/>
+        <translation>Konflik versi</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
@@ -18474,14 +18474,15 @@ Modul ini tidak akan dimuat.</translation>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
         <source>Network error</source>
-        <translation type="unfinished"/>
+        <translation>Kesalahan jaringan</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1094"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Semua perubahan yang tersimpan sekarang akan diperbarui di awan.
+Anda bisa mengelola berkas ini dari halaman proyek yang terbaru di audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
@@ -18538,7 +18539,7 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
         <source>Your changes will be lost if you don’t save them.</source>
-        <translation type="unfinished"/>
+        <translation>Perubahan Anda akan hilang jika Anda tidak menyimpannya.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
@@ -18548,7 +18549,7 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
         <source>Resuming sync to audio.com…</source>
-        <translation type="unfinished"/>
+        <translation>Melanjutkan sinkronisasi ke audio.com...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
@@ -18585,7 +18586,7 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="40"/>
         <source>Audacity exception occurred</source>
-        <translation type="unfinished"/>
+        <translation>Ada kesalahan Audacity</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="41"/>
@@ -18597,7 +18598,7 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="45"/>
         <source>Database error</source>
-        <translation type="unfinished"/>
+        <translation>Kesalahan basis data</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="46"/>
@@ -18611,7 +18612,9 @@ Gagal memuat proyek: “%1”</translation>
         <source>The file:
 “%1”
 Cannot be found or accessed at this location. If it’s stored on an external or cloud drive, please verify that the drive is connected and syncing properly.</source>
-        <translation type="unfinished"/>
+        <translation>Berkas:
+“%1”
+Tidak bisa ditemukan atau diakses di lokasi ini. Jika ia disimpan di drive awan atau eksternal, harap verifikasi bahwa drive-nya terhubung dan tersinkron dengan benar.</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="57"/>
@@ -18623,7 +18626,9 @@ Cannot be found or accessed at this location. If it’s stored on an external or
         <source>To open this file:
 “%1”
 Please check the file’s properties and permissions, ensure it is not stored on a drive or folder with restricted access, or try running Audacity as an administrator.</source>
-        <translation type="unfinished"/>
+        <translation>Untuk membuka berkas ini:
+“%1”
+Cek properti dan izin berkasnya, pastikan ia tidak disimpan di drive atau folder dengan akses terbatas, atau coba jalankan Audacity sebagai administrator.</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="63"/>
@@ -18635,7 +18640,9 @@ Please check the file’s properties and permissions, ensure it is not stored on
         <source>To open this file:
 “%1”
 Please remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.</source>
-        <translation type="unfinished"/>
+        <translation>Untuk membuka berkas ini:
+“%1”
+Harap cabut perlindungan tulisnya dengan memeriksa properti berkasnya, pastikan ia tidak disimpan di drive atau folder yang dibatasi akses tulisnya, atau coba jalankan Audacity sebagai administrator.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
@@ -18834,7 +18841,7 @@ Berkas mungkin rusak atau hanya bisa dibaca saja.</translation>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="899"/>
         <source>Unable to add ‘inset’ function (can’t verify blockids)</source>
         <extracomment>An error message. Don't translate inset or blockids.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tidak bisa menambahkan fungsi ‘inset’ (tidak bisa memverifikasi blockids)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="917"/>
@@ -19133,7 +19140,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="117"/>
         <source>Would you also like to share your music on Audio.com?</source>
-        <translation type="unfinished"/>
+        <translation>Apakah Anda juga ingin untuk membagikan musik Anda di Audio.com?</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="126"/>
@@ -19143,17 +19150,17 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="145"/>
         <source>You can change this setting in Preferences at any time.</source>
-        <translation type="unfinished"/>
+        <translation>Anda bisa mengubah pengaturan ini kapan saja di Preferensi.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="165"/>
         <source>Remember my choice</source>
-        <translation type="unfinished"/>
+        <translation>Ingat pilihan saya</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Menyinkronkan dengan audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
@@ -19192,7 +19199,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>Ekspor ke komputer</translation>
     </message>
 </context>
 <context>
@@ -19261,12 +19268,12 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>Time Track not supported</source>
-        <translation type="unfinished"/>
+        <translation>Trek Waktu tidak didukung</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
-        <translation type="unfinished"/>
+        <translation>Proyeknya mengandung trek waktu, yang belum didukung di Audacity 4, dan perlu dibuang. Hal ini tidak memengaruhi proyek asli Audacity 3 Anda.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
@@ -19284,7 +19291,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="81"/>
         <source>Audacity version:</source>
-        <translation type="unfinished"/>
+        <translation>Versi Audacity:</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="90"/>
@@ -19333,7 +19340,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <source>Save to the cloud (free)</source>
-        <translation type="unfinished"/>
+        <translation>Simpan ke awan (gratis)</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="104"/>
@@ -19343,7 +19350,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
         <source>If you prefer to save your files on your computer, you can do that here.</source>
-        <translation type="unfinished"/>
+        <translation>Jika Anda memilih untuk menyimpan berkas-berkas Anda di komputer Anda, Anda bisa melakukannya di sini.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
@@ -19354,7 +19361,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     </message>
     <message>
         <source>Save on your computer</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Simpan di komputer Anda</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
@@ -19378,7 +19385,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
-        <translation type="unfinished"/>
+        <translation>Masuk atau buat akun baru di Audio.com untuk membagikan musik Anda.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
@@ -19389,12 +19396,12 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
         <source>Publish changes online?</source>
-        <translation type="unfinished"/>
+        <translation>Publikasikan perubahan secara daring?</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
-        <translation type="unfinished"/>
+        <translation>Perubahan Anda yang disimpan akan bisa dilihat secara publik. Kami juga perlu membuat MP3 baru untuk pemutaran secara publik.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
@@ -19407,12 +19414,12 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
         <source>Unable to connect to the cloud</source>
-        <translation type="unfinished"/>
+        <translation>Tidak dapat menghubungkan ke awan</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
         <source>Unable to connect to Audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Tidak dapat terhubung ke Audio.com</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
@@ -19438,12 +19445,12 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
         <source>Replace the existing &lt;a href=&quot;%1&quot;&gt;online score&lt;/a&gt;</source>
         <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ganti &lt;a href=&quot;%1&quot;&gt;partitur daring&lt;/a&gt; yang ada</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
         <source>Publish as new online score</source>
-        <translation type="unfinished"/>
+        <translation>Terbitkan sebagai partitur daring baru</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
@@ -19454,7 +19461,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
         <source>Replace the &lt;a href=&quot;%1&quot;&gt;existing audio&lt;/a&gt;</source>
         <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ganti &lt;a href=&quot;%1&quot;&gt;suara yang ada&lt;/a&gt; </translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
@@ -19472,29 +19479,29 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="858"/>
         <source>Your audio could not be shared</source>
-        <translation type="unfinished"/>
+        <translation>Suara Anda tidak bisa dibagikan</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
-        <translation type="unfinished"/>
+        <translation>Akun audio.com Anda harus diverifikasi dulu. Harap aktivasi akun Anda melalui tautan di email aktivasi.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audio.com mengembalikan kode eror yang tidak diketahui: %1.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
         <source>Audio.com returned an unknown error code.</source>
-        <translation type="unfinished"/>
+        <translation>Audio.com mengembalikan kode eror yang tidak diketahui.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
-        <translation type="unfinished"/>
+        <translation>Silakan coba lagi nanti, atau dapatkan bantuan untuk masalah ini di audio.com.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
@@ -19520,12 +19527,12 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="50"/>
         <source>Selection start</source>
-        <translation type="unfinished"/>
+        <translation>Awal pilihan</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="51"/>
         <source>Selection end</source>
-        <translation type="unfinished"/>
+        <translation>Akhir pilihan</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
@@ -19573,17 +19580,17 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="355"/>
         <source>Customize toolbar</source>
         <extracomment>Tooltip of the toolbar customization button</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sesuaikan toolbar</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="44"/>
         <source>Playback toolbar</source>
-        <translation type="unfinished"/>
+        <translation>Toolbar pemutaran</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="164"/>
         <source>Playback position:</source>
-        <translation type="unfinished"/>
+        <translation>Posisi pemutaran:</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
@@ -19599,17 +19606,17 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap to</source>
-        <translation type="unfinished"/>
+        <translation>Tempel ke</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
         <source>Show/hide toolbar buttons</source>
-        <translation type="unfinished"/>
+        <translation>Tampilkan/sembunyikan tombol toolbar</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="21"/>
         <source>Workspace selection</source>
-        <translation type="unfinished"/>
+        <translation>Pilihan ruang kerja</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="60"/>
@@ -19625,7 +19632,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="66"/>
         <source>Label track name</source>
-        <translation type="unfinished"/>
+        <translation>Nama trek label</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="112"/>
@@ -19635,7 +19642,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml" line="15"/>
         <source>Label editor</source>
-        <translation type="unfinished"/>
+        <translation>Editor labe</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="58"/>
@@ -19674,7 +19681,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="41"/>
         <source>Optimize for voice</source>
-        <translation type="unfinished"/>
+        <translation>Optimalkan untuk suara</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml" line="17"/>
@@ -19684,7 +19691,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="46"/>
         <source>Clip pitch</source>
-        <translation type="unfinished"/>
+        <translation>Nada klip</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="61"/>
@@ -19699,7 +19706,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml" line="38"/>
         <source>Clip speed</source>
-        <translation type="unfinished"/>
+        <translation>Kecepatan klip</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml" line="48"/>
@@ -19735,13 +19742,13 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
         <source>Toggle all master effects</source>
-        <translation type="unfinished"/>
+        <translation>Nyalakan/matikan semua efek master</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
         <source>Toggle all effects</source>
-        <translation type="unfinished"/>
+        <translation>Nyalakan/matikan semua efek</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
@@ -19752,7 +19759,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
         <source>Add master effect</source>
-        <translation type="unfinished"/>
+        <translation>Tambahkan efek master</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="158"/>
@@ -19762,12 +19769,12 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="159"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Tonton video&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
         <source>Real-time effects panel</source>
-        <translation type="unfinished"/>
+        <translation>Panel efek real-time</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
@@ -19778,7 +19785,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
         <source>Close real-time effects panel</source>
         <extracomment>Tooltip of the button that closes the panel</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tutup panel efek real-time</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
@@ -19800,7 +19807,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="80"/>
         <source>Track volume</source>
-        <translation type="unfinished"/>
+        <translation>Volume trek</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="17"/>
@@ -19811,7 +19818,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="105"/>
         <source>Opens effects panel</source>
-        <translation type="unfinished"/>
+        <translation>Buka panel efek</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="251"/>
@@ -19828,7 +19835,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="232"/>
         <source>Separator line</source>
-        <translation type="unfinished"/>
+        <translation>Garis pemisah</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="52"/>
@@ -19873,7 +19880,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="61"/>
         <source>Enable triplets</source>
-        <translation type="unfinished"/>
+        <translation>Aktifkan triplet</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="217"/>
@@ -19953,32 +19960,32 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="76"/>
         <source>Start time</source>
-        <translation type="unfinished"/>
+        <translation>Waktu mulai</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="88"/>
         <source>End time</source>
-        <translation type="unfinished"/>
+        <translation>Waktu selesai</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="99"/>
         <source>Low frequency</source>
-        <translation type="unfinished"/>
+        <translation>Frekuensi rendah</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="111"/>
         <source>High frequency</source>
-        <translation type="unfinished"/>
+        <translation>Frekuensi tinggi</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="29"/>
         <source>Remove effect</source>
-        <translation type="unfinished"/>
+        <translation>Buang efek</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
         <source>Audio setup and sharing</source>
-        <translation type="unfinished"/>
+        <translation>Pengaturan dan pembagian suara</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
@@ -19988,39 +19995,39 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="159"/>
         <source>Clip: %1</source>
-        <translation type="unfinished"/>
+        <translation>Klip: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
         <source>Clip name: %1</source>
-        <translation type="unfinished"/>
+        <translation>Nama klip: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
         <source>Clip menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu klip</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="103"/>
         <source>Label: %1</source>
-        <translation type="unfinished"/>
+        <translation>Label: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml" line="30"/>
         <source>Track name: %1</source>
-        <translation type="unfinished"/>
+        <translation>Nama trek: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="253"/>
         <source>Reorder effect</source>
         <extracomment>Tooltip of the drag handle used to reorder effects</extracomment>
-        <translation type="unfinished"/>
+        <translation>Atur ulang urutan efek</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="303"/>
         <source>Bypass %1</source>
         <extracomment>Tooltip of the effect power button; %1 is an effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Bypass %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="323"/>
@@ -20037,33 +20044,33 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackItem.qml" line="212"/>
         <source>Track menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu trek</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track, selected</source>
-        <translation type="unfinished"/>
+        <translation>Trek %1: %2, trek suara, dipilih</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
         <source>Track %1: %2, audio track</source>
-        <translation type="unfinished"/>
+        <translation>Trek %1: %2, trek suara</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
         <source>Press Enter to select or deselect</source>
-        <translation type="unfinished"/>
+        <translation>Tekan Enter untuk memilih atau membatalkan pilihan</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track, selected</source>
-        <translation type="unfinished"/>
+        <translation>Trek %1: %2, trek label, dipilih</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track</source>
-        <translation type="unfinished"/>
+        <translation>Trek %1: %2, trek label</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
@@ -20140,13 +20147,13 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="209"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 (Mono) Saluran perekaman</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="212"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation>2 (Stereo) Saluran Perekaman</translation>
     </message>
 </context>
 <context>
@@ -20154,17 +20161,17 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="85"/>
         <source>Microphone level</source>
-        <translation type="unfinished"/>
+        <translation>Level mikrofon</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="156"/>
         <source>Recording level</source>
-        <translation type="unfinished"/>
+        <translation>Level perekaman</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="185"/>
         <source>Note: this control is tied to your computer’s main mic volume</source>
-        <translation type="unfinished"/>
+        <translation>Catatan: kendali ini berkaitan dengan volume mik utama komputer Anda</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="213"/>
@@ -20185,7 +20192,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="971"/>
         <source>Recorded audio</source>
-        <translation type="unfinished"/>
+        <translation>Rekaman suara</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcontroller.cpp" line="118"/>
@@ -20195,12 +20202,12 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../src/record/internal/recordcontroller.cpp" line="200"/>
         <source>Recording error</source>
         <extracomment>Title of an error dialog</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eror rekaman</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcontroller.cpp" line="223"/>
         <source>Lead-in Recording error</source>
-        <translation type="unfinished"/>
+        <translation>Eror Rekaman Pengantar</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="37"/>
@@ -20212,12 +20219,12 @@ Code Kesalahan: %1</translation>
     <message>
         <location filename="../../src/record/recorderrors.h" line="38"/>
         <source>Cannot stop recording</source>
-        <translation type="unfinished"/>
+        <translation>Tidak bisa berhenti merekam</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="39"/>
         <source>Cannot resume recording</source>
-        <translation type="unfinished"/>
+        <translation>Tidak dapat melanjutkan rekaman</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="41"/>
@@ -20228,13 +20235,15 @@ Code Kesalahan: %1</translation>
         <location filename="../../src/record/recorderrors.h" line="44"/>
         <source>Too few tracks are selected for recording at this sample rate.
 (Audacity requires two channels at the same sample rate foreach stereo track)</source>
-        <translation type="unfinished"/>
+        <translation>Terlalu sedikit trek yang dipilih untuk direkam pada laju sampel ini.
+(Audacity memerlukan dua saluran dengan laju sampel yang sama untuk masing-masing trek stereo)</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="48"/>
         <source>No recording device available.
 Please connect an input device and rescan.</source>
-        <translation type="unfinished"/>
+        <translation>Tidak ada perangkat perekam yang tersedia.
+Harap hubungkan perangkat input dan pindai ulang.</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="52"/>
@@ -20244,7 +20253,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="55"/>
         <source>Please select a track for lead-in recording.</source>
-        <translation type="unfinished"/>
+        <translation>Silakan pilih trek untuk rekaman pengantar.</translation>
     </message>
 </context>
 <context>
@@ -20291,7 +20300,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="28"/>
         <source>Cut and close gap</source>
-        <translation type="unfinished"/>
+        <translation>Potong dan tutup celah</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="30"/>
@@ -20326,7 +20335,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="48"/>
         <source>Delete and close gap</source>
-        <translation type="unfinished"/>
+        <translation>Buang dan tutup celah</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="50"/>
@@ -21528,7 +21537,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
         <source>Delete and close gap</source>
-        <translation type="unfinished"/>
+        <translation>Buang dan tutup celah</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
