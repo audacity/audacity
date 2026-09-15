@@ -25,6 +25,8 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
+#include "trackedit/tracklistchangeguard.h"
+
 #include "au3audioinput.h"
 #include "../../recorderrors.h"
 
@@ -900,7 +902,12 @@ Ret Au3Record::doRecord(Au3Project& project,
         for (auto& w : newTracks) {
             list->Add(std::static_pointer_cast<Track>(std::move(w)));
         }
-        pendingTracks.RegisterPendingNewTracks(*list);
+
+        {
+            const trackedit::TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
+            pendingTracks.RegisterPendingNewTracks(*list);
+        }
 
         for (auto& [newTrack, newClip] : newTrackHolders) {
             auto updater = [this, trackId = newTrack->GetId(), clipId = newClip->GetId()](Au3Track& d, const Au3Track& s){
@@ -929,7 +936,6 @@ Ret Au3Record::doRecord(Au3Project& project,
             rebuildRecordingClipKeys();
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-            prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
             prj->notifyAboutClipAdded(DomConverter::clip(newTrack.get(), newClip.get()));
         }
         pendingTracks.UpdatePendingTracks();

@@ -32,6 +32,7 @@
 #include "defer.h"
 #include "log.h"
 #include "trackediterrors.h"
+#include "tracklistchangeguard.h"
 #include "translation.h"
 
 using namespace au::trackedit;
@@ -533,6 +534,8 @@ bool Au3ClipsInteraction::splitClipsAtSilences(const ClipKeyList& clipKeyList)
 
 bool Au3ClipsInteraction::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList)
 {
+    const TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     std::map<TrackId, std::vector<ClipKey> > clipsPerTrack;
     for (const auto& clipKey : clipKeyList) {
         clipsPerTrack[clipKey.trackId].push_back(clipKey);
@@ -564,7 +567,6 @@ bool Au3ClipsInteraction::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
         projectTracks.Add(newTrack);
-        prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
         for (const auto& clip : prj->clipList(newTrack->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }
@@ -597,6 +599,8 @@ bool Au3ClipsInteraction::duplicateClips(const ClipKeyList& clipKeyList)
     if (selectedTracks.empty()) {
         return false;
     }
+
+    const TrackListChangeGuard guard(prj);
 
     //Get only the selected tracks but keeping the UI order
     std::vector<Au3WaveTrack*> waveTracks;
@@ -645,7 +649,6 @@ bool Au3ClipsInteraction::duplicateClips(const ClipKeyList& clipKeyList)
 
     for (const auto& newTrack : newTracks) {
         projectTracks.Add(newTrack);
-        prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
         for (const auto& clip : prj->clipList(newTrack->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }
@@ -1009,8 +1012,9 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
         if (!origWaveTrack) {
             // This must be a new track created 'cos the user dragged clips down.
             assert(offset > 0);
+            const TrackListChangeGuard guard(prj);
+
             origWaveTrack = utils::appendWaveTrack(mutOrig, newWaveTrack->NChannels());
-            prj->notifyAboutTrackAdded(DomConverter::track(origWaveTrack));
         }
 
         if (utils::clipIdSetsAreEqual(*origWaveTrack, *newWaveTrack)) {

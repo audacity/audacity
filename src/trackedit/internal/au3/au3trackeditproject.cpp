@@ -288,24 +288,17 @@ void Au3TrackeditProject::reload()
     m_tracksChanged.send(trackList());
 }
 
-void Au3TrackeditProject::notifyAboutTrackAdded(const Track& track)
-{
-    m_trackAdded.send(track);
-}
-
 void Au3TrackeditProject::notifyAboutTrackChanged(const Track& track)
 {
     m_trackChanged.send(track);
 }
 
-void Au3TrackeditProject::notifyAboutTrackRemoved(const Track& track)
+void Au3TrackeditProject::notifyAboutTrackListChanged(const TrackListChange& change)
 {
-    m_trackRemoved.send(track);
-}
-
-void Au3TrackeditProject::notifyAboutTrackInserted(const Track& track, int pos)
-{
-    m_trackInserted.send(track, pos);
+    if (!change.hasChanges()) {
+        return;
+    }
+    m_trackListChanged.send(change);
 }
 
 void Au3TrackeditProject::notifyAboutTrackMoved(const Track& track, int pos)
@@ -433,9 +426,9 @@ muse::async::Channel<std::vector<au::trackedit::Track> > Au3TrackeditProject::tr
     return m_tracksChanged;
 }
 
-muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackAdded() const
+muse::async::Channel<au::trackedit::TrackListChange> Au3TrackeditProject::trackListChanged() const
 {
-    return m_trackAdded;
+    return m_trackListChanged;
 }
 
 muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackChanged() const
@@ -446,16 +439,6 @@ muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackChanged() c
 muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackClipListChanged() const
 {
     return m_trackClipListChanged;
-}
-
-muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackRemoved() const
-{
-    return m_trackRemoved;
-}
-
-muse::async::Channel<au::trackedit::Track, int> Au3TrackeditProject::trackInserted() const
-{
-    return m_trackInserted;
 }
 
 muse::async::Channel<au::trackedit::Track, int> Au3TrackeditProject::trackMoved() const

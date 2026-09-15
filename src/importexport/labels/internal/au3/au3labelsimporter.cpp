@@ -11,6 +11,8 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/internal/domconverter.h"
 
+#include "trackedit/tracklistchangeguard.h"
+
 #include "labelsutils.h"
 
 using namespace au::au3;
@@ -29,6 +31,8 @@ muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
+    const trackedit::TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     LabelFormat format = au3labelFormatFromSuffix(filePath);
 
     auto& tracks = Au3TrackList::Get(*project);
@@ -41,11 +45,8 @@ muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
 
     textFile.Close();
 
-    // Notify project about the new track
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        prj->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
-
         // Notify about each imported label
         const auto& labels = labelTrack->GetLabels();
         for (size_t i = 0; i < labels.size(); ++i) {

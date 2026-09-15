@@ -32,9 +32,9 @@
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
-#include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/progressdialog.h"
 #include "trackedit/trackeditutils.h"
+#include "trackedit/tracklistchangeguard.h"
 
 #include "../effecterrors.h"
 using namespace muse;
@@ -586,41 +586,12 @@ muse::Ret EffectExecutionScenario::previewEffect(const EffectInstanceId& effectI
     return doPreviewEffect(effectId, settings);
 }
 
-namespace {
-std::vector<au::trackedit::Track> trackListDifference(const std::vector<au::trackedit::Track>& a,
-                                                      const std::vector<au::trackedit::Track>& b)
-{
-    std::vector<au::trackedit::Track> result;
-    for (const au::trackedit::Track& item : a) {
-        if (std::find_if(b.begin(), b.end(), [&item](const au::trackedit::Track& other) { return item.id == other.id; }) == b.end()) {
-            result.push_back(item);
-        }
-    }
-    return result;
-}
-
-void notifyIfTracksWereAdded(au::au3::Au3Project& au3Prj, const std::vector<au::trackedit::Track>& before,
-                             au::trackedit::ITrackeditProject& trackeditPrj)
-{
-    const auto& trackList = ::TrackList::Get(au3Prj);
-    std::vector<au::trackedit::Track> tracksAfter;
-    auto it = trackList.begin();
-    while (it != trackList.end()) {
-        tracksAfter.push_back(au::au3::DomConverter::track(*it));
-        ++it;
-    }
-
-    const std::vector<au::trackedit::Track> addedTracks = trackListDifference(tracksAfter, before);
-    for (const auto& track : addedTracks) {
-        trackeditPrj.notifyAboutTrackAdded(track);
-    }
-}
-}
-
 muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& project, Effect* effect,
                                                          std::shared_ptr<EffectInstance> pInstanceEx,
                                                          EffectSettings& settings)
 {
+    const trackedit::TrackListChangeGuard guard(globalContext()->currentTrackeditProject());
+
     //! ============================================================================
     //! NOTE Step 1 - add new a track if need
     //! ============================================================================
@@ -638,7 +609,6 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                 track, TrackList::DoAssignId::Yes,
                 TrackList::EventPublicationSynchrony::Synchronous);
             newTrack->SetSelected(true);
-            globalContext()->currentTrackeditProject()->notifyAboutTrackAdded(au3::DomConverter::track(newTrack));
         }
     }
 
@@ -673,9 +643,6 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
 
             assert(pInstanceEx); // null check above
             try {
-                // Get tracklist now and compare it with after to see if some tracks were added (such as a label track being added by the beat finder analyzer).
-                const auto prj = globalContext()->currentTrackeditProject();
-                const std::vector<trackedit::Track> tracksBefore = prj->trackList();
                 if (pInstanceEx->Process(settings) == false) {
                     if (progress.Cancelled()) {
                         success = make_ret(Err::EffectProcessCancelled);
@@ -683,7 +650,6 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                         success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
                     }
                 }
-                notifyIfTracksWereAdded(project, tracksBefore, *prj);
             } catch (::AudacityException& e) {
                 success = make_ret(Err::EffectProcessFailed);
                 if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
@@ -707,10 +673,8 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
 
     {
         if (!success && newTrack) {
-            const auto au4Track = au3::DomConverter::track(newTrack);
             // This decreases the reference count of the track, so it may be deleted.
             effect->mTracks->Remove(*newTrack);
-            globalContext()->currentTrackeditProject()->notifyAboutTrackRemoved(au4Track);
         }
     }
 
