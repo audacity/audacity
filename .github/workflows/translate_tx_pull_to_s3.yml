@@ -64,6 +64,8 @@ jobs:
 
       - name: Clone repository
         uses: actions/checkout@v6
+        with:
+          submodules: true
 
       - name: Install Qt for lrelease
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
@@ -82,7 +84,7 @@ jobs:
       - name: Setup environment for pushing to S3
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
         run: |
-          bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.AU_S3_KEY }} --s3_secret ${{ secrets.AU_S3_SECRET }}
+          bash ./muse/buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.AU_S3_KEY }} --s3_secret ${{ secrets.AU_S3_SECRET }}
 
           cmake -P ./buildscripts/ci/common/make_build_number_env.cmake
           BUILD_NUMBER=$(cat ./build.artifacts/env/build_number.env)

@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v6
+        with:
+          submodules: true
 
       - name: Update info about the get started playlist in s3
         run: |
@@ -26,12 +28,12 @@ jobs:
             S3_URL="s3://extensions.musescore.org/audacity/4.0/learn/started_playlist.test.json"
           fi
 
-          sudo bash ./buildscripts/ci/learn/make_playlists_info_file.sh \
+          sudo bash ./muse/buildscripts/ci/learn/make_playlists_info_file.sh \
             --youtube_api_key ${{ secrets.YOUTUBE_API_KEY }} \
             --youtube_playlist_id 'PLt__f9D3T90yZiTOE1QOAF2Uc1MPAK_fv'
 
-          sudo bash ./buildscripts/ci/tools/s3_push_file.sh \
+          sudo bash ./muse/buildscripts/ci/tools/s3_push_file.sh \
             --s3_key ${{ secrets.S3_KEY }} \
             --s3_secret ${{ secrets.S3_SECRET }} \
             --s3_url ${S3_URL} \
-            --file_path "playlist.json"
+            --file_path "build.artifacts/playlist.json"
