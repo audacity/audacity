@@ -26,6 +26,7 @@ class DownloadManager : public muse::async::Asyncable
 
 public:
     void scheduleDownloads(const std::vector<DownloadRequest>& requests);
+    void cancelAll();
 
     muse::async::Channel<std::string, muse::io::path_t> downloadCompleted() const;
 
@@ -35,6 +36,7 @@ private:
     muse::async::Channel<std::string, muse::io::path_t> m_downloadCompleted;
 
     std::map<std::string, muse::network::INetworkManagerPtr> m_activeManagers;
+    std::map<std::string, muse::Progress> m_activeProgresses;
 
     std::set<std::string> m_inProgressIds;
     std::mutex m_mutex;
