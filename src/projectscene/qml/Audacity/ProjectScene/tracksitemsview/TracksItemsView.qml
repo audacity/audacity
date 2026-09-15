@@ -19,6 +19,8 @@ Rectangle {
     //! so the tracks area draws the navigation focus border for it
     property NavigationControl navDefaultControl: null
 
+    property NavigationSection timelineNavigationSection: null
+
     readonly property alias tracksAreaItem: content
 
     property bool itemHovered: false
@@ -343,6 +345,8 @@ Rectangle {
             anchors.right: verticalRulerPanelHeader.left
 
             height: 40
+
+            navigationSection: root.timelineNavigationSection
 
             Timer {
                 id: playCursorReleaseTimer
