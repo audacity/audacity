@@ -38,10 +38,9 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
         return;
     }
 
-    const std::vector<double> channelHeight {
-        params.geometry.height * params.channelHeightRatio,
-        params.geometry.height * (1 - params.channelHeightRatio),
-    };
+    const size_t displayedChannels = samplespainterutils::displayedChannelCount(*track);
+    const std::vector<double> channelHeight
+        = samplespainterutils::channelHeights(params.geometry.height, params.channelHeightRatio, displayedChannels);
 
     const float dBRange = std::abs(params.dbRange);
     const bool dB = !params.isLinear;
@@ -49,13 +48,14 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
 
     auto waveMetrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), clipKey, params);
 
-    for (size_t index = 0; index < waveClip->NChannels(); index++) {
+    for (size_t index = 0; index < displayedChannels; index++) {
         waveMetrics.height = channelHeight[index];
         samplespainterutils::drawBackground(painter, waveMetrics, params.style, trimLeft);
         // Draw center line at the middle of the current channel
         const int centerY = waveMetrics.top + waveMetrics.height / 2;
         samplespainterutils::drawCenterLine(painter, waveMetrics, params.style, centerY);
-        const auto samples = samplespainterutils::getSampleData(*waveClip, index, waveMetrics, dB, dBRange, params.displayBounds.second,
+        const auto samples = samplespainterutils::getSampleData(*waveClip, samplespainterutils::paintChannelIndex(*waveClip, index),
+                                                                waveMetrics, dB, dBRange, params.displayBounds.second,
                                                                 params.displayBounds.first);
         if (samples.size() == 0) {
             continue;

@@ -108,10 +108,9 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         return;
     }
 
-    const std::vector<double> channelHeight {
-        params.geometry.height * params.channelHeightRatio,
-        params.geometry.height * (1 - params.channelHeightRatio),
-    };
+    const size_t displayedChannels = samplespainterutils::displayedChannelCount(*track);
+    const std::vector<double> channelHeight
+        = samplespainterutils::channelHeights(params.geometry.height, params.channelHeightRatio, displayedChannels);
 
     const float dBRange = std::abs(params.dbRange);
     const bool dB = !params.isLinear;
@@ -119,7 +118,7 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
 
     auto waveMetrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), clipKey, params, true);
 
-    for (size_t index = 0; index < waveClip->NChannels(); index++) {
+    for (size_t index = 0; index < displayedChannels; index++) {
         waveMetrics.height = channelHeight[index];
 
         // Draw background with the full channel area
@@ -132,7 +131,8 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         int yZero = samplespainterutils::getWaveYPos(0.0, params.displayBounds.first, params.displayBounds.second, paddedMetrics.height, dB,
                                                      true, dBRange, false);
         yZero = paddedMetrics.top + std::max(-1, std::min(static_cast<int>(paddedMetrics.height + paddedMetrics.top), yZero));
-        const auto samples = samplespainterutils::getSampleData(*waveClip, index, paddedMetrics, dB, dBRange, params.displayBounds.second,
+        const auto samples = samplespainterutils::getSampleData(*waveClip, samplespainterutils::paintChannelIndex(*waveClip, index),
+                                                                paddedMetrics, dB, dBRange, params.displayBounds.second,
                                                                 params.displayBounds.first);
         if (samples.size() == 0) {
             samplespainterutils::drawCenterLine(painter, waveMetrics, params.style, yZero);
