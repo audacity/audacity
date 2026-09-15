@@ -990,6 +990,17 @@ size_t VST3Wrapper::Process(const float* const* inBlock, float* const* outBlock,
            ? data.numSamples : 0;
 }
 
+void VST3Wrapper::DeliverPendingUiMessages()
+{
+    //Both proxies are created by this class, so their concrete type is known here.
+    if (mComponentConnectionProxy) {
+        static_cast<internal::ConnectionProxy*>(mComponentConnectionProxy.get())->deliverPendingMessages();
+    }
+    if (mControllerConnectionProxy) {
+        static_cast<internal::ConnectionProxy*>(mControllerConnectionProxy.get())->deliverPendingMessages();
+    }
+}
+
 void VST3Wrapper::SuspendProcessing()
 {
     mAudioProcessor->setProcessing(false);
