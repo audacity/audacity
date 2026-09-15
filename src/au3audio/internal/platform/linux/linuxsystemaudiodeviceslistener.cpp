@@ -56,7 +56,7 @@ void LinuxSystemAudioDevicesListener::startListening()
         // drain the queued events; what changed does not matter, and bursts
         // (a card exposes several sound devices) collapse into one notification;
         // restarting the timer would let a continuous stream starve it forever
-        while (struct udev_device* device = udev_monitor_receive_device(m_monitor)) {
+        while (udev_device* device = udev_monitor_receive_device(m_monitor)) {
             udev_device_unref(device);
         }
         if (!m_debounceTimer.isActive()) {

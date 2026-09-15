@@ -706,7 +706,8 @@ AudioStreamRestorer PlaybackController::suspendForAudioConfiguration(AudioStream
                     return true;
                 }
 
-                audioEngine()->startMonitoring(*au3Project);
+                audioEngine()->startMonitoring(
+                    *au3Project, audioDriverController()->configuration().inputChannelSelection);
                 return audioEngine()->isMonitoring();
             };
     }
@@ -987,15 +988,24 @@ void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q
 
 void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("input-channels_index")) {
+    if (!q.contains("input-channels_index")) {
         return;
     }
 
-    const int channels = q.param("input-channels_index").toInt();
+    bool validCount = false;
+    const int channelCount = QString::fromStdString(q.param("input-channels_index").toString()).toInt(&validCount);
+    const int availableChannels = audioDriverController()->inputChannelsAvailable();
+    if (!validCount || channelCount <= 0 || channelCount > availableChannels) {
+        return;
+    }
     AudioConfigurationChange change;
-    change.inputChannels = channels;
-    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
-                                   PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString());
+    change.inputChannelSelection = audio::legacyInputChannelSelection(channelCount);
+    const auto result = audioDriverController()->apply(iocContext(), change);
+    if (result.status == ApplyStatus::NoChange) {
+        // A selected preset cannot be unchecked, even when no configuration change is needed.
+        notifyActionCheckedChanged(PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString());
+    }
+    handleAudioConfigurationResult(result, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString());
 }
 
 void PlaybackController::rescanAudioDevices()

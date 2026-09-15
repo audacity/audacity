@@ -62,6 +62,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "AudioIOExt.h"
 #include "AudioIOListener.h"
+#include "internal/AudioIOInputChannelSelection.h"
 
 #include "au3-math/float_cast.h"
 #include "au3-math/Resample.h"
@@ -69,10 +70,12 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "au3-audio-devices/DeviceManager.h"
 
 #include <cfloat>
+#include <cmath>
 #include <cstring>
 #include <math.h>
 #include <stdlib.h>
 #include <algorithm>
+#include <limits>
 #include <numeric>
 #include <optional>
 
@@ -184,6 +187,7 @@ int AudioIoCallback::mNextStreamToken = 0;
 double AudioIoCallback::mCachedBestRateOut;
 bool AudioIoCallback::mCachedBestRatePlaying;
 bool AudioIoCallback::mCachedBestRateCapturing;
+size_t AudioIoCallback::mCachedBestRateInputStreamChannels;
 
 #ifdef __WXGTK__
 // Might #define this for a useful thing on Linux
@@ -259,6 +263,7 @@ AudioIO::AudioIO()
 
     mLastRecordingOffset = 0.0;
     mNumCaptureChannels = 0;
+    mNumInputStreamChannels = 0;
     mSilenceLevel = 0.0;
 
     ResetMeters();
@@ -496,6 +501,34 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     ResetMeters();
 
     mLastPaError = paNoError;
+    mInputChannelIndices.clear();
+    mInputChannelSelection = options.inputChannelSelection;
+    if (numCaptureChannels > 0 && mInputChannelSelection.empty()) {
+        mInputChannelSelection
+            = audacity::audio_io::details::LegacyInputChannelSelection(numCaptureChannels);
+    }
+    if (numCaptureChannels > 0
+        && (!audacity::audio_io::details::IsStructurallyValidInputChannelSelection(mInputChannelSelection)
+            || audacity::audio_io::details::InputChannelSelectionCount(mInputChannelSelection)
+            != numCaptureChannels)) {
+        mLastPaError = paInvalidChannelCount;
+        return false;
+    }
+    mInputChannelIndices
+        = audacity::audio_io::details::FlattenInputChannelSelection(mInputChannelSelection);
+    mNumPlaybackChannels = numPlaybackChannels;
+    mNumCaptureChannels = numCaptureChannels;
+    mNumInputStreamChannels = 0;
+    if (numCaptureChannels > 0) {
+        mNumInputStreamChannels
+            = audacity::audio_io::details::InputChannelSelectionStreamWidth(
+            mInputChannelSelection);
+    }
+    if (mNumInputStreamChannels > static_cast<size_t>(std::numeric_limits<int>::max())) {
+        mLastPaError = paInvalidChannelCount;
+        return false;
+    }
+
     // pick a rate to do the audio I/O at, from those available. The project
     // rate is suggested, but we may get something else if it isn't supported
     mRate = 0.0;
@@ -511,7 +544,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     }
 
     if (mRate == 0.0) {
-        mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
+        mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate,
+                            mNumInputStreamChannels);
     }
 
     // GetBestRate() will return 0.0 for bidirectional streams when there is no
@@ -545,9 +579,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         // still working (assuming it worked before).
         mCaptureFormat = captureFormat;
     }
-
-    mNumPlaybackChannels = numPlaybackChannels;
-    mNumCaptureChannels = numCaptureChannels;
 
     bool usePlayback = false, useCapture = false;
     PaStreamParameters playbackParameters{};
@@ -641,7 +672,12 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
             =AudacityToPortAudioSampleFormat(mCaptureFormat);
 
         captureParameters.hostApiSpecificStreamInfo = NULL;
-        captureParameters.channelCount = mNumCaptureChannels;
+        if (mNumInputStreamChannels == 0
+            || mNumInputStreamChannels > static_cast<size_t>(captureDeviceInfo->maxInputChannels)) {
+            mLastPaError = paInvalidChannelCount;
+            return false;
+        }
+        captureParameters.channelCount = static_cast<int>(mNumInputStreamChannels);
 
         if (mSoftwarePlaythrough && !isMME) {
             captureParameters.suggestedLatency
@@ -869,7 +905,15 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     }
 
     const auto captureFormat = QualitySettings::SampleFormatChoice();
-    const auto captureChannels = AudioIORecordChannels.Read();
+    auto streamOptions = options;
+    if (streamOptions.inputChannelSelection.empty()) {
+        streamOptions.inputChannelSelection
+            = audacity::audio_io::details::LegacyInputChannelSelection(
+            std::max(1, AudioIORecordChannels.Read()));
+    }
+    const auto captureChannels
+        = audacity::audio_io::details::InputChannelSelectionCount(
+        streamOptions.inputChannelSelection);
     mSoftwarePlaythrough = options.inputMonitoring;
     int playbackChannels = 0;
 
@@ -882,7 +926,7 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     mUsingAlsa = false;
     mCaptureFormat = captureFormat;
     mCaptureRate = 44100.0; // Shouldn't matter
-    const bool success = StartPortAudioStream(options,
+    const bool success = StartPortAudioStream(streamOptions,
                                               static_cast<unsigned int>(playbackChannels),
                                               static_cast<unsigned int>(captureChannels));
 
@@ -1067,9 +1111,11 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     }
 
     if (mCaptureSequences.size() > 0) {
-        size_t requestedInputChannels = AudioIORecordChannels.Read();
+        size_t requestedInputChannels
+            = audacity::audio_io::details::InputChannelSelectionCount(
+            options.inputChannelSelection);
         if (requestedInputChannels == 0) {
-            requestedInputChannels = 1;
+            requestedInputChannels = std::max(1, AudioIORecordChannels.Read());
         }
         ConfigureCaptureRouting(requestedInputChannels);
         numCaptureChannels = requestedInputChannels;
@@ -1803,7 +1849,10 @@ void AudioIO::StopStream()
     ResetOwningProject();
 
     mNumCaptureChannels = 0;
+    mNumInputStreamChannels = 0;
     mNumPlaybackChannels = 0;
+    mInputChannelSelection.clear();
+    mInputChannelIndices.clear();
 
     mPlaybackSequences.clear();
     mCaptureSequences.clear();
@@ -1843,11 +1892,12 @@ void AudioIO::SetPaused(bool state, bool publish)
     }
 }
 
-double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
+double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate, size_t inputStreamChannels)
 {
     // Check if we can use the cached value
     if (mCachedBestRateIn != 0.0 && mCachedBestRateIn == sampleRate
-        && mCachedBestRatePlaying == playing && mCachedBestRateCapturing == capturing) {
+        && mCachedBestRatePlaying == playing && mCachedBestRateCapturing == capturing
+        && mCachedBestRateInputStreamChannels == inputStreamChannels) {
         return mCachedBestRateOut;
     }
 
@@ -1863,12 +1913,12 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     long supportedRate = 0;
 
     if (capturing && !playing) {
-        supportedRate = GetClosestSupportedCaptureRate(-1, sampleRate);
+        supportedRate = GetClosestSupportedCaptureRate(-1, sampleRate, static_cast<int>(inputStreamChannels));
     } else if (playing && !capturing) {
         supportedRate = GetClosestSupportedPlaybackRate(-1, sampleRate);
     } else { // we assume capturing and playing - the alternative would be a
              // bit odd
-        supportedRate = GetClosestSupportedSampleRate(-1, -1, sampleRate);
+        supportedRate = GetClosestSupportedSampleRate(-1, -1, sampleRate, static_cast<int>(inputStreamChannels));
     }
 
     /* if we get here, there is a problem - the project rate isn't supported
@@ -1885,6 +1935,7 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     mCachedBestRateOut = supportedRate;
     mCachedBestRatePlaying = playing;
     mCachedBestRateCapturing = capturing;
+    mCachedBestRateInputStreamChannels = inputStreamChannels;
     return supportedRate;
 }
 
@@ -2438,8 +2489,8 @@ void AudioIO::DrainRecordBuffers()
             || deltat >= mMinCaptureSecsToCopy) {
             // Append captured samples to the end of the RecordableSequences.
             // (WaveTracks have their own buffering for efficiency.)
-            const size_t hardwareChannels = std::min(mNumCaptureChannels, mCaptureBuffers.size());
-            if (hardwareChannels == 0 || mCaptureChannelLayout.empty()) {
+            const size_t logicalChannels = std::min(mNumCaptureChannels, mCaptureBuffers.size());
+            if (logicalChannels == 0 || mCaptureChannelLayout.empty()) {
                 return;
             }
 
@@ -2449,11 +2500,11 @@ void AudioIO::DrainRecordBuffers()
                 sampleFormat format { floatSample };
             };
 
-            std::vector<CapturedChannelData> captured(hardwareChannels);
+            std::vector<CapturedChannelData> captured(logicalChannels);
             const bool forceFloatCapture = mCaptureNeedsMixdown
                                            || !mRecordingSchedule.mCrossfadeData.empty();
 
-            for (size_t i = 0; i < hardwareChannels; ++i) {
+            for (size_t i = 0; i < logicalChannels; ++i) {
                 size_t discarded = 0;
 
                 if (!mRecordingSchedule.mLatencyCorrected) {
@@ -2697,27 +2748,6 @@ void AudioIoCallback::SetListener(
     mListener = listener;
 }
 
-static void DoSoftwarePlaythrough(constSamplePtr inputBuffer,
-                                  sampleFormat inputFormat,
-                                  unsigned inputChannels,
-                                  float* outputBuffer,
-                                  unsigned long len)
-{
-    for (unsigned int i=0; i < inputChannels; i++) {
-        auto inputPtr = inputBuffer + (i * SAMPLE_SIZE(inputFormat));
-
-        SamplesToFloats(inputPtr, inputFormat,
-                        outputBuffer + i, len, inputChannels, 2);
-    }
-
-    // One mono input channel goes to both output channels...
-    if (inputChannels == 1) {
-        for (int i=0; i < len; i++) {
-            outputBuffer[2 * i + 1] = outputBuffer[2 * i];
-        }
-    }
-}
-
 int audacityAudioCallback(const void* inputBuffer, void* outputBuffer,
                           unsigned long framesPerBuffer,
                           const PaStreamCallbackTimeInfo* timeInfo,
@@ -2746,13 +2776,10 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
         return;
     }
 
-    float maxPeak = 0.;
-    for ( unsigned long i = 0, cnt = framesPerBuffer * mNumCaptureChannels; i < cnt; ++i ) {
-        float sample = fabs(*(inputSamples++));
-        if (sample > maxPeak) {
-            maxPeak = sample;
-        }
-    }
+    const float maxPeak
+        = audacity::audio_io::details::InputChannelSelectionPeak(
+        inputSamples, mNumInputStreamChannels, mInputChannelIndices,
+        framesPerBuffer);
 
     bool bShouldBePaused = maxPeak < mSilenceLevel;
     if (bShouldBePaused != IsPaused()) {
@@ -3059,6 +3086,7 @@ unsigned long AudioIoCallback::DrainInputBuffers(
     // possible issues with the (short*) cast.  We'd have a problem if
     // sizeof(short) > sizeof(float) since our buffers are sized for floats.
     for (unsigned t = 0; t < numCaptureChannels; t++) {
+        const auto inputChannel = mInputChannelIndices[t];
         // dmazzoni:
         // Un-interleave.  Ugly special-case code required because the
         // capture channels could be in three different sample formats;
@@ -3068,10 +3096,9 @@ unsigned long AudioIoCallback::DrainInputBuffers(
         switch (mCaptureFormat) {
         case floatSample: {
             auto inputFloats = (const float*)inputBuffer;
-            for (unsigned i = 0; i < len; i++) {
-                tempFloats[i]
-                    =inputFloats[numCaptureChannels * i + t];
-            }
+            audacity::audio_io::details::CopyInputChannel(
+                inputFloats, mNumInputStreamChannels, inputChannel,
+                tempFloats, len);
         } break;
         case int24Sample:
             // We should never get here. Audacity's int24Sample format
@@ -3083,11 +3110,9 @@ unsigned long AudioIoCallback::DrainInputBuffers(
         case int16Sample: {
             auto inputShorts = (const short*)inputBuffer;
             short* tempShorts = (short*)tempFloats;
-            for ( unsigned i = 0; i < len; i++) {
-                float tmp = inputShorts[numCaptureChannels * i + t];
-                tmp = std::clamp(tmp, -32768.0f, 32767.0f);
-                tempShorts[i] = (short)(tmp);
-            }
+            audacity::audio_io::details::CopyInputChannel(
+                inputShorts, mNumInputStreamChannels, inputChannel,
+                tempShorts, len);
         } break;
         } // switch
 
@@ -3138,12 +3163,11 @@ void OldCodeToCalculateLatency()
 // return true, IFF we have fully handled the callback.
 // Prime the output buffer with 0's, optionally adding in the playthrough.
 void AudioIoCallback::DoPlaythrough(
-    constSamplePtr inputBuffer,
+    const float* inputSamples,
     float* outputBuffer,
     unsigned long framesPerBuffer,
     float* outputMeterFloats)
 {
-    const auto numCaptureChannels = mNumCaptureChannels;
     const auto numPlaybackChannels = mNumPlaybackChannels;
 
     // Quick returns if next to nothing to do.
@@ -3159,10 +3183,10 @@ void AudioIoCallback::DoPlaythrough(
         outputFloats[i] = 0.0;
     }
 
-    if (inputBuffer && mSoftwarePlaythrough) {
-        DoSoftwarePlaythrough(inputBuffer, mCaptureFormat,
-                              numCaptureChannels,
-                              outputBuffer, framesPerBuffer);
+    if (inputSamples && mSoftwarePlaythrough) {
+        audacity::audio_io::details::MixInputChannelSelectionToStereo(
+            inputSamples, mNumInputStreamChannels, mInputChannelSelection,
+            outputBuffer, framesPerBuffer);
     }
 
     // Copy the results to outputMeterFloats if necessary
@@ -3221,39 +3245,64 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
     }
 
     // Update meter tracks
-    auto sptr = values;
+    size_t destinationChannel = 0;
     for (const auto& sequence : mCaptureSequences) {
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
-            // Map track channel to input channel, wrapping if track has more channels than input
-            size_t inputCh = ch % mNumCaptureChannels;
-            sender->push(ch, { sptr + inputCh, frames, mNumCaptureChannels, dacTime }, IMeterSender::TrackId { id });
+            if (destinationChannel >= mTrackChannelSourceMap.size()) {
+                break;
+            }
+            const auto& sources = mTrackChannelSourceMap[destinationChannel++];
+            if (sources.empty()) {
+                continue;
+            }
+            if (sources.size() == 1) {
+                const auto physicalChannel = mInputChannelIndices[sources.front()];
+                sender->push(ch, { values + physicalChannel, frames, mNumInputStreamChannels, dacTime },
+                             IMeterSender::TrackId { id });
+            } else {
+                const auto mixed = stackAllocate(float, frames);
+                for (size_t frame = 0; frame < frames; ++frame) {
+                    float value = 0.0f;
+                    for (const auto source : sources) {
+                        value += values[frame * mNumInputStreamChannels + mInputChannelIndices[source]];
+                    }
+                    mixed[frame] = value / static_cast<float>(sources.size());
+                }
+                sender->push(ch, { mixed, frames, 1, dacTime }, IMeterSender::TrackId { id });
+            }
         }
     }
 
     // Update main meter
-    // If the input source has more than 2 channels it will be splitted on multiple mono sequences
-    if (mNumCaptureChannels <= 2) {
-        for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
-            sender->push(ch, { sptr + ch, frames, mNumCaptureChannels, dacTime });
+    // With one or two inputs, preserve individual levels regardless of grouping.
+    if (mInputChannelIndices.size() <= 2) {
+        for (size_t ch = 0; ch < mInputChannelIndices.size(); ++ch) {
+            sender->push(ch, { values + mInputChannelIndices[ch], frames,
+                              mNumInputStreamChannels, dacTime });
         }
     } else {
-        constexpr size_t maxMainTrackChannels = 2;
-        const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
-        std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
+        constexpr size_t mainMeterChannels = 2;
+        const auto mainInput = stackAllocate(float, frames * mainMeterChannels);
+        std::fill_n(mainInput, frames * mainMeterChannels, 0.0f);
 
-        for (size_t i = 0; i < frames; ++i) {
-            for (size_t seqNum = 0; seqNum < mCaptureSequences.size(); seqNum++) {
-                const auto channel = seqNum % maxMainTrackChannels;
-                mainTrackInput[channel * frames + i] = std::max(
-                    mainTrackInput[channel * frames + i], *sptr);
-                sptr++;
+        // Preserve maximum-based metering without averaging or polarity cancellation.
+        // Use selected inputs even when no recording destination tracks exist yet.
+        for (size_t frame = 0; frame < frames; ++frame) {
+            for (size_t groupIndex = 0; groupIndex < mInputChannelSelection.size(); ++groupIndex) {
+                const auto& group = mInputChannelSelection[groupIndex];
+                for (size_t ch = 0; ch < group.size(); ++ch) {
+                    // Mono groups alternate bars; stereo groups keep their left/right channels.
+                    const size_t meterChannel = group.size() == 1 ? groupIndex % mainMeterChannels : ch;
+                    auto& peak = mainInput[meterChannel * frames + frame];
+                    peak = std::max(peak, std::fabs(values[frame * mNumInputStreamChannels + group[ch]]));
+                }
             }
         }
 
-        for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
-            sender->push(ch, { mainTrackInput + ch * frames, frames, 1, dacTime });
+        for (size_t ch = 0; ch < mainMeterChannels; ++ch) {
+            sender->push(ch, { mainInput + ch * frames, frames, 1, dacTime });
         }
     }
 }
@@ -3372,7 +3421,7 @@ int AudioIoCallback::AudioCallback(
     const auto numPlaybackChannels = mNumPlaybackChannels;
     const auto numCaptureChannels = mNumCaptureChannels;
     const auto tempFloats = stackAllocate(float,
-                                          framesPerBuffer * std::max(numCaptureChannels, numPlaybackChannels));
+                                          framesPerBuffer * std::max(mNumInputStreamChannels, numPlaybackChannels));
 
     bool bVolEmulationActive
         =(outputBuffer && GetMixerOutputVol() != 1.0);
@@ -3387,13 +3436,13 @@ int AudioIoCallback::AudioCallback(
     const auto levelDisplayTime = std::chrono::steady_clock::now()
                                   + std::chrono::milliseconds(static_cast<int>(mHardwarePlaybackLatencyMs));
 
+    float* inputSamples = nullptr;
     if (inputBuffer && numCaptureChannels) {
-        float* inputSamples;
 
         if (!mInputMixerWorks) {
             const float gain = GetSoftwareRecordGain();
             if (gain != 1.0f) {
-                const size_t numSamples = framesPerBuffer * numCaptureChannels;
+                const size_t numSamples = framesPerBuffer * mNumInputStreamChannels;
                 const auto scratch = stackAllocate(char, numSamples * SAMPLE_SIZE(mCaptureFormat));
                 inputBuffer = ApplyRecordGain(inputBuffer, gain, numSamples, scratch);
             }
@@ -3403,7 +3452,7 @@ int AudioIoCallback::AudioCallback(
             inputSamples = (float*)inputBuffer;
         } else {
             SamplesToFloats(reinterpret_cast<constSamplePtr>(inputBuffer),
-                            mCaptureFormat, tempFloats, framesPerBuffer * numCaptureChannels);
+                            mCaptureFormat, tempFloats, framesPerBuffer * mNumInputStreamChannels);
             inputSamples = tempFloats;
         }
 
@@ -3425,7 +3474,7 @@ int AudioIoCallback::AudioCallback(
     // Initialise output buffer to zero or to playthrough data.
     // Initialise output meter values.
     DoPlaythrough(
-        inputBuffer,
+        inputSamples,
         outputBuffer,
         framesPerBuffer,
         outputMeterFloats);

@@ -59,7 +59,7 @@ void AudioSetupContextMenuModel::makeMenuItems()
         makeMenu(muse::TranslatableString("audio setup", "Host"), makeHostItems(), "hostMenu"),
         makeMenu(muse::TranslatableString("audio setup", "Playback device"), makePlaybackDevicesItems(), "playbackDeviceMenu"),
         makeMenu(muse::TranslatableString("audio setup", "Recording device"), makeRecordingDevicesItems(), "recordingDeviceMenu"),
-        makeMenu(muse::TranslatableString("audio setup", "Recording channels"), makeInputChannelsItems(), "inputChannelsMenu"),
+        makeInputChannelsMenu(),
         makeMenuItem("rescan-devices"),
         makeMenuItem("audio-settings")
     };
@@ -191,40 +191,52 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
     return items;
 }
 
-MenuItemList AudioSetupContextMenuModel::makeInputChannelsItems()
+MenuItem* AudioSetupContextMenuModel::makeInputChannelsMenu()
 {
     MenuItemList items;
-    int inputChannelsSelected = audioDriverController()->configuration().inputChannels;
-    int inputChannelsAvailable = audioDriverController()->inputChannelsAvailable();
+    const auto& selection = audioDriverController()->configuration().inputChannelSelection;
+    const int inputChannelsAvailable = audioDriverController()->inputChannelsAvailable();
 
-    auto makeChangeInputChannelsAction = [](int index) -> ActionQuery {
+    auto makeChangeInputChannelsAction = [](int channelCount) -> ActionQuery {
         ActionQuery q = PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY;
-        q.addParam("input-channels_index", muse::Val(index));
+        q.addParam("input-channels_index", muse::Val(channelCount));
         return q;
     };
 
-    auto channelName = [](int channelNumber) -> QString {
-        return channelNumber == 1
-               //: %1 is the recording channel number
-               ? muse::qtrc("projectscene/toolbars", "%1 (Mono) Recording channel").arg(channelNumber)
-               : channelNumber == 2
-               //: %1 is the recording channel number
-               ? muse::qtrc("projectscene/toolbars", "%1 (Stereo) Recording channels").arg(channelNumber)
-               : QString::number(channelNumber);
+    auto channelName = [](int channelCount) -> muse::TranslatableString {
+        if (channelCount == 1) {
+            //: %1 is the recording channel count
+            return muse::TranslatableString("projectscene/toolbars", "%1 (Mono) Recording channel").arg(channelCount);
+        }
+        if (channelCount == 2) {
+            //: %1 is the recording channel count
+            return muse::TranslatableString("projectscene/toolbars", "%1 (Stereo) Recording channels").arg(channelCount);
+        }
+        return muse::TranslatableString::untranslatable(QString::number(channelCount));
     };
 
-    for (int i = 0; i < inputChannelsAvailable; ++i) {
-        int channelNumber = i + 1;
-        MenuItem* item = makeMenuItem(makeChangeInputChannelsAction(channelNumber).toString(),
-                                      muse::TranslatableString::untranslatable(channelName(channelNumber)));
+    bool hasCheckedPreset = false;
+    for (int channelCount = 1; channelCount <= inputChannelsAvailable; ++channelCount) {
+        MenuItem* item = makeMenuItem(makeChangeInputChannelsAction(channelCount).toString(), channelName(channelCount));
 
         item->setId(QString::fromStdString(item->query().toString()));
-
-        if (inputChannelsSelected == (channelNumber)) {
-            item->setChecked(true);
-        }
+        item->setCheckable(true);
+        item->setChecked(selection == audio::legacyInputChannelSelection(channelCount));
+        hasCheckedPreset = hasCheckedPreset || item->checked();
         items << item;
     }
 
-    return items;
+    if (!items.empty()) {
+        items << makeSeparator();
+    }
+    MenuItem* customItem = makeMenuItem("audio-settings", muse::TranslatableString("audio setup", "Custom..."));
+    customItem->setId("customInputChannels");
+    customItem->setCheckable(false);
+    customItem->setChecked(false);
+    items << customItem;
+
+    const auto title = inputChannelsAvailable > 0 && !selection.empty() && !hasCheckedPreset
+                       ? muse::TranslatableString("audio setup", "Recording channels: Custom")
+                       : muse::TranslatableString("audio setup", "Recording channels");
+    return makeMenu(title, items, "inputChannelsMenu");
 }

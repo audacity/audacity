@@ -37,15 +37,12 @@ QString toSampleRateName(uint64_t sampleRate)
     return QString::number(sampleRate) + " Hz";
 }
 
-QString channelName(int channelNumber)
+QString channelGroupName(const au::audio::InputChannelGroup& group)
 {
-    return channelNumber == 1
-           //: %1 is the recording channel number
-           ? muse::qtrc("preferences", "%1 (Mono) Recording channel").arg(channelNumber)
-           : channelNumber == 2
-           //: %1 is the recording channel number
-           ? muse::qtrc("preferences", "%1 (Stereo) Recording channels").arg(channelNumber)
-           : QString::number(channelNumber);
+    if (group.channels.size() == 1) {
+        return QString::number(group.channels.front() + 1);
+    }
+    return QString("%1+%2").arg(group.channels[0] + 1).arg(group.channels[1] + 1);
 }
 
 QString failureMessage(au::audio::ApplyStatus status)
@@ -107,7 +104,7 @@ void CommonAudioApiConfigurationModel::load()
         if (delta.contains(audio::AudioConfigurationField::Api)
             || delta.contains(audio::AudioConfigurationField::OutputDevice)
             || delta.contains(audio::AudioConfigurationField::InputDevice)
-            || delta.contains(audio::AudioConfigurationField::InputChannels)) {
+            || delta.contains(audio::AudioConfigurationField::InputChannelSelection)) {
             notifyDeviceContextChanged();
         }
         if (delta.contains(audio::AudioConfigurationField::BufferLength)) {
@@ -205,11 +202,11 @@ int CommonAudioApiConfigurationModel::effectiveInputChannelsAvailable() const
     return audioDriverController()->inputChannelsAvailable(effectiveApi(), effectiveInputDevice());
 }
 
-int CommonAudioApiConfigurationModel::effectiveInputChannels() const
+au::audio::InputChannelSelection CommonAudioApiConfigurationModel::effectiveInputChannelSelection() const
 {
-    int channels = m_pending.inputChannels.value_or(audioDriverController()->configuration().inputChannels);
     const int available = effectiveInputChannelsAvailable();
-    return available > 0 ? std::min(channels, available) : 0;
+    return audio::normalizeInputChannelSelection(
+        m_pending.inputChannelSelection.value_or(audioDriverController()->configuration().inputChannelSelection), available);
 }
 
 void CommonAudioApiConfigurationModel::notifyDeviceContextChanged()
@@ -220,8 +217,7 @@ void CommonAudioApiConfigurationModel::notifyDeviceContextChanged()
     emit longestDeviceNameLengthChanged();
     emit currentOutputDeviceIndexChanged();
     emit currentInputDeviceIndexChanged();
-    emit inputChannelsListChanged();
-    emit currentInputChannelsSelectedChanged();
+    emit inputChannelSelectionChanged();
 }
 
 bool CommonAudioApiConfigurationModel::isAsio() const
@@ -302,7 +298,7 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
     }
     m_pending.outputDevice.reset();
     m_pending.inputDevice.reset();
-    m_pending.inputChannels.reset();
+    m_pending.inputChannelSelection.reset();
     notifyDeviceContextChanged();
 }
 
@@ -413,10 +409,9 @@ void CommonAudioApiConfigurationModel::inputDeviceSelected(int index)
     } else {
         m_pending.inputDevice = value;
     }
-    m_pending.inputChannels.reset();
+    m_pending.inputChannelSelection.reset();
     emit currentInputDeviceIndexChanged();
-    emit inputChannelsListChanged();
-    emit currentInputChannelsSelectedChanged();
+    emit inputChannelSelectionChanged();
 }
 
 double CommonAudioApiConfigurationModel::bufferLength() const
@@ -480,32 +475,51 @@ void CommonAudioApiConfigurationModel::latencyCompensationSelected(
     emit latencyCompensationChanged();
 }
 
-QString CommonAudioApiConfigurationModel::currentInputChannelsSelected() const
+QString CommonAudioApiConfigurationModel::inputChannelSelectionSummary() const
 {
-    return channelName(effectiveInputChannels());
+    QStringList groups;
+    for (const auto& group : effectiveInputChannelSelection()) {
+        groups.push_back(channelGroupName(group));
+    }
+    return groups.empty() ? QStringLiteral("\u2014") : groups.join(", ");
 }
 
-QVariantList CommonAudioApiConfigurationModel::inputChannelsList() const
+QVariantList CommonAudioApiConfigurationModel::inputChannelGroups() const
 {
     QVariantList result;
-
-    for (int i = 0; i < effectiveInputChannelsAvailable(); i++) {
-        result << channelName(i + 1);
+    const auto selection = effectiveInputChannelSelection();
+    for (const auto& group : audio::availableInputChannelGroups(effectiveInputChannelsAvailable())) {
+        result.push_back(QVariantMap {
+            { "title", channelGroupName(group) },
+            { "firstChannel", static_cast<int>(group.channels.front()) },
+            { "channelCount", static_cast<int>(group.channels.size()) },
+            { "sectionStart", group.channels.front() == 0 },
+            { "checked", std::find(selection.begin(), selection.end(), group) != selection.end() },
+        });
     }
-
     return result;
 }
 
-void CommonAudioApiConfigurationModel::inputChannelsSelected(const int index)
+void CommonAudioApiConfigurationModel::toggleInputChannelGroup(int firstChannel, int channelCount)
 {
-    const int value = index + 1;
-    if (!m_pending.api && !m_pending.inputDevice
-        && value == audioDriverController()->configuration().inputChannels) {
-        m_pending.inputChannels.reset();
-    } else {
-        m_pending.inputChannels = value;
+    const int availableChannels = effectiveInputChannelsAvailable();
+    if (firstChannel < 0 || (channelCount != 1 && channelCount != 2)
+        || firstChannel > availableChannels - channelCount) {
+        return;
     }
-    emit currentInputChannelsSelectedChanged();
+    audio::InputChannelGroup group;
+    for (int channel = 0; channel < channelCount; ++channel) {
+        group.channels.push_back(static_cast<audio::InputChannelIndex>(firstChannel + channel));
+    }
+    const auto value = audio::toggleInputChannelGroup(
+        effectiveInputChannelSelection(), group, availableChannels);
+    if (!m_pending.api && !m_pending.inputDevice
+        && value == audioDriverController()->configuration().inputChannelSelection) {
+        m_pending.inputChannelSelection.reset();
+    } else {
+        m_pending.inputChannelSelection = value;
+    }
+    emit inputChannelSelectionChanged();
 }
 
 QString CommonAudioApiConfigurationModel::defaultSampleRate() const
