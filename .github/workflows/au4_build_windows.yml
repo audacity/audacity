@@ -65,7 +65,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.app_repo || github.repository }}
         ref: ${{ inputs.app_ref || github.ref }}
@@ -74,7 +74,7 @@ jobs:
 
     - name: Override muse_framework
       if: inputs.framework_ref != '' || github.event_name == 'schedule'
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.framework_repo || 'musescore/muse_framework' }}
         ref: ${{ inputs.framework_ref || 'main' }}
@@ -173,7 +173,7 @@ jobs:
 
     - name: Setup x64 Python (WoA)
       if: matrix.runner == 'windows-11-arm'
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: '3.12'
         architecture: x64
@@ -277,7 +277,7 @@ jobs:
     steps:
     - name: Setup x64 Python (WoA)
       if: matrix.runner == 'windows-11-arm'
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: '3.12'
         architecture: x64
@@ -294,7 +294,7 @@ jobs:
         cache: true
 
     - name: Download build artifact
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         name: selftest-build-windows-${{ matrix.arch }}
         path: ./build.install

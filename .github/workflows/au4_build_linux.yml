@@ -65,7 +65,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.app_repo || github.repository }}
         ref: ${{ inputs.app_ref || github.ref }}
@@ -73,7 +73,7 @@ jobs:
 
     - name: Override muse_framework
       if: inputs.framework_ref != '' || github.event_name == 'schedule'
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.framework_repo || 'musescore/muse_framework' }}
         ref: ${{ inputs.framework_ref || 'main' }}
@@ -242,7 +242,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.app_repo || job.workflow_repository }}
         ref: ${{ inputs.app_ref || job.workflow_sha }}
@@ -263,7 +263,7 @@ jobs:
         cache: true
 
     - name: Download build artifact
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         name: selftest-build-linux-${{ matrix.arch }}
         path: ./build.install

@@ -18,7 +18,7 @@ jobs:
     if: github.event_name != 'schedule' || github.repository == 'audacity/audacity'
     steps:
       - name: Clone repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
