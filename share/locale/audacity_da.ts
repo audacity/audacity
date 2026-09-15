@@ -67,7 +67,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
         <source>Online &amp;handbook</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Online &amp;håndbog</translation>
+        <translation>Online&amp;håndbog</translation>
     </message>
     <message>
         <source>Open online handbook</source>
@@ -261,13 +261,13 @@
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Se projekt på audio.com</translation>
+        <translation>Se projekt på Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
         <source>View on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Se på audio.com</translation>
+        <translation>Se på Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
@@ -650,7 +650,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
         <source>Duplicate</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kopiér</translation>
+        <translation>Dublér</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
@@ -931,7 +931,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Plugin manager</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kontrolpanel for tillægsprogrammer</translation>
+        <translation>Kontrolpanel for programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
@@ -1053,7 +1053,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Installationsprogram til Nyquist-tillægsprogram</translation>
+        <translation>Installationsprogram til Nyquist-programudvidelse</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
@@ -1155,7 +1155,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="723"/>
         <source>Violate assertion</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Overskrid påstand</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="731"/>
@@ -1266,7 +1266,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
         <source>Beats &amp;&amp; measures</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Taktslag &amp;&amp; takter</translation>
+        <translation>Taktslag og takter</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="156"/>
@@ -1850,7 +1850,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="636"/>
         <source>Track range selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Valg af sporinterval</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="644"/>
@@ -2474,7 +2474,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="194"/>
         <source>Duplicate</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Kopiér</translation>
+        <translation>Dublér</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
@@ -2715,7 +2715,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="491"/>
         <source>Plugin manager</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Kontrolpanel for tillægsprogrammer</translation>
+        <translation>Kontrolpanel for programudvidelse</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
@@ -2781,7 +2781,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="585"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Installationsprogram til Nyquist-tillægsprogram</translation>
+        <translation>Installationsprogram til Nyquist-programudvidelse</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
@@ -2829,7 +2829,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="651"/>
         <source>Benchmark</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Benchmark</translation>
+        <translation>Referenceværdi</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="659"/>
@@ -2883,7 +2883,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="725"/>
         <source>Violate assertion</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Overskrid påstand</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="733"/>
@@ -3010,13 +3010,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
         <source>Minutes &amp;&amp; seconds</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Minutter &amp;&amp; sekunder</translation>
+        <translation>Minutter og sekunder</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="149"/>
         <source>Beats &amp;&amp; measures</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Taktslag &amp;&amp; takter</translation>
+        <translation>Taktslag og takter</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="158"/>
@@ -3602,7 +3602,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="638"/>
         <source>Track range selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Valg af sporinterval</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="646"/>
@@ -3660,12 +3660,12 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="97"/>
         <source>Plugins</source>
-        <translation>Tilføjelsesprogrammer</translation>
+        <translation>Programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="110"/>
         <source>Plugins search</source>
-        <translation>Søg efter tilføjelsesprogrammer</translation>
+        <translation>Søg efter programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
@@ -3739,7 +3739,7 @@
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation>Dette til nulstille alle indstillinger i programmet og tilpasninger af brugerfladen. Det sletter også dine egne arbejdsområder og genveje. Du skal selv finde alle tillægsprogrammer fra tredjepart igen.
+        <translation>Dette til nulstille alle indstillinger i programmet og tilpasninger af brugerfladen. Det sletter også dine egne arbejdsområder og genveje. Du skal selv finde alle programudvidelser fra tredjepart igen.
 
 Ingen af dine projekter vil dog blive slettet.</translation>
     </message>
@@ -3801,12 +3801,12 @@ Ingen af dine projekter vil dog blive slettet.</translation>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
         <source>Validate audio plugins</source>
-        <translation>Kontrollér lydtilføjelsesprogrammer</translation>
+        <translation>Kontrollér lydprogramudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation>Audacity har fundet tilføjelsesprogrammer, som skal kontrolleres før brug. Ønsker du at kontrollere dem nu eller springe over?</translation>
+        <translation>Audacity har fundet programudvidelser, som skal kontrolleres før brug. Ønsker du at kontrollere dem nu eller springe over?</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
@@ -3821,7 +3821,7 @@ Ingen af dine projekter vil dog blive slettet.</translation>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
         <source>Audio plugin validation</source>
-        <translation>Kontrol af lydtilføjelsesprogrammer</translation>
+        <translation>Kontrol af lydprogramudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/startupscenario.cpp" line="325"/>
@@ -5443,12 +5443,12 @@ Ingen af dine projekter vil dog blive slettet.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="67"/>
         <source>Explore free plugins for sculpting your audio</source>
-        <translation>Udforsk de gratis tilføjelsesprogrammer til at formgive din lyd</translation>
+        <translation>Udforsk de gratis programudvidelser til at formgive din lyd</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="70"/>
         <source>View free plugins</source>
-        <translation>Se de gratis tilføjelsesprogrammer</translation>
+        <translation>Se de gratis programudvidelser</translation>
     </message>
 </context>
 <context>
@@ -5484,19 +5484,19 @@ Ingen af dine projekter vil dog blive slettet.</translation>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>Audio plugins scan completed</source>
-        <translation>Søgning efter lydtilføjelsesprogrammet er gennemført</translation>
+        <translation>Søgning efter lydprogramudvidelser er gennemført</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
         <source>All audio plugins are up to date.</source>
-        <translation>Alle lydtilføjelsesprogrammer er opdaterede.</translation>
+        <translation>Alle programudvidelser er opdaterede.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
         <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
         <source>Validating audio plugins</source>
-        <translation>Kontrollerer lydtilføjelsesprogrammer</translation>
+        <translation>Kontrollerer lydprogramudvidelser</translation>
     </message>
 </context>
 <context>
@@ -5787,7 +5787,7 @@ Ingen af dine projekter vil dog blive slettet.</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="281"/>
         <source>Error Initializing Audio</source>
-        <translation>Fejl ved initialisering af lydkort</translation>
+        <translation>Fejl ved start af lydkort</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="775"/>
@@ -5902,7 +5902,7 @@ Fejlkode: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="231"/>
         <source>Could not initialize component</source>
-        <translation>Kunne ikke initiere komponent</translation>
+        <translation>Kunne ikke starte komponent</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="352"/>
@@ -5922,17 +5922,17 @@ Fejlkode: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="379"/>
         <source>Failed to set class info for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>Kunne ikke angive klasseoplysninger for forudindstillingen &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="484"/>
         <source>Failed to set preset name</source>
-        <translation>Kunne ikke sætte forudindstillingsnavn</translation>
+        <translation>Kunne ikke angive navn på forudindstillingen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="489"/>
         <source>Failed to retrieve preset content</source>
-        <translation>Kunne ikke hente forudindstillingsindhold</translation>
+        <translation>Kunne ikke hente indhold af forudindstillingen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="498"/>
@@ -5947,12 +5947,12 @@ Fejlkode: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
         <source>The plugin “%1” does not support the required block size</source>
-        <translation>Tilføjelsesprogrammet &quot;%1&quot; understøtter ikke den krævede blokstørrelse</translation>
+        <translation>Programudvidelsen &quot;%1&quot; understøtter ikke den krævede blokstørrelse</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
         <source>The plugin “%1” has crashed while processing audio</source>
-        <translation>Tilføjelsesprogrammet &quot;%1&quot; er gået ned under lydbehandlingen</translation>
+        <translation>Programudvidelsen &quot;%1&quot; er gået ned under lydbehandlingen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
@@ -6023,7 +6023,7 @@ Fejlkode: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangePitchBase.cpp" line="80"/>
         <source>Changes the pitch of a track without changing its tempo</source>
-        <translation>Ændre sporets tonehøjde, uden at ændre hastigheden</translation>
+        <translation>Ændrer sporets tonehøjde uden at ændre hastigheden</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangePitchBase.cpp" line="117"/>
@@ -6038,7 +6038,7 @@ Fejlkode: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="48"/>
         <source>Changes the speed of a track, also changing its pitch</source>
-        <translation>Ændre sporets hastighed, samtidigt med at tonehøjden ændres</translation>
+        <translation>Ændrer sporets hastighed, samtidig med at tonehøjden ændres</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="33"/>
@@ -6048,7 +6048,7 @@ Fejlkode: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="63"/>
         <source>Changes the tempo of a selection without changing its pitch</source>
-        <translation>Ændre markeringens hastighed, uden at ændre tonehøjden</translation>
+        <translation>Ændre markeringens hastighed uden at ændre tonehøjden</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="114"/>
@@ -6070,7 +6070,7 @@ Fejlkode: %1</translation>
         <source>Invalid audio selection.
 Please ensure that audio is selected.</source>
         <translation>Ugyldig lydmarkering.
-Sørg venligst for at lyden er markeret.</translation>
+Sørg venligst for, at lyden er markeret.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="59"/>
@@ -6284,17 +6284,17 @@ Vælg venligst et område af et spor.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="186"/>
         <source>Bass Boost</source>
-        <translation>Bassboost</translation>
+        <translation>Styrk bas</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="188"/>
         <source>Bass Cut</source>
-        <translation>Bass cut</translation>
+        <translation>Beskær bas</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="190"/>
         <source>Low rolloff for speech</source>
-        <translation>Lav rolloff for tale</translation>
+        <translation>Lavt fald før beskæring for tale</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="193"/>
@@ -6309,12 +6309,12 @@ Vælg venligst et område af et spor.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="198"/>
         <source>Treble Boost</source>
-        <translation>Diskantboost</translation>
+        <translation>Styrk diskant</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="200"/>
         <source>Treble Cut</source>
-        <translation>Diskant cut</translation>
+        <translation>Beskær diskant</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="275"/>
@@ -6349,7 +6349,7 @@ Vælg venligst et område af et spor.</translation>
 Error message says:
 %2</source>
         <extracomment>EQ stands for 'Equalization'.</extracomment>
-        <translation>Fejl ved indlæsning af equaliserkurver fra filen:
+        <translation>Fejl ved indlæsning af udjævningskurver fra filen:
 %1
 Fejlmeddelelsen siger:
 %2</translation>
@@ -6362,7 +6362,7 @@ Fejlmeddelelsen siger:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurvesList.cpp" line="280"/>
         <source>Requested curve not found, using ‘unnamed’</source>
-        <translation>Den ønskede kurve findes ikke - bruger i stedet &apos;uden navn&apos;</translation>
+        <translation>Den ønskede kurve findes ikke – bruger i stedet &apos;uden navn&apos;</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
@@ -7138,15 +7138,15 @@ Forsøg at nulstille udstrakte klip, eller mix sporene, før de analyseres</tran
     </message>
     <message>
         <source>Test query action</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Afprøv forespørgselshandling</translation>
     </message>
     <message>
         <source>Test query action with params 1</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Afprøv forespørgselshandling med parametrene 1</translation>
     </message>
     <message>
         <source>Test query action with params 2</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Afprøv forespørgselshandling med parametrene 2</translation>
     </message>
 </context>
 <context>
@@ -7471,7 +7471,7 @@ Forsøg at nulstille udstrakte klip, eller mix sporene, før de analyseres</tran
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="16"/>
         <source>Knee width</source>
-        <translation type="unfinished"/>
+        <translation>Bredde på &apos;knee&apos; (overgang)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
@@ -7766,28 +7766,28 @@ Forsøg at nulstille udstrakte klip, eller mix sporene, før de analyseres</tran
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation>Håndtér tilføjelsesprogrammer</translation>
+        <translation>Håndtér programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="91"/>
         <source>Rescan plugins</source>
-        <translation>Kontrollér tilføjelsesprogrammer</translation>
+        <translation>Kontrollér programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="107"/>
         <source>Include plugins with errors</source>
-        <translation>Medtag tilføjelsesprogrammer med fejl</translation>
+        <translation>Medtag programudvidelser med fejl</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation>Manglende tilføjelsesprogrammer</translation>
+        <translation>Manglende programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
         <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
-        <translation>Visse tilføjelsesprogrammer anvendt i dette projekt blev ikke fundet. Dobbeltklik på det enkelte for at se dets placering.</translation>
+        <translation>Visse programudvidelser anvendt i dette projekt blev ikke fundet. Dobbeltklik på det enkelte for at se dens placering.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
@@ -7799,7 +7799,7 @@ Forsøg at nulstille udstrakte klip, eller mix sporene, før de analyseres</tran
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
         <source>Plugin details</source>
-        <translation>Detaljer om tilføjelsesprogram</translation>
+        <translation>Detaljer om programudvidelse</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
@@ -8467,7 +8467,7 @@ Forsøg at nulstille udstrakte klip, eller mix sporene, før de analyseres</tran
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="111"/>
         <source>Ill-formed Nyquist plug-in header</source>
-        <translation>Dårligt udformet Nyquist-plugin-hovede</translation>
+        <translation>Dårligt udformet hoved i Nyquist-programudvidelse</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="138"/>
@@ -8488,7 +8488,7 @@ frekvensområdet, som effekten skal virke på.</translation>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation>fejl: Filen &quot;%1&quot; er anført i hovedet men findes ikke i stien til tilføjelsesprogram.
+        <translation>fejl: Filen &quot;%1&quot; er anført i hovedet men findes ikke i stien til programudvidelsen.
 </translation>
     </message>
     <message>
@@ -8507,65 +8507,67 @@ frekvensområdet, som effekten skal virke på.</translation>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>&apos;;type tool&apos;-effekter kan ikke levere lyd fra Nyquist.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1400"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>&apos;;type tool&apos;-effekter kan ikke vise etiketter fra Nyquist.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1410"/>
         <source>nyx_error returned from %1.
 </source>
         <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
-        <translation>nyx_error returnerede fra %1.
+        <translation>nyx_error meldt tilbage fra %1.
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
         <source>plug-in</source>
-        <translation>plugin</translation>
+        <translation>programudvidelse</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1426"/>
         <source>Nyquist returned a list.</source>
-        <translation>Nyquist returnerede en liste.</translation>
+        <translation>Nyquist meldte en liste tilbage.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1471"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1484"/>
         <source>Nyquist returned the value: %1</source>
-        <translation>Nyquist returnerede værdien: %1</translation>
+        <translation>Nyquist meldte værdien: %1 tilbage</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1534"/>
         <source>Nyquist returned too many audio channels.
 </source>
-        <translation>Nyquist returnerede for mange lydkanaler.
+        <translation>Nyquist meldte om for mange lydkanaler.
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1539"/>
         <source>Nyquist returned one audio channel as an array.
 </source>
-        <translation>Nyquist returnerede en lydkanal som et array.
+        <translation>Nyquist meldte om en lydkanal som en matrix.
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1544"/>
         <source>Nyquist returned an empty array.
 </source>
-        <translation>Nyquist returnerede et tom array.
+        <translation>Nyquist sendte en tom matrix tilbage.
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1565"/>
         <source>Nyquist returned nil audio.
 </source>
-        <translation>Nyquist returnerede ingen lyd.
+        <translation>Nyquist sendte ingen lyd tilbage.
 </translation>
     </message>
     <message>
@@ -8576,7 +8578,7 @@ frekvensområdet, som effekten skal virke på.</translation>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2062"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
-        <translation>Denne version af Audacity understøtter ikke Nyquist-plugin version %1</translation>
+        <translation>Denne version af Audacity understøtter ikke Nyquist-programudvidelse version %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
@@ -8990,7 +8992,7 @@ eller (til LISP) begynd med en åben parentes, f.eks.:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="82"/>
         <source>Fade direction</source>
-        <translation>Faderetning</translation>
+        <translation>Optonigs-/udtoningsretning</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="83"/>
@@ -9155,7 +9157,7 @@ eller (til LISP) begynd med en åben parentes, f.eks.:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="115"/>
         <source>None - Text Only</source>
-        <translation>Ingen - Kun tekst</translation>
+        <translation>Ingen - kun tekst</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="116"/>
@@ -9546,7 +9548,7 @@ Højre kanal</translation>
         <source>Peak based on first ~a seconds ~a dB~%~
                Suggested Threshold Setting ~a dB.</source>
         <translation>Spidspunkt baseret på første ~a sekunder ~a dB~%
-               Foreslået tærskelsindstilling ~a dB.</translation>
+               Foreslået tærskelindstilling ~a dB.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="189"/>
@@ -9580,7 +9582,7 @@ Højre kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="194"/>
         <source>Nyquist plugin installer</source>
-        <translation>Installationsprogram til Nyquist-tilføjelse</translation>
+        <translation>Installationsprogram til Nyquist-programudvidelse</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="195"/>
@@ -9595,7 +9597,7 @@ Højre kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
         <source>Plug-in</source>
-        <translation>Plugin</translation>
+        <translation>Programudvidelse</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="198"/>
@@ -9660,17 +9662,17 @@ Højre kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
         <source>Plug-ins installed.~%(Use the Plug-in Manager to enable effects):</source>
-        <translation>Plugins installeret.~%(Brug pluginhåndteringen for at aktivere effekter):</translation>
+        <translation>Programudvidelser installeret.~%(Brug Kontrolpanel for programudvidelser for at aktivere effekter):</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
         <source>Plug-ins updated:</source>
-        <translation>Plugins opdateret:</translation>
+        <translation>Programudvidelser opdateret:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
         <source>Files copied to plug-ins folder:</source>
-        <translation>Filer kopieret til plugins-mappe:</translation>
+        <translation>Filer kopieret til mappen med programudvidelser:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
@@ -9690,7 +9692,7 @@ Højre kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
         <source>Cannot be written to plug-ins folder:</source>
-        <translation>Kan ikke skrive til plugins-mappe:</translation>
+        <translation>Kan ikke skrive til mappen med programudvidelser:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
@@ -9997,7 +9999,7 @@ Højre kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="277"/>
         <source>Include header information</source>
-        <translation>Medtag hovedoplysninger</translation>
+        <translation>Medtag oplysninger fra hoved</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="278"/>
@@ -10017,7 +10019,7 @@ Højre kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="281"/>
         <source>Optional header text</source>
-        <translation>Valgfri hovedtekst</translation>
+        <translation>Valgfri tekst til hoved</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="282"/>
@@ -10277,7 +10279,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="331"/>
         <source>Invalid data handling</source>
-        <translation>Håndtering af ugyldig data</translation>
+        <translation>Håndtering af ugyldige data</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="332"/>
@@ -10463,7 +10465,7 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
         <translation>Lydmarkeringen er for kort til forhåndslytning.
 
-Prøv at øge lydkarkeringen til mindst %1 sekunder,
+Prøv at øge lydmarkeringen til mindst %1 sekunder,
 eller reducér &apos;Tidsopløsning&apos; til mindre end %2 sekunder.</translation>
     </message>
     <message>
@@ -10619,7 +10621,7 @@ Vælg venligst et område med nogen lyd på mindst en af siderne (jo mere, jo be
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="87"/>
         <source>Voice Tail</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Voice Tail</translation>
+        <translation>Stemmeefterklang</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="90"/>
@@ -10643,7 +10645,7 @@ Vælg venligst et område med nogen lyd på mindst en af siderne (jo mere, jo be
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="96"/>
         <source>Medium Room</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Mellemstørrelse rum</translation>
+        <translation>Rum i mellemstørrelse</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="98"/>
@@ -10690,7 +10692,7 @@ Vælg venligst et område med nogen lyd på mindst en af siderne (jo mere, jo be
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="30"/>
         <source>Reverses the selected audio</source>
-        <translation>Gør den markerede lyd baglæns</translation>
+        <translation>Den markerede lyd afspilles baglæns</translation>
     </message>
 </context>
 <context>
@@ -11106,12 +11108,12 @@ Vælg venligst et område med nogen lyd på mindst en af siderne (jo mere, jo be
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
         <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
-        <translation>Ingen brugerflade i tilføjelsesprogrammet (indrapportér venligst, hvis Audacity 3 har en brugerflade til dette tilføjelsesprogram)</translation>
+        <translation>Ingen brugerflade i programudvidelsen (indrapportér venligst, hvis Audacity 3 har en brugerflade til denne programudvidelse)</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
         <source>X11 UI refusing to be externalized</source>
-        <translation type="unfinished"/>
+        <translation>X11-brugerfladen lader sig ikke bruge eksternt</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
@@ -11170,7 +11172,7 @@ Vælg venligst et område med nogen lyd på mindst en af siderne (jo mere, jo be
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="78"/>
         <source>Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.</source>
-        <translation>Vælg nogle få sekunder af kun støj, således at Audacity ved, hvad der skal filtreres bort. Klik derefter på Hent støjprofil.</translation>
+        <translation>Vælg nogle få sekunder med kun støj, således at Audacity ved, hvad der skal filtreres bort. Klik derefter på Hent støjprofil.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
@@ -11575,7 +11577,7 @@ Vælg venligst et område med nogen lyd på mindst en af siderne (jo mere, jo be
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
         <source>bpm</source>
         <extracomment>Abbreviation of &quot;beats per minute&quot;</extracomment>
-        <translation>BPM (taktslag i minuttet)</translation>
+        <translation>taktslag i minuttet</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="112"/>
@@ -12100,7 +12102,7 @@ Mastereffekter vil blive slået til igen efter eksporten.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="168"/>
         <source>Reload plugins</source>
-        <translation>Genindlæs tilføjelsesprogrammer</translation>
+        <translation>Genindlæs programudvidelser</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
@@ -12213,7 +12215,7 @@ Mastereffekter vil blive slået til igen efter eksporten.</translation>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="101"/>
         <source>Composing/arranging tools</source>
-        <translation>Kompositions/arrangementsværktøjer</translation>
+        <translation>Kompositions-/arrangementsværktøjer</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="102"/>
@@ -12233,7 +12235,7 @@ Mastereffekter vil blive slået til igen efter eksporten.</translation>
     <message>
         <source>Run plugin %1</source>
         <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation type="vanished">Kør hjælpeværktøj %1</translation>
+        <translation type="vanished">Kør programudvidelsen %1</translation>
     </message>
     <message>
         <source>Run plugin %1: %2</source>
@@ -12307,19 +12309,19 @@ Mastereffekter vil blive slået til igen efter eksporten.</translation>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="369"/>
         <source>Gaussian(a=2.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>Gaussisk(a=2,5)</translation>
+        <translation>Gaussisk (a=2,5)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="372"/>
         <source>Gaussian(a=3.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>Gaussisk(a=3,5)</translation>
+        <translation>Gaussisk (a=3,5)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="375"/>
         <source>Gaussian(a=4.5)</source>
         <extracomment>a mathematical function named for C. F. Gauss</extracomment>
-        <translation>Gaussisk(a=4,5)</translation>
+        <translation>Gaussisk (a=4,5)</translation>
     </message>
 </context>
 <context>
@@ -12438,7 +12440,7 @@ Måske kan der ikke skrives til %1, eller disken er fuld.</translation>
         <source>The temporary files directory is on a FAT formatted drive.
 Resetting to default location.</source>
         <extracomment>FAT is a filesystem type name</extracomment>
-        <translation>Den midlertidige filmappe ligger på et FAT-formatteret drev.
+        <translation>Den midlertidige filmappe ligger på et FAT-formateret drev.
 Gendanner standardplaceringen.</translation>
     </message>
     <message>
@@ -14721,30 +14723,30 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="698"/>
         <source>FFmpeg : ERROR - Can’t determine format description for file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>FFmpeg: FEJL - kan ikke fastslå formatbeskrivelsen for filen &quot;%1&quot;.</translation>
+        <translation>FFmpeg: FEJL – kan ikke fastslå formatbeskrivelsen for filen &quot;%1&quot;.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="706"/>
         <source>FFmpeg : ERROR - Can’t allocate output format context.</source>
-        <translation>FFmpeg: FEJL – Kan ikke tildele kontekst for outputformat.</translation>
+        <translation>FFmpeg: FEJL – kan ikke tildele kontekst for outputformat.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="717"/>
         <source>FFmpeg : ERROR - Can’t add audio stream to output file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>FFmpeg: FEJL - kan ikke føje lydstrøm til outputfilen &quot;%1&quot;.</translation>
+        <translation>FFmpeg: FEJL – kan ikke føje lydstrøm til outputfilen &quot;%1&quot;.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="744"/>
         <source>FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation>FFmpeg: FEJL - kan ikke åbne outputfilen &quot;%1&quot; for at skrive til den. Fejlkoden er %2.</translation>
+        <translation>FFmpeg: FEJL – kan ikke åbne outputfilen &quot;%1&quot; for at skrive til den. Fejlkoden er %2.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="779"/>
         <source>FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation>FFmpeg: FEJL - kan ikke skrive oplysninger i hovedet på outputfilen &quot;%1&quot;. Fejlkoden er %2.</translation>
+        <translation>FFmpeg: FEJL – kan ikke skrive oplysninger i hovedet på outputfilen &quot;%1&quot;. Fejlkoden er %2.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
@@ -14777,42 +14779,42 @@ Understøttelse af dette codec er sandsynligvis ikke lagt ind.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1112"/>
         <source>FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.</source>
-        <translation>FFmpeg: FEJL - kan ikke tildele buffer til læsning af lyd-FIFO.</translation>
+        <translation>FFmpeg: FEJL – kan ikke tildele buffer til læsning af lyd-FIFO.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1141"/>
         <source>FFmpeg : ERROR - Couldn’t write audio frame to output file.</source>
-        <translation>FFmpeg: FEJL - kan ikke skrive sidste lydramme til outputfilen.</translation>
+        <translation>FFmpeg: FEJL – kan ikke skrive sidste lydramme til outputfilen.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1172"/>
         <source>FFmpeg : ERROR - Could not get sample buffer size</source>
-        <translation>FFmpeg : FEJL - kunne ikke læse størrelse af buffer på lydsampling</translation>
+        <translation>FFmpeg : FEJL – kunne ikke læse størrelse af buffer på lydsampling</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1179"/>
         <source>FFmpeg : ERROR - Could not allocate bytes for samples buffer</source>
-        <translation>FFmpeg : FEJL - kunne ikke tildele byte til datapunktsbuffer</translation>
+        <translation>FFmpeg : FEJL – kunne ikke tildele byte til datapunktsbuffer</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1188"/>
         <source>FFmpeg : ERROR - Could not setup audio frame</source>
-        <translation>FFmpeg : FEJL - kunne ikke opsætte lydramme</translation>
+        <translation>FFmpeg : FEJL – kunne ikke opsætte lydramme</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1269"/>
         <source>FFmpeg : ERROR - encoding frame failed</source>
-        <translation>FFmpeg : FEJL - kodning af ramme mislykkedes</translation>
+        <translation>FFmpeg : FEJL – kodning af ramme mislykkedes</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1294"/>
         <source>FFmpeg : ERROR - Too much remaining data.</source>
-        <translation>FFmpeg : FEJL - for meget resterende data.</translation>
+        <translation>FFmpeg : FEJL – for mange resterende data.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1369"/>
         <source>FFmpeg : ERROR - nAudioFrameSizeOut too large.</source>
-        <translation>FFmpeg : FEJL - nAudioFrameSizeOut er for stor.</translation>
+        <translation>FFmpeg : FEJL – nAudioFrameSizeOut er for stor.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1409"/>
@@ -15304,27 +15306,27 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="173"/>
         <source>Unable to export - rate or quality problem</source>
-        <translation>Kan ikke eksportere - problem med hastighed eller kvalitet</translation>
+        <translation>Kan ikke eksportere – problem med hastighed eller kvalitet</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="186"/>
         <source>Unable to export - problem initialising</source>
-        <translation>Kan ikke eksportere - problem ved initiering</translation>
+        <translation>Kan ikke eksportere – problem ved opstart</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="198"/>
         <source>Unable to export - problem creating stream</source>
-        <translation>Kan ikke eksportere - problem ved oprettelse af strøm</translation>
+        <translation>Kan ikke eksportere – problem ved oprettelse af strøm</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="219"/>
         <source>Unable to export - problem with packets</source>
-        <translation>Kan ikke eksportere - problem med pakker</translation>
+        <translation>Kan ikke eksportere – problem med pakker</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="227"/>
         <source>Unable to export - problem with file</source>
-        <translation>Kan ikke eksportere - problem med fil</translation>
+        <translation>Kan ikke eksportere – problem med fil</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="236"/>
@@ -15944,7 +15946,7 @@ Libsndfile melder &quot;%2&quot;</translation>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
         <source>Creator, Mastering MuseScore</source>
-        <translation>Ophavsmand til &apos;Mastering MuseScore&apos;</translation>
+        <translation>Ophavsmand til &apos;Lær at mestre MuseScore&apos;</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
@@ -15955,18 +15957,18 @@ Whether you are just getting started with music notation software, or are a powe
 In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
 
 (Note: Mastering MuseScore is available in English only)</source>
-        <translation>Velkommen til &quot;Mastering MuseScore&quot; – den mest omfattende ressource til at lære verdens mest populære notationssoftware! Mit navn er Marc Sabatella, og jeg har været med til at udvikle, støtte og promovere MuseScore siden den første udgivelse for over ti år siden.
+        <translation>Velkommen til &quot;Lær at mestre MuseScore&quot; – den mest omfattende ressource til at lære verdens mest populære notationssoftware! Mit navn er Marc Sabatella, og jeg har været med til at udvikle, støtte og promovere MuseScore siden den første udgivelse for over ti år siden.
 
-Uanset om du lige er begyndt med notationssoftware, eller er en superbruger, der er ivrig efter at udforske avancerede graverings- og afspilningsteknikker, dækker mit onlinekursus &quot;Mastering MuseScore&quot; alt, hvad du behøver at vide for at få mest muligt ud af MuseScore. 
+Uanset om du lige er begyndt med notationssoftware, eller er en superbruger, der er ivrig efter at udforske avancerede graverings- og afspilningsteknikker, dækker mit onlinekursus &quot;Lær at mestre MuseScore&quot; alt, hvad du behøver at vide for at få mest muligt ud af MuseScore. 
 
-Derudover byder &quot;Mastering MuseScore&quot; på et støttende fællesskab af musikere med diskussionsrum, livestreams og andre relaterede kurser og tjenester, der hjælper dig med at skabe din bedste musik. Udnyt denne mulighed for at lære MuseScore fra en af ​​dets mest anerkendte eksperter!
+Derudover byder &quot;Lær at mestre MuseScore&quot; på et støttende fællesskab af musikere med diskussionsrum, livestreams og andre relaterede kurser og tjenester, der hjælper dig med at skabe din bedste musik. Udnyt denne mulighed for at lære MuseScore fra en af ​​dets mest anerkendte eksperter!
 
-(Bemærk: Mastering MuseScore er kun tilgængelig på engelsk)</translation>
+(Bemærk: Lær at mestre MuseScore er kun tilgængelig på engelsk)</translation>
     </message>
     <message>
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Mastering MuseScore</source>
-        <translation>&quot;Mastering MuseScore&quot;</translation>
+        <translation>Lær at mestre MuseScore</translation>
     </message>
 </context>
 <context>
@@ -16250,7 +16252,7 @@ Derudover byder &quot;Mastering MuseScore&quot; på et støttende fællesskab af
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
-        <translation>KOMMENTAR</translation>
+        <translation>KOMMENTARER</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
@@ -16386,17 +16388,17 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
         <source>Overwrite the plug-in file %1?</source>
-        <translation>Overskriv plugin-filen %1?</translation>
+        <translation>Overskriv programudvidelsesfilen %1?</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="424"/>
         <source>Plug-in already exists</source>
-        <translation>Pluginet findes allerede</translation>
+        <translation>Programudvidelsen findes allerede</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="447"/>
         <source>Plug-in file is in use. Failed to overwrite</source>
-        <translation>Plugin-filen er i brug. Kunne ikke overskrive</translation>
+        <translation>Programudvidelsesfilen er i brug. Kunne ikke overskrive</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="469"/>
@@ -16411,14 +16413,14 @@ Det vil ikke blive indlæst.</translation>
 </source>
         <comment>plug-ins</comment>
         <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation type="vanished"><numerusform>Skal dette tilføjelsesprogram aktiveres?
-</numerusform><numerusform>Skal disse tilføjelsesprogrammer aktiveres?
+        <translation type="vanished"><numerusform>Skal denne programudvidelse aktiveres?
+</numerusform><numerusform>Skal disse programudvidelse aktiveres?
 </numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
         <source>Enable new plug-ins</source>
-        <translation>Aktivér nye plugins</translation>
+        <translation>Aktivér nye programudvidelser</translation>
     </message>
 </context>
 <context>
@@ -16666,12 +16668,12 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
         <source>The I/O device was not opened for reading</source>
-        <translation>I/O enheden var ikke åbnet for læsning</translation>
+        <translation>I/O-enheden var ikke åbnet for læsning</translation>
     </message>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="53"/>
         <source>The I/O device was not opened for writing</source>
-        <translation>I/O enheden var ikke åbnet for skrivning</translation>
+        <translation>I/O-enheden var ikke åbnet for skrivning</translation>
     </message>
 </context>
 <context>
@@ -17461,7 +17463,7 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="44"/>
         <source>FFmpeg library path</source>
-        <translation>FFmpeg-bibliotek, sti</translation>
+        <translation>FFmpeg-bibliotek – sti</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
@@ -17576,7 +17578,7 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="110"/>
         <source>Default sample rates and formats apply to newly created tracks only. Recording into existing tracks will use the track’s sample rate and format instead.</source>
-        <translation>Standard hastighed og format på lydsampling gælder kun nyligt oprettede spor. Optagelse på eksisterende spor vil bruge sporets hastighed og format i stedet.</translation>
+        <translation>Standardhastigheder og -formater på lydsampling gælder kun nyligt oprettede spor. Optagelse på eksisterende spor vil bruge sporets hastighed og format i stedet.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="17"/>
@@ -17903,7 +17905,7 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
         <source>Plugins</source>
-        <translation>Tilføjelsesprogrammer</translation>
+        <translation>Programudvidelser</translation>
     </message>
     <message>
         <source>Advanced options</source>
@@ -17957,7 +17959,7 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation>Vælg placering af tilføjelsesprogram</translation>
+        <translation>Vælg placering af programudvidelse</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
@@ -17982,22 +17984,22 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Custom LV2 plugins location</source>
-        <translation>Brugervalgt placering af LV2-tilføjelsesprogrammer</translation>
+        <translation>Brugervalgt placering af LV2-programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="53"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation>Vælg selv placering af LV2-tilføjelsesprogrammer</translation>
+        <translation>Vælg selv placering af LV2-programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="87"/>
         <source>Custom VST3 plugins location</source>
-        <translation>Brugervalgt placering af VST3-tilføjelsesprogrammer</translation>
+        <translation>Brugervalgt placering af VST3-programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="88"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation>Vælg selv placering af VST3-tilføjelsesprogrammer</translation>
+        <translation>Vælg selv placering af VST3-programudvidelser</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
@@ -18142,7 +18144,7 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="492"/>
         <source>Files will appear here when you save a file to the cloud, or publish a project</source>
-        <translation>Filer vil blive vist her, når du gemmer en fil på netdrevet eller publicerer et projekt</translation>
+        <translation>Filer vil blive vist her, når du gemmer en fil på netdrevet eller udgiver et projekt</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="516"/>
@@ -18188,7 +18190,7 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="207"/>
         <source>Projects will appear here when you publish a project</source>
-        <translation>Projekterne vil blive vist her, når du publicerer dem</translation>
+        <translation>Projekterne vil blive vist her, når du udgiver dem</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="232"/>
@@ -18313,7 +18315,7 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="158"/>
         <source>Publish your finished projects on Audio.com</source>
-        <translation>Publicér dine færdige projekter på Audio.com</translation>
+        <translation>Udgiv dine færdige projekter på Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
@@ -18410,7 +18412,7 @@ Det vil ikke blive indlæst.</translation>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
         <source>Upload project to audio.com…</source>
-        <translation>Læg projektet på audio.com…</translation>
+        <translation>Læg projektet på Audio.com…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
@@ -18456,7 +18458,7 @@ Det vil ikke blive indlæst.</translation>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Visit audio.com</source>
-        <translation>Besøg audio.com</translation>
+        <translation>Besøg Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
@@ -18480,7 +18482,7 @@ Det vil ikke blive indlæst.</translation>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>Alle gemte ændringer vil nu blive opdateret på netdrevet.
-Du kan arbejde med denne fil fra din opdaterede projektside på audio.com</translation>
+Du kan arbejde med denne fil fra din opdaterede projektside på Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
@@ -18522,7 +18524,7 @@ Du kan arbejde med denne fil fra din opdaterede projektside på audio.com</trans
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
         <source>Raw files</source>
-        <translation>Rå filer</translation>
+        <translation>Råfiler</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
@@ -18640,7 +18642,7 @@ skal dens egenskaber og tilladelser kontrolleres. Sørg for, at den ikke er gemt
 Please remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.</source>
         <translation>For at åbne denne fil:
 &quot;%1&quot;
-skal skrivebeskyttelsen fjernes ved at åbne filens egenskaber, sikre, at den ikke er gemt på et skrivebeskyttet drev eller i en skrivebeskyttet mappe eller ved at køre Audacity som administrator.</translation>
+skal skrivebeskyttelsen fjernes ved at åbne filens egenskaber, sikre, at den ikke er gemt på et skrivebeskyttet drev eller i en skrivebeskyttet mappe, eller ved at køre Audacity som administrator.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
@@ -18697,7 +18699,7 @@ skal skrivebeskyttelsen fjernes ved at åbne filens egenskaber, sikre, at den ik
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="213"/>
         <source>Failed to set safe mode on checkpoint connection to %1</source>
-        <translation>Kunne ikke bruge sikker tilstand til kontrolforbindelsen til %1</translation>
+        <translation>Kunne ikke bruge sikker tilstand på kontrolforbindelsen til %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>
@@ -19002,7 +19004,7 @@ Klik på knappen Hjælp for at få tips til at frigive plads.</translation>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1698"/>
         <source>(Recovered)</source>
         <extracomment>E.g this is recovered audio that had been lost.</extracomment>
-        <translation>(gendannet)</translation>
+        <translation>(Gendannet)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1798"/>
@@ -19156,12 +19158,12 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation>Synkroniserer med audio.com</translation>
+        <translation>Synkroniserer med Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
         <source>Project is syncing with audio.com. Do you want to stop the sync process?</source>
-        <translation>Projektet synkroniseres med audio.com. Ønsker du at standse synkroniseringen?</translation>
+        <translation>Projektet synkroniseres med Audio.com. Ønsker du at standse synkroniseringen?</translation>
     </message>
 </context>
 <context>
@@ -19180,7 +19182,7 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
         <source>Share to audio.com</source>
-        <translation>Del med audio.com</translation>
+        <translation>Del på Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
@@ -19392,7 +19394,7 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
         <source>Publish changes online?</source>
-        <translation>Publicér ændringerne online?</translation>
+        <translation>Udgiv ændringerne online?</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
@@ -19410,12 +19412,12 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
         <source>Unable to connect to the cloud</source>
-        <translation>Kunne ikke forbinde til netdrevet</translation>
+        <translation>Kunne ikke få forbindelse til netdrevet</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
         <source>Unable to connect to Audio.com</source>
-        <translation>Kunne ikke forbinde til audio.com</translation>
+        <translation>Kunne ikke få forbindelse til til audio.com</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
@@ -19441,12 +19443,12 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
         <source>Replace the existing &lt;a href=&quot;%1&quot;&gt;online score&lt;/a&gt;</source>
         <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
-        <translation>Erstat eksisterende &lt;a href=&quot;%1&quot;&gt;online nodeark&lt;/a&gt;</translation>
+        <translation>Erstat eksisterende &lt;a href=&quot;%1&quot;&gt;onlinepartitur&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
         <source>Publish as new online score</source>
-        <translation>Udgiv som nyt online nodeark</translation>
+        <translation>Udgiv som nyt onlinepartitur</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
@@ -19462,7 +19464,7 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
         <source>Upload as new audio file</source>
-        <translation>Send som ny audio fil</translation>
+        <translation>Send som ny lydfil</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="209"/>
@@ -19502,7 +19504,7 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
-        <translation>Kunne ikke forbinde til audio.com. Kontrollér venligst din internetforbindelse, eller prøv igen senere.</translation>
+        <translation>Kunne ikke få forbindelse til audio.com. Kontrollér venligst din internetforbindelse, eller prøv igen senere.</translation>
     </message>
 </context>
 <context>
@@ -19906,7 +19908,7 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
         <source>Seconds &amp; samples</source>
-        <translation>Sekunder &amp;&amp; datapunkter</translation>
+        <translation>Sekunder og datapunkter</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
@@ -20258,19 +20260,19 @@ Kobl venligst en lydenhed til, og genscan.</translation>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="189"/>
         <source>Plug-in group at %1 was merged with a previously defined group</source>
         <extracomment>%1 is the registry path of the merged plug-in group</extracomment>
-        <translation>Plugingruppe i %1 blev forenet med en tidligere defineret gruppe</translation>
+        <translation>Programudvidelsesgruppe i %1 blev samlet med en tidligere defineret gruppe</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="197"/>
         <source>Plug-in item at %1 conflicts with a previously defined item and was discarded</source>
         <extracomment>%1 is the registry path of the conflicting plug-in item</extracomment>
-        <translation>Plugin-punkt ved %1 er i konflikt med et tidligere defineret punkt og er blevet forkastet</translation>
+        <translation>Programudvidelsespunkt ved %1 er i konflikt med et tidligere defineret punkt og er blevet forkastet</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="205"/>
         <source>Plug-in items at %1 specify conflicting placements</source>
         <extracomment>%1 is the registry path of the conflicting plug-in items</extracomment>
-        <translation>Plugin-punkter ved %1 angiver placeringer med konflikter</translation>
+        <translation>Programudvidelsespunkter ved %1 angiver placeringer med konflikter</translation>
     </message>
 </context>
 <context>
@@ -20390,7 +20392,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
         <source>Shortcuts bottom panel</source>
-        <translation>Genveje i nedre panel</translation>
+        <translation>Genveje – nedre panel</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
@@ -20420,7 +20422,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="46"/>
         <source>Shortcuts top panel</source>
-        <translation>Genveje øvre panel</translation>
+        <translation>Genveje – øvre panel</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="64"/>
@@ -20435,7 +20437,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="31"/>
         <source>Enter shortcut sequence</source>
-        <translation>Angiv genvejs sekvensen</translation>
+        <translation>Angiv genvejssekvensen</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="62"/>
@@ -20450,7 +20452,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
         <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
-        <translation>Er du sikker på at du vil tilknytte den til &lt;b&gt;%1&lt;/b&gt; i stedet?</translation>
+        <translation>Er du sikker på, at du vil tilknytte den til &lt;b&gt;%1&lt;/b&gt; i stedet?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
@@ -20460,7 +20462,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
         <source>MuseScore Studio shortcuts file</source>
-        <translation>MuseScore Studio fil for genvejsdefinitioner</translation>
+        <translation>MuseScore Studio-fil til genvejsdefinitioner</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
@@ -20601,7 +20603,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="24"/>
         <source>Seconds &amp;&amp; samples</source>
-        <translation>Sekunder &amp;&amp; datapunkter</translation>
+        <translation>Sekunder og datapunkter</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="25"/>
@@ -20652,7 +20654,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="36"/>
         <source>Roseus</source>
-        <translation>Roseus</translation>
+        <translation>Rosa</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="38"/>
@@ -20758,17 +20760,17 @@ Kobl venligst en lydenhed til, og genscan.</translation>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="31"/>
         <source>Gaussian (a=0.25)</source>
-        <translation>Gaussian (a=0,25)</translation>
+        <translation>Gaussisk (a=0,25)</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="32"/>
         <source>Gaussian (a=0.35)</source>
-        <translation>Gaussian (a=0,35)</translation>
+        <translation>Gaussisk (a=0,35)</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="33"/>
         <source>Gaussian (a=0.45)</source>
-        <translation>Gaussian (a=0,45)</translation>
+        <translation>Gaussisk (a=0,45)</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="37"/>
@@ -21180,19 +21182,19 @@ Kobl venligst en lydenhed til, og genscan.</translation>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n time tilbage</numerusform><numerusform>%n timer tilbage</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n minut tilbage</numerusform><numerusform>%n minutter tilbage</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n sekund tilbage</numerusform><numerusform>%n sekunder tilbage</numerusform></translation>
     </message>
 </context>
 <context>
@@ -21229,7 +21231,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Meters &amp;&amp; monitoring</source>
-        <translation>Målere &amp;&amp; overvågning</translation>
+        <translation>Målere og overvågning</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
@@ -21341,7 +21343,7 @@ Kobl venligst en lydenhed til, og genscan.</translation>
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
 
 Do you wish to continue?</source>
-        <translation>De spor, som du forsøger at samle til stereo, rummer klip fra forskellige positioner eller klip, der ikke passer sammen. At samle dem vil samle sporene.
+        <translation>De spor, som du forsøger at samle til stereo, rummer klip fra forskellige positioner eller klip, der ikke passer sammen. Hvis du fletter dem, vil sporene blive samlet.
 
 Derved vil alle realtidseffekter, som er brugt i bølgeform, samt skjulte data blive fjernet. Ydermere vil hele sporet blive ét stort klip.
 
@@ -21786,22 +21788,22 @@ Derved vil alle realtidseffekter, som er brugt i bølgeform, samt skjulte data b
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
         <source>Label low frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Etiket på lav frekvens er ændret</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
         <source>Change label low frequency</source>
-        <translation type="unfinished"/>
+        <translation>Ændr etiket på lav frekvens</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
         <source>Label high frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Etiket på høj frekvens er ændret</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
         <source>Change label high frequency</source>
-        <translation type="unfinished"/>
+        <translation>Ændr etiket på høj frekvens</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
@@ -21883,13 +21885,13 @@ Derved vil alle realtidseffekter, som er brugt i bølgeform, samt skjulte data b
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
         <source>Duplicated</source>
-        <translation>Kopieret</translation>
+        <translation>Dubleret</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
         <source>Duplicate</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
-        <translation>Kopiér</translation>
+        <translation>Dublér</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
@@ -22072,7 +22074,7 @@ Derved vil alle realtidseffekter, som er brugt i bølgeform, samt skjulte data b
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="137"/>
         <source>Half wave</source>
-        <translation>Halv bølge</translation>
+        <translation>Halvbølge</translation>
     </message>
 </context>
 <context>
@@ -22180,12 +22182,12 @@ Derved vil alle realtidseffekter, som er brugt i bølgeform, samt skjulte data b
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
         <source>sorted ascending</source>
-        <translation>sorter stigende</translation>
+        <translation>sorteret stigende</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
         <source>sorted descending</source>
-        <translation>sorter faldende</translation>
+        <translation>sorteret faldende</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="56"/>
@@ -22233,13 +22235,13 @@ Derved vil alle realtidseffekter, som er brugt i bølgeform, samt skjulte data b
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
-        <translation>Værdiliste overskriftslinje</translation>
+        <translation>Værdiliste – overskriftslinje</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
-        <translation>Værdiliste indhold</translation>
+        <translation>Værdiliste – indhold</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
@@ -22729,7 +22731,7 @@ Afkorter til denne maksimumslængde.</translation>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1017"/>
         <source>Warning - Truncating Overlong Block File</source>
-        <translation>Advarsel - afkorter alt for lang blokfil</translation>
+        <translation>Advarsel – afkorter alt for lang blokfil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="22"/>
@@ -22749,7 +22751,7 @@ Afkorter til denne maksimumslængde.</translation>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1899"/>
         <source>Resampling failed.</source>
-        <translation>Ændring af samplingshastighed mislykkede.</translation>
+        <translation>Ændring af samplingshastighed mislykkedes.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1900"/>
@@ -22816,27 +22818,27 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
-        <translation>-48 dB (PCM-område med 8 bit datapunkter)</translation>
+        <translation>-48 dB (PCM-område med 8-bit datapunkter)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
-        <translation>-60 dB (PCM-område med 10 bit datapunkter)</translation>
+        <translation>-60 dB (PCM-område med 10-bit datapunkter)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
-        <translation>-72 dB (PCM-område med 12 bit datapunkter)</translation>
+        <translation>-72 dB (PCM-område med 12-bit datapunkter)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
-        <translation>-84 dB (PCM-område med 14 bit datapunkter)</translation>
+        <translation>-84 dB (PCM-område med 14-bit datapunkter)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
-        <translation>-96 dB (PCM-område med 16 bit datapunkter)</translation>
+        <translation>-96 dB (PCM-område med 16-bit datapunkter)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
@@ -22885,7 +22887,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
         <source>Workspace name:</source>
-        <translation>Arbejdsområdenavn:</translation>
+        <translation>Navn på arbejdsområde:</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
@@ -22916,7 +22918,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
         <source>Resetting workspaces</source>
-        <translation>Nulstil arbejdsområder</translation>
+        <translation>Nulstiller arbejdsområder</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>

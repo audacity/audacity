@@ -30,7 +30,7 @@
     <message>
         <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
         <source>%1 panel</source>
-        <translation>%1 パネル</translation>
+        <translation>%1パネル</translation>
     </message>
 </context>
 <context>
@@ -224,7 +224,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
         <source>&amp;Trigger</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>トリガー(&amp;T)</translation>
+        <translation>実行(&amp;T)</translation>
     </message>
     <message>
         <source>Trigger</source>
@@ -261,7 +261,7 @@
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>audio.comでプロジェクトを確認</translation>
+        <translation>audio.comでプロジェクトを表示</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
@@ -273,7 +273,7 @@
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
         <source>Repeat last effect</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>前回のエフェクトを繰り返す</translation>
+        <translation>直前のエフェクトを繰り返す</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="33"/>
@@ -407,7 +407,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
         <source>Get effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>エフェクト取得</translation>
+        <translation>エフェクトを取得</translation>
     </message>
     <message>
         <source>Open Get effects dialog</source>
@@ -519,7 +519,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="255"/>
         <source>Set loop region to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>選択範囲をループ領域に設定</translation>
+        <translation>ループ領域を選択範囲に設定</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="263"/>
@@ -537,7 +537,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="279"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>ループ作成時にオーディオも選択</translation>
+        <translation>オーディオも選択してループを作成</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
@@ -715,31 +715,31 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="224"/>
         <source>Track start to cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>トラック先頭位置からカーソル位置</translation>
+        <translation>トラック先頭からカーソル</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="232"/>
         <source>Cursor to track end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>カーソル位置からトラック終了位置</translation>
+        <translation>トラック末尾へ移動</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
         <source>Track start to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>トラック先頭位置から終了位置</translation>
+        <translation>トラック先頭から末尾</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="248"/>
         <source>Previous clip boundary to cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>前のクリップ境界からカーソル位置</translation>
+        <translation>前のクリップ境界からカーソル</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="256"/>
         <source>Cursor to next clip boundary</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>カーソル位置から次のクリップ境界</translation>
+        <translation>次のクリップ境界へ移動</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
@@ -811,13 +811,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
         <source>Skip to selection start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>選択範囲の開始位置へスキップ</translation>
+        <translation>選択範囲の先頭へスキップ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="322"/>
         <source>Skip to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>選択範囲の終了位置へスキップ</translation>
+        <translation>選択範囲の末尾へスキップ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
@@ -847,7 +847,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
         <source>Set up timed recording</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>予約録音の設定</translation>
+        <translation>予約録音を設定</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
@@ -883,49 +883,49 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="416"/>
         <source>Align together</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>開始位置を揃える</translation>
+        <translation>先頭を揃える</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
         <source>Align start to zero</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>開始位置をを 0位置に揃える</translation>
+        <translation>0位置に先頭を揃える</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Align start to playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>再生ヘッドに開始位置を揃える</translation>
+        <translation>再生ヘッドに先頭を揃える</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
         <source>Align start to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>選択範囲の終端に開始位置を揃える</translation>
+        <translation>選択範囲の末端に先頭を揃える</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
         <source>Align end to playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>再生ヘッドに終了位置を揃える</translation>
+        <translation>再生ヘッドに末尾を揃える</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="456"/>
         <source>Align end to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>選択範囲の終端に終了位置を揃える</translation>
+        <translation>選択範囲の末尾に終了位置を揃える</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
         <source>Sort by time</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>時間順で並べ替え</translation>
+        <translation>時間で並べ替え</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
         <source>Sort by name</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>名前順で並べ替え</translation>
+        <translation>名前で並べ替え</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
@@ -1029,7 +1029,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="551"/>
         <source>Manage macros</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>マクロ管理</translation>
+        <translation>マクロを管理</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
@@ -1053,7 +1053,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nyquistプラグインをインストール</translation>
+        <translation>Nyquistプラグインインストーラ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
@@ -1217,7 +1217,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="23"/>
         <source>Clip gain</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>クリップゲイン</translation>
+        <translation>クリップのゲイン</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="32"/>
@@ -1235,7 +1235,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="94"/>
         <source>Center view on playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>再生ヘッドをスクロール表示</translation>
+        <translation>再生ヘッドを中央に表示</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="102"/>
@@ -1284,7 +1284,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
         <source>Update display while playing</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>再生中に表示をアップデート</translation>
+        <translation>再生中に表示を更新</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="192"/>
@@ -1354,13 +1354,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="277"/>
         <source>Move playhead to selection start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>再生ヘッドを選択範囲の開始位置に移動</translation>
+        <translation>再生ヘッドを選択範囲の先頭に移動</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="285"/>
         <source>Move playhead to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>再生へッドを選択範囲の終了位置に移動</translation>
+        <translation>再生へッドを選択範囲の末尾に移動</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="293"/>
@@ -1438,7 +1438,7 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
         <source>Show mic metering</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>マイク目盛りを表示</translation>
+        <translation>マイクレベルメーターを表示</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="75"/>
@@ -1466,55 +1466,55 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
         <source>Clear selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>選択範囲を消去</translation>
+        <translation>選択を解除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="95"/>
         <source>Cut and leave gap</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>切り取ってギャップを残す</translation>
+        <translation>カット（ギャップを残す）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="104"/>
         <source>Cut and close gap (per clip)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>切り取ってギャップを閉じる (クリップ単位)</translation>
+        <translation>カット（ギャップを閉じる:クリップごと）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="113"/>
         <source>Cut and close gap (per track)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>切り取ってギャップを閉じる (トラック単位)</translation>
+        <translation>カット（ギャップを閉じる:トラックごと）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
         <source>Cut and close gap (all tracks)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>切り取ってギャップを閉じる (すべてのトラック)</translation>
+        <translation>カット（ギャップを閉じる:すべてのトラック）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="131"/>
         <source>Delete and leave gap</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>削除してギャップを残す</translation>
+        <translation>削除（ギャップを残す）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>削除してギャップを閉じる (クリップ単位)</translation>
+        <translation>削除（ギャップを閉じる:クリップごと）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="149"/>
         <source>Delete and close gap (per track)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>削除してギャップを閉じる (トラック単位)</translation>
+        <translation>削除（ギャップを閉じる:トラックごと）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="158"/>
         <source>Delete and close gap (all tracks)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>削除してギャップを閉じる (すべてのトラック)</translation>
+        <translation>削除（ギャップを閉じる:すべてのトラック）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="167"/>
@@ -1610,7 +1610,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="298"/>
         <source>Resample track…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>トラックを再サンプリング…</translation>
+        <translation>トラックを再サンプル…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="306"/>
@@ -1628,13 +1628,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="586"/>
         <source>Above item</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>項目の上</translation>
+        <translation>上の項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="594"/>
         <source>Below item</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>項目の下</translation>
+        <translation>下の項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="326"/>
@@ -1646,7 +1646,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
         <source>Rename item (clip/label)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>項目の名称を変更（クリップ/ラベル）</translation>
+        <translation>項目を名称変更（クリップ/ラベル）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
@@ -1658,7 +1658,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="354"/>
         <source>Paste (overlaps other clips)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>ペースト（ほかのクリップをオーバーラップ）</translation>
+        <translation>ペースト（ほかのクリップにオーバーラップ）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="363"/>
@@ -1856,13 +1856,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="644"/>
         <source>Multi track selection previous</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>前のトラックを複数選択</translation>
+        <translation>複数トラックを選択（前へ）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="652"/>
         <source>Multi track selection next</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>次のトラックを複数選択</translation>
+        <translation>複数トラックを選択（次へ）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="661"/>
@@ -1908,12 +1908,12 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
         <source>Show g&amp;raphics info…</source>
-        <translation>グラフィックの情報を表示(&amp;R)…</translation>
+        <translation>グラフィック情報を表示(&amp;R)…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
         <source>Show graphics info</source>
-        <translation>グラフィックの情報を表示</translation>
+        <translation>グラフィック情報を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
@@ -1938,12 +1938,12 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
         <source>&amp;Dump accessibility tree to console</source>
-        <translation>アクセシビリティツリーをコンソールにダンプ(&amp;D)</translation>
+        <translation>アクセシビリティツリーをコンソール出力(&amp;D)</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
         <source>Dump accessibility tree to console</source>
-        <translation>アクセシビリティツリーをコンソールにダンプ</translation>
+        <translation>アクセシビリティツリーをコンソール出力</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
@@ -1953,7 +1953,7 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
         <source>Show engraving elements</source>
-        <translation>スコア（楽譜）要素を表示</translation>
+        <translation>スコア要素を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
@@ -1963,7 +1963,7 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
         <source>Show engraving undo stack</source>
-        <translation>スコア（楽譜）編集の履歴を表示</translation>
+        <translation>スコア編集の履歴を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
@@ -1973,27 +1973,27 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
         <source>Show engraving style options list</source>
-        <translation>スコア（楽譜）スタイルのオプションリストを表示</translation>
+        <translation>スコアスタイルのオプションリストを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
         <source>Show &amp;actions list</source>
-        <translation>操作一覧を表示(&amp;A)</translation>
+        <translation>操作リストを表示(&amp;A)</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
         <source>Show actions list</source>
-        <translation>操作一覧を表示</translation>
+        <translation>操作リストを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
         <source>Show &amp;rcommands list</source>
-        <translation>rcommandリストを表示(&amp;R)</translation>
+        <translation>リモートコマンドリストを表示(&amp;R)</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
         <source>Show rcommands list</source>
-        <translation>rcommandリストを表示</translation>
+        <translation>リモートコマンドリストを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
@@ -2008,7 +2008,7 @@
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
         <source>Show API dump</source>
-        <translation>APIダンプを表示</translation>
+        <translation>APIログを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
@@ -2067,49 +2067,49 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
         <source>Exit</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>終了</translation>
+        <translation>終了します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="63"/>
         <source>Full screen</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>フルスクリーンにする</translation>
+        <translation>フルスクリーンにします</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="84"/>
         <source>Open online handbook</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オンラインハンドブックを開く</translation>
+        <translation>オンラインハンドブックを開きます</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="98"/>
         <source>Revert to factory settings</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>工場出荷時の設定に戻す</translation>
+        <translation>工場出荷時の設定に戻します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
         <source>Restore the default layout</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>デフォルトのレイアウトに戻す</translation>
+        <translation>デフォルトのレイアウトに戻します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
         <source>Show/hide playback controls</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生コントロールを表示/非表示</translation>
+        <translation>再生コントロールを表示/非表示します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="128"/>
         <source>Show/hide tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを表示/非表示</translation>
+        <translation>トラックを表示/非表示します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="138"/>
         <source>Show/hide status bar</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ステータスバーを表示/非表示</translation>
+        <translation>ステータスバーを表示/非表示します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
@@ -2122,35 +2122,35 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="35"/>
         <source>Copy</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>コピー</translation>
+        <translation>コピーします</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="167"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="44"/>
         <source>Cut</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>切り取り</translation>
+        <translation>カットします</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="177"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="338"/>
         <source>Paste</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>貼り付け</translation>
+        <translation>ペーストします</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
         <source>Undo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>元に戻す</translation>
+        <translation>取り消します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="197"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="62"/>
         <source>Redo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>やり直す</translation>
+        <translation>やり直します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="207"/>
@@ -2158,7 +2158,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="71"/>
         <source>Delete</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除</translation>
+        <translation>削除します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="216"/>
@@ -2170,224 +2170,224 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
         <source>Trigger</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トリガー</translation>
+        <translation>実行します</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
         <source>Trigger the focused control or select the focused track item</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>対象のコントロールを操作するか、対象のトラック項目を選択</translation>
+        <translation>対象の操作を実行するか、対象のトラック項目を選択します</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
         <source>View project on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>audio.com でプロジェクトを確認</translation>
+        <translation>audio.comでプロジェクトを表示します</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
         <source>View on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>audio.com で表示</translation>
+        <translation>audio.comで表示します</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
         <source>Remove realtime effect</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>リアルタイムエフェクトを削除</translation>
+        <translation>リアルタイムエフェクトを削除します</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
         <source>Import preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>プリセットをインポート</translation>
+        <translation>プリセットを読み込みます</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="76"/>
         <source>Export preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>プリセットをエクスポート</translation>
+        <translation>プリセットを書き出します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
         <source>Play/Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生/一時停止</translation>
+        <translation>再生/一時停止します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="51"/>
         <source>Play/Stop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生/停止</translation>
+        <translation>再生/停止します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カーソル位置から再生/一時停止</translation>
+        <translation>カーソル位置から再生/一時停止します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
         <source>Play the selected time range</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択した時間範囲を再生</translation>
+        <translation>選択した時間範囲を再生します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
         <source>Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>一時停止</translation>
+        <translation>一時停止します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
         <source>Stop playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生を停止</translation>
+        <translation>再生を停止します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
         <source>Rewind to start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>先頭まで早戻し</translation>
+        <translation>先頭まで早戻しします</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
         <source>Rewind to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>末尾まで早送り</translation>
+        <translation>末尾まで早送りします</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
         <source>Toggle ‘Loop playback’</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>‘ループ再生’を切り替え</translation>
+        <translation>‘ループ再生’を切り替えます</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="124"/>
         <source>Open audio setup context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオ設定コンテクストメニューを開く</translation>
+        <translation>オーディオ設定コンテクストメニューを開きます</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
         <source>Open Get effects dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>エフェクト取得ダイアログを開く</translation>
+        <translation>エフェクト取得ダイアログを開きます</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="142"/>
         <source>Open audio setup dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオ設定ダイアログを開く</translation>
+        <translation>オーディオ設定ダイアログを開きます</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="150"/>
         <source>Rescan audio devices</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオデバイスを再スキャン</translation>
+        <translation>オーディオデバイスを再スキャンします</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="158"/>
         <source>Toggle metronome playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>メトロノーム再生を切り替え</translation>
+        <translation>メトロノーム再生を切り替えます</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
         <source>Set playback time</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生時間を設定</translation>
+        <translation>再生位置（時間）を設定します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="177"/>
         <source>Set playback tempo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生テンポを設定</translation>
+        <translation>再生テンポを設定します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="186"/>
         <source>Set playback time signature</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生拍子記号を設定</translation>
+        <translation>再生時の拍子を設定します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
         <source>Set playback level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生レベルを設定</translation>
+        <translation>再生レベルを設定します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
         <source>Change audio host</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオホストを変更</translation>
+        <translation>オーディオホストを変更します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="213"/>
         <source>Change playback device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生デバイスを変更</translation>
+        <translation>再生デバイスを変更します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="222"/>
         <source>Change recording device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>録音デバイスを変更</translation>
+        <translation>録音デバイスを変更します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="231"/>
         <source>Change input channels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>入力チャンネルを変更</translation>
+        <translation>入力チャンネルを変更します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="240"/>
         <source>Toggle loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ループ領域を切り替え</translation>
+        <translation>ループ領域を切り替えます</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="249"/>
         <source>Clear loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ループ領域を解除</translation>
+        <translation>ループ領域を解除します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="257"/>
         <source>Set loop region to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲をループ領域に設定</translation>
+        <translation>ループ領域を選択範囲に設定します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="265"/>
         <source>Set selection to loop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲をループに設定</translation>
+        <translation>選択範囲をループに設定します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="273"/>
         <source>Set loop region in out</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ループ領域にイン/アウトを設定</translation>
+        <translation>ループ領域にイン/アウトを設定します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="281"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ループ作成時にオーディオも選択</translation>
+        <translation>ループ領域の作成時にオーディオも選択します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="293"/>
         <source>Play repeats</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>繰り返し再生</translation>
+        <translation>繰り返し再生します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="303"/>
         <source>Pan automatically during playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生中に自動的にパン</translation>
+        <translation>再生中に自動的にパンします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="31"/>
@@ -2405,13 +2405,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
         <source>Show in Finder</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Finder に表示</translation>
+        <translation>Finderに表示します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="63"/>
         <source>Open recent project</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>最近使ったプロジェクトを開く</translation>
+        <translation>最近使ったプロジェクトを開きます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
@@ -2424,49 +2424,49 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="87"/>
         <source>Clear recent files</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>最近使ったファイルを消去</translation>
+        <translation>最近使ったファイルを消去します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
         <source>Import…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>インポート…</translation>
+        <translation>読み込みます…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
         <source>Save</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>保存</translation>
+        <translation>保存します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="111"/>
         <source>Save as…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>別名で保存…</translation>
+        <translation>別名で保存します…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="119"/>
         <source>Export audio…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオをエクスポート…</translation>
+        <translation>オーディオを書き出します…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
         <source>Export labels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ラベルをエクスポート</translation>
+        <translation>ラベルを書き出します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
         <source>Export MIDI</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>MIDI をエクスポート</translation>
+        <translation>MIDIを書き出します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="143"/>
         <source>Close project</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>プロジェクトを閉じる</translation>
+        <translation>プロジェクトを閉じます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="153"/>
@@ -2474,242 +2474,242 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="194"/>
         <source>Duplicate</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>複製</translation>
+        <translation>〓複製します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
         <source>Insert</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>挿入</translation>
+        <translation>挿入します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
         <source>Trim clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クリップをトリミング</translation>
+        <translation>クリップをトリミングします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="177"/>
         <source>Split into new track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>新規トラックに分割</translation>
+        <translation>新規トラックに分割します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
         <source>Paste new label</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>新規ラベルを貼り付け</translation>
+        <translation>新規ラベルをペーストします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="81"/>
         <source>Select all</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>すべて選択</translation>
+        <translation>すべてを選択します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
         <source>Select all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>すべてのトラックを選択</translation>
+        <translation>すべてのトラックを選択します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="210"/>
         <source>Left of playback position</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生位置の左</translation>
+        <translation>再生位置の左です</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="218"/>
         <source>Right of playback position</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生位置の右</translation>
+        <translation>再生位置の右です</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
         <source>Track start to cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラック先頭位置からカーソル位置</translation>
+        <translation>トラックの先頭からカーソルまで</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <source>Cursor to track end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カーソル位置からトラック終了位置</translation>
+        <translation>トラック末尾へカーソルを移動します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="242"/>
         <source>Track start to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラック先頭位置から終了位置</translation>
+        <translation>トラックの先頭から末尾まで</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="250"/>
         <source>Previous clip boundary to cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>前のクリップ境界からカーソル位置</translation>
+        <translation>前のクリップ境界からカーソル位置まで</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
         <source>Cursor to next clip boundary</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>カーソル位置から次のクリップ境界</translation>
+        <translation>次のクリップ境界へカーソルを移動します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
         <source>Previous clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>前のクリップ</translation>
+        <translation>前のクリップです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="274"/>
         <source>Next clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>次のクリップ</translation>
+        <translation>次のクリップです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="282"/>
         <source>Toggle spectral selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>スペクトル選択を切り替え</translation>
+        <translation>スペクトル選択を切り替えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="290"/>
         <source>Move cursor to closest zero crossing</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ゼロ交差位置にカーソルを移動</translation>
+        <translation>ゼロ交差位置にカーソルを移動します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="300"/>
         <source>Collapse all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>すべてのトラックを折りたたむ</translation>
+        <translation>すべてのトラックを折りたたみます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="308"/>
         <source>Expand all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>すべてのトラックを展開</translation>
+        <translation>すべてのトラックを展開します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="316"/>
         <source>Skip to selection start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲の開始位置へスキップ</translation>
+        <translation>選択範囲の先頭へスキップします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
         <source>Skip to selection end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲の終了位置へスキップ</translation>
+        <translation>選択範囲の末尾へスキップします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="332"/>
         <source>Show effects panel</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>エフェクトパネルを表示</translation>
+        <translation>エフェクトパネルを表示します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="341"/>
         <source>Show metadata editor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>メタデータエディタを表示</translation>
+        <translation>メタデータエディタを表示します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
         <source>Show history</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>履歴を表示</translation>
+        <translation>履歴を表示します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
         <source>Set up timed recording</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>予約録音の設定</translation>
+        <translation>予約録音を設定します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="368"/>
         <source>Enable sound activating recording</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>サウンドによるアクティベート録音を有効にする</translation>
+        <translation>サウンドによるアクティベート録音を有効にします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="376"/>
         <source>Set sound activation level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>サウンドアクティベーションレベルを設定</translation>
+        <translation>サウンドアクティベーションのレベルを設定します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="394"/>
         <source>Remove tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを削除</translation>
+        <translation>トラックを削除します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="402"/>
         <source>Mix-down to…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ミックスダウン…</translation>
+        <translation>ミックスダウン先です…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
         <source>Align end to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>直列に揃える</translation>
+        <translation>前の末尾に次の先頭を接続します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
         <source>Align together</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>開始位置を揃える</translation>
+        <translation>先頭を揃えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="426"/>
         <source>Align start to zero</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>開始位置を 0位置に揃える</translation>
+        <translation>0位置に先頭を揃えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="434"/>
         <source>Align start to playhead</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生ヘッドに開始位置を揃える</translation>
+        <translation>再生ヘッドに先頭を揃えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="442"/>
         <source>Align start to selection end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲の終端に開始位置を揃える</translation>
+        <translation>選択範囲の終端に先頭を揃えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="450"/>
         <source>Align end to playhead</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生ヘッドに終了位置を揃える</translation>
+        <translation>再生ヘッドに末尾を揃えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
         <source>Align end to selection end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲の終端に終了位置を揃える</translation>
+        <translation>選択範囲の終端に末尾を揃えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="466"/>
         <source>Sort by time</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>時間順で並べ替え</translation>
+        <translation>時間で並べ替えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="474"/>
         <source>Sort by name</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>名前順で並べ替え</translation>
+        <translation>名前で並べ替えます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
         <source>Keep tracks synchronized</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラック間の同期を保つ</translation>
+        <translation>トラック間の同期を保ちます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="491"/>
@@ -2721,109 +2721,109 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
         <source>Add track effects</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックエフェクトを追加</translation>
+        <translation>トラックエフェクトを追加します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="509"/>
         <source>Fav effect #1</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>お気に入りエフェクト #1</translation>
+        <translation>お気に入りエフェクト#1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="517"/>
         <source>Fav effect #2</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>お気に入りエフェクト #2</translation>
+        <translation>お気に入りエフェクト#2</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="525"/>
         <source>Fav effect #3</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>お気に入りエフェクト #3</translation>
+        <translation>お気に入りエフェクト#3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="535"/>
         <source>Contrast analyzer</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>コントラスト分析</translation>
+        <translation>コントラストを分析します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="543"/>
         <source>Plot spectrum</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>スペクトルをプロット</translation>
+        <translation>スペクトルをプロットします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="553"/>
         <source>Manage macros</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>マクロ管理</translation>
+        <translation>マクロを管理します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="561"/>
         <source>Apply macros palette</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>マクロパレットを適用</translation>
+        <translation>マクロパレットを適用します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="569"/>
         <source>Macro fade ends</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>両端フェードマクロ</translation>
+        <translation>両端をフェードするマクロです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="577"/>
         <source>Macro MP3 conversion</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>MP3 変換マクロ</translation>
+        <translation>MP3を変換するマクロです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="585"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nyquist プラグインをインストール</translation>
+        <translation>Nyquistプラグインをインストールします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
         <source>Nyquist prompt</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nyquist プロンプト</translation>
+        <translation>Nyquistプロンプトです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
         <source>Sample data export</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>サンプルデータをエクスポート</translation>
+        <translation>サンプルデータを書き出します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="609"/>
         <source>Sample data import</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>サンプルデータをインポート</translation>
+        <translation>サンプルデータを読み込みます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="617"/>
         <source>Raw data import</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Raw データをインポート</translation>
+        <translation>Rawデータを読み込みます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="625"/>
         <source>Reset configuration</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>構成をリセット</translation>
+        <translation>構成をリセットします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="635"/>
         <source>Previous window</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>前のウインドウ</translation>
+        <translation>前のウインドウです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="643"/>
         <source>Next window</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>次のウインドウ</translation>
+        <translation>次のウインドウです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="651"/>
@@ -2835,97 +2835,97 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="659"/>
         <source>Regular interval labels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>等間隔ラベル</translation>
+        <translation>等間隔のラベルです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="669"/>
         <source>Tutorials</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>チュートリアル</translation>
+        <translation>チュートリアルです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="677"/>
         <source>Device info</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>デバイス情報</translation>
+        <translation>〓デバイスの情報です</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="685"/>
         <source>MIDI device info</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>MIDI デバイス情報</translation>
+        <translation>MIDIデバイスの情報です</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="693"/>
         <source>Log</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ログ</translation>
+        <translation>ログです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="701"/>
         <source>Crash report</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クラッシュレポート</translation>
+        <translation>クラッシュをレポートします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="709"/>
         <source>Raise segfault</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>セグメント違反</translation>
+        <translation>セグメント違反です</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="717"/>
         <source>Throw exception</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>例外エラー</translation>
+        <translation>例外エラーです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="725"/>
         <source>Violate assertion</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>アサーション違反</translation>
+        <translation>アサーション違反です</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="733"/>
         <source>Menu tree</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>メニューツリー</translation>
+        <translation>メニューツリーです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="741"/>
         <source>Frame statistics</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>フレーム統計</translation>
+        <translation>フレームの統計です</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="749"/>
         <source>Link account</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>リンクアカウント</translation>
+        <translation>リンクアカウントです</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="757"/>
         <source>Save to cloud…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クラウドに保存…</translation>
+        <translation>クラウドに保存します…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="766"/>
         <source>Share audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオを共有</translation>
+        <translation>オーディオを共有します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
         <source>Update cloud audio preview</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クラウドのオーディオプレビューをアップデート</translation>
+        <translation>クラウドのオーディオプレビューをアップデートします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="783"/>
         <source>Update audio preview</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オーディオプレビューをアップデート</translation>
+        <translation>オーディオプレビューをアップデートします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="792"/>
@@ -2937,68 +2937,68 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="25"/>
         <source>Clip gain</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クリップゲイン</translation>
+        <translation>クリップのゲインです</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="34"/>
         <source>Split tool</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>分割ツール</translation>
+        <translation>分割ツールです</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
         <source>Zoom in</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>拡大</translation>
+        <translation>拡大します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="52"/>
         <source>Zoom out</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>縮小</translation>
+        <translation>縮小します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="61"/>
         <source>Zoom default</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>デフォルト倍率</translation>
+        <translation>デフォルトの倍率にします</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="69"/>
         <source>Zoom to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲に合わせて拡大/縮小</translation>
+        <translation>選択範囲に合わせて拡大/縮小します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
         <source>Zoom to fit project</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>プロジェクトに合わせて拡大/縮小</translation>
+        <translation>プロジェクトに合わせて拡大/縮小します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="87"/>
         <source>Zoom toggle</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>拡大/縮小を切り替え</translation>
+        <translation>拡大/縮小を切り替えます</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="96"/>
         <source>Center view on playhead</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生ヘッドをスクロール表示</translation>
+        <translation>再生ヘッドを中央に表示します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
         <source>Toggle spectral view</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>スペクトル表示を切り替え</translation>
+        <translation>スペクトル表示を切り替えます</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="113"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="122"/>
         <source>Spectral box select</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>スペクトルボックス選択</translation>
+        <translation>スペクトルボックスを選択します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="131"/>
@@ -3022,257 +3022,257 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="158"/>
         <source>Show vertical rulers</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>垂直ルーラを表示</translation>
+        <translation>垂直ルーラを表示します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
         <source>Show master track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>マスタートラックを表示</translation>
+        <translation>マスタートラックを表示します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="176"/>
         <source>Update display while playing</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生中に表示をアップデート</translation>
+        <translation>再生中も表示を更新します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="185"/>
         <source>Pinned playhead</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生ヘッドをピン留め</translation>
+        <translation>再生ヘッドの位置を固定します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="194"/>
         <source>Click ruler to start playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ルーラをクリックして再生開始</translation>
+        <translation>ルーラをクリックして再生を開始します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="204"/>
         <source>Show clip properties</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クリップのプロパティを表示</translation>
+        <translation>クリップのプロパティを表示します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="222"/>
         <source>Follow track color</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックのカラーに従う</translation>
+        <translation>トラックのカラーに従います</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
         <source>Move playhead left</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生ヘッドを左に移動</translation>
+        <translation>再生ヘッドを左に移動します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
         <source>Move playhead right</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生ヘッドを右に移動</translation>
+        <translation>再生ヘッドを右に移動します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="247"/>
         <source>Extend selection left</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲の左側を拡大</translation>
+        <translation>選択範囲の左側を拡大します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="255"/>
         <source>Extend selection right</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲の右側を拡大</translation>
+        <translation>選択範囲の右側を拡大します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="263"/>
         <source>Contract selection from left</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲の左側を縮小</translation>
+        <translation>選択範囲の左側を縮小します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="271"/>
         <source>Contract selection from right</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲の右側を縮小</translation>
+        <translation>選択範囲の右側を縮小します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="279"/>
         <source>Move playhead to selection start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生ヘッドを選択範囲の開始位置に移動</translation>
+        <translation>再生ヘッドを選択範囲の先頭に移動します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="287"/>
         <source>Move playhead to selection end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>再生へッドを選択範囲の終了位置に移動</translation>
+        <translation>再生へッドを選択範囲の末尾に移動します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="295"/>
         <source>Pitch and speed</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ピッチと速度</translation>
+        <translation>ピッチと速度です</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="303"/>
         <source>Show RMS in waveform</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>波形に RMS を表示</translation>
+        <translation>波形にRMSを表示します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="312"/>
         <source>Show clipping in waveform</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>波形にクリッピングを表示</translation>
+        <translation>波形にクリッピングを表示します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="321"/>
         <source>Half-wave</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>半波</translation>
+        <translation>半波です</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="331"/>
         <source>Show label editor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ラベルエディタを表示</translation>
+        <translation>ラベルエディタを表示します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="339"/>
         <source>Move realtime effect up</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>リアルタイムエフェクトを上に移動</translation>
+        <translation>リアルタイムエフェクトを上に移動します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="347"/>
         <source>Move realtime effect down</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>リアルタイムエフェクトを下に移動</translation>
+        <translation>リアルタイムエフェクトを下に移動します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="371"/>
         <source>Change clip color</source>
-        <translation>クリップのカラーを変更</translation>
+        <translation>クリップのカラーを変更します</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="383"/>
         <source>Change track color</source>
-        <translation>トラックのカラーを変更</translation>
+        <translation>トラックのカラーを変更します</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
         <source>Record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>録音</translation>
+        <translation>録音します</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
         <source>Stop record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>録音を停止</translation>
+        <translation>録音を停止します</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="59"/>
         <source>Set record level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>録音レベルを設定</translation>
+        <translation>録音レベルを設定します</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="68"/>
         <source>Show mic metering</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>マイク目盛りを表示</translation>
+        <translation>マイクレベルメーターを表示</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="77"/>
         <source>Turn on input monitoring</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>入力モニタリングをオンにする</translation>
+        <translation>入力モニタリングをオンにします</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="86"/>
         <source>Start lead-in recording</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>リードイン録音を開始</translation>
+        <translation>リードイン録音を開始します</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="95"/>
         <source>Record on current track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>現在のトラックに録音</translation>
+        <translation>現在のトラックに録音します</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="103"/>
         <source>Record on new track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>新規トラックに録音</translation>
+        <translation>新規トラックに録音します</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="21"/>
         <source>Spectrogram settings…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>スペクトログラム設定…</translation>
+        <translation>スペクトログラムを設定します…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="27"/>
         <source>Rename item (clip/label)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目の名称を変更 (クリップ/ラベル)</translation>
+        <translation>項目を名称変更します（クリップ/ラベル）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="89"/>
         <source>Clear selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲を消去</translation>
+        <translation>選択を解除します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="97"/>
         <source>Cut and leave gap</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>切り取ってギャップを残す</translation>
+        <translation>カットしてギャップを残します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="106"/>
         <source>Cut and close gap (per clip)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>切り取ってギャップを閉じる (クリップ単位)</translation>
+        <translation>カットしてギャップを閉じます（クリップごと）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
         <source>Cut and close gap (per track)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>切り取ってギャップを閉じる (トラック単位)</translation>
+        <translation>カットしてギャップを閉じます（トラックごと）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="124"/>
         <source>Cut and close gap (all tracks)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>切り取ってギャップを閉じる (すべてのトラック)</translation>
+        <translation>カットしてギャップを閉じます（すべてのトラック）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="133"/>
         <source>Delete and leave gap</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除してギャップを残す</translation>
+        <translation>削除してギャップを残します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="142"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除してギャップを閉じる (クリップ単位)</translation>
+        <translation>削除してギャップを閉じます（クリップごと）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="151"/>
         <source>Delete and close gap (per track)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除してギャップを閉じる (トラック単位)</translation>
+        <translation>削除してギャップを閉じます（トラックごと）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
         <source>Delete and close gap (all tracks)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>削除してギャップを閉じる (すべてのトラック)</translation>
+        <translation>削除してギャップを閉じます（すべてのトラック）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
@@ -3284,55 +3284,55 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
         <source>Join selected clips</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択したクリップを結合</translation>
+        <translation>選択したクリップを結合します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="186"/>
         <source>Split clips at silences</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>無音部分でクリップを分割</translation>
+        <translation>無音部分でクリップを分割します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
         <source>Rename track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを名称変更</translation>
+        <translation>トラックを名称変更します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="211"/>
         <source>Duplicate track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを複製</translation>
+        <translation>トラックを複製します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="219"/>
         <source>Delete track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを削除</translation>
+        <translation>トラックを削除します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
         <source>Move track up</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを上に移動</translation>
+        <translation>トラックを上に移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="235"/>
         <source>Move track down</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを下に移動</translation>
+        <translation>トラックを下に移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="243"/>
         <source>Move track to top</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを上端に移動</translation>
+        <translation>トラックを上端に移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="251"/>
         <source>Move track to bottom</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを下端に移動</translation>
+        <translation>トラックを下端に移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="259"/>
@@ -3344,31 +3344,31 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="268"/>
         <source>Make stereo track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ステレオトラックを作成</translation>
+        <translation>ステレオトラックを作成します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="276"/>
         <source>Swap stereo channels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>左右チャンネルを入れ替え</translation>
+        <translation>ステレオの左右チャンネルを入れ替えます</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
         <source>Split stereo to L/R mono</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ステレオを左/右モノラルに分割</translation>
+        <translation>ステレオを左/右モノラルに分割します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="292"/>
         <source>Split stereo to center mono</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ステレオを中央モノラルに分割</translation>
+        <translation>ステレオを中央モノラルに分割します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="300"/>
         <source>Resample track…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックを再サンプリング…</translation>
+        <translation>トラックを再サンプルします…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
@@ -3386,251 +3386,251 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
         <source>Multi-view</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>マルチビュー</translation>
+        <translation>マルチビューです</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="347"/>
         <source>Paste (pushes clips on selected track)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>貼り付け (選択トラックにクリップを押し出す)</translation>
+        <translation>ペーストします（選択トラックのクリップを押し出します）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="356"/>
         <source>Paste (overlaps other clips)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>貼り付け (ほかのクリップをオーバーラップ)</translation>
+        <translation>ペーストします（ほかのクリップにオーバーラップ）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="365"/>
         <source>Paste (preserves synchronization on all tracks)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>貼り付け (すべてのトラックの同期を維持)</translation>
+        <translation>ペーストします（すべてのトラックの同期を維持します）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="374"/>
         <source>Merge selected clips</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択クリップを結合</translation>
+        <translation>選択したクリップを結合します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="382"/>
         <source>Duplicate selected</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>選択範囲を複製</translation>
+        <translation>選択範囲を複製します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="390"/>
         <source>Duplicate clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クリップを複製</translation>
+        <translation>クリップを複製します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="398"/>
         <source>Export clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クリップをエクスポート</translation>
+        <translation>クリップを書き出します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="406"/>
         <source>Stretch with tempo changes</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>テンポを変更してストレッチ</translation>
+        <translation>テンポを変更してストレッチします</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="415"/>
         <source>Open pitch and speed dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ピッチと速度ダイアログを開く</translation>
+        <translation>ピッチと速度ダイアログを開きます</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="423"/>
         <source>Render pitch and speed</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ピッチと速度をレンダリング</translation>
+        <translation>ピッチと速度をレンダリングします</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="431"/>
         <source>Reset pitch and speed</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ピッチと速度をリセット</translation>
+        <translation>ピッチと速度をリセットします</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="439"/>
         <source>New mono track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>新規モノラルトラック</translation>
+        <translation>新規モノラルトラックです</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
         <source>New stereo track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>新規ステレオトラック</translation>
+        <translation>新規ステレオトラックです</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="455"/>
         <source>New label track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>新規ラベルトラック</translation>
+        <translation>新規ラベルトラックです</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="463"/>
         <source>Add label</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>ラベルを追加</translation>
+        <translation>ラベルを追加します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="471"/>
         <source>Trim</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トリミング</translation>
+        <translation>トリミングします</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
         <source>Silence</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>無音</translation>
+        <translation>無音部分</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="489"/>
         <source>Group clips</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クリップをグループ化</translation>
+        <translation>クリップをグループ化します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="497"/>
         <source>Ungroup clips</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>クリップをグループ解除</translation>
+        <translation>クリップをグループ解除します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="505"/>
         <source>Move item left</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目を左に移動</translation>
+        <translation>項目を左に移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="513"/>
         <source>Move item right</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目を右に移動</translation>
+        <translation>項目を右に移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="521"/>
         <source>Extend item left</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目の左側を拡大</translation>
+        <translation>項目の左側を拡大します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="529"/>
         <source>Extend item right</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目の右側を拡大</translation>
+        <translation>項目の右側を拡大します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="537"/>
         <source>Reduce item left</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目の左側を縮小</translation>
+        <translation>項目の左側を縮小します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="545"/>
         <source>Reduce item right</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目の右側を縮小</translation>
+        <translation>項目の右側を縮小します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="553"/>
         <source>Move item up</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目を上に移動</translation>
+        <translation>項目を上に移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="561"/>
         <source>Move item down</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目を下に移動</translation>
+        <translation>項目を下に移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="571"/>
         <source>Next panel</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>次のパネル</translation>
+        <translation>次のパネルです</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="579"/>
         <source>Previous panel</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>前のパネル</translation>
+        <translation>前のパネルです</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="588"/>
         <source>Above item</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目の上</translation>
+        <translation>上の項目です</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="596"/>
         <source>Below item</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目の下</translation>
+        <translation>下の項目です</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="605"/>
         <source>First track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>最初のトラック</translation>
+        <translation>最初のトラックえす</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="613"/>
         <source>Last track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>最後のトラック</translation>
+        <translation>最後のトラックです</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="622"/>
         <source>Select track/track item</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラック/トラック項目を選択</translation>
+        <translation>トラック/トラック項目を選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="630"/>
         <source>Add track or track item to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックまたはトラック項目を選択範囲に追加</translation>
+        <translation>トラックまたはトラック項目を選択範囲に追加します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="638"/>
         <source>Track range selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>トラックレンジを選択</translation>
+        <translation>トラックのレンジを選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="646"/>
         <source>Multi track selection previous</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>前のトラックを複数選択</translation>
+        <translation>複数トラックを前へ選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="654"/>
         <source>Multi track selection next</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>次のトラックを複数選択</translation>
+        <translation>複数トラックを次へ選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="663"/>
         <source>Open item’s context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>項目のコンテクストメニューを開く</translation>
+        <translation>項目のコンテクストメニューを開きます</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="683"/>
         <source>Change track format</source>
-        <translation>トラックフォーマットを変更</translation>
+        <translation>トラックフォーマットを変更します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="696"/>
         <source>Change track sample rate</source>
-        <translation>トラックのサンプルレートを変更</translation>
+        <translation>トラックのサンプルレートを変更します</translation>
     </message>
 </context>
 <context>
@@ -3670,7 +3670,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
         <source>Category:</source>
-        <translation>カテゴリ :</translation>
+        <translation>カテゴリ:</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="138"/>
@@ -3796,7 +3796,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="51"/>
         <source>Loading project…‎</source>
-        <translation>プロジェクトを読み込み中…</translation>
+        <translation>プロジェクトを読み込み中…‎</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
@@ -3867,7 +3867,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectStatusBar.qml" line="43"/>
         <source>Selection status</source>
-        <translation>選択範囲の状態</translation>
+        <translation>選択範囲の状況</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
@@ -4259,7 +4259,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="329"/>
         <source>Audacity Team Members</source>
-        <translation>Audacity チームメンバー</translation>
+        <translation>Audacityチームメンバー</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
@@ -4269,7 +4269,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
         <source>Distinguished Audacity Team members, not currently active</source>
-        <translation>功績ある Audacity チームメンバー (活動休止中)</translation>
+        <translation>功績あるAudacityチームメンバー（活動休止中）</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
@@ -4279,7 +4279,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="334"/>
         <source>Website and Graphics</source>
-        <translation>Web サイトとグラフィック</translation>
+        <translation>Webサイトとグラフィック</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
@@ -4304,7 +4304,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="347"/>
         <source>Audacity includes code from the following projects:</source>
-        <translation>Audacity には以下のプロジェクトのコードが含まれています :</translation>
+        <translation>Audacityには以下のプロジェクトのコードが含まれています:</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
@@ -4329,7 +4329,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
         <source>Audacity the free, open source, cross-platform software for recording and editing sounds.</source>
-        <translation>Audacity は音声の録音と編集を行うための、無料でオープンソース、クロスプラットフォームのソフトウェアです。</translation>
+        <translation>Audacityはサウンド録音・編集用の、オープンソース、クロスプラットフォームの無料ソフトウェアです。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
@@ -4344,7 +4344,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
-        <translation>&lt;b&gt;Audacity®&lt;/b&gt;ソフトウェア著作権所有 © 1999-%1 Audacity チーム。</translation>
+        <translation>&lt;b&gt;Audacity®&lt;/b&gt;ソフトウェア著作権所有 © 1999-%1 Audacityチーム。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
@@ -4413,7 +4413,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
         <source>Preferences → General</source>
-        <translation>設定 → 全般</translation>
+        <translation>設定 → 一般</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
@@ -4428,7 +4428,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
         <source>Audacity automatically sends crash reports to help us improve product quality.</source>
-        <translation>Audacity は、製品の品質向上に役立てるため、クラッシュレポートを自動的に送信します。</translation>
+        <translation>Audacityは、製品の品質向上に役立てるため、クラッシュレポートを自動的に送信します。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="44"/>
@@ -4971,7 +4971,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="51"/>
         <source>Auto save every</source>
-        <translation>自動保存する間隔 :</translation>
+        <translation>自動保存する間隔:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="78"/>
@@ -4986,17 +4986,17 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="39"/>
         <source>Overture import character set:</source>
-        <translation>Overture インポート時の文字セット :</translation>
+        <translation>Overtureを読み込むときの文字セット:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="64"/>
         <source>Color:</source>
-        <translation>カラー :</translation>
+        <translation>カラー:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="97"/>
         <source>Wallpaper:</source>
-        <translation>壁紙 :</translation>
+        <translation>壁紙:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/DefaultFilesSection.qml" line="33"/>
@@ -5068,7 +5068,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="41"/>
         <source>Shortest note:</source>
-        <translation>最も短い音符 :</translation>
+        <translation>最も短い音符:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MiscellaneousSection.qml" line="32"/>
@@ -5078,7 +5078,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MiscellaneousSection.qml" line="41"/>
         <source>Proximity for selecting elements:</source>
-        <translation>要素を選択するための近接条件 :</translation>
+        <translation>要素を選択するための近接条件:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="34"/>
@@ -5118,7 +5118,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="61"/>
         <source>Default duration:</source>
-        <translation>デフォルトの長さ :</translation>
+        <translation>デフォルトの継続時間:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="84"/>
@@ -5153,7 +5153,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="93"/>
         <source>Delay between notes in automatic real time mode:</source>
-        <translation>自動リアルタイムモードでの音符間のディレイ :</translation>
+        <translation>自動リアルタイムモードでの音符間のディレイ:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PreferencesButtonsPanel.qml" line="50"/>
@@ -5178,7 +5178,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="52"/>
         <source>Port number:</source>
-        <translation>ポート番号 :</translation>
+        <translation>ポート番号:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="33"/>
@@ -5218,7 +5218,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="50"/>
         <source>Default zoom:</source>
-        <translation>デフォルトの拡大/縮小率 :</translation>
+        <translation>デフォルトの拡大/縮小率:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
@@ -5248,7 +5248,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
         <source>Zoom toggle (magnifying glass)</source>
-        <translation>倍率を切り替える (拡大鏡)</translation>
+        <translation>倍率を切り替える（拡大鏡）</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
@@ -5258,12 +5258,12 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="34"/>
         <source>Zoom state 1:</source>
-        <translation>倍率 1 :</translation>
+        <translation>倍率1:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="55"/>
         <source>Zoom state 2:</source>
-        <translation>倍率 2 :</translation>
+        <translation>倍率2:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="246"/>
@@ -5471,7 +5471,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation>拍子 : %1/%2</translation>
+        <translation>拍子記号: %1/%2</translation>
     </message>
 </context>
 <context>
@@ -5582,7 +5582,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="872"/>
         <source>Device ID: %1
 </source>
-        <translation>デバイス ID : %1
+        <translation>デバイスID: %1
 </translation>
     </message>
     <message>
@@ -5617,28 +5617,28 @@ SakiPapa 2022-2026</translation>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="877"/>
         <source>Low Recording Latency: %1
 </source>
-        <translation>最小録音レイテンシ : %1
+        <translation>最小録音レイテンシ: %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="878"/>
         <source>Low Playback Latency: %1
 </source>
-        <translation>最小再生レイテンシ : %1
+        <translation>最小再生レイテンシ: %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="879"/>
         <source>High Recording Latency: %1
 </source>
-        <translation>最大録音レイテンシ : %1
+        <translation>最大録音レイテンシ: %1
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="880"/>
         <source>High Playback Latency: %1
 </source>
-        <translation>最大再生レイテンシ : %1
+        <translation>最大再生レイテンシ: %1
 </translation>
     </message>
     <message>
@@ -5797,7 +5797,7 @@ SakiPapa 2022-2026</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="775"/>
         <source>Audacity Audio</source>
-        <translation>Audacity オーディオ</translation>
+        <translation>Audacityオーディオ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
@@ -5952,12 +5952,12 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
         <source>The plugin “%1” does not support the required block size</source>
-        <translation>プラグイン“%1”は指定されたブロックサイズに対応していません</translation>
+        <translation>プラグイン”%1”は指定されたブロックサイズに対応していません</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
         <source>The plugin “%1” has crashed while processing audio</source>
-        <translation>プラグイン“%1”がオーディオ処理中にクラッシュしました</translation>
+        <translation>プラグイン”%1”がオーディオ処理中にクラッシュしました</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
@@ -6142,12 +6142,12 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="60"/>
         <source>Hard clip -12dB, 80% make-up gain</source>
-        <translation>ハードクリップ -12dB、80% メイクアップゲイン</translation>
+        <translation>ハードクリップ -12dB、80%メイクアップゲイン</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="62"/>
         <source>Soft clip -12dB, 80% make-up gain</source>
-        <translation>ソフトクリップ -12dB、80% メイクアップゲイン</translation>
+        <translation>ソフトクリップ -12dB、80%メイクアップゲイン</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="63"/>
@@ -6479,13 +6479,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="43"/>
         <source>Chebyshev Type I</source>
         <extracomment>Chebyshev is the name of the person after whom the filter type is named.</extracomment>
-        <translation>チェビシェフ (タイプ1)</translation>
+        <translation>チェビシェフ（タイプ1）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="46"/>
         <source>Chebyshev Type II</source>
         <extracomment>Chebyshev is the name of the person after whom the filter type is named.</extracomment>
-        <translation>チェビシェフ (タイプ2)</translation>
+        <translation>チェビシェフ（タイプ2）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="51"/>
@@ -6601,12 +6601,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="28"/>
         <source>Paste and make room on this track</source>
-        <translation>貼り付けてこのトラックに空き領域を確保</translation>
+        <translation>ペースト（このトラックに空きを確保）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="30"/>
         <source>Paste and make room on all tracks</source>
-        <translation>貼り付けてすべてのトラックに空き領域を確保</translation>
+        <translation>ペースト（すべてのトラックに空きを確保）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="35"/>
@@ -6624,12 +6624,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
         <source>Cut and close gap on this track</source>
-        <translation>このトラックのギャップを切り取って閉じる</translation>
+        <translation>カット（ギャップを閉じる:このトラック）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="61"/>
         <source>Cut and close gap on all tracks</source>
-        <translation>すべてのトラックのギャップを切り取って閉じる</translation>
+        <translation>カット（ギャップを閉じる:すべてのトラック）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="66"/>
@@ -6639,12 +6639,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
         <source>Delete and close gap on this track</source>
-        <translation>このトラックで削除してギャップを閉じる</translation>
+        <translation>削除（ギャップを閉じる:このトラック）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="70"/>
         <source>Delete and close gap on all tracks</source>
-        <translation>すべてのトラックで削除してギャップを閉じる</translation>
+        <translation>削除（ギャップを閉じる:すべてのトラック）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
@@ -6912,7 +6912,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
-        <translation>オーディオプレビューは、このプロジェクトの保存された最新バージョンと一致しています。</translation>
+        <translation>オーディオプレビューは、このプロジェクトで保存した最新バージョンと一致しています。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
@@ -7068,7 +7068,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
-        <translation>プロファイルを表示…</translation>
+        <translation>プロファイラを表示…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
@@ -7078,12 +7078,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
-        <translation>グラフィックの情報を表示…</translation>
+        <translation>グラフィックス情報を表示…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation>グラフィックの情報を表示</translation>
+        <translation>グラフィックス情報を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
@@ -7109,25 +7109,25 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
         <source>Dump accessibility tree to console</source>
-        <translation>アクセシビリティツリーをコンソールにダンプ</translation>
+        <translation>アクセシビリティツリーをコンソールに出力</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation>スコア (楽譜)要素を表示</translation>
+        <translation>スコア（楽譜）要素を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation>スコア (楽譜)編集の履歴を表示</translation>
+        <translation>スコア（楽譜）編集の履歴を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation>スコア (楽譜)スタイルのオプションリストを表示</translation>
+        <translation>スコア（楽譜）スタイルのオプションリストを表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
@@ -7139,7 +7139,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show rcommands list</source>
-        <translation>rcommand リストを表示</translation>
+        <translation>rcommandリストを表示</translation>
     </message>
     <message>
         <source>Test query action</source>
@@ -7648,49 +7648,49 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
-        <translation>%1 を %2 に追加しました</translation>
+        <translation>%1を%2に追加しました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
-        <translation>%1 を追加</translation>
+        <translation>%1を追加</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
-        <translation>%1 を %2 から削除しました</translation>
+        <translation>%1を%2から削除しました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
-        <translation>%1 を削除</translation>
+        <translation>%1を削除</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
-        <translation>%1 を %2 で置き換えました</translation>
+        <translation>%1を%2で置き換えました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
-        <translation>%1 を置き換える</translation>
+        <translation>%1を置き換える</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
-        <translation>%2 内の %1 を上に移動しました</translation>
+        <translation>%2内の%1を上に移動しました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
-        <translation>%2 内の %1 を下に移動しました</translation>
+        <translation>%2内の%1を下に移動しました</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
@@ -7836,7 +7836,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="58"/>
         <source>Show:</source>
-        <translation>表示 :</translation>
+        <translation>表示:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="64"/>
@@ -7846,7 +7846,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="70"/>
         <source>Category:</source>
-        <translation>カテゴリ :</translation>
+        <translation>カテゴリ:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="76"/>
@@ -8151,7 +8151,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
         <source>Selection must be larger than 4096 samples.</source>
-        <translation>選択範囲は 4096 サンプル以上である必要があります。</translation>
+        <translation>選択範囲は4096サンプル以上である必要があります。</translation>
     </message>
 </context>
 <context>
@@ -8226,7 +8226,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/filtercurveeq.cpp" line="9"/>
         <source>Filter Curve EQ</source>
-        <translation>EQ フィルタ曲線</translation>
+        <translation>EQフィルタ曲線</translation>
     </message>
 </context>
 <context>
@@ -8472,7 +8472,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="111"/>
         <source>Ill-formed Nyquist plug-in header</source>
-        <translation>不正な Nyquist プラグインヘッダ</translation>
+        <translation>不正なNyquistプラグインヘッダ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="138"/>
@@ -8598,12 +8598,11 @@ For SAL, use a return statement such as:
 or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation>コードは SAL 構文と思われますが、’return’ステートメントがありません。
-SAL の場合には、次のような return ステートメントを使用してください :
+        <translation>コードはSAL構文と思われますが、’return’ステートメントがありません。
+SALの場合には、次のようなreturnステートメントを使用してください:
 	return *track* * 0.1
-LISP の場合には、次のように開き括弧から始めてください :
-	(mult *track* 0.1)
- .</translation>
+LISPの場合には、次のように開き括弧から始めてください:
+	(mult *track* 0.1)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
@@ -8716,15 +8715,15 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="27"/>
         <source>~aCenter frequency must be above 0 Hz.</source>
-        <translation>~a 中央周波数は 0 Hz より大きい必要があります。</translation>
+        <translation>~a中央周波数は0 Hzより大きい必要があります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="28"/>
         <source>~aFrequency selection is too high for track sample rate.~%~
                         For the current track, the high frequency setting cannot~%~
                         be greater than ~a Hz</source>
-        <translation>~a トラックのサンプルレートより高い周波数が選択されています。~%~
-                        現在のトラックでは、高域周波数の設定が ~%~
+        <translation>~aトラックのサンプルレートより高い周波数が選択されています。~%~
+                        現在のトラックでは、高域周波数の設定が~%~
                         ~a Hzを超えてはいけません</translation>
     </message>
     <message>
@@ -8744,7 +8743,7 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="31"/>
         <source>GNU General Public License v2.0 or later</source>
-        <translation>GNU General Public License v2.0 以降</translation>
+        <translation>GNU General Public License v2.0 or later</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
@@ -8899,7 +8898,7 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="62"/>
         <source>~aPercentage values cannot be more than 1000 %.</source>
-        <translation>~a パーセント値に 1000% を超える数値を指定できません。</translation>
+        <translation>~aパーセント値に1000%を超える数値を指定できません。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="63"/>
@@ -8907,8 +8906,8 @@ LISP の場合には、次のように開き括弧から始めてください :
                                       Hint: 6 dB doubles the amplitude~%~
                                       -6 dB halves the amplitude.</source>
         <translation>~adB値に+100 dBを超える数値は指定できません。~%~%~
-                                      ヒント : 6 dB で振幅が倍に、~%~
-                                      -6 dB で振幅が半分になります。</translation>
+                                      ヒント: 6 dBで振幅が倍に、~%~
+                                      -6 dBで振幅が半分になります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
@@ -8943,17 +8942,17 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation>クリップをクロスフェード</translation>
+        <translation>クロスフェード（クリップ）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
         <source>Error.~%Invalid selection.~%More than 2 audio clips selected.</source>
-        <translation>エラー。~% 選択が正しくありません。~% 2つ以上のオーディオクリップが選択されています。</translation>
+        <translation>エラー。~%選択が正しくありません。~%2つ以上のオーディオクリップが選択されています。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="73"/>
         <source>Error.~%Invalid selection.~%Empty space at start/ end of the selection.</source>
-        <translation>エラー。~% 選択が正しくありません。~% 開始点/終了点の選択範囲が空白です。</translation>
+        <translation>エラー。~%選択が正しくありません。~%開始点/終了点の選択範囲に空白があります。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="74"/>
@@ -8963,7 +8962,7 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation>トラックをクロスフェード</translation>
+        <translation>クロスフェード（トラック）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -9038,17 +9037,17 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="90"/>
         <source>Bouncing Ball</source>
-        <translation>バウンシングボール (加速)</translation>
+        <translation>バウンシングボール（加速）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="91"/>
         <source>Reverse Bouncing Ball</source>
-        <translation>逆バウンシングボール (減速)</translation>
+        <translation>逆バウンシングボール（減速）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="92"/>
         <source>Delay level per echo (dB)</source>
-        <translation>繰り返しごとの減衰量 (dB)</translation>
+        <translation>繰り返しごとの減衰量（dB）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="93"/>
@@ -9238,12 +9237,12 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="130"/>
         <source>~a~a ~a at intervals of ~a seconds.~%</source>
-        <translation>~a~a ~a を ~a 秒間隔で生成。~%</translation>
+        <translation>~a~a ~a を ~a秒間隔で生成。~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="131"/>
         <source>~aRegion length = ~a seconds.</source>
-        <translation>~a 領域の長さ = ~a 秒。</translation>
+        <translation>~a領域の長さ = ~a秒。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
@@ -9258,7 +9257,7 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="134"/>
         <source>Roll-off (dB per octave)</source>
-        <translation>ロールオフ (減衰量 : dB/オクターブ)</translation>
+        <translation>ロールオフ（減衰量: dB/オクターブ）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="135"/>
@@ -9327,17 +9326,17 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="147"/>
         <source>RMS level</source>
-        <translation>RMS レベル</translation>
+        <translation>RMSレベル</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="148"/>
         <source>Minimum silence duration</source>
-        <translation>無音部分の最短長さ</translation>
+        <translation>無音部分の最小継続時間</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="149"/>
         <source>Minimum label interval</source>
-        <translation>最短ラベル間隔</translation>
+        <translation>ラベルの最小間隔</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="150"/>
@@ -9347,22 +9346,22 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="151"/>
         <source>Point before sound</source>
-        <translation>サウンド開始部分に</translation>
+        <translation>サウンド開始部分</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="152"/>
         <source>Point after sound</source>
-        <translation>サウンド終了部分に</translation>
+        <translation>サウンド終了部分</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="153"/>
         <source>Region around sounds</source>
-        <translation>サウンド継続部分に</translation>
+        <translation>サウンド継続領域</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="154"/>
         <source>Region between sounds</source>
-        <translation>サウンド間に</translation>
+        <translation>サウンド間の領域</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="155"/>
@@ -9382,7 +9381,7 @@ LISP の場合には、次のように開き括弧から始めてください :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="158"/>
         <source>~ah ~am ~as</source>
-        <translation>~a 時間 ~a 分 ~a 秒</translation>
+        <translation>~a時間 ~a分 ~a秒</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="159"/>
@@ -9394,7 +9393,7 @@ LISP の場合には、次のように開き括弧から始めてください :
         <source>No sounds found.~%~
                  Try lowering ‘Threshold level (dB)’.</source>
         <translation>サウンドが検出されません。~%~
-                 しきい値 (dB)’を小さくしてください。</translation>
+                 しきい値（dB）’を小さくしてください。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="161"/>
@@ -9439,7 +9438,7 @@ LISP の場合には、次のように開き括弧から始めてください :
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="168"/>
         <source>Input Gain (dB)
 mono/Left</source>
-        <translation>入力ゲイン (dB)
+        <translation>入力ゲイン（dB）
 モノラル/左</translation>
     </message>
     <message>
@@ -9547,7 +9546,7 @@ Right channel</source>
                             Make the selection longer than ~a ms.</source>
         <translation>エラー。~%~
                             選択範囲が短かすぎます。~%~
-                            ~a ミリ秒より長く選択してください。</translation>
+                            ~aミリ秒より長く選択してください。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="188"/>
@@ -9668,7 +9667,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
         <source>Plug-ins installed.~%(Use the Plug-in Manager to enable effects):</source>
-        <translation>プラグインをインストールしました。~% (”プラグインマネージャ”から有効にしてください):</translation>
+        <translation>プラグインをインストールしました。~%（”プラグインマネージャ”から有効にしてください）:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
@@ -9678,7 +9677,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
         <source>Files copied to plug-ins folder:</source>
-        <translation>プラグインフォルダーにコピーされたファイル :</translation>
+        <translation>プラグインフォルダにコピーされたファイル:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
@@ -9698,7 +9697,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
         <source>Cannot be written to plug-ins folder:</source>
-        <translation>プラグインフォルダーに書き込めなかったファイル :</translation>
+        <translation>プラグインフォルダに書き込めなかったファイル:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
@@ -9733,7 +9732,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Duration (60s max)</source>
-        <translation>長さ (最大60秒)</translation>
+        <translation>継続時間（最大60秒）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
@@ -9753,7 +9752,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="227"/>
         <source>30 - 300 beats/minute</source>
-        <translation>30～300 ビート/分</translation>
+        <translation>30～300ビート/分</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="228"/>
@@ -9788,7 +9787,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="234"/>
         <source>1 - 1000 bars</source>
-        <translation>1～1000 小節</translation>
+        <translation>1～1000小節</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="235"/>
@@ -9915,7 +9914,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
         <source>Measure RMS</source>
-        <translation>RMS を測定</translation>
+        <translation>RMSを測定</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
@@ -10085,23 +10084,23 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="293"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a</source>
-        <translation>~a   ~a~%~a サンプルレート : ~a Hz。~% 処理長さ : ~a サンプル、~a 秒。~a</translation>
+        <translation>~a   ~a~%~aサンプルレート: ~a Hz。~%処理長さ: ~aサンプル、~a秒。~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="294"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
                      Length processed: ~a samples ~a seconds.~a</source>
-        <translation>~a   ~a~%~a サンプルレート : ~a Hz。サンプル値スケール : ~a。~%~
-                     処理長さ : ~a サンプル、~a 秒。~a</translation>
+        <translation>~a   ~a~%~aサンプルレート: ~a Hz。サンプル値スケール: ~a。~%~
+                     処理長さ: ~aサンプル、~a秒。~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="295"/>
         <source>~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
                   samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~
                   DC offset: ~a~a</source>
-        <translation>~a~% サンプルレート : ~a Hz。サンプル値スケール : ~a。~a。~%~
-~a 処理長さ : ~a サンプル、~a 秒。~% ピーク振幅 : ~a (リニア)、~a dB。重みなし RMS : ~a dB。~%~
-DC オフセット : ~a~a</translation>
+        <translation>~a~%サンプルレート: ~a Hz。サンプル値スケール: ~a。~a。~%~
+~a処理長さ: ~aサンプル、~a秒。~%ピーク振幅: ~a（リニア）、~a dB。重みなしRMS: ~a dB。~%~
+DCオフセット: ~a~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="296"/>
@@ -10121,12 +10120,12 @@ DC オフセット : ~a~a</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="299"/>
         <source>~a samples.</source>
-        <translation>~a サンプル。</translation>
+        <translation>~aサンプル。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
         <source>~a seconds.</source>
-        <translation>~a 秒。</translation>
+        <translation>~a秒。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="301"/>
@@ -10141,27 +10140,27 @@ DC オフセット : ~a~a</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="303"/>
         <source>&lt;b&gt;Peak Amplitude:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a (linear) &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>&lt;b&gt;ピーク振幅 :&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a (リニア)&amp;nbsp;&amp;nbsp;~a dB.</translation>
+        <translation>&lt;b&gt;ピーク振幅:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a（リニア）&amp;nbsp;&amp;nbsp;~a dB.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="304"/>
         <source>&lt;b&gt;RMS&lt;/b&gt; (unweighted): &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>&lt;b&gt;RMS&lt;/b&gt; (重みなし): &amp;nbsp;&amp;nbsp;~a dB。</translation>
+        <translation>&lt;b&gt;RMS&lt;/b&gt;（重みなし）: &amp;nbsp;&amp;nbsp;~a dB。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="305"/>
         <source>&lt;b&gt;DC Offset:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</source>
-        <translation>&lt;b&gt;DC オフセット :&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</translation>
+        <translation>&lt;b&gt;DCオフセット:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="306"/>
         <source>~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>~a (リニア)、&amp;nbsp;&amp;nbsp;~a dB。</translation>
+        <translation>~a（リニア）、&amp;nbsp;&amp;nbsp;~a dB。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="307"/>
         <source>Left: ~a lin, ~a dB | Right: ~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>左: ~a (リニア), ~a dB | 右: ~a (リニア), &amp;nbsp;&amp;nbsp;~a dB。</translation>
+        <translation>左: ~a（リニア）, ~a dB | 右: ~a（リニア）, &amp;nbsp;&amp;nbsp;~a dB。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="308"/>
@@ -10493,8 +10492,8 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
         <translation>‘時間分解能’が選択範囲に対して長すぎます。
 
-オーディオ選択を少なくとも %1 秒以上に延ばすか、
-‘時間分解能’を %2 秒未満に減らしてください。</translation>
+オーディオ選択を少なくとも%1秒以上に延ばすか、
+‘時間分解能’を%2秒未満に減らしてください。</translation>
     </message>
 </context>
 <context>
@@ -10551,7 +10550,7 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <source>The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).
 
 Zoom in and select a tiny fraction of a second to repair.</source>
-        <translation>修復エフェクトは、損傷したオーディオデータの非常に短い範囲 (128 サンプルまで)に対して使います。
+        <translation>修復エフェクトは、損傷したオーディオデータの非常に短い範囲（128 サンプルまで）に対して使います。
 
 拡大して、修復する短い範囲を選択してください。</translation>
     </message>
@@ -10795,7 +10794,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="34"/>
         <source>Estimated start pitch: %1%2 (%3 Hz)</source>
         <extracomment>%1 = pitch name (e.g. C), %2 = octave number, %3 = frequency in Hz</extracomment>
-        <translation>予想される開始ピッチ : %1%2 (%3 Hz)</translation>
+        <translation>予想される開始ピッチ: %1%2（%3 Hz）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="43"/>
@@ -10914,7 +10913,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
         <source>Show:</source>
-        <translation>表示 :</translation>
+        <translation>表示:</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
@@ -10996,7 +10995,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="13"/>
         <source>Filter Curve EQ</source>
-        <translation>EQ フィルタ曲線</translation>
+        <translation>EQフィルタ曲線</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
@@ -11118,7 +11117,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
         <source>X11 UI refusing to be externalized</source>
-        <translation>X11 UI の外部出力が拒否されました</translation>
+        <translation>X11 UIの外部出力が拒否されました</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
@@ -11199,7 +11198,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="155"/>
         <source>Noise reduction</source>
-        <translation>ノイズ除去</translation>
+        <translation>ノイズを除去</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="173"/>
@@ -11260,7 +11259,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="63"/>
         <source>Normalize peak amplitude to</source>
-        <translation>最大振幅を次までノーマライズ :</translation>
+        <translation>最大振幅を次までノーマライズ:</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="99"/>
@@ -11470,7 +11469,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="180"/>
         <source>Truncate to</source>
-        <translation>次まで切り詰める :</translation>
+        <translation>次まで切り詰める:</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="185"/>
@@ -11480,7 +11479,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="230"/>
         <source>Compress to</source>
-        <translation>次まで圧縮 :</translation>
+        <translation>次まで圧縮:</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="235"/>
@@ -11734,7 +11733,7 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
         <source>Format:</source>
-        <translation>フォーマット :</translation>
+        <translation>フォーマット:</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
@@ -11910,8 +11909,8 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
 Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
 192000 - recommended</source>
-        <translation>ビットレート (ビット/秒)- 出力ファイルのサイズと品質に影響します
-コーデックによっては、特定の値 (128k、192k、256kなど)しか指定できない場合があります。
+        <translation>ビットレート（ビット/秒）- 出力ファイルのサイズと品質に影響します
+コーデックによっては、特定の値（128k、192k、256kなど）しか指定できない場合があります。
 0 - 自動
 192000 - 推奨</translation>
     </message>
@@ -12122,7 +12121,7 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="187"/>
         <source>Version:</source>
-        <translation>バージョン :</translation>
+        <translation>バージョン:</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
@@ -12174,12 +12173,12 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
         <source>The extension does not contain a valid manifest file.</source>
-        <translation>この拡張機能は有効なマニフェストファイルが含まれていません。</translation>
+        <translation>この拡張機能には有効なマニフェストファイルが含まれていません。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
         <source>The extension is already installed.</source>
-        <translation>この拡張機能はすでにインストール済みです。</translation>
+        <translation>この拡張機能はすでにインストールされています。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
@@ -12264,7 +12263,7 @@ Master effects will be turned back on after export.</source>
         <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="35"/>
         <source>Show API dump</source>
-        <translation>API ダンプを表示</translation>
+        <translation>APIログを表示</translation>
     </message>
 </context>
 <context>
@@ -12882,7 +12881,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
         <source>%Ln byte(s)</source>
         <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
-        <translation><numerusform>%Ln バイト</numerusform></translation>
+        <translation><numerusform>%Lnバイト</numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
@@ -14555,7 +14554,6 @@ but none of them understood this file format.</source>
         <source>Try installing FFmpeg.
 </source>
         <translation>FFmpegをインストールしてください。
-
 </translation>
     </message>
     <message>
@@ -14612,7 +14610,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="283"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="102"/>
         <source>5 ms</source>
-        <translation>5 ミリ秒</translation>
+        <translation>5ミリ秒</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="284"/>
@@ -14760,7 +14758,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
-        <translation>FFmpeg はオーディオコーデック 0x%1 を見つけられません。
+        <translation>FFmpegはオーディオコーデック0x%1を見つけられません。
 コーデックへの対応がコンパイル時に組み込まれていないと思われます。</translation>
     </message>
     <message>
@@ -14771,7 +14769,7 @@ Support for this codec is probably not compiled in.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1078"/>
         <source>The codec reported an invalid parameter (EINVAL)</source>
-        <translation>コーデックが正しくないパラメータを報告しました (EINVAL)</translation>
+        <translation>コーデックが正しくないパラメータを報告しました（EINVAL）</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1088"/>
@@ -14857,7 +14855,7 @@ You can configure it at Preferences &gt; General.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1576"/>
         <source>Resample</source>
-        <translation>再サンプリング</translation>
+        <translation>再サンプル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1582"/>
@@ -14876,7 +14874,7 @@ supported by the current output file format. </source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1588"/>
         <source>You may resample to one of the rates below.</source>
-        <translation>次のいずれかのサンプルレートで再サンプリングしてください。</translation>
+        <translation>次のいずれかのサンプルレートで再サンプルしてください。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1595"/>
@@ -15181,22 +15179,22 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
         <source>Only lame_enc.dll</source>
-        <translation>lame_enc.dll のみ</translation>
+        <translation>lame_enc.dllのみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1063"/>
         <source>Only libmp3lame64bit.dylib</source>
-        <translation>libmp3lame64bit.dylib のみ</translation>
+        <translation>libmp3lame64bit.dylibのみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1066"/>
         <source>Only libmp3lame.dylib</source>
-        <translation>libmp3lame.dylib のみ</translation>
+        <translation>libmp3lame.dylibのみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1090"/>
         <source>Only libmp3lame.so</source>
-        <translation>libmp3lame.so のみ</translation>
+        <translation>libmp3lame.soのみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1091"/>
@@ -15213,18 +15211,18 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1113"/>
         <source>Only libmp3lame.so.0</source>
-        <translation>libmp3lame.so.0 のみ</translation>
+        <translation>libmp3lame.so.0のみ</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1234"/>
         <source>MP3 Files</source>
-        <translation>MP3 ファイル</translation>
+        <translation>MP3ファイル</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1334"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1373"/>
         <source>Could not open MP3 encoding library!</source>
-        <translation>MP3 エンコーディングライブラリを開けません!</translation>
+        <translation>MP3エンコーディングライブラリを開けません!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1337"/>
@@ -15269,12 +15267,12 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1508"/>
         <source>Exporting selected audio at %1 Kbps</source>
-        <translation>選択したオーディオを %1 kbps でエクスポート中</translation>
+        <translation>選択したオーディオを%1 kbpsで書き出し中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1509"/>
         <source>Exporting the audio at %1 Kbps</source>
-        <translation>オーディオを %1 kbps でエクスポート中</translation>
+        <translation>オーディオを%1 kbpsで書き出し中</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1556"/>
@@ -15529,7 +15527,7 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="249"/>
         <source>Unable to write OGG page header</source>
-        <translation>OGG ページヘッダを書き込めません</translation>
+        <translation>OGGページヘッダを書き込めません</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="253"/>
@@ -15730,7 +15728,7 @@ Libsndfileは“%2”を返しています</translation>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation><numerusform>WavPackファイルをデコード中に%1エラーが起きました。</numerusform></translation>
+        <translation><numerusform>WavPackファイルをデコード中に%1個のエラーが起きました!</numerusform></translation>
     </message>
 </context>
 <context>
@@ -15776,12 +15774,12 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="38"/>
         <source>Paste and make room on this track</source>
-        <translation>貼り付けてこのトラックに空き領域を確保</translation>
+        <translation>ペースト（このトラックに空きを確保）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="40"/>
         <source>Paste and make room on all tracks</source>
-        <translation>貼り付けてすべてのトラックに空き領域を確保</translation>
+        <translation>ペースト（すべてのトラックに空きを確保）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
@@ -16171,13 +16169,13 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="63"/>
         <source>16-bit PCM</source>
         <extracomment>Audio data bit depth (precision): 16-bit integers</extracomment>
-        <translation>16ビット PCM</translation>
+        <translation>16ビットPCM</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="66"/>
         <source>24-bit PCM</source>
         <extracomment>Audio data bit depth (precision): 24-bit integers</extracomment>
-        <translation>24ビット PCM</translation>
+        <translation>24ビットPCM</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="69"/>
@@ -16328,7 +16326,7 @@ Error: %2</source>
 It will not be loaded.</source>
         <translation>モジュール”%1”にはバージョン文字列がありません。
 
-このモジュールは読み込まれません</translation>
+このモジュールは読み込まれません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
@@ -16439,27 +16437,27 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="28"/>
         <source>Cut and close gap on this track</source>
-        <translation>このトラックのギャップを切り取って閉じる</translation>
+        <translation>カット（このトラックのギャップを閉じる）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="30"/>
         <source>Cut and close gap on all tracks</source>
-        <translation>すべてのトラックのギャップを切り取って閉じる</translation>
+        <translation>カット（すべてのトラックのギャップを閉じる）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="35"/>
         <source>Delete and leave gap</source>
-        <translation>削除してギャップを残す</translation>
+        <translation>削除（ギャップを残す）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="37"/>
         <source>Delete and close gap on this track</source>
-        <translation>このトラックで削除してギャップを閉じる</translation>
+        <translation>削除（このトラックのギャップを閉じる）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="39"/>
         <source>Delete and close gap on all tracks</source>
-        <translation>すべてのトラックで削除してギャップを閉じる</translation>
+        <translation>削除（すべてのトラックのギャップを閉じる）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="47"/>
@@ -16483,12 +16481,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation>マルチインスタンス</translation>
+        <translation>複数インスタンスを起動</translation>
     </message>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation>マルチウィンドウ情報を表示</translation>
+        <translation>複数ウインドウの情報を表示</translation>
     </message>
 </context>
 <context>
@@ -17152,7 +17150,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="39"/>
         <source>Moved volume slider</source>
-        <translation>移動した音量スライダ</translation>
+        <translation>音量スライダの移動</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
@@ -17163,7 +17161,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="66"/>
         <source>Moved pan dial</source>
-        <translation>移動したパンダイヤル</translation>
+        <translation>パンダイヤルの移動</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="68"/>
@@ -17336,7 +17334,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="55"/>
         <source>Dragging on the center line may adjust the height of the channel:</source>
-        <translation>センターラインをドラッグしてチャンネルの高さを調整 :</translation>
+        <translation>センターラインをドラッグしてチャンネルの高さを調整:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
@@ -17389,7 +17387,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="38"/>
         <source>Clip style</source>
-        <translation>クリップスタイル</translation>
+        <translation>クリップのスタイル</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="69"/>
@@ -17449,17 +17447,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="34"/>
         <source>Group effects</source>
-        <translation>グループエフェクト</translation>
+        <translation>エフェクトをグループ表示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="47"/>
         <source>Display effects in one flat list</source>
-        <translation>エフェクトを一覧表示</translation>
+        <translation>すべてのエフェクトを一覧表示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="26"/>
         <source>FFmpeg library version:</source>
-        <translation>FFmpegライブラリバージョン: </translation>
+        <translation>FFmpegライブラリバージョン:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="42"/>
@@ -17549,12 +17547,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="14"/>
         <source>Recording behavior</source>
-        <translation>録音動作</translation>
+        <translation>録音時の動作</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="27"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
-        <translation>入力モニタリングをオンにする (録音中に音声を再生)</translation>
+        <translation>入力モニタリングをオンにする（録音中にオーディオを再生）</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="45"/>
@@ -17629,7 +17627,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="95"/>
         <source>Enable high-contrast</source>
-        <translation>高コントラストを有効にする</translation>
+        <translation>ハイコントラストを有効にする</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="34"/>
@@ -17821,7 +17819,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="535"/>
         <source>Other</source>
-        <translation>その他…</translation>
+        <translation>その他</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
@@ -17897,7 +17895,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
         <source>Export</source>
-        <translation>エクスポート</translation>
+        <translation>書き出し</translation>
     </message>
     <message>
         <source>Cloud</source>
@@ -17945,12 +17943,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="29"/>
         <source>Music imports</source>
-        <translation>ミュージックをインポート</translation>
+        <translation>ミュージックの読み込み</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
         <source>Detect tempo in imported files:</source>
-        <translation>次の読み込んだファイルからテンポを検出 :</translation>
+        <translation>読み込んだファイルからテンポを検出:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="121"/>
@@ -18020,17 +18018,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
         <source>Export behavior</source>
-        <translation>エクスポート動作</translation>
+        <translation>書き出し時の動作</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation>’どのようにエクスポートしますか?’ダイアログを表示</translation>
+        <translation>’どのように書き出ししますか?’ダイアログを表示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
         <source>Save behavior</source>
-        <translation>保存動作</translation>
+        <translation>保存時の動作</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="29"/>
@@ -18661,7 +18659,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="374"/>
         <source>Connection to project file is null</source>
-        <translation>プロジェクトファイルとの接続は null です</translation>
+        <translation>プロジェクトファイルとの接続はnullです</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
@@ -18683,14 +18681,14 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
         <source>Discarding undo/redo history</source>
-        <translation>元に戻す/やり直すの履歴を破棄</translation>
+        <translation>取り消す/やり直すの履歴を破棄</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="92"/>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="120"/>
         <source>(%1): %2</source>
         <extracomment>%1 is the SQLite error code, %2 is the error message</extracomment>
-        <translation>(%1): %2</translation>
+        <translation>（%1）: %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="186"/>
@@ -18730,7 +18728,7 @@ Please remove the write protection by checking the file’s properties, ensuring
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>パスに書き込めませんでした: %1
+        <translation>%1に書き込めませんでした。
 </translation>
     </message>
     <message>
@@ -18894,8 +18892,8 @@ File might be corrupted or read only.</source>
         <source>A disk I/O error
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
-        <translation>ストレージ I/O エラー
- (blockfiles を取り扱えません)</translation>
+        <translation>ストレージI/Oエラー
+（blockfilesを取り扱えません）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="935"/>
@@ -18946,7 +18944,7 @@ File might be corrupted or read only.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1139"/>
         <source>Failed to bind SQL parameter</source>
-        <translation>SQL パラメータをバインドできませんでした</translation>
+        <translation>SQLパラメータをバインドできませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1154"/>
@@ -19178,34 +19176,33 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
         <source>Export audio</source>
-        <translation>オーディオをエクスポート</translation>
+        <translation>オーディオを書き出す</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
         <source>How would you like to export?</source>
-        <translation>どのようにエクスポートしますか?</translation>
+        <translation>どのように書き出ししますか?</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
         <source>Share to audio.com</source>
-        <translation>audio.com で共有</translation>
+        <translation>audio.comで共有</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
         <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
-        <translation>非圧縮オーディオファイルをアップロードし、共有リンクを作成します。
-このリンクから、ほかの人が WAV または MP3 形式のファイルをダウンロードできます。</translation>
+        <translation>非圧縮オーディオファイルをアップロードし、共有リンクを作成します。このリンクから、ほかの人がWAVまたはMP3形式のファイルをダウンロードできます。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
         <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
-        <translation>MP3、WAV、FLAC そのほかの形式で自分のコンピューターにエクスポートします。</translation>
+        <translation>MP3、WAV、FLACそのほかの形式で自分のコンピュータに書き出しします。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation>コンピュータにエクスポート</translation>
+        <translation>コンピュータに書き出す</translation>
     </message>
 </context>
 <context>
@@ -19292,22 +19289,22 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="51"/>
         <source>File path:</source>
-        <translation>ファイルパス :</translation>
+        <translation>ファイルパス:</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="81"/>
         <source>Audacity version:</source>
-        <translation>Audacity バージョン :</translation>
+        <translation>Audacityバージョン:</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="90"/>
         <source>Revision:</source>
-        <translation>リビジョン :</translation>
+        <translation>リビジョン:</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="104"/>
         <source>API-Level:</source>
-        <translation>API レベル :</translation>
+        <translation>APIレベル:</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="68"/>
@@ -19461,7 +19458,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
         <source>Share on Audio.com</source>
-        <translation>Audio.com で共有</translation>
+        <translation>audio.comで共有</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
@@ -19612,7 +19609,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap to</source>
-        <translation>次にスナップ:</translation>
+        <translation>スナップ先:</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
@@ -19742,7 +19739,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="33"/>
         <source>Pan:</source>
-        <translation>パン :</translation>
+        <translation>パン:</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
@@ -20071,7 +20068,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Track %1: %2, label track, selected</source>
-        <translation>トラック %1: %2、ラベルトラック、選択済み</translation>
+        <translation>トラック%1: %2、ラベルトラック、選択済み</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
@@ -20081,7 +20078,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
         <source>Moved Samples</source>
-        <translation>サンプルを移動しました</translation>
+        <translation>サンプルの移動</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
@@ -20091,7 +20088,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="197"/>
         <source>Blue</source>
-        <translation>青</translation>
+        <translation>ブルー</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="198"/>
@@ -20106,7 +20103,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="200"/>
         <source>Red</source>
-        <translation>赤</translation>
+        <translation>レッド</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="201"/>
@@ -20121,7 +20118,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="203"/>
         <source>Green</source>
-        <translation>緑</translation>
+        <translation>グリーン</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="204"/>
@@ -20144,7 +20141,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="41"/>
         <source>Duration:</source>
-        <translation>録音時間 :</translation>
+        <translation>録音時間:</translation>
     </message>
 </context>
 <context>
@@ -20187,7 +20184,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="230"/>
         <source>Show mic metering when not recording</source>
-        <translation>録音していないときもマイクレベルを表示</translation>
+        <translation>録音していないときもマイクレベルメーターを表示</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
@@ -20235,7 +20232,7 @@ Error code: %1</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="41"/>
         <source>The tracks selected for recording must all have the same sampling rate</source>
-        <translation>録音用に選択したトラックのサンプルレートは、すべて同一にする必要があります。</translation>
+        <translation>録音用に選択したトラックのサンプルレートは、すべて同一にしてください</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="44"/>
@@ -20268,19 +20265,19 @@ Please connect an input device and rescan.</source>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="189"/>
         <source>Plug-in group at %1 was merged with a previously defined group</source>
         <extracomment>%1 is the registry path of the merged plug-in group</extracomment>
-        <translation>%1プラグイングループを、以前に定義したグループとマージしました。</translation>
+        <translation>%1プラグイングループを、以前に定義したグループとマージ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="197"/>
         <source>Plug-in item at %1 conflicts with a previously defined item and was discarded</source>
         <extracomment>%1 is the registry path of the conflicting plug-in item</extracomment>
-        <translation>%1プラグイン項目は、以前に定義した項目と競合しているため、破棄しました。</translation>
+        <translation>%1プラグイン項目は、以前に定義した項目と競合しているため破棄</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="205"/>
         <source>Plug-in items at %1 specify conflicting placements</source>
         <extracomment>%1 is the registry path of the conflicting plug-in items</extracomment>
-        <translation>%1にあるプラグイン項目は、配置が競合しています</translation>
+        <translation>%1にあるプラグイン項目は、配置が競合</translation>
     </message>
 </context>
 <context>
@@ -20288,12 +20285,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-sample-track/SampleTrack.cpp" line="27"/>
         <source>Sample Track</source>
-        <translation>サンプリングトラック</translation>
+        <translation>サンプルトラック</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sample-track/SampleTrack.cpp" line="55"/>
         <source>Writable Sample Track</source>
-        <translation>書き込み可能なサンプリングトラック</translation>
+        <translation>書き込み可能なサンプルトラック</translation>
     </message>
 </context>
 <context>
@@ -20326,12 +20323,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="39"/>
         <source>Paste and make room on this track</source>
-        <translation>貼り付けてこのトラックに空き領域を確保</translation>
+        <translation>ペースト（このトラックに空きを確保）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="41"/>
         <source>Paste and make room on all tracks</source>
-        <translation>貼り付けてすべてのトラックに空き領域を確保</translation>
+        <translation>ペースト（すべてのトラックに空きを確保）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="46"/>
@@ -20455,7 +20452,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
         <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
-        <translation>このショートカットはすでに&lt;b&gt;%1&lt;/b&gt;に割り当てられています。</translation>
+        <translation>このショートカットはすでに&lt;b&gt;%1&lt;/b&gt;に割り当てられています</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
@@ -20611,7 +20608,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="24"/>
         <source>Seconds &amp;&amp; samples</source>
-        <translation>秒とサンプリング</translation>
+        <translation>秒とサンプル</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="25"/>
@@ -21190,19 +21187,19 @@ Please connect an input device and rescan.</source>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>残り %n 時間</numerusform></translation>
+        <translation><numerusform>残り%n時間</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>残り %n 分</numerusform></translation>
+        <translation><numerusform>残り%n分</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation><numerusform>残り %n 秒</numerusform></translation>
+        <translation><numerusform>残り%n秒</numerusform></translation>
     </message>
 </context>
 <context>
@@ -21245,24 +21242,24 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="93"/>
         <source>Format:</source>
-        <translation>フォーマット :</translation>
+        <translation>フォーマット:</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="71"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="94"/>
         <source>Rate:</source>
-        <translation>サンプリング周波数 :</translation>
+        <translation>サンプルレート:</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
         <source>Format: %1</source>
-        <translation>フォーマット : %1</translation>
+        <translation>フォーマット: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
         <source>Rate: %1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation>レート : %1 Hz</translation>
+        <translation>サンプルレート: %1 Hz</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
@@ -21274,13 +21271,13 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/trackedit/dom/track.h" line="52"/>
         <source>16-bit PCM</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation>16ビット PCM</translation>
+        <translation>16ビットPCM</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="54"/>
         <source>24-bit PCM</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation>24ビット PCM</translation>
+        <translation>24ビットPCM</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
@@ -21294,7 +21291,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <source>Added enveloped point</source>
-        <translation>追加したエンベロープポイント</translation>
+        <translation>エンベロープポイントを追加</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
@@ -21306,12 +21303,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <source>Removed enveloped point</source>
-        <translation>削除したエンベロープポイント</translation>
+        <translation>エンベロープポイントを削除</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Dragged enveloped point</source>
-        <translation>ドラッグしたエンベロープポイント</translation>
+        <translation>エンベロープポイントをドラッグ</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="861"/>
@@ -21404,7 +21401,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
         <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation>選択したオーディオトラックの %1 秒から %2 秒までをトリミング</translation>
+        <translation>選択したオーディオトラックの%1秒から%2秒までをトリミング</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
@@ -21415,18 +21412,18 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
         <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation>選択したオーディオトラックの %1 秒から %2 秒までを消音しました</translation>
+        <translation>選択したオーディオトラックの%1秒から%2秒までを消音</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
         <source>Silence</source>
-        <translation>無音</translation>
+        <translation>無音部分</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
         <source>Silenced selected clips</source>
-        <translation>選択クリップを消音しました</translation>
+        <translation>選択クリップを消音</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
@@ -21436,7 +21433,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
         <source>Changed Track Title</source>
-        <translation>トラックタイトルを変更しました</translation>
+        <translation>トラックタイトルを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
@@ -21446,7 +21443,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
         <source>Changed clip title</source>
-        <translation>クリップタイトルを変更しました</translation>
+        <translation>クリップタイトルを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
@@ -21467,7 +21464,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="656"/>
         <source>Changed Speed</source>
-        <translation>変更後の速度</translation>
+        <translation>速度を変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="130"/>
@@ -21477,7 +21474,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
         <source>Changed track color</source>
-        <translation>トラックカラーを変更しました</translation>
+        <translation>トラックカラーを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="160"/>
@@ -21488,7 +21485,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
         <source>Rendered time-stretched audio</source>
-        <translation>タイムストレッチしたオーディオをレンダリングしました</translation>
+        <translation>タイムストレッチしたオーディオをレンダリング</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
@@ -21498,25 +21495,25 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
         <source>Pasted from the clipboard</source>
-        <translation>クリップボードから貼り付けました</translation>
+        <translation>クリップボードからペースト</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
         <source>Paste</source>
-        <translation>貼り付け</translation>
+        <translation>ペースト</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
         <source>Cut to the clipboard</source>
-        <translation>クリップボードに切り取りました</translation>
+        <translation>クリップボードにカット</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
         <source>Cut</source>
-        <translation>切り取り</translation>
+        <translation>カット</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
@@ -21547,18 +21544,18 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
         <source>Delete and close gap</source>
-        <translation>削除してギャップを閉じる</translation>
+        <translation>削除（ギャップを閉じる）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
         <source>Items moved</source>
-        <translation>項目を移動しました</translation>
+        <translation>項目を移動</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
         <source>Clip moved</source>
-        <translation>クリップを移動しました</translation>
+        <translation>クリップを移動</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
@@ -21600,13 +21597,13 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <source>Split-cut to the clipboard</source>
-        <translation>クリップボードに分割切り取りしました</translation>
+        <translation>クリップボードに分割してカット</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <source>Split cut</source>
-        <translation>分割切り取り</translation>
+        <translation>分割カット</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
@@ -21638,7 +21635,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
         <source>Changed speed to: %1%</source>
-        <translation>速度を変更しました : %1%</translation>
+        <translation>速度を変更: %1%</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
@@ -21675,7 +21672,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
         <source>Created new mono track</source>
-        <translation>新規モノラルトラックを作成しました</translation>
+        <translation>新規モノラルトラックを作成</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
@@ -21685,7 +21682,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Created new stereo track</source>
-        <translation>新規ステレオトラックを作成しました</translation>
+        <translation>新規ステレオトラックを作成</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
@@ -21695,7 +21692,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
         <source>Created label track</source>
-        <translation>ラベルトラックを作成しました</translation>
+        <translation>ラベルトラックを作成</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
@@ -21726,28 +21723,28 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
         <source>Clips grouped</source>
-        <translation>グループ化したクリップ</translation>
+        <translation>クリップをグループ化</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
         <source>Clips ungrouped</source>
-        <translation>グループ化していないクリップ</translation>
+        <translation>クリップをグループ解除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
         <source>Changed track format</source>
-        <translation>トラックフォーマットを変更しました</translation>
+        <translation>トラックフォーマットを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
         <source>Changed track rate</source>
-        <translation>トラックレートを変更しました</translation>
+        <translation>トラックレートを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
         <source>Swapped stereo channels</source>
-        <translation>左右チャンネルを入れ替えました</translation>
+        <translation>左右チャンネルを入れ替え</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
@@ -21769,13 +21766,13 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
         <source>Resampled audio track(s)</source>
-        <translation>オーディオトラックを再サンプリングしました</translation>
+        <translation>オーディオトラックを再サンプル</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
         <source>Label added</source>
-        <translation>ラベルを追加しました</translation>
+        <translation>ラベルを追加</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
@@ -21786,17 +21783,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Label title changed</source>
-        <translation>ラベルタイトルを変更しました</translation>
+        <translation>ラベルタイトルを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Changed label title</source>
-        <translation>変更されたラベルタイトル</translation>
+        <translation>ラベルタイトルを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
         <source>Label low frequency changed</source>
-        <translation>低域周波数ラベルを変更しました</translation>
+        <translation>低域周波数ラベルを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
@@ -21806,7 +21803,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
         <source>Label high frequency changed</source>
-        <translation>高域周波数ラベルを変更しました</translation>
+        <translation>高域周波数ラベルを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
@@ -21816,7 +21813,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
         <source>Cut label</source>
-        <translation>ラベルを切り取り</translation>
+        <translation>ラベルをカット</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
@@ -21844,13 +21841,13 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
         <source>Labels moved</source>
-        <translation>ラベルを移動しました</translation>
+        <translation>ラベルを移動</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
         <source>Label stretched</source>
-        <translation>ラベルをストレッチしました</translation>
+        <translation>ラベルをストレッチ</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
@@ -21882,7 +21879,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation>場所 %2 に %1 秒を結合</translation>
+        <translation>場所%2に%1秒結合</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
@@ -21893,7 +21890,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
         <source>Duplicated</source>
-        <translation>複製しました</translation>
+        <translation>複製</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
@@ -21904,7 +21901,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split-deleted clips</source>
-        <translation>クリップを分割削除しました</translation>
+        <translation>クリップを分割して削除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
@@ -21915,12 +21912,12 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation>場所 %2 で %1 秒を削除</translation>
+        <translation>場所%2で%1秒を削除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
         <source>Not enough space to paste clip into</source>
-        <translation>クリップを貼り付けるための十分なスペースがありません</translation>
+        <translation>クリップのペースト先に十分な空きがありません</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="366"/>
@@ -21930,17 +21927,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
         <source>Tempo changed</source>
-        <translation>テンポを変更しました</translation>
+        <translation>テンポを変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
         <source>Upper time signature changed</source>
-        <translation>拍子記号の上 (拍数)を変更しました</translation>
+        <translation>拍子記号の上（拍数）を変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
         <source>Lower time signature changed</source>
-        <translation>拍子記号の下 (音価)を変更しました</translation>
+        <translation>拍子記号の下（音価）を変更</translation>
     </message>
 </context>
 <context>
@@ -21963,7 +21960,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="45"/>
         <source>Your delete behavior has been set</source>
-        <translation>削除動作を設定しました</translation>
+        <translation>削除時の動作を設定しました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="57"/>
@@ -21983,27 +21980,27 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
         <source>There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</source>
-        <translation>各種の削除動作にすばやくアクセスできる新しいショートカットも多数用意されています。詳しくは、%2 を参照してください。</translation>
+        <translation>削除時の異なる動作にすばやくアクセスできる新しいショートカットも多数用意されています。詳しくは、%2を参照してください。</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when deleting a portion of a clip</source>
-        <translation>クリップの一部を削除する場合の動作を選択</translation>
+        <translation>クリップの一部を削除するときの動作を選択</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="82"/>
         <source>When closing the gap, do the following</source>
-        <translation>ギャップを閉じる場合に行なう動作</translation>
+        <translation>ギャップを閉じるときに行なう動作</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when pasting audio</source>
-        <translation>オーディオを貼り付ける場合の動作を選択</translation>
+        <translation>オーディオをペーストするときの動作を選択</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="82"/>
         <source>When making room for pasted audio, do the following</source>
-        <translation>貼り付けるオーディオのスペースを作成する場合の動作</translation>
+        <translation>ペーストするオーディオのスペースを作成するときの動作</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="61"/>
@@ -22033,22 +22030,22 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="61"/>
         <source>Pasting audio pushes other clips on the same track</source>
-        <translation>貼り付けたオーディオが同じトラックのほかのクリップを押し出す</translation>
+        <translation>ペーストしたオーディオが同じトラックのほかのクリップを押し出す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="63"/>
         <source>Pasting audio pushes all clips on all tracks</source>
-        <translation>貼り付けたオーディオがすべてのトラックのすべてのクリップを押し出す</translation>
+        <translation>ペーストしたオーディオがすべてのトラックのすべてのクリップを押し出す</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="74"/>
         <source>Paste overlaps other clips</source>
-        <translation>貼り付けてほかのクリップをオーバーラップ</translation>
+        <translation>ペースト（ほかのクリップにオーバーラップ）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="77"/>
         <source>Paste pushes other clips</source>
-        <translation>貼り付けてほかのクリップを押し出す</translation>
+        <translation>ペースト（ほかのクリップを押し出す）</translation>
     </message>
 </context>
 <context>
@@ -22056,7 +22053,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="46"/>
         <source>New sample rate (Hz):</source>
-        <translation>新規サンプルレート（Hz）: </translation>
+        <translation>新規サンプルレート（Hz）:</translation>
     </message>
 </context>
 <context>
@@ -22064,7 +22061,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="39"/>
         <source>Position:</source>
-        <translation>位置 :</translation>
+        <translation>位置:</translation>
     </message>
 </context>
 <context>
@@ -22210,17 +22207,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
         <source>Red</source>
-        <translation>赤</translation>
+        <translation>レッド</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
         <source>Green</source>
-        <translation>緑</translation>
+        <translation>グリーン</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
         <source>Blue</source>
-        <translation>青</translation>
+        <translation>ブルー</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
@@ -22303,12 +22300,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation>展開された</translation>
+        <translation>展開されました</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation>折りたたまれた</translation>
+        <translation>折りたたまれました</translation>
     </message>
 </context>
 <context>
@@ -22564,7 +22561,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
         <source>A new version of %1 is available!</source>
-        <translation>%1 の新しいバージョンが入手可能です!</translation>
+        <translation>%1の新しいバージョンがあります!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
@@ -22594,12 +22591,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
-        <translation>%1 の最新バージョンを使っています。今後の予定についての最新情報は&lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt;を参照してください。</translation>
+        <translation>%1の最新バージョンを使用しています。今後の予定についての最新情報は&lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt;を参照してください。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
         <source>You’re up to date!</source>
-        <translation>最新版を使っています!</translation>
+        <translation>最新版を使用中です!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
@@ -22658,13 +22655,13 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation>FX エディタを開く</translation>
+        <translation>FXエディタを開く</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation>音源エディタを開く</translation>
+        <translation>楽器エディタを開く</translation>
     </message>
 </context>
 <context>
@@ -22688,7 +22685,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
         <source>VST3 Effects</source>
-        <translation>VST3 エフェクト</translation>
+        <translation>VST3エフェクト</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="166"/>
@@ -22744,7 +22741,7 @@ Truncating to this maximum length.</source>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="22"/>
         <source>Pre-processing</source>
-        <translation>前処理 :</translation>
+        <translation>前処理</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="38"/>
@@ -22759,7 +22756,7 @@ Truncating to this maximum length.</source>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1899"/>
         <source>Resampling failed.</source>
-        <translation>再サンプリングできませんでした。</translation>
+        <translation>再アンプルできませんでした。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1900"/>
@@ -22826,27 +22823,27 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
-        <translation>-48 dB（8ビットサンプリングのPCMレンジ）</translation>
+        <translation>-48 dB（8ビットサンプルのPCMレンジ）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
-        <translation>-60 dB（10ビットサンプリングのPCMレンジ）</translation>
+        <translation>-60 dB（10ビットサンプルのPCMレンジ）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
-        <translation>-72 dB（12ビットサンプリングのPCMレンジ）</translation>
+        <translation>-72 dB（12ビットサンプルのPCMレンジ）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
-        <translation>-84 dB（14ビットサンプリングのPCMレンジ）</translation>
+        <translation>-84 dB（14ビットサンプルのPCMレンジ）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
-        <translation>-96 dB（16ビットサンプリングのPCMレンジ）</translation>
+        <translation>-96 dB（16ビットサンプルのPCMレンジ）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
@@ -22856,7 +22853,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
-        <translation>-145 dB（24ビットサンプリングのPCMレンジ）</translation>
+        <translation>-145 dB（24ビットサンプルのPCMレンジ）</translation>
     </message>
 </context>
 <context>
@@ -22921,7 +22918,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
         <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
-        <translation>この操作により、ワークスペースはデフォルトのレイアウトにリセットされ、元に戻すことはできません。続行しますか?</translation>
+        <translation>この操作により、ワークスペースはデフォルトのレイアウトにリセットされ、取り消すことはできません。続けてもよろしいですか?</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
@@ -22975,7 +22972,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation>ワークスペースの編集...</translation>
+        <translation>ワークスペースを編集…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
