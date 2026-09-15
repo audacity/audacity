@@ -76,6 +76,8 @@ void au::trackedit::Au3ProjectHistory::rollbackState()
 {
     auto& project = projectRef();
     ::ProjectHistory::Get(project).RollbackState();
+    m_interactionOngoing = false;
+    m_historyChanged.send(HistoryEvent::RestoredState);
 }
 
 void Au3ProjectHistory::startUserInteraction()

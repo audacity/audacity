@@ -5,9 +5,11 @@
 #include "au3clipsinteraction.h"
 
 #include <algorithm>
+#include <set>
 
 #include <QCoreApplication>
 
+#include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
@@ -406,8 +408,7 @@ bool Au3ClipsInteraction::removeClips(const ClipKeyList& clipKeyList, bool moveC
 }
 
 muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
-                                                         int trackPositionOffset, bool completed,
-                                                         bool& clipsMovedToOtherTracks)
+                                                         int trackPositionOffset)
 {
     ClipKeyList newClipKeyList = clipKeyList;
 
@@ -420,10 +421,6 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
 
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
-    if (!m_tracksWhenDragStarted) {
-        m_tracksWhenDragStarted.emplace(utils::getTrackListInfo(Au3TrackList::Get(projectRef())));
-    }
-
     //! NOTE: check if offset is applicable to every clip and recalculate if needed
     std::optional<secs_t> leftmostStartTime = leftmostClipStartTime(clipKeyList);
 
@@ -435,43 +432,45 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
 
     changeClipsStartTime(clipKeyList, timePositionOffset, false);
 
-    if (trackPositionOffset != 0) {
-        // Update m_moveClipsNeedsDownmixing only when moving up/down
-        m_moveClipsNeedsDownmixing = moveSelectedClipsUpOrDown(newClipKeyList, trackPositionOffset) == NeedsDownmixing::Yes;
-        clipsMovedToOtherTracks = true;
-    }
-
-    if (!completed) {
-        return muse::RetVal<ClipKeyList>::make_ok(newClipKeyList);
-    }
-
-    m_tracksWhenDragStarted.reset();
+    const bool needsDownmixing = trackPositionOffset != 0
+                                 && moveSelectedClipsUpOrDown(newClipKeyList, trackPositionOffset) == NeedsDownmixing::Yes;
 
     const muse::Ret makeRoomRet = makeRoomForClips(newClipKeyList);
     if (!makeRoomRet) {
         return muse::RetVal<ClipKeyList>::make_ret(makeRoomRet);
     }
 
-    const muse::Defer defer2([&] {
-        m_moveClipsNeedsDownmixing = false;
-    });
-
-    if (m_moveClipsNeedsDownmixing && !userIsOkWithDownmixing()) {
+    if (needsDownmixing && !userIsOkWithDownmixing()) {
         return muse::RetVal<ClipKeyList>::make_ret(make_ret(Err::DownmixingIsNotAllowed));
     }
 
+    // Selection can still refer to the source tracks when a preview is committed in one call.
+    std::set<TrackId> destinationTracks;
+    for (const ClipKey& key : newClipKeyList) {
+        destinationTracks.insert(key.trackId);
+    }
+    std::vector<Au3WaveTrack*> tracksToConvert;
+    for (const TrackId trackId : destinationTracks) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return muse::RetVal<ClipKeyList>::make_ret(make_ret(Err::TrackNotFound));
+        }
+        const auto& clips = waveTrack->Intervals();
+        if (std::any_of(clips.begin(), clips.end(), [waveTrack](const auto& clip) {
+            return clip->NChannels() != waveTrack->NChannels();
+        })) {
+            tracksToConvert.push_back(waveTrack);
+        }
+    }
+    if (tracksToConvert.empty()) {
+        return muse::RetVal<ClipKeyList>::make_ok(newClipKeyList);
+    }
+
     muse::RetVal<ClipKeyList> result;
-    //! TODO AU4: later when having keyboard arrow shortcut for moving clips
-    //! make use of UndoPush::CONSOLIDATE arg in UndoManager
     result.ret = utils::withProgress(*interactive(), mixingDownToMonoLabel, [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
     {
         std::vector<std::pair<WaveTrack*, std::shared_ptr<WaveTrack> > > toReplace;
-        for (const trackedit::TrackId track : selectionController()->selectedTracks()) {
-            Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track));
-            // If this is not an audio track (i.e. a label track), skip it
-            if (!waveTrack) {
-                continue;
-            }
+        for (Au3WaveTrack* waveTrack : tracksToConvert) {
             const auto copy = std::static_pointer_cast<WaveTrack>(waveTrack->Duplicate(::Track::DuplicateOptions {}.Backup()));
             if (copy->FixClipChannels(progressCb, cancelCb)) {
                 toReplace.emplace_back(waveTrack, copy);
@@ -492,20 +491,6 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
     }
 
     return result;
-}
-
-void Au3ClipsInteraction::cancelClipDragEdit()
-{
-    // If false, then the edit wasn't a clip drag (could have been trim or stretch)
-    if (m_tracksWhenDragStarted.has_value()) {
-        if (const auto prj = globalContext()->currentTrackeditProject()) {
-            // Doesn't matter it tracks are now empty or not - we're canceling the action.
-            constexpr auto emptyOnly = false;
-            tracksInteraction()->removeDragAddedTracks(m_tracksWhenDragStarted->size, emptyOnly);
-        }
-        m_tracksWhenDragStarted.reset();
-    }
-    m_moveClipsNeedsDownmixing = false;
 }
 
 bool Au3ClipsInteraction::splitClipsAtSilences(const ClipKeyList& clipKeyList)
@@ -975,21 +960,6 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
     const NeedsDownmixing needsDownmixing = utils::moveClipsVertically(offset, orig,
                                                                        *copy, clipKeyList);
 
-    // Clean-up after ourselves, preserving original track formats:
-    // Tracks that were empty at the start of the interaction, are empty now and differ in format must be restored.
-    const TrackListInfo copyInfo = utils::getTrackListInfo(*copy);
-    for (const size_t index : copyInfo.emptyTrackIndices) {
-        if (index >= m_tracksWhenDragStarted->size) {
-            continue;
-        }
-        const auto isStereoNow = muse::contains(copyInfo.stereoTrackIndices, index);
-        const auto wasStereoBefore = muse::contains(m_tracksWhenDragStarted->stereoTrackIndices, index);
-        if (isStereoNow != wasStereoBefore) {
-            // Toggle back the way it was.
-            utils::toggleStereo(*copy, index);
-        }
-    }
-
     // Now we can update the original with the modified copy.
     auto& mutOrig = const_cast<au3::Au3TrackList&>(orig);
 
@@ -1024,6 +994,7 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
         const auto wasToggled = origWaveTrack->NChannels() != newWaveTrack->NChannels();
         const auto trackId = origWaveTrack->GetId();
         const auto clipsBefore = prj->clipList(trackId);
+        RealtimeEffectList::ShareStates(*newTrack, *origWaveTrack);
         // Careful, this decreases the `origWaveTrack` ref count.
         mutOrig.ReplaceOne(*origWaveTrack, std::move(*copy));
         if (wasToggled) {
@@ -1061,20 +1032,6 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
         if (newTrack) {
             clipKey.trackId = newTrack->GetId();
         }
-    }
-
-    if (offset < 0) {
-        // The user dragged up. It's possible that the bottom-most tracks were created during this interaction,
-        // in which case we make it nice to the user and remove them automatically.
-        // Only remove empty temp tracks that are below the dragged clips
-        const auto& origTracks = ::TrackList::Get(projectRef());
-        size_t highestClipIndex = 0;
-        for (const auto& clipKey : clipKeyList) {
-            highestClipIndex = std::max(highestClipIndex, utils::getTrackIndex(origTracks, clipKey.trackId));
-        }
-        const size_t removeFrom = std::max(m_tracksWhenDragStarted->size, highestClipIndex + 1);
-        constexpr auto emptyOnly = true;
-        tracksInteraction()->removeDragAddedTracks(removeFrom, emptyOnly);
     }
 
     return needsDownmixing;

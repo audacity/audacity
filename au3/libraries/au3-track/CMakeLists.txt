@@ -44,6 +44,7 @@ PRIVATE
    au3-exceptions
    au3-project
    au3-project-history
+   au3-realtime-effects
    au3-strings
    wxBase
 )

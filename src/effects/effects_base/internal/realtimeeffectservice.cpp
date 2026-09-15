@@ -150,7 +150,10 @@ void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
         IF_ASSERT_FAILED(e.mId.has_value()) {
             return;
         }
-        unregisterRealtimeEffectList(*e.mId);
+        // Track is being replaced, keep the effect list
+        if (e.mExtra != 1) {
+            unregisterRealtimeEffectList(*e.mId);
+        }
     }
     break;
     case TrackListEvent::UNDO_REDO_BEGIN:

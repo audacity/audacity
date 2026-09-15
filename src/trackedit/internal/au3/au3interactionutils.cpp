@@ -12,6 +12,7 @@
 #include "au3-wave-track/WaveClip.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
 #include "global/containers.h"
 #include "global/realfn.h"
 #include "log.h"
@@ -96,6 +97,7 @@ size_t au::trackedit::utils::getTrackIndex(const au3::Au3TrackList& tracks, cons
 
 void au::trackedit::utils::exchangeTrack(au3::Au3TrackList& tracks, au3::Au3WaveTrack& oldOne, au3::Au3WaveTrack& newOne)
 {
+    RealtimeEffectList::ShareStates(newOne, oldOne);
     auto tmp = au3::Au3TrackList::Temporary(nullptr, newOne.shared_from_this());
     tracks.ReplaceOne(oldOne, std::move(*tmp));
 }
@@ -242,26 +244,6 @@ au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(int off
     }
 
     return needsDownmixing;
-}
-
-au::trackedit::TrackListInfo au::trackedit::utils::getTrackListInfo(const au3::Au3TrackList& tracks)
-{
-    std::vector<size_t> stereoTrackIndices;
-    std::vector<size_t> emptyTrackIndices;
-    auto i = 0;
-    for (const au3::Au3Track* track : tracks) {
-        const au3::Au3WaveTrack* waveTrack = dynamic_cast<const au3::Au3WaveTrack*>(track);
-        if (waveTrack) {
-            if (waveTrack->NChannels() == 2) {
-                stereoTrackIndices.push_back(i);
-            }
-            if (waveTrack->IsEmpty()) {
-                emptyTrackIndices.push_back(i);
-            }
-        }
-        ++i;
-    }
-    return { tracks.Size(), std::move(stereoTrackIndices), std::move(emptyTrackIndices) };
 }
 
 bool au::trackedit::utils::clipIdSetsAreEqual(const au3::Au3WaveTrack& track1, const au3::Au3WaveTrack& track2)

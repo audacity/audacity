@@ -68,6 +68,7 @@ public:
 
     static RealtimeEffectList& Get(ChannelGroup& group);
     static const RealtimeEffectList& Get(const ChannelGroup& group);
+    static void ShareStates(ChannelGroup& group, const ChannelGroup& other);
 
     // Type that state visitor functions would have for out-of-line definition
     // of Visit
