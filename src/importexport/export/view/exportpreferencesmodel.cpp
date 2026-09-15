@@ -477,7 +477,8 @@ void ExportPreferencesModel::setFilePickerPath(const QString& path)
 
     if (info.entryType() == muse::io::EntryType::File) {
         setDirectoryPath(info.absolutePath());
-        setFilename(info.baseName());
+
+        setFilename(info.completeBaseName());
         return;
     }
 
@@ -494,7 +495,8 @@ void ExportPreferencesModel::setFileDialogPath(const QString& path)
     }
 
     setDirectoryPath(info.absolutePath());
-    setFilename(info.baseName());
+
+    setFilename(info.completeBaseName());
 }
 
 void ExportPreferencesModel::updateCurrentSampleRate()
