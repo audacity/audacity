@@ -418,6 +418,7 @@ elseif(OS_IS_MAC)
         DEPLOY_TOOL_OPTIONS
             -qmldir=${PROJECT_SOURCE_DIR}/src
             -qmldir=${PROJECT_SOURCE_DIR}/muse/framework
+            ${AU4_MACDEPLOYQT_EXTRA_OPTIONS}
     )
     install(SCRIPT ${deploy_script})
 
