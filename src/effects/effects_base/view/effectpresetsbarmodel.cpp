@@ -344,7 +344,7 @@ void EffectPresetsBarModel::deletePreset()
     }
 
     ActionQuery q("action://effects/presets/delete");
-    q.addParam("effectId", Val(effectId.toStdString()));
+    q.addParam("effectId", Val(encodeEffectId(effectId)));
     q.addParam("presetId", Val(m_currentPreset.toStdString()));
     dispatcher()->dispatch(q);
 }
