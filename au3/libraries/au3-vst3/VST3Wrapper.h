@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <pluginterfaces/base/smartpointer.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
@@ -148,7 +150,31 @@ private:
     //Reads runtime data changes to apply them during next processing pass
     void ConsumeChanges(const EffectSettings& settings);
 
+    //! Move the transport on by a block that has just been processed
+    void AdvanceTransport(Steinberg::int32 numSamples);
+
+    //! Report the transport as stopped and push one silent block through
+    /*!
+     A plug-in that accumulates what it is fed while the host plays needs to be
+     told that no more is coming, and a zero-sample call does not say it: that
+     is the parameter-flush idiom, which plug-ins are free to skip. Does
+     nothing unless the transport was playing.
+     */
+    void NotifyTransportStopped();
+
+    //! Channels on the main buses, which is what Process expects to be given
+    unsigned CountMainChannels(Steinberg::Vst::BusDirection direction) const;
+
+    //! Audacity has no tempo map, so a steady default is reported to plug-ins
+    //! that insist on a musical timeline
+    static constexpr double sDefaultTempo = 120.0;
+    static constexpr Steinberg::int32 sDefaultTimeSigNumerator = 4;
+    static constexpr Steinberg::int32 sDefaultTimeSigDenominator = 4;
+
     bool mActive { false };
+
+    //! Whether the stored state has been pushed into this plug-in already
+    bool mStateRestored { false };
 
     std::vector<std::pair<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> > mParameters;
     //A preallocated array of Steinberg::Vst::IParameterValueQueue
@@ -158,4 +184,15 @@ private:
     std::unique_ptr<SingleInputParameterValue[]> mParameterQueues;
 
     Steinberg::Vst::ProcessContext mProcessContext { };
+
+    //! @name The final block that NotifyTransportStopped renders
+    //! Silence in, and somewhere for the plug-in to write; sized once, during
+    //! Initialize, so that finalizing does no allocation
+    //! @{
+    std::vector<float> mStopBlock;
+    //! Into mStopBlock: the input channels, then the output channels
+    std::vector<float*> mStopBlockChannels;
+    unsigned mMainInputChannels { 0 };
+    unsigned mMainOutputChannels { 0 };
+    //! @}
 };
