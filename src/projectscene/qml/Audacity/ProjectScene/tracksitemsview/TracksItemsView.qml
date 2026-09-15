@@ -694,11 +694,11 @@ Rectangle {
 
                 if (root.itemHovered) {
                     selectionViewController.selectItemData(root.hoveredItemKey)
-                    playCursorController.animatedSeekToTime(timeline.context.selectedItemStartTime)
+                    playCursorController.seekToTimeKeepingView(timeline.context.selectedItemStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 } else {
                     selectionViewController.selectTrackAudioData(e.y)
-                    playCursorController.animatedSeekToTime(timeline.context.selectionStartTime)
+                    playCursorController.seekToTimeKeepingView(timeline.context.selectionStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                 }
                 itemsSelection.visible = false
