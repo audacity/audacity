@@ -29,6 +29,7 @@
 
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
+#include "translation.h"
 
 namespace au::appshell {
 class ThemesPageModel : public QObject, public muse::async::Asyncable
