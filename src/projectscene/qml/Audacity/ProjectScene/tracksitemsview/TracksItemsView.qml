@@ -19,6 +19,8 @@ Rectangle {
     //! so the tracks area draws the navigation focus border for it
     property NavigationControl navDefaultControl: null
 
+    property NavigationSection timelineNavigationSection: null
+
     readonly property alias tracksAreaItem: content
 
     property bool itemHovered: false
@@ -343,6 +345,8 @@ Rectangle {
             anchors.right: verticalRulerPanelHeader.left
 
             height: 40
+
+            navigationSection: root.timelineNavigationSection
 
             Timer {
                 id: playCursorReleaseTimer
@@ -694,11 +698,11 @@ Rectangle {
 
                 if (root.itemHovered) {
                     selectionViewController.selectItemData(root.hoveredItemKey)
-                    playCursorController.animatedSeekToTime(timeline.context.selectedItemStartTime)
+                    playCursorController.seekToTimeKeepingView(timeline.context.selectedItemStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 } else {
                     selectionViewController.selectTrackAudioData(e.y)
-                    playCursorController.animatedSeekToTime(timeline.context.selectionStartTime)
+                    playCursorController.seekToTimeKeepingView(timeline.context.selectionStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                 }
                 itemsSelection.visible = false
