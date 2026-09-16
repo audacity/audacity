@@ -5,6 +5,7 @@
 
 #include <cmath>
 
+#include <QCursor>
 #include <QGuiApplication>
 
 #include "framework/global/log.h"
