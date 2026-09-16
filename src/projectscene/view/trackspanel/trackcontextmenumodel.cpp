@@ -2,9 +2,11 @@
 * Audacity: A Digital Audio Editor
 */
 #include "trackcontextmenumodel.h"
-#include "trackedit/dom/track.h"
 
-#include "global/async/async.h"
+#include "framework/global/async/async.h"
+
+#include "record/recordcommands.h"
+#include "trackedit/dom/track.h"
 
 using namespace au::projectscene;
 using namespace muse::uicomponents;
@@ -520,8 +522,8 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackVisualizationIt
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeMeterMonitoringItems()
 {
     return {
-        makeItemWithArg("action://record/toggle-mic-metering"),
+        makeMenuItem(record::RECORD_TOGGLE_MIC_METERING_COMMAND),
         makeSeparator(),
-        makeItemWithArg("action://record/toggle-input-monitoring"),
+        makeMenuItem(record::RECORD_TOGGLE_INPUT_MONITORING_COMMAND),
     };
 }
