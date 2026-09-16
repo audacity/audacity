@@ -21,11 +21,12 @@
  */
 #include "appmenumodel.h"
 
-#include "shared/types/workspacetitles.h"
+#include "framework/global/containers.h"
+#include "framework/global/types/translatablestring.h"
+#include "framework/extensions/extensionscommands.h"
 
-#include "global/containers.h"
-#include "types/translatablestring.h"
-#include "extensions/extensionscommands.h"
+#include "shared/types/workspacetitles.h"
+#include "record/recordcommands.h"
 
 #include "muse_framework_config.h"
 
@@ -376,10 +377,10 @@ MenuItem* AppMenuModel::makeViewMenu()
 MenuItem* AppMenuModel::makeRecordMenu()
 {
     MenuItemList recordItems {
-        makeMenuItem("record-on-current-track"),
-        makeMenuItem("record-on-new-track"),
+        makeMenuItem(record::RECORD_ON_CURRENT_TRACK_COMMAND),
+        makeMenuItem(record::RECORD_ON_NEW_TRACK_COMMAND),
         //! makeMenuItem("set-up-timed-recording"),
-        makeMenuItem("action://record/lead-in-recording"),
+        makeMenuItem(record::RECORD_LEAD_IN_RECORDING_COMMAND),
         //! makeMenuItem("toggle-sound-activated-recording"),
         //! makeMenuItem("set-sound-activation-level"),
     };
