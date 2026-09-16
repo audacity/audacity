@@ -567,6 +567,7 @@ NetworkError Response::mapNetworkError(int qtError) const
     case QNetworkReply::TemporaryNetworkFailureError:
     case QNetworkReply::NetworkSessionFailedError:
     case QNetworkReply::BackgroundRequestNotAllowedError:
+    case QNetworkReply::UnknownNetworkError:
         return NetworkError::ConnectionFailed;
 
     default:
