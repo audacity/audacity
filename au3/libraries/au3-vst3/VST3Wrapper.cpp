@@ -1,4 +1,6 @@
 #include "VST3Wrapper.h"
+#include <algorithm>
+#include <cmath>
 #include <stdexcept>
 #include <optional>
 #include <map>
@@ -816,13 +818,51 @@ bool VST3Wrapper::Initialize(EffectSettings& settings, Steinberg::Vst::SampleRat
 
     mSetup = setup;
 
-    constexpr auto fallbackOnDefaults = false;
-    FetchSettings(settings, fallbackOnDefaults);
+    // Restore the stored state only into a plug-in that has not run yet.
+    // Deactivating a VST3 component does not cost it its state, so a wrapper
+    // being brought up again already holds everything it had, including
+    // whatever it has done since Audacity last took a snapshot. Pushing the
+    // old chunk back in undoes that work: a plug-in that finished analysing a
+    // capture after the previous playback stopped - and so after Finalize
+    // took the snapshot - loses the analysis the moment playback starts
+    // again. A plug-in's own live state is the newer of the two.
+    if (!mStateRestored) {
+        constexpr auto fallbackOnDefaults = false;
+        FetchSettings(settings, fallbackOnDefaults);
+        mStateRestored = true;
+    }
 
     if (mEffectComponent->setActive(true) == kResultOk) {
         if (mAudioProcessor->setProcessing(true) != kResultFalse) {
-            mProcessContext.state = Vst::ProcessContext::kPlaying;
+            // Describe the transport fully, not just as playing. The sample
+            // position is always valid, but the musical fields are read only
+            // when their flags say so, and a plug-in that checks the flags
+            // first - which is what the SDK asks for - otherwise sees nothing
+            // but a playhead frozen wherever it was left.
+            mProcessContext = {};
             mProcessContext.sampleRate = sampleRate;
+            mProcessContext.tempo = sDefaultTempo;
+            mProcessContext.timeSigNumerator = sDefaultTimeSigNumerator;
+            mProcessContext.timeSigDenominator = sDefaultTimeSigDenominator;
+            mProcessContext.state = Vst::ProcessContext::kPlaying
+                                    | Vst::ProcessContext::kContTimeValid
+                                    | Vst::ProcessContext::kProjectTimeMusicValid
+                                    | Vst::ProcessContext::kBarPositionValid
+                                    | Vst::ProcessContext::kTempoValid
+                                    | Vst::ProcessContext::kTimeSigValid;
+
+            // Size the buffers for the final block now, while allocating is
+            // still harmless
+            mMainInputChannels = CountMainChannels(Vst::kInput);
+            mMainOutputChannels = CountMainChannels(Vst::kOutput);
+            const auto channels
+                = static_cast<size_t>(mMainInputChannels) + mMainOutputChannels;
+            const auto blockLen = static_cast<size_t>(std::max(0, maxSamplesPerBlock));
+            mStopBlock.assign(channels * blockLen, 0.0f);
+            mStopBlockChannels.resize(channels);
+            for (size_t i = 0; i < channels; ++i) {
+                mStopBlockChannels[i] = mStopBlock.data() + i * blockLen;
+            }
 
             mActive = true;
             ConsumeChanges(settings);
@@ -839,11 +879,13 @@ void VST3Wrapper::Finalize(EffectSettings* settings)
 {
     //Could be FlushParameters but processor is already configured
     //If no calls to process were performed deliver changes here
-    mProcessContext.state = 0;
     if (settings != nullptr) {
         ConsumeChanges(*settings);
-        Process(nullptr, nullptr, 0);
     }
+    // Let the plug-in see the end of the transfer. This also delivers any
+    // parameter changes just consumed, which the zero-sample call it replaces
+    // used to be here for.
+    NotifyTransportStopped();
     mAudioProcessor->setProcessing(false);
     mEffectComponent->setActive(false);
     mActive = false;
@@ -851,6 +893,77 @@ void VST3Wrapper::Finalize(EffectSettings* settings)
     if (settings != nullptr) {
         StoreSettings(*settings);
     }
+
+    std::vector<float>().swap(mStopBlock);
+    std::vector<float*>().swap(mStopBlockChannels);
+    mMainInputChannels = 0;
+    mMainOutputChannels = 0;
+}
+
+unsigned VST3Wrapper::CountMainChannels(Steinberg::Vst::BusDirection direction) const
+{
+    using namespace Steinberg;
+
+    unsigned channels { 0 };
+    const auto busCount = mEffectComponent->getBusCount(Vst::kAudio, direction);
+    for (int32 busIndex = 0; busIndex < busCount; ++busIndex) {
+        Vst::BusInfo busInfo { };
+        if (mEffectComponent->getBusInfo(Vst::kAudio, direction, busIndex, busInfo) == kResultOk
+            && busInfo.busType == Vst::kMain) {
+            channels += busInfo.channelCount;
+        }
+    }
+    return channels;
+}
+
+void VST3Wrapper::AdvanceTransport(Steinberg::int32 numSamples)
+{
+    if (numSamples <= 0) {
+        return;
+    }
+    mProcessContext.projectTimeSamples += numSamples;
+    mProcessContext.continousTimeSamples += numSamples;
+    if (mProcessContext.sampleRate > 0) {
+        const auto quarterNotesPerSample
+            = sDefaultTempo / 60.0 / mProcessContext.sampleRate;
+        mProcessContext.projectTimeMusic
+            = mProcessContext.projectTimeSamples * quarterNotesPerSample;
+        const auto quarterNotesPerBar = 4.0 * sDefaultTimeSigNumerator
+                                        / sDefaultTimeSigDenominator;
+        mProcessContext.barPositionMusic
+            = std::floor(mProcessContext.projectTimeMusic / quarterNotesPerBar)
+              * quarterNotesPerBar;
+    }
+}
+
+void VST3Wrapper::NotifyTransportStopped()
+{
+    using namespace Steinberg;
+
+    if (!(mProcessContext.state & Vst::ProcessContext::kPlaying)) {
+        return;
+    }
+    // Only the transport stops; the fields stay as valid as they were
+    mProcessContext.state
+        &= ~static_cast<uint32>(Vst::ProcessContext::kPlaying);
+
+    const auto blockLen = static_cast<size_t>(std::max(0, mSetup.maxSamplesPerBlock));
+    const auto channels
+        = static_cast<size_t>(mMainInputChannels) + mMainOutputChannels;
+    if (blockLen == 0 || channels == 0
+        || mStopBlockChannels.size() < channels
+        || mStopBlock.size() < channels * blockLen) {
+        // Nothing to render through, so the cleared flag will have to do
+        Process(nullptr, nullptr, 0);
+        return;
+    }
+
+    // One more block, of silence, with the transport now stopped
+    std::fill_n(mStopBlock.data(), mMainInputChannels * blockLen, 0.0f);
+    Process(mMainInputChannels > 0 ? mStopBlockChannels.data() : nullptr,
+            mMainOutputChannels > 0
+            ? mStopBlockChannels.data() + mMainInputChannels : nullptr,
+            blockLen);
 }
 
 void VST3Wrapper::ProcessBlockStart(const EffectSettings& settings)
@@ -985,6 +1098,10 @@ size_t VST3Wrapper::Process(const float* const* inBlock, float* const* outBlock,
     }
 
     const auto processResult = mAudioProcessor->process(data);
+    if (processResult == kResultOk) {
+        // The playhead moves only over audio the plug-in has actually seen
+        AdvanceTransport(data.numSamples);
+    }
 
     return processResult == kResultOk
            ? data.numSamples : 0;
