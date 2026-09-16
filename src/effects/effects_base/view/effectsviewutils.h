@@ -3,6 +3,8 @@
  */
 #pragma once
 
+#include <QtQml/qqml.h>
+
 #include "effectsviewtypes.h"
 
 #include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
