@@ -118,6 +118,8 @@ static const ActionCode SELECT_ZERO_CROSSING("zero-cross");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
+static const ActionQuery LABEL_AUTO_COLOR_QUERY("action://trackedit/label/change-color-auto");
+static const ActionQuery LABEL_CHANGE_COLOR_QUERY("action://trackedit/label/change-color");
 static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/change-color");
 static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
 static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
@@ -304,6 +306,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
 
+    dispatcher()->reg(this, LABEL_AUTO_COLOR_QUERY, this, &TrackeditActionsController::setLabelColor);
+    dispatcher()->reg(this, LABEL_CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setLabelColor);
     dispatcher()->reg(this, TRACK_CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setTrackColor);
     dispatcher()->reg(this, TRACK_CHANGE_FORMAT_QUERY, this, &TrackeditActionsController::setTrackFormat);
     dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
@@ -2034,6 +2038,24 @@ void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& 
 
     auto clipKey = selectedClips.front();
     trackeditInteraction()->changeClipColor(clipKey, colorIndex);
+    notifyActionCheckedChanged(q.toString());
+}
+
+void TrackeditActionsController::setLabelColor(const muse::actions::ActionQuery& q)
+{
+    const auto labels = selectionController()->selectedLabels();
+    if (labels.empty()) {
+        return;
+    }
+
+    trackedit::ClipColorIndex colorIndex = trackedit::CLIP_COLOR_INDEX_NONE;
+    if (q.contains("colorindex")) {
+        colorIndex = q.param("colorindex").toInt();
+    }
+
+    for (const auto& labelKey : labels) {
+        trackeditInteraction()->changeLabelColor(labelKey, colorIndex);
+    }
     notifyActionCheckedChanged(q.toString());
 }
 

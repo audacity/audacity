@@ -453,6 +453,11 @@ bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     return m_interaction->changeLabelTitle(labelKey, title);
 }
 
+bool TrackeditInteraction::changeLabelColor(const LabelKey& labelKey, ClipColorIndex colorIndex)
+{
+    return m_interaction->changeLabelColor(labelKey, colorIndex);
+}
+
 bool TrackeditInteraction::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
 {
     return m_interaction->changeLabelLowFrequency(labelKey, frequency);

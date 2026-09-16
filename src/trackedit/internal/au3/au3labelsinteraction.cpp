@@ -150,6 +150,29 @@ bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     return true;
 }
 
+bool Au3LabelsInteraction::changeLabelColor(const LabelKey& labelKey, ClipColorIndex colorIndex)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
+        return false;
+    }
+
+    label->SetColorIndex(colorIndex);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, label));
+    }
+
+    return true;
+}
+
 bool Au3LabelsInteraction::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
 {
     auto& project = projectRef();
