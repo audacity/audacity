@@ -435,6 +435,20 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
     return ok;
 }
 
+double TrackLabelsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+{
+    const ViewTrackItem* item = itemByKey(key.key);
+    if (item && !muse::RealIsEqual(item->time().startTime, item->time().endTime)) {
+        if (direction == DirectionType::Direction::Right && muse::RealIsEqual(item->time().endTime, m_editedLabelStartTime)) {
+            direction = DirectionType::Direction::Left;
+        } else if (direction == DirectionType::Direction::Left && muse::RealIsEqual(item->time().startTime, m_editedLabelEndTime)) {
+            direction = DirectionType::Direction::Right;
+        }
+    }
+
+    return TrackItemsListModel::findGuideline(key, direction);
+}
+
 bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed)
 {
     auto project = globalContext()->currentProject();
