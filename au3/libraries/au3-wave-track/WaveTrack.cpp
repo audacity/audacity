@@ -1412,6 +1412,16 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     t0 = roundTime(t0);
     t1 = roundTime(t1);
 
+    const auto isInsideClip = [&track](double t) {
+        const auto s = track.TimeToLongSamples(t);
+        const auto clips = track.Intervals();
+        return std::any_of(clips.begin(), clips.end(), [s](const auto& clip) {
+            return clip->GetPlayStartSample() < s && s < clip->GetPlayEndSample();
+        });
+    };
+    const auto joinAtT0 = joinEnds && isInsideClip(t0);
+    const auto joinAtT1 = joinEnds && isInsideClip(t1);
+
     // Save the cut/split lines whether preserving or not since merging
     // needs to know if a clip boundary is being crossed since Paste()
     // will add split lines around the pasted clip if so.
@@ -1654,9 +1664,11 @@ void WaveTrack::ClearAndPasteAtSameTempo(
         }
     }
 
-    if (joinEnds) {
-        const auto delta = LongSamplesToTime(1);
+    const auto delta = LongSamplesToTime(1);
+    if (joinAtT0) {
         track.Join(t0 - delta, t0 + delta, {}, false /* evenIfPitchOrSpeedMismatch */);
+    }
+    if (joinAtT1) {
         track.Join(t1 - delta, t1 + delta, {}, false /* evenIfPitchOrSpeedMismatch */);
     }
 }
