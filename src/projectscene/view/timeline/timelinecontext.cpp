@@ -142,7 +142,7 @@ void TimelineContext::init(double frameWidth)
     });
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
-        updateFrameTime();
+        emit horizontalScrollChanged();
     });
 
     onProjectChanged();
