@@ -12,8 +12,10 @@
 #include "mocks/playbackmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
+#include "record/recordcommands.h"
 #include "record/tests/mocks/recordcontrollermock.h"
 #include "record/tests/mocks/recordmock.h"
+#include "trackedit/tests/mocks/commanddispatchermock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
@@ -21,7 +23,6 @@
 
 using ::testing::_;
 using ::testing::NiceMock;
-using ::testing::Property;
 using ::testing::Return;
 using ::testing::ReturnRef;
 
@@ -46,6 +47,15 @@ public:
 
         m_dispatcher = std::make_shared<actions::ActionsDispatcherMock>();
         m_controller->dispatcher.set(m_dispatcher);
+
+        m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
+        m_controller->commandDispatcher.set(m_commandDispatcher);
+        ON_CALL(*m_commandDispatcher, dispatch(_))
+        .WillByDefault([](const muse::rcommand::Request& request) {
+            return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
+                return resolve(muse::rcommand::make_response(request, muse::make_ok()));
+            });
+        });
 
         m_interactive = std::make_shared<NiceMock<InteractiveMock> >();
         m_controller->interactive.set(m_interactive);
@@ -205,6 +215,7 @@ public:
 
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<actions::ActionsDispatcherMock> m_dispatcher;
+    std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
     std::shared_ptr<InteractiveMock> m_interactive;
     std::shared_ptr<record::RecordControllerMock> m_recordController;
     std::shared_ptr<record::RecordMock> m_record;
@@ -1458,8 +1469,7 @@ TEST_F(PlaybackControllerTests, Stop_WhenRecording_StopsTheRecorder)
     setRecording(true);
 
     //! [THEN] The recorder is stopped, not the player
-    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
-                                            Property(&muse::actions::ActionQuery::toString, "action://record/stop"))))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_STOP_COMMAND)))
     .Times(1);
 
     EXPECT_CALL(*m_player, stop())
@@ -1475,8 +1485,7 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_WhenRecording_PausesTheRecorder)
     setRecording(true, false /* isLeadIn */);
 
     //! [THEN] The recorder is paused, not the player
-    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
-                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND)))
     .Times(1);
 
     EXPECT_CALL(*m_player, pause())
@@ -1499,8 +1508,7 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadIn_PausesThePlayback)
     EXPECT_CALL(*m_player, pause())
     .Times(1);
 
-    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
-                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND)))
     .Times(0);
 
     //! [WHEN] User presses the Play/Pause button during lead-in
@@ -1520,8 +1528,7 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadInWhenPaused_ResumesTh
     EXPECT_CALL(*m_player, resume())
     .Times(1);
 
-    EXPECT_CALL(*m_dispatcher, dispatch(::testing::Matcher<const muse::actions::ActionQuery&>(
-                                            Property(&muse::actions::ActionQuery::toString, "action://record/pause"))))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND)))
     .Times(0);
 
     //! [WHEN] User presses the Play/Pause button to resume the lead-in
