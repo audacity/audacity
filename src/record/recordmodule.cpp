@@ -6,7 +6,11 @@
 #include "modularity/ioc.h"
 
 #include "ui/iuiactionsregister.h"
+#include "rcommand/icommandsregister.h"
+#include "rcommand/icommandsstate.h"
 
+#include "internal/recordcommandsregister.h"
+#include "internal/recordcommandsstate.h"
 #include "internal/recordconfiguration.h"
 #include "internal/recordcontroller.h"
 #include "internal/recordmetercontroller.h"
@@ -33,6 +37,14 @@ void RecordModule::registerExports()
 
     globalIoc()->registerExport<IRecordConfiguration>(mname, m_configuration);
     globalIoc()->registerExport<IRecordMeterController>(mname, m_meterController);
+}
+
+void RecordModule::resolveImports()
+{
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<RecordCommandsRegister>());
+    }
 }
 
 void RecordModule::onInit(const IApplication::RunMode& mode)
@@ -65,6 +77,10 @@ void RecordContext::registerExports()
 
 void RecordContext::resolveImports()
 {
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<RecordCommandsState>(iocContext()));
+    }
 }
 
 void RecordContext::onInit(const IApplication::RunMode& mode)
