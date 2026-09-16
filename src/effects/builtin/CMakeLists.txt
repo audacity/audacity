@@ -33,6 +33,7 @@ set(MODULE_SRC
 
 set(MODULE_LINK
         au3wrap
+        Qt::Quick
 )
 
 set(MODULE_LINK_PUBLIC

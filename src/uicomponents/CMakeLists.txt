@@ -40,6 +40,7 @@ set(MODULE_SRC
 
 set(MODULE_LINK
     muse::uicomponents_qml
+    Qt::Quick
 )
 
 setup_module()
