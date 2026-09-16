@@ -28,12 +28,7 @@ RealtimeEffectList::~RealtimeEffectList()
 
 std::unique_ptr<ClientData::Cloneable<> > RealtimeEffectList::Clone() const
 {
-    auto result = std::make_unique<RealtimeEffectList>();
-    for (auto& pState : mStates) {
-        result->mStates.push_back(pState->Clone());
-    }
-    result->SetActive(this->IsActive());
-    return result;
+    return std::make_unique<RealtimeEffectList>(*this);
 }
 
 RealtimeEffectList& RealtimeEffectList::operator=(const RealtimeEffectList& other)
