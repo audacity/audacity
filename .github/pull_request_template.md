@@ -12,7 +12,3 @@ Resolves: *(direct link to the issue)*
 
 Recommended:
 - [ ] Each commit compiles and runs on my machine without known undesirable changes of behavior
-
-QA:
-
-- [ ] Testflow test cases have been run

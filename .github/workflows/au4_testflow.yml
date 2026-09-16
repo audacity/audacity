@@ -30,7 +30,7 @@ env:
 
 jobs:
   discover:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       scripts: ${{ steps.list.outputs.scripts }}
     steps:
@@ -53,7 +53,7 @@ jobs:
 
   run:
     needs: discover
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       actions: read # to list the artifacts of another run when reusing one
       contents: read
@@ -88,7 +88,7 @@ jobs:
           libgl1 libglx0 libopengl0 libegl1 \
           libx11-6 libx11-xcb1 libxcb1 \
           libfontconfig1 libfreetype6 libexpat1 \
-          libasound2
+          libasound2t64
 
     - name: Download AppImage artifact
       if: matrix.status != 'DISABLED'
