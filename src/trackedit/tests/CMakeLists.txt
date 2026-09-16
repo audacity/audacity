@@ -34,6 +34,9 @@ set(MODULE_TEST_LINK
     spectrogram
     au3wrap
     au3-project-file-io
+    effects_base
+    au3-project-history
+    au3-realtime-effects
 
     muse::ui
     muse::ui_qml
@@ -46,6 +49,7 @@ set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})
 set(MODULE_TEST_INCLUDE
     ${CMAKE_CURRENT_LIST_DIR}/..
     ${PROJECT_SOURCE_DIR}/src/spectrogram
+    ${PROJECT_SOURCE_DIR}/src/effects/effects_base
 )
 
 include(SetupGTest)

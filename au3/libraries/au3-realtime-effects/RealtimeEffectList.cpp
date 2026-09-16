@@ -183,6 +183,17 @@ void RealtimeEffectList::Clear()
     }
 }
 
+void RealtimeEffectList::CloneStates()
+{
+    States clones;
+    clones.reserve(mStates.size());
+    for (const auto& pState : mStates) {
+        clones.push_back(pState->Clone());
+    }
+    // Lock for only a short time
+    (LockGuard{ mLock }, swap(clones, mStates));
+}
+
 std::optional<size_t> RealtimeEffectList::FindState(
     const std::shared_ptr<RealtimeEffectState>& pState) const
 {
