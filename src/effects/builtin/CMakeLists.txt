@@ -23,6 +23,7 @@ target_sources(effects_builtin PRIVATE
 
 target_link_libraries(effects_builtin PRIVATE
         au3wrap
+        Qt::Quick
 )
 
 target_link_libraries(effects_builtin PUBLIC

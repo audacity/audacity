@@ -12,6 +12,7 @@ target_sources(uicomponents PRIVATE
 
 target_link_libraries(uicomponents PRIVATE
     muse::uicomponents_qml
+    Qt::Quick
 )
 
 add_subdirectory(qml/Audacity/UiComponents)

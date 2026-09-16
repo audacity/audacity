@@ -142,6 +142,7 @@ set(MODULE_LINK
         au3wrap
         au3-tags
         Qt::Widgets
+        Qt::Quick
 )
 
 if (QT_ADD_CONCURRENT)
