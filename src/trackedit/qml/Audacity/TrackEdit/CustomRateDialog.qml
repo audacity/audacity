@@ -56,15 +56,15 @@ StyledDialogView {
 
                 anchors.fill: parent
 
-                currentText: root.rate > 0 ? root.rate.toString() : ""
+                currentText: root.rate > 0 ? ui.df.formatRealForEdit(root.rate, 0) : ""
 
                 validator: IntValidator {
                     bottom: 1
                 }
 
                 onTextChanged: function (newValue) {
-                    var val = parseInt(newValue)
-                    root.rate = (val > 0) ? val : 1
+                    var val = ui.df.parseReal(newValue, 0)
+                    root.rate = (val !== undefined && val > 0) ? val : 1
                 }
             }
 
@@ -85,7 +85,7 @@ StyledDialogView {
                     onClicked: {
                         menuLoader.toggleOpened(availableRates.map(function (rate) {
                             return {
-                                "title": rate.toString(),
+                                "title": rate.toLocaleString(Qt.locale(), 'f', 0),
                                 "id": rate.toString()
                             }
                         }))

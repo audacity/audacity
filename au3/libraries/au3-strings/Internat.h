@@ -46,10 +46,12 @@ inline ::TranslatableString Verbatim(const char* s)
 {
     return ::TranslatableString::untranslatable(s);
 }
+
 inline ::TranslatableString Verbatim(const wxString& s)
 {
     return au3::untranslatable(s);
 }
+
 inline ::TranslatableString Verbatim(const std::string& s)
 {
     return ::TranslatableString::untranslatable(QString::fromStdString(s));
@@ -67,6 +69,8 @@ public:
      * Normally, this is a decimal point ('.'), but e.g. Germany uses a
      * comma (',').*/
     static wxChar GetDecimalSeparator();
+    //! Set the separator without Init(), e.g. from the Qt locale in AU4
+    static void SetDecimalSeparator(wxChar sep);
     static void SetCeeNumberFormat();
 
     /** \brief Convert a string to a number.
