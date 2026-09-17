@@ -153,6 +153,7 @@ StyledPopupView {
             navPanel.name: "TrackRulerFormat"
             navPanel.section: root.navigationSection
             navPanel.order: 2
+            navPanel.enabled: root.isOpened
             navPanel.accessible.name: title
 
             model: root.availableRulerTypes
