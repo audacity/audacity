@@ -189,6 +189,28 @@ ExpandClipTillNextOne(const WaveTrack& track, WaveTrack::Interval& interval);
  @post `track.NoPlayRegionsOverlap()`
  */
 WAVE_TRACK_API void RemoveOverlaps(WaveTrack& track);
+
+//! Ref: the copy keeps using the realtime effect states of the original,
+//! for a copy that replaces the original or is temporary.
+//! Deep: the copy gets its own states, for a copy that becomes a new track.
+enum class RealtimeEffectsCopy {
+    Ref, Deep
+};
+
+//! Make another track copying format, rate, etc. but containing no
+//! clips; with the specified number of channels.
+/*!
+ It is important to pass the correct factory (that for the project
+ which will own the copy) in the unusual case that a track is copied from
+ another project or the clipboard.  For copies within one project, the
+ default will do.
+ */
+WAVE_TRACK_API WaveTrack::Holder EmptyCopy(const WaveTrack& track, size_t nChannels, RealtimeEffectsCopy effects,
+                                           const SampleBlockFactoryPtr& pFactory = {});
+
+//! As above, with as many channels as in `track`
+WAVE_TRACK_API WaveTrack::Holder EmptyCopy(const WaveTrack& track, RealtimeEffectsCopy effects,
+                                           const SampleBlockFactoryPtr& pFactory = {});
 } // namespace WaveTrackUtilities
 
 #endif

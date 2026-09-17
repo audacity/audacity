@@ -13,6 +13,7 @@
 #include "Sequence.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
 #include <algorithm>
 
 WaveTrackUtilities::AllClipsIterator::AllClipsIterator(WaveTrack& track)
@@ -450,4 +451,27 @@ void WaveTrackUtilities::RemoveOverlaps(WaveTrack& track)
             prev->TrimRight(prev->GetPlayEndTime() - cur->GetPlayStartTime());
         }
     }
+}
+
+struct WaveTrackUtilities::EmptyCopyAccess {
+    static WaveTrack::Holder Call(const WaveTrack& track, size_t nChannels, const SampleBlockFactoryPtr& pFactory)
+    {
+        return track.EmptyCopy(nChannels, pFactory);
+    }
+};
+
+WaveTrack::Holder WaveTrackUtilities::EmptyCopy(const WaveTrack& track, size_t nChannels, RealtimeEffectsCopy effects,
+                                                const SampleBlockFactoryPtr& pFactory)
+{
+    auto result = EmptyCopyAccess::Call(track, nChannels, pFactory);
+    if (effects == RealtimeEffectsCopy::Deep) {
+        RealtimeEffectList::Get(*result).CloneStates();
+    }
+    return result;
+}
+
+WaveTrack::Holder WaveTrackUtilities::EmptyCopy(const WaveTrack& track, RealtimeEffectsCopy effects,
+                                                const SampleBlockFactoryPtr& pFactory)
+{
+    return EmptyCopy(track, track.NChannels(), effects, pFactory);
 }

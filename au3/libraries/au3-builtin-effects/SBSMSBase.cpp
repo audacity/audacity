@@ -17,6 +17,7 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "au3-label-track/LabelTrack.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-track/TimeWarper.h"
 
 #include <cassert>
@@ -361,7 +362,7 @@ bool SBSMSBase::Process(EffectInstance&, EffectSettings&)
                 const auto warper = createTimeWarper(
                     mT0, mT1, maxDuration, rateStart, rateEnd, rateSlideType);
 
-                WaveTrack::Holder outputTrack = track.EmptyCopy();
+                WaveTrack::Holder outputTrack = WaveTrackUtilities::EmptyCopy(track, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
                 auto iter = outputTrack->Channels().begin();
                 rb.outputTrack = outputTrack.get();
                 rb.outputLeftChannel = (*iter++).get();
