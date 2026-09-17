@@ -85,8 +85,8 @@ public:
         //! NOTE The tracks navigation controller channels the model subscribes to
         ON_CALL(*m_tracksNavigationController, focusedTrackChanged())
         .WillByDefault(Return(m_focusedTrackChanged));
-        ON_CALL(*m_tracksNavigationController, focusedItemChanged())
-        .WillByDefault(Return(m_focusedItemChanged));
+        ON_CALL(*m_tracksNavigationController, focusChanged())
+        .WillByDefault(Return(m_focusChanged));
         ON_CALL(*m_tracksNavigationController, focusedTrack())
         .WillByDefault(Return(INVALID_TRACK));
 
@@ -245,7 +245,7 @@ public:
     muse::async::Channel<Track, int> m_trackInserted;
     muse::async::Channel<Track, int> m_trackMoved;
     muse::async::Channel<TrackId, bool> m_focusedTrackChanged;
-    muse::async::Channel<TrackItemKey, bool> m_focusedItemChanged;
+    muse::async::Channel<TrackFocus, bool> m_focusChanged;
 
     std::vector<muse::ui::NavigationControl*> m_controls;
     std::vector<muse::ui::NavigationPanel*> m_extraPanels;
@@ -399,7 +399,7 @@ TEST_F(TrackNavigationModelTests, NavigationOnItemsPanelFocusesItem)
     .WillByDefault(Return(clipControl));
 
     //! [EXPECT] The focused item is set to that clip on that track
-    EXPECT_CALL(*m_tracksNavigationController, setFocusedItem(TrackItemKey { 10, 200 }, _)).Times(1);
+    EXPECT_CALL(*m_tracksNavigationController, setFocus(TrackFocus::item({ 10, 200 }), _)).Times(1);
 
     //! [WHEN] The navigation changes
     m_navigationChanged.notify();
@@ -424,7 +424,7 @@ TEST_F(TrackNavigationModelTests, NavigationOnTrackPanelFocusesTrackWithoutItem)
     .WillByDefault(Return(nullptr));
 
     //! [EXPECT] The track is focused, without an item
-    EXPECT_CALL(*m_tracksNavigationController, setFocusedItem(TrackItemKey { 10, INVALID_TRACK_ITEM }, _)).Times(1);
+    EXPECT_CALL(*m_tracksNavigationController, setFocus(TrackFocus::track(10), _)).Times(1);
 
     //! [WHEN] The navigation changes
     m_navigationChanged.notify();
@@ -451,7 +451,7 @@ TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesTrackWithProjectN
     .WillByDefault(Return(rulerControl));
 
     //! [EXPECT] The track is focused, without an item, and the general navigation is off
-    EXPECT_CALL(*m_tracksNavigationController, setFocusedItem(TrackItemKey { 10, INVALID_TRACK_ITEM }, _)).Times(1);
+    EXPECT_CALL(*m_tracksNavigationController, setFocus(TrackFocus::track(10), _)).Times(1);
     EXPECT_CALL(*m_tracksNavigationController, setIsNavigationActive(false)).Times(1);
 
     //! [WHEN] The navigation changes

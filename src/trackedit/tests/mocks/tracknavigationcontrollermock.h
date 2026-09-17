@@ -16,12 +16,11 @@ public:
     MOCK_METHOD(muse::async::Notification, isNavigationActiveChanged, (), (const, override));
 
     MOCK_METHOD(TrackId, focusedTrack, (), (const, override));
-    MOCK_METHOD(void, setFocusedTrack, (const TrackId& trackId, bool), (override));
     MOCK_METHOD((muse::async::Channel<TrackId, bool>), focusedTrackChanged, (), (const, override));
 
-    MOCK_METHOD(TrackItemKey, focusedItem, (), (const, override));
-    MOCK_METHOD(void, setFocusedItem, (const TrackItemKey& key, bool), (override));
-    MOCK_METHOD((muse::async::Channel<TrackItemKey, bool>), focusedItemChanged, (), (const, override));
+    MOCK_METHOD(TrackFocus, focus, (), (const, override));
+    MOCK_METHOD(void, setFocus, (const TrackFocus& focus, bool), (override));
+    MOCK_METHOD((muse::async::Channel<TrackFocus, bool>), focusChanged, (), (const, override));
 
     MOCK_METHOD(TrackItemKeyList, itemKeysInRange, (const TrackItemKey& anchor, const TrackItemKey& target), (const, override));
 

@@ -142,7 +142,7 @@ void RecordController::startWithNewTrack()
     }
 
     selectionController()->setSelectedTracks(newTracks);
-    trackNavigationController()->setFocusedTrack(newTracks.front());
+    trackNavigationController()->setFocus(trackedit::TrackFocus::track(newTracks.front()));
 
     Ret ret = record()->start();
     if (!ret) {

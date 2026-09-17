@@ -768,7 +768,8 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const ClipKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
+        const trackedit::TrackItemKey anchor = trackNavigationController()->focus().itemKey().value_or(trackedit::TrackItemKey {});
+        const ClipKeyList rangeKeys = trackNavigationController()->itemKeysInRange(anchor, key.key);
         if (!rangeKeys.empty()) {
             selectionController()->resetSelectedLabels();
             selectionController()->setSelectedClips(rangeKeys, complete);
@@ -801,7 +802,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
         } else {
             selectionController()->resetSelectedLabels();
             selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);
-            trackNavigationController()->setFocusedTrack(key.key.trackId);
+            trackNavigationController()->setFocus(TrackFocus::track(key.key.trackId));
         }
     } else {
         if (mode == SelectionMode::Toggle) {
@@ -848,11 +849,11 @@ TrackItemKeyList TrackClipsListModel::getSelectedItemKeys() const
 {
     TrackItemKeyList result = selectionController()->selectedClips();
 
-    trackedit::TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+    const std::optional<trackedit::TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (focusedItemKey && !muse::contains(result, *focusedItemKey)) {
         const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        if (prj && prj->track(focusedItemKey.trackId)->type != TrackType::Label) {
-            result.insert(result.cbegin(), focusedItemKey);
+        if (prj && prj->track(focusedItemKey->trackId)->type != TrackType::Label) {
+            result.insert(result.cbegin(), *focusedItemKey);
         }
     }
 
