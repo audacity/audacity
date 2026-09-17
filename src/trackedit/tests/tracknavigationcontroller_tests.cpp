@@ -197,7 +197,7 @@ TEST_F(TrackNavigationControllerTests, TabOnClipStepsToNextClip)
     setupTrackWithClips(1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) });
 
     initController();
-    m_controller->setFocusedItem({ 1, 100 });
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
 
     //! [EXPECT] Framework panel navigation is NOT dispatched
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(0);
@@ -206,7 +206,7 @@ TEST_F(TrackNavigationControllerTests, TabOnClipStepsToNextClip)
     invokeAction("track-view-next-panel");
 
     //! [THEN] Focus moves to the next clip
-    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 200 }));
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 200 }));
 }
 
 /**
@@ -219,7 +219,7 @@ TEST_F(TrackNavigationControllerTests, TabOnLastClipHandsOverToNextPanel)
     setupTrackWithClips(1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) });
 
     initController();
-    m_controller->setFocusedItem({ 1, 200 });
+    m_controller->setFocus(TrackFocus::item({ 1, 200 }));
 
     //! [EXPECT] Framework panel navigation is dispatched
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(1);
@@ -228,7 +228,7 @@ TEST_F(TrackNavigationControllerTests, TabOnLastClipHandsOverToNextPanel)
     invokeAction("track-view-next-panel");
 
     //! [THEN] Focus stays on the last clip
-    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 200 }));
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 200 }));
 }
 
 /**
@@ -241,7 +241,7 @@ TEST_F(TrackNavigationControllerTests, TabNavigatesToNextPanelWhenNoItems)
     setupTrackWithClips(1, {});
 
     initController();
-    m_controller->setFocusedTrack(1);
+    m_controller->setFocus(TrackFocus::track(1));
 
     //! [EXPECT] Framework panel navigation is dispatched
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(1);
@@ -260,7 +260,7 @@ TEST_F(TrackNavigationControllerTests, ShiftTabOnClipStepsToPrevClip)
     setupTrackWithClips(1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) });
 
     initController();
-    m_controller->setFocusedItem({ 1, 200 });
+    m_controller->setFocus(TrackFocus::item({ 1, 200 }));
 
     //! [EXPECT] Framework panel navigation is NOT dispatched
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND))).Times(0);
@@ -269,7 +269,7 @@ TEST_F(TrackNavigationControllerTests, ShiftTabOnClipStepsToPrevClip)
     invokeAction("track-view-prev-panel");
 
     //! [THEN] Focus moves to the previous clip
-    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 100 }));
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 100 }));
 }
 
 /**
@@ -282,7 +282,7 @@ TEST_F(TrackNavigationControllerTests, ShiftTabOnFirstClipHandsOverToPrevPanel)
     setupTrackWithClips(1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) });
 
     initController();
-    m_controller->setFocusedItem({ 1, 100 });
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
 
     //! [EXPECT] Framework panel navigation is dispatched
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND))).Times(1);
@@ -291,7 +291,7 @@ TEST_F(TrackNavigationControllerTests, ShiftTabOnFirstClipHandsOverToPrevPanel)
     invokeAction("track-view-prev-panel");
 
     //! [THEN] Focus stays on the first clip
-    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 100 }));
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 100 }));
 }
 
 /**
@@ -304,7 +304,7 @@ TEST_F(TrackNavigationControllerTests, DownFromTrackFocusesNextTrack)
     setupTracks({ { 1, {} }, { 2, {} } });
 
     initController();
-    m_controller->setFocusedTrack(1);
+    m_controller->setFocus(TrackFocus::track(1));
 
     //! [WHEN] Down is pressed
     invokeAction("track-view-below-item");
@@ -323,7 +323,7 @@ TEST_F(TrackNavigationControllerTests, UpFromTrackFocusesPrevTrack)
     setupTracks({ { 1, {} }, { 2, {} } });
 
     initController();
-    m_controller->setFocusedTrack(2);
+    m_controller->setFocus(TrackFocus::track(2));
 
     //! [WHEN] Up is pressed
     invokeAction("track-view-above-item");
@@ -345,13 +345,13 @@ TEST_F(TrackNavigationControllerTests, DownFromClipFocusesClosestClipBelow)
         });
 
     initController();
-    m_controller->setFocusedItem({ 1, 100 }); //!< start time 0.0
+    m_controller->setFocus(TrackFocus::item({ 1, 100 })); //!< start time 0.0
 
     //! [WHEN] Down is pressed
     invokeAction("track-view-below-item");
 
     //! [THEN] The clip closest to 0.0 on track 2 is focused (clip 300 at 0.1)
-    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 2, 300 }));
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 2, 300 }));
 }
 
 /**
@@ -367,13 +367,13 @@ TEST_F(TrackNavigationControllerTests, UpFromClipFocusesClosestClipAbove)
         });
 
     initController();
-    m_controller->setFocusedItem({ 2, 400 }); //!< start time 2.5
+    m_controller->setFocus(TrackFocus::item({ 2, 400 })); //!< start time 2.5
 
     //! [WHEN] Up is pressed
     invokeAction("track-view-above-item");
 
     //! [THEN] The clip closest to 2.5 on track 1 is focused (clip 200 at 2.0)
-    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 1, 200 }));
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 200 }));
 }
 
 /**
@@ -386,7 +386,7 @@ TEST_F(TrackNavigationControllerTests, ContextMenuRequestedForFocusedTrack)
     setupTracks({ { 1, {} } });
 
     initController();
-    m_controller->setFocusedTrack(1);
+    m_controller->setFocus(TrackFocus::track(1));
 
     //! [GIVEN] A listener on the context-menu request channel
     TrackItemKey requested { INVALID_TRACK, INVALID_TRACK_ITEM };
@@ -415,7 +415,7 @@ TEST_F(TrackNavigationControllerTests, RulerContextMenuRequestedForFocusedTrack)
     setupTracks({ { 1, {} } });
 
     initController();
-    m_controller->setFocusedTrack(1);
+    m_controller->setFocus(TrackFocus::track(1));
 
     //! [GIVEN] A listener on the ruler context-menu request channel
     TrackId requested = INVALID_TRACK;
@@ -471,12 +471,12 @@ TEST_F(TrackNavigationControllerTests, ResetNavigationRecomputesVerticalReferenc
     initController();
 
     //! [GIVEN] A vertical anchor established at t=0 by moving down from the first track
-    m_controller->setFocusedItem({ 1, 100 });
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
     invokeAction("track-view-below-item");
-    ASSERT_EQ(m_controller->focusedItem(), (TrackItemKey { 2, 200 }));
+    ASSERT_EQ(m_controller->focus(), TrackFocus::item({ 2, 200 }));
 
     //! [GIVEN] The focus is moved to an item at t=10 (the anchor is now stale at t=0)
-    m_controller->setFocusedItem({ 2, 210 });
+    m_controller->setFocus(TrackFocus::item({ 2, 210 }));
 
     //! [EXPECT] Resetting the navigation also drops the highlight
     EXPECT_CALL(*m_navigationController, setIsHighlight(false)).Times(1);
@@ -489,6 +489,6 @@ TEST_F(TrackNavigationControllerTests, ResetNavigationRecomputesVerticalReferenc
 
     //! [THEN] The reference is recomputed from t=10, so the closest clip on track 3 is 310 (t=9),
     //! not the stale-anchor clip 300 (t=1)
-    EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 3, 310 }));
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 3, 310 }));
 }
 }
