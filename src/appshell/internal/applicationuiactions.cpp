@@ -233,8 +233,8 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action_description", "Trigger the focused control or select the focused track item")
              ),
     UiAction("action://context-menu",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Open item context menu"),
              //: Action description: shown as a tooltip; can be a full sentence
