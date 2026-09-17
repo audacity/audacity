@@ -8,6 +8,7 @@
 
 #include <QCoreApplication>
 
+#include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
@@ -547,6 +548,7 @@ bool Au3ClipsInteraction::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList
         auto& trackFactory = WaveTrackFactory::Get(projectRef());
         auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
         auto newTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+        RealtimeEffectList::Get(*newTrack).CloneStates();
         auto& projectTracks = Au3TrackList::Get(projectRef());
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -618,6 +620,7 @@ bool Au3ClipsInteraction::duplicateClips(const ClipKeyList& clipKeyList)
 
     for (const auto& track : waveTracks) {
         auto newTrack = track->EmptyCopy(pSampleBlockFactory);
+        RealtimeEffectList::Get(*newTrack).CloneStates();
 
         std::vector<ClipKey> clipsToDuplicate;
         std::copy_if(clipKeyList.begin(), clipKeyList.end(), std::back_inserter(clipsToDuplicate), [track](const ClipKey& clipKey) {
