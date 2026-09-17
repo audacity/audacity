@@ -106,6 +106,7 @@ public:
         Clip clip;
         clip.key = { trackId, itemId };
         clip.startTime = startTime;
+        clip.endTime = startTime + 1.0;
         return clip;
     }
 
@@ -117,17 +118,22 @@ public:
 
         ON_CALL(*m_trackeditProject, track(trackId))
         .WillByDefault(Return(track));
-        ON_CALL(*m_trackeditProject, itemList(trackId))
+        ON_CALL(*m_trackeditProject, itemTimeSpansSorted(trackId))
         .WillByDefault([clips](const TrackId&) {
-            ItemWithTimeList items;
-            for (const Clip& clip : clips) {
-                items.push_back({ clip.key, clip.startTime, clip.endTime });
-            }
-            std::sort(items.begin(), items.end(), [](const ItemWithTime& a, const ItemWithTime& b) {
+            Clips sorted = clips;
+            std::sort(sorted.begin(), sorted.end(), [](const Clip& a, const Clip& b) {
                 return a.startTime < b.startTime;
             });
+            ItemTimeSpanList items;
+            for (const Clip& clip : sorted) {
+                items.push_back({ clip.key, TimeSpan(clip.startTime, clip.endTime) });
+            }
             return items;
         });
+        for (const Clip& clip : clips) {
+            ON_CALL(*m_trackeditProject, itemTimeSpan(clip.key))
+            .WillByDefault(Return(std::optional<TimeSpan>(TimeSpan(clip.startTime, clip.endTime))));
+        }
     }
 
     struct TrackSpec
@@ -137,7 +143,7 @@ public:
     };
 
     //! NOTE Set up a project with several mono tracks, each with its own clips.
-    //! Wires trackList() and per-track track()/itemList() so the start-time
+    //! Wires trackList() and per-track track()/itemTimeSpansSorted() so the start-time
     //! based navigation (above/below item) can be exercised.
     void setupTracks(const std::vector<TrackSpec>& specs)
     {
