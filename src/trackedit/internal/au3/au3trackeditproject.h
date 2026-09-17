@@ -37,10 +37,8 @@ public:
 
     void reload() override;
 
-    void notifyAboutTrackAdded(const Track& track) override;
     void notifyAboutTrackChanged(const Track& track) override;
-    void notifyAboutTrackRemoved(const Track& track) override;
-    void notifyAboutTrackInserted(const Track& track, int pos) override;
+    void notifyAboutTrackListChanged(const TrackListChange& change) override;
     void notifyAboutTrackMoved(const Track& track, int pos) override;
 
     void notifyAboutTrackClipListChanged(const Track& track) override;
@@ -58,11 +56,9 @@ public:
     muse::async::Channel<TimeSignature> timeSignatureChanged() const override;
 
     muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const override;
-    muse::async::Channel<Track> trackAdded() const override;
+    muse::async::Channel<TrackListChange> trackListChanged() const override;
     muse::async::Channel<Track> trackChanged() const override;
     muse::async::Channel<Track> trackClipListChanged() const override;
-    muse::async::Channel<Track> trackRemoved() const override;
-    muse::async::Channel<Track, int> trackInserted() const override;
     muse::async::Channel<Track, int> trackMoved() const override;
 
     secs_t totalTime() const override;
@@ -88,11 +84,9 @@ private:
     mutable muse::async::Channel<au::trackedit::TimeSignature> m_timeSignatureChanged;
 
     mutable muse::async::Channel<trackedit::TrackList> m_tracksChanged;
-    mutable muse::async::Channel<trackedit::Track> m_trackAdded;
+    mutable muse::async::Channel<TrackListChange> m_trackListChanged;
     mutable muse::async::Channel<trackedit::Track> m_trackChanged;
     mutable muse::async::Channel<trackedit::Track> m_trackClipListChanged;
-    mutable muse::async::Channel<trackedit::Track> m_trackRemoved;
-    mutable muse::async::Channel<trackedit::Track, int> m_trackInserted;
     mutable muse::async::Channel<trackedit::Track, int> m_trackMoved;
 
     muse::ValCh<bool> m_hasAudioContent;

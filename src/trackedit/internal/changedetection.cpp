@@ -1,5 +1,8 @@
 #include "changedetection.h"
 
+#include <algorithm>
+#include <iterator>
+
 #include "log.h"
 
 using namespace au::trackedit;
@@ -225,30 +228,43 @@ void notifyOfUndoRedo(const TracksAndItems& before,
         }
     }
 
-    //! Checking for Track addition:
+    const auto toId = [](const Track& track) { return track.id; };
+    TrackIdList idsBefore;
+    idsBefore.reserve(before.tracks.size());
+    std::transform(before.tracks.begin(), before.tracks.end(), std::back_inserter(idsBefore), toId);
+    TrackIdList idsAfter;
+    idsAfter.reserve(after.tracks.size());
+    std::transform(after.tracks.begin(), after.tracks.end(), std::back_inserter(idsAfter), toId);
+    const TrackListChange listChange(std::move(idsBefore), std::move(idsAfter));
+
+    //! Clips of removed tracks go away before the track event:
     notifier<Track>(
-        before.tracks,
         after.tracks,
-        [&](Track track, int index) {
+        before.tracks,
+        [&](Track, int index) {
         changed = true;
-        trackeditProject->trackInserted().send(track, index);
-        for (const Clip& clip : after.clips[index]) {
-            trackeditProject->notifyAboutClipAdded(clip);
+        for (const Clip& clip : before.clips[index]) {
+            trackeditProject->notifyAboutClipRemoved(clip);
         }
     },
         trackIdCheck
         );
 
-    //! Checking for Track removal:
-    notifier<Track>(
-        after.tracks,
-        before.tracks,
-        [&](Track track, int index) {
+    //! Checking for Track addition/removal:
+    if (listChange.hasChanges()) {
         changed = true;
-        for (const Clip& clip : before.clips[index]) {
-            trackeditProject->notifyAboutClipRemoved(clip);
+        trackeditProject->trackListChanged().send(listChange);
+    }
+
+    //! Clips of added tracks arrive after the track event:
+    notifier<Track>(
+        before.tracks,
+        after.tracks,
+        [&](Track, int index) {
+        changed = true;
+        for (const Clip& clip : after.clips[index]) {
+            trackeditProject->notifyAboutClipAdded(clip);
         }
-        trackeditProject->trackRemoved().send(track);
     },
         trackIdCheck
         );

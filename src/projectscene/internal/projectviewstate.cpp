@@ -213,24 +213,17 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
             return;
         }
 
-        prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
+        prj->trackListChanged().onReceive(this, [this](const trackedit::TrackListChange& change) {
             recomputeTotalTrackHeight();
             m_verticalRulerWidth.set(calculateVerticalRulerWidth());
-            m_tracks.erase(track.id);
+            for (const trackedit::TrackId& trackId : change.removed()) {
+                m_tracks.erase(trackId);
+            }
+            updateItemsBoundaries(false);
         });
 
         updateItemsBoundaries(false);
         prj->trackChanged().onReceive(this, [this](const trackedit::Track&) {
-            updateItemsBoundaries(false);
-        });
-
-        prj->trackAdded().onReceive(this, [this](const trackedit::Track&) {
-            recomputeTotalTrackHeight();
-            updateItemsBoundaries(false);
-        });
-
-        prj->trackInserted().onReceive(this, [this](const trackedit::Track&, int) {
-            recomputeTotalTrackHeight();
             updateItemsBoundaries(false);
         });
 
@@ -242,7 +235,7 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
             frequencySelectionController()->setShowsSpectrogram(trackId, hasSpectrogram);
         }
 
-        // Tracks already present on open don't trigger trackAdded / trackInserted
+        // Tracks already present on open don't trigger trackListChanged
         // So the total height must be computed here
         recomputeTotalTrackHeight();
     });

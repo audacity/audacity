@@ -163,23 +163,6 @@ void ViewTracksListModel::load()
         });
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    prj->trackAdded().onReceive(this, [this](const trackedit::Track& track) {
-        const int size = static_cast<int>(m_trackList.size());
-        beginInsertRows(QModelIndex(), size, size);
-        m_trackList.push_back(track);
-        endInsertRows();
-    }, muse::async::Asyncable::Mode::SetReplace);
-
-    prj->trackInserted().onReceive(this, [this](const trackedit::Track& track, const int pos) {
-        const int size = static_cast<int>(m_trackList.size());
-        const int index = ((pos >= 0) && (pos <= size)) ? pos : size;
-
-        beginInsertRows(QModelIndex(), index, index);
-        m_trackList.insert(m_trackList.begin() + index, track);
-
-        endInsertRows();
-    }, muse::async::Asyncable::Mode::SetReplace);
-
     prj->trackMoved().onReceive(this, [this](const trackedit::Track& track, const int pos) {
         const auto iterator = std::find_if(m_trackList.begin(), m_trackList.end(), [&track](const trackedit::Track& it)
         {
@@ -199,14 +182,35 @@ void ViewTracksListModel::load()
         endMoveRows();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
-        for (size_t i = 0; i < m_trackList.size(); ++i) {
-            if (m_trackList.at(i).id == track.id) {
-                beginRemoveRows(QModelIndex(), i, i);
-                m_trackList.erase(m_trackList.begin() + i);
-                endRemoveRows();
-                break;
+    prj->trackListChanged().onReceive(this, [this](const trackedit::TrackListChange& change) {
+        for (const trackedit::TrackId& trackId : change.removed()) {
+            for (size_t i = 0; i < m_trackList.size(); ++i) {
+                if (m_trackList.at(i).id == trackId) {
+                    beginRemoveRows(QModelIndex(), i, i);
+                    m_trackList.erase(m_trackList.begin() + i);
+                    endRemoveRows();
+                    break;
+                }
             }
+        }
+
+        const auto currentPrj = globalContext()->currentTrackeditProject();
+        if (!currentPrj) {
+            return;
+        }
+
+        for (const trackedit::TrackId& trackId : change.added()) {
+            const std::optional<trackedit::Track> track = currentPrj->track(trackId);
+            if (!track) {
+                continue;
+            }
+
+            const int size = static_cast<int>(m_trackList.size());
+            const int index = std::min(static_cast<int>(change.indexAfter(trackId).value_or(m_trackList.size())), size);
+
+            beginInsertRows(QModelIndex(), index, index);
+            m_trackList.insert(m_trackList.begin() + index, track.value());
+            endInsertRows();
         }
     }, muse::async::Asyncable::Mode::SetReplace);
 

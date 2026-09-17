@@ -3,7 +3,7 @@
 #include "itrackeditinteraction.h"
 #include "trackedit/trackediterrors.h"
 
-#include "playback/iplayer.h"
+#include "context/iglobalcontext.h"
 #include "global/types/secs.h"
 #include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
@@ -15,6 +15,7 @@ class TrackeditInteraction : public ITrackeditInteraction, public muse::Contexta
 {
     muse::ContextInject<au::record::IRecordController> recordController { this };
     muse::ContextInject<au::playback::IPlaybackController> playbackController { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
 
 public:
     TrackeditInteraction(const muse::modularity::ContextPtr& ctx, std::unique_ptr<ITrackeditInteraction> interaction);

@@ -30,32 +30,26 @@ void RealtimeEffectPanelTrackSelection::init()
 
 void RealtimeEffectPanelTrackSelection::setupCallbacks(trackedit::ITrackeditProject& project)
 {
-    project.trackAdded().onReceive(this, [this](trackedit::Track track) { onTrackAdded(track); });
-    project.trackRemoved().onReceive(this, [this](trackedit::Track track) { onTrackRemoved(track.id); });
+    project.trackListChanged().onReceive(this, [this](const trackedit::TrackListChange& change) { onTrackListChanged(change); });
     project.tracksChanged().onReceive(this, [this](std::vector<trackedit::Track> tracks) {
         onTracksChanged(tracks);
     });
 }
 
-void RealtimeEffectPanelTrackSelection::onTrackAdded(const trackedit::Track& track)
+void RealtimeEffectPanelTrackSelection::onTrackListChanged(const trackedit::TrackListChange& change)
 {
-    if (m_trackId.has_value()) {
+    if (!m_trackId.has_value()) {
+        const trackedit::TrackIdList added = change.added();
+        if (!added.empty()) {
+            setTrackId(added.front());
+        }
         return;
     }
-    setTrackId(track.id);
-}
 
-void RealtimeEffectPanelTrackSelection::onTrackRemoved(const trackedit::TrackId& trackId)
-{
-    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
-    IF_ASSERT_FAILED(project) {
-        return;
-    }
-    const std::vector<trackedit::TrackId> tracks = project->trackIdList();
-    if (tracks.empty()) {
+    if (change.after().empty()) {
         setTrackId(std::nullopt);
-    } else if (m_trackId == trackId) {
-        setTrackId(tracks.front());
+    } else if (change.wasRemoved(m_trackId.value())) {
+        setTrackId(change.after().front());
     }
 }
 
