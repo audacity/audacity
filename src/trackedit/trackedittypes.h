@@ -4,6 +4,7 @@
 #pragma once
 
 #include "framework/global/types/number.h"
+#include "timespan.h"
 #include "framework/global/logstream.h"
 
 namespace au::trackedit {
@@ -51,6 +52,22 @@ using ClipKeyList = TrackItemKeyList;
 
 using LabelKey = TrackItemKey;
 using LabelKeyList = TrackItemKeyList;
+
+struct ClipAndLabelKeys
+{
+    ClipKeyList clips;
+    LabelKeyList labels;
+
+    inline bool empty() const { return clips.empty() && labels.empty(); }
+};
+
+struct ItemTimeSpan
+{
+    TrackItemKey key;
+    TimeSpan span;
+};
+
+using ItemTimeSpanList = std::vector<ItemTimeSpan>;
 
 struct TimeSignature
 {
