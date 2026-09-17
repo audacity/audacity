@@ -2168,11 +2168,14 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
     if (
         !useAutosave
         && (!GetValue("SELECT COUNT(1) FROM main.project;", rowsCount, true) || rowsCount == 0)) {
-        // Missing both the autosave and project docs. This can happen if the
-        // system were to crash before the first autosave into a temporary file.
-        // This should be a recoverable scenario.
+        // No saved document, and autosave is absent or deliberately ignored.
+        // This also covers a crash before the first autosave.
         mRecovered = true;
         mModified = true;
+        mTemporary = true;
+
+        // Let the caller commit this connection even without a document to load.
+        result->SetFileName(fileName);
 
         return result;
     }

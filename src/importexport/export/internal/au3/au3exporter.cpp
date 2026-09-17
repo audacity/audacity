@@ -372,7 +372,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
             return muse::make_ret(muse::Ret::Code::InternalError);
         }
     } catch (const ExportException& e) {
-        return muse::make_ret(muse::Ret::Code::InternalError, e.What().ToStdString());
+        return muse::make_ret(muse::Ret::Code::InternalError, wxToStdString(e.What()));
     }
 
     return muse::make_ret(muse::Ret::Code::Ok);

@@ -44,6 +44,7 @@
 #include "au3cloud/au3clouderrors.h"
 #include "au3cloud/cloudtypes.h"
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "importexport/export/iexporter.h"
 #include "importexport/export/types/exporttypes.h"
 #include "project/iaudacityproject.h"
@@ -1058,8 +1059,8 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
 
         const bool isPublic = false;
         op->handle = op->service->Upload(
-            tempPath.toStdString(),
-            title,
+            au::au3::wxFromPath(tempPath),
+            au::au3::wxFromStdString(title),
             isPublic,
             [op, progress, tempPath, filesystem = self->filesystem()](const audacity::cloud::audiocom::UploadOperationCompleted& result) {
             filesystem->remove(tempPath);
