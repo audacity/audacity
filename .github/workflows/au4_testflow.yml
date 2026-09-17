@@ -35,7 +35,7 @@ jobs:
       scripts: ${{ steps.list.outputs.scripts }}
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.app_repo || job.workflow_repository }}
         ref: ${{ inputs.app_ref || job.workflow_sha }}
@@ -71,7 +71,7 @@ jobs:
     # Before the artifact download: actions/checkout cleans the workspace
     - name: Clone repository
       if: matrix.status != 'DISABLED'
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.app_repo || job.workflow_repository }}
         ref: ${{ inputs.app_ref || job.workflow_sha }}
@@ -92,7 +92,7 @@ jobs:
 
     - name: Download AppImage artifact
       if: matrix.status != 'DISABLED'
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         pattern: AU4_*_Lin_x86_64_*
         merge-multiple: true
