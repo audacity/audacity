@@ -485,10 +485,36 @@ TEST_F(TrackNavigationModelTests, UpDownOnRulerMoveToAdjacentRuler)
 }
 
 /**
- * A track without a ruler control (a label track) stops the ruler navigation: Down towards
- * it does nothing, but the event is still consumed so navigation system does not move either.
+ * A track without a ruler control (a label track) is skipped by the ruler navigation: Down
+ * and Up move to the ruler of the nearest track that has one, on the other side of it.
  */
-TEST_F(TrackNavigationModelTests, DownOnRulerTowardsTrackWithoutRulerIsNoOp)
+TEST_F(TrackNavigationModelTests, UpDownOnRulerSkipTracksWithoutRuler)
+{
+    //! [GIVEN] A label track between two wave tracks, only the wave tracks have a ruler control
+    loadWithTracks({ makeTrack(10), makeTrack(20, TrackType::Label), makeTrack(30) });
+
+    muse::ui::NavigationPanel* firstRuler = m_model->rulerPanels().at(0);
+    muse::ui::NavigationPanel* thirdRuler = m_model->rulerPanels().at(2);
+    addItemControl(firstRuler, "VerticalRuler", 0);
+    addItemControl(thirdRuler, "VerticalRuler", 0);
+
+    //! [EXPECT] Down activates the ruler of the third track, Up the ruler of the first one
+    EXPECT_CALL(*m_navigationController, setIsHighlight(true)).Times(2);
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), rulerPanelName(30).toStdString(), std::string("VerticalRuler"))).Times(1);
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), rulerPanelName(10).toStdString(), std::string("VerticalRuler"))).Times(1);
+
+    //! [WHEN] Down is pressed on the first ruler, then Up on the third one
+    EXPECT_TRUE(sendPanelEvent(firstRuler, muse::ui::INavigation::Event::Down));
+    EXPECT_TRUE(sendPanelEvent(thirdRuler, muse::ui::INavigation::Event::Up));
+}
+
+/**
+ * When every track past the ruler has no ruler control (a trailing label track), Down does
+ * nothing, but the event is still consumed so navigation system does not move either.
+ */
+TEST_F(TrackNavigationModelTests, DownOnRulerWithOnlyRulerlessTracksBelowIsNoOp)
 {
     //! [GIVEN] A wave track followed by a label track, only the wave track has a ruler control
     loadWithTracks({ makeTrack(10), makeTrack(20, TrackType::Label) });
