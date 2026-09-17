@@ -291,16 +291,17 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
             return;
         }
 
-        //! NOTE: Up/Down on a vertical ruler move to the ruler of the adjacent track. A track
-        //! without a ruler control (a label track, hidden rulers) stops the navigation
+        //! NOTE: Up/Down on a vertical ruler move to the ruler of the nearest track that has one,
+        //! skipping the tracks without a ruler control (label tracks, hidden rulers)
         event->setAccepted(true);
 
-        const int adjacentPos = indexOfTrack(trackId) + (type == muse::ui::NavigationEvent::Up ? -1 : 1);
-        if (adjacentPos < 0 || adjacentPos >= m_panels.size()) {
-            return;
+        const int step = type == muse::ui::NavigationEvent::Up ? -1 : 1;
+        for (int pos = indexOfTrack(trackId) + step; pos >= 0 && pos < m_panels.size(); pos += step) {
+            if (const muse::ui::INavigationControl* control = findFirstEnabledControl(m_panels.at(pos).ruler)) {
+                activateNavigation(control, true /*highlight*/);
+                return;
+            }
         }
-
-        activateNavigation(findFirstEnabledControl(m_panels.at(adjacentPos).ruler), true /*highlight*/);
     });
 
     m_panels.insert(pos, { trackId, trackPanel, headerPanel, itemsPanel, rulerPanel });
