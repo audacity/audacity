@@ -42,7 +42,7 @@ public:
     std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group, size_t effectListIndex,
                                                                     const std::string& newEffectId) override;
 
-    void startMonitoring(AudacityProject& project) override;
+    void startMonitoring(AudacityProject& project, const audio::InputChannelSelection& inputChannelSelection) override;
     void stopMonitoring() override;
 
     void setInputVolume(float newInputVolume) override;

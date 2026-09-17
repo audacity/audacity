@@ -404,7 +404,7 @@ void PlaybackUiActions::init()
         if (delta.contains(AudioConfigurationField::InputDevice)) {
             actions.push_back(PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString());
         }
-        if (delta.contains(AudioConfigurationField::InputChannels)) {
+        if (delta.contains(AudioConfigurationField::InputChannelSelection)) {
             actions.push_back(PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString());
         }
         if (!actions.empty()) {
