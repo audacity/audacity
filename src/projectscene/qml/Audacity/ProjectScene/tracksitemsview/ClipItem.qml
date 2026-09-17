@@ -121,7 +121,7 @@ Rectangle {
     }
 
     property int borderWidth: 1
-    property bool hover: root.containsMouse || root.headerHovered
+    property bool hover: clipHoverHandler.hovered || root.containsMouse || root.headerHovered
     property bool headerHovered: false
     property var lastSample: undefined
     property bool altPressed: false
@@ -427,6 +427,12 @@ Rectangle {
         }
     }
 
+    HoverHandler {
+        id: clipHoverHandler
+
+        enabled: root.enableCursorInteraction
+    }
+
     // NOTE: hover events from polyline are not visible in MouseArea
     // so we need to handle them manually
     HoverHandler {
@@ -581,7 +587,7 @@ Rectangle {
             height: root.headerHeight
             z: 2
 
-            visible: !root.collapsed || root.hover
+            visible: !root.collapsed || root.hover || menuBtn.isMenuOpened
 
             Rectangle {
                 id: headerSelectionRectangle
