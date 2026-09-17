@@ -30,6 +30,7 @@
 #include "au3-wave-track/WaveChannelUtilities.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-files/wxFileNameWrapper.h"
 
 #include "nyquist/xlisp/xlisp.h"
@@ -1545,7 +1546,7 @@ bool NyquistBase::ProcessOne(
         return false;
     }
 
-    nyxContext.mOutputTrack = mCurChannelGroup->EmptyCopy();
+    nyxContext.mOutputTrack = WaveTrackUtilities::EmptyCopy(*mCurChannelGroup, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
     auto out = nyxContext.mOutputTrack;
 
     // Now fully evaluate the sound

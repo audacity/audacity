@@ -70,6 +70,7 @@ using ProgressReporter = std::function<void (double)>;
 
 class Envelope;
 class WaveTrack;
+namespace WaveTrackUtilities { struct EmptyCopyAccess; }
 
 struct WaveTrackMessage {
     WaveClipHolder pClip{};
@@ -290,6 +291,28 @@ private:
     Track::Holder Clone(bool backup) const override;
 
     friend class WaveTrackFactory;
+    friend struct WaveTrackUtilities::EmptyCopyAccess;
+
+    //! Make another track copying format, rate, etc. but containing no
+    //! clips; with the specified number of channels.
+    /*!
+     It is important to pass the correct factory (that for the project
+     which will own the copy) in the unusual case that a track is copied from
+     another project or the clipboard.  For copies within one project, the
+     default will do.
+     */
+    Holder EmptyCopy(size_t nChannels, const SampleBlockFactoryPtr& pFactory = {}) const;
+
+    //! Make another channel group copying format, rate, etc. but
+    //! containing no clips; with as many channels as in `this`
+    /*!
+     It is important to pass the correct factory (that for the project
+     which will own the copy) in the unusual case that a track is copied from
+     another project or the clipboard.  For copies within one project, the
+     default will do.
+     */
+    Holder EmptyCopy(const SampleBlockFactoryPtr& pFactory = {})
+    const;
 
     wxString MakeClipCopyName(const wxString& originalName) const;
     wxString MakeNewClipName() const;
@@ -345,27 +368,6 @@ public:
     //
 
     Track::Holder Cut(double t0, double t1, bool moveClips) override;
-
-    //! Make another track copying format, rate, etc. but containing no
-    //! clips; with the specified number of channels.
-    /*!
-     It is important to pass the correct factory (that for the project
-     which will own the copy) in the unusual case that a track is copied from
-     another project or the clipboard.  For copies within one project, the
-     default will do.
-     */
-    Holder EmptyCopy(size_t nChannels, const SampleBlockFactoryPtr& pFactory = {}) const;
-
-    //! Make another channel group copying format, rate, etc. but
-    //! containing no clips; with as many channels as in `this`
-    /*!
-     It is important to pass the correct factory (that for the project
-     which will own the copy) in the unusual case that a track is copied from
-     another project or the clipboard.  For copies within one project, the
-     default will do.
-     */
-    Holder EmptyCopy(const SampleBlockFactoryPtr& pFactory = {})
-    const;
 
     Track::Holder TrackEmptyCopy() const override;
 
