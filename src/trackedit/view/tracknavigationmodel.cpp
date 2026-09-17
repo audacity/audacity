@@ -506,19 +506,18 @@ void TrackNavigationModel::updateDefaultNavigationControl()
 
 void TrackNavigationModel::updateNavigationActive(const muse::ui::INavigationPanel* activePanel)
 {
-    //! NOTE: the header controls panel and the ruler panel are navigated as usual panels (general
-    //! navigation): Left/Right move between the controls, Up/Down on the ruler move to the adjacent
-    //! ruler and the trigger (Space) presses the focused control.
-    //! The track panel and the clips/labels panel belong to the project: Left/Right move the play
-    //! cursor, Up/Down navigate the tracks, the trigger starts the playback.
+    //! NOTE: only the header controls panel is navigated as a usual panel (general navigation):
+    //! Left/Right move between the controls and the trigger (Space) presses the focused control.
+    //! The track panel, the clips/labels panel and the ruler panel belong to the project: Left/Right
+    //! move the play cursor, Up/Down navigate the tracks, the trigger starts the playback.
     bool navigationActive = false;
     for (const TrackPanels& panels : m_panels) {
-        if (panels.header == activePanel || panels.ruler == activePanel) {
+        if (panels.header == activePanel) {
             navigationActive = true;
             break;
         }
 
-        if (panels.track == activePanel || panels.items == activePanel) {
+        if (panels.track == activePanel || panels.items == activePanel || panels.ruler == activePanel) {
             navigationActive = false;
             break;
         }
