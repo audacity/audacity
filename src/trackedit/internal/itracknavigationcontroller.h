@@ -22,12 +22,11 @@ public:
     virtual muse::async::Notification isNavigationActiveChanged() const = 0;
 
     virtual TrackId focusedTrack() const = 0;
-    virtual void setFocusedTrack(const TrackId& trackId, bool highlight = false) = 0;
     virtual muse::async::Channel<TrackId, bool /*highlight*/> focusedTrackChanged() const = 0;
 
-    virtual TrackItemKey focusedItem() const = 0;
-    virtual void setFocusedItem(const TrackItemKey& key, bool highlight = false) = 0;
-    virtual muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const = 0;
+    virtual TrackFocus focus() const = 0;
+    virtual void setFocus(const TrackFocus& focus, bool highlight = false) = 0;
+    virtual muse::async::Channel<TrackFocus, bool /*highlight*/> focusChanged() const = 0;
 
     virtual TrackItemKeyList itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const = 0;
 

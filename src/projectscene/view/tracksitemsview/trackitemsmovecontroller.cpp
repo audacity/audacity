@@ -195,10 +195,10 @@ void TrackItemsMoveController::moveByKeyboard(double timeOffset, int trackOffset
         if (!project) {
             return;
         }
-        auto source = trackNavigationController()->focusedItem();
-        if (source.trackId != INVALID_TRACK && source.itemId == INVALID_TRACK_ITEM) {
+        const TrackFocus focus = trackNavigationController()->focus();
+        if (focus.trackId != INVALID_TRACK && focus.isTrack()) {
             if (trackOffset != 0) {
-                trackeditInteraction()->moveTracks({ source.trackId }, trackOffset < 0 ? TrackMoveDirection::Up : TrackMoveDirection::Down);
+                trackeditInteraction()->moveTracks({ focus.trackId }, trackOffset < 0 ? TrackMoveDirection::Up : TrackMoveDirection::Down);
             }
             return;
         }
@@ -206,6 +206,7 @@ void TrackItemsMoveController::moveByKeyboard(double timeOffset, int trackOffset
             const auto track = project->track(key.trackId);
             return track && (track->type == TrackType::Label ? project->label(key).isValid() : project->clip(key).isValid());
         };
+        trackedit::TrackItemKey source = focus.itemKey().value_or(trackedit::TrackItemKey {});
         if (!exists(source)) {
             TrackItemKeyList selected = selectionController()->selectedLabels();
             const auto clips = selectionController()->selectedClipsInTrackOrder();
@@ -447,7 +448,7 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
     }
     endInteraction();
     if (keyboard) {
-        trackNavigationController()->setFocusedItem(movedKey.key, true /* highlight */);
+        trackNavigationController()->setFocus(TrackFocus::item(movedKey.key), true /* highlight */);
     }
     return movedKey;
 }
