@@ -33,7 +33,8 @@ Item {
 
     property alias backgroundColor: thumbnailLoader.backgroundColor
     property alias lineColor: thumbnailLoader.lineColor
-    property alias borderColor: thumbnailLoader.borderColor
+    property color borderColor
+    property real radius: 3
 
     ThumbnailLoader {
         id: thumbnailLoader
@@ -48,5 +49,7 @@ Item {
         anchors.fill: parent
 
         thumbnail: thumbnailLoader.thumbnail
+        borderColor: root.borderColor
+        radius: root.radius
     }
 }
