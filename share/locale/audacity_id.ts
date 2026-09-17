@@ -21954,7 +21954,7 @@ Apakah Anda ingin melanjutkan?</translation>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="23"/>
         <source>Delete preference</source>
-        <translation>Hapus preferensi</translation>
+        <translation>Preferensi penghapusan</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="45"/>
@@ -21979,52 +21979,52 @@ Apakah Anda ingin melanjutkan?</translation>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
         <source>There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</source>
-        <translation type="unfinished"/>
+        <translation>Ada juga berbagai pintasan baru yang memungkinkan Anda untuk mengakses perilaku-perilaku penghapusan yang berbeda dengan cepat. Lihat %2 untuk mempelajari lebih lanjut.</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when deleting a portion of a clip</source>
-        <translation type="unfinished"/>
+        <translation>Pilih perilaku saat menghapus suatu bagian klip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="82"/>
         <source>When closing the gap, do the following</source>
-        <translation type="unfinished"/>
+        <translation>Saat menutup ruang, lakukan hal berikut</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when pasting audio</source>
-        <translation type="unfinished"/>
+        <translation>Pilih perilaku saat menempelkan suara</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="82"/>
         <source>When making room for pasted audio, do the following</source>
-        <translation type="unfinished"/>
+        <translation>Saat membuat ruang untuk suara yang ditempel, lakukan hal berikut</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="61"/>
         <source>The selected clip moves back to fill the gap</source>
-        <translation type="unfinished"/>
+        <translation>Klip yang terpilih pindah kembali untuk mengisi ruang kosong</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="63"/>
         <source>All clips on the same track move back to fill the gap</source>
-        <translation type="unfinished"/>
+        <translation>Semua klip pada trek yang sama pindah kembali untuk mengisi ruang kosong</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="65"/>
         <source>All clips on all tracks move back to fill the gap</source>
-        <translation type="unfinished"/>
+        <translation>Semua klip di semua trek pindah kembali untuk mengisi ruang kosong</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="76"/>
         <source>Leave gap</source>
-        <translation type="unfinished"/>
+        <translation>Biarkan ruang kosong</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="79"/>
         <source>Close gap (ripple)</source>
-        <translation type="unfinished"/>
+        <translation>Tutup ruang kosong (domino)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="61"/>
@@ -22034,7 +22034,7 @@ Apakah Anda ingin melanjutkan?</translation>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="63"/>
         <source>Pasting audio pushes all clips on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Penempelan suara mendorong semua klip di semua trek</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="74"/>
@@ -22073,12 +22073,12 @@ Apakah Anda ingin melanjutkan?</translation>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="121"/>
         <source>Ruler format</source>
-        <translation type="unfinished"/>
+        <translation>Format penggaris</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="137"/>
         <source>Half wave</source>
-        <translation type="unfinished"/>
+        <translation>Setengah gelombang</translation>
     </message>
 </context>
 <context>
@@ -22086,7 +22086,7 @@ Apakah Anda ingin melanjutkan?</translation>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="30"/>
         <source>Database error.  Sorry, but we don’t have more details.</source>
-        <translation type="unfinished"/>
+        <translation>Eror basis data. Maaf, kami tidak memiliki rincian lebih lanjut.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="31"/>
