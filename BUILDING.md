@@ -9,6 +9,7 @@
 * A package manager (tested: Choco on Windows, Homebrew on macOS)
 * A CMake generator (tested: Ninja)
 * A C++ compiler (tested: MSVC on Windows, g++ on Linux)
+* On macOS: macOS 13 or later and Xcode 15 or later, as [required by Qt 6.10](https://doc.qt.io/qt-6.10/supported-platforms.html)
 * Qt 6.10 'Desktop' (macOS), 'MSVC 2022 64-bit' (Windows) or 'MSVC 2022 ARM64' (Windows on ARM) with 'Additional Libraries':
   * Qt 5 Compatibility Module
   * Qt Network Authorization
