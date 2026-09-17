@@ -431,11 +431,11 @@ TEST_F(TrackNavigationModelTests, NavigationOnTrackPanelFocusesTrackWithoutItem)
 }
 
 /**
- * Landing on a vertical ruler panel focuses its track with no item and, like the header
- * panel, turns the general navigation on: the arrows are handled by navigation system
- * (and the ruler panel itself) rather than by the project's track/item navigation.
+ * Landing on a vertical ruler panel focuses its track with no item and, like the track
+ * panel, keeps the general navigation off: the arrows are handled by the project's
+ * track/item navigation (Left/Right move the play cursor, Up/Down navigate the tracks).
  */
-TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesTrackWithGeneralNavigation)
+TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesTrackWithProjectNavigation)
 {
     //! [GIVEN] A project with one track
     loadWithTracks({ makeTrack(10) });
@@ -450,9 +450,9 @@ TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesTrackWithGeneralN
     ON_CALL(*m_navigationController, activeControl())
     .WillByDefault(Return(rulerControl));
 
-    //! [EXPECT] The track is focused, without an item, and the general navigation is on
+    //! [EXPECT] The track is focused, without an item, and the general navigation is off
     EXPECT_CALL(*m_tracksNavigationController, setFocusedItem(TrackItemKey { 10, INVALID_TRACK_ITEM }, _)).Times(1);
-    EXPECT_CALL(*m_tracksNavigationController, setIsNavigationActive(true)).Times(1);
+    EXPECT_CALL(*m_tracksNavigationController, setIsNavigationActive(false)).Times(1);
 
     //! [WHEN] The navigation changes
     m_navigationChanged.notify();
