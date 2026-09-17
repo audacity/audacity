@@ -7,6 +7,7 @@
 #include <variant>
 
 #include "framework/global/types/number.h"
+#include "timespan.h"
 #include "framework/global/logstream.h"
 
 namespace au::trackedit {
@@ -99,14 +100,13 @@ struct ItemKeys
     inline bool empty() const { return clips.empty() && labels.empty(); }
 };
 
-struct ItemWithTime
+struct ItemTimeSpan
 {
     TrackItemKey key;
-    double startTime = 0.0;
-    double endTime = 0.0;
+    TimeSpan span;
 };
 
-using ItemWithTimeList = std::vector<ItemWithTime>;
+using ItemTimeSpanList = std::vector<ItemTimeSpan>;
 
 struct TimeSignature
 {

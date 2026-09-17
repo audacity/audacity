@@ -272,16 +272,6 @@ ClipKeyList Au3SelectionController::selectedClipsInTrackOrder() const
 }
 
 namespace {
-std::optional<au::trackedit::ItemWithTime> findItem(const au::trackedit::ItemWithTimeList& items, const au::trackedit::TrackItemKey& key)
-{
-    for (const au::trackedit::ItemWithTime& item : items) {
-        if (item.key == key) {
-            return item;
-        }
-    }
-    return std::nullopt;
-}
-
 int trackIndexOf(const std::vector<au::trackedit::Track>& tracks, const au::trackedit::TrackId& trackId)
 {
     for (int i = 0; i < static_cast<int>(tracks.size()); ++i) {
@@ -316,28 +306,24 @@ ItemKeys Au3SelectionController::itemKeysInRange(const TrackItemKey& target) con
     const int firstTrackIndex = std::min(anchorTrackIndex, targetTrackIndex);
     const int lastTrackIndex = std::max(anchorTrackIndex, targetTrackIndex);
 
-    std::vector<ItemWithTimeList> itemsPerTrack(lastTrackIndex - firstTrackIndex + 1);
-    for (int trackIndex = firstTrackIndex; trackIndex <= lastTrackIndex; ++trackIndex) {
-        itemsPerTrack[trackIndex - firstTrackIndex] = prj->itemList(tracks.at(trackIndex).id);
-    }
-
-    const std::optional<ItemWithTime> anchorItem = findItem(itemsPerTrack.at(anchorTrackIndex - firstTrackIndex), anchor);
-    const std::optional<ItemWithTime> targetItem = findItem(itemsPerTrack.at(targetTrackIndex - firstTrackIndex), target);
-    if (!anchorItem.has_value() || !targetItem.has_value()) {
+    const std::optional<TimeSpan> anchorSpan = prj->itemTimeSpan(anchor);
+    const std::optional<TimeSpan> targetSpan = prj->itemTimeSpan(target);
+    if (!anchorSpan.has_value() || !targetSpan.has_value()) {
         return {};
     }
 
     //! NOTE Only items that fit entirely between the leftmost item's start
     //! and the rightmost item's end make it into the selection
-    const double rangeStartTime = std::min(anchorItem->startTime, targetItem->startTime);
-    const double rangeEndTime = std::max(anchorItem->endTime, targetItem->endTime);
+    const secs_t rangeStartTime = std::min(anchorSpan->start(), targetSpan->start());
+    const secs_t rangeEndTime = std::max(anchorSpan->end(), targetSpan->end());
 
     ItemKeys range;
     for (int trackIndex = firstTrackIndex; trackIndex <= lastTrackIndex; ++trackIndex) {
-        const bool isLabelTrack = tracks.at(trackIndex).type == TrackType::Label;
+        const Track& track = tracks.at(trackIndex);
+        const bool isLabelTrack = track.type == TrackType::Label;
 
-        for (const ItemWithTime& item : itemsPerTrack.at(trackIndex - firstTrackIndex)) {
-            if (item.startTime < rangeStartTime || item.endTime > rangeEndTime) {
+        for (const ItemTimeSpan& item : prj->itemTimeSpansSorted(track.id)) {
+            if (item.span.start() < rangeStartTime || item.span.end() > rangeEndTime) {
                 continue;
             }
 
@@ -382,8 +368,7 @@ ItemKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, const Tr
         return {};
     }
 
-    const std::optional<ItemWithTime> anchorItem
-        = findItem(prj->itemList(m_itemSelectionAnchor->itemKey.trackId), m_itemSelectionAnchor->itemKey);
+    const std::optional<TimeSpan> anchorSpan = prj->itemTimeSpan(m_itemSelectionAnchor->itemKey);
 
     //! NOTE A leftward box reaches the anchor item's end rather than the anchor
     //! point, so items sharing the anchor's time span are included as well
@@ -392,7 +377,7 @@ ItemKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, const Tr
     double boxEndTime = time.raw();
     if (boxEndTime < boxStartTime) {
         boxStartTime = time.raw();
-        boxEndTime = anchorItem.has_value() ? anchorItem->endTime : anchorTime;
+        boxEndTime = anchorSpan.has_value() ? anchorSpan->end().raw() : anchorTime;
     }
 
     const int firstTrackIndex = std::min(anchorTrackIndex, targetTrackIndex);

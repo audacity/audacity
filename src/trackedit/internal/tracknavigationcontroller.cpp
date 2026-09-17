@@ -210,7 +210,7 @@ TrackItemKeyList TrackNavigationController::sortedItemsKeys(const TrackId& track
         return result;
     }
 
-    for (const ItemWithTime& item : prj->itemList(trackId)) {
+    for (const ItemTimeSpan& item : prj->itemTimeSpansSorted(trackId)) {
         result.emplace_back(item.key);
     }
 
@@ -408,13 +408,8 @@ double TrackNavigationController::itemStartTime(const TrackItemKey& key) const
         return 0.0;
     }
 
-    for (const ItemWithTime& item : prj->itemList(key.trackId)) {
-        if (item.key == key) {
-            return item.startTime;
-        }
-    }
-
-    return 0.0;
+    const std::optional<TimeSpan> span = prj->itemTimeSpan(key);
+    return span.has_value() ? span->start().raw() : 0.0;
 }
 
 TrackItemKey TrackNavigationController::findClosestItemOnTrack(const TrackId& trackId, double referenceStartTime) const
@@ -424,7 +419,7 @@ TrackItemKey TrackNavigationController::findClosestItemOnTrack(const TrackId& tr
         return TrackItemKey { trackId, INVALID_TRACK_ITEM };
     }
 
-    const ItemWithTimeList items = prj->itemList(trackId);
+    const ItemTimeSpanList items = prj->itemTimeSpansSorted(trackId);
     if (items.empty()) {
         return TrackItemKey { trackId, INVALID_TRACK_ITEM };
     }
@@ -432,8 +427,8 @@ TrackItemKey TrackNavigationController::findClosestItemOnTrack(const TrackId& tr
     TrackItemKey closest = items.front().key;
     double closestDiff = std::numeric_limits<double>::max();
 
-    for (const ItemWithTime& item : items) {
-        double diff = std::abs(item.startTime - referenceStartTime);
+    for (const ItemTimeSpan& item : items) {
+        double diff = std::abs(item.span.start().raw() - referenceStartTime);
         if (diff < closestDiff) {
             closestDiff = diff;
             closest = item.key;
