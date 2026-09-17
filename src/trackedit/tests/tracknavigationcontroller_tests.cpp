@@ -107,11 +107,11 @@ public:
         return clip;
     }
 
-    void setupTrackWithClips(const TrackId& trackId, const std::vector<Clip>& clips)
+    void setupTrackWithClips(const TrackId& trackId, const std::vector<Clip>& clips, TrackType type = TrackType::Mono)
     {
         Track track;
         track.id = trackId;
-        track.type = TrackType::Mono;
+        track.type = type;
 
         ON_CALL(*m_trackeditProject, track(trackId))
         .WillByDefault(Return(track));
@@ -129,9 +129,10 @@ public:
     {
         TrackId id = INVALID_TRACK;
         std::vector<Clip> clips;
+        TrackType type = TrackType::Mono;
     };
 
-    //! NOTE Set up a project with several mono tracks, each with its own clips.
+    //! NOTE Set up a project with several tracks (mono unless told otherwise), each with its own clips.
     //! Wires trackList(), per-track track()/clipList() and a clip(key) lookup so
     //! the start-time based navigation (above/below item) can be exercised.
     void setupTracks(const std::vector<TrackSpec>& specs)
@@ -140,11 +141,11 @@ public:
         std::vector<Clip> allClips;
 
         for (const TrackSpec& spec : specs) {
-            setupTrackWithClips(spec.id, spec.clips);
+            setupTrackWithClips(spec.id, spec.clips, spec.type);
 
             Track track;
             track.id = spec.id;
-            track.type = TrackType::Mono;
+            track.type = spec.type;
             trackList.push_back(track);
 
             for (const Clip& clip : spec.clips) {
@@ -490,5 +491,63 @@ TEST_F(TrackNavigationControllerTests, ResetNavigationRecomputesVerticalReferenc
     //! [THEN] The reference is recomputed from t=10, so the closest clip on track 3 is 310 (t=9),
     //! not the stale-anchor clip 300 (t=1)
     EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 3, 310 }));
+}
+
+/**
+ * Down (track-view-below-item), while a vertical ruler is focused, moves the focus to the
+ * ruler of the next track that has one: label tracks have no ruler and are skipped, as the
+ * tracks without items are skipped for the items.
+ */
+TEST_F(TrackNavigationControllerTests, DownFromRulerSkipsLabelTracks)
+{
+    //! [GIVEN] An audio track, a label track and an audio track, the ruler of the first one focused
+    setupTracks({ { 1, {} }, { 2, {}, TrackType::Label }, { 3, {} } });
+
+    initController();
+    m_controller->setFocus(TrackFocus::ruler(1));
+
+    //! [WHEN] Down is pressed
+    invokeAction("track-view-below-item");
+
+    //! [THEN] The ruler of the third track is focused
+    EXPECT_EQ(m_controller->focus(), TrackFocus::ruler(3));
+}
+
+/**
+ * Up (track-view-above-item), while a vertical ruler is focused, moves the focus to the
+ * ruler of the previous track that has one, skipping the label tracks.
+ */
+TEST_F(TrackNavigationControllerTests, UpFromRulerSkipsLabelTracks)
+{
+    //! [GIVEN] An audio track, a label track and an audio track, the ruler of the last one focused
+    setupTracks({ { 1, {} }, { 2, {}, TrackType::Label }, { 3, {} } });
+
+    initController();
+    m_controller->setFocus(TrackFocus::ruler(3));
+
+    //! [WHEN] Up is pressed
+    invokeAction("track-view-above-item");
+
+    //! [THEN] The ruler of the first track is focused
+    EXPECT_EQ(m_controller->focus(), TrackFocus::ruler(1));
+}
+
+/**
+ * Down from a vertical ruler with only label tracks below keeps the focus where it is:
+ * there is no ruler to go to.
+ */
+TEST_F(TrackNavigationControllerTests, DownFromRulerWithNoRulerBelowKeepsFocus)
+{
+    //! [GIVEN] An audio track followed by a label track, the ruler of the audio track focused
+    setupTracks({ { 1, {} }, { 2, {}, TrackType::Label } });
+
+    initController();
+    m_controller->setFocus(TrackFocus::ruler(1));
+
+    //! [WHEN] Down is pressed
+    invokeAction("track-view-below-item");
+
+    //! [THEN] The focus is unchanged
+    EXPECT_EQ(m_controller->focus(), TrackFocus::ruler(1));
 }
 }
