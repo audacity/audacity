@@ -499,7 +499,12 @@ void TrackNavigationController::navigateToAboveItem()
 {
     MYLOG() << "====";
 
-    if (!m_focus.isItem()) {
+    if (m_focus.isRuler()) {
+        navigateToAdjacentRuler(SelectionDirection::Up);
+        return;
+    }
+
+    if (m_focus.isTrack()) {
         navigateToPrevTrack();
         return;
     }
@@ -539,7 +544,12 @@ void TrackNavigationController::navigateToBelowItem()
 {
     MYLOG() << "====";
 
-    if (!m_focus.isItem()) {
+    if (m_focus.isRuler()) {
+        navigateToAdjacentRuler(SelectionDirection::Down);
+        return;
+    }
+
+    if (m_focus.isTrack()) {
         navigateToNextTrack();
         return;
     }
@@ -570,6 +580,32 @@ void TrackNavigationController::navigateToBelowItem()
                     return;
                 }
             }
+            return;
+        }
+    }
+}
+
+void TrackNavigationController::navigateToAdjacentRuler(SelectionDirection direction)
+{
+    MYLOG() << "====";
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    const std::vector<Track> trackList = prj->trackList();
+    const auto current = std::ranges::find(trackList, m_focus.trackId, &Track::id);
+    if (current == trackList.end()) {
+        return;
+    }
+
+    //! NOTE: label tracks have no vertical ruler, so they are skipped, as the tracks without items are for the items
+    const int count = static_cast<int>(trackList.size());
+    const int step = direction == SelectionDirection::Up ? -1 : 1;
+    for (int pos = static_cast<int>(std::distance(trackList.begin(), current)) + step; pos >= 0 && pos < count; pos += step) {
+        if (trackList[pos].type != TrackType::Label) {
+            setFocus(TrackFocus::ruler(trackList[pos].id), true /*highlight*/);
             return;
         }
     }

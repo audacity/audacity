@@ -268,26 +268,6 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
 
     muse::ui::NavigationPanel* rulerPanel = makePanel(makeTrackRulerPanelName(trackId), orderBase + 3);
 
-    connect(rulerPanel, &muse::ui::NavigationPanel::navigationEvent, this,
-            [this, trackId](muse::ui::NavigationEvent* event) {
-        const muse::ui::NavigationEvent::Type type = event->type();
-        if (type != muse::ui::NavigationEvent::Up && type != muse::ui::NavigationEvent::Down) {
-            return;
-        }
-
-        //! NOTE: Up/Down on a vertical ruler move to the ruler of the nearest track that has one,
-        //! skipping the tracks without a ruler control (label tracks, hidden rulers)
-        event->setAccepted(true);
-
-        const int step = type == muse::ui::NavigationEvent::Up ? -1 : 1;
-        for (int pos = indexOfTrack(trackId) + step; pos >= 0 && pos < m_panels.size(); pos += step) {
-            if (const muse::ui::INavigationControl* control = findFirstEnabledControl(m_panels.at(pos).ruler)) {
-                activateNavigation(control, true /*highlight*/);
-                return;
-            }
-        }
-    });
-
     m_panels.insert(pos, { trackId, trackPanel, headerPanel, itemsPanel, rulerPanel });
 
     emit panelsChanged();
@@ -544,7 +524,8 @@ void TrackNavigationModel::syncFocusedItem(const muse::ui::INavigationPanel* act
 
             MYLOG() << "the " << activePanel->name().toStdString() << " is active, track: " << panels.trackId;
 
-            tracksNavigationController()->setFocus(TrackFocus::track(panels.trackId));
+            const TrackFocus focus = panels.ruler == activePanel ? TrackFocus::ruler(panels.trackId) : TrackFocus::track(panels.trackId);
+            tracksNavigationController()->setFocus(focus);
             return;
         }
     }
