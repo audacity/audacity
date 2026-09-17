@@ -69,7 +69,7 @@ void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
         query.addParam("path", muse::Val(muse::io::path_t(m_path.toStdString())));
-        dispatch(query);
+        dispatchAction(query);
         return;
     }
 
@@ -80,7 +80,7 @@ void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(UPDATE_AUDIO_PREVIEW_ACTION);
         query.addParam("id", muse::Val(m_cloudProjectId));
-        dispatch(query);
+        dispatchAction(query);
         return;
     }
 

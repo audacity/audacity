@@ -55,7 +55,7 @@ void CloudProjectContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
         query.addParam("id", muse::Val(m_projectId));
-        dispatch(query);
+        dispatchAction(query);
         return;
     }
 
@@ -75,7 +75,7 @@ void CloudProjectContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(UPDATE_AUDIO_PREVIEW_ACTION);
         query.addParam("id", muse::Val(m_projectId));
-        dispatch(query);
+        dispatchAction(query);
         return;
     }
 
