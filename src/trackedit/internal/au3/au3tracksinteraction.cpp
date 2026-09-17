@@ -486,7 +486,7 @@ ITrackDataPtr Au3TracksInteraction::copyNonContinuousTrackData(const TrackId tra
     if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
         auto& trackFactory = WaveTrackFactory::Get(projectRef());
         auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-        auto clipboardTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+        auto clipboardTrack = WaveTrackUtilities::EmptyCopy(*waveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Ref, pSampleBlockFactory);
 
         for (const auto& itemKey : itemKeys) {
             if (std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, itemKey.itemId)) {
@@ -1484,8 +1484,7 @@ std::shared_ptr<au::au3::Au3Track> Au3TracksInteraction::createNewTrackAndPaste(
         auto& trackFactory = WaveTrackFactory::Get(projectRef());
         auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
 
-        auto pFirstTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
-        RealtimeEffectList::Get(*pFirstTrack).CloneStates();
+        auto pFirstTrack = WaveTrackUtilities::EmptyCopy(*waveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Deep, pSampleBlockFactory);
         list.Add(pFirstTrack->SharedPointer());
         pFirstTrack->Paste(begin, *track, false);
         return pFirstTrack->SharedPointer();
@@ -1768,7 +1767,7 @@ void Au3TracksInteraction::doInsertSilence(const TrackIdList& trackIds, secs_t b
         if (!muse::is_zero(duration)) {
             PasteTimeWarper warper{ end, begin + duration };
 
-            auto copy = waveTrack->EmptyCopy();
+            auto copy = WaveTrackUtilities::EmptyCopy(*waveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
 
             copy->InsertSilence(0.0, duration);
             copy->Flush();
