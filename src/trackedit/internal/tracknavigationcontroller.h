@@ -82,6 +82,7 @@ private:
 
     void navigateToAboveItem();
     void navigateToBelowItem();
+    void navigateToAdjacentRuler(SelectionDirection direction);
     void navigateToFirstItem();
     void navigateToLastItem();
 

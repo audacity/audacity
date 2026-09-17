@@ -55,7 +55,8 @@ using ClipKeyList = TrackItemKeyList;
 using LabelKey = TrackItemKey;
 using LabelKeyList = TrackItemKeyList;
 
-//! NOTE: what the keyboard focus of the track view is on: a track itself or an item (clip/label) of a track
+//! NOTE: what the keyboard focus of the track view is on: a track itself, an item (clip/label)
+//! of a track or the vertical ruler of a track
 struct TrackFocus
 {
     struct TrackTarget
@@ -63,16 +64,23 @@ struct TrackFocus
         bool operator==(const TrackTarget&) const = default;
     };
 
-    using Target = std::variant<TrackTarget, TrackItemId>;
+    struct RulerTarget
+    {
+        bool operator==(const RulerTarget&) const = default;
+    };
+
+    using Target = std::variant<TrackTarget, TrackItemId, RulerTarget>;
 
     TrackId trackId = INVALID_TRACK;
     Target target = TrackTarget {};
 
     static TrackFocus track(const TrackId& trackId) { return { trackId, TrackTarget {} }; }
     static TrackFocus item(const TrackItemKey& key) { return { key.trackId, key.itemId }; }
+    static TrackFocus ruler(const TrackId& trackId) { return { trackId, RulerTarget {} }; }
 
     bool isTrack() const { return std::holds_alternative<TrackTarget>(target); }
     bool isItem() const { return std::holds_alternative<TrackItemId>(target); }
+    bool isRuler() const { return std::holds_alternative<RulerTarget>(target); }
 
     std::optional<TrackItemKey> itemKey() const
     {

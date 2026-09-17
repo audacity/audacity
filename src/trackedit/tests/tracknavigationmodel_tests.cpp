@@ -3,8 +3,10 @@
 */
 #include <gtest/gtest.h>
 
+#include <QEventLoop>
 #include <QQmlEngine>
 #include <QQmlContext>
+#include <QTimer>
 
 #include "../view/tracknavigationmodel.h"
 
@@ -213,6 +215,15 @@ public:
         auto event = muse::ui::INavigation::Event::make(muse::ui::INavigation::Event::AboutActive);
         panel->onEvent(event);
         return event->data.value("controlName").toString();
+    }
+
+    //! NOTE The model activates the navigation on a focus change from a deferred call,
+    //! let the event loop run it
+    static void waitForDeferredActivation()
+    {
+        QEventLoop loop;
+        QTimer::singleShot(50, &loop, &QEventLoop::quit);
+        loop.exec();
     }
 
     //! NOTE Deliver a navigation event (e.g. Escape) to a panel, as navigation system would,
@@ -431,11 +442,11 @@ TEST_F(TrackNavigationModelTests, NavigationOnTrackPanelFocusesTrackWithoutItem)
 }
 
 /**
- * Landing on a vertical ruler panel focuses its track with no item and, like the track
+ * Landing on a vertical ruler panel focuses the ruler of its track and, like the track
  * panel, keeps the general navigation off: the arrows are handled by the project's
- * track/item navigation (Left/Right move the play cursor, Up/Down navigate the tracks).
+ * track/item navigation (Left/Right move the play cursor, Up/Down navigate the rulers).
  */
-TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesTrackWithProjectNavigation)
+TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesRulerWithProjectNavigation)
 {
     //! [GIVEN] A project with one track
     loadWithTracks({ makeTrack(10) });
@@ -450,8 +461,8 @@ TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesTrackWithProjectN
     ON_CALL(*m_navigationController, activeControl())
     .WillByDefault(Return(rulerControl));
 
-    //! [EXPECT] The track is focused, without an item, and the general navigation is off
-    EXPECT_CALL(*m_tracksNavigationController, setFocus(TrackFocus::track(10), _)).Times(1);
+    //! [EXPECT] The ruler of the track is focused and the general navigation is off
+    EXPECT_CALL(*m_tracksNavigationController, setFocus(TrackFocus::ruler(10), _)).Times(1);
     EXPECT_CALL(*m_tracksNavigationController, setIsNavigationActive(false)).Times(1);
 
     //! [WHEN] The navigation changes
@@ -459,96 +470,43 @@ TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesTrackWithProjectN
 }
 
 /**
- * Down on a vertical ruler moves the navigation to the ruler of the next track,
- * Up to the ruler of the previous one, with the highlight kept on.
+ * A ruler focus reported by the tracks controller (Up/Down from another ruler) lands the
+ * navigation on the ruler control of that track, as an item focus lands on its clip.
  */
-TEST_F(TrackNavigationModelTests, UpDownOnRulerMoveToAdjacentRuler)
+TEST_F(TrackNavigationModelTests, RulerFocusChangeActivatesRulerOfTrack)
 {
     //! [GIVEN] A project with two tracks, each with a ruler control
     loadWithTracks({ makeTrack(10), makeTrack(20) });
+    addItemControl(m_model->rulerPanels().at(0), "VerticalRuler", 0);
+    addItemControl(m_model->rulerPanels().at(1), "VerticalRuler", 0);
 
-    muse::ui::NavigationPanel* firstRuler = m_model->rulerPanels().at(0);
-    muse::ui::NavigationPanel* secondRuler = m_model->rulerPanels().at(1);
-    addItemControl(firstRuler, "VerticalRuler", 0);
-    addItemControl(secondRuler, "VerticalRuler", 0);
-
-    //! [EXPECT] Down activates the ruler of the second track, Up the ruler of the first one
-    EXPECT_CALL(*m_navigationController, setIsHighlight(true)).Times(2);
+    //! [EXPECT] The ruler of the second track is activated, highlighted
+    EXPECT_CALL(*m_navigationController, setIsHighlight(true)).Times(1);
     EXPECT_CALL(*m_navigationController, requestActivateByName(
                     std::string(SECTION_NAME), rulerPanelName(20).toStdString(), std::string("VerticalRuler"))).Times(1);
-    EXPECT_CALL(*m_navigationController, requestActivateByName(
-                    std::string(SECTION_NAME), rulerPanelName(10).toStdString(), std::string("VerticalRuler"))).Times(1);
 
-    //! [WHEN] Down is pressed on the first ruler, then Up on the second one
-    EXPECT_TRUE(sendPanelEvent(firstRuler, muse::ui::INavigation::Event::Down));
-    EXPECT_TRUE(sendPanelEvent(secondRuler, muse::ui::INavigation::Event::Up));
+    //! [WHEN] The tracks controller reports the ruler of the second track as focused
+    m_focusChanged.send(TrackFocus::ruler(20), true);
+    waitForDeferredActivation();
 }
 
 /**
- * A track without a ruler control (a label track) is skipped by the ruler navigation: Down
- * and Up move to the ruler of the nearest track that has one, on the other side of it.
+ * A ruler focus on a track whose ruler has no control (hidden rulers) falls back to the
+ * track panel, so the navigation always lands somewhere on the focused track.
  */
-TEST_F(TrackNavigationModelTests, UpDownOnRulerSkipTracksWithoutRuler)
+TEST_F(TrackNavigationModelTests, RulerFocusChangeWithoutRulerControlFallsBackToTrackPanel)
 {
-    //! [GIVEN] A label track between two wave tracks, only the wave tracks have a ruler control
-    loadWithTracks({ makeTrack(10), makeTrack(20, TrackType::Label), makeTrack(30) });
-
-    muse::ui::NavigationPanel* firstRuler = m_model->rulerPanels().at(0);
-    muse::ui::NavigationPanel* thirdRuler = m_model->rulerPanels().at(2);
-    addItemControl(firstRuler, "VerticalRuler", 0);
-    addItemControl(thirdRuler, "VerticalRuler", 0);
-
-    //! [EXPECT] Down activates the ruler of the third track, Up the ruler of the first one
-    EXPECT_CALL(*m_navigationController, setIsHighlight(true)).Times(2);
-    EXPECT_CALL(*m_navigationController, requestActivateByName(
-                    std::string(SECTION_NAME), rulerPanelName(30).toStdString(), std::string("VerticalRuler"))).Times(1);
-    EXPECT_CALL(*m_navigationController, requestActivateByName(
-                    std::string(SECTION_NAME), rulerPanelName(10).toStdString(), std::string("VerticalRuler"))).Times(1);
-
-    //! [WHEN] Down is pressed on the first ruler, then Up on the third one
-    EXPECT_TRUE(sendPanelEvent(firstRuler, muse::ui::INavigation::Event::Down));
-    EXPECT_TRUE(sendPanelEvent(thirdRuler, muse::ui::INavigation::Event::Up));
-}
-
-/**
- * When every track past the ruler has no ruler control (a trailing label track), Down does
- * nothing, but the event is still consumed so navigation system does not move either.
- */
-TEST_F(TrackNavigationModelTests, DownOnRulerWithOnlyRulerlessTracksBelowIsNoOp)
-{
-    //! [GIVEN] A wave track followed by a label track, only the wave track has a ruler control
-    loadWithTracks({ makeTrack(10), makeTrack(20, TrackType::Label) });
-
-    muse::ui::NavigationPanel* firstRuler = m_model->rulerPanels().at(0);
-    addItemControl(firstRuler, "VerticalRuler", 0);
-
-    //! [EXPECT] Nothing is activated
-    EXPECT_CALL(*m_navigationController, requestActivateByName(_, _, _)).Times(0);
-
-    //! [WHEN] Down is pressed on the wave track's ruler
-    //! [THEN] The event is accepted
-    EXPECT_TRUE(sendPanelEvent(firstRuler, muse::ui::INavigation::Event::Down));
-}
-
-/**
- * Up on the first ruler and Down on the last one have no neighbour to go to: nothing is
- * activated, the event is still consumed.
- */
-TEST_F(TrackNavigationModelTests, UpOnFirstRulerIsNoOp)
-{
-    //! [GIVEN] A project with one track with a ruler control
+    //! [GIVEN] A project with one track with a track control and no ruler control
     loadWithTracks({ makeTrack(10) });
+    addItemControl(m_model->trackItemPanels().at(0), "Track", 0);
 
-    muse::ui::NavigationPanel* ruler = m_model->rulerPanels().at(0);
-    addItemControl(ruler, "VerticalRuler", 0);
+    //! [EXPECT] The track panel is activated
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), trackPanelName(10).toStdString(), std::string("Track"))).Times(1);
 
-    //! [EXPECT] Nothing is activated
-    EXPECT_CALL(*m_navigationController, requestActivateByName(_, _, _)).Times(0);
-
-    //! [WHEN] Up, then Down, is pressed on the only ruler
-    //! [THEN] Both events are accepted
-    EXPECT_TRUE(sendPanelEvent(ruler, muse::ui::INavigation::Event::Up));
-    EXPECT_TRUE(sendPanelEvent(ruler, muse::ui::INavigation::Event::Down));
+    //! [WHEN] The tracks controller reports the ruler of the track as focused
+    m_focusChanged.send(TrackFocus::ruler(10), true);
+    waitForDeferredActivation();
 }
 
 /**
