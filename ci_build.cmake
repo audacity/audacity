@@ -68,13 +68,18 @@ macro(do_build build_type build_dir)
         -DMUSE_APP_INSTALL_SUFFIX=${INSTALL_SUFFIX}
         -DCMAKE_BUILD_NUMBER=${BUILD_NUMBER}
         -DAU4_REVISION=${BUILD_REVISION}
-        -DMUE_COMPILE_USE_UNITY=${BUILD_USE_UNITY}
         -DCMAKE_SKIP_RPATH=${SKIP_RPATH}
         -DMUSE_ENABLE_UNIT_TESTS=${BUILD_ENABLE_UNIT_TESTS}
         -DMUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}
         -DMUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT=${ENABLE_CRASHPAD_CLIENT}
         -DMUSE_MODULE_DIAGNOSTICS_CRASHREPORT_URL=${CRASH_REPORT_URL}
     )
+
+    # Only pass the flag when set: an empty -D value would leave the app's option() at
+    # an empty (false) value instead of its default.
+    if (NOT "${BUILD_USE_UNITY}" STREQUAL "")
+        list(APPEND CONFIGURE_ARGS -DMUSE_COMPILE_USE_UNITY=${BUILD_USE_UNITY})
+    endif()
 
     # Allow macos architecture override with env OSX_ARCHITECTURES
     if (DEFINED ENV{OSX_ARCHITECTURES} AND NOT "$ENV{OSX_ARCHITECTURES}" STREQUAL "")
