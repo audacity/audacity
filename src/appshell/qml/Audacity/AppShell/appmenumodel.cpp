@@ -21,6 +21,8 @@
  */
 #include "appmenumodel.h"
 
+#include <QSet>
+
 #include "shared/types/workspacetitles.h"
 
 #include "global/containers.h"
@@ -137,7 +139,13 @@ void AppMenuModel::setupConnections()
         for (const UiAction& act : acts) {
             MenuItem& item = findItem(act.code);
             if (item.isValid()) {
-                item.setAction(act);
+                UiAction menuAction = act;
+                // Effect access keys belong to the menu, not the shared action.
+                // Keep them when the action registry refreshes its metadata.
+                if (act.code.rfind("action://effects/open?", 0) == 0) {
+                    menuAction.title = item.action().title;
+                }
+                item.setAction(menuAction);
             }
         }
     });
@@ -413,7 +421,7 @@ MenuItem* AppMenuModel::makeGenerateMenu()
 
 MenuItem* AppMenuModel::makeEffectMenu()
 {
-    return makeMenu(TranslatableString("appshell-menu-effect", "&Effect"), makeEffectsItems(), "menu-effect");
+    return makeMenu(TranslatableString("appshell-menu-effect", "Effe&ct"), makeEffectsItems(), "menu-effect");
 }
 
 MenuItem* AppMenuModel::makeAnalyzeMenu()
@@ -887,6 +895,46 @@ muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffectItem(const effects::Ef
 
 muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items)
 {
+    // Give dynamic effect names distinct access keys within each submenu.
+    // For example, Limiter uses L and Loudness Normalisation uses O.
+    auto mnemonic = [](const QString& text) {
+        for (int i = 0; i + 1 < text.size(); ++i) {
+            if (text.at(i) == '&') {
+                if (text.at(i + 1) == '&') {
+                    ++i;
+                } else {
+                    return text.at(i + 1).toCaseFolded();
+                }
+            }
+        }
+        return QChar();
+    };
+
+    QSet<QChar> used;
+    for (const MenuItem* item : items) {
+        if (!item) {
+            continue;
+        }
+        const QChar key = mnemonic(item->action().title.qTranslatedWithMnemonicAmpersand());
+        if (!key.isNull()) {
+            used.insert(key);
+        }
+    }
+    for (MenuItem* item : items) {
+        if (!item || !mnemonic(item->action().title.qTranslatedWithMnemonicAmpersand()).isNull()) {
+            continue;
+        }
+        const QString label = item->translatedTitle();
+        for (int i = 0; i < label.size(); ++i) {
+            const QChar key = label.at(i).toCaseFolded();
+            if (key.isLetterOrNumber() && !used.contains(key)) {
+                used.insert(key);
+                const QString marked = label.left(i).replace("&", "&&") + "&" + label.mid(i).replace("&", "&&");
+                item->setTitle(TranslatableString::untranslatable(marked));
+                break;
+            }
+        }
+    }
     return makeMenu(TranslatableString::untranslatable(title), items);
 }
 
