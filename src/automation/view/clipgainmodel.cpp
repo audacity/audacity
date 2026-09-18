@@ -3,6 +3,7 @@
  */
 #include "clipgainmodel.h"
 
+#include "global/types/number.h"
 #include "log.h"
 
 using namespace au::automation;
@@ -139,6 +140,7 @@ void ClipGainModel::setClipKey(const ClipKey& key)
     }
 
     m_clipKey = key;
+    m_pendingAddedTime.reset();
 
     if (m_clipKey.isValid()) {
         if (auto prj = globalContext()->currentTrackeditProject()) {
@@ -240,6 +242,7 @@ void ClipGainModel::setPoint(int index, double tAbs, double value, bool complete
 
         m_dragActive = false;
         m_dragIndex = -1;
+        m_pendingAddedTime.reset();
 
         reload();
     }
@@ -255,6 +258,12 @@ void ClipGainModel::addPoint(double tAbs, double value, bool completed)
 
     if (!clipGainInteraction()->setClipGainPoint(m_clipKey.key, clampedTime, value, completed)) {
         return;
+    }
+
+    if (completed) {
+        m_pendingAddedTime.reset();
+    } else {
+        m_pendingAddedTime = clampedTime;
     }
 
     reload();
@@ -273,6 +282,10 @@ void ClipGainModel::removePoint(int index, bool completed)
         return;
     }
 
+    if (completed) {
+        m_pendingAddedTime.reset();
+    }
+
     reload();
 }
 
@@ -286,4 +299,19 @@ void ClipGainModel::cancelDrag()
 
     m_dragActive = false;
     m_dragIndex = -1;
+
+    if (m_pendingAddedTime) {
+        const double t = *m_pendingAddedTime;
+        m_pendingAddedTime.reset();
+
+        reload();
+
+        for (int i = 0; i < int(m_points.size()); ++i) {
+            if (muse::is_equal(m_points[i].xValue, t)) {
+                clipGainInteraction()->removeClipGainPoint(m_clipKey.key, i, /*completed*/ false);
+                reload();
+                break;
+            }
+        }
+    }
 }
