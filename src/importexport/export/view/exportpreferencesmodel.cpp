@@ -4,7 +4,9 @@
 
 #include "exportpreferencesmodel.h"
 
+#include "framework/global/containers.h"
 #include "framework/global/io/fileinfo.h"
+#include "framework/global/stringutils.h"
 #include "framework/global/translation.h"
 #include "framework/global/defer.h"
 
@@ -245,18 +247,24 @@ QString ExportPreferencesModel::filename() const
     return m_filename;
 }
 
-QString ExportPreferencesModel::suggestedFilePath() const
+muse::io::path_t ExportPreferencesModel::exportFilePath() const
 {
-    muse::io::path_t filePath = exportConfiguration()->directoryPath().appendingComponent(m_filename);
+    std::string name = m_filename.toStdString();
 
-    if (suffix(filePath).empty()) {
-        const auto extensions = exporter()->formatExtensions(exportConfiguration()->currentFormat());
-        if (!extensions.empty()) {
-            filePath = filePath.appendingSuffix(extensions.front());
+    const std::vector<std::string> extensions = exporter()->formatExtensions(exportConfiguration()->currentFormat());
+    if (!extensions.empty()) {
+        const std::string suffix = muse::strings::toLower(muse::io::suffix(muse::io::path_t(name)));
+        if (!muse::contains(extensions, suffix)) {
+            name += "." + extensions.front();
         }
     }
 
-    return filePath.toQString();
+    return exportConfiguration()->directoryPath().appendingComponent(name);
+}
+
+QString ExportPreferencesModel::suggestedFilePath() const
+{
+    return exportFilePath().toQString();
 }
 
 void ExportPreferencesModel::setFilename(const QString& filename)
@@ -477,7 +485,8 @@ void ExportPreferencesModel::setFilePickerPath(const QString& path)
 
     if (info.entryType() == muse::io::EntryType::File) {
         setDirectoryPath(info.absolutePath());
-        setFilename(info.baseName());
+
+        setFilename(info.completeBaseName());
         return;
     }
 
@@ -494,7 +503,8 @@ void ExportPreferencesModel::setFileDialogPath(const QString& path)
     }
 
     setDirectoryPath(info.absolutePath());
-    setFilename(info.baseName());
+
+    setFilename(info.completeBaseName());
 }
 
 void ExportPreferencesModel::updateCurrentSampleRate()
@@ -620,18 +630,7 @@ void ExportPreferencesModel::exportData()
         }
     });
 
-    muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
-    muse::io::path_t filePath = directoryPath.appendingComponent(filename());
-
-    if (suffix(filePath).empty()) {
-        auto extensions = exporter()->formatExtensions(exportConfiguration()->currentFormat());
-        std::string defaultExtension;
-        if (!extensions.empty()) {
-            defaultExtension = extensions.front();
-        }
-
-        filePath = filePath.appendingSuffix(defaultExtension);
-    }
+    const muse::io::path_t filePath = exportFilePath();
 
     if (fileSystem()->exists(filePath)) {
         const int overwriteBtn = int(muse::IInteractive::Button::CustomButton) + 1;
