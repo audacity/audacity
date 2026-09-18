@@ -147,6 +147,7 @@ private:
     void updateExportChannels();
 
     QString m_filename;
+    bool m_filenameIsStem = true;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
     bool m_resetSampleRate = true;
 };

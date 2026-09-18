@@ -17,6 +17,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.h
 
     #internals
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportfilename.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3ffmpegoptionsaccessor.cpp
@@ -62,3 +63,7 @@ set(MODULE_LINK
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (MUSE_ENABLE_UNIT_TESTS)
+    add_subdirectory(tests)
+endif()
