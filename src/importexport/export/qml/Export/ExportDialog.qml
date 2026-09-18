@@ -134,13 +134,39 @@ StyledDialogView {
                 navigation.order: typeSection.navigation.order + 1
 
                 RowLayout {
+                    visible: exportPreferencesModel.separateFilesExport
+
+                    Item {
+                        width: root.labelColumnWidth
+                        StyledTextLabel {
+                            id: fileNamePreviewLabel
+
+                            text: qsTrc("export", "File name preview")
+
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    StyledTextLabel {
+                        id: fileNamePreviewField
+
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: root.dropdownWidth
+
+                        text: exportPreferencesModel.fileNamePreview
+                        horizontalAlignment: Text.AlignLeft
+                        elide: Text.ElideMiddle
+                    }
+                }
+
+                RowLayout {
 
                     Item {
                         width: root.labelColumnWidth
                         StyledTextLabel {
                             id: filenameLabel
 
-                            text: qsTrc("export", "File name")
+                            text: exportPreferencesModel.separateFilesExport ? qsTrc("export", "File name prefix") : qsTrc("export", "File name")
 
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -152,7 +178,7 @@ StyledDialogView {
                         Layout.fillWidth: true
                         Layout.minimumWidth: implicitWidth
 
-                        currentText: exportPreferencesModel.filename
+                        currentText: exportPreferencesModel.separateFilesExport ? exportPreferencesModel.fileNamePrefix : exportPreferencesModel.filename
 
                         implicitWidth: root.dropdownWidth
 
@@ -162,8 +188,37 @@ StyledDialogView {
                         navigation.accessible.name: filenameLabel.text + ": " + currentText
 
                         onTextChanged: function (newTextValue) {
-                            exportPreferencesModel.setFilename(newTextValue)
+                            if (exportPreferencesModel.separateFilesExport) {
+                                exportPreferencesModel.fileNamePrefix = newTextValue
+                            } else {
+                                exportPreferencesModel.setFilename(newTextValue)
+                            }
                         }
+                    }
+                }
+
+                RowLayout {
+                    width: parent.width
+                    visible: exportPreferencesModel.separateFilesExport
+
+                    Item {
+                        width: root.labelColumnWidth
+                    }
+
+                    CheckBox {
+                        id: includeNumbersCheckBox
+
+                        Layout.fillWidth: true
+
+                        text: exportPreferencesModel.separateFilesByLabels ? qsTrc("export", "Number files in label order") : qsTrc("export", "Number files in track order")
+                        checked: exportPreferencesModel.includeNumbers
+
+                        navigation.name: "IncludeNumbersBox"
+                        navigation.panel: fileSection.navigation
+                        navigation.order: filenameField.navigation.order + 1
+                        navigation.accessible.name: text
+
+                        onClicked: exportPreferencesModel.includeNumbers = !exportPreferencesModel.includeNumbers
                     }
                 }
 
@@ -204,7 +259,7 @@ StyledDialogView {
 
                             navigation.name: "FolderFieldBox"
                             navigation.panel: fileSection.navigation
-                            navigation.order: filenameField.navigation.order + 1
+                            navigation.order: includeNumbersCheckBox.navigation.order + 1
                             navigation.accessible.name: folderLabel.text + ": " + currentText
 
                             onTextEditingFinished: function (newTextValue) {
@@ -357,7 +412,7 @@ StyledDialogView {
 
                                 checked: exportPreferencesModel.exportChannelsType == ExportChannels.CUSTOM
                                 text: qsTrc("export", "Custom mapping")
-                                enabled: exportPreferencesModel.maxExportChannels > 2
+                                enabled: exportPreferencesModel.maxExportChannels > 2 && !exportPreferencesModel.separateFilesExport
 
                                 spacing: 8
 
@@ -605,6 +660,8 @@ StyledDialogView {
                         id: trimBlankSpaceCheckBox
                         width: parent.width
 
+                        enabled: exportPreferencesModel.trimBlankSpaceEnabled
+
                         text: qsTrc("export", "Trim blank space before first clip")
                         checked: exportPreferencesModel.trimBlankSpace
 
@@ -614,6 +671,23 @@ StyledDialogView {
                         navigation.accessible.name: text
 
                         onClicked: exportPreferencesModel.trimBlankSpace = !exportPreferencesModel.trimBlankSpace
+                    }
+
+                    CheckBox {
+                        id: includeAudioBeforeFirstLabelCheckBox
+                        width: parent.width
+
+                        visible: exportPreferencesModel.separateFilesByLabels
+
+                        text: qsTrc("export", "Include audio before first label")
+                        checked: exportPreferencesModel.includeAudioBeforeFirstLabel
+
+                        navigation.name: "IncludeAudioBeforeFirstLabelBox"
+                        navigation.panel: renderingSection.navigation
+                        navigation.order: trimBlankSpaceCheckBox.navigation.order + 1
+                        navigation.accessible.name: text
+
+                        onClicked: exportPreferencesModel.includeAudioBeforeFirstLabel = !exportPreferencesModel.includeAudioBeforeFirstLabel
                     }
                 }
             }
