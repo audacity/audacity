@@ -560,6 +560,9 @@ RealtimeEffectState::AddGroup(
         // Remember the sampleRate of the group, so latency can be computed
         // later
         mGroups[group] = { first, sampleRate };
+        // Publish the state to the worker: everything it reads (the instance,
+        // mWorkerSettings, mGroups) is written above.
+        mReadyForWorker.store(true, std::memory_order_release);
         return pInstance;
     }
     return {};
@@ -567,6 +570,10 @@ RealtimeEffectState::AddGroup(
 
 bool RealtimeEffectState::ProcessStart(bool running)
 {
+    if (!ReadyForWorker()) {
+        return false;
+    }
+
     // Get state changes from the main thread
     // Note that it is only here that the answer of IsActive() may be changed,
     // and it is important that for each state the answer is unchanging in one
@@ -618,6 +625,13 @@ size_t RealtimeEffectState::Process(
     const float* const* inbuf, float* const* outbuf, float* const dummybuf,
     size_t numSamples)
 {
+    if (!ReadyForWorker()) {
+        for (size_t ii = 0; ii < chans; ++ii) {
+            memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
+        }
+        return 0;
+    }
+
     const auto pInstance = mwInstance.lock();
     const auto& pair = mGroups[group];
     const float** const clientIn
@@ -730,6 +744,10 @@ size_t RealtimeEffectState::Process(
 
 bool RealtimeEffectState::ProcessEnd()
 {
+    if (!ReadyForWorker()) {
+        return false;
+    }
+
     auto pInstance = mwInstance.lock();
     bool result = pInstance
                   &&// Assuming we are in a processing scope, use the worker settings
@@ -774,6 +792,10 @@ void RealtimeEffectState::SetActive(bool active)
 
 bool RealtimeEffectState::Finalize() noexcept
 {
+    // Relaxed: this store publishes nothing. Keeping the worker off a state that is
+    // being finalized is the caller's job (end of the processing scope, or removal
+    // from the list), not this flag's.
+    mReadyForWorker.store(false, std::memory_order_relaxed);
     mGroups.clear();
     mCurrentProcessor = 0;
 

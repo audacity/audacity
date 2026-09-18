@@ -209,6 +209,19 @@ private:
     size_t mCurrentProcessor{ 0 };
     bool mInitialized{ false };
 
+    //! Worker-thread gate: may this state be processed? Set (release) at the end of
+    //! AddGroup, once the state is completely integrated into the current processing
+    //! scope - instance, mWorkerSettings and mGroups all written - and cleared by
+    //! Finalize. Written by the main thread only, read (acquire) by the worker. That
+    //! single store is the one place to check that everything the worker reads is
+    //! written before it.
+    std::atomic<bool> mReadyForWorker{ false };
+
+    bool ReadyForWorker() const noexcept
+    {
+        return mReadyForWorker.load(std::memory_order_acquire);
+    }
+
     //! @}
 };
 
