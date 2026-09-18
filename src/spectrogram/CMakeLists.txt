@@ -119,6 +119,7 @@ set(MODULE_LINK
         au3-utility
         au3-wave-track
         Qt6::Concurrent
+        Qt::Quick
         tft
 )
 set(MODULE_LINK_PUBLIC shared)

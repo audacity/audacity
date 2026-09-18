@@ -146,7 +146,7 @@ if (NOT OS_IS_MAC)
     target_link_libraries(appshell_qml PRIVATE Qt6::GuiPrivate)
 endif(NOT OS_IS_MAC)
 
-target_link_libraries(appshell_qml PRIVATE Qt::Widgets)
+target_link_libraries(appshell_qml PRIVATE Qt::Widgets Qt::Quick)
 
 fixup_qml_module_dependencies(appshell_qml)
 

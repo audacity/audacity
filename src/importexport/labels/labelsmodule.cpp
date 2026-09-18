@@ -4,6 +4,8 @@
 
 #include "labelsmodule.h"
 
+#include <QtQml/qqml.h>
+
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractiveuriregister.h"
 
