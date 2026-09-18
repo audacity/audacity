@@ -214,7 +214,8 @@ private:
     //! scope - instance, mWorkerSettings and mGroups all written - and cleared by
     //! Finalize. Written by the main thread only, read (acquire) by the worker. That
     //! single store is the one place to check that everything the worker reads is
-    //! written before it.
+    //! written before it. Access consults it too, on the main thread: settings travel
+    //! through the worker iff the worker processes the state.
     std::atomic<bool> mReadyForWorker{ false };
 
     bool ReadyForWorker() const noexcept

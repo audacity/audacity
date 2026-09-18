@@ -225,15 +225,9 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
     {
         if (auto pState = mwState.lock()) {
             if (auto pAccessState = pState->GetAccessState()) {
-                if (pAccessState->mState.mInitialized) {
-                    // try once
-                    assert(pAccessState->mState.mInitialized);
-                    auto& lastSettings = pAccessState->mLastSettings;
-                    // Assigns to mCounter
+                // Don't try to read worker updates until ready
+                if (pAccessState->mState.ReadyForWorker()) {
                     pAccessState->MainRead();
-                } else {
-                    // Not yet waiting on the other thread's progress
-                    // Not necessarily values yet in the state's Settings objects
                 }
                 return pAccessState->mLastSettings.settings;
             }
@@ -248,7 +242,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
     {
         if (auto pState = mwState.lock()) {
             if (auto pAccessState = pState->GetAccessState()) {
-                if (pMessage && !pAccessState->mState.mInitialized) {
+                if (pMessage && !pAccessState->mState.ReadyForWorker()) {
                     // Other thread isn't processing.
                     // Let the instance consume the message directly.
                     if (auto pInstance = pState->mwInstance.lock()) {
@@ -279,7 +273,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
     {
         if (auto pState = mwState.lock()) {
             if (auto pAccessState = pState->GetAccessState()) {
-                if (pMessage && !pAccessState->mState.mInitialized) {
+                if (pMessage && !pAccessState->mState.ReadyForWorker()) {
                     // Other thread isn't processing.
                     // Let the instance consume the message directly.
                     if (auto pInstance = pState->mwInstance.lock()) {
@@ -308,7 +302,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             if (auto pAccessState = pState->GetAccessState()) {
                 assert(pAccessState->mMainThreadId == std::this_thread::get_id());
 
-                if (pAccessState->mState.mInitialized) {
+                if (pAccessState->mState.ReadyForWorker()) {
                     std::unique_lock lk(pAccessState->mLockForCV);
                     pAccessState->mCV.wait(lk,
                                            [&] {
