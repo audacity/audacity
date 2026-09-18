@@ -33,9 +33,25 @@ const AVFormatContext* AVFormatContextWrapper::GetWrappedValue() const noexcept
 
 AVFormatContextWrapper::~AVFormatContextWrapper()
 {
-    if (mAVFormatContext != nullptr) {
-        mFFmpeg.avformat_free_context(mAVFormatContext);
+    if (mAVFormatContext == nullptr) {
+        return;
     }
+
+    if (mIsInputContext && mFFmpeg.avformat_close_input != nullptr) {
+        // Also runs the demuxer's read_close hook, which frees whatever it
+        // allocated inside its private data. Freeing the context alone leaks
+        // that: measured at roughly 0.9 MB per open for Matroska, MP4 and
+        // WebM, and far more for MPEG-TS, which allocates per PID.
+        //
+        // This does not touch the AVIOContext that mAVIOContext owns.
+        // avformat_open_input sets AVFMT_FLAG_CUSTOM_IO when it is handed a
+        // context whose pb is already set, and avformat_close_input skips
+        // avio_close for exactly that case.
+        mFFmpeg.avformat_close_input(&mAVFormatContext);
+        return;
+    }
+
+    mFFmpeg.avformat_free_context(mAVFormatContext);
 }
 
 AVIOContextWrapper::OpenResult AVFormatContextWrapper::OpenInputContext(
@@ -71,8 +87,14 @@ AVIOContextWrapper::OpenResult AVFormatContextWrapper::OpenInputContext(
     AVDictionaryWrapper cleanup{ mFFmpeg, dict };
 
     if (rc) {
+        // On failure libavformat has already freed the context and nulled the
+        // pointer, so there is nothing left to own.
         return AVIOContextWrapper::OpenResult::InternalError;
     }
+
+    // Set before find_stream_info: the context is open and needs the input
+    // teardown from here on, even if the call below fails.
+    mIsInputContext = true;
 
     if (mFFmpeg.avformat_find_stream_info(mAVFormatContext, nullptr) < 0) {
         return AVIOContextWrapper::OpenResult::InternalError;

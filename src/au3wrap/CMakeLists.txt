@@ -48,6 +48,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3commonsettings.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3basicui.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3basicui.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectvideoref.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectvideoref.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsnap.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsnap.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectthumbnail.cpp

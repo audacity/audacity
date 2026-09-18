@@ -48,6 +48,7 @@ bool LoadAVCodecFunctions(
     // New decoding API
     GET_SYMBOL(avcodec_send_packet);
     GET_SYMBOL(avcodec_receive_frame);
+    GET_SYMBOL(avcodec_flush_buffers);
     GET_SYMBOL(avcodec_send_frame);
     GET_SYMBOL(avcodec_receive_packet);
 
