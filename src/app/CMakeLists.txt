@@ -324,6 +324,16 @@ endif()
 
 add_dependencies(audacity builtin-workspaces)
 
+if (MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT)
+    # To be able to locally build with MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT=ON and run the audacity
+    # executable on the spot, not from the install destination. Relative path to the app is preserved,
+    # so there will still be just one crashpad_handler in the deployed bundle.
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${MUSE_MODULE_DIAGNOSTICS_CRASHPAD_HANDLER_PATH} $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>
+    )
+endif()
+
 ###########################################
 # INSTALL
 ###########################################
