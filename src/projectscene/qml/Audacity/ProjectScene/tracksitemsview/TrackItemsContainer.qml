@@ -53,7 +53,7 @@ Item {
     signal requestSelectionContextMenu(real x, real y)
     signal selectionResize(var x1, var x2, var completed)
 
-    signal insureVerticallyVisible
+    signal ensureVerticallyVisible
 
     signal handleTimeGuideline(real x, bool completed)
     signal updateItemGuideline(real time)
