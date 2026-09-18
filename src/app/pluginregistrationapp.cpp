@@ -25,24 +25,24 @@ void PluginRegistrationApp::applyCommandLineOptions(const std::shared_ptr<muse::
 {
     BaseApplication::applyCommandLineOptions(options);
 
-    if (!crashHandler()) {
-        // By default only available on non-development CI builds.
-        return;
-    }
-
     const auto audacityOptions = std::dynamic_pointer_cast<AudacityCmdOptions>(options);
     IF_ASSERT_FAILED(audacityOptions) {
         return;
     }
 
-    const auto& task = audacityOptions->audioPluginRegistration;
-    if (task.pluginPath.empty()) {
-        LOGE() << "plugin path arg not provided";
+    if (!audacityOptions->diagnostics.crashDumpConfig) {
         return;
     }
 
-    // Only keep the plugin name: the full path could reveal the user's name or folder layout
-    crashHandler()->addSessionTag(muse::String { "plugin-validation" }, io::filename(task.pluginPath).toString());
+    diagnosticsConfiguration()->setCrashDumpConfig(*audacityOptions->diagnostics.crashDumpConfig);
+
+    const muse::io::path_t& pluginPath = audacityOptions->audioPluginRegistration.pluginPath;
+    if (!pluginPath.empty()) {
+        diagnosticsConfiguration()->setCrashReportTags({ { muse::String { "plugin-validation" },
+                                                           io::filename(pluginPath).toString() } });
+    }
+
+    diagnosticsConfiguration()->setSystemCrashReporterForwardingEnabled(false);
 }
 
 void PluginRegistrationApp::startupScenario(const muse::modularity::ContextPtr& ctxId)
@@ -51,13 +51,6 @@ void PluginRegistrationApp::startupScenario(const muse::modularity::ContextPtr& 
     IF_ASSERT_FAILED(options) {
         qApp->exit(1);
         return;
-    }
-
-    // Keep the system crash reporter out of it plugin registration: on macOS it would show
-    // one "Audacity quit unexpectedly" dialog per crashing plugin. The dump for our own
-    // crash server is still written.
-    if (crashHandler()) {
-        crashHandler()->setSystemCrashReporterForwardingEnabled(false);
     }
 
     QMetaObject::invokeMethod(qApp, [this, ctxId, options]() {

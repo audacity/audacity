@@ -87,6 +87,8 @@ jobs:
         pull_request_title: ${{ github.event.pull_request.title }}
         SENTRY_SERVER_AU4_KEY: ${{ secrets.SENTRY_SERVER_AU4_KEY }}
         SENTRY_SERVER_AU4_SANDBOX_KEY: ${{ secrets.SENTRY_SERVER_AU4_SANDBOX_KEY }}
+        SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY: ${{ secrets.SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY }}
+        SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY: ${{ secrets.SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY }}
         SENTRY_PROJECT: ${{ github.event.inputs.sentry_project }}
       run: |
         ADD_INFO="_${GITHUB_REF#refs/heads/}"
@@ -105,6 +107,7 @@ jobs:
 
         DO_UPLOAD_SYMBOLS='false'
         SENTRY_URL=""
+        SENTRY_PLUGIN_VALIDATION_URL=""
 
         if [ "$SENTRY_SERVER_AU4_KEY" != "" ]; then
           if [ -z "$SENTRY_PROJECT" ] && [ "$BUILD_MODE" == "stable_build" ]; then
@@ -114,6 +117,10 @@ jobs:
           if [ "$SENTRY_PROJECT" == "au4" ]; then
             DO_UPLOAD_SYMBOLS='true'
             SENTRY_URL=https://sentry.audacityteam.org/api/4/minidump/?sentry_key=$SENTRY_SERVER_AU4_KEY
+
+            if [ "$SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY" != "" ]; then
+              SENTRY_PLUGIN_VALIDATION_URL=https://sentry.audacityteam.org/api/4/minidump/?sentry_key=$SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY
+            fi
           fi
         fi
 
@@ -124,12 +131,17 @@ jobs:
         if [ "$SENTRY_PROJECT" == "au4-sandbox" ] && [ "$SENTRY_SERVER_AU4_SANDBOX_KEY" != "" ]; then
           DO_UPLOAD_SYMBOLS='true'
           SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_SANDBOX_KEY
+
+          if [ "$SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY" != "" ]; then
+            SENTRY_PLUGIN_VALIDATION_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY
+          fi
         fi
 
         # Skip crash reporting and symbols for WoA
         if [ "${{ matrix.arch }}" == "aarch64" ]; then
           DO_UPLOAD_SYMBOLS='false'
           SENTRY_URL=""
+          SENTRY_PLUGIN_VALIDATION_URL=""
         fi
 
         echo "DO_BUILD=$DO_BUILD" >> $GITHUB_ENV
@@ -143,6 +155,8 @@ jobs:
         echo "SENTRY_PROJECT: $SENTRY_PROJECT"
         echo "SENTRY_URL=$SENTRY_URL" >> $GITHUB_ENV
         echo "SENTRY_URL: $SENTRY_URL"
+        echo "SENTRY_PLUGIN_VALIDATION_URL=$SENTRY_PLUGIN_VALIDATION_URL" >> $GITHUB_ENV
+        echo "SENTRY_PLUGIN_VALIDATION_URL: $SENTRY_PLUGIN_VALIDATION_URL"
 
     - name: Restore ccache files
       id: restore-ccache
@@ -200,8 +214,9 @@ jobs:
       shell: bash
       run: |
         C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
+        C_URL_PV=${SENTRY_PLUGIN_VALIDATION_URL}; if [ -z "$C_URL_PV" ]; then C_URL_PV="''"; fi
         source /c/build_tools/environment.sh
-        cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/windows/ci_build.cmake
+        cmake -DCRASH_REPORT_URL=$C_URL -DAUDIOPLUGINS_CRASHREPORT_URL=$C_URL_PV -P ${CI_DIR}/windows/ci_build.cmake
 
     - name: Show ccache stats
       run: |
