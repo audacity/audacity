@@ -14,6 +14,7 @@ struct Label {
 
     muse::String title;
     ClipColorIndex colorIndex = CLIP_COLOR_INDEX_NONE;
+    bool isAutoColor = true;
     double startTime = 0.0;
     double endTime = 0.0;
     double lowFrequency = 0.0;
