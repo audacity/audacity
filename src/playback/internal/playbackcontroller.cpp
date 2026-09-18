@@ -2,7 +2,9 @@
 * Audacity: A Digital Audio Editor
 */
 #include "playbackcontroller.h"
-#include "playbackuiactions.h"
+
+#include "record/recordcommands.h"
+
 #include "../playbacktypes.h"
 
 using namespace muse;
@@ -26,9 +28,6 @@ static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/chan
 static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
 static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
 static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
-
-static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
-static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
@@ -343,7 +342,7 @@ void PlaybackController::togglePlayPauseAction()
         //! Toggle the shared stream directly: pause it, or resume it if already paused.
         isPaused() ? doResume() : doPause();
     } else {
-        dispatcher()->dispatch(RECORD_PAUSE_QUERY);
+        commandDispatcher()->dispatch(record::RECORD_PAUSE_COMMAND);
     }
 }
 
@@ -636,7 +635,7 @@ void PlaybackController::stopAction()
     //! NOTE: the stop button is a single action; the controller decides whether it
     //! stops the recorder or the player.
     if (recordController()->isRecording()) {
-        dispatcher()->dispatch(RECORD_STOP_QUERY);
+        commandDispatcher()->dispatch(record::RECORD_STOP_COMMAND);
         return;
     }
 

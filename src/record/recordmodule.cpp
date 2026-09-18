@@ -9,7 +9,11 @@
 #include "modularity/ioc.h"
 
 #include "ui/iuiactionsregister.h"
+#include "rcommand/icommandsregister.h"
+#include "rcommand/icommandsstate.h"
 
+#include "internal/recordcommandsregister.h"
+#include "internal/recordcommandsstate.h"
 #include "internal/recordconfiguration.h"
 #include "internal/recordcontroller.h"
 #include "internal/recordmetercontroller.h"
@@ -56,6 +60,14 @@ void RecordModule::registerUiTypes()
     qmlRegisterType<LeadInRecordingIndicatorModel>("Audacity.Record", 1, 0, "LeadInRecordingIndicatorModel");
 }
 
+void RecordModule::resolveImports()
+{
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<RecordCommandsRegister>());
+    }
+}
+
 void RecordModule::onInit(const IApplication::RunMode& mode)
 {
     if (mode == IApplication::RunMode::AudioPluginRegistration) {
@@ -86,6 +98,10 @@ void RecordContext::registerExports()
 
 void RecordContext::resolveImports()
 {
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<RecordCommandsState>(iocContext()));
+    }
 }
 
 void RecordContext::onInit(const IApplication::RunMode& mode)
