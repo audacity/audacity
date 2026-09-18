@@ -161,6 +161,11 @@ std::shared_ptr<RealtimeEffectState> Au3AudioEngine::replaceRealtimeEffectState(
     return AudioIO::Get()->ReplaceState(project, group, effectListIndex, au::au3::wxFromStdString(newEffectId));
 }
 
+void Au3AudioEngine::reloadRealtimeEffectState(AudacityProject& project, ChannelGroup* group, RealtimeEffectState& state)
+{
+    AudioIO::Get()->ReloadState(project, group, state);
+}
+
 void Au3AudioEngine::pauseStream(const bool pause)
 {
     AudioIO::Get()->SetPaused(pause);

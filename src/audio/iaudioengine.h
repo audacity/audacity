@@ -69,6 +69,9 @@ public:
                                            const std::shared_ptr<RealtimeEffectState>& state) = 0;
     virtual std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                             size_t effectListIndex, const std::string& newEffectId) = 0;
+    //! Integrates an already-listed state whose plugin has just become loadable into the
+    //! live stream's processing scope, in place. No-op when not playing.
+    virtual void reloadRealtimeEffectState(AudacityProject& project, ChannelGroup* group, RealtimeEffectState& state) = 0;
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;

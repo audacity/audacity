@@ -33,6 +33,7 @@ public:
                 (AudacityProject&, ChannelGroup*, const std::shared_ptr<RealtimeEffectState>&), (override));
     MOCK_METHOD(std::shared_ptr<RealtimeEffectState>, replaceRealtimeEffectState,
                 (AudacityProject&, ChannelGroup*, size_t, const std::string&), (override));
+    MOCK_METHOD(void, reloadRealtimeEffectState, (AudacityProject&, ChannelGroup*, RealtimeEffectState&), (override));
 
     MOCK_METHOD(void, startMonitoring, (AudacityProject & project), (override));
     MOCK_METHOD(void, stopMonitoring, (), (override));
