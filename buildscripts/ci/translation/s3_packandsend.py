@@ -49,9 +49,7 @@ def processTsFile(prefix, langCode, data):
     # if the file has been updated, update or add entry in details.json
     if (cur_time - lang_time < period) or not os.path.isfile(qmFilePath):
         # generate qm file
-        lrelease = subprocess.Popen(
-            ['lrelease', tsFilePath, '-qm', qmFilePath])
-        lrelease.communicate()
+        subprocess.run(['lrelease', tsFilePath, '-qm', qmFilePath], check=True)
 
         # get qm file size
         file_size = os.path.getsize(qmFilePath)
@@ -128,9 +126,8 @@ for lang_code, languageProps in langCodeNameDict.items():
         data[lang_code]["hash"] = str(hash_file.hexdigest())
         data[lang_code]["file_size"] = file_size
 
-        push_zip = subprocess.Popen(
-            ['s3cmd', 'put', '--acl-public', '--guess-mime-type', zipPath, s3Url + zipName])
-        push_zip.communicate()
+        subprocess.run(
+            ['s3cmd', 'put', '--acl-public', '--guess-mime-type', zipPath, s3Url + zipName], check=True)
 
 
 json_file = open(outputDir + "details.json", "w")
@@ -138,6 +135,5 @@ json_file.write(json.dumps(data, sort_keys=True, indent=4))
 json_file.close()
 
 if translationChanged:
-    push_json = subprocess.Popen(
-        ['s3cmd', 'put', '--acl-public', '--guess-mime-type', outputDir + 'details.json', s3Url + 'details.json'])
-    push_json.communicate()
+    subprocess.run(
+        ['s3cmd', 'put', '--acl-public', '--guess-mime-type', outputDir + 'details.json', s3Url + 'details.json'], check=True)
