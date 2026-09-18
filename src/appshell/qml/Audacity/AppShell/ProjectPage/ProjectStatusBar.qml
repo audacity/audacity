@@ -49,16 +49,21 @@ Item {
     RowLayout {
         id: statusBarRow
 
+        readonly property int leftMargin: 12
+        readonly property int rightMargin: 6
+
         anchors.left: parent.left
-        anchors.leftMargin: 12
+        anchors.leftMargin: statusBarRow.leftMargin
         anchors.right: parent.right
-        anchors.rightMargin: 6
+        anchors.rightMargin: statusBarRow.rightMargin
 
         height: parent.height
 
         SelectionStatus {
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
             Layout.preferredWidth: width
+
+            maximumWidth: root.width - statusBarRow.leftMargin - statusBarRow.rightMargin
 
             navigationPanel: navPanel
         }
