@@ -51,12 +51,11 @@ QString customSampleRateName(int rate)
 }
 
 const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
-    { ExportProcessType::FULL_PROJECT_AUDIO, QT_TRANSLATE_NOOP("export", "Export full project audio") },
-    { ExportProcessType::SELECTED_AUDIO, QT_TRANSLATE_NOOP("export", "Export selected audio") },
-    { ExportProcessType::AUDIO_IN_LOOP_REGION, QT_TRANSLATE_NOOP("export", "Export audio in loop region") },
-    { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES, QT_TRANSLATE_NOOP("export", "Export tracks as separate audio files") },
-    { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE,
-      QT_TRANSLATE_NOOP("export", "Export each label as a separate audio file (chapters)") },
+    { ExportProcessType::FULL_PROJECT_AUDIO, QT_TRANSLATE_NOOP("export", "Full project audio") },
+    { ExportProcessType::SELECTED_AUDIO, QT_TRANSLATE_NOOP("export", "Selected audio") },
+    { ExportProcessType::AUDIO_IN_LOOP_REGION, QT_TRANSLATE_NOOP("export", "Audio in loop region") },
+    { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES, QT_TRANSLATE_NOOP("export", "Tracks as separate audio files") },
+    { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE, QT_TRANSLATE_NOOP("export", "Labeled regions as separate audio files") },
     //! NOTE: not implemented yet
     // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE,
     //   QT_TRANSLATE_NOOP("export", "Export all labels as a subtitle file") }
@@ -239,7 +238,7 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
     if (type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE && !hasLabelsToExport()) {
         interactive()->error(muse::trc("export", "No labels"),
                              muse::trc("export",
-                                       "Export each label as a separate audio file requires at least one label on the first label track. Please return to the project, add labels and then try again."));
+                                       "Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again."));
         return;
     }
 

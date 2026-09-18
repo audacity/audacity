@@ -147,21 +147,15 @@ StyledDialogView {
                         }
                     }
 
-                    TextInputField {
+                    StyledTextLabel {
                         id: fileNamePreviewField
 
                         Layout.fillWidth: true
-                        Layout.minimumWidth: implicitWidth
+                        Layout.preferredWidth: root.dropdownWidth
 
-                        readOnly: true
-                        currentText: exportPreferencesModel.fileNamePreview
-
-                        implicitWidth: root.dropdownWidth
-
-                        navigation.name: "FileNamePreviewFieldBox"
-                        navigation.panel: fileSection.navigation
-                        navigation.order: 1
-                        navigation.accessible.name: fileNamePreviewLabel.text + ": " + currentText
+                        text: exportPreferencesModel.fileNamePreview
+                        horizontalAlignment: Text.AlignLeft
+                        elide: Text.ElideMiddle
                     }
                 }
 
@@ -190,7 +184,7 @@ StyledDialogView {
 
                         navigation.name: "FileNameFieldBox"
                         navigation.panel: fileSection.navigation
-                        navigation.order: fileNamePreviewField.navigation.order + 1
+                        navigation.order: 1
                         navigation.accessible.name: filenameLabel.text + ": " + currentText
 
                         onTextChanged: function (newTextValue) {
@@ -216,7 +210,7 @@ StyledDialogView {
 
                         Layout.fillWidth: true
 
-                        text: exportPreferencesModel.separateFilesByLabels ? qsTrc("export", "Include label numbers") : qsTrc("export", "Include track numbers")
+                        text: exportPreferencesModel.separateFilesByLabels ? qsTrc("export", "Number files in label order") : qsTrc("export", "Number files in track order")
                         checked: exportPreferencesModel.includeNumbers
 
                         navigation.name: "IncludeNumbersBox"
