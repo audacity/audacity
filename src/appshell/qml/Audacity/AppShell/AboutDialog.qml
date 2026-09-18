@@ -77,6 +77,7 @@ StyledDialogView {
                 Layout.alignment: Qt.AlignRight
                 Layout.margins: prv.btnMargins
 
+                //: Label of a dialog button
                 text: qsTrc("global", "Close")
 
                 onClicked: {

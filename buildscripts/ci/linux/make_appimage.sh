@@ -134,6 +134,8 @@ system_libs=(
   libmount.so.1
   libblkid.so.1
   libuuid.so.1
+  libsystemd.so.0
+  libdbus-1.so.3
 )
 for lib in "${system_libs[@]}"; do
   rm -f "${appdir}/lib/${lib}"

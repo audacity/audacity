@@ -325,6 +325,10 @@ void LabelsTableViewModel::exportLabels()
 void LabelsTableViewModel::importLabels()
 {
     muse::io::path_t importPath = selectFileForImport();
+    if (importPath.empty()) {
+        return;
+    }
+
     Ret ret = labelsImporter()->importData(importPath);
     if (!ret) {
         LOGE() << ret.toString();
@@ -632,6 +636,7 @@ io::path_t LabelsTableViewModel::selectFileForImport()
     std::vector<std::string> filter = importExportFilter(labelsImportExportConfiguration()->fileFilter());
     io::path_t defaultDir = labelsImportExportConfiguration()->labelsDirectoryPath();
 
+    //: Title of a file picker dialog
     io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("global", "Open"), defaultDir, filter);
 
     if (!filePath.empty()) {

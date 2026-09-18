@@ -8,5 +8,5 @@ add_unit_test(
    SOURCES
       SQliteHelpersTests.cpp
    LIBRARIES
-      au3-sqlite-helpers-interface
+      au3-sqlite-helpers
 )

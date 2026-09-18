@@ -29,6 +29,7 @@ const EffectParameterMethods& NormalizeEffect::Parameters() const
     return parameters;
 }
 
+//: Name of the Normalize effect; shown in menus and dialog titles
 const ComponentInterfaceSymbol NormalizeEffect::Symbol { TranslatableString("effects-normalize", "Normalize") };
 
 NormalizeEffect::NormalizeEffect()

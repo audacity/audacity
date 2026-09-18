@@ -7,12 +7,13 @@
 #include "modularity/ioc.h"
 
 #include "global/types/color.h"
+#include "global/types/translatablestring.h"
 #include "trackedit/trackedittypes.h"
 #include "types/projectscenetypes.h"
 
 namespace au::projectscene {
 struct ClipColorInfo {
-    std::string name;
+    muse::TranslatableString title;
     trackedit::ClipColorIndex index = 0;
 };
 class IProjectSceneConfiguration : MODULE_GLOBAL_INTERFACE

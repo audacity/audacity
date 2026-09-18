@@ -92,6 +92,7 @@ RowLayout {
 
         enabled: !metadataModel.isStandardTag(tagView.currentSourceRow)
 
+        //: Label of the button that deletes the selected metadata tag
         text: qsTrc("export", "Delete")
 
         navigation.panel: root.navigationPanel

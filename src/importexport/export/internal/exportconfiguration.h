@@ -26,6 +26,18 @@ public:
     void setTrimBlankSpace(bool trim) override;
     muse::async::Notification trimBlankSpaceChanged() const override;
 
+    bool includeNumbers() const override;
+    void setIncludeNumbers(bool include) override;
+    muse::async::Notification includeNumbersChanged() const override;
+
+    bool includeAudioBeforeFirstLabel() const override;
+    void setIncludeAudioBeforeFirstLabel(bool include) override;
+    muse::async::Notification includeAudioBeforeFirstLabelChanged() const override;
+
+    bool askExportLocationType() const override;
+    void setAskExportLocationType(bool ask) override;
+    muse::async::Notification askExportLocationTypeChanged() const override;
+
     muse::io::path_t directoryPath() const override;
     void setDirectoryPath(const muse::io::path_t& path) override;
     muse::async::Notification directoryPathChanged() const override;
@@ -151,6 +163,9 @@ private:
 
     muse::async::Notification m_processChanged;
     muse::async::Notification m_trimBlankSpaceChanged;
+    muse::async::Notification m_includeNumbersChanged;
+    muse::async::Notification m_includeAudioBeforeFirstLabelChanged;
+    muse::async::Notification m_askExportLocationTypeChanged;
     muse::async::Notification m_filenameChanged;
     muse::async::Notification m_directoryPathChanged;
     muse::async::Notification m_currentFormatChanged;

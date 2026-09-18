@@ -194,15 +194,15 @@ muse::async::Notification ProjectSceneConfiguration::isEffectsPanelVisibleChange
 const std::vector<ClipColorInfo>& ProjectSceneConfiguration::clipColorInfos() const
 {
     static const std::vector<ClipColorInfo> infos = {
-        { "Blue", 1 },
-        { "Violet", 2 },
-        { "Magenta", 3 },
-        { "Red", 4 },
-        { "Orange", 5 },
-        { "Yellow", 6 },
-        { "Green", 7 },
-        { "Turquoise", 8 },
-        { "Cyan", 9 }
+        { muse::TranslatableString("projectscene", "Blue"), 1 },
+        { muse::TranslatableString("projectscene", "Violet"), 2 },
+        { muse::TranslatableString("projectscene", "Magenta"), 3 },
+        { muse::TranslatableString("projectscene", "Red"), 4 },
+        { muse::TranslatableString("projectscene", "Orange"), 5 },
+        { muse::TranslatableString("projectscene", "Yellow"), 6 },
+        { muse::TranslatableString("projectscene", "Green"), 7 },
+        { muse::TranslatableString("projectscene", "Turquoise"), 8 },
+        { muse::TranslatableString("projectscene", "Cyan"), 9 }
     };
 
     return infos;

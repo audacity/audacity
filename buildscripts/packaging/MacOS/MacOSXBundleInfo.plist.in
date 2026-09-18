@@ -5,7 +5,7 @@
 	<key>NSPrincipalClass</key>
     <string>NSApplication</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string>en-US</string>
 	<!-- UTI declarations for OS X >= 10.4	-->
 	<key>UTExportedTypeDeclarations</key>
 	<array>
@@ -80,6 +80,8 @@
 	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
 	<string>${MACOSX_BUNDLE_ICON_FILE}</string>
+	<key>CFBundleIconName</key>
+	<string>${MACOSX_BUNDLE_ICON_NAME}</string>
 	<key>CFBundleIdentifier</key>
 	<string>${MACOSX_BUNDLE_GUI_IDENTIFIER}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -116,7 +118,6 @@
 	<false/>
 	<key>CFBundleLocalizations</key>
 	<array>
-		<string>en</string>
-	</array>
+${AU4_BUNDLE_LOCALIZATIONS}	</array>
 </dict>
 </plist>

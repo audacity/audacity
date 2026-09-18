@@ -17,15 +17,19 @@ Rectangle {
     property alias isMasterTrack: effectList.isMasterTrack
     property alias minimumHeight: prv.addEffectButtonHeight
 
-    property NavigationSection navigationSection: null
     property NavigationPanel navigationPanel: null
     property int navigationOrderStart: 0
     readonly property int navigationOrderEnd: navigationOrderStart + effectList.count + 1
+    property alias hasPendingDialogRestore: effectList.hasPendingDialogRestore
 
     color: ui.theme.backgroundPrimaryColor
 
     Component.onCompleted: {
         menuModel.init()
+    }
+
+    function requestActive() {
+        addEffectButton.navigation.requestActive()
     }
 
     QtObject {
@@ -171,10 +175,6 @@ Rectangle {
             elide: Text.ElideNone
             verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignLeft
-
-            onLinkActivated: function (link) {
-                Qt.openUrlExternally(link)
-            }
         }
     }
 }

@@ -26,8 +26,14 @@
     "bg": {
         "name": "български"
     },
+    "bn": {
+        "name": "বাংলা"
+    },
     "br": {
         "name": "Brezhoneg"
+    },
+    "bs": {
+        "name": "Bosanski"
     },
     "ca": {
         "name": "Català",
@@ -36,6 +42,10 @@
     "ca@valencia": {
         "name": "Valencià",
         "fallbackLanguages": ["ca"]
+    },
+    "co": {
+        "name": "Corsu",
+        "fallbackLanguages": ["fr"]
     },
     "cs": {
         "name": "Čeština"
@@ -102,7 +112,7 @@
     "he": {
         "name": "עברית"
     },
-    "hi_IN": {
+    "hi": {
         "name": "हिन्दी",
         "fallbackLanguages": ["en_GB"]
     },
@@ -122,6 +132,9 @@
         "name": "Ásụ̀sụ̀ Ị̀gbò",
         "fallbackLanguages": ["en_GB"]
     },
+    "is": {
+        "name": "Íslenska"
+    },
     "it": {
         "name": "Italiano"
     },
@@ -134,6 +147,9 @@
     "kab": {
         "name": "ⵜⴰⵇⴱⴰⵢⵍⵉⵜ"
     },
+    "km": {
+        "name": "ខ្មែរ"
+    },
     "ko": {
         "name": "한국어"
     },
@@ -143,6 +159,9 @@
     "lv": {
         "name": "Latviešu"
     },
+    "mk": {
+        "name": "Македонски"
+    },
     "ml": {
         "name": "മലയാളം",
         "fallbackLanguages": ["en_GB"]
@@ -150,9 +169,18 @@
     "mn_MN": {
         "name": "Монгол хэл"
     },
+    "mr": {
+        "name": "मराठी"
+    },
+    "ms": {
+        "name": "Bahasa Melayu"
+    },
     "mt": {
         "name": "Malti",
         "fallbackLanguages": ["en_GB"]
+    },
+    "my": {
+        "name": "မြန်မာ"
     },
     "nb": {
         "name": "Norsk (Bokmål)",
@@ -165,16 +193,19 @@
         "name": "Norsk (Nynorsk)",
         "fallbackLanguages": ["nb"]
     },
+    "oc": {
+        "name": "Occitan"
+    },
     "pl": {
         "name": "Polski"
     },
-    "pt": {
-        "name": "Português",
-        "fallbackLanguages": ["pt_BR"]
-    },
     "pt_BR": {
         "name": "Português brasileiro",
-        "fallbackLanguages": ["pt"]
+        "fallbackLanguages": ["pt_PT"]
+    },
+    "pt_PT": {
+        "name": "Português",
+        "fallbackLanguages": ["pt_BR"]
     },
     "ro": {
         "name": "Română"
@@ -191,6 +222,9 @@
     "sl": {
         "name": "Slovenščina"
     },
+    "sq": {
+        "name": "Shqip"
+    },
     "sr": {
         "name": "Srpski"
     },
@@ -205,8 +239,20 @@
         "name": "Svenska (traditionell)",
         "fallbackLanguages": ["sv"]
     },
+    "ta": {
+        "name": "தமிழ்"
+    },
+    "te": {
+        "name": "తెలుగు"
+    },
+    "tg": {
+        "name": "Тоҷикӣ"
+    },
     "th": {
         "name": "ภาษาไทย"
+    },
+    "tl": {
+        "name": "Tagalog"
     },
     "tr": {
         "name": "Türkçe"
@@ -219,6 +265,12 @@
     },
     "vi": {
         "name": "Tiếng Việt"
+    },
+    "yi": {
+        "name": "ייִדיש"
+    },
+    "yo": {
+        "name": "Yorùbá"
     },
     "zh_CN": {
         "name": "简体中文"

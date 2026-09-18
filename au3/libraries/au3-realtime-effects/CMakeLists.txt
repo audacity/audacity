@@ -16,11 +16,18 @@ set( SOURCES
    SavedMasterEffectList.h
 )
 set( LIBRARIES
-   au3-channel-interface
-   au3-math-interface
-   au3-module-manager-interface
-   au3-project-history-interface
-   au3-strings-interface
+PUBLIC
+   au3-components
+   au3-registries
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-channel
+   au3-math
+   au3-module-manager
+   au3-project
+   au3-project-history
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

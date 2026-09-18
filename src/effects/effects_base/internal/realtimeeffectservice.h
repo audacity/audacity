@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
+#include "audio/iaudioengine.h"
 
 struct TrackListEvent;
 
@@ -34,6 +35,7 @@ class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asynca
     public std::enable_shared_from_this<RealtimeEffectService>
 {
     muse::GlobalInject<IEffectsProvider> effectsProvider;
+    muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };

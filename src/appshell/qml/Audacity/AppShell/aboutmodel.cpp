@@ -326,10 +326,12 @@ QVariantList AboutModel::creditList() const
 {
     static const QVariantList cached = [] {
         QVariantList creditList = {
-            makeSection("Audacity Team Members", buildCredits(sTeamMembers)),
-            makeSection("Emeritus", "Distinguished Audacity Team members, not currently active", buildCredits(sEmeritusTeam)),
-            makeSection("Contributors", buildCredits(sContributors)),
-            makeSection("Website and Graphics", buildCredits(sGraphics)),
+            makeSection(QT_TRANSLATE_NOOP("appshell/about", "Audacity Team Members"), buildCredits(sTeamMembers)),
+            makeSection(QT_TRANSLATE_NOOP("appshell/about", "Emeritus"),
+                        QT_TRANSLATE_NOOP("appshell/about", "Distinguished Audacity Team members, not currently active"),
+                        buildCredits(sEmeritusTeam)),
+            makeSection(QT_TRANSLATE_NOOP("appshell/about", "Contributors"), buildCredits(sContributors)),
+            makeSection(QT_TRANSLATE_NOOP("appshell/about", "Website and Graphics"), buildCredits(sGraphics)),
         };
 
         /* i18n-hint: Replace this with the names of the translators for your language.
@@ -338,11 +340,13 @@ QVariantList AboutModel::creditList() const
             Leave untranslated to hide the Translators section. */
         QString translationCredits = muse::qtrc("appshell/about", "translator_credits");
         if (translationCredits != "translator_credits") {
-            creditList.append(makeSection("Translators", translationCredits));
+            creditList.append(makeSection(QT_TRANSLATE_NOOP("appshell/about", "Translators"), translationCredits));
         }
 
-        creditList.append(makeSection("Libraries", "Audacity includes code from the following projects:", buildCredits(sLibraries)));
-        creditList.append(makeSection("Special Thanks", buildCredits(sThanks)));
+        creditList.append(makeSection(QT_TRANSLATE_NOOP("appshell/about", "Libraries"),
+                                      QT_TRANSLATE_NOOP("appshell/about", "Audacity includes code from the following projects:"),
+                                      buildCredits(sLibraries)));
+        creditList.append(makeSection(QT_TRANSLATE_NOOP("appshell/about", "Special Thanks"), buildCredits(sThanks)));
         return creditList;
     }();
     return cached;

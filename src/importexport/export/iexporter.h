@@ -32,7 +32,10 @@ public:
         ExportChannels,
         ExportCustomChannelMapping,
         ExportSampleRate,
-        Parameters
+        Parameters,
+        FileNamePrefix,
+        IncludeNumbers,
+        IncludeAudioBeforeFirstLabel
     };
 
     using Options = std::map<OptionKey, muse::Val>;
@@ -43,10 +46,14 @@ public:
     virtual muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr,
                                  au::project::IAudacityProjectPtr project = nullptr) = 0;
 
+    virtual muse::Ret prepareSeparateFiles(const Options& options = {}) = 0;
+    virtual std::vector<std::string> separateFileNames() const = 0;
+    virtual muse::Ret exportSeparateFiles(const muse::io::path_t& directory, muse::ProgressPtr progress = nullptr) = 0;
+
     virtual std::vector<std::string> formatsList() const = 0;
     virtual int formatIndex(const std::string& format) const = 0;
     virtual std::vector<std::string> formatExtensions(const std::string& format) const = 0;
-    virtual std::vector<std::string> cloudPreferredAudioFormats() const = 0;
+    virtual std::vector<std::string> cloudPreferredAudioFormats(bool preferLossless = true) const = 0;
     virtual ExportParameters cloudExportParameters(const std::string& format) const = 0;
     virtual bool isCustomFFmpegExportFormat() const = 0;
     virtual bool isOggExportFormat() const = 0;

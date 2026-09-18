@@ -194,8 +194,9 @@ set( SOURCES
    LoadThemeResources.cpp
 )
 set( LIBRARIES
-   au3-theme-interface
- )
+PRIVATE
+   au3-theme
+)
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

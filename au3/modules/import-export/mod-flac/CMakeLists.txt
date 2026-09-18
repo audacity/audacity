@@ -1,29 +1,31 @@
 #[[
-FLAC import and export
+FLAC import/export.
 ]]
 
-set( TARGET mod-flac )
+set( TARGET au3-mod-flac )
 
 set( SOURCES
-      ImportFLAC.cpp
-      ExportFLAC.cpp
-      FLAC.cpp
+   ExportFLAC.cpp
+   ExportFLAC.h
+   ImportFLAC.cpp
+   ImportFLAC.h
 )
 
 set( LIBRARIES
-   PRIVATE
-      FLAC::FLAC
-      FLAC::FLAC++
+PUBLIC
+   FLAC::FLAC
+   FLAC::FLAC++
+   au3-import-export
+   au3-mixer
+   au3-tags
+   au3-track
+   au3-wave-track
+PRIVATE
+   au3-math
+   rapidjson::rapidjson
+   wxBase
 )
 
-if ( USE_LIBID3TAG )
-      list ( APPEND LIBRARIES PRIVATE libid3tag::libid3tag)
-endif()
-
-set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
-
-list(APPEND LIBRARIES
-   lib-import-export-interface
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
 )
-
-audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

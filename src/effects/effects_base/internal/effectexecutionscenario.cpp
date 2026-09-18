@@ -3,6 +3,8 @@
 */
 #include "effectexecutionscenario.h"
 
+#include "effectsutils.h"
+
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/realfn.h"
@@ -32,6 +34,7 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/progressdialog.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "trackedit/trackeditutils.h"
 
 #include "../effecterrors.h"
@@ -94,7 +97,7 @@ muse::Ret EffectExecutionScenario::repeatLastProcessor()
 std::pair<std::string, std::string> EffectExecutionScenario::makeErrorMsg(const muse::Ret& ret,
                                                                           const EffectId& effectId)
 {
-    const muse::String& effect = effectsProvider()->meta(effectId).title;
+    const muse::String effect = utils::effectDisplayTitle(effectsProvider()->meta(effectId));
     return { effect.toStdString(), ret.text() };
 }
 
@@ -119,7 +122,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! ============================================================================
 
     // common things used below
-    PluginID ID = effectId.toStdString();
+    PluginID ID = au::au3::wxFromString(effectId);
     EffectManager& em = EffectManager::Get();
     Effect* effect = nullptr;
 
@@ -675,7 +678,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                 const auto prj = globalContext()->currentTrackeditProject();
                 const std::vector<trackedit::Track> tracksBefore = prj->trackList();
                 if (pInstanceEx->Process(settings) == false) {
-                    if (progress.cancelled()) {
+                    if (progress.Cancelled()) {
                         success = make_ret(Err::EffectProcessCancelled);
                     } else {
                         success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
@@ -886,7 +889,17 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
 
         bool success = pInstance->Process(settings);
         if (!success) {
-            return muse::make_ret(muse::Ret::Code::InternalError);
+            if (progress->Cancelled()) {
+                return muse::make_ret(muse::Ret::Code::Cancel);
+            }
+            const muse::Ret ret = make_ret(Err::EffectProcessFailed, pInstance->GetLastError());
+            // reset is needed to close progress dialog before modal error dialog opens
+            // so they don't stack
+            progress.reset();
+            interactive()->error(muse::trc("effects", "Effect preview"), ret.text(), {},
+                                 int(muse::IInteractive::Button::NoButton),
+                                 { muse::IInteractive::Option::WithIcon });
+            return ret;
         }
 
         // Time-warping effects (e.g. Paulstretch) may update mT1 during

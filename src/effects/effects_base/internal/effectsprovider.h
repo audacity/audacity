@@ -36,7 +36,8 @@ public:
     void deinit();
 
     void initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                  muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
+                  muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                  StartupPluginValidationPolicy validationPolicy) override;
 
     EffectMetaList effectMetaList() const override;
     muse::async::Notification effectMetaListChanged() const override;
@@ -69,7 +70,7 @@ private:
 
     NewPluginsRegistered doScanPlugins(const muse::modularity::ContextPtr& ctx,
                                        muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                       const std::function<bool()>& doScanThirdPartyPlugins = nullptr);
+                                       const std::function<bool()>& shouldValidateThirdPartyPlugins = nullptr);
     void doSave(EffectFilter removeFromConfig = nullptr);
 
     EffectMetaList m_effects;

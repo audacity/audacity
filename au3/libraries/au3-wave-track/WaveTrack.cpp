@@ -1470,6 +1470,11 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     // Now, clear the selection
     track.HandleClear(t0, t1, addCutLines, split, moveClips, clearByTrimming);
 
+    const auto pasteDelta = srcEndTime - (t1 - t0);
+    if (std::abs(pasteDelta) >= LongSamplesToTime(1)) {
+        track.ShiftBy(t1, pasteDelta);
+    }
+
     // And paste in the new data
     track.PasteWaveTrackAtSameTempo(t0, src, merge, moveClips);
 
@@ -3458,6 +3463,12 @@ void WaveTrack::Split(double t0, double t1)
     if (t0 != t1) {
         SplitAt(t1);
     }
+}
+
+bool WaveTrack::SplitsSomeClip(double t) const
+{
+    const auto intervals = Intervals();
+    return std::any_of(intervals.begin(), intervals.end(), [t](const auto& interval){ return interval->SplitsPlayRegion(t); });
 }
 
 /*! @excsafety{Weak} */

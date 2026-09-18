@@ -20,9 +20,14 @@ set( SOURCES
    ProjectStatus.h
 )
 set( LIBRARIES
-   au3-registries-interface
-   au3-xml-interface
-   au3-strings-interface
+PUBLIC
+   au3-preferences
+   au3-registries
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-basic-ui
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -10,10 +10,13 @@ set( SOURCES
    TimeTrack.h
 )
 set( LIBRARIES
-   au3-mixer-interface # for Envelope
-   au3-project-rate-interface
-   au3-track-interface
-   au3-strings-interface
+PUBLIC
+   au3-track
+PRIVATE
+   au3-mixer # for Envelope
+   au3-project
+   au3-project-rate
+   au3-strings
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

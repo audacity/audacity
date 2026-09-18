@@ -249,6 +249,7 @@ ListItemBlank {
             accentButton: root.innerGripReorderActive
             accentColor: ui.theme.accentColor
             iconColor: root.innerGripReorderActive ? ui.theme.extra["white_color"] : ui.theme.fontPrimaryColor
+            //: Tooltip of the drag handle used to reorder effects
             toolTipTitle: qsTrc("projectscene", "Reorder effect")
 
             mouseArea.cursorShape: Qt.SizeAllCursor
@@ -298,6 +299,7 @@ ListItemBlank {
             navigation.panel: root.innerNavigationPanel
             navigation.order: gripButton.navigation.order + 1
             navigation.name: "panel bypass btn - " + prv.title
+            //: Tooltip of the effect power button; %1 is an effect name
             toolTipTitle: qsTrc("projectscene", "Bypass %1").arg(prv.title)
 
             isMasterEffect: item && item.isMasterEffect
@@ -317,6 +319,7 @@ ListItemBlank {
             navigation.panel: root.innerNavigationPanel
             navigation.order: bypassButton.navigation.order + 1
             navigation.name: "show ui btn - " + prv.title
+            //: Tooltip of the button that opens the effect dialog; %1 is an effect name
             toolTipTitle: qsTrc("projectscene", "Open %1").arg(prv.title)
 
             Layout.fillWidth: true
@@ -358,6 +361,7 @@ ListItemBlank {
             navigation.panel: root.innerNavigationPanel
             navigation.order: effectNameButton.navigation.order + 1
             navigation.name: "replace btn - " + prv.title
+            //: Tooltip of the button that replaces the effect; %1 is an effect name
             toolTipTitle: qsTrc("projectscene", "Replace %1").arg(prv.title)
 
             Layout.fillHeight: true

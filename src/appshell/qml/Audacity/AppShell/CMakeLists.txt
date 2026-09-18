@@ -104,6 +104,7 @@ qt_add_qml_module(appshell_qml
         TARGET muse_shortcuts_qml
         TARGET muse_toast_qml
         TARGET muse_tours_qml
+        TARGET muse_update_qml
 )
 
 if (AU_BUILD_CLOUD_AUDIOCOM)

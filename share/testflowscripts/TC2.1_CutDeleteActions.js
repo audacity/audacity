@@ -65,6 +65,9 @@ steps.push(u.step("Setup: two tracks, 3 clips each", function () {
     u.run("file-close")
     Home.goToHome()
     Home.createNewProject()
+    // createNewProject is a queued navigation trigger; let it complete
+    // before dispatching track creation, which is synchronous
+    u.sleep(500)
     Create.newMonoTrack()
     Create.newMonoTrack()
     u.sleep(500)

@@ -7,9 +7,9 @@
 
 #include "actions/tests/mocks/actionsdispatchermock.h"
 #include "framework/ui/navigationcommands.h"
+#include "framework/ui/tests/mocks/navigationmocks.h"
 #include "mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
-#include "mocks/navigationcontrollermock.h"
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/trackeditprojectmock.h"
@@ -170,7 +170,7 @@ public:
     static auto isPanelCommand(const muse::rcommand::Command& command)
     {
         return ::testing::Truly([command](const muse::rcommand::Request& request) {
-            return request.query.uri() == command;
+            return request.command == command;
         });
     }
 
@@ -377,8 +377,8 @@ TEST_F(TrackNavigationControllerTests, UpFromClipFocusesClosestClipAbove)
 }
 
 /**
- * Shift+F10 (track-view-item-context-menu), while a track is focused, requests
- * the context menu for the focused track (no item).
+ * track-view-item-context-menu (routed from Shift+F10 while the track view is focused)
+ * requests the context menu for the focused track (no item).
  */
 TEST_F(TrackNavigationControllerTests, ContextMenuRequestedForFocusedTrack)
 {
@@ -406,7 +406,7 @@ TEST_F(TrackNavigationControllerTests, ContextMenuRequestedForFocusedTrack)
 }
 
 /**
- * Shift+F10 (track-view-item-context-menu) is a no-op when nothing is focused.
+ * track-view-item-context-menu is a no-op when nothing is focused.
  */
 TEST_F(TrackNavigationControllerTests, ContextMenuNotRequestedWithoutFocus)
 {

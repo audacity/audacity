@@ -44,9 +44,7 @@ public:
     virtual ITrackDataPtr copyClip(const ClipKey& clipKey) = 0;
     virtual std::optional<TimeSpan> removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
-    virtual muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset,
-                                                bool completed, bool& clipsMovedToOtherTracks) = 0;
-    virtual void cancelClipDragEdit() = 0;
+    virtual muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset) = 0;
 
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
     virtual bool splitClipsIntoNewTracks(const ClipKeyList& clipKeyList) = 0;
@@ -80,6 +78,5 @@ public:
     //! TODO
     virtual bool clipTransferNeedsDownmixing(const std::vector<ITrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const = 0;
     virtual bool userIsOkWithDownmixing() const = 0;
-    virtual bool singleClipOnTrack(const TrackId trackId) const = 0;
 };
 }

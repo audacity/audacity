@@ -12,6 +12,7 @@
 #include "mocks/projecthistorymock.h"
 #include "mocks/clipboardmock.h"
 #include "mocks/tracknavigationcontrollermock.h"
+#include "mocks/clipsinteractionmock.h"
 #include "../trackediterrors.h"
 
 #include "interactive/tests/mocks/interactivemock.h"
@@ -45,6 +46,9 @@ public:
         m_tracksInteraction->configuration.set(m_configuration);
         m_tracksInteraction->projectHistory.set(m_projectHistory);
 
+        m_clipsInteraction = std::make_shared<NiceMock<ClipsInteractionMock> >();
+        m_tracksInteraction->clipsInteraction.set(m_clipsInteraction);
+
         m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
         ON_CALL(*m_globalContext, currentTrackeditProject())
         .WillByDefault(Return(m_trackEditProject));
@@ -70,6 +74,7 @@ public:
     }
 
     std::shared_ptr<Au3TracksInteraction> m_tracksInteraction;
+    std::shared_ptr<ClipsInteractionMock> m_clipsInteraction;
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
 
@@ -792,6 +797,38 @@ TEST_F(Au3TracksInteractionTests, DuplicateTracksRemapsClipGroups)
     //Cleanup
     removeTrack(trackId);
     removeTrack(TrackId(clone->GetId()));
+}
+
+TEST_F(Au3TracksInteractionTests, DuplicateRangeSelectionGivesTheCopyNewClipIds)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    Au3WaveTrack* origTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(origTrack) << "Precondition failed: original track not found";
+
+    std::set<int64_t> originalIds;
+    for (const auto& clip : origTrack->Intervals()) {
+        originalIds.insert(clip->GetId());
+    }
+    ASSERT_FALSE(originalIds.empty());
+
+    m_tracksInteraction->duplicateSelectedOnTracks({ trackId }, origTrack->GetStartTime(), origTrack->GetEndTime());
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 2);
+
+    Au3WaveTrack* clone = nullptr;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId) {
+            clone = dynamic_cast<Au3WaveTrack*>(track);
+        }
+    }
+    ASSERT_TRUE(clone) << "The duplicated track was not found";
+
+    for (const auto& clip : clone->Intervals()) {
+        EXPECT_EQ(originalIds.count(clip->GetId()), 0u)
+            << "duplicated clip reuses id " << clip->GetId()
+            << "; dragging it onto the original track makes findWaveClip ambiguous";
+    }
 }
 
 TEST_F(Au3TracksInteractionTests, DuplicateRangeSelectionRemapsClipGroups)
@@ -1677,6 +1714,43 @@ TEST_F(Au3TracksInteractionTests, changeTrackRate)
     ASSERT_NE(firstClip, nullptr) << "The first clip is not found";
     ValidateClipProperties(firstClip, TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END * 10,
                            TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END * 10);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PasteClipAtStartOfItselfIntoExistingClipDoesNotOverlap)
+{
+    //! [GIVEN] A track with a single clip starting at 0
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_EQ(track->NIntervals(), 1);
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    const double clipDuration = clip->GetPlayDuration();
+
+    //! [GIVEN] The clipboard holds a copy of that very clip
+    const Au3Track::Holder trackCopy = track->Copy(clip->GetPlayStartTime(), clip->GetPlayEndTime());
+    ASSERT_NE(trackCopy, nullptr) << "Failed to copy clip";
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
+
+    //! [GIVEN] The track is selected and "paste into existing clip" mode is on
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { trackId }));
+    ON_CALL(*m_configuration, pasteAsNewClip()).WillByDefault(Return(false));
+
+    //! [WHEN] Pasting at the exact start of the existing clip
+    constexpr auto moveClips = false;
+    constexpr auto moveAllTracks = false;
+    constexpr auto isMultiSelectionCopy = false;
+    bool projectWasModified = false;
+    const muse::Ret ret
+        = m_tracksInteraction->paste({ trackData }, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy, projectWasModified);
+    ASSERT_EQ(ret, muse::make_ok()) << "The return value is not Ok";
+
+    //! [THEN] The audio was inserted into the existing clip: one clip, twice as long
+    EXPECT_EQ(track->NIntervals(), 1);
+    EXPECT_DOUBLE_EQ(track->GetStartTime(), 0.0);
+    EXPECT_DOUBLE_EQ(track->GetEndTime(), 2 * clipDuration);
 
     // Cleanup
     removeTrack(trackId);

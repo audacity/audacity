@@ -9,7 +9,8 @@ set( SOURCES
    ExportOptionsUIServices.h
 )
 set( LIBRARIES
-   au3-shuttlegui-interface
+PRIVATE
+   au3-shuttlegui
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

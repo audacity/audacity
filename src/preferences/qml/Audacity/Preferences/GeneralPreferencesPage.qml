@@ -98,9 +98,15 @@ PreferencesPage {
             }
         }
 
-        SeparatorLine {}
+        SeparatorLine {
+            visible: automaticUpdateSection.visible
+        }
 
         AutomaticUpdateSection {
+            id: automaticUpdateSection
+
+            visible: updateModel.isAppUpdatable()
+
             isAppUpdatable: updateModel.isAppUpdatable()
             needCheckForNewAppVersion: updateModel.needCheckForNewAppVersion
             privacyPolicyUrl: updateModel.privacyPolicyUrl()
@@ -119,9 +125,15 @@ PreferencesPage {
             }
         }
 
-        SeparatorLine {}
+        SeparatorLine {
+            visible: crashReportsSection.visible
+        }
 
         CrashReportsSection {
+            id: crashReportsSection
+
+            visible: usageInfoModel.isCrashReportingAvailable()
+
             sendCrashReports: usageInfoModel.sendCrashReports
             privacyPolicyUrl: updateModel.privacyPolicyUrl()
 
@@ -139,9 +151,15 @@ PreferencesPage {
             }
         }
 
-        SeparatorLine {}
+        SeparatorLine {
+            visible: usageInfoSection.visible
+        }
 
         UsageInfoSection {
+            id: usageInfoSection
+
+            visible: usageInfoModel.isUsageInfoAvailable()
+
             sendAnonymousUsageInfo: usageInfoModel.sendAnonymousUsageInfo
             privacyPolicyUrl: updateModel.privacyPolicyUrl()
 

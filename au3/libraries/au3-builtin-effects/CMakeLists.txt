@@ -85,14 +85,37 @@ set( SOURCES
    WahWahBase.h
 )
 set( LIBRARIES
-   au3-dynamic-range-processor-interface
-   au3-wave-track-fft-interface
-   au3-label-track-interface
-#   au3-note-track-interface # don't link for now as we need USE_MIDI
-   PRIVATE
+PUBLIC
+   au3-command-parameters
+   au3-components
+   au3-dynamic-range-processor
+   au3-effects
+   au3-fft
+   au3-math
+   au3-mixer
+   au3-strings
+   au3-track
+   au3-utility
+   au3-wave-track
+   au3-xml
+   # SBSMSBase.h includes <sbsms.h>; making it PRIVATE again is tracked in
+   # https://github.com/audacity/audacity/issues/11803
    $<$<BOOL:${AU_USE_SBSMS}>:libsbsms>
+PRIVATE
+   au3-basic-ui
+   au3-exceptions
+   au3-files
+   au3-label-track
+   au3-module-manager
+#   au3-note-track # don't link for now as we need USE_MIDI
+   au3-numeric-formats
+   au3-preferences
+   au3-project
+   au3-project-rate
+   au3-realtime-effects
+   au3-time-frequency-selection
+   au3-wave-track-fft
    $<$<BOOL:${AU_USE_SOUNDTOUCH}>:soundtouch>
-   au3-strings-interface
    wxBase
 )
 set( DEFINES

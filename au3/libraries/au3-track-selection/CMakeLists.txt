@@ -17,8 +17,15 @@ set( SOURCES
    TrackFocus.h
 )
 set( LIBRARIES
-   au3-time-frequency-selection-interface
-   au3-strings-interface
+PUBLIC
+   au3-registries
+   au3-utility
+PRIVATE
+   au3-basic-ui
+   au3-project
+   au3-strings
+   au3-time-frequency-selection
+   au3-track
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -10,12 +10,12 @@ set(SOURCES
    CrashpadConfigurer.cpp
    internal/Util.h
 )
-set(LIBRARIES 
-   PRIVATE
-      crashpad::client
-      crashpad::client_common
-      crashpad::util
-      crashpad::mini_chromium_base
+set( LIBRARIES
+PRIVATE
+   crashpad::client
+   crashpad::client_common
+   crashpad::util
+   crashpad::mini_chromium_base
 )
 set(DEFINES
    INTERFACE

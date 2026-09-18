@@ -49,7 +49,7 @@ void ProjectPageModel::updatePlaybackMeterVisibility()
                                                   au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
     const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
                                  [](const muse::ui::ToolConfig::Item& item) {
-        return item.action == PLAYBACK_LEVEL_QUERY.toString();
+        return item.intent == PLAYBACK_LEVEL_QUERY.toString();
     });
 
     if (it != toolConfig.items.end()) {

@@ -88,6 +88,18 @@ protected:
         m_viewState->setSnapType(type);
     }
 
+    //! NOTE Frame moves persist the zoom state into the AU3 project, which the mocks do not provide
+    muse::async::Channel<muse::secs_t> usePositionUpdatesWithoutViewState()
+    {
+        ON_CALL(*m_project, viewState())
+        .WillByDefault(Return(IProjectViewStatePtr()));
+        muse::async::Channel<muse::secs_t> positionChanged;
+        ON_CALL(*m_playbackState, playbackPositionChanged())
+        .WillByDefault(Return(positionChanged));
+        m_controller->init();
+        return positionChanged;
+    }
+
     std::shared_ptr<NiceMock<context::GlobalContextMock> > m_globalContext;
     std::shared_ptr<NiceMock<project::AudacityProjectMock> > m_project;
     std::shared_ptr<NiceMock<trackedit::TrackeditProjectMock> > m_trackeditProject;
@@ -179,6 +191,49 @@ TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_AlreadyAtStart_DoesNot
     m_controller->seekToTime(-3.0);
 }
 
+TEST_F(PlayCursorControllerTests, SeekToTime_TargetOutsideFrame_MovesFrame)
+{
+    //! CASE A plain seek to a time outside the visible frame scrolls the frame to keep the cursor visible.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    m_controller->seekToTime(30.0);
+    positionChanged.send(30.0);
+
+    EXPECT_NE(m_context->frameStartTime(), frameStart);
+}
+
+TEST_F(PlayCursorControllerTests, SeekToTimeKeepingView_TargetOutsideFrame_LeavesFrame)
+{
+    //! CASE Seeking with the view kept dispatches the seek but leaves the frame where it was.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    muse::actions::ActionQuery captured;
+    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    .WillOnce(SaveArg<0>(&captured));
+
+    m_controller->seekToTimeKeepingView(30.0);
+    positionChanged.send(30.0);
+
+    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 30.0);
+    EXPECT_DOUBLE_EQ(m_context->frameStartTime(), frameStart);
+}
+
+TEST_F(PlayCursorControllerTests, SeekToTimeKeepingView_AffectsOnlyTheNextSeek)
+{
+    //! CASE The view is kept for that one seek only; a following plain seek scrolls again.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    m_controller->seekToTimeKeepingView(30.0);
+    positionChanged.send(30.0);
+    m_controller->seekToTime(60.0);
+    positionChanged.send(60.0);
+
+    EXPECT_NE(m_context->frameStartTime(), frameStart);
+}
+
 TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
 {
     //! CASE Region edges snap to boundaries and are clamped to >= 0.
@@ -194,6 +249,39 @@ TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
 
     EXPECT_DOUBLE_EQ(captured.param("start").toDouble(), 0.0);
     EXPECT_DOUBLE_EQ(captured.param("end").toDouble(), 10.0);
+}
+
+TEST_F(PlayCursorControllerTests, PositionTickWhilePaused_DoesNotScrollView)
+{
+    //! CASE Residual engine ticks after pausing must not scroll a view the
+    //! user scrolled/zoomed away; the cursor position itself still updates.
+    ON_CALL(*m_playbackState, playbackStatus())
+    .WillByDefault(Return(playback::PlaybackStatus::Paused));
+
+    m_context->onResizeFrameWidth(100.0); // frame = [0, 100]s at zoom 1
+
+    SnapTestAccess::updatePositionX(m_controller, muse::secs_t(500.0)); // play head far off-screen
+
+    EXPECT_DOUBLE_EQ(m_context->frameStartTime(), 0.0);
+    EXPECT_DOUBLE_EQ(m_controller->positionX(), 500.0);
+}
+
+TEST_F(PlayCursorControllerTests, PositionChangeWhileStopped_BringsViewToCursor)
+{
+    //! CASE Position changes from stop/seek still scroll the cursor into view.
+    ON_CALL(*m_playbackState, playbackStatus())
+    .WillByDefault(Return(playback::PlaybackStatus::Stopped));
+    // no view state: moving the frame would persist zoom into the au3 project
+    ON_CALL(*m_project, viewState())
+    .WillByDefault(Return(nullptr));
+
+    m_context->onResizeFrameWidth(100.0); // frame = [0, 100]s at zoom 1
+
+    SnapTestAccess::updatePositionX(m_controller, muse::secs_t(500.0));
+
+    EXPECT_GT(m_context->frameStartTime(), 0.0);
+    EXPECT_LE(m_context->frameStartTime(), 500.0);
+    EXPECT_GE(m_context->frameEndTime(), 500.0);
 }
 
 //! Seek gesture: pressing in the track area must never move the playhead by

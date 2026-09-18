@@ -10,6 +10,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/log.h"
 #include "framework/global/stringutils.h"
+#include "framework/global/translation.h"
 
 #include "effectstypes.h"
 #include "effects/vst/internal/vsttypes.h"
@@ -45,6 +46,16 @@ muse::String utils::effectFamilyToString(EffectFamily family)
         assert(false);
         return u"Unknown";
     }
+}
+
+muse::String utils::effectFamilyLabel(EffectFamily family)
+{
+    //! NOTE The other families are plug-in format names, which stay as they are
+    if (family == EffectFamily::Extension) {
+        return muse::mtrc("effects", "Extension");
+    }
+
+    return effectFamilyToString(family);
 }
 
 EffectFamily utils::effectFamilyFromString(const muse::String& family)
@@ -324,6 +335,35 @@ EffectCategory utils::effectCategoryFromString(const muse::String& category)
     return EffectCategory::Unspecified;
 }
 
+muse::String utils::effectCategoryLabel(const muse::String& category)
+{
+    if (category == volumeAndCompressionEffectCategoryString) {
+        return muse::mtrc("effects", "Volume and compression");
+    } else if (category == fadingEffectCategoryString) {
+        return muse::mtrc("effects", "Fading");
+    } else if (category == pitchAndTempoEffectCategoryString) {
+        return muse::mtrc("effects", "Pitch and tempo");
+    } else if (category == eqAndFiltersEffectCategoryString) {
+        return muse::mtrc("effects", "EQ and filters");
+    } else if (category == noiseRemovalAndRepairEffectCategoryString) {
+        return muse::mtrc("effects", "Noise removal and repair");
+    } else if (category == delayAndReverbEffectCategoryString) {
+        return muse::mtrc("effects", "Delay and reverb");
+    } else if (category == distortionAndModulationEffectCategoryString) {
+        return muse::mtrc("effects", "Distortion and modulation");
+    } else if (category == specialEffectCategoryString) {
+        return muse::mtrc("effects", "Special");
+    } else if (category == spectralToolsEffectCategoryString) {
+        return muse::mtrc("effects", "Spectral tools");
+    } else if (category == legacyEffectCategoryString) {
+        return muse::mtrc("effects", "Legacy");
+    } else if (category == unspecifiedEffectCategoryString) {
+        return muse::mtrc("effects", "Third-party");
+    }
+
+    return category;
+}
+
 muse::String utils::effectTypeToString(EffectType type)
 {
     switch (type) {
@@ -335,6 +375,19 @@ muse::String utils::effectTypeToString(EffectType type)
     default:
         assert(false);
         return u"Unknown";
+    }
+}
+
+muse::String utils::effectTypeLabel(EffectType type)
+{
+    switch (type) {
+    case EffectType::Unknown: return muse::mtrc("effects", "Unknown");
+    case EffectType::Analyzer: return muse::mtrc("effects", "Analyzer");
+    case EffectType::Generator: return muse::mtrc("effects", "Generator");
+    case EffectType::Processor: return muse::mtrc("effects", "Effect");
+    case EffectType::Tool: return muse::mtrc("effects", "Tool");
+    default:
+        return effectTypeToString(type);
     }
 }
 
@@ -368,6 +421,7 @@ muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
     museMeta.attributes.emplace(EFFECT_CATEGORY_ATTRIBUTE, meta.category);
     // Store the plugin name (from $name directive) for display
     museMeta.attributes.emplace(EFFECT_TITLE_ATTRIBUTE, meta.title);
+    museMeta.attributes.emplace(EFFECT_TITLE_CONTEXT_ATTRIBUTE, meta.titleContext);
     museMeta.attributes.emplace(EFFECT_DESCRIPTION_ATTRIBUTE, meta.description);
     museMeta.attributes.emplace(EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, meta.paramsAreInputAgnostic ? u"true" : u"false");
     museMeta.attributes.emplace(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, meta.isRealtimeCapable ? u"true" : u"false");
@@ -377,6 +431,14 @@ muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
     museMeta.attributes.emplace(EFFECT_ACTIVATED_ATTRIBUTE, meta.isActivated ? u"true" : u"false");
 
     return museMeta;
+}
+
+muse::String utils::effectDisplayTitle(const EffectMeta& meta)
+{
+    if (meta.titleContext.empty()) {
+        return meta.title;
+    }
+    return muse::mtrc(meta.titleContext.toStdString().c_str(), meta.title);
 }
 
 namespace {
@@ -416,6 +478,7 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     effectMeta.vendor = muse::String::fromStdString(meta.vendor);
     effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, isLoadable));
     effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, isLoadable);
+    effectMeta.titleContext = meta.attributeVal(EFFECT_TITLE_CONTEXT_ATTRIBUTE);
     effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE, isLoadable);
     effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, isLoadable);
     effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, isLoadable);
@@ -548,7 +611,7 @@ MenuItemList audacityDestructiveEffectsGroup(const EffectMetaList& effects, IEff
                 items << effectMenu.makeMenuEffectItem(effectId);
             }
         } else {
-            items << makeEffectSubmenu(CiString { category }, effectIds, effectMenu);
+            items << makeEffectSubmenu(utils::effectCategoryLabel(category), effectIds, effectMenu);
         }
     }
     return items;
@@ -589,7 +652,7 @@ MenuItemList thirdPartyGroup(const EffectMetaList& effects, IEffectMenuItemFacto
             publisherMenus << effectMenu.makeMenuEffect(publisher, makeItemsOrDisambiguationSubmenus(publisherEffects, effectMenu));
         }
 
-        items << effectMenu.makeMenuEffect(family, publisherMenus);
+        items << effectMenu.makeMenuEffect(utils::effectFamilyLabel(utils::effectFamilyFromString(family)), publisherMenus);
     }
 
     return items;

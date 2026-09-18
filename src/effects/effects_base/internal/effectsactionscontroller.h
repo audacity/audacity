@@ -11,6 +11,7 @@
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/ui/iuiactionsregister.h"
+#include "framework/shortcuts/ishortcutsregister.h"
 
 #include "spectrogram/ispectraleffectsregister.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
@@ -33,6 +34,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
+    muse::ContextInject<muse::shortcuts::IShortcutsRegister> shortcutsRegister{ this };
     muse::ContextInject<IEffectExecutionScenario> effectExecutionScenario{ this };
     muse::ContextInject<IEffectPresetsScenario> presetsScenario{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };

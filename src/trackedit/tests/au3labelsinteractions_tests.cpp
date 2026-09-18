@@ -89,7 +89,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneE
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -133,7 +133,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesExistingLabelTrack)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -180,7 +180,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesFocusedLabelTrack)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -211,13 +211,20 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
+    //! [GIVEN] Playback is not active at position 3.5 seconds
+    const double playbackPosition = 3.5;
+    ON_CALL(*m_playbackState, isPlaying())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(playbackPosition));
+
     //! [EXPECT] The project is notified about a new track and a new label being added
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label at the cursor position
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label at cursor position should succeed";
@@ -230,11 +237,11 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     ASSERT_NE(labelTrack, nullptr) << "Label track should exist";
     ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
 
-    //! [THEN] The label is a point label (same start and end time)
+    //! [THEN] The label is a point label (same start and end time), at the playback position
     const Au3Label* label = labelTrack->GetLabel(0);
     ASSERT_NE(label, nullptr) << "Label should exist";
-    ASSERT_DOUBLE_EQ(label->getT0(), cursorPosition) << "Label start should be at cursor position";
-    ASSERT_DOUBLE_EQ(label->getT1(), cursorPosition) << "Label end should be at cursor position";
+    ASSERT_DOUBLE_EQ(label->getT0(), playbackPosition) << "Label start should be at playback position";
+    ASSERT_DOUBLE_EQ(label->getT1(), playbackPosition) << "Label end should be at playback position";
 }
 
 TEST_F(Au3LabelsInteractionsTests, AddMultipleLabelsToSameLabelTrack)
@@ -254,19 +261,19 @@ TEST_F(Au3LabelsInteractionsTests, AddMultipleLabelsToSameLabelTrack)
     //! [WHEN] Add first label from 0.0 to 1.0
     ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(0.0));
     ON_CALL(*m_selectionController, dataSelectedEndTime()).WillByDefault(Return(1.0));
-    bool result1 = m_labelsInteraction->addLabelToSelection();
+    bool result1 = m_labelsInteraction->addLabelToSelection().ret;
     ASSERT_TRUE(result1) << "Adding first label should succeed";
 
     //! [WHEN] Add second label from 2.0 to 3.0
     ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(2.0));
     ON_CALL(*m_selectionController, dataSelectedEndTime()).WillByDefault(Return(3.0));
-    bool result2 = m_labelsInteraction->addLabelToSelection();
+    bool result2 = m_labelsInteraction->addLabelToSelection().ret;
     ASSERT_TRUE(result2) << "Adding second label should succeed";
 
     //! [WHEN] Add third label from 4.0 to 5.0
     ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(4.0));
     ON_CALL(*m_selectionController, dataSelectedEndTime()).WillByDefault(Return(5.0));
-    bool result3 = m_labelsInteraction->addLabelToSelection();
+    bool result3 = m_labelsInteraction->addLabelToSelection().ret;
     ASSERT_TRUE(result3) << "Adding third label should succeed";
 
     //! [THEN] Only one label track was created
@@ -319,7 +326,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithAudioTrackPresent)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -375,7 +382,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenPlaybackIsActive)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection (while playback is active)
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The existing label track now contains one label
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -430,7 +437,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenRecordingIsActive)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection (while recording is active)
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The existing label track now contains one label
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -1251,6 +1258,45 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithNoSelection)
     ASSERT_EQ(label->GetId(), labelId) << "Label should have correct ID";
     ASSERT_DOUBLE_EQ(label->getT0(), 1.0) << "Label start time should be unchanged";
     ASSERT_DOUBLE_EQ(label->getT1(), 2.0) << "Label end time should be unchanged";
+}
+
+TEST_F(Au3LabelsInteractionsTests, MoveLabelsClampsIndividuallyAtBoundaryTracks)
+{
+    auto& tracks = Au3TrackList::Get(projectRef());
+    auto* first = ::LabelTrack::Create(tracks);
+    ASSERT_NE(createTrack(TestTrackID::TRACK_SMALL_SILENCE), INVALID_TRACK);
+    auto* middle = ::LabelTrack::Create(tracks);
+    ASSERT_NE(createTrack(TestTrackID::TRACK_SMALL_SILENCE), INVALID_TRACK);
+    auto* last = ::LabelTrack::Create(tracks);
+
+    for (int offset : { -1, 1 }) {
+        LabelKeyList keys;
+        for (auto* track : { first, middle, last }) {
+            keys.push_back({ track->GetId(), track->AddLabel(SelectedRegion(10.0, 15.0), wxString("Label")) });
+        }
+
+        const auto result = m_labelsInteraction->moveLabels(keys, 0.0, offset);
+        ASSERT_TRUE(result.ret);
+        ASSERT_EQ(result.val.size(), 3);
+        EXPECT_EQ(result.val[0].trackId, offset < 0 ? first->GetId() : middle->GetId());
+        EXPECT_EQ(result.val[1].trackId, offset < 0 ? first->GetId() : last->GetId());
+        EXPECT_EQ(result.val[2].trackId, offset < 0 ? middle->GetId() : last->GetId());
+        EXPECT_EQ(first->GetNumLabels(), offset < 0 ? 2 : 0);
+        EXPECT_EQ(middle->GetNumLabels(), 1);
+        EXPECT_EQ(last->GetNumLabels(), offset < 0 ? 0 : 2);
+        for (const auto& key : result.val) {
+            auto* track = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(key.trackId));
+            const auto* label = DomAccessor::findLabel(track, key.itemId);
+            ASSERT_NE(label, nullptr);
+            EXPECT_DOUBLE_EQ(label->getT0(), 10.0);
+            EXPECT_DOUBLE_EQ(label->getT1(), 15.0);
+        }
+        for (auto* track : { first, middle, last }) {
+            while (track->GetNumLabels() > 0) {
+                track->DeleteLabel(0);
+            }
+        }
+    }
 }
 
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsToAnotherTrack)

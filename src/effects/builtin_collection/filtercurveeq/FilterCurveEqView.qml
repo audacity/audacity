@@ -139,6 +139,7 @@ BuiltinEffectBase {
                     navigation.order: invertButton.navigation.order + 1
 
                     icon: IconCode.ZOOM_IN
+                    //: Tooltip of a zoom button in the EQ curve view
                     toolTipTitle: qsTrc("effects/filtercurveeq", "Zoom in")
                     enabled: filterCurveEq.canZoomIn
 
@@ -155,6 +156,7 @@ BuiltinEffectBase {
                     navigation.order: zoomInButton.navigation.order + 1
 
                     icon: IconCode.ZOOM_OUT
+                    //: Tooltip of a zoom button in the EQ curve view
                     toolTipTitle: qsTrc("effects/filtercurveeq", "Zoom out")
                     enabled: filterCurveEq.canZoomOut
 

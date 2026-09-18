@@ -1,27 +1,26 @@
 #[[
-MPG123 import
+MP3 import via mpg123.
 ]]
 
-set( TARGET mod-mpg123 )
+set( TARGET au3-mod-mpg123 )
 
 set( SOURCES
-      ImportMP3_MPG123.cpp
-      MPG123.cpp
+   ImportMP3_MPG123.cpp
+   ImportMP3_MPG123.h
 )
 
 set( LIBRARIES
-   PRIVATE
-      mpg123::libmpg123
+PUBLIC
+   mpg123::libmpg123
+   au3-import-export
+   au3-wave-track
+PRIVATE
+   au3-project
+   au3-string-utils
+   au3-tags
+   wxBase
 )
 
-if ( USE_LIBID3TAG )
-      list ( APPEND LIBRARIES PRIVATE libid3tag::libid3tag)
-endif()
-
-set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
-
-list(APPEND LIBRARIES
-   lib-import-export-interface
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
 )
-
-audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

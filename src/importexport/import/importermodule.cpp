@@ -9,7 +9,7 @@
 #include "internal/au3/au3importer.h"
 #include "internal/importerconfiguration.h"
 
-#include "RegisterImportPlugins.h" // from au3/modules/import-export/ see IMPORT_EXPORT_MODULE in au3wrapDefs.cmake
+#include "RegisterImportPlugins.h" // from the au3-import-export-modules library (au3/modules/import-export)
 
 using namespace au::importexport;
 

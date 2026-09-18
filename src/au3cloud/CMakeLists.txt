@@ -49,11 +49,20 @@ else()
     list(APPEND MODULE_SRC ${CMAKE_CURRENT_LIST_DIR}/internal/customschemeregistrar.cpp)
 endif()
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap Qt6::Network Qt6::NetworkAuth)
+set(MODULE_LINK
+        au3wrap
+        au3-import-export
+        au3-network-manager
+        au3-preferences
+        au3-project-file-io
+        au3-project-rate
+        au3-string-utils
+        au3-utility
+        au3-wave-track
+        Qt6::Network
+        Qt6::NetworkAuth
+        au3-cloud-audiocom
+        au3-concurrency
+)
 
 setup_module()

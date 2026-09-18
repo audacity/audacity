@@ -87,6 +87,11 @@ public:
         ON_CALL(*m_audioDriverController, inputChannelsAvailable())
         .WillByDefault(Return(2));
 
+        audio::AudioConfiguration audioConfiguration;
+        audioConfiguration.inputChannels = 2;
+        ON_CALL(*m_audioDriverController, configuration())
+        .WillByDefault(Return(audioConfiguration));
+
         ON_CALL(*m_recordConfiguration, leadInTimeDuration())
         .WillByDefault(Return(2.0));
         ON_CALL(*m_recordConfiguration, crossfadeDuration())
@@ -209,6 +214,31 @@ TEST_F(Au3RecordTests, LeadInRecordingAtZeroPlayheadFails)
 
     //! [THEN] It fails and no stream is started
     EXPECT_FALSE(ret);
+}
+
+TEST_F(Au3RecordTests, RecordingToNewTrackUsesConfiguredTrackName)
+{
+    //! [GIVEN] No recordable track exists and a custom recording track name
+    //! with the track number suffix is configured
+    RecordingTrackNameOptions nameOptions;
+    nameOptions.useCustomName = true;
+    nameOptions.customName = "MyTake";
+    nameOptions.addTrackNumber = true;
+    ON_CALL(*m_recordConfiguration, recordingTrackNameOptions())
+    .WillByDefault(Return(nameOptions));
+
+    EXPECT_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+    .WillOnce(Return(1));
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] Recording goes to a new track named after the configured scheme
+    const auto tracks = Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>();
+    ASSERT_EQ(tracks.size(), 1u);
+    EXPECT_EQ((*tracks.begin())->NChannels(), 2u);
+    EXPECT_EQ((*tracks.begin())->GetName(), wxString("MyTake_1"));
 }
 
 TEST_F(Au3RecordTests, RecordingWithBusyEngineStartsUnpausedAtPlayhead)

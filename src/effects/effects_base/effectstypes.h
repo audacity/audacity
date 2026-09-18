@@ -48,6 +48,7 @@ using TrackId = long;
 using EffectChainLinkIndex = int;
 
 static const muse::String EFFECT_TITLE_ATTRIBUTE(u"title");
+static const muse::String EFFECT_TITLE_CONTEXT_ATTRIBUTE(u"titleContext");
 static const muse::String EFFECT_DESCRIPTION_ATTRIBUTE(u"description");
 static const muse::String EFFECT_TYPE_ATTRIBUTE(u"type");
 static const muse::String EFFECT_CATEGORY_ATTRIBUTE(u"category");
@@ -65,6 +66,12 @@ enum class EffectMenuOrganization {
 enum class EffectUIMode {
     VendorUI = 0,      // Use plugin's native/graphical UI
     FallbackUI = 1,   // Use Audacity's fallback UI
+};
+
+//! What to do with third-party plugins discovered at startup
+enum class StartupPluginValidationPolicy {
+    AskUser,
+    Skip, // register them, but skip validation
 };
 
 // Parameter types for auto-generated UI
@@ -234,6 +241,7 @@ struct EffectMeta {
     EffectFamily family = EffectFamily::Unknown;
     EffectType type = EffectType::Unknown;
     muse::String title;
+    muse::String titleContext;
     muse::String description;
     muse::String vendor;
     muse::String version;

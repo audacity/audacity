@@ -3,6 +3,8 @@
 */
 #include "waveview.h"
 
+#include "global/translation.h"
+
 #include <QPainter>
 #include <QElapsedTimer>
 
@@ -651,7 +653,8 @@ void WaveView::onWaveZoomChanged()
 
 void WaveView::pushProjectHistorySampleEdit()
 {
-    projectHistory()->pushHistoryState("Moved Samples", "Sample Edit", trackedit::UndoPushType::CONSOLIDATE);
+    projectHistory()->pushHistoryState(muse::trc("projectscene", "Moved Samples"), muse::trc("projectscene", "Sample Edit"),
+                                       trackedit::UndoPushType::CONSOLIDATE);
 }
 
 au::context::IPlaybackStatePtr WaveView::playbackState() const

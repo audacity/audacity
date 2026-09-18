@@ -45,6 +45,8 @@ public:
     void onInit(const muse::IApplication::RunMode&) override;
 
 private:
+    void refreshPlugins() const;
+
     std::shared_ptr<ExtensionEffectsScanner> m_scanner;
 };
 } // namespace au::effects::extensions

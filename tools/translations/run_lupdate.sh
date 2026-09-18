@@ -53,6 +53,7 @@ SRC_DIRS=(
     muse/framework/network
     muse/framework/shortcuts
     muse/framework/testflow
+    muse/framework/toast
     muse/framework/ui
     muse/framework/uicomponents
     muse/framework/update

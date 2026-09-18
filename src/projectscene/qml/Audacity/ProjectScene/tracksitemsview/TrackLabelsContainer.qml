@@ -10,6 +10,7 @@ TrackItemsContainer {
 
     TrackLabelsListModel {
         id: labelsModel
+        moveController: root.moveController
         trackId: root.trackId
         context: root.context
     }
@@ -96,12 +97,20 @@ TrackItemsContainer {
                             }
                         }
 
-                        function clearGuidelineIfPointerLeft() {
-                            const overAnyLabel = labelsContainer.checkIfAnyLabel(function (labelItem) {
-                                return labelItem && labelItem.hover
-                            })
-                            if (!labelsContainerMouseArea.containsMouse && !overAnyLabel) {
-                                root.clearItemGuideline()
+                        // Timer to wait for hover state to update after item creation
+                        Timer {
+                            id: clearGuidelineTimer
+                            interval: 0
+
+                            onTriggered: {
+                                if (root.moveActive || labelsContainerMouseArea.containsMouse) {
+                                    return
+                                }
+
+                                const overAnyLabel = labelsContainer.checkIfAnyLabel(labelItem => labelItem.hover)
+                                if (!overAnyLabel) {
+                                    root.clearItemGuideline()
+                                }
                             }
                         }
 
@@ -146,8 +155,10 @@ TrackItemsContainer {
                                 labelItem.setContainsMouse(containsMouse)
                             })
 
-                            if (!containsMouse) {
-                                Qt.callLater(labelsContainerMouseArea.clearGuidelineIfPointerLeft)
+                            if (!containsMouse && !root.moveActive) {
+                                clearGuidelineTimer.restart()
+                            } else {
+                                clearGuidelineTimer.stop()
                             }
                         }
 
@@ -180,6 +191,17 @@ TrackItemsContainer {
 
                             asynchronous: true
 
+                            active: !itemData.dragged
+                            enabled: !itemData.isDragGhost
+
+                            onActiveChanged: {
+                                if (!active) {
+                                    // The dragged label is destroyed before it can report that it is no longer hovered
+                                    root.itemHeaderHoveredChanged(false)
+                                    root.hover = labelsContainer.checkIfAnyLabel(labelItem => labelItem.hover)
+                                }
+                            }
+
                             visible: y < root.height
 
                             sourceComponent: {
@@ -203,6 +225,23 @@ TrackItemsContainer {
                                     id: item
 
                                     property var itemData: labelLoader.itemData
+
+                                    readonly property bool titleEditRequested: Boolean(itemData) && itemData.titleEditRequested
+
+                                    function startRequestedTitleEdit() {
+                                        if (!Boolean(itemData)) {
+                                            return
+                                        }
+
+                                        item.editTitle()
+                                        labelsModel.titleEditRequestHandled(itemData.key)
+                                    }
+
+                                    onTitleEditRequestedChanged: {
+                                        if (titleEditRequested) {
+                                            Qt.callLater(startRequestedTitleEdit)
+                                        }
+                                    }
 
                                     title: Boolean(itemData) ? itemData.title : ""
                                     labelColor: Boolean(itemData) ? itemData.color : null
@@ -342,11 +381,6 @@ TrackItemsContainer {
 
                                     Connections {
                                         target: labelsModel
-                                        function onItemTitleEditRequested(key) {
-                                            if (key === item.itemData.key) {
-                                                item.editTitle()
-                                            }
-                                        }
                                         function onItemContextMenuOpenRequested(key) {
                                             if (key === item.itemData.key) {
                                                 item.openContextMenu()
@@ -356,6 +390,10 @@ TrackItemsContainer {
 
                                     Component.onCompleted: {
                                         itemData.visualHeight = item.headerDefaultHeight
+
+                                        if (titleEditRequested) {
+                                            Qt.callLater(startRequestedTitleEdit)
+                                        }
                                     }
                                 }
                             }
@@ -394,22 +432,6 @@ TrackItemsContainer {
 
     Connections {
         target: root.container
-
-        function onItemMoveRequested(itemKey, completed) {
-            root.updateMouseMoveActive(completed)
-
-            labelsModel.moveSelectedLabels(itemKey, completed)
-
-            handleLabelGuideline(itemKey, Direction.Auto, completed)
-        }
-
-        function onItemStartEditRequested(itemKey) {
-            labelsModel.startEditItem(itemKey)
-        }
-
-        function onItemEndEditRequested(itemKey) {
-            labelsModel.endEditItem(itemKey)
-        }
 
         function onItemReleaseRequested(itemKey) {
             labelsModel.toggleTracksDataSelectionByLabel(itemKey)

@@ -59,9 +59,7 @@ void AudacityExtensionsContext::enableExtensionsByDefault() const
         return;
     }
     for (const auto& manifest : m_extensions->manifestList()) {
-        if (!manifest.actions.empty() && manifest.config.actions.empty()) {
-            m_extensions->setExecPoint(manifest.uri, muse::extensions::EXEC_MANUALLY);
-        }
+        m_extensions->setEnabled(manifest.uri, true);
     }
 }
 

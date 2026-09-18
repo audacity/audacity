@@ -49,6 +49,14 @@ target_sources(appshell PRIVATE
     internal/splashscreen/newinstanceloadingscreenview.h
 )
 
+if (MUSE_MODULE_TESTFLOW)
+    target_sources(appshell PRIVATE
+        testflowstartup.h
+        internal/testflowstartupscenario.cpp
+        internal/testflowstartupscenario.h
+    )
+endif()
+
 if (OS_IS_MAC)
     target_sources(appshell PRIVATE
         internal/platform/macos/macosappmenumodelhook.mm
@@ -69,7 +77,10 @@ if (OS_IS_WIN)
         internal/platform/win/winframelesswindowcontroller.h
     )
 
-    set(MODULE_LINK ${MODULE_LINK} dwmapi)
+    set(MODULE_LINK
+            ${MODULE_LINK}
+            dwmapi
+    )
 endif(OS_IS_WIN)
 
 qt_add_resources(appshell appshell_resources
@@ -81,9 +92,8 @@ qt_add_resources(appshell appshell_resources
         resources/Colorful.svg
         resources/LoadingScreen.svg
         resources/GoogleLogo.png
-        resources/FacebookLogo.png
         resources/win_opengl_buglist.json
-        resources/welcomedialog/Audacity40Video.png
+        resources/welcomedialog/YT_Release_Video_Thumb_v1.png
         resources/welcomedialog/Audacity_Feature_Survey.png
         resources/welcomedialog/Audacity_Merch_Store.png
         resources/welcomedialog/AudioDotCom_Dark.png

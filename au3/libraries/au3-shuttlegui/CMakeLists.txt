@@ -34,11 +34,15 @@ set( SOURCES
    wxTextCtrlWrapper.h
 )
 set( LIBRARIES
-   au3-command-parameters-interface
-   PRIVATE
-   au3-theme-interface
-   au3-wx-wrappers-interface
-   au3-strings-interface
+PUBLIC
+   au3-command-parameters
+   au3-components
+   au3-preferences
+   au3-strings
+   au3-wx-wrappers
+PRIVATE
+   au3-theme
+   au3-utility
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

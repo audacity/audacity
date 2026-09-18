@@ -26,6 +26,7 @@
 #include "au3-module-manager/ModuleManager.h"
 
 #include "au3-strings/wxArrayStringEx.h"
+#include "au3-files/FileNames.h"
 #include "au3-files/PlatformCompatibility.h"
 #include "au3-module-manager/PluginInterface.h"
 #include "au3-components/PluginProvider.h"
@@ -140,7 +141,7 @@ std::shared_ptr<VST3::Hosting::Module> VST3EffectsModule::GetModule(const wxStri
     std::string moduleCreateError;
     //VST sdk provides platform-specific module loading routines as well,
     //implementation is conditionally included (see CMakeLists.txt)
-    auto module = VST3::Hosting::Module::create(path.ToStdString(), moduleCreateError);
+    auto module = VST3::Hosting::Module::create(path.ToStdString(wxConvUTF8), moduleCreateError);
     if (!module) {
         throw std::runtime_error(moduleCreateError.c_str());
     }
@@ -233,7 +234,7 @@ VST3EffectsModule::FindModulePaths(PluginManagerInterface& pluginManager,
         }
     }
 #elif __WXMAC__
-    pathList.push_back("~/Library/Audio/Plug-ins/VST3/");
+    pathList.push_back(wxGetHomeDir() + "/Library/Audio/Plug-ins/VST3/");
     pathList.push_back("/Library/Audio/Plug-ins/VST3/");
     pathList.push_back("/Network/Library/Audio/Plug-ins/VST3/");
 #elif __WXGTK__
@@ -256,6 +257,9 @@ VST3EffectsModule::FindModulePaths(PluginManagerInterface& pluginManager,
         auto customPaths = pluginManager.ReadCustomPaths(*this);
         std::copy(customPaths.begin(), customPaths.end(), std::back_inserter(pathList));
     }
+
+    // VST3 paths are filesystem paths: we can use this helper to remove duplicates.
+    FileNames::RemoveDuplicatesFromPathList(pathList);
 
     PluginPaths result;
 
@@ -366,7 +370,7 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
     }
     catch (std::exception& e)
     {
-        wxLogError("VST3 Module was not loaded: %s", e.what());
+        wxLogError(wxT("VST3 Module was not loaded: %s"), wxString::FromUTF8(e.what()));
     }
     return nullptr;
 }

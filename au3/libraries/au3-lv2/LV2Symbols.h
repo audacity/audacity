@@ -30,6 +30,10 @@
 #define LV2_UI__makeResident  LV2_UI_PREFIX "makeResident"
 #endif
 
+#if !defined(LV2_UI__Qt6UI)
+#define LV2_UI__Qt6UI  LV2_UI_PREFIX "Qt6UI"
+#endif
+
 #if !defined(LV2_BUF_SIZE__nominalBlockLength)
 #define LV2_BUF_SIZE__nominalBlockLength  LV2_BUF_SIZE_PREFIX "nominalBlockLength"
 #endif

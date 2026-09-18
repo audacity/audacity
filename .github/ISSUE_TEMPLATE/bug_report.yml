@@ -1,4 +1,4 @@
-name: Audacity 4.0 beta Bug report
+name: Audacity 4.0 bug report
 description: File a bug report
 labels: ["bug"]
 type: "bug"
@@ -42,8 +42,7 @@ body:
       label: Audacity Version
       description: What version of Audacity are you running?
       options:
-        - Audacity 4.0 beta 3
-        - Audacity 4.0 beta 2
+        - Audacity 4.0.0
         - Other
     validations:
       required: true

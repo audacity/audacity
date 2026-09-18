@@ -3,11 +3,22 @@
 */
 #pragma once
 
+#include <string>
+
 #include "global/modularity/imoduleinterface.h"
 #include "global/async/notification.h"
 #include "draw/types/color.h"
 
 namespace au::record {
+//! Naming scheme for newly recorded tracks
+struct RecordingTrackNameOptions {
+    bool useCustomName = false;
+    std::string customName;
+    bool addTrackNumber = false;
+    bool addDateStamp = false;
+    bool addTimeStamp = false;
+};
+
 class IRecordConfiguration : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IRecordConfiguration)
@@ -30,5 +41,7 @@ public:
     virtual double crossfadeDuration() const = 0;
     virtual void setCrossfadeDuration(double milliseconds) = 0;
     virtual muse::async::Notification crossfadeDurationChanged() const = 0;
+
+    virtual RecordingTrackNameOptions recordingTrackNameOptions() const = 0;
 };
 }

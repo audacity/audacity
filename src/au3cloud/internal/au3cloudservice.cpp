@@ -16,6 +16,7 @@
 #include "au3-preferences/Prefs.h"
 
 #include "au3cloud/cloudtypes.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace au::au3cloud;
 
@@ -24,37 +25,6 @@ void Au3CloudService::init()
     syncUsageInfoPrefs();
     usageInfo()->usageInfoChanged().onNotify(this, [this]() {
         syncUsageInfoPrefs();
-    });
-
-    auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
-    m_replyHandler = new OAuthHttpServerReplyHandler(this);
-    m_replyHandler->setRedirectUrl(QUrl(serviceConfig.GetTourPage().c_str()));
-    connect(m_replyHandler, &OAuthHttpServerReplyHandler::callbackReceived,
-            this, [this](const QVariantMap& data) {
-        // Extract authorization code from callback
-        std::string code = data.value("code").toString().toStdString();
-        std::string error = data.value("error").toString().toStdString();
-
-        if (code.empty() || !error.empty()) {
-            m_authState.set(NotAuthorized(error));
-            m_replyHandler->sendError();
-            return;
-        }
-
-        auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
-        oauthService.AuthorizeCode(
-            code,
-            m_replyHandler->callback().toStdString(),
-            AudiocomTrace::ignore,
-            [this](auto token)
-        {
-            const auto AUTHORIZATION_FAILED = muse::qtrc("appshell/gettingstarted", "Authorization failed");
-            if (token.empty()) {
-                m_authState.set(NotAuthorized(AUTHORIZATION_FAILED.toStdString()));
-                m_replyHandler->sendError();
-                return;
-            }
-        });
     });
 
     auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
@@ -96,8 +66,8 @@ void Au3CloudService::init()
             auto& userService = audacity::cloud::audiocom::GetUserService();
             m_accountInfo.id = userService.GetUserId().ToStdString();
             m_accountInfo.userSlug = userService.GetUserSlug().ToStdString();
-            m_accountInfo.displayName = userService.GetDisplayName().ToStdString();
-            m_accountInfo.avatarPath = userService.GetAvatarPath().ToStdString();
+            m_accountInfo.displayName = au::au3::wxToStdString(userService.GetDisplayName());
+            m_accountInfo.avatarPath = au::au3::wxToStdString(userService.GetAvatarPath());
 
             if (!std::holds_alternative<Authorized>(m_authState.val)) {
                 //Only set to authorized if we have user data
@@ -118,6 +88,46 @@ void Au3CloudService::init()
         usageInfo()->setUserId(m_accountInfo.id);
         m_accountInfoChanged.notify();
     });
+}
+
+bool Au3CloudService::initReplyHandlerIfNecessary()
+{
+    if (m_replyHandler) {
+        return m_replyHandler->isListening() || m_replyHandler->listen();
+    }
+
+    m_replyHandler = new OAuthHttpServerReplyHandler(this);
+    connect(m_replyHandler, &OAuthHttpServerReplyHandler::callbackReceived,
+            this, [this](const QVariantMap& data) {
+        // Extract authorization code from callback
+        std::string code = data.value("code").toString().toStdString();
+        std::string error = data.value("error").toString().toStdString();
+
+        if (code.empty() || !error.empty()) {
+            m_authState.set(NotAuthorized(error));
+            m_replyHandler->sendError();
+            m_replyHandler->close();
+            return;
+        }
+
+        auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+        oauthService.AuthorizeCode(
+            code,
+            m_replyHandler->callback().toStdString(),
+            AudiocomTrace::ignore,
+            [this](auto token)
+        {
+            const auto AUTHORIZATION_FAILED = muse::qtrc("appshell/gettingstarted", "Authorization failed");
+            if (token.empty()) {
+                m_authState.set(NotAuthorized(AUTHORIZATION_FAILED.toStdString()));
+                m_replyHandler->sendError();
+                m_replyHandler->close();
+                return;
+            }
+        });
+    });
+
+    return m_replyHandler->isListening();
 }
 
 void Au3CloudService::registerWithPassword(const std::string& email, const std::string& password)
@@ -164,6 +174,12 @@ void Au3CloudService::signInWithPassword(const std::string& email, const std::st
 
 void Au3CloudService::signInWithSocial(const std::string& provider)
 {
+    if (!initReplyHandlerIfNecessary()) {
+        const auto SIGN_IN_FAILED = muse::qtrc("appshell/gettingstarted", "Could not start the sign-in process. Please try again.");
+        m_authState.set(AuthState(NotAuthorized(SIGN_IN_FAILED.toStdString())));
+        return;
+    }
+
     platformInteractive()->openUrl(buildOAuthRequestURL(provider));
 }
 
@@ -205,17 +221,15 @@ void Au3CloudService::openBrowserSession()
 {
     auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
     auto& authService = audacity::cloud::audiocom::GetOAuthService();
+    const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, serviceConfig.GetTourPage());
 
-    const auto landingPage = m_accountInfo.userSlug.empty()
-                             ? serviceConfig.GetTourPage()
-                             : serviceConfig.GetProfilePagePath(m_accountInfo.userSlug, AudiocomTrace::ignore);
-    const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, landingPage);
-
-    if (m_replyHandler->hasPendingSocket()) {
-        m_replyHandler->sendRedirect(QUrl(QString::fromStdString(url)));
-    } else {
-        platformInteractive()->openUrl(url);
+    if (m_replyHandler && m_replyHandler->hasPendingSocket()) {
+        m_replyHandler->sendRedirect(QString::fromStdString(url));
+        m_replyHandler->close();
+        return;
     }
+
+    platformInteractive()->openUrl(url);
 }
 
 std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)
@@ -225,7 +239,6 @@ std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)
         { "authclient", provider },
         { "response_type", "code" },
         { "client_id", serviceConfig.GetOAuthClientID() },
-        { "client_secret", serviceConfig.GetOAuthClientSecret() },
         { "redirect_uri", m_replyHandler->callback().toStdString() }
     };
 

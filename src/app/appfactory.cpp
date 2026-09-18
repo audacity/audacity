@@ -28,7 +28,11 @@
 #else
 #include "framework/stubs/update/updatestubmodule.h"
 #endif
+#ifdef MUSE_MODULE_LEARN
 #include "framework/learn/learnmodule.h"
+#else
+#include "framework/stubs/learn/learnmodule.h"
+#endif
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"
 
@@ -192,6 +196,13 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
 std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options) const
 {
     std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(options);
+
+    //! NOTE `diagnostics` must be first, because it installs the crash handler. Without it
+    //! a crashing validation only produces a dump on macOS, where the child happens to
+    //! inherit the parent's exception port, and that dump then carries the parent's
+    //! annotations.
+    app->addModule(new muse::diagnostics::DiagnosticsModule());
+    app->addModule(new muse::rcommand::RCommandModule()); // needed by diagnostics module
 
     app->addModule(new muse::audioplugins::AudioPluginsModule());
     app->addModule(new muse::actions::ActionsModule());

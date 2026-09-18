@@ -60,28 +60,38 @@ DockPage {
         order: 2
     }
 
-    property NavigationSection trackEffectsKeyNavSec: NavigationSection {
-        name: "TrackEffectsSection"
+    property NavigationSection effectsKeyNavSec: NavigationSection {
+        name: "EffectsSection"
         enabled: root.visible && tracksPanel.showEffectsSection
         order: playbackToolBarKeyNavSec.order + 1
     }
 
-    property NavigationSection masterEffectsKeyNavSec: NavigationSection {
-        name: "MasterEffectsSection"
+    property NavigationPanel effectsKeyNavPanel: NavigationPanel {
+        name: "EffectsPanel"
+        section: root.effectsKeyNavSec
         enabled: root.visible && tracksPanel.showEffectsSection
-        order: trackEffectsKeyNavSec.order + 1
+        direction: NavigationPanel.Vertical
+        order: 0
+
+        accessible.name: qsTrc("appshell", "Real-time effects panel")
     }
 
     property NavigationSection addNewTrackKeyNavSec: NavigationSection {
         name: "AddNewTrackSection"
         enabled: root.visible
-        order: masterEffectsKeyNavSec.order + 1
+        order: effectsKeyNavSec.order + 1
+    }
+
+    property NavigationSection timelineKeyNavSec: NavigationSection {
+        name: "TimelineSection"
+        enabled: root.visible
+        order: addNewTrackKeyNavSec.order + 1
     }
 
     property NavigationSection keynavTopPanelSec: NavigationSection {
         name: "NavigationTopPanel"
         enabled: root.visible
-        order: addNewTrackKeyNavSec.order + 1
+        order: timelineKeyNavSec.order + 1
     }
 
     property NavigationSection keynavLeftPanelSec: NavigationSection {
@@ -318,6 +328,7 @@ DockPage {
                     id: trackstitleBarItem
 
                     navigation.section: root.addNewTrackKeyNavSec
+                    effectsNavigationPanel: root.effectsKeyNavPanel
 
                     effectsSectionWidth: tracksPanel.effectsSectionWidth
                     showEffectsSection: tracksPanel.showEffectsSection
@@ -342,11 +353,8 @@ DockPage {
 
                     navigationPanels: tracksNavModel.trackItemPanels
                     headerNavigationPanels: tracksNavModel.trackHeaderPanels
-                    effectColumnNavigationPanel: trackstitleBarItem.closeEffectsNavigation
+                    effectsNavigationPanel: root.effectsKeyNavPanel
                     effectsSectionWidth: tracksPanel.effectsSectionWidth
-
-                    trackEffectsNavigationSection: root.trackEffectsKeyNavSec
-                    masterEffectsNavigationSection: root.masterEffectsKeyNavSec
 
                     onOpenEffectsRequested: {
                         tracksPanel.showEffectsSection = true
@@ -446,6 +454,8 @@ DockPage {
 
         navPanels: tracksNavModel.viewItemPanels
         navDefaultControl: tracksNavModel.defaultNavigationControl
+
+        timelineNavigationSection: root.timelineKeyNavSec
 
         Binding {
             target: tracksNavModel

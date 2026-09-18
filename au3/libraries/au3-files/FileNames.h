@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_FILE_NAMES__
 #define __AUDACITY_FILE_NAMES__
 
-#include <wx/dir.h> // for wxDIR_FILES
 #include "au3-strings/Identifier.h"
 #include "au3-preferences/Prefs.h"
 
@@ -201,7 +200,11 @@ FilePath WithDefaultPath
 // Useful functions for working with search paths
 FILES_API void AddUniquePathToPathList(const FilePath& path, FilePaths& pathList);
 FILES_API void AddMultiPathsToPathList(const wxString& multiPathString, FilePaths& pathList);
-FILES_API void FindFilesInPathList(const wxString& pattern, const FilePaths& pathList, FilePaths& results, int flags = wxDIR_FILES);
+//! Squashes equivalent paths, yet keeping the original spelling of the first occurrence,
+//! e.g. {`~/.vst3/`, `/home/me/.vst3`} returns {`~/.vst3/`} and not e.g. {`/home/me/.vst3`})
+//! Directories that do not exist are deduplicated only on exact spelling.
+FILES_API void RemoveDuplicatesFromPathList(FilePaths& pathList);
+FILES_API void FindFilesInPathList(const wxString& pattern, const FilePaths& pathList, FilePaths& results);
 
 //! Check location on writable access and return true if checked successfully.
 // message is the explanation that is to be displayed to the user if the location is unwritable.

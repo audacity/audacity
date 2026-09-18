@@ -176,6 +176,7 @@ BuiltinEffectBase {
                         minValue: 1
                         maxValue: 1000000
 
+                        //: Abbreviation of hertz, used as a unit suffix
                         measureUnitsSymbol: qsTrc("global", "Hz")
 
                         onValueEdited: function (newValue) {
@@ -298,15 +299,6 @@ BuiltinEffectBase {
 
                 Layout.fillHeight: false
                 Layout.columnSpan: 2
-
-                border: Border {
-                    color: ui.theme.strokeColor
-                    width: 1
-                }
-
-                arrowSpacing: -2
-                backgroundColor: ui.theme.backgroundSecondaryColor
-                textColor: ui.theme.fontPrimaryColor
 
                 value: chirp.duration
                 mode: TimecodeModeSelector.Duration

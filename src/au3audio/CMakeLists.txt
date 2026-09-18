@@ -62,12 +62,16 @@ else()
     )
 endif()
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3wrapDefs.cmake)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK
+        au3-audio-io
+        au3wrap
+        au3-audio-devices
+        au3-math
+        au3-project-rate
+        au3-time-frequency-selection
+        au3-track
+        au3-utility
+)
 
 if (OS_IS_MAC)
     set(MODULE_LINK ${MODULE_LINK} "-framework CoreAudio")

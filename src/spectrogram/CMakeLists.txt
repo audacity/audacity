@@ -107,7 +107,20 @@ set(MODULE_SRC
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 set(MODULE_USE_UNITY OFF)
-set(MODULE_LINK au3wrap Qt6::Concurrent tft)
+set(MODULE_LINK
+        au3wrap
+        au3-basic-ui
+        au3-fft
+        au3-math
+        au3-project
+        au3-stretching-sequence
+        au3-time-frequency-selection
+        au3-track
+        au3-utility
+        au3-wave-track
+        Qt6::Concurrent
+        tft
+)
 set(MODULE_LINK_PUBLIC shared)
 
 setup_module()

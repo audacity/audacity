@@ -29,7 +29,7 @@ std::optional<EffectDescriptor> effectDescriptor(const muse::extensions::Manifes
     descriptor.title = stringMember(object, "title");
     descriptor.description = stringMember(object, "description");
     descriptor.vendor = stringMember(object, "vendor");
-    descriptor.version = manifest.version.toStdString();
+    descriptor.version = manifest.version;
     descriptor.group = stringMember(object, "group");
     descriptor.factory = stringMember(object, "factory");
     if (descriptor.factory.empty()) {

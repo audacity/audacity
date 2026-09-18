@@ -238,6 +238,7 @@ StyledDialogView {
                 navigation.order: 1
                 navigation.name: "Close"
 
+                //: Label of the button that closes the dialog
                 text: qsTrc("effects", "Close")
 
                 onClicked: detailDialog.close()

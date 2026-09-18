@@ -47,8 +47,8 @@ wxString GetFactoryPresetsBasePath()
 wxString GetPresetsPath(const wxString& basePath, const VST3::Hosting::ClassInfo& effectClassInfo)
 {
     wxRegEx fixName(R"([\\*?/:<>|])");
-    wxString companyName = wxString(effectClassInfo.vendor()).Trim();
-    wxString pluginName = wxString(effectClassInfo.name()).Trim();
+    wxString companyName = wxString::FromUTF8(effectClassInfo.vendor()).Trim();
+    wxString pluginName = wxString::FromUTF8(effectClassInfo.name()).Trim();
 
     fixName.ReplaceAll(&companyName, { "_" });
     fixName.ReplaceAll(&pluginName, { "_" });
@@ -102,7 +102,7 @@ std::string VST3Utils::UTF16ToStdString(const Steinberg::Vst::TChar* str)
 
     // Use wxString's built-in UTF-16 to UTF-8 conversion
     // This leverages the same conversion logic as ToWxString
-    return ToWxString(str).ToStdString();
+    return ToWxString(str).ToStdString(wxConvUTF8);
 }
 
 std::string VST3Utils::GetParameterUnitStdString(Steinberg::Vst::IEditController* controller,
@@ -210,4 +210,25 @@ wxString PresetsBufferStream::toString() const
 {
     auto str = Base64::Encode(mBuffer, mBuffer.getFillSize());
     return str;
+}
+
+unsigned VST3Utils::CountChannels(Steinberg::Vst::IComponent* component,
+                                  const Steinberg::Vst::MediaTypes mediaType,
+                                  const Steinberg::Vst::BusDirection busDirection,
+                                  const Steinberg::Vst::BusType busType)
+{
+    using namespace Steinberg;
+
+    unsigned channelsCount{ 0 };
+
+    const auto busCount = component->getBusCount(mediaType, busDirection);
+    for (auto i = 0; i < busCount; ++i) {
+        Vst::BusInfo busInfo;
+        if (component->getBusInfo(mediaType, busDirection, i, busInfo) == kResultOk) {
+            if (busInfo.busType == busType) {
+                channelsCount += busInfo.channelCount;
+            }
+        }
+    }
+    return channelsCount;
 }

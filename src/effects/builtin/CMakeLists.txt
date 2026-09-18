@@ -31,13 +31,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectsviewregister.h
     )
 
-# AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
+set(MODULE_LINK
+        au3wrap
+)
 
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK_PUBLIC
+        au3-effects
+        au3-components # exposed by this module's public headers
+)
 
 set(MODULE_USE_UNITY OFF)
 

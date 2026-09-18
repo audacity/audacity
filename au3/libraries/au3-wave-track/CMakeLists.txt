@@ -41,11 +41,27 @@ set( SOURCES
    WaveChannelViewConstants.h
 )
 set( LIBRARIES
-   au3-project-rate-interface
-   au3-sample-track-interface
-   au3-stretching-sequence-interface
-   au3-track-selection-interface
-   au3-strings-interface
+PUBLIC
+   au3-audio-graph
+   au3-channel
+   au3-components
+   au3-math
+   au3-mixer
+   au3-preferences
+   au3-registries
+   au3-sample-track
+   au3-stretching-sequence
+   au3-strings
+   au3-utility
+   au3-xml
+PRIVATE
+   au3-basic-ui
+   au3-exceptions
+   au3-project
+   au3-project-rate
+   au3-time-and-pitch
+   au3-track
+   au3-track-selection
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -1,10 +1,10 @@
-;nyquist plug-in
-;version 5
-;type analyze nogroup
-;name "Measure RMS"
-;debugbutton false
-;author "Steve Daulton"
-;release 4.0.0
+$nyquist plug-in
+$version 5
+$type analyze nogroup
+$name (_ "Measure RMS")
+$debugbutton false
+$author (_ "Steve Daulton")
+$release 4.0.0
 $copyright (_ "GNU General Public License v2.0 or later")
 
 ;; License: GPL v2+

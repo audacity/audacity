@@ -6,6 +6,7 @@
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3wrap/internal/progressdialog.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "au3-effects/Effect.h"
 #include "au3-effects/EffectManager.h"
@@ -23,9 +24,14 @@ using namespace muse;
 using namespace au::effects;
 
 void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
+                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                               StartupPluginValidationPolicy validationPolicy)
 {
-    const auto doScanThirdPartyPlugins = [&interactive]() {
+    const auto shouldValidateThirdPartyPlugins = [&interactive, validationPolicy]() {
+        if (validationPolicy == StartupPluginValidationPolicy::Skip) {
+            return false;
+        }
+
         auto ret = interactive.questionSync(muse::trc("appshell", "Validate audio plugins"),
                                             muse::trc(
                                                 "appshell",
@@ -43,7 +49,7 @@ void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::II
         return ret.standardButton() == muse::IInteractive::Button::Apply;
     };
 
-    doScanPlugins(ctx, registerAudioPluginsScenario, doScanThirdPartyPlugins);
+    doScanPlugins(ctx, registerAudioPluginsScenario, shouldValidateThirdPartyPlugins);
 
     // Providers must be available in ModuleManager for on-demand plugin loading.
     ModuleManager::Get().DiscoverProviders();
@@ -72,7 +78,7 @@ void EffectsProvider::rescanPlugins(const muse::modularity::ContextPtr& ctx, mus
 EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
     const muse::modularity::ContextPtr& ctx,
     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-    const std::function<bool()>& doScanThirdPartyPlugins)
+    const std::function<bool()>& shouldValidateThirdPartyPlugins)
 {
     muse::audioplugins::PluginScanResult scanResult;
     {
@@ -126,7 +132,7 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
     }
 
     if (!thirdPartyPluginPaths.empty()) {
-        const bool validate = (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins());
+        const bool validate = (shouldValidateThirdPartyPlugins == nullptr || shouldValidateThirdPartyPlugins());
         const muse::Ret ret = registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, validate);
         if (!ret) {
             LOGE() << "Failed to register new plugins: " << ret.toString();
@@ -227,14 +233,14 @@ std::string EffectsProvider::effectPath(const std::string& effectId) const
 std::string EffectsProvider::effectName(const std::string& effectId) const
 {
     if (const auto meta = this->meta(EffectId::fromStdString(effectId)); meta.isValid()) {
-        return meta.title.toStdString();
+        return utils::effectDisplayTitle(meta).toStdString();
     }
     return utils::parseEffectName(muse::String::fromStdString(effectId));
 }
 
 std::string EffectsProvider::effectName(const effects::RealtimeEffectState& state) const
 {
-    return effectName(state.GetID().ToStdString());
+    return effectName(au::au3::wxToStdString(state.GetID()));
 }
 
 bool EffectsProvider::paramsAreInputAgnostic(const EffectId& effectId) const

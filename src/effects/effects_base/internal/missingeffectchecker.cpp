@@ -8,6 +8,7 @@
 #include "framework/global/types/val.h"
 
 #include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "effectsutils.h"
 
 #include <set>
@@ -30,7 +31,7 @@ void MissingEffectChecker::warnIfEffectsMissing()
         }
         for (const auto& state : *effectStack) {
             if (!realtimeEffectService()->isAvailable(state)) {
-                missingEffectIds.insert(EffectId::fromStdString(state->GetID().ToStdString()));
+                missingEffectIds.insert(au::au3::wxToString(state->GetID()));
             }
         }
     }

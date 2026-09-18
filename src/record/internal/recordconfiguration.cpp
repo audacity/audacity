@@ -13,6 +13,15 @@ const muse::Settings::Key MIC_METERING_KEY("record", "record/micMetering");
 const muse::Settings::Key INPUT_MONITORING_KEY("record", "record/inputMonitoring");
 const muse::Settings::Key LEAD_IN_TIME_DURATION_KEY("record", "record/leadInTimeDuration");
 const muse::Settings::Key CROSSFADE_DURATION_KEY("record", "record/crossfadeDuration");
+
+//! NOTE: these keys deliberately match the au3 preference paths (bridged to the
+//! same settings storage), so values recorded by au3 code stay readable;
+//! "RecodingTrackName" reproduces the au3 key's typo
+const muse::Settings::Key RECORDING_NAME_CUSTOM_KEY("record", "GUI/TrackNames/RecordingNameCustom");
+const muse::Settings::Key CUSTOM_TRACK_NAME_KEY("record", "GUI/TrackNames/RecodingTrackName");
+const muse::Settings::Key TRACK_NUMBER_KEY("record", "GUI/TrackNames/TrackNumber");
+const muse::Settings::Key DATE_STAMP_KEY("record", "GUI/TrackNames/DateStamp");
+const muse::Settings::Key TIME_STAMP_KEY("record", "GUI/TrackNames/TimeStamp");
 }
 
 void RecordConfiguration::init()
@@ -96,4 +105,15 @@ void RecordConfiguration::setCrossfadeDuration(double milliseconds)
 muse::async::Notification RecordConfiguration::crossfadeDurationChanged() const
 {
     return m_crossfadeDurationChanged;
+}
+
+RecordingTrackNameOptions RecordConfiguration::recordingTrackNameOptions() const
+{
+    RecordingTrackNameOptions options;
+    options.useCustomName = muse::settings()->value(RECORDING_NAME_CUSTOM_KEY).toBool();
+    options.customName = muse::settings()->value(CUSTOM_TRACK_NAME_KEY).toString();
+    options.addTrackNumber = muse::settings()->value(TRACK_NUMBER_KEY).toBool();
+    options.addDateStamp = muse::settings()->value(DATE_STAMP_KEY).toBool();
+    options.addTimeStamp = muse::settings()->value(TIME_STAMP_KEY).toBool();
+    return options;
 }

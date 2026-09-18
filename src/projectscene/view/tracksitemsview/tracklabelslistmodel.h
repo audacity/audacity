@@ -6,10 +6,14 @@
 #include "trackitemslistmodel.h"
 #include "tracklabelitem.h"
 
+#include "trackedit/itracksviewrequestsservice.h"
+
 namespace au::projectscene {
 class TrackLabelsListModel : public TrackItemsListModel
 {
     Q_OBJECT
+
+    muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
 
 public:
     explicit TrackLabelsListModel(QObject* parent = nullptr);
@@ -18,10 +22,10 @@ public:
     Q_INVOKABLE void selectLabelWithSharedStalk(const LabelKey& key, bool rightSide);
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
+    Q_INVOKABLE void titleEditRequestHandled(const LabelKey& key);
 
     Q_INVOKABLE void toggleTracksDataSelectionByLabel(const LabelKey& key);
 
-    Q_INVOKABLE bool moveSelectedLabels(const LabelKey& key, bool completed);
     Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed);
     Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, const LabelKey& rightLinkedLabel, bool unlink, bool completed);
 
@@ -30,12 +34,15 @@ public:
 
 private:
     friend class TrackLabelsLayoutManagerTests;
+    friend class TrackItemsMoveControllerTests;
 
     void onInit() override;
     void onReload() override;
 
     void update();
+    void updatePendingTitleEdit();
     void updateItemMetrics(ViewTrackItem* item) override;
+    ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
 
     TrackLabelItem* labelItemByKey(const trackedit::LabelKey& k) const;

@@ -14,9 +14,10 @@ set( SOURCES
 )
 
 set( LIBRARIES
-   PRIVATE
-   au3-string-utils-interface
-   au3-utility-interface
+PUBLIC
+   au3-utility
+PRIVATE
+   au3-string-utils
    wxBase
 )
 

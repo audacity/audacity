@@ -888,12 +888,8 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 
     const auto pOwningProject = mOwningProject.lock();
     if (!success) {
-        using namespace BasicUI;
-        const auto msg = TranslatableString("audio-io", "Error opening recording device.\nError code: %1")
-                         .Format(Get()->LastPaErrorString());
-        ShowErrorDialog(*ProjectFramePlacement(pOwningProject.get()),
-                        TranslatableString("audio-io", "Error"), msg, wxT("Error_opening_sound_device"),
-                        ErrorDialogOptions { ErrorDialogType::ModalErrorReport });
+        wxLogMessage("Error opening recording device for monitoring. Error code: %s",
+                     Get()->LastPaErrorString());
         return;
     }
 
@@ -1928,7 +1924,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             if (lastState != ProcessingState::eCallbackProcessing) {
                 // Main thread has told us to start - acknowledge that we do
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStart,
-                                                        std::memory_order::memory_order_release);
+                                                        std::memory_order_release);
             }
             lastState = ProcessingState::eCallbackProcessing;
 
@@ -1946,7 +1942,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
                 // Main thread has told us to stop; (actually: to neither process "once" nor "loop running")
                 // acknowledge that we received the order and that no more processing will be done.
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStop,
-                                                        std::memory_order::memory_order_release);
+                                                        std::memory_order_release);
             }
             lastState = ProcessingState::eSkipProcessing;
 

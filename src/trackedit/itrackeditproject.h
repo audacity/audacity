@@ -36,6 +36,7 @@ public:
     virtual std::vector<TrackId> trackIdList() const = 0;
     virtual std::vector<Track> trackList() const = 0;
     virtual muse::ValCh<bool> hasAudioContent() const = 0;
+    virtual muse::ValCh<bool> hasLabels() const = 0;
     virtual bool timeTrackFound() const = 0;
     virtual std::optional<Track> track(TrackId trackId) const = 0;
     virtual Clip clip(const ClipKey& key) const = 0;

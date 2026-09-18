@@ -65,6 +65,7 @@ StyledDialogView {
         navigation.order: 1
         navigation.name: "Preset name"
 
+        //: Placeholder text of the preset name input field
         hint: qsTrc("effects", "Preset name")
 
         onTextChanged: t => input.currentText = t

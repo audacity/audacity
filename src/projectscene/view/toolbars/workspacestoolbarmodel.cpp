@@ -3,6 +3,8 @@
 */
 #include "workspacestoolbarmodel.h"
 
+#include "shared/types/workspacetitles.h"
+
 #include "muse_framework_config.h"
 
 #ifdef MUSE_MODULE_WORKSPACE
@@ -75,6 +77,8 @@ void WorkspacesToolBarModel::updateState()
     }
 
     muse::TranslatableString currentWorkspaceName;
+
+    au::shared::translateWorkspaceTitles(m_workspacesMenuModel->items());
 
     for (const MenuItem* menuItem : m_workspacesMenuModel->items()) {
         if (menuItem->selected()) {

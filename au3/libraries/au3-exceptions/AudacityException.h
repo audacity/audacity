@@ -223,9 +223,7 @@ noexcept(
         return body();
     }
     catch (AudacityException& e) {
-   #ifndef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
         const auto uncaughtExceptionsCount = std::uncaught_exceptions();
-   #endif
         auto end = finally([&]()
                            noexcept(noexcept(
                                         std::function<void(AudacityException*)> {
@@ -233,11 +231,7 @@ noexcept(
             // At this point, e is the "current" exception, but not "uncaught"
             // unless it was rethrown by handler.  handler might also throw some
             // other exception object.
-      #ifdef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
-            if (!std::uncaught_exception()) {
-      #else
             if (uncaughtExceptionsCount >= std::uncaught_exceptions()) {
-      #endif
                 auto pException = std::current_exception(); // This points to e
                 AudacityException::EnqueueAction(
                     pException, std::move(delayedHandler));

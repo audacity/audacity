@@ -21,6 +21,8 @@
  */
 #include "uicontextresolver.h"
 
+#include "framework/extensions/extensionstypes.h"
+
 #include "shortcutcontext.h"
 #include "log.h"
 
@@ -38,6 +40,7 @@ static const muse::Uri EXTENSIONS_DIALOG_URI("muse://extensions/viewer");
 //! area that's being focused when opening a project
 static const QString PROJECT_NAVIGATION_PANEL("MainToolBar");
 static const QString DEFAULT_NAVIGATION_SECTION("TrackViewSection");
+static const QString TIMELINE_NAVIGATION_SECTION("TimelineSection");
 
 UiContextResolver::UiContextResolver(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx)
@@ -92,6 +95,10 @@ muse::ui::UiContext UiContextResolver::resolveUiContext() const
         }
 
         INavigationSection* activeSection = navigationController()->activeSection();
+        if (activeSection && activeSection->name() == TIMELINE_NAVIGATION_SECTION) {
+            return context::UiCtxProjectFocused;
+        }
+
         if (activeSection && activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
             //! NOTE: the project focus is bound to the track panel and the clips/labels panel.
             //! The track header controls panel is navigated as a usual panel (general navigation),
@@ -171,4 +178,23 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
     }
 
     return true;
+}
+
+bool UiContextResolver::isContextAllowed(const std::string& extensionContext) const
+{
+    const std::string_view contextName = extensionContext;
+    if (contextName == muse::extensions::ANY_CONTEXT) {
+        return true;
+    }
+
+    if (contextName != muse::extensions::PROJECT_OPENED_CONTEXT) {
+        LOGE() << "unknown extension context: " << extensionContext << ", using the default project-opened context";
+    }
+
+    return matchWithCurrent(context::UiCtxProjectOpened);
+}
+
+async::Notification UiContextResolver::contextChanged() const
+{
+    return currentUiContextChanged();
 }

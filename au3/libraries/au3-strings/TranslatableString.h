@@ -105,6 +105,8 @@ public:
 
     const QString& msgid() const { return m_source; }
 
+    const char* context() const { return m_context; }
+
     QString translated() const { return translated(m_n); }
 
     QString translated(int n) const

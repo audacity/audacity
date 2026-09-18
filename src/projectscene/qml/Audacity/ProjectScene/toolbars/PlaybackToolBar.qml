@@ -163,6 +163,8 @@ Item {
 
                 accessibleName: qsTrc("projectscene", "Playback position:")
 
+                appearance: Timecode.Appearance.Clock
+
                 value: Boolean(itemData) ? itemData.currentValue : 0
 
                 mode: TimecodeModeSelector.TimePoint
@@ -308,6 +310,7 @@ Item {
                 width: 143
                 height: 28
 
+                //: Noun: label of the snapping control in the playback toolbar
                 title: qsTrc("projectscene", "Snap")
                 toggleAccessibleName: qsTrc("projectscene", "Snapping")
                 dropdownAccessibleName: qsTrc("projectscene", "Snap to")
@@ -343,6 +346,7 @@ Item {
 
         icon: IconCode.SETTINGS_COG
         iconFont: ui.theme.iconsFont
+        //: Tooltip of the toolbar customization button
         toolTipTitle: qsTrc("projectscene", "Customize toolbar")
         toolTipDescription: qsTrc("projectscene", "Show/hide toolbar buttons")
 

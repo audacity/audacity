@@ -171,6 +171,9 @@ public:
     virtual ProgressResult Poll(
         unsigned long long numerator, unsigned long long denominator, const TranslatableString& message = {}) = 0;
 
+    //! Whether the user has requested cancellation of the operation
+    virtual bool Cancelled() const = 0;
+
     //! Change an existing dialog's message
     virtual void SetMessage(const TranslatableString& message) = 0;
 

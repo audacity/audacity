@@ -59,6 +59,7 @@ Item {
             Layout.bottomMargin: 12
 
             icon: IconCode.AUDIO
+            //: Tooltip of the playback meter settings button
             toolTipTitle: qsTrc("playback", "Playback meter settings")
             accentButton: popup.isOpened
 

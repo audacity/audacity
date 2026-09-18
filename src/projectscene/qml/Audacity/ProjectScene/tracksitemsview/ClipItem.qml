@@ -609,6 +609,12 @@ Rectangle {
                     root.headerHovered = containsMouse
                 }
 
+                // during dragging, the clip is hidden, and do not receive mouse events
+                // we need to restore hover state when the clip become visible again
+                onVisibleChanged: {
+                    root.headerHovered = containsMouse
+                }
+
                 visible: root.enableCursorInteraction
 
                 acceptedButtons: Qt.LeftButton
@@ -972,8 +978,10 @@ Rectangle {
 
                     defaultValue: clipGainModel.defaultValue
 
-                    xRangeFrom: waveView.itemStartTime
-                    xRangeTo: waveView.itemEndTime
+                    // Offset the envelope display to follow the drag preview while its point times remain unchanged.
+                    readonly property real timeOffset: waveView.startTime - clipGainModel.clipStartTime
+                    xRangeFrom: waveView.itemStartTime - timeOffset
+                    xRangeTo: waveView.itemEndTime - timeOffset
 
                     yRangeFrom: clipGainModel.minValue
                     yRangeTo: clipGainModel.maxValue
@@ -987,7 +995,7 @@ Rectangle {
 
                     onPointMoved: function (index, x, y, completed) {
                         clipGainModel.setPoint(index, x, y, completed)
-                        tooltip.gain = gainToDb(y)
+                        tooltip.value = gainToDb(y)
                         tooltip.show(true)
                     }
 
@@ -1014,7 +1022,7 @@ Rectangle {
                         if (automation.hasActivePoint) {
                             fake.x = automation.activePointX
                             fake.y = automation.activePointY - (automation.standardPointStyle.centerRadius + 2)
-                            tooltip.gain = gainToDb(automation.activePointValue)
+                            tooltip.value = gainToDb(automation.activePointValue)
                             tooltip.show(true)
                         } else {
                             tooltip.hide(true)
@@ -1033,8 +1041,11 @@ Rectangle {
 
                         enabled: false // so it doesn't steal mouse events
 
-                        GainTooltip {
+                        ValueTooltip {
                             id: tooltip
+
+                            unitText: "dB"
+                            sizingText: "-60.0dB"
                         }
                     }
 

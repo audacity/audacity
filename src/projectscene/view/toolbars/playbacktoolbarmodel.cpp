@@ -315,19 +315,19 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
-        if (citem.action == PLAYBACK_LEVEL_QUERY.toString()) {
+        if (citem.intent == PLAYBACK_LEVEL_QUERY.toString()) {
             if (playbackUiState()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar) {
                 // Skip playback meter item if it is set to be displayed in the sidebar
                 continue;
             }
         }
 
-        if (citem.action == AbstractToolBarModel::SEPARATOR_ID) {
+        if (citem.isSeparator()) {
             items << AbstractToolBarModel::makeSeparator();
             continue;
         }
 
-        ToolBarItem* item = makeLocalItem(citem.action);
+        ToolBarItem* item = makeLocalItem(citem.intent);
         if (!item) {
             continue;
         }

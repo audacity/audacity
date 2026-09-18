@@ -10,12 +10,23 @@ set( SOURCES
    AudacityApplicationLogicTypes.h
 )
 set( LIBRARIES
-   au3-audio-io-interface
-   au3-effects-interface
-   au3-menus-interface
-   au3-project-file-io-interface
-   au3-viewport-interface
-   au3-strings-interface
+PUBLIC
+   au3-components
+   au3-menus
+   au3-strings
+PRIVATE
+   au3-audio-io
+   au3-basic-ui
+   au3-effects
+   au3-module-manager
+   au3-project
+   au3-project-file-io
+   au3-project-history
+   au3-project-rate
+   au3-time-frequency-selection
+   au3-track-selection
+   au3-viewport
+   au3-wave-track
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

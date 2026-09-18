@@ -344,6 +344,7 @@ EffectStyledDialogView {
                             navigation.panel: bbox.navigationPanel
                             navigation.order: previewBtn.navigation.order + 1
 
+                            //: Label of a dialog button
                             text: qsTrc("global", "Cancel")
                             buttonRole: ButtonBoxModel.RejectRole
                             buttonId: ButtonBoxModel.Cancel
@@ -361,6 +362,7 @@ EffectStyledDialogView {
                             navigation.panel: bbox.navigationPanel
                             navigation.order: cancelBtn.navigation.order + 1
 
+                            //: Label of the dialog button that applies the effect
                             text: qsTrc("global", "Apply")
                             buttonRole: ButtonBoxModel.AcceptRole
                             buttonId: ButtonBoxModel.Apply

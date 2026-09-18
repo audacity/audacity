@@ -13,7 +13,7 @@ set( SOURCES
    concurrency/ICancellable.h
 )
 set( LIBRARIES
-   PUBLIC
+
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" "" )

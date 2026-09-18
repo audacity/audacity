@@ -62,7 +62,6 @@ elseif(OS_IS_LIN)
 
 elseif(OS_IS_MAC)
     set(EXECUTABLE_NAME audacity MACOSX_BUNDLE)
-    set(MACOSX_BUNDLE_ICON_FILE AppIcon.icns)
     set(MACOSX_BUNDLE_GUI_IDENTIFIER ${MUSE_APP_GUI_IDENTIFIER})
     set(MACOSX_BUNDLE_BUNDLE_NAME ${MUSE_APP_TITLE})
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MUSE_APP_VERSION})
@@ -172,6 +171,10 @@ else()
     list(APPEND AUDACITY_APPEND_SRC internal/platform/stub/backgroundprocess.cpp)
 endif()
 
+if (MUSE_MODULE_TESTFLOW)
+    list(APPEND AUDACITY_APPEND_SRC testflowrunner.cpp testflowrunner.h)
+endif()
+
 if (OS_IS_WIN)
     list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_ICONS_RC})
     list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_VERSION_RC})
@@ -242,6 +245,25 @@ if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
 endif()
 
 if (OS_IS_MAC)
+    # macOS localizes its own interface - the native file pickers, standard
+    # buttons and the application menu - according to the localizations the
+    # bundle declares, not according to the Qt catalogues we load. Declare
+    # every localization macOS itself provides, so its native UI always
+    # follows the system language, independently of the app language.
+    file(GLOB AU4_APPKIT_LPROJ_DIRS
+         "/System/Library/Frameworks/AppKit.framework/Versions/C/Resources/*.lproj")
+    list(SORT AU4_APPKIT_LPROJ_DIRS)
+    set(AU4_BUNDLE_LOCALIZATIONS "")
+    foreach(lproj_dir ${AU4_APPKIT_LPROJ_DIRS})
+        get_filename_component(AU4_LANGUAGE_CODE ${lproj_dir} NAME_WE)
+        if (NOT AU4_LANGUAGE_CODE STREQUAL "Base")
+            string(APPEND AU4_BUNDLE_LOCALIZATIONS "\t\t<string>${AU4_LANGUAGE_CODE}</string>\n")
+        endif()
+    endforeach()
+
+    include(${PROJECT_SOURCE_DIR}/share/icons/SetupIconComposerIcon.cmake)
+    target_setup_iconcomposer_icon(audacity "${PROJECT_SOURCE_DIR}/share/icons/AppIcon/AppIcon.icon")
+
     set_target_properties(audacity
         PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/MacOS/MacOSXBundleInfo.plist.in
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
@@ -286,7 +308,11 @@ endif(CC_IS_MSVC)
 ###########################################
 # Link
 ##########################################
-target_link_libraries(audacity PRIVATE ${LINK_LIB}  ${COVERAGE_LINK_FLAGS})
+target_link_libraries(audacity
+        PRIVATE
+        ${LINK_LIB}
+        ${COVERAGE_LINK_FLAGS}
+)
 
 ###########################################
 # Dependencies

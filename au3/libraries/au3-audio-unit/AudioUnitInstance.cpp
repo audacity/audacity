@@ -14,6 +14,8 @@
 #include "AudioUnitInstance.h"
 
 #include <AudioToolbox/AudioUnitUtilities.h>
+#include <dispatch/dispatch.h>
+#include "au3-basic-ui/BasicUI.h"
 #include "au3-exceptions/AudacityException.h"
 #include <wx/log.h>
 
@@ -67,6 +69,29 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect& effect,
     mAudioIns = audioIns;
     mAudioOuts = audioOuts;
     CreateAudioUnit();
+}
+
+AudioUnitInstance::~AudioUnitInstance()
+{
+    // Tearing an instance down is main-thread work: for an out-of-process
+    // plug-in AudioUnitUninitialize dismantles the shared render pipe, and
+    // disposing a plug-in removes the run loop timers it registered when it
+    // was created. Both trip over a thread that owns neither. The destructor
+    // itself can run on any thread, so hand the work to the main queue
+    // instead of doing it here. Both handles are released so the base
+    // ~AudioUnitWrapper does not dispose a second time.
+    const bool wasInitialized = mInitialization.release() != nullptr;
+    AudioUnit unit = mUnit.release();
+    if (!unit) {
+        return;
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        if (wasInitialized) {
+            AudioUnitUninitialize(unit);
+        }
+        AudioComponentInstanceDispose(unit);
+    });
 }
 
 size_t AudioUnitInstance::InitialBlockSize() const
@@ -131,6 +156,8 @@ size_t AudioUnitInstance::GetTailSize() const
 
 bool AudioUnitInstance::Initialize()
 {
+    assert(CFRunLoopGetCurrent() == CFRunLoopGetMain());
+
     if (mInitialization) {
         return true;
     }
@@ -147,9 +174,7 @@ bool AudioUnitInstance::Initialize()
 bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
                                           double sampleRate, ChannelNames chanMap)
 {
-    if (!StoreSettings(mProcessor, GetSettings(settings))) {
-        return false;
-    }
+    mLastError.clear();
 
     mInputList
         =PackedArray::AllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
@@ -161,31 +186,63 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
                                 // accumulate the number of frames processed so far
     mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
-    mInitialization.reset();
-    // Redo this with the correct sample rate, not the arbirary 44100 that the
-    // effect used
-    auto ins = mAudioIns;
-    auto outs = mAudioOuts;
-    if (!SetRateAndChannels(sampleRate, mIdentifier)) {
-        return false;
-    }
+    //! NOTE Every playback start calls this. Uninitializing and initializing
+    //! the unit again resets the plug-in to the values it was last given,
+    //! discarding whatever the user has since changed in its own editor, so
+    //! only do it when the sample rate makes it necessary.
+    const bool needsReinitialize = !mInitialization || mInitializedSampleRate != sampleRate;
+    if (needsReinitialize) {
+        mInitialization.reset();
+        // Redo this with the correct sample rate, not the arbirary 44100 that the
+        // effect used
+        auto ins = mAudioIns;
+        auto outs = mAudioOuts;
+        if (!SetRateAndChannels(sampleRate, mIdentifier)) {
+            return false;
+        }
 
-    if (!Initialize()) {
-        return false;
-    }
+        // Must be set, not just queried: out-of-process plug-ins size their
+        // shared render buffers from this property, and rendering without it
+        // fails with kAudioUnitErr_RenderTimeout
+        if (SetProperty(kAudioUnitProperty_MaximumFramesPerSlice,
+                        static_cast<UInt32>(mBlockSize))) {
+            wxLogError("%ls didn't accept maximum frames per slice\n", mIdentifier.wx_str());
+            mLastError = TranslatableString("audio-unit",
+                                            "The plugin “%1” does not support the required block size")
+                         .arg(mProcessor.GetName()).Translation();
+            return false;
+        }
 
-    if (ins != mAudioIns || outs != mAudioOuts) {
-        // A change of channels with changing rate?  This is unexpected!
-        ins = mAudioIns;
-        outs = mAudioOuts;
-        return false;
-    }
+        if (!Initialize()) {
+            return false;
+        }
 
-    if (SetProperty(kAudioUnitProperty_SetRenderCallback,
-                    AudioUnitUtils::RenderCallback { RenderCallback, this },
-                    kAudioUnitScope_Input)) {
-        wxLogError("Setting input render callback failed.\n");
-        return false;
+        if (ins != mAudioIns || outs != mAudioOuts) {
+            // A change of channels with changing rate?  This is unexpected!
+            ins = mAudioIns;
+            outs = mAudioOuts;
+            return false;
+        }
+
+        if (SetProperty(kAudioUnitProperty_SetRenderCallback,
+                        AudioUnitUtils::RenderCallback { RenderCallback, this },
+                        kAudioUnitScope_Input)) {
+            wxLogError("Setting input render callback failed.\n");
+            return false;
+        }
+
+        mInitializedSampleRate = sampleRate;
+
+        // The reinitialization above discarded the unit's parameter state and
+        // only this method knows it did, so restore it from the stored
+        // settings - and only now, because an out-of-process plug-in also
+        // discards values set before AudioUnitInitialize. A unit that stayed
+        // initialized is left alone: it is already processing with the values
+        // the user set, which the stored copy may lag behind (see
+        // RealtimeFinalize).
+        if (!StoreSettings(mProcessor, GetSettings(settings))) {
+            return false;
+        }
     }
 
     if (AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0)) {
@@ -204,6 +261,24 @@ bool AudioUnitInstance::ProcessFinalize() noexcept
     mOutputList.reset();
     mInputList.reset();
     return true;
+}
+
+std::string AudioUnitInstance::GetLastError() const
+{
+    if (!mLastError.empty()) {
+        return mLastError;
+    }
+
+    // Realtime processing spreads channel groups over slave instances, so a
+    // failure may have been recorded by any of them
+    for (const auto& pSlave : mSlaves) {
+        std::string slaveError = pSlave->GetLastError();
+        if (!slaveError.empty()) {
+            return slaveError;
+        }
+    }
+
+    return {};
 }
 
 size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
@@ -236,6 +311,12 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
     if (result != noErr) {
         wxLogError("Render failed: %d %4.4s\n",
                    static_cast<int>(result), reinterpret_cast<char*>(&result));
+        if (result == kAudioComponentErr_InstanceInvalidated
+            || result == kAudioComponentErr_InstanceTimedOut) {
+            mLastError = TranslatableString("audio-unit",
+                                            "The plugin “%1” has crashed while processing audio")
+                         .arg(mProcessor.GetName()).Translation();
+        }
         return 0;
     }
 
@@ -246,6 +327,7 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
 bool AudioUnitInstance::RealtimeInitialize(
     EffectSettings& settings, double sampleRate, size_t)
 {
+    mRealtimeErrorReported.store(false);
     return ProcessInitialize(settings, sampleRate, nullptr);
 }
 
@@ -271,9 +353,18 @@ bool AudioUnitInstance::RealtimeAddProcessor(
     return true;
 }
 
-bool AudioUnitInstance::RealtimeFinalize(EffectSettings&) noexcept
+bool AudioUnitInstance::RealtimeFinalize(EffectSettings& settings) noexcept
 {
     return GuardedCall<bool>([&]{
+        // Adopt the values the plug-in has been processing with, which include
+        // whatever the user changed in its own editor. An instance without
+        // messages (UsesMessages()) gets this for free: RealtimeEffectState::
+        // Finalize copies the worker settings back into the main settings.
+        // For a message-based instance like this one it skips that copy, so
+        // the live values have to be brought over here, or the next instance
+        // starts from the values these replace.
+        FetchSettings(GetSettings(settings), true, true);
+
         for (auto& pSlave : mSlaves) {
             pSlave->ProcessFinalize();
         }
@@ -382,7 +473,17 @@ AudioUnitInstance::RealtimeProcess(size_t group, EffectSettings& settings,
         pSlave = mSlaves[group].get();
     }
     if (pSlave) {
-        return pSlave->ProcessBlock(settings, inbuf, outbuf, numSamples);
+        const auto processed = pSlave->ProcessBlock(settings, inbuf, outbuf, numSamples);
+        if (processed == 0 && !pSlave->mLastError.empty()
+            && !mRealtimeErrorReported.exchange(true)) {
+            const auto message = pSlave->mLastError;
+            BasicUI::CallAfter([message]{
+                BasicUI::ShowErrorDialog(
+                    {}, TranslatableString("audio-unit", "Realtime effect error"),
+                    TranslatableString::untranslatable(message.c_str()), {});
+            });
+        }
+        return processed;
     } else {
         return 0;
     }

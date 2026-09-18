@@ -26,6 +26,7 @@ import QtQuick.Layouts 1.3
 import Muse.Ui 1.0
 import Muse.UiComponents
 import Muse.Cloud 1.0
+import Muse.Update 1.0
 
 Item {
     id: root
@@ -94,12 +95,6 @@ Item {
                     "title": qsTrc("appshell", "Project"),
                     "icon": IconCode.NEW_FILE,
                     "enabled": true
-                },
-                {
-                    "name": "learn",
-                    "title": qsTrc("appshell", "Learn"),
-                    "icon": IconCode.MORTAR_BOARD,
-                    "enabled": false
                 }
             ]
 
@@ -135,6 +130,13 @@ Item {
                     root.selected(modelData["name"])
                 }
             }
+        }
+
+        UpdateBanner {
+            Layout.fillWidth: true
+            Layout.margins: 8
+
+            visible: hasReadyUpdate && !root.iconsOnly
         }
     }
 }

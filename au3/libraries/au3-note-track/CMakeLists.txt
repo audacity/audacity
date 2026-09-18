@@ -12,12 +12,21 @@ set( SOURCES
    WrapAllegro.h
 )
 set( LIBRARIES
-   au3-audio-io-interface
-   au3-playable-track-interface
-   PRIVATE
+PUBLIC
+   au3-audio-io
+   au3-mixer
+   au3-playable-track
+   au3-preferences
+   au3-utility
+PRIVATE
+   au3-audio-devices
+   au3-basic-ui
+   au3-exceptions
+   au3-project
+   au3-strings
+   au3-track
    portmidi::portmidi
    portsmf
-   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

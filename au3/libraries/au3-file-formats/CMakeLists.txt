@@ -10,11 +10,14 @@ set( SOURCES
    AcidizerTags.h
 )
 set( LIBRARIES
-      PRIVATE
-      SndFile::sndfile
-      au3-math-interface
-      au3-strings-interface
-      wxBase
+PUBLIC
+   SndFile::sndfile # FileFormats.h includes <sndfile.h>
+   au3-math
+   au3-strings
+PRIVATE
+   au3-basic-ui
+   au3-utility
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

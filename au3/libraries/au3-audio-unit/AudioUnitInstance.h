@@ -13,6 +13,8 @@
 #define __AUDACITY_AUDIO_UNIT_INSTANCE__
 
 #include "au3-effects/PerTrackEffect.h"
+#include <atomic>
+
 #include "AudioUnitWrapper.h"
 struct AudioUnitEvent;
 
@@ -23,8 +25,11 @@ public:
 
     AudioUnitInstance(const PerTrackEffect& effect, AudioComponent component, Parameters& parameters, const wxString& identifier,
                       unsigned audioIns, unsigned audioOuts, bool useLatency);
+    ~AudioUnitInstance() override;
 
     bool Initialize();
+
+    bool IsInitialized() const { return static_cast<bool>(mInitialization); }
 
     void EventListener(const AudioUnitEvent* inEvent, AudioUnitParameterValue inParameterValue);
 
@@ -48,6 +53,7 @@ private:
 
     bool ProcessInitialize(EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
     bool ProcessFinalize() noexcept override;
+    std::string GetLastError() const override;
     size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen)
     override;
 
@@ -84,5 +90,8 @@ private:
     const wxString& mIdentifier; // for debug messages only
     const size_t mBlockSize;
     const bool mUseLatency;
+    double mInitializedSampleRate = 0.0;
+    std::string mLastError;
+    std::atomic<bool> mRealtimeErrorReported{ false };
 };
 #endif

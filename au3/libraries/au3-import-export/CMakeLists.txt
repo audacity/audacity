@@ -39,16 +39,28 @@ set( SOURCES
    PlainExportOptionsEditor.h
 )
 set( LIBRARIES
-   au3-tags-interface
-   au3-wave-track-interface
-   au3-project-interface
+PUBLIC
+   SndFile::sndfile # LibsndfileTagger.h exposes SNDFILE
+   au3-basic-ui
+   au3-file-formats
+   au3-files
+   au3-math
    au3-registries
-   PRIVATE
+   au3-strings
+   au3-track
+PRIVATE
+   au3-effects
+   au3-mixer
+   au3-preferences
+   au3-project
+   au3-project-rate
+   au3-stretching-sequence
+   au3-tags
+   au3-time-frequency-selection
+   au3-wave-track
+   au3-xml
    rapidjson::rapidjson
-   au3-effects-interface
-   au3-strings-interface
    wxBase
-   SndFile::sndfile
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -53,19 +53,29 @@ set( SOURCES
 
 set ( LIBRARIES
 PUBLIC
-      au3-network-manager-interface # Required for the networking
-      au3-files-interface # FileNames
-      au3-strings-interface # Languages
-      au3-wave-track-interface
-      au3-project-file-io-interface # ProjectFileIOExtension
-      au3-concurrency-interface
-   PRIVATE
-      au3-sqlite-helpers-interface
-      au3-crypto-interface
-      au3-import-export-interface
-      wavpack::wavpack # Required for the WavPackCompressor
-      wxBase # Required to retrieve the OS information
-      rapidjson::rapidjson
+   au3-concurrency
+   au3-preferences
+   au3-registries
+   au3-sqlite-helpers
+   au3-utility
+PRIVATE
+   au3-basic-ui
+   au3-crypto
+   au3-exceptions
+   au3-files # FileNames
+   au3-import-export
+   au3-math
+   au3-network-manager # Required for the networking
+   au3-project
+   au3-project-file-io # ProjectFileIOExtension
+   au3-project-rate
+   au3-string-utils
+   au3-strings # Languages
+   au3-track
+   au3-wave-track
+   wavpack::wavpack # Required for the WavPackCompressor
+   wxBase # Required to retrieve the OS information
+   rapidjson::rapidjson
 )
 
 set ( DEFINES

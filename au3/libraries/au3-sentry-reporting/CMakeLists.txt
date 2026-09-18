@@ -20,8 +20,10 @@ if(${_OPT}has_sentry_reporting)
     )
 
 
-    set ( LIBRARIES PRIVATE
-        au3-network-manager # Required for the networking
+    set ( LIBRARIES
+    PUBLIC
+        au3-network-manager # Required for the networking; exposed in SentryReport.h
+    PRIVATE
         au3-string-utils # ToUtf8
         au3-uuid # UUIDs are required as an event identifier.
         rapidjson::rapidjson # Protocol is JSON based
