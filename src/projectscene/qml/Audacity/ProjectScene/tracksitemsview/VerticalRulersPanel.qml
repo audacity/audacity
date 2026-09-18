@@ -15,12 +15,18 @@ Rectangle {
 
     property var navPanels: null
 
-    readonly property int listHeaderHeight: 2
-
     width: 32
     color: ui.theme.backgroundQuarternaryColor
 
     visible: model.isVerticalRulersVisible
+
+    TracksViewStateModel {
+        id: tracksViewState
+    }
+
+    Component.onCompleted: {
+        tracksViewState.init()
+    }
 
     Rectangle {
         id: leftBorder
@@ -31,60 +37,16 @@ Rectangle {
         opacity: 0.1
     }
 
-    StyledListView {
+    TracksListView {
         id: verticalRulersListView
 
         anchors.fill: parent
 
         clip: false
 
-        ScrollBar.vertical: null
-
-        //! NOTE Sync with TracksItemsView
-        TracksViewStateModel {
-            id: tracksViewState
-            onTracksVerticalOffsetChanged: {
-                verticalRulersListView.contentY = tracksViewState.tracksVerticalOffset - root.listHeaderHeight
-            }
-        }
-
-        Component.onCompleted: {
-            tracksViewState.init()
-        }
-
-        header: Rectangle {
-            height: root.listHeaderHeight
-            width: parent.width
-            color: "transparent"
-        }
-
-        footer: Item {
-            height: tracksViewState.tracksVerticalScrollPadding
-        }
-
-        property real lockedVerticalScrollPosition
-        property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
-
-        onVerticalScrollLockedChanged: {
-            lockedVerticalScrollPosition = contentY
-        }
-
-        onContentYChanged: {
-            if (verticalScrollLocked) {
-                verticalRulersListView.contentY = lockedVerticalScrollPosition
-            } else {
-                tracksViewState.changeTracksVerticalOffset(verticalRulersListView.contentY + root.listHeaderHeight)
-            }
-        }
-
-        interactive: false
+        tracksViewState: tracksViewState
 
         model: root.model
-
-        function insureVerticallyVisible(item) {
-            let itemViewY = item.mapToItem(verticalRulersListView.contentItem, Qt.point(0, 0)).y
-            tracksViewState.insureVerticallyVisible(verticalRulersListView.contentY + root.listHeaderHeight, verticalRulersListView.height, itemViewY + root.listHeaderHeight, item.height)
-        }
 
         delegate: Loader {
             id: rulerLoader
@@ -133,7 +95,7 @@ Rectangle {
                         onActiveChanged: function (active) {
                             if (active) {
                                 rulerItem.forceActiveFocus()
-                                verticalRulersListView.insureVerticallyVisible(rulerLoader)
+                                verticalRulersListView.ensureVerticallyVisible(rulerLoader)
                             }
                         }
                     }
