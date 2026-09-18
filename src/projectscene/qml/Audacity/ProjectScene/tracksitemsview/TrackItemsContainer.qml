@@ -54,7 +54,7 @@ Item {
 
     signal updateMouseMoveActive(bool completed)
 
-    signal insureVerticallyVisible
+    signal ensureVerticallyVisible
 
     signal handleTimeGuideline(real x, bool completed)
     signal updateItemGuideline(real time)

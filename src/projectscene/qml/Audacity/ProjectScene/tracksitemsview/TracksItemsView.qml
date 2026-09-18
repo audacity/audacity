@@ -76,7 +76,6 @@ Rectangle {
 
         property bool playRegionActivated: false
         readonly property int headerHeight: 20
-        readonly property int listHeaderHeight: 2
 
         function cancelItemDragEdit() {
             if (mainMouseArea.pressed) {
@@ -166,12 +165,8 @@ Rectangle {
         }
     }
 
-    //! NOTE Sync with TracksPanel
     TracksViewStateModel {
         id: tracksViewState
-        onTracksVerticalOffsetChanged: {
-            tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight
-        }
     }
 
     PlayCursorController {
@@ -239,7 +234,7 @@ Rectangle {
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight)
+        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - tracksItemsView.listHeaderHeight)
     }
 
     Rectangle {
@@ -770,11 +765,13 @@ Rectangle {
             scrollbarOpacityNormal: 0.5
             scrollbarOpacityPressed: 0.8
 
-            StyledListView {
+            TracksListView {
                 id: tracksItemsView
 
                 anchors.fill: parent
                 clip: false // do not clip so clip handles are visible
+
+                tracksViewState: tracksViewState
 
                 property bool mouseMoveActive: false
 
@@ -787,10 +784,6 @@ Rectangle {
                 }
 
                 ScrollBar.horizontal: null
-                ScrollBar.vertical: null
-
-                property real lockedVerticalScrollPosition
-                property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
 
                 function checkIfAnyTrack(f) {
                     for (let i = 0; i < tracksItemsView.count; i++) {
@@ -822,11 +815,6 @@ Rectangle {
                     }
                 }
 
-                function insureVerticallyVisible(item) {
-                    var itemViewY = item.mapToItem(tracksItemsView.contentItem, Qt.point(0, 0)).y
-                    tracksViewState.insureVerticallyVisible(tracksItemsView.contentY + prv.listHeaderHeight, tracksItemsView.height, itemViewY + prv.listHeaderHeight, item.height)
-                }
-
                 signal itemMoveRequested(var itemKey, bool completed)
                 signal itemStartEditRequested(var itemKey)
                 signal itemEndEditRequested(var itemKey)
@@ -838,25 +826,8 @@ Rectangle {
                 signal previewImportClipRequested(var trackIds, real startPos, var durations, var titles)
                 signal clearPreviewImportClip(var excludeTrackIds)
 
-                header: Rectangle {
-                    height: prv.listHeaderHeight
-                    width: parent.width
-                    color: "transparent"
-                }
-
-                footer: Item {
-                    height: tracksViewState.tracksVerticalScrollPadding
-                }
-
-                onVerticalScrollLockedChanged: {
-                    lockedVerticalScrollPosition = contentY
-                }
-
                 onContentYChanged: {
-                    if (verticalScrollLocked) {
-                        contentY = lockedVerticalScrollPosition
-                    } else {
-                        tracksViewState.changeTracksVerticalOffset(tracksItemsView.contentY + prv.listHeaderHeight)
+                    if (!verticalScrollLocked) {
                         timeline.context.startVerticalScrollPosition = tracksItemsView.contentY
                     }
                 }
@@ -1016,8 +987,8 @@ Rectangle {
                                 selectionViewController.onSelectionHorizontalResize(timeline.context.positionToTime(x1), timeline.context.positionToTime(x2), completed)
                             }
 
-                            onInsureVerticallyVisible: function () {
-                                tracksItemsView.insureVerticallyVisible(this)
+                            onEnsureVerticallyVisible: function () {
+                                tracksItemsView.ensureVerticallyVisible(this)
                             }
 
                             onInteractionStarted: {
@@ -1215,8 +1186,8 @@ Rectangle {
                                 root.snapGuidelineToPosition(x)
                             }
 
-                            onInsureVerticallyVisible: function () {
-                                tracksItemsView.insureVerticallyVisible(this)
+                            onEnsureVerticallyVisible: function () {
+                                tracksItemsView.ensureVerticallyVisible(this)
                             }
                         }
                     }
