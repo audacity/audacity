@@ -1546,11 +1546,11 @@
     </message>
     <message>
         <source>Duplicate track</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Spur duplizieren</translation>
     </message>
     <message>
         <source>Delete track</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Spur löschen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="225"/>
@@ -1586,7 +1586,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="266"/>
         <source>Make stereo track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Stereo-Spur erstellen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="274"/>
@@ -1724,7 +1724,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="445"/>
         <source>New stereo track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Neue Stereo-Spur</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
@@ -1736,7 +1736,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="461"/>
         <source>Add label</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Textmarke hinzufügen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="469"/>
@@ -3302,13 +3302,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="211"/>
         <source>Duplicate track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spur duplizieren</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="219"/>
         <source>Delete track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spur löschen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
@@ -3344,7 +3344,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="268"/>
         <source>Make stereo track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Stereo-Spur erstellen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="276"/>
@@ -3464,7 +3464,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
         <source>New stereo track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Neue Stereo-Spur</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="455"/>
@@ -3476,7 +3476,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="463"/>
         <source>Add label</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Textmarke hinzufügen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="471"/>
@@ -19555,7 +19555,7 @@ Sie müssen diese Version von Audacity benutzen, um das Projekt wiederherzustell
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="127"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/LabelTrackItem.qml" line="20"/>
         <source>Add label</source>
-        <translation type="unfinished"/>
+        <translation>Textmarke hinzufügen</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="33"/>
@@ -21096,7 +21096,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="85"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="108"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>Spur bewegen</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
@@ -21562,7 +21562,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>New stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Neue Stereo-Spur</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
@@ -21577,66 +21577,66 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="712"/>
         <source>Delete track</source>
-        <translation type="unfinished"/>
+        <translation>Spur löschen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="721"/>
         <source>Duplicate track</source>
-        <translation type="unfinished"/>
+        <translation>Spur duplizieren</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>Spur bewegen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
         <source>Insert silence</source>
-        <translation type="unfinished"/>
+        <translation>Stille einfügen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
         <source>Clips grouped</source>
-        <translation type="unfinished"/>
+        <translation>Clips gruppiert</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
         <source>Clips ungrouped</source>
-        <translation type="unfinished"/>
+        <translation>Clips ungruppiert</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
         <source>Changed track format</source>
-        <translation type="unfinished"/>
+        <translation>Spurformat geändert</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
         <source>Changed track rate</source>
-        <translation type="unfinished"/>
+        <translation>Spur-Abtastrate geändert</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
         <source>Swapped stereo channels</source>
-        <translation type="unfinished"/>
+        <translation>Stereo-Kanäle gewechselt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
         <source>Split stereo tracks to L/R mono</source>
-        <translation type="unfinished"/>
+        <translation>Stereo-Spuren in L/R-Mono trennen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
         <source>Split stereo tracks to center mono</source>
-        <translation type="unfinished"/>
+        <translation>Stereo-Spuren in Center-Mono trennen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
         <source>Make stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Stereo-Spur erstellen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
@@ -21647,23 +21647,23 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
         <source>Label added</source>
-        <translation type="unfinished"/>
+        <translation>Textmarke hinzugefügt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
         <source>Add label</source>
-        <translation type="unfinished"/>
+        <translation>Textmarke hinzufügen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Label title changed</source>
-        <translation type="unfinished"/>
+        <translation>Textmarken-Titel geändert</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
         <source>Changed label title</source>
-        <translation type="unfinished"/>
+        <translation>Geänderter Textmaken-Titel</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
@@ -21688,12 +21688,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
         <source>Cut label</source>
-        <translation type="unfinished"/>
+        <translation>Textmarke ausschneiden</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
         <source>Remove label</source>
-        <translation type="unfinished"/>
+        <translation>Textmarke löschen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
@@ -21711,12 +21711,12 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
         <source>Move</source>
-        <translation type="unfinished"/>
+        <translation>Bewegen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
         <source>Labels moved</source>
-        <translation type="unfinished"/>
+        <translation>Textmarken bewegt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>

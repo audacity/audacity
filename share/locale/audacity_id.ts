@@ -238,7 +238,7 @@
     </message>
     <message>
         <source>Trigger the focused control or select the focused track item</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Aktifkan kontrol yang difokuskan atau pilih item trek yang difokuskan</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
@@ -473,11 +473,11 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
         <source>Playback level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Level pemutaran</translation>
     </message>
     <message>
         <source>Set playback level</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Atur level pemutaran</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
@@ -733,13 +733,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="248"/>
         <source>Previous clip boundary to cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Batas klip sebelumnya hingga kursor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="256"/>
         <source>Cursor to next clip boundary</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Kursor hingga batas klip berikutnya</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
@@ -871,7 +871,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
         <source>Mix-down to…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Miks ke...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
@@ -2176,7 +2176,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
         <source>Trigger the focused control or select the focused track item</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Aktifkan kontrol yang difokuskan atau pilih item trek yang difokuskan</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
@@ -2315,7 +2315,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
         <source>Set playback level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Atur level pemutaran</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
@@ -2547,13 +2547,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="250"/>
         <source>Previous clip boundary to cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Batas klip sebelumnya hingga kursor</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
         <source>Cursor to next clip boundary</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Kursor hingga batas klip berikutnya</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
@@ -2649,7 +2649,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="402"/>
         <source>Mix-down to…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Miks ke...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
@@ -5098,7 +5098,7 @@ Tindakan ini tidak akan menghapus proyek Anda.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="60"/>
         <source>Import system and page breaks</source>
-        <translation type="unfinished"/>
+        <translation>Impor pemisah sistem dan halaman </translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="75"/>
@@ -5188,7 +5188,7 @@ Tindakan ini tidak akan menghapus proyek Anda.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="32"/>
         <source>Scroll pages</source>
-        <translation type="unfinished"/>
+        <translation>Menggulir halaman</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="51"/>
@@ -8918,7 +8918,7 @@ atau untuk LISP, mulai dengan tanda kurung pembuka seperti:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished"/>
+        <translation>Perbaikan klip</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -10700,7 +10700,7 @@ Harap pilih wilayah untuk diperbaiki dengan suatu suara setidaknya pada salah sa
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>Peregangan dan geser nada</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -11212,7 +11212,7 @@ Harap pilih wilayah untuk diperbaiki dengan suatu suara setidaknya pada salah sa
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="223"/>
         <source>bands</source>
-        <translation type="unfinished"/>
+        <translation>pita</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="242"/>
@@ -11360,7 +11360,7 @@ Harap pilih wilayah untuk diperbaiki dengan suatu suara setidaknya pada salah sa
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>Peregangan dan geser nada</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
@@ -21288,24 +21288,24 @@ Harap hubungkan perangkat input dan pindai ulang.</translation>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <source>Added enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>Menambahkan titik envelope</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Clip envelope edit</source>
-        <translation type="unfinished"/>
+        <translation>Edit envelope klip</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <source>Removed enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>Menghapus titik envelope</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Dragged enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>Menyeret titik envelope</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="861"/>
@@ -21602,7 +21602,7 @@ Apakah Anda ingin melanjutkan?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <source>Split cut</source>
-        <translation type="unfinished"/>
+        <translation>Pisahkan dan potong</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
@@ -21900,12 +21900,12 @@ Apakah Anda ingin melanjutkan?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split-deleted clips</source>
-        <translation type="unfinished"/>
+        <translation>Klip yang dipisahkan dan terhapus</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
         <source>Split delete</source>
-        <translation type="unfinished"/>
+        <translation>Pisahkan dan hapus</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
