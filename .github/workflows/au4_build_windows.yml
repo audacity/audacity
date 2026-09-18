@@ -154,7 +154,7 @@ jobs:
     - name: Setup ccache
       run: |
         choco install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        bash ./muse/buildscripts/ci/tools/setup_ccache_config.sh
 
     - name: Install WiX 3 (WoA)
       if: matrix.runner == 'windows-11-arm' && env.DO_BUILD == 'true'
