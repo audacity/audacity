@@ -67,6 +67,10 @@ public:
     //! const accessor will not initialize the effect on demand
     const EffectInstanceFactory* GetEffect() const { return mPlugin; }
 
+    //! Whether EnsureInstance has initialized this state for the current processing
+    //! scope (reset by Finalize). Main thread.
+    bool IsInitialized() const noexcept { return mInitialized; }
+
     //! Expose a pointer to the state's instance (making one as needed).
     /*!
      @post `true` (no promise result is not null)

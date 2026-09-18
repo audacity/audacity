@@ -100,6 +100,13 @@ public:
     /*! No effect if realtime is active but scope is not supplied */
     void RemoveState(RealtimeEffects::InitializationScope* pScope, ChannelGroup* pGroup, std::shared_ptr<RealtimeEffectState> pState);
 
+    /*!
+     Integrate an already-listed state into the running processing scope, in place.
+     No-op when not playing, when the state is already integrated, or when its plugin
+     still isn't loadable.
+     */
+    void ReloadState(RealtimeEffects::InitializationScope& pScope, ChannelGroup* pGroup, RealtimeEffectState& state);
+
     //! Report the position of a state in the global or a per-group list
     std::optional<size_t> FindState(
         ChannelGroup* pGroup, const std::shared_ptr<RealtimeEffectState>& pState) const;

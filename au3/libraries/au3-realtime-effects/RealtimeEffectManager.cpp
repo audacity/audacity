@@ -232,6 +232,19 @@ void RealtimeEffectManager::IntegrateStateInFlight(RealtimeEffects::Initializati
     }
 }
 
+void RealtimeEffectManager::ReloadState(RealtimeEffects::InitializationScope& scope, ChannelGroup* pGroup, RealtimeEffectState& state)
+{
+    if (!mActive) {
+        return;
+    }
+    // Already part of this scope, or the plugin still isn't loadable
+    if (state.IsInitialized() || !state.GetEffect()) {
+        return;
+    }
+
+    IntegrateStateInFlight(scope, pGroup, state);
+}
+
 namespace {
 RealtimeEffectList&
 FindStates(AudacityProject& project, ChannelGroup* pGroup)
