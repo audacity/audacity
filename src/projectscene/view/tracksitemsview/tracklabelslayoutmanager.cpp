@@ -135,7 +135,7 @@ void TrackLabelsLayoutManager::subscribeToLabelsChanges()
     for (const LabelInfo& label : labels) {
         connect(label.item, &TrackLabelItem::startTimeChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
         connect(label.item, &TrackLabelItem::endTimeChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
-        connect(label.item, &TrackLabelItem::visualWidthChanged, [this, labelKey = label.key]() {
+        connect(label.item, &TrackLabelItem::visualWidthChanged, this, [this, labelKey = label.key]() {
             QList<LabelInfo> labels = collectLabelsInfo();
             for (const LabelInfo& label : labels) {
                 if (label.key == labelKey && !label.isEditing) {
@@ -145,6 +145,7 @@ void TrackLabelsLayoutManager::subscribeToLabelsChanges()
             }
         });
 
+        connect(label.item, &TrackLabelItem::draggedChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
         connect(label.item, &TrackLabelItem::isEditingChanged, this, &TrackLabelsLayoutManager::relink);
     }
 
@@ -234,6 +235,7 @@ void TrackLabelsLayoutManager::relayout()
     }
 
     QList<LabelInfo> labels = collectLabelsInfo();
+    labels.removeIf([](const LabelInfo& label) { return label.item->dragged(); });
 
     std::sort(labels.begin(), labels.end(), [](const LabelInfo& a, const LabelInfo& b) {
         if (a.x != b.x) {
@@ -336,6 +338,8 @@ void TrackLabelsLayoutManager::relink()
     m_rightLinkedLabels.clear();
 
     QList<LabelInfo> labels = collectLabelsInfo();
+    // Do not link to ghosts
+    labels.removeIf([](const LabelInfo& label) { return label.item->isDragGhost(); });
     for (const LabelInfo& label : labels) {
         label.item->setIsLeftLinked(false);
         label.item->setIsRightLinked(false);
