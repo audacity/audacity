@@ -123,6 +123,10 @@ private:
     std::shared_ptr<RealtimeEffectState>
     MakeNewState(RealtimeEffects::InitializationScope* pScope, ChannelGroup* pGroup, const PluginID& id);
 
+    //! Initialize a state and add its processors for the groups of a running scope
+    //! (the "adding a state while playback is in-flight" part of MakeNewState).
+    void IntegrateStateInFlight(RealtimeEffects::InitializationScope& scope, ChannelGroup* pGroup, RealtimeEffectState& state);
+
     //! Main thread begins to define a set of groups for playback
     void Initialize(RealtimeEffects::InitializationScope& scope, unsigned numPlaybackChannels, double sampleRate,
                     size_t audioThreadBufferSize);
