@@ -12,9 +12,8 @@ the formats as dynamically loaded modules, and mod-cl, mod-lof, mod-aup,
 the DEFINE_MODULE_ENTRIES module-entry stubs and the wx preference pages
 only make sense in that setup (or need the wx GUI application).
 
-The codec targets are PUBLIC on the mod libraries because the mod headers
-expose codec types; slimming the headers so codecs can go PRIVATE is tracked
-in https://github.com/audacity/audacity/issues/11803
+Each mod header declares only its plugin class; the codec libraries are
+PRIVATE implementation details of the mod that uses them.
 ]]
 
 add_subdirectory( mod-ffmpeg/lib-ffmpeg-support au3-ffmpeg-support )

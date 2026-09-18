@@ -12,6 +12,29 @@ effect that uses SBSMS to do its processing (TimeScale)
 **********************************************************************/
 #if USE_SBSMS
 #include "SBSMSBase.h"
+
+#include <sbsms.h>
+using namespace _sbsms_;
+
+namespace {
+#define AU_CHECK_SLIDE_TYPE(name) \
+    static_assert(static_cast<int>(SBSMSBase::name) == static_cast<int>(_sbsms_::name), \
+                  "SBSMSBase::SlideType is out of sync with _sbsms_::SlideType")
+AU_CHECK_SLIDE_TYPE(SlideIdentity);
+AU_CHECK_SLIDE_TYPE(SlideConstant);
+AU_CHECK_SLIDE_TYPE(SlideLinearInputRate);
+AU_CHECK_SLIDE_TYPE(SlideLinearOutputRate);
+AU_CHECK_SLIDE_TYPE(SlideLinearInputStretch);
+AU_CHECK_SLIDE_TYPE(SlideLinearOutputStretch);
+AU_CHECK_SLIDE_TYPE(SlideGeometricInput);
+AU_CHECK_SLIDE_TYPE(SlideGeometricOutput);
+#undef AU_CHECK_SLIDE_TYPE
+
+_sbsms_::SlideType ToSbsms(SBSMSBase::SlideType type)
+{
+    return static_cast<_sbsms_::SlideType>(type);
+}
+}
 #include "au3-effects/EffectOutputTracks.h"
 
 #include "au3-label-track/LabelTrack.h"
@@ -168,27 +191,27 @@ void SBSMSBase::setParameters(double tempoRatio, double pitchRatio)
 }
 
 std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double duration,
-                                             double rateStart, double rateEnd, SlideType rateSlideType)
+                                             double rateStart, double rateEnd, SBSMSBase::SlideType rateSlideType)
 {
-    if (rateStart == rateEnd || rateSlideType == SlideConstant) {
+    if (rateStart == rateEnd || rateSlideType == SBSMSBase::SlideConstant) {
         return std::make_unique<LinearTimeWarper>(
             t0, t0, t1, t0 + duration);
-    } else if (rateSlideType == SlideLinearInputRate) {
+    } else if (rateSlideType == SBSMSBase::SlideLinearInputRate) {
         return std::make_unique<LinearInputRateTimeWarper>(
             t0, t1, rateStart, rateEnd);
-    } else if (rateSlideType == SlideLinearOutputRate) {
+    } else if (rateSlideType == SBSMSBase::SlideLinearOutputRate) {
         return std::make_unique<LinearOutputRateTimeWarper>(
             t0, t1, rateStart, rateEnd);
-    } else if (rateSlideType == SlideLinearInputStretch) {
+    } else if (rateSlideType == SBSMSBase::SlideLinearInputStretch) {
         return std::make_unique<LinearInputStretchTimeWarper>(
             t0, t1, rateStart, rateEnd);
-    } else if (rateSlideType == SlideLinearOutputStretch) {
+    } else if (rateSlideType == SBSMSBase::SlideLinearOutputStretch) {
         return std::make_unique<LinearOutputStretchTimeWarper>(
             t0, t1, rateStart, rateEnd);
-    } else if (rateSlideType == SlideGeometricInput) {
+    } else if (rateSlideType == SBSMSBase::SlideGeometricInput) {
         return std::make_unique<GeometricInputTimeWarper>(
             t0, t1, rateStart, rateEnd);
-    } else if (rateSlideType == SlideGeometricOutput) {
+    } else if (rateSlideType == SBSMSBase::SlideGeometricOutput) {
         return std::make_unique<GeometricOutputTimeWarper>(
             t0, t1, rateStart, rateEnd);
     } else {
@@ -214,13 +237,13 @@ bool SBSMSBase::ProcessLabelTrack(LabelTrack* lt)
 
 double SBSMSBase::getInvertedStretchedTime(double rateStart, double rateEnd, SlideType slideType, double outputTime)
 {
-    Slide slide(slideType, rateStart, rateEnd, 0);
+    Slide slide(ToSbsms(slideType), rateStart, rateEnd, 0);
     return slide.getInverseStretchedTime(outputTime);
 }
 
 double SBSMSBase::getRate(double rateStart, double rateEnd, SlideType slideType, double t)
 {
-    Slide slide(slideType, rateStart, rateEnd, 0);
+    Slide slide(ToSbsms(slideType), rateStart, rateEnd, 0);
     return slide.getRate(t);
 }
 
@@ -235,8 +258,8 @@ bool SBSMSBase::Process(EffectInstance&, EffectSettings&)
 
     double maxDuration = 0.0;
 
-    Slide rateSlide(rateSlideType, rateStart, rateEnd);
-    Slide pitchSlide(pitchSlideType, pitchStart, pitchEnd);
+    Slide rateSlide(ToSbsms(rateSlideType), rateStart, rateEnd);
+    Slide pitchSlide(ToSbsms(pitchSlideType), pitchStart, pitchEnd);
     mTotalStretch = rateSlide.getTotalStretch();
 
     outputs.Get().Any().VisitWhile(bGoodResult,
@@ -322,7 +345,7 @@ bool SBSMSBase::Process(EffectInstance&, EffectSettings&)
                     rb.ratio = srProcess / srTrack;
                     rb.quality = std::make_unique<SBSMSQuality>(&SBSMSQualityStandard);
                     rb.resampler = std::make_unique<Resampler>(resampleCB, &rb,
-                                                               srProcess == srTrack ? SlideIdentity : SlideConstant);
+                                                               ToSbsms(srProcess == srTrack ? SlideIdentity : SlideConstant));
                     rb.sbsms = std::make_unique<SBSMS>(
                         rightTrack ? 2 : 1, rb.quality.get(), true);
                     rb.SBSMSBlockSize = rb.sbsms->getInputFrameSize();
@@ -338,7 +361,7 @@ bool SBSMSBase::Process(EffectInstance&, EffectSettings&)
                         rb.quality.get());
                 }
 
-                Resampler resampler(outResampleCB, &rb, outSlideType);
+                Resampler resampler(outResampleCB, &rb, ToSbsms(outSlideType));
 
                 audio outBuf[SBSMSOutBlockSize];
                 float outBufLeft[2 * SBSMSOutBlockSize];

@@ -11,13 +11,13 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   twolame # ExportMP2.h includes twolame.h
-   au3-files
    au3-import-export
+PRIVATE
+   au3-files
    au3-mixer
    au3-tags
    au3-track
-PRIVATE
+   twolame
    wxBase
 )
 
