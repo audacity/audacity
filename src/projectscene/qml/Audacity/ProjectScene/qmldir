@@ -12,6 +12,7 @@ TrackEffectsSection 1.0 trackspanel/TrackEffectsSection.qml
 TracksTitleBar 1.0 trackspanel/TracksTitleBar.qml
 TracksItemsView 1.0 tracksitemsview/TracksItemsView.qml
 TracksPositionController 1.0 common/TracksPositionController.qml
+TracksListView 1.0 common/TracksListView.qml
 SelectionStatus 1.0 statusbar/SelectionStatus.qml
 Snap 1.0 toolbars/Snap.qml
 HistoryPanel 1.0 historypanel/HistoryPanel.qml

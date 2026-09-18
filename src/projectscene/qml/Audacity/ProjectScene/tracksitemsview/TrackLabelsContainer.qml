@@ -246,7 +246,7 @@ TrackItemsContainer {
                                     navigation.onActiveChanged: {
                                         if (navigation.highlight) {
                                             root.context.animatedInsureVisible(itemData.time.startTime)
-                                            root.insureVerticallyVisible()
+                                            root.ensureVerticallyVisible()
                                         }
                                     }
 
