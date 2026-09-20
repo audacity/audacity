@@ -318,7 +318,17 @@ void PlaybackController::onProjectChanged()
 
 void PlaybackController::onPlaybackPositionChanged()
 {
+    if (isLoopRegionActive()) {
+        return;
+    }
+
     if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+        if (isPlaying() && isPlaybackPositionOnTheEndOfProject() && !isEqualToPlaybackPosition(lastPlaybackSeekTime())) {
+            //! NOTE: reached the project end — return the playhead to the user's position
+            stopSeekAndUpdatePlaybackRegion();
+            return;
+        }
+
         //! NOTE: just stop, without seek
         player()->stop();
         if (player()->playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
