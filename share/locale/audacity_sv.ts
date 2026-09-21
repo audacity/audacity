@@ -9457,7 +9457,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="172"/>
         <source>Apply Make-up Gain</source>
-        <translation>Tillämpa ombrytningsförstärkning</translation>
+        <translation>Tillämpa kompensationsförstärkning</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
