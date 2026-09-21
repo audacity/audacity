@@ -103,6 +103,7 @@ Rectangle {
                     NavigationFocusBorder {
                         navigationCtrl: navCtrl
                         drawOutsideParent: false
+                        border.color: ui.theme.fontSecondaryColor
                     }
 
                     MouseArea {
