@@ -465,4 +465,78 @@ TEST_F(TrackNavigationControllerTests, ResetNavigationRecomputesVerticalReferenc
     //! not the stale-anchor clip 300 (t=1)
     EXPECT_EQ(m_controller->focusedItem(), (TrackItemKey { 3, 310 }));
 }
+
+/**
+ * Enter, while a clip is focused, selects the clip and must not clear the track
+ * selection afterwards: setSelectedClips also selects the clip's track, and a
+ * subsequent setSelectedLabels({}) would deselect all tracks again, breaking
+ * everything that relies on the selected tracks — e.g. "Export selected audio"
+ * failed with "All selected audio is muted" (issue #11733). The label reset must
+ * therefore go through resetSelectedLabels, which leaves tracks alone.
+ */
+TEST_F(TrackNavigationControllerTests, EnterOnClipDoesNotClearTrackSelection)
+{
+    //! [GIVEN] A track with one clip, focus on the clip
+    setupTracks({ { 1, { makeClip(1, 100, 0.0) } } });
+
+    initController();
+    m_controller->setFocusedItem({ 1, 100 });
+
+    //! [EXPECT] The clip is selected and labels are reset without touching tracks
+    EXPECT_CALL(*m_selectionController, setSelectedClips(ClipKeyList { { 1, 100 } }, _)).Times(1);
+    EXPECT_CALL(*m_selectionController, resetSelectedLabels()).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(0);
+
+    //! [WHEN] Enter is pressed
+    invokeAction("track-view-replace-selection");
+}
+
+/**
+ * The label counterpart of EnterOnClipDoesNotClearTrackSelection: Enter on a
+ * focused label selects it, and the clip reset must not clear the track
+ * selection made by setSelectedLabels.
+ */
+TEST_F(TrackNavigationControllerTests, EnterOnLabelDoesNotClearTrackSelection)
+{
+    //! [GIVEN] A label track, focus on one of its labels
+    Track track;
+    track.id = 1;
+    track.type = TrackType::Label;
+    ON_CALL(*m_trackeditProject, track(TrackId(1)))
+    .WillByDefault(Return(track));
+
+    initController();
+    m_controller->setFocusedItem({ 1, 100 });
+
+    //! [EXPECT] The label is selected and clips are reset without touching tracks
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(LabelKeyList { { 1, 100 } }, _)).Times(1);
+    EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedClips(_, _)).Times(0);
+
+    //! [WHEN] Enter is pressed
+    invokeAction("track-view-replace-selection");
+}
+
+/**
+ * Shift+Enter range selection has the same constraint as Enter: the reset of the
+ * other item type must not clear the track selection made by the range selection.
+ */
+TEST_F(TrackNavigationControllerTests, RangeSelectionDoesNotClearTrackSelection)
+{
+    //! [GIVEN] A track with two clips, the first one selected via Enter, focus on the second
+    setupTracks({ { 1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) } } });
+
+    initController();
+    m_controller->setFocusedItem({ 1, 100 });
+    invokeAction("track-view-replace-selection");
+    m_controller->setFocusedItem({ 1, 200 });
+
+    //! [EXPECT] Both clips are selected and labels are reset without touching tracks
+    EXPECT_CALL(*m_selectionController, setSelectedClips(ClipKeyList { { 1, 100 }, { 1, 200 } }, _)).Times(1);
+    EXPECT_CALL(*m_selectionController, resetSelectedLabels()).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(0);
+
+    //! [WHEN] Shift+Enter is pressed
+    invokeAction("track-view-range-selection");
+}
 }
