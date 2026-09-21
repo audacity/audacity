@@ -85,8 +85,10 @@ jobs:
 
     - name: Build (PCH off, unity off)
       run: |
+        set -o pipefail
         source $HOME/build_tools/environment.sh
-        cmake -DBUILD_USE_PCH=OFF -P ${CI_DIR}/linux/ci_build_utests.cmake
+        # keep going after errors (ninja -k 0) so one run reports every failure
+        cmake -DBUILD_USE_PCH=OFF -DBUILD_KEEP_GOING=ON -P ${CI_DIR}/linux/ci_build_utests.cmake 2>&1 | tee strict_build.log
 
     - name: Show ccache stats
       if: always()
@@ -107,22 +109,33 @@ jobs:
         GH_REPO: ${{ github.repository }}
       run: |
         run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        sha=$(git rev-parse --short HEAD)
+        # Distinct compiler errors, paths relative to the repo, capped to keep the issue readable
+        errors=$(grep -E 'error:' strict_build.log 2>/dev/null | sed -E "s|$GITHUB_WORKSPACE/||g" | sort -u | head -30)
+        [ -n "$errors" ] || errors="(no compiler error lines found, see the run log)"
+        summary() { printf '%s\n' '<details><summary>Errors (first 30 distinct)</summary>' '' '```' "$errors" '```' '' '</details>'; }
+
         existing=$(gh issue list --label "$ISSUE_LABEL" --state open --limit 200 --json number,title \
           --jq 'map(select(.title == env.ISSUE_TITLE)) | .[0].number // empty')
         if [ -n "$existing" ]; then
-          gh issue comment "$existing" --body "Still failing on $(git rev-parse --short HEAD): $run_url"
+          { echo "Still failing on $sha: $run_url"; echo; summary; } > issue_body.md
+          gh issue comment "$existing" --body-file issue_body.md
         else
           cc=$(for u in $ISSUE_NOTIFY; do printf '@%s ' "$u"; done)
-          issue_url=$(gh issue create --title "$ISSUE_TITLE" --label "$ISSUE_LABEL" --body "$(printf '%s\n' \
-            "The scheduled strict build (\`MUSE_COMPILE_USE_PCH=OFF\`, \`MUSE_COMPILE_USE_UNITY=OFF\`, Linux/gcc) failed on $(git rev-parse --short HEAD)." \
-            "" \
-            "Run: $run_url" \
-            "" \
-            "Typical causes: a header relying on the PCH for a Qt/std include, or a module using Qt Quick/Qml types without linking the Qt module. See #12178 and #12189 for examples of both." \
-            "" \
-            "This issue is closed automatically when the build passes again." \
-            "" \
-            "cc $cc")")
+          {
+            echo "The scheduled strict build (\`MUSE_COMPILE_USE_PCH=OFF\`, \`MUSE_COMPILE_USE_UNITY=OFF\`, Linux/gcc) failed on $sha."
+            echo
+            echo "Run: $run_url"
+            echo
+            summary
+            echo
+            echo "Typical causes: a header relying on the PCH for a Qt/std include, or a module using Qt Quick/Qml types without linking the Qt module. See #12178 and #12189 for examples of both."
+            echo
+            echo "This issue is closed automatically when the build passes again."
+            echo
+            echo "cc $cc"
+          } > issue_body.md
+          issue_url=$(gh issue create --title "$ISSUE_TITLE" --label "$ISSUE_LABEL" --body-file issue_body.md)
           # Best effort: a login without triage access must not fail the report
           for u in $ISSUE_NOTIFY; do
             gh issue edit "$issue_url" --add-assignee "$u" || true

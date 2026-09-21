@@ -21,6 +21,7 @@ set(BUILD_NUMBER "12345678" CACHE STRING "Build number")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
 set(BUILD_USE_UNITY "" CACHE STRING "Build use unity")
 set(BUILD_USE_PCH "" CACHE STRING "Build use precompiled headers")
+set(BUILD_KEEP_GOING "" CACHE STRING "Keep building after errors (ninja -k 0)")
 set(BUILD_ENABLE_UNIT_TESTS "ON" CACHE STRING "Build unit tests")
 set(BUILD_ENABLE_CODE_COVERAGE "" CACHE STRING "Build with code coverage")
 set(CRASH_REPORT_URL "" CACHE STRING "Crash report url")
@@ -106,9 +107,14 @@ macro(do_build build_type build_dir)
         message(STATUS "========= Success configure =========")
     endif()
 
+    set(NINJA_ARGS -j ${CPUS})
+    if (BUILD_KEEP_GOING)
+        list(APPEND NINJA_ARGS -k 0)
+    endif()
+
     message(STATUS "========= Begin build =========")
     execute_process(
-        COMMAND ninja -j ${CPUS}
+        COMMAND ninja ${NINJA_ARGS}
         WORKING_DIRECTORY ${build_dir}
         RESULT_VARIABLE NINJA_RESULT
     )
