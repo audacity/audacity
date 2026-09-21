@@ -32,6 +32,7 @@
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/rcommand/icommanddispatcher.h"
+#include "framework/rcommand/commandable.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/ui/imainwindow.h"
@@ -56,7 +57,7 @@ class QFileOpenEvent;
 
 namespace au::appshell {
 class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
-    public muse::async::Asyncable, public muse::Contextable
+    public muse::rcommand::Commandable, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<IAppShellConfiguration> configuration;
@@ -105,7 +106,8 @@ private:
 
     void setupConnections();
 
-    bool quit(const muse::io::path_t& installerPath = "");
+    bool quit(bool isAllInstances, const muse::io::path_t& installerPath = "");
+    void doQuit(bool isAllInstances, const muse::io::path_t& installerPath);
     void restart();
 
     void toggleFullScreen();

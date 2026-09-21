@@ -5,10 +5,10 @@
 
 #include "../internal/tracknavigationcontroller.h"
 
-#include "actions/tests/mocks/actionsdispatchermock.h"
+#include "framework/actions/tests/mocks/actionsdispatchermock.h"
 #include "framework/ui/navigationcommands.h"
 #include "framework/ui/tests/mocks/navigationmocks.h"
-#include "mocks/commanddispatchermock.h"
+#include "framework/rcommand/tests/mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/trackeditinteractionmock.h"
