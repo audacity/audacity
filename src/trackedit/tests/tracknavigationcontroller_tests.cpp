@@ -588,4 +588,35 @@ TEST_F(TrackNavigationControllerTests, FocusFallsBackToTrackWhenItemVanishesInHi
     EXPECT_EQ(m_controller->focus(), TrackFocus::track(trackId));
     EXPECT_EQ(published, TrackFocus::track(trackId));
 }
+
+/**
+ * The navigation controls lag behind the project: after a clip moved to another
+ * track, re-activating its old control asks to focus a key that no longer names
+ * an item. Such a request focuses the item's track instead.
+ */
+TEST_F(TrackNavigationControllerTests, FocusingAVanishedItemFocusesItsTrackInstead)
+{
+    const TrackId trackId = 1;
+    const Clip clip = makeClip(trackId, 10, 0.0);
+    setupTracks({ { trackId, { clip } } });
+    initController();
+
+    std::optional<TrackFocus> published;
+    m_controller->focusChanged().onReceive(m_controller.get(), [&published](const TrackFocus& focus, bool) {
+        published = focus;
+    });
+
+    //! [WHEN] A key of a clip that is not on the track any more is focused
+    m_controller->setFocus(TrackFocus::item({ trackId, 99 }));
+
+    //! [THEN] The focus lands on the track, not on the vanished clip
+    EXPECT_EQ(m_controller->focus(), TrackFocus::track(trackId));
+    EXPECT_EQ(published, TrackFocus::track(trackId));
+
+    //! [WHEN] An existing clip is focused
+    m_controller->setFocus(TrackFocus::item(clip.key));
+
+    //! [THEN] The focus lands on it
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item(clip.key));
+}
 }

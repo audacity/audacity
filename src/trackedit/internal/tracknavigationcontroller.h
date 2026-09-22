@@ -105,6 +105,7 @@ private:
     void au3SetTrackFocused(const TrackId& trackId);
 
     void revalidateFocusedTrack();
+    bool itemExists(const TrackFocus& focus) const;
     void revalidateFocusedItem();
 
     bool m_isNavigationActive = false;

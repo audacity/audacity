@@ -150,8 +150,12 @@ TrackFocus TrackNavigationController::focus() const
     return m_focus;
 }
 
-void TrackNavigationController::setFocus(const TrackFocus& focus, bool highlight)
+void TrackNavigationController::setFocus(const TrackFocus& requested, bool highlight)
 {
+    //! NOTE The navigation controls lag behind the project, so a control can still name an
+    //! item that has moved away; such a request focuses the item's track instead
+    const TrackFocus focus = itemExists(requested) ? requested : TrackFocus::track(requested.trackId);
+
     if (m_focus == focus) {
         return;
     }
@@ -832,21 +836,16 @@ void TrackNavigationController::au3SetTrackFocused(const TrackId& trackId)
     }
 }
 
+bool TrackNavigationController::itemExists(const TrackFocus& focus) const
+{
+    const std::optional<TrackItemKey> key = focus.itemKey();
+    return !key.has_value() || muse::contains(sortedItemsKeys(key->trackId), *key);
+}
+
 void TrackNavigationController::revalidateFocusedItem()
 {
-    const std::optional<TrackItemKey> key = m_focus.itemKey();
-    if (!key.has_value()) {
-        return;
-    }
-
-    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return;
-    }
-
-    const bool exists = isFocusedItemLabel() ? prj->label(*key).isValid() : prj->clip(*key).isValid();
-    if (!exists) {
-        setFocus(TrackFocus::track(key->trackId));
+    if (!itemExists(m_focus)) {
+        setFocus(TrackFocus::track(m_focus.trackId));
     }
 }
 
