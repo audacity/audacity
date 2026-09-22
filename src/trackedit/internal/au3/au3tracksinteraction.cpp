@@ -1519,12 +1519,16 @@ TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vecto
                : trackType == TrackType::Mono || trackType == TrackType::Stereo;
     };
 
+    const size_t clipboardTracksSize = std::count_if(clipboardData.begin(), clipboardData.end(), [&matchesFilter](const auto& data) {
+        return data->track() && matchesFilter(DomConverter::track(data->track().get()).type);
+    });
+
     //! NOTE: If there's a label track in clipboard, match tracks strictly by position and type
     if (hasLabelTrack && tracks.size() == clipboardData.size()) {
         TrackIdList result;
 
         for (const auto& track : tracks) {
-            if (matchesFilter(track.type)) {
+            if (matchesFilter(track.type) && result.size() < clipboardTracksSize) {
                 result.push_back(track.id);
             }
         }
@@ -1544,7 +1548,6 @@ TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vecto
         }
     }
 
-    size_t clipboardTracksSize = clipboardData.size();
     if (filteredDestinationTrackIds.size() > clipboardTracksSize) {
         //! NOTE: more tracks selected than needed, return sub-vector
         return TrackIdList(filteredDestinationTrackIds.begin(), filteredDestinationTrackIds.begin() + clipboardTracksSize);
