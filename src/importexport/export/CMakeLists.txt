@@ -50,3 +50,7 @@ set(MODULE_LINK au3wrap)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (AU_BUILD_EXPORT_TESTS)
+    add_subdirectory(tests)
+endif()
