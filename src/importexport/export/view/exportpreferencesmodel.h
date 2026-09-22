@@ -142,6 +142,7 @@ signals:
     void exportCompleted();
 
 private:
+    muse::io::path_t exportFilePath() const;
     void updateCurrentSampleRate();
     void openCustomSampleRateDialog();
     void updateExportChannels();
