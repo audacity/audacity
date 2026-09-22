@@ -90,6 +90,7 @@ set(MODULE_LINK
         au3-utility
         au3-wave-track
         uicomponents
+        Qt::Quick
 )
 
 set(MODULE_USE_UNITY OFF)

@@ -3,6 +3,8 @@
 */
 #include "accountmodel.h"
 
+#include <QDateTime>
+
 #include "framework/global/io/path.h"
 #include "framework/global/types/retval.h"
 

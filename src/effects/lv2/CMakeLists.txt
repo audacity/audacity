@@ -45,6 +45,7 @@ set(MODULE_LINK
         au3-module-manager
         au3-realtime-effects
         X11
+        Qt::Quick
 )
 
 set(MODULE_USE_UNITY OFF)

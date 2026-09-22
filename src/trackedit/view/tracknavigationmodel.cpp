@@ -1,5 +1,7 @@
 #include "tracknavigationmodel.h"
 
+#include <QTimer>
+
 #include "global/defer.h"
 #include "global/translation.h"
 

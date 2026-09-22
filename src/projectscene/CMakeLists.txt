@@ -259,6 +259,7 @@ set(MODULE_LINK
         au3-project
         au3-wave-track-paint
         au3-musehub
+        Qt::Quick
 )
 
 if(MUSE_MODULE_WORKSPACE)

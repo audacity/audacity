@@ -19,6 +19,7 @@
 
 #include <QObject>
 #include <QQuickItem>
+#include <QTimer>
 
 class LV2PortUIStates;
 struct LV2EffectOutputs;
