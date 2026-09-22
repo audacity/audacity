@@ -118,35 +118,40 @@ jobs:
         DO_BUILD='true'
         UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/artifact_name.env)
 
-        DO_UPLOAD_SYMBOLS='false'
+        PROJECT_ID=""
+        APP_KEY=""
+        PLUGIN_KEY=""
+
+        case "${SENTRY_PROJECT:-$BUILD_MODE}" in
+          au4|stable_build)
+            SENTRY_PROJECT="au4"
+            PROJECT_ID=4
+            APP_KEY="$SENTRY_SERVER_AU4_KEY"
+            PLUGIN_KEY="$SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY"
+            ;;
+          au4-sandbox|nightly_build)
+            SENTRY_PROJECT="au4-sandbox"
+            PROJECT_ID=5
+            APP_KEY="$SENTRY_SERVER_AU4_SANDBOX_KEY"
+            PLUGIN_KEY="$SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY"
+            ;;
+        esac
+
+        DO_UPLOAD_SYMBOLS=false
         SENTRY_URL=""
         SENTRY_PLUGIN_VALIDATION_URL=""
 
-        if [ "$SENTRY_SERVER_AU4_KEY" != "" ]; then
-          if [ -z "$SENTRY_PROJECT" ] && [ "$BUILD_MODE" == "stable_build" ]; then
-            SENTRY_PROJECT="au4"
+        if [ -n "$PROJECT_ID" ]; then
+          BASE_URL="https://sentry.audacityteam.org/api/$PROJECT_ID/minidump/"
+
+          if [ -n "$APP_KEY" ]; then
+            SENTRY_URL="${BASE_URL}?sentry_key=$APP_KEY"
+            DO_UPLOAD_SYMBOLS=true
           fi
 
-          if [ "$SENTRY_PROJECT" == "au4" ]; then
-            DO_UPLOAD_SYMBOLS='true'
-            SENTRY_URL=https://sentry.audacityteam.org/api/4/minidump/?sentry_key=$SENTRY_SERVER_AU4_KEY
-
-            if [ "$SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY" != "" ]; then
-              SENTRY_PLUGIN_VALIDATION_URL=https://sentry.audacityteam.org/api/4/minidump/?sentry_key=$SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY
-            fi
-          fi
-        fi
-
-        if [ -z "$SENTRY_PROJECT" ] && [ "$BUILD_MODE" == "nightly_build" ]; then
-          SENTRY_PROJECT="au4-sandbox"
-        fi
-
-        if [ "$SENTRY_PROJECT" == "au4-sandbox" ] && [ "$SENTRY_SERVER_AU4_SANDBOX_KEY" != "" ]; then
-          DO_UPLOAD_SYMBOLS='true'
-          SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_SANDBOX_KEY
-
-          if [ "$SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY" != "" ]; then
-            SENTRY_PLUGIN_VALIDATION_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY
+          if [ -n "$PLUGIN_KEY" ]; then
+            SENTRY_PLUGIN_VALIDATION_URL="${BASE_URL}?sentry_key=$PLUGIN_KEY"
+            DO_UPLOAD_SYMBOLS=true
           fi
         fi
 
