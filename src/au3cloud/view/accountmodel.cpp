@@ -57,18 +57,12 @@ void AccountModel::signOut() const
 
 void AccountModel::openSignInDialog() const
 {
-    muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-    query.addParam("sync", muse::Val(true));
-
-    dispatcher()->dispatch(query);
+    authorization()->ensureAuthorized(iocContext());
 }
 
 void AccountModel::openCreateAccountDialog() const
 {
-    muse::actions::ActionQuery query("audacity://cloud/open-create-account-dialog");
-    query.addParam("sync", muse::Val(true));
-
-    dispatcher()->dispatch(query);
+    authorization()->ensureAuthorized(iocContext(), true);
 }
 
 void AccountModel::openProfile() const

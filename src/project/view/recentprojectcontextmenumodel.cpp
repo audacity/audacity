@@ -4,7 +4,6 @@
 #include "recentprojectcontextmenumodel.h"
 
 #include "framework/actions/actiontypes.h"
-#include "framework/global/io/path.h"
 #include "framework/global/types/translatablestring.h"
 
 #include <QUrl>
@@ -63,12 +62,12 @@ void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
     }
 
     if (itemId == OPEN_PROJECT_PAGE_ACTION) {
-        if (m_path.isEmpty()) {
+        if (m_cloudProjectId.isEmpty()) {
             return;
         }
 
         muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
-        query.addParam("path", muse::Val(muse::io::path_t(m_path.toStdString())));
+        query.addParam("id", muse::Val(m_cloudProjectId));
         dispatchAction(query);
         return;
     }

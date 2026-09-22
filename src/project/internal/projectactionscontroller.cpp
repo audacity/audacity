@@ -1710,16 +1710,7 @@ void ProjectActionsController::openCustomMapping()
 
 muse::Ret ProjectActionsController::ensureAuthorization()
 {
-    if (authorization()->isAuthorized()) {
-        return make_ret(Ret::Code::Ok);
-    }
-
-    muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-    query.addParam("sync", muse::Val(true));
-
-    dispatcher()->dispatch(query);
-
-    return authorization()->isAuthorized() ? make_ret(Ret::Code::Ok) : make_ret(Ret::Code::Cancel);
+    return authorization()->ensureAuthorized(iocContext());
 }
 
 void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, const io::path_t& localPath,
