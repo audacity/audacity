@@ -88,15 +88,25 @@ endif()
 file(MAKE_DIRECTORY "${ARTIFACTS_DIR}")
 
 # PACK 7z
-if(PACK_TYPE STREQUAL "7z")
-  message(STATUS "Start 7z packing...")
-  set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${PACKARCH}")
-
-  file(RENAME ${INSTALL_DIR} ${ARTIFACT_NAME})
-  file(ARCHIVE_CREATE OUTPUT ${ARTIFACTS_DIR}/${ARTIFACT_NAME}.7z PATHS ${ARTIFACT_NAME} FORMAT 7zip)
+message(STATUS "Start 7z packing...")
+set(_archive_name "Audacity-${BUILD_VERSION}-${PACKARCH}")
+set(_archive_stage "${BUILD_DIR}/archive")
+set(_archive_root "${_archive_stage}/${_archive_name}")
+file(REMOVE_RECURSE "${_archive_root}")
+file(MAKE_DIRECTORY "${_archive_root}")
+file(COPY "${INSTALL_DIR}/" DESTINATION "${_archive_root}")
+get_filename_component(_archive_path "${ARTIFACTS_DIR}/${_archive_name}.7z" ABSOLUTE)
+execute_process(
+  COMMAND "${CMAKE_COMMAND}" -E tar cf "${_archive_path}" --format=7zip "${_archive_name}"
+  WORKING_DIRECTORY "${_archive_stage}"
+  RESULT_VARIABLE _archive_rc
+)
+if(NOT _archive_rc EQUAL 0)
+  message(FATAL_ERROR "7z packaging failed (exit ${_archive_rc})")
+endif()
+file(REMOVE_RECURSE "${_archive_root}")
 
 message(STATUS "Finished 7z packing")
-endif()
 
 # PACK MSI
 if(PACK_TYPE STREQUAL "msi")
