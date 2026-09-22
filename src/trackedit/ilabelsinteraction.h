@@ -43,6 +43,10 @@ public:
 
     virtual void resetLabelStretchState() = 0;
 
+    virtual int64_t labelGroupId(const LabelKey& labelKey) const = 0;
+    virtual void setLabelGroupId(const LabelKey& labelKey, int64_t id) = 0;
+    virtual LabelKeyList labelsInGroup(int64_t id) const = 0;
+
     virtual muse::Progress progress() const = 0;
 };
 }

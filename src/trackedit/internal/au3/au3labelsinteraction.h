@@ -47,6 +47,10 @@ public:
 
     void resetLabelStretchState() override;
 
+    int64_t labelGroupId(const LabelKey& labelKey) const override;
+    void setLabelGroupId(const LabelKey& labelKey, int64_t id) override;
+    LabelKeyList labelsInGroup(int64_t id) const override;
+
     muse::Progress progress() const override;
 
 private:
