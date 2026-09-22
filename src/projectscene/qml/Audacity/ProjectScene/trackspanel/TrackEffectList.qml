@@ -25,6 +25,7 @@ Rectangle {
     property int pendingGripFocusIndex: -1
     property bool pendingGripFocusHandle: false
     property int pendingDialogRestoreIndex: -1
+    readonly property bool hasPendingDialogRestore: root.pendingDialogRestoreIndex >= 0
 
     Component.onCompleted: {
         trackEffectListModel.load()

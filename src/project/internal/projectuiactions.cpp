@@ -325,7 +325,7 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("toggle-effects",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_PROJECT_OPENED,
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Show effects panel"),
              //: Action description: shown as a tooltip; can be a full sentence
@@ -494,7 +494,7 @@ const UiActionList ProjectUiActions::m_actions = {
     // effects menu
     UiAction("add-realtime-effects",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_PROJECT_OPENED,
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Add track effects"),
              //: Action description: shown as a tooltip; can be a full sentence
