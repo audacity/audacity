@@ -30,7 +30,7 @@ function(target_setup_iconcomposer_icon target icon_path)
         message(WARNING "Icon path '${icon_path}' does not seem to name a valid Icon Composer bundle.")
         return()
     endif()
-    
+
     if(NOT XCRUN)
         message(WARNING "xcrun not found. Cannot setup Icon Composer icon.")
         return()
