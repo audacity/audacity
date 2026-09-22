@@ -61,12 +61,14 @@ struct TrackFocus
 {
     struct TrackTarget
     {
-        bool operator==(const TrackTarget&) const = default;
+        bool operator==(const TrackTarget&) const { return true; }
+        bool operator!=(const TrackTarget&) const { return false; }
     };
 
     struct RulerTarget
     {
-        bool operator==(const RulerTarget&) const = default;
+        bool operator==(const RulerTarget&) const { return true; }
+        bool operator!=(const RulerTarget&) const { return false; }
     };
 
     using Target = std::variant<TrackTarget, TrackItemId, RulerTarget>;
@@ -88,7 +90,8 @@ struct TrackFocus
         return itemId ? std::optional<TrackItemKey>(TrackItemKey { trackId, *itemId }) : std::nullopt;
     }
 
-    bool operator==(const TrackFocus&) const = default;
+    bool operator==(const TrackFocus& other) const { return trackId == other.trackId && target == other.target; }
+    bool operator!=(const TrackFocus& other) const { return !(*this == other); }
 };
 
 struct TimeSignature

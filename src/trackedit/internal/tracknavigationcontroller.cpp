@@ -595,7 +595,9 @@ void TrackNavigationController::navigateToAdjacentRuler(SelectionDirection direc
     }
 
     const std::vector<Track> trackList = prj->trackList();
-    const auto current = std::ranges::find(trackList, m_focus.trackId, &Track::id);
+    const auto current = std::find_if(trackList.begin(), trackList.end(), [this](const Track& track) {
+        return track.id == m_focus.trackId;
+    });
     if (current == trackList.end()) {
         return;
     }
