@@ -67,6 +67,59 @@ public:
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
 };
 
+TEST_F(Au3LabelsInteractionsTests, LabelsAreUngroupedByDefault)
+{
+    //! [GIVEN] A label track with one label
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("label")) };
+
+    //! [THEN] It belongs to no group
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(key), -1);
+    EXPECT_TRUE(m_labelsInteraction->labelsInGroup(-1).empty());
+}
+
+TEST_F(Au3LabelsInteractionsTests, SetLabelGroupIdNotifiesAndListsTheLabelInItsGroup)
+{
+    //! [GIVEN] Two labels on a track
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey first { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("first")) };
+    region.setTimes(3.0, 4.0);
+    const LabelKey second { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("second")) };
+
+    //! [EXPECT] The grouped label reports a change
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(1);
+
+    //! [WHEN] One label joins group 7
+    m_labelsInteraction->setLabelGroupId(first, 7);
+
+    //! [THEN] Only that label is listed in the group
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(first), 7);
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(second), -1);
+    EXPECT_EQ(m_labelsInteraction->labelsInGroup(7), LabelKeyList { first });
+}
+
+TEST_F(Au3LabelsInteractionsTests, LabelGroupIdSurvivesTrackCopy)
+{
+    //! [GIVEN] A grouped label
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("label")) };
+    m_labelsInteraction->setLabelGroupId(key, 5);
+
+    //! [WHEN] The track is copied
+    const auto copy = labelTrack->Copy(0.0, 10.0, false);
+    const auto labelCopy = static_cast<const Au3LabelTrack*>(copy.get());
+
+    //! [THEN] The copied label keeps the group id
+    ASSERT_EQ(labelCopy->GetLabels().size(), 1u);
+    EXPECT_EQ(labelCopy->GetLabels().front().GetGroupId(), 5);
+}
+
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneExists)
 {
     //! [GIVEN] There is a project without any label tracks

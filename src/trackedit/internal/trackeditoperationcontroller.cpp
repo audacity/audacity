@@ -332,7 +332,7 @@ muse::RetVal<ClipKeyList> TrackeditOperationController::moveClips(const ClipKeyL
     return result.ret ? muse::RetVal<ClipKeyList>::make_ok(result.val.clips) : muse::RetVal<ClipKeyList>::make_ret(result.ret);
 }
 
-muse::RetVal<TrackeditOperationController::MovedItems> TrackeditOperationController::moveItems(
+muse::RetVal<ItemKeys> TrackeditOperationController::moveItems(
     const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset)
 {
     for (const ClipKey& key : clips) {
@@ -355,10 +355,10 @@ muse::RetVal<TrackeditOperationController::MovedItems> TrackeditOperationControl
     const auto rollback = [&](const muse::Ret& error) {
         projectHistory()->rollbackState();
         project->reload();
-        return muse::RetVal<MovedItems>::make_ret(error);
+        return muse::RetVal<ItemKeys>::make_ret(error);
     };
 
-    MovedItems moved;
+    ItemKeys moved;
     if (!labels.empty()) {
         const auto result = labelsInteraction()->moveLabels(labels, timeOffset, trackOffset);
         if (!result.ret) {
@@ -399,7 +399,7 @@ muse::RetVal<TrackeditOperationController::MovedItems> TrackeditOperationControl
         action = muse::trc("trackedit", "Move label");
     }
     projectHistory()->pushHistoryState(description, action);
-    return muse::RetVal<MovedItems>::make_ok(moved);
+    return muse::RetVal<ItemKeys>::make_ok(moved);
 }
 
 bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset, bool completed)
