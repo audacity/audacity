@@ -102,6 +102,13 @@ jobs:
               -DARTIFACT_INFO="Win_${{ matrix.arch }}${ADD_INFO}" \
               -P ${CI_DIR}/common/ci_configure.cmake
 
+        # build_mode is only set when the workflow is run manually or called by another workflow.
+        # On schedule events, take the mode ci_configure.cmake derived from the event instead.
+        if [ -z "$BUILD_MODE" ]; then
+          BUILD_MODE=$(cat ./build.artifacts/env/build_mode.env)
+        fi
+        echo "BUILD_MODE: $BUILD_MODE"
+
         DO_BUILD='true'
         UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/artifact_name.env)
 
