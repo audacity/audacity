@@ -13,6 +13,7 @@
 #include "mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "mocks/selectioncontrollermock.h"
+#include "mocks/projecthistorymock.h"
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/trackeditprojectmock.h"
 
@@ -44,6 +45,7 @@ public:
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
         m_trackeditInteraction = std::make_shared<NiceMock<TrackeditInteractionMock> >();
         m_trackeditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
+        m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
 
         m_testCtx = std::make_shared<muse::modularity::Context>(999);
         m_controller = std::make_shared<TrackNavigationController>(m_testCtx);
@@ -62,6 +64,10 @@ public:
         m_controller->globalContext.set(m_globalContext);
         m_controller->selectionController.set(m_selectionController);
         m_controller->trackeditInteraction.set(m_trackeditInteraction);
+        m_controller->projectHistory.set(m_projectHistory);
+
+        ON_CALL(*m_projectHistory, historyChanged())
+        .WillByDefault(Return(m_historyChanged));
 
         ON_CALL(*m_globalContext, currentTrackeditProject())
         .WillByDefault(Return(m_trackeditProject));
@@ -180,6 +186,8 @@ public:
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
     std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
+    std::shared_ptr<ProjectHistoryMock> m_projectHistory;
+    muse::async::Channel<HistoryEvent> m_historyChanged;
 
     std::map<muse::actions::ActionCode, IActionsDispatcher::ActionCallBackWithNameAndData> m_actionCallbacks;
 };
@@ -545,5 +553,39 @@ TEST_F(TrackNavigationControllerTests, DownFromRulerWithNoRulerBelowKeepsFocus)
 
     //! [THEN] The focus is unchanged
     EXPECT_EQ(m_controller->focus(), TrackFocus::ruler(1));
+}
+
+/**
+ * A history event, such as undo, can remove the focused item or recreate it under
+ * a new id. The focus then falls back to the item's track, and stays put while
+ * the item still exists.
+ */
+TEST_F(TrackNavigationControllerTests, FocusFallsBackToTrackWhenItemVanishesInHistory)
+{
+    const TrackId trackId = 1;
+    const Clip clip = makeClip(trackId, 10, 0.0);
+    setupTracks({ { trackId, { clip } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item(clip.key));
+
+    std::optional<TrackFocus> published;
+    m_controller->focusChanged().onReceive(m_controller.get(), [&published](const TrackFocus& focus, bool) {
+        published = focus;
+    });
+
+    //! [WHEN] History changes while the item still exists
+    m_historyChanged.send(HistoryEvent::NewState);
+
+    //! [THEN] The focus stays on the item
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item(clip.key));
+    EXPECT_FALSE(published.has_value());
+
+    //! [WHEN] Undo removes the item from the project
+    setupTracks({ { trackId, {} } });
+    m_historyChanged.send(HistoryEvent::RestoredState);
+
+    //! [THEN] The focus falls back to the item's track
+    EXPECT_EQ(m_controller->focus(), TrackFocus::track(trackId));
+    EXPECT_EQ(published, TrackFocus::track(trackId));
 }
 }

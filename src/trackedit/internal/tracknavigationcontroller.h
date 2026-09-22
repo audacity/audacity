@@ -12,6 +12,7 @@
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/inavigationcontroller.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditinteraction.h"
 
@@ -32,6 +33,7 @@ class TrackNavigationController : public ITrackNavigationController, public muse
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<au::trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     TrackNavigationController(const muse::modularity::ContextPtr& ctx)
@@ -103,6 +105,7 @@ private:
     void au3SetTrackFocused(const TrackId& trackId);
 
     void revalidateFocusedTrack();
+    void revalidateFocusedItem();
 
     bool m_isNavigationActive = false;
     muse::async::Notification m_isNavigationActiveChannel;
