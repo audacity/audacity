@@ -6,6 +6,8 @@
 
 #include "trackediterrors.h"
 
+#include "defer.h"
+
 namespace au::trackedit {
 TrackeditOperationController::TrackeditOperationController(const muse::modularity::ContextPtr& ctx,
                                                            std::unique_ptr<IUndoManager> undoManager)
@@ -346,6 +348,11 @@ muse::RetVal<ItemKeys> TrackeditOperationController::moveItems(
         }
     }
 
+    //! NOTE The mixdown question opens a dialog, which cancels the drag's mouse grab; that
+    //! cancel must not roll the project back underneath the move that is still running
+    m_movingItems = true;
+    const muse::Defer movingItemsDone([this] { m_movingItems = false; });
+
     const auto selection = selectionController();
 
     // Move notifications must not expose selection or focus keys whose items have already changed tracks.
@@ -457,7 +464,7 @@ bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset,
 
 void TrackeditOperationController::cancelItemDragEdit()
 {
-    if (!projectHistory()->interactionOngoing()) {
+    if (m_movingItems || !projectHistory()->interactionOngoing()) {
         return;
     }
     labelsInteraction()->resetLabelStretchState();
