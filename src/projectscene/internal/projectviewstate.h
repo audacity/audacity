@@ -107,6 +107,9 @@ public:
     void setMoveInitiated(bool val) override;
     bool moveInitiated() const override;
 
+    void setMovePreviewEndTime(double time) override;
+    double movePreviewEndTime() const override;
+
     void setLastEditedClip(const trackedit::ClipKey& clipKey) override;
     trackedit::ClipKey lastEditedClip() const override;
 
@@ -179,6 +182,7 @@ private:
     //! User needs to drag a mouse by a certain amount of pixels (left or right) or
     //! move to the other track for move to be initiated
     bool m_moveInitiated = false;
+    double m_movePreviewEndTime = 0.0;
 
     trackedit::ClipKey m_lastEditedClip = trackedit::ClipKey{};
 

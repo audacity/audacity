@@ -1260,6 +1260,45 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithNoSelection)
     ASSERT_DOUBLE_EQ(label->getT1(), 2.0) << "Label end time should be unchanged";
 }
 
+TEST_F(Au3LabelsInteractionsTests, MoveLabelsClampsIndividuallyAtBoundaryTracks)
+{
+    auto& tracks = Au3TrackList::Get(projectRef());
+    auto* first = ::LabelTrack::Create(tracks);
+    ASSERT_NE(createTrack(TestTrackID::TRACK_SMALL_SILENCE), INVALID_TRACK);
+    auto* middle = ::LabelTrack::Create(tracks);
+    ASSERT_NE(createTrack(TestTrackID::TRACK_SMALL_SILENCE), INVALID_TRACK);
+    auto* last = ::LabelTrack::Create(tracks);
+
+    for (int offset : { -1, 1 }) {
+        LabelKeyList keys;
+        for (auto* track : { first, middle, last }) {
+            keys.push_back({ track->GetId(), track->AddLabel(SelectedRegion(10.0, 15.0), wxString("Label")) });
+        }
+
+        const auto result = m_labelsInteraction->moveLabels(keys, 0.0, offset);
+        ASSERT_TRUE(result.ret);
+        ASSERT_EQ(result.val.size(), 3);
+        EXPECT_EQ(result.val[0].trackId, offset < 0 ? first->GetId() : middle->GetId());
+        EXPECT_EQ(result.val[1].trackId, offset < 0 ? first->GetId() : last->GetId());
+        EXPECT_EQ(result.val[2].trackId, offset < 0 ? middle->GetId() : last->GetId());
+        EXPECT_EQ(first->GetNumLabels(), offset < 0 ? 2 : 0);
+        EXPECT_EQ(middle->GetNumLabels(), 1);
+        EXPECT_EQ(last->GetNumLabels(), offset < 0 ? 0 : 2);
+        for (const auto& key : result.val) {
+            auto* track = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(key.trackId));
+            const auto* label = DomAccessor::findLabel(track, key.itemId);
+            ASSERT_NE(label, nullptr);
+            EXPECT_DOUBLE_EQ(label->getT0(), 10.0);
+            EXPECT_DOUBLE_EQ(label->getT1(), 15.0);
+        }
+        for (auto* track : { first, middle, last }) {
+            while (track->GetNumLabels() > 0) {
+                track->DeleteLabel(0);
+            }
+        }
+    }
+}
+
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsToAnotherTrack)
 {
     //! [GIVEN] There is a project with two label tracks

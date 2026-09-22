@@ -68,8 +68,7 @@ public:
     bool removeClip(const ClipKey& clipKey) override;
     bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
-    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset, bool completed,
-                                        bool& clipsMovedToOtherTrack) override;
+    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset) override;
     bool moveRangeSelection(secs_t timePositionOffset, bool completed) override;
     void cancelItemDragEdit() override;
     bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
@@ -149,9 +148,7 @@ public:
     bool cutLabel(const LabelKey& labelKey) override;
     bool copyLabel(const LabelKey& labelKey) override;
 
-    bool moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed) override;
-    muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, int trackPositionOffset,
-                                          bool completed) override;
+    muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, int trackPositionOffset) override;
     muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
@@ -165,6 +162,13 @@ public:
     muse::Progress progress() const override;
 
 private:
+    struct MovedItems {
+        ClipKeyList clips;
+        LabelKeyList labels;
+    };
+
+    muse::RetVal<MovedItems> moveItems(const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset);
+
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
     void pushProjectHistoryDuplicateState();
     void pushProjectHistorySplitDeleteState();

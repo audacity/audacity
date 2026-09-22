@@ -12,7 +12,6 @@
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditconfiguration.h"
 #include "trackedit/iprojecthistory.h"
-#include "trackedit/itracksinteraction.h"
 #include "automation/iclipgaininteraction.h"
 
 #include "au3wrap/au3types.h"
@@ -33,7 +32,6 @@ class Au3ClipsInteraction : public IClipsInteraction, public muse::Contextable
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
-    muse::ContextInject<ITracksInteraction> tracksInteraction{ this };
     muse::ContextInject<automation::IClipGainInteraction> clipGainInteraction{ this };
 
 public:
@@ -60,9 +58,7 @@ public:
     ITrackDataPtr copyClip(const trackedit::ClipKey& clipKey) override;
     std::optional<TimeSpan> removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
-    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset, bool completed,
-                                        bool& clipsMovedToOtherTracks) override;
-    void cancelClipDragEdit() override;
+    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset) override;
 
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
     bool splitClipsIntoNewTracks(const ClipKeyList& clipKeyList) override;
@@ -132,8 +128,5 @@ private:
 
     muse::Progress m_progress;
     std::atomic<bool> m_busy = false;
-
-    std::optional<TrackListInfo> m_tracksWhenDragStarted;
-    bool m_moveClipsNeedsDownmixing = false;
 };
 }
