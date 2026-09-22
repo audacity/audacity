@@ -420,6 +420,7 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
     }
     TrackItemKey movedKey(m_sourceKey);
     const bool keyboard = keyboardActive();
+    bool refocus = keyboard;
     if (m_moved && (!keyboard || m_timeOffset != 0.0 || m_trackOffset != 0)) {
         update();
         QScopedValueRollback<bool> guard(m_updating, true);
@@ -443,12 +444,13 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
                 if (source != selected.end() && sourceIndex < static_cast<int>(result.val.size())) {
                     movedKey = TrackItemKey(result.val[sourceIndex]);
                 }
+                refocus = true;
             }
         }
     }
     endInteraction();
-    if (keyboard) {
-        trackNavigationController()->setFocus(TrackFocus::item(movedKey.key), true /* highlight */);
+    if (refocus) {
+        trackNavigationController()->setFocus(TrackFocus::item(movedKey.key), keyboard /* highlight */);
     }
     return movedKey;
 }

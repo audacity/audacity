@@ -11,6 +11,7 @@
 #include "au3interactiontestbase.h"
 #include "mocks/projecthistorymock.h"
 #include "mocks/clipsinteractionmock.h"
+#include "mocks/tracknavigationcontrollermock.h"
 #include "trackediterrors.h"
 #include "spectrogram/internal/frequencyselectioncontroller.h"
 #include "spectrogram/internal/au3/au3frequencyselectionrestorer.h"
@@ -49,6 +50,8 @@ public:
         ioc->registerExport<IClipsInteraction>("utests", m_clips);
         ioc->registerExport<ILabelsInteraction>("utests", m_labels);
         ioc->registerExport<IProjectHistory>("utests", m_history);
+        m_navigation = std::make_shared<NiceMock<TrackNavigationControllerMock> >();
+        ioc->registerExport<ITrackNavigationController>("utests", m_navigation);
         auto frequencyRestorer = std::make_unique<spectrogram::FrequencySelectionRestorer>(ctx);
         auto frequencySelection = std::make_shared<spectrogram::FrequencySelectionController>(ctx, std::move(frequencyRestorer));
         ioc->registerExport<spectrogram::IFrequencySelectionController>("utests", frequencySelection);
@@ -119,6 +122,7 @@ public:
     std::shared_ptr<Au3ClipsInteraction> m_clips;
     std::shared_ptr<Au3LabelsInteraction> m_labels;
     std::shared_ptr<ProjectHistoryMock> m_history;
+    std::shared_ptr<TrackNavigationControllerMock> m_navigation;
     std::unique_ptr<Au3ProjectHistory> m_realHistory;
     std::unique_ptr<TrackeditOperationController> m_operation;
     ClipKey m_sourceClip;
@@ -195,6 +199,42 @@ TEST_P(TrackeditOperationMoveTests, MixedMoveUpdatesBothSelectionsBeforeHistory)
     EXPECT_EQ(m_selection->selectedLabels().front().trackId, m_destinationLabelTrack);
     EXPECT_EQ(m_selection->leftMostSelectedLabelStartTime(), 2.5);
     EXPECT_EQ(DomAccessor::findSelectedLabels(projectRef()), m_selection->selectedLabels());
+}
+
+TEST_P(TrackeditOperationMoveTests, MixedMoveDropsFocusFromMovedItemBeforeAnythingIsPublished)
+{
+    //! [GIVEN] The focus sits on the item that is about to change tracks
+    ON_CALL(*m_navigation, focus()).WillByDefault(Return(TrackFocus::item(GetParam() ? m_sourceLabel : m_sourceClip)));
+    bool focusDropped = false;
+    EXPECT_CALL(*m_navigation, setFocus(_, _)).WillOnce([&focusDropped](const TrackFocus& focus, bool) {
+        EXPECT_TRUE(focus.isTrack());
+        focusDropped = true;
+    });
+
+    //! [GIVEN] Nothing observes the move while the focus still names the source key
+    const auto expectFocusDropped = [&focusDropped]() {
+        EXPECT_TRUE(focusDropped);
+    };
+    ON_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).WillByDefault([&](const Track&) { expectFocusDropped(); });
+    ON_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).WillByDefault([&](const Clip&) { expectFocusDropped(); });
+    m_selection->clipsSelected().onReceive(m_operation.get(), [&](const ClipKeyList&) { expectFocusDropped(); });
+    m_selection->labelsSelected().onReceive(m_operation.get(), [&](const LabelKeyList&) { expectFocusDropped(); });
+
+    //! [WHEN] The mixed selection is moved one track down
+    const auto result = move(0.5, 1);
+    ASSERT_TRUE(result.ret);
+    EXPECT_TRUE(focusDropped);
+}
+
+TEST_P(TrackeditOperationMoveTests, MixedMoveLeavesFocusOnUnmovedItem)
+{
+    //! [GIVEN] The focus sits on the track panel, not on a moved item
+    ON_CALL(*m_navigation, focus()).WillByDefault(Return(TrackFocus::track(m_sourceClip.trackId)));
+    EXPECT_CALL(*m_navigation, setFocus(_, _)).Times(0);
+
+    //! [WHEN] The mixed selection is moved one track down
+    const auto result = move(0.5, 1);
+    ASSERT_TRUE(result.ret);
 }
 
 TEST_P(TrackeditOperationMoveTests, MixedHorizontalMoveClampsBothTypesTogether)
