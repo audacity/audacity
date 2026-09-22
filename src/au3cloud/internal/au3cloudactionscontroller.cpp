@@ -6,23 +6,33 @@
 #include <variant>
 
 #include "framework/actions/actiontypes.h"
-#include "framework/global/types/uri.h"
+#include "framework/rcommand/actiontocommand.h"
 
+#include "../cloudcommands.h"
 #include "cloudurlhandler.h"
 
 using namespace au::au3cloud;
+using namespace muse::actions;
+using namespace muse::rcommand;
 
 namespace {
-const muse::Uri SIGNIN_URI("audacity://signin/audiocom");
+const ActionQuery SHOW_TOUR_PAGE_ACTION("audacity://cloud/show-tour-page");
+const ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("audacity://cloud/open-project-page");
+const ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("audacity://cloud/open-audio-page");
+const ActionQuery OPEN_CLOUD_PROFILE_PAGE_ACTION("audacity://cloud/open-profile-page");
+const ActionCode OPEN_URL_ACTION("open-url");
 
-const muse::actions::ActionQuery SHOW_TOUR_PAGE_ACTION("audacity://cloud/show-tour-page");
-const muse::actions::ActionQuery OPEN_SIGNIN_DIALOG_ACTION("audacity://cloud/open-signin-dialog");
-const muse::actions::ActionQuery OPEN_CREATE_ACCOUNT_DIALOG_ACTION("audacity://cloud/open-create-account-dialog");
-const muse::actions::ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("audacity://cloud/open-project-page");
-const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("audacity://cloud/open-audio-page");
-const muse::actions::ActionQuery OPEN_CLOUD_PROFILE_PAGE_ACTION("audacity://cloud/open-profile-page");
+CommandQuery queryParamsConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.empty()) {
+        return query;
+    }
 
-constexpr const char* createAccountModeParam = "isCreateAccountMode";
+    const ActionQuery legacy(args.arg<std::string>(0));
+    query.setParams(legacy.params());
+    return query;
+}
 }
 
 Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPtr ctx)
@@ -36,13 +46,21 @@ void Au3CloudActionsController::init()
 {
     m_urlHandler = std::make_unique<CloudUrlHandler>(iocContext());
 
-    dispatcher()->reg(this, SHOW_TOUR_PAGE_ACTION, this, &Au3CloudActionsController::showTourPage);
-    dispatcher()->reg(this, OPEN_SIGNIN_DIALOG_ACTION, this, &Au3CloudActionsController::openSignInDialog);
-    dispatcher()->reg(this, OPEN_CREATE_ACCOUNT_DIALOG_ACTION, this, &Au3CloudActionsController::openCreateAccountDialog);
-    dispatcher()->reg(this, OPEN_CLOUD_PROJECT_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProjectPage);
-    dispatcher()->reg(this, OPEN_CLOUD_AUDIO_PAGE_ACTION, this, &Au3CloudActionsController::openCloudAudioPage);
-    dispatcher()->reg(this, OPEN_CLOUD_PROFILE_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProfilePage);
-    dispatcher()->reg(this, "open-url", this, &Au3CloudActionsController::openUrl);
+    auto cd = commandDispatcher();
+    cd->onRequest(this, CLOUD_SHOW_TOUR_PAGE_COMMAND, [this]() { return showTourPage(); });
+    cd->onRequest(this, CLOUD_OPEN_PROJECT_PAGE_COMMAND, [this](const Params& params) { return openCloudProjectPage(params); });
+    cd->onRequest(this, CLOUD_OPEN_AUDIO_PAGE_COMMAND, [this](const Params& params) { return openCloudAudioPage(params); });
+    cd->onRequest(this, CLOUD_OPEN_PROFILE_PAGE_COMMAND, [this]() { return openCloudProfilePage(); });
+    cd->onRequest(this, CLOUD_OPEN_URL_COMMAND, [this](const Params& params) { return openUrl(params); });
+
+    static const std::vector<ActionToCommand> actionToCommand = {
+        { SHOW_TOUR_PAGE_ACTION.toString(), CLOUD_SHOW_TOUR_PAGE_COMMAND, {} },
+        { OPEN_CLOUD_PROJECT_PAGE_ACTION.toString(), CLOUD_OPEN_PROJECT_PAGE_COMMAND, queryParamsConv },
+        { OPEN_CLOUD_AUDIO_PAGE_ACTION.toString(), CLOUD_OPEN_AUDIO_PAGE_COMMAND, queryParamsConv },
+        { OPEN_CLOUD_PROFILE_PAGE_ACTION.toString(), CLOUD_OPEN_PROFILE_PAGE_COMMAND, {} },
+        { OPEN_URL_ACTION, CLOUD_OPEN_URL_COMMAND, make_conv({ { "url", param<QString> } }) },
+    };
+    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     authorization()->authState().ch.onReceive(this, [this](const AuthState& state) {
         if (std::holds_alternative<Authorizing>(state)) {
@@ -55,131 +73,88 @@ void Au3CloudActionsController::init()
     });
 }
 
-void Au3CloudActionsController::openUrl(const muse::actions::ActionData& args)
+muse::Ret Au3CloudActionsController::openUrl(const Params& params)
 {
-    if (args.empty()) {
-        return;
+    const QString url = params.at("url").toQString();
+    if (url.isEmpty()) {
+        return muse::make_ret(muse::Ret::Code::BadArgs);
     }
 
-    const QString url = args.arg<QString>(0);
     if (std::holds_alternative<Authorizing>(authorization()->authState().val)) {
         m_pendingUrls.push_back(url.toStdString());
-        return;
+        return muse::make_ok();
     }
 
     m_urlHandler->handle(url);
+    return muse::make_ok();
 }
 
-bool Au3CloudActionsController::canReceiveAction(const muse::actions::ActionCode&) const
+bool Au3CloudActionsController::canReceiveAction(const ActionCode&) const
 {
     return true;
 }
 
-void Au3CloudActionsController::openCreateAccountDialog(const muse::actions::ActionQuery& query)
+muse::Ret Au3CloudActionsController::showTourPage()
 {
-    auto newQuery = query;
-    newQuery.addParam(createAccountModeParam, muse::Val(true));
-
-    openSignInDialog(newQuery);
-}
-
-void Au3CloudActionsController::showTourPage()
-{
-    if (!authorization()->isAuthorized()) {
-        muse::UriQuery uri(SIGNIN_URI);
-        uri.addParam(createAccountModeParam, muse::Val(true));
-
-        const muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
-        if (!rv.ret) {
-            LOGW() << "Sign in cancelled: " << rv.ret.toString();
-            return;
-        }
+    const muse::Ret ret = authorization()->ensureAuthorized(iocContext(), true);
+    if (!ret) {
+        LOGW() << "Sign in cancelled: " << ret.toString();
+        return ret;
     }
 
     platformInteractive()->openUrl(audioComService()->getTourPage());
+    return muse::make_ok();
 }
 
-void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuery& query)
+muse::Ret Au3CloudActionsController::openCloudProjectPage(const Params& params)
 {
-    if (authorization()->isAuthorized()) {
-        return;
+    const auto id = params.at("id").toString();
+    if (id.empty()) {
+        LOGE() << "Cannot open cloud project page: empty id";
+        return muse::make_ret(muse::Ret::Code::BadArgs);
     }
 
-    const bool sync = query.param("sync").toBool();
-
-    muse::UriQuery uri(SIGNIN_URI);
-    if (query.contains(createAccountModeParam)) {
-        uri.addParam(createAccountModeParam, query.param(createAccountModeParam));
-    }
-
-    if (sync) {
-        const muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
-        if (!rv.ret) {
-            return;
-        }
-    } else {
-        interactive()->open(uri);
-    }
-}
-
-void Au3CloudActionsController::openCloudProjectPage(const muse::actions::ActionQuery& query)
-{
-    std::string url {};
-    if (!query.param("id").isNull()) {
-        const auto id = query.param("id").toString();
-        if (id.empty()) {
-            LOGE() << "Cannot open cloud project page: empty id";
-            return;
-        }
-
-        url = audioComService()->getCloudProjectPage(id);
-    } else if (!query.param("path").isNull()) {
-        const auto path = query.param("path").toPath();
-        if (path.empty()) {
-            LOGE() << "Cannot open cloud project page: empty path";
-            return;
-        }
-
-        url = audioComService()->getCloudProjectPage(path);
-    }
-
+    const std::string url = audioComService()->getCloudProjectPage(id);
     if (url.empty()) {
         LOGE() << "Cannot open cloud project page: empty URL";
-        return;
+        return muse::make_ret(muse::Ret::Code::BadArgs);
     }
 
     platformInteractive()->openUrl(url);
+    return muse::make_ok();
 }
 
-void Au3CloudActionsController::openCloudAudioPage(const muse::actions::ActionQuery& query)
+muse::Ret Au3CloudActionsController::openCloudAudioPage(const Params& params)
 {
-    const auto slug = query.param("slug").toString();
+    const auto slug = params.at("slug").toString();
     if (slug.empty()) {
         LOGE() << "Cannot open cloud audio page: empty slug";
-        return;
+        return muse::make_ret(muse::Ret::Code::BadArgs);
     }
 
     const auto url = audioComService()->getCloudAudioPage(slug);
     if (url.empty()) {
         LOGE() << "Cannot open cloud audio page: empty URL";
-        return;
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
     platformInteractive()->openUrl(url);
+    return muse::make_ok();
 }
 
-void Au3CloudActionsController::openCloudProfilePage()
+muse::Ret Au3CloudActionsController::openCloudProfilePage()
 {
     if (!authorization()->isAuthorized()) {
         LOGE() << "Cannot open cloud profile page: not signed in";
-        return;
+        return muse::make_ret(muse::Ret::Code::NotSupported);
     }
 
     const auto url = audioComService()->getCloudProfilePage();
     if (url.empty()) {
         LOGE() << "Cannot open cloud profile page: empty URL";
-        return;
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
     platformInteractive()->openUrl(url);
+    return muse::make_ok();
 }
