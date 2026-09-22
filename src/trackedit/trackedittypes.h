@@ -98,6 +98,7 @@ struct ItemKeys
     LabelKeyList labels;
 
     inline bool empty() const { return clips.empty() && labels.empty(); }
+    inline size_t size() const { return clips.size() + labels.size(); }
 
     inline bool operator==(const ItemKeys& other) const { return clips == other.clips && labels == other.labels; }
     inline bool operator!=(const ItemKeys& other) const { return !operator==(other); }

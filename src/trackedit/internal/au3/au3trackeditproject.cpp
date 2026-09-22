@@ -68,21 +68,20 @@ std::vector<int64_t> Au3TrackeditProject::groupsIdsList() const
 {
     std::vector<int64_t> groupsList;
 
-    for (const auto& trackId : trackIdList()) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
-        if (!waveTrack) {
-            continue;
+    const auto add = [&groupsList](int64_t groupId) {
+        if (groupId != -1 && !muse::contains(groupsList, groupId)) {
+            groupsList.push_back(groupId);
         }
+    };
 
-        for (const auto& key : clipList(trackId)) {
-            std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.key.itemId);
-            IF_ASSERT_FAILED(au3Clip) {
-                return {};
+    for (const Au3Track* track : *m_impl->trackList) {
+        if (const auto waveTrack = dynamic_cast<const Au3WaveTrack*>(track)) {
+            for (const auto& clip : waveTrack->Intervals()) {
+                add(clip->GetGroupId());
             }
-
-            int64_t groupId = au3Clip->GetGroupId();
-            if (!muse::contains(groupsList, groupId)) {
-                groupsList.push_back(groupId);
+        } else if (const auto labelTrack = dynamic_cast<const Au3LabelTrack*>(track)) {
+            for (const Au3Label& label : labelTrack->GetLabels()) {
+                add(label.GetGroupId());
             }
         }
     }

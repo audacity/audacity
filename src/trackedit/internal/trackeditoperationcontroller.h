@@ -162,12 +162,7 @@ public:
     muse::Progress progress() const override;
 
 private:
-    struct MovedItems {
-        ClipKeyList clips;
-        LabelKeyList labels;
-    };
-
-    muse::RetVal<MovedItems> moveItems(const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset);
+    muse::RetVal<ItemKeys> moveItems(const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset);
 
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
     void pushProjectHistoryDuplicateState();
