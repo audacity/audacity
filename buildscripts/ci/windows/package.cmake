@@ -55,20 +55,19 @@ if(NOT DEFINED SIGN_ENABLE AND SIGN_KEY AND SIGN_SECRET)
   set(SIGN_ENABLE ON)
 endif()
 
-set(SIGN_SERVICE_SH "${CMAKE_SOURCE_DIR}/buildscripts/ci/windows/sign_service_aws.sh")
+set(SIGN_SERVICE_PS "${CMAKE_SOURCE_DIR}/buildscripts/ci/windows/PfxSign.ps1")
 
-function(sign_file FILE_PATH)
-  message(STATUS "Signing: ${FILE_PATH}")
+function(sign_files)
+  message(STATUS "Signing: ${ARGN}")
   execute_process(
-    COMMAND "${BASH_EXECUTABLE}" "${SIGN_SERVICE_SH}"
-            --s3_key "${SIGN_KEY}"
-            --s3_secret "${SIGN_SECRET}"
-            --file_path "${FILE_PATH}"
+    COMMAND "${POWERSHELL_EXECUTABLE}" -NoProfile -NonInteractive -ExecutionPolicy Bypass
+            -File "${SIGN_SERVICE_PS}"
+            ${ARGN}
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     RESULT_VARIABLE _sign_rc
   )
   if(NOT _sign_rc EQUAL 0)
-    message(FATAL_ERROR "Code signing failed for ${FILE_PATH} (exit ${_sign_rc})")
+    message(FATAL_ERROR "Code signing failed (exit ${_sign_rc})")
   endif()
 endfunction()
 
@@ -76,19 +75,12 @@ if(SIGN_ENABLE)
   if(NOT SIGN_KEY OR NOT SIGN_SECRET)
     message(FATAL_ERROR "Code signing enabled but credentials are missing")
   endif()
-  if(NOT EXISTS "${SIGN_SERVICE_SH}")
-    message(FATAL_ERROR "Signing script not found: ${SIGN_SERVICE_SH}")
+  if(NOT EXISTS "${SIGN_SERVICE_PS}")
+    message(FATAL_ERROR "Signing script not found: ${SIGN_SERVICE_PS}")
   endif()
-  find_program(BASH_EXECUTABLE bash REQUIRED)
+  find_program(POWERSHELL_EXECUTABLE NAMES pwsh powershell REQUIRED)
 
-  # Sign all executables and libraries
-  file(GLOB_RECURSE _runtime_binaries LIST_DIRECTORIES FALSE
-    "${INSTALL_DIR}/*.exe"
-    "${INSTALL_DIR}/*.dll"
-  )
-  foreach(_binary IN LISTS _runtime_binaries)
-    sign_file("${_binary}")
-  endforeach()
+  sign_files(-Directory "${INSTALL_DIR}")
 else()
   message(STATUS "[sign-prepack] disabled or credentials missing; skipping runtime signing")
 endif()
@@ -208,24 +200,7 @@ if(PACK_TYPE STREQUAL "msi")
   message(STATUS "Copied installer to ${ARTIFACT_PATH}")
 
   if(SIGN_ENABLE)
-    if(NOT EXISTS "${SIGN_SERVICE_SH}")
-      message(FATAL_ERROR "Signing script not found: ${SIGN_SERVICE_SH}")
-    endif()
-
-    find_program(BASH_EXECUTABLE bash)
-
-    message(STATUS "Signing MSI: ${ARTIFACT_PATH}")
-    execute_process(
-      COMMAND "${BASH_EXECUTABLE}" "${SIGN_SERVICE_SH}"
-              --s3_key "${SIGN_KEY}"
-              --s3_secret "${SIGN_SECRET}"
-              --file_path "${ARTIFACT_PATH}"
-      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-      RESULT_VARIABLE _sign_rc
-    )
-    if(NOT _sign_rc EQUAL 0)
-      message(FATAL_ERROR "Code signing failed (exit ${_sign_rc})")
-    endif()
+    sign_files(-File "${ARTIFACT_PATH}")
     message(STATUS "Signing complete: ${ARTIFACT_PATH}")
   endif()
 
