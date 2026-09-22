@@ -371,31 +371,6 @@ bool TrackeditInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipK
     return withPlaybackStop(&ITrackeditInteraction::toggleStretchToMatchProjectTempo, clipKey);
 }
 
-int64_t TrackeditInteraction::clipGroupId(const ClipKey& clipKey) const
-{
-    return m_interaction->clipGroupId(clipKey);
-}
-
-void TrackeditInteraction::setClipGroupId(const ClipKey& clipKey, int64_t id)
-{
-    return m_interaction->setClipGroupId(clipKey, id);
-}
-
-void TrackeditInteraction::groupClips(const ClipKeyList& clipKeyList)
-{
-    return m_interaction->groupClips(clipKeyList);
-}
-
-void TrackeditInteraction::ungroupClips(const ClipKeyList& clipKeyList)
-{
-    return m_interaction->ungroupClips(clipKeyList);
-}
-
-ClipKeyList TrackeditInteraction::clipsInGroup(int64_t id) const
-{
-    return m_interaction->clipsInGroup(id);
-}
-
 int64_t TrackeditInteraction::itemGroupId(const TrackItemKey& key) const
 {
     return m_interaction->itemGroupId(key);
