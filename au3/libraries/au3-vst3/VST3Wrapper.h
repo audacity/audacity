@@ -148,6 +148,11 @@ private:
     //Reads runtime data changes to apply them during next processing pass
     void ConsumeChanges(const EffectSettings& settings);
 
+    //Runs the processor on a short block of silence so that the parameter
+    //changes collected by ConsumeChanges reach the DSP model while no real
+    //audio is being processed. Allocates, so not for the audio thread.
+    void ProcessSilentBlock();
+
     bool mActive { false };
 
     std::vector<std::pair<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> > mParameters;
