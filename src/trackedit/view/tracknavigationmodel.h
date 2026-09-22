@@ -87,7 +87,7 @@ private:
 
     struct NavigationRequest
     {
-        TrackItemKey itemKey;
+        TrackFocus focus;
         bool highlight = false;
     };
 
@@ -105,7 +105,7 @@ private:
     QList<muse::ui::NavigationPanel*> panelsList(muse::ui::NavigationPanel* TrackPanels::* panel) const;
     void updateNavigationActive(const muse::ui::INavigationPanel* activePanel);
     void syncFocusedItem(const muse::ui::INavigationPanel* activePanel, const muse::ui::INavigationControl* activeControl);
-    void requestNavigation(const TrackItemKey& itemKey, bool highlight);
+    void requestNavigation(const TrackFocus& focus, bool highlight);
     void updatePendingNavigation();
 
     void addDefaultNavigation();

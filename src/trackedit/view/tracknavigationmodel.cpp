@@ -206,7 +206,7 @@ void TrackNavigationModel::load()
             return;
         }
 
-        requestNavigation(focus.itemKey().value_or(TrackItemKey { focus.trackId, INVALID_TRACK_ITEM }), highlight);
+        requestNavigation(focus, highlight);
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
@@ -531,14 +531,14 @@ void TrackNavigationModel::syncFocusedItem(const muse::ui::INavigationPanel* act
     }
 }
 
-void TrackNavigationModel::requestNavigation(const TrackItemKey& itemKey, bool highlight)
+void TrackNavigationModel::requestNavigation(const TrackFocus& focus, bool highlight)
 {
-    if (itemKey.trackId == INVALID_TRACK) {
+    if (focus.trackId == INVALID_TRACK) {
         m_pendingNavigation.reset();
         return;
     }
 
-    m_pendingNavigation = NavigationRequest { itemKey, highlight };
+    m_pendingNavigation = NavigationRequest { focus, highlight };
     updatePendingNavigation();
 }
 
@@ -554,7 +554,7 @@ void TrackNavigationModel::updatePendingNavigation()
 
     const NavigationRequest request = *m_pendingNavigation;
 
-    const int pos = indexOfTrack(request.itemKey.trackId);
+    const int pos = indexOfTrack(request.focus.trackId);
     if (pos < 0) {
         return;
     }
@@ -562,21 +562,27 @@ void TrackNavigationModel::updatePendingNavigation()
     const TrackPanels& panels = m_panels.at(pos);
     const muse::ui::INavigationControl* control = nullptr;
 
-    if (request.itemKey.itemId == INVALID_TRACK_ITEM) {
-        if (isNavigationOnTrack(request.itemKey.trackId)) {
-            MYLOG() << "skipped, the navigation is already on the track " << request.itemKey.trackId;
-            m_pendingNavigation.reset();
-            return;
-        }
-
-        control = findFirstEnabledControl(panels.track);
-    } else {
-        const QString controlName = QString::number(request.itemKey.itemId);
+    if (const std::optional<TrackItemKey> itemKey = request.focus.itemKey()) {
+        const QString controlName = QString::number(itemKey->itemId);
         for (const muse::ui::INavigationControl* candidate : panels.items->controls()) {
             if (candidate && candidate->enabled() && candidate->name() == controlName) {
                 control = candidate;
                 break;
             }
+        }
+    } else {
+        if (request.focus.isRuler()) {
+            control = findFirstEnabledControl(panels.ruler);
+        }
+
+        if (!control) {
+            if (isNavigationOnTrack(request.focus.trackId)) {
+                MYLOG() << "skipped, the navigation is already on the track " << request.focus.trackId;
+                m_pendingNavigation.reset();
+                return;
+            }
+
+            control = findFirstEnabledControl(panels.track);
         }
     }
 

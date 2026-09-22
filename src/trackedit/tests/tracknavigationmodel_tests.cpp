@@ -334,7 +334,7 @@ TEST_F(TrackNavigationModelTests, FirstAddedTrackFocusWaitsForNavigationControl)
     m_trackAdded.send(makeTrack(20));
 
     //! [AND] The tracks controller focuses it
-    m_focusedTrackChanged.send(20, false);
+    m_focusChanged.send(TrackFocus::track(20), false);
 
     //! [THEN] Creating the control synchronizes navigation with the focused track
     EXPECT_CALL(*m_navigationController,
@@ -356,7 +356,7 @@ TEST_F(TrackNavigationModelTests, FirstInsertedTrackFocusWaitsForNavigationContr
     m_trackInserted.send(makeTrack(20), 0);
 
     //! [AND] The tracks controller focuses it before its control exists
-    m_focusedTrackChanged.send(20, false);
+    m_focusChanged.send(TrackFocus::track(20), false);
 
     //! [THEN] Creating the control synchronizes navigation with the focused track
     EXPECT_CALL(*m_navigationController, requestActivateByName(
@@ -374,7 +374,7 @@ TEST_F(TrackNavigationModelTests, FocusedItemWaitsForNavigationControl)
     loadWithTracks({ makeTrack(20) });
 
     //! [WHEN] An item is focused
-    m_focusedItemChanged.send({ 20, 200 }, false);
+    m_focusChanged.send(TrackFocus::item({ 20, 200 }), false);
 
     //! [THEN] Creating the navigation control executes pending navigation request
     EXPECT_CALL(*m_navigationController, requestActivateByName(
