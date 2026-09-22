@@ -143,8 +143,9 @@ void CloudProjectsModel::loadItemsIfNecessary()
                     obj[SHOW_INDICATOR_KEY] = true;
 
                     const auto id = obj[CLOUD_ITEM_ID_KEY].toString();
+                    const auto record = cloudProjectsProvider()->projectRecordForId(item.id);
                     obj[CONTEXT_MENU_MODEL_KEY] = QVariant::fromValue(
-                        new CloudProjectContextMenuModel(id, this));
+                        new CloudProjectContextMenuModel(id, record ? record->localPath : muse::io::path_t(), this));
 
                     m_items.push_back(obj);
                 }
