@@ -57,6 +57,42 @@ endif()
 
 set(SIGN_SERVICE_SH "${CMAKE_SOURCE_DIR}/buildscripts/ci/windows/sign_service_aws.sh")
 
+function(sign_file FILE_PATH)
+  message(STATUS "Signing: ${FILE_PATH}")
+  execute_process(
+    COMMAND "${BASH_EXECUTABLE}" "${SIGN_SERVICE_SH}"
+            --s3_key "${SIGN_KEY}"
+            --s3_secret "${SIGN_SECRET}"
+            --file_path "${FILE_PATH}"
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    RESULT_VARIABLE _sign_rc
+  )
+  if(NOT _sign_rc EQUAL 0)
+    message(FATAL_ERROR "Code signing failed for ${FILE_PATH} (exit ${_sign_rc})")
+  endif()
+endfunction()
+
+if(SIGN_ENABLE)
+  if(NOT SIGN_KEY OR NOT SIGN_SECRET)
+    message(FATAL_ERROR "Code signing enabled but credentials are missing")
+  endif()
+  if(NOT EXISTS "${SIGN_SERVICE_SH}")
+    message(FATAL_ERROR "Signing script not found: ${SIGN_SERVICE_SH}")
+  endif()
+  find_program(BASH_EXECUTABLE bash REQUIRED)
+
+  # Sign all executables and libraries
+  file(GLOB_RECURSE _runtime_binaries LIST_DIRECTORIES FALSE
+    "${INSTALL_DIR}/*.exe"
+    "${INSTALL_DIR}/*.dll"
+  )
+  foreach(_binary IN LISTS _runtime_binaries)
+    sign_file("${_binary}")
+  endforeach()
+else()
+  message(STATUS "[sign-prepack] disabled or credentials missing; skipping runtime signing")
+endif()
+
 file(MAKE_DIRECTORY "${ARTIFACTS_DIR}")
 
 # PACK 7z
@@ -99,30 +135,6 @@ if(PACK_TYPE STREQUAL "msi")
     "set(CPACK_INSTALL_CMAKE_PROJECTS \"\")\n"
     "set(CPACK_INSTALLED_DIRECTORIES \"${_install_abs};.\")\n"
   )
-
-  if(SIGN_ENABLE AND SIGN_KEY AND SIGN_SECRET)
-    set(_app_exe "${INSTALL_DIR}/bin/Audacity4.exe")
-
-    if(EXISTS "${_app_exe}")
-      message(STATUS "[sign-prepack] exe: ${_app_exe}")
-      find_program(BASH_EXECUTABLE bash REQUIRED)
-      execute_process(
-        COMMAND "${BASH_EXECUTABLE}" "${SIGN_SERVICE_SH}"
-                --s3_key     "${SIGN_KEY}"
-                --s3_secret  "${SIGN_SECRET}"
-                --file_path  "${_app_exe}"
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        RESULT_VARIABLE _rc_exe
-      )
-      if(NOT _rc_exe EQUAL 0)
-        message(WARNING "[sign-prepack] failed to sign ${_app_exe} (rc=${_rc_exe})")
-      endif()
-    else()
-      message(WARNING "[sign-prepack] exe not found at ${_app_exe}")
-    endif()
-  else()
-    message(STATUS "[sign-prepack] disabled or credentials missing; skipping exe signing")
-  endif()
 
   get_filename_component(_cmake_bin_dir "${CMAKE_COMMAND}" DIRECTORY)
   find_program(_cpack_cmd cpack HINTS "${_cmake_bin_dir}" REQUIRED)
