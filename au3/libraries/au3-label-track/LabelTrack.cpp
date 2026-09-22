@@ -925,6 +925,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 labelStruct.getT1() - t0,
                 labelStruct.title
             };
+            l.SetSelected(labelStruct.GetSelected());
             l.SetGroupId(labelStruct.GetGroupId());
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::WITHIN_LABEL) {
@@ -934,6 +935,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 t1 - t0,
                 labelStruct.title
             };
+            l.SetSelected(labelStruct.GetSelected());
             l.SetGroupId(labelStruct.GetGroupId());
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
@@ -943,6 +945,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 labelStruct.getT1() - t0,
                 labelStruct.title
             };
+            l.SetSelected(labelStruct.GetSelected());
             l.SetGroupId(labelStruct.GetGroupId());
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::ENDS_IN_LABEL) {
@@ -952,6 +955,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 t1 - t0,
                 labelStruct.title
             };
+            l.SetSelected(labelStruct.GetSelected());
             l.SetGroupId(labelStruct.GetGroupId());
             lt->mLabels.push_back(l);
         }
@@ -978,6 +982,7 @@ bool LabelTrack::PasteOver(double t, const Track& src)
                 labelStruct.getT1() + t,
                 labelStruct.title
             };
+            l.SetSelected(labelStruct.GetSelected());
             l.SetGroupId(labelStruct.GetGroupId());
             mLabels.insert(mLabels.begin() + pos++, l);
         }
