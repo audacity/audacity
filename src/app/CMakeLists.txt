@@ -233,17 +233,6 @@ if (OS_IS_WIN)
     )
 endif()
 
-if (MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT)
-    # To be able to locally build with MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT=ON and run the audacity
-    # executable on the spot, not from the install destination. Relative path to the app is preserved,
-    # so there will still be just one crashpad_handler in the deployed bundle.
-    # Registered before the macOS codesign step below, which must seal the bundle last.
-    add_custom_command(TARGET audacity POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                ${MUSE_MODULE_DIAGNOSTICS_CRASHPAD_HANDLER_PATH} $<TARGET_FILE_DIR:audacity>
-    )
-endif()
-
 if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
     set(COVERAGE_FLAGS -fprofile-arcs -ftest-coverage --coverage)
     set(COVERAGE_LINK_FLAGS --coverage)
