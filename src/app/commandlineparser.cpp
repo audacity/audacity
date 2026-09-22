@@ -24,7 +24,7 @@ static QStringList prepareArguments(int argc, char** argv)
     QStringList args;
 
     for (int i = 0; i < argc; ++i) {
-        QString arg = QString::fromLocal8Bit(argv[i]);
+        QString arg = QString::fromUtf8(argv[i]);
 
 #ifndef NDEBUG
         if (arg.startsWith("-qmljsdebugger")) {

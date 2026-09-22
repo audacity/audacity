@@ -164,7 +164,8 @@ int DBConnection::Open(const FilePath fileName)
 
 int DBConnection::OpenStepByStep(const FilePath fileName)
 {
-    const char* name = fileName.ToUTF8();
+    const wxScopedCharBuffer nameBuf = fileName.ToUTF8();
+    const char* name = nameBuf.data();
 
     bool success = false;
     int rc = sqlite3_open(name, &mDB);
