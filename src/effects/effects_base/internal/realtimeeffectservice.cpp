@@ -271,7 +271,7 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
         LOGW() << "cannot load the effect: " << effectId;
         return nullptr;
     }
-    if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString())) {
+    if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, au3::wxFromString(effectId))) {
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
         projectHistory()->pushHistoryState(
@@ -336,7 +336,7 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         return nullptr;
     }
     const auto oldState = data->effectList->GetStateAt(effectListIndex);
-    if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString())) {
+    if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, au3::wxFromString(newEffectId))) {
         const auto oldEffectName = getEffectName(*oldState);
         const auto newEffectName = getEffectName(*newState);
         projectHistory()->pushHistoryState(
@@ -456,7 +456,7 @@ RealtimeEffectList* RealtimeEffectService::realtimeEffectList(TrackId trackId)
 
 std::string RealtimeEffectService::getEffectName(const RealtimeEffectState& state) const
 {
-    return effectsProvider()->effectName(state.GetID().ToStdString());
+    return effectsProvider()->effectName(au3::wxToStdString(state.GetID()));
 }
 
 const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const PluginID& id)
@@ -466,11 +466,11 @@ const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const Plu
     IF_ASSERT_FAILED(provider) {
         return nullptr;
     }
-    if (!provider->loadEffect(EffectId::fromStdString(id.ToStdString()))) {
+    if (!provider->loadEffect(au3::wxToString(id))) {
         return nullptr;
     }
     return EffectManager::GetInstanceFactory(id, [provider](const PluginID& id) -> EffectSettingsManager* {
-        return provider->effect(muse::String::fromStdString(id.ToStdString()));
+        return provider->effect(au3::wxToString(id));
     });
 }
 
@@ -481,8 +481,7 @@ wxString RealtimeEffectService::resolveEffectId(const PluginID& id)
         return {};
     }
 
-    const EffectId resolved = utils::findRelocatedVst3EffectId(EffectId::fromStdString(id.ToStdString()),
-                                                               provider->effectMetaList());
+    const EffectId resolved = utils::findRelocatedVst3EffectId(au3::wxToString(id), provider->effectMetaList());
     return resolved.empty() ? wxString {} : au3::wxFromString(resolved);
 }
 
@@ -493,7 +492,7 @@ bool RealtimeEffectService::isAvailable(const RealtimeEffectStatePtr& state) con
     }
     // isValid() passes for Missing/Error/Discovered entries too;
     // only isLoadable (Validated) gates actual usability
-    const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
+    const auto meta = effectsProvider()->meta(au3::wxToString(state->GetID()));
     return meta.isValid() && meta.isLoadable();
 }
 }

@@ -6,6 +6,7 @@
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3wrap/internal/progressdialog.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "au3-effects/Effect.h"
 #include "au3-effects/EffectManager.h"
@@ -234,7 +235,7 @@ std::string EffectsProvider::effectName(const std::string& effectId) const
 
 std::string EffectsProvider::effectName(const effects::RealtimeEffectState& state) const
 {
-    return effectName(state.GetID().ToStdString());
+    return effectName(au::au3::wxToStdString(state.GetID()));
 }
 
 bool EffectsProvider::paramsAreInputAgnostic(const EffectId& effectId) const

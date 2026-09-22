@@ -4,6 +4,7 @@
 #include "realtimeeffectlistitemmenumodel.h"
 #include "effects/effects_base/effectstypes.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "global/defer.h"
 #include "log.h"
 
@@ -102,7 +103,7 @@ void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
         return;
     }
     const MenuItemList& itemList = items();
-    const auto myEffectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    const auto myEffectId = au::au3::wxToString(m_effectState->GetID());
     for (MenuItem* category : itemList) {
         updateCheckmarks(*category, myEffectId);
     }

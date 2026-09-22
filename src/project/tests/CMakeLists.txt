@@ -13,12 +13,14 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/cloudprojectsprovidermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/dummyeffectinstancefactory.h
     ${CMAKE_CURRENT_LIST_DIR}/audacityproject_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/projectrecovery_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/realtimeeffectspersistence_tests.cpp
 )
 
 set(MODULE_TEST_LINK
     project
     au3wrap
+    au3-project-file-io
     trackedit
     muse::actions
     muse::draw
