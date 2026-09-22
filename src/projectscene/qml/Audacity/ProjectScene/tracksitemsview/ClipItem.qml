@@ -987,7 +987,7 @@ Rectangle {
 
                     onPointMoved: function (index, x, y, completed) {
                         clipGainModel.setPoint(index, x, y, completed)
-                        tooltip.gain = gainToDb(y)
+                        tooltip.value = gainToDb(y)
                         tooltip.show(true)
                     }
 
@@ -1014,7 +1014,7 @@ Rectangle {
                         if (automation.hasActivePoint) {
                             fake.x = automation.activePointX
                             fake.y = automation.activePointY - (automation.standardPointStyle.centerRadius + 2)
-                            tooltip.gain = gainToDb(automation.activePointValue)
+                            tooltip.value = gainToDb(automation.activePointValue)
                             tooltip.show(true)
                         } else {
                             tooltip.hide(true)
@@ -1033,8 +1033,11 @@ Rectangle {
 
                         enabled: false // so it doesn't steal mouse events
 
-                        GainTooltip {
+                        ValueTooltip {
                             id: tooltip
+
+                            unitText: "dB"
+                            sizingText: "-60.0dB"
                         }
                     }
 

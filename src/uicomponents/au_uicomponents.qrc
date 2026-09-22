@@ -18,5 +18,6 @@
         <file>qml/Audacity/UiComponents/components/BaseSection.qml</file>
         <file>qml/Audacity/UiComponents/components/StyledGroupBox.qml</file>
         <file>qml/Audacity/UiComponents/components/GridPlot.qml</file>
+        <file>qml/Audacity/UiComponents/components/ValueTooltip.qml</file>
     </qresource>
 </RCC>
