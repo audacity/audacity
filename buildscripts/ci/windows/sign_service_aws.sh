@@ -48,7 +48,7 @@ export AWS_DEFAULT_REGION=us-east-1
 aws s3 ls s3://$S3_BUCKET
 
 echo "Send file to sign service..."
-aws s3 cp $FILE_PATH $S3_UNSIGNED_URL
+aws s3 cp "$FILE_PATH" "$S3_UNSIGNED_URL"
 aws s3 ls s3://$S3_BUCKET/$S3_UNSIGNED_DIR/
 
 # Disable exit on any error
@@ -57,7 +57,7 @@ trap '' ERR
 signed=-1
 for i in 1 2 3 4 5 6 7 8 9; do
     echo "Check sign... $i"
-    aws s3 cp $S3_SIGNED_URL $FILE_SIGNED_PATH
+    aws s3 cp "$S3_SIGNED_URL" "$FILE_SIGNED_PATH"
     signed=$?
     if [ $signed -eq 0 ]; then break; fi
     if [ $i -eq 9 ]; then
@@ -74,13 +74,13 @@ echo "Signed file downloaded successfully"
 trap 'echo Sign failed; exit 1' ERR
 
 echo "Delete signed file from service"
-aws s3 rm $S3_SIGNED_URL 
+aws s3 rm "$S3_SIGNED_URL"
 
 echo "Rename original unsigned file"
-mv $FILE_PATH "${FILE_PATH}_origin"
+mv "$FILE_PATH" "${FILE_PATH}_origin"
 
 echo "Rename signed file to original name"
-mv $FILE_SIGNED_PATH $FILE_PATH
+mv "$FILE_SIGNED_PATH" "$FILE_PATH"
 
 echo "Delete original unsigned file"
 rm -f "${FILE_PATH}_origin"
