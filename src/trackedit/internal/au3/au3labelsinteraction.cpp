@@ -102,8 +102,14 @@ muse::RetVal<LabelKey> Au3LabelsInteraction::addLabelToSelection()
         muse::secs_t recordPos = playbackState->playbackPosition();
         selectedRegion.setTimes(recordPos, recordPos);
     } else {
-        selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),
-                                selectionController()->dataSelectedEndTime());
+        const double selectionStart = selectionController()->dataSelectedStartTime();
+        const double selectionEnd = selectionController()->dataSelectedEndTime();
+        if (muse::RealIsEqualOrLess(selectionEnd, selectionStart)) {
+            muse::secs_t playbackPos = playbackState->playbackPosition();
+            selectedRegion.setTimes(playbackPos, playbackPos);
+        } else {
+            selectedRegion.setTimes(selectionStart, selectionEnd);
+        }
     }
 
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
