@@ -716,6 +716,40 @@ TEST_F(Au3ClipsInteractionTests, MoveAcrossTracksPreservesIntermediateAndEmptyTr
     EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
 }
 
+TEST_F(Au3ClipsInteractionTests, MoveStereoClipsUpIntoOccupiedMonoTrackReturnsExistingClips)
+{
+    //! [GIVEN] A mono track holding a clip above a stereo track holding two clips
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto upper = factory.createTrackFromTemplate("upper", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto lower = factory.createTrackFromTemplate("lower", {
+            { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } },
+            { 1.0, { { 0.1, TrackTemplateFactory::createNoise } } }
+        });
+    lower = lower->MonoToStereo();
+    const TrackId upperId = factory.addTrackToProject(upper);
+    const TrackId lowerId = factory.addTrackToProject(lower);
+    const ClipKeyList keys {
+        { lowerId, lower->GetSortedClipByIndex(0)->GetId() },
+        { lowerId, lower->GetSortedClipByIndex(1)->GetId() }
+    };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { lowerId }));
+
+    //! [WHEN] Both stereo clips are moved up, which mixes them down to mono
+    const auto result = m_clipsInteraction->moveClips(keys, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val.size(), 2u);
+
+    //! [THEN] Every returned key names a clip that exists on the upper track
+    const Au3WaveTrack* upperTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(upperId));
+    ASSERT_NE(upperTrack, nullptr);
+    EXPECT_EQ(upperTrack->NChannels(), 1u);
+    EXPECT_EQ(upperTrack->NIntervals(), 3u);
+    for (const ClipKey& key : result.val) {
+        EXPECT_EQ(key.trackId, upperId);
+        EXPECT_NE(DomAccessor::findWaveClip(const_cast<Au3WaveTrack*>(upperTrack), key.itemId), nullptr) << "clip " << key.itemId;
+    }
+}
+
 class Au3ClipsDropTests : public Au3ClipsInteractionTests, public testing::WithParamInterface<std::tuple<bool, bool> >
 {
 };
