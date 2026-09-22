@@ -1581,6 +1581,54 @@ TEST_F(Au3TracksInteractionTests, PasteLabelTrackWhenWaveTrackSelected)
     removeTrack(dstLabelTrackId);
 }
 
+TEST_F(Au3TracksInteractionTests, PasteClipsAndLabelsTogetherUsesOneTrackPerCopiedTrack)
+{
+    //! [GIVEN] A project with a label track and two wave tracks, the second wave track after everything selected
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
+            { 1.0, 2.0, "Label" }
+        });
+    const TrackId waveTrack1Id = factory.addTrackFromTemplate("Wave Track 1", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+    const TrackId waveTrack2Id = factory.addTrackFromTemplate("Wave Track 2", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+
+    //! [GIVEN] The clipboard holds a clip from the first wave track and the label
+    Au3WaveTrack* waveTrack1 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrack1Id));
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(waveTrack1, nullptr);
+    ASSERT_NE(labelTrack, nullptr);
+    const ITrackDataPtr clipData = std::make_shared<Au3TrackData>(waveTrack1->Copy(0.0, 1.0));
+    const ITrackDataPtr labelData = std::make_shared<Au3TrackData>(labelTrack->Copy(0.0, 10.0));
+
+    //! [GIVEN] The tracks of the copied items are selected
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { labelTrackId, waveTrack1Id }));
+
+    //! [WHEN] Both are pasted at once
+    auto projectWasModified = false;
+    const muse::Ret ret = m_tracksInteraction->paste({ clipData, labelData }, 5.0, false, false, true, projectWasModified);
+    ASSERT_EQ(ret, muse::make_ok()) << "The return value is not Ok";
+
+    //! [THEN] The clip lands on the first wave track only, the second one is untouched
+    EXPECT_EQ(waveTrack1->NIntervals(), 2u);
+    Au3WaveTrack* waveTrack2 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrack2Id));
+    ASSERT_NE(waveTrack2, nullptr);
+    EXPECT_EQ(waveTrack2->NIntervals(), 1u);
+
+    //! [THEN] The label is pasted at the paste position
+    ASSERT_EQ(labelTrack->GetNumLabels(), 2);
+    EXPECT_DOUBLE_EQ(labelTrack->GetLabel(1)->getT0(), 6.0);
+
+    // Cleanup
+    removeTrack(waveTrack1Id);
+    removeTrack(waveTrack2Id);
+    removeTrack(labelTrackId);
+}
+
 TEST_F(Au3TracksInteractionTests, PasteLabelTrackCreatesNewTrack)
 {
     //! [GIVEN] There is a project with tracks: Wave, Label, Wave (no label tracks after the selected wave)
