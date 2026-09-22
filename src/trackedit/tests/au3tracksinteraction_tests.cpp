@@ -350,6 +350,33 @@ TEST_F(Au3TracksInteractionTests, CopyNonContinuousTrackData)
     removeTrack(trackId);
 }
 
+TEST_F(Au3TracksInteractionTests, CopyNonContinuousLabelDataKeepsGroupId)
+{
+    //! [GIVEN] A label track with a grouped label
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
+            { 1.0, 2.0, "Label" }
+        });
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(labelTrack, nullptr);
+    Au3Label label = labelTrack->GetLabels().front();
+    label.SetGroupId(4);
+    labelTrack->SetLabel(0, label);
+
+    //! [WHEN] The label is copied as clipboard data
+    const ITrackDataPtr data = m_tracksInteraction->copyNonContinuousTrackData(labelTrackId, { { labelTrackId, label.GetId() } }, -1.0);
+    ASSERT_NE(data, nullptr);
+
+    //! [THEN] The copy keeps the group id and the offset time
+    const auto copiedTrack = std::static_pointer_cast<Au3LabelTrack>(std::static_pointer_cast<Au3TrackData>(data)->track());
+    ASSERT_EQ(copiedTrack->GetNumLabels(), 1);
+    EXPECT_EQ(copiedTrack->GetLabel(0)->GetGroupId(), 4);
+    EXPECT_DOUBLE_EQ(copiedTrack->GetLabel(0)->getT0(), 0.0);
+
+    // Cleanup
+    removeTrack(labelTrackId);
+}
+
 TEST_F(Au3TracksInteractionTests, CutTrackDataWithoutMovingClips)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
