@@ -1,0 +1,1265 @@
+﻿{
+    "profileId":  "comfy-yue2-bf16-cover-v1",
+    "runMode":  "submitted",
+    "startedAtUtc":  "2026-09-17T08:30:08.4105137Z",
+    "baseUrl":  "http://127.0.0.1:8188",
+    "workflowPath":  "D:\\AI Music Studio v2\\yue2_comfyui.json",
+    "workflowSha256":  "e284e8dcc0e38e7406027eed349f4f0aaba7986f8cda712daff4e1563df56747",
+    "systemStats":  {
+                        "system":  {
+                                       "os":  "win32",
+                                       "ram_total":  33157967872,
+                                       "ram_free":  11167449088,
+                                       "comfyui_version":  "0.36.0",
+                                       "required_frontend_version":  "1.52.7",
+                                       "installed_templates_version":  "0.11.62",
+                                       "required_templates_version":  "0.11.62",
+                                       "comfy_package_versions":  [
+                                                                      {
+                                                                          "name":  "comfyui-frontend-package",
+                                                                          "installed":  "1.52.7",
+                                                                          "required":  "1.52.7"
+                                                                      },
+                                                                      {
+                                                                          "name":  "comfyui-workflow-templates",
+                                                                          "installed":  "0.11.62",
+                                                                          "required":  "0.11.62"
+                                                                      },
+                                                                      {
+                                                                          "name":  "comfyui-embedded-docs",
+                                                                          "installed":  "0.5.11",
+                                                                          "required":  "0.5.11"
+                                                                      },
+                                                                      {
+                                                                          "name":  "comfy-kitchen",
+                                                                          "installed":  "0.2.34",
+                                                                          "required":  "0.2.34"
+                                                                      },
+                                                                      {
+                                                                          "name":  "comfy-aimdo",
+                                                                          "installed":  "0.5.3",
+                                                                          "required":  "0.5.3"
+                                                                      }
+                                                                  ],
+                                       "python_version":  "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+                                       "pytorch_version":  "2.11.0+cu130",
+                                       "embedded_python":  true,
+                                       "deploy_environment":  "local-git",
+                                       "argv":  [
+                                                    "D:\\ComfyUI-Easy-Install\\ComfyUI\\main.py",
+                                                    "--windows-standalone-build",
+                                                    "--use-ck-attention",
+                                                    "--disable-auto-launch"
+                                                ]
+                                   },
+                        "devices":  [
+                                        {
+                                            "name":  "cuda:0 NVIDIA GeForce RTX 4060 Ti : cudaMallocAsync",
+                                            "type":  "cuda",
+                                            "index":  0,
+                                            "vram_total":  17175150592,
+                                            "vram_free":  15932981248,
+                                            "torch_vram_total":  33554432,
+                                            "torch_vram_free":  25034752
+                                        }
+                                    ]
+                    },
+    "requiredClasses":  [
+                            "EmptyYuE2LatentAudio",
+                            "KSampler",
+                            "VAEDecodeAudio",
+                            "SaveAudioAdvanced",
+                            "PreviewAny",
+                            "CheckpointLoaderSimple",
+                            "AudioEncoderLoader",
+                            "SheetSage2AudioToABC",
+                            "YuE2GenerateMusic",
+                            "YuE2GenerateABC",
+                            "LoadAudio",
+                            "PixaromaSwitch"
+                        ],
+    "missingClasses":  [
+
+                       ],
+    "gpuSamples":  [
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  8540,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  9713,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  97
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  58,
+                           "memoryUsedMiB":  10129,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  10124,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  96
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  10075,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  10064,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  10141,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  94
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  10137,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  10093,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  97
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  10105,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  97
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  10092,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  58,
+                           "memoryUsedMiB":  10092,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  62,
+                           "memoryUsedMiB":  13275,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  58,
+                           "memoryUsedMiB":  14951,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  95
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  58,
+                           "memoryUsedMiB":  14952,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  61,
+                           "memoryUsedMiB":  14952,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  59,
+                           "memoryUsedMiB":  14951,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  59,
+                           "memoryUsedMiB":  14947,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  62,
+                           "memoryUsedMiB":  14968,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  62,
+                           "memoryUsedMiB":  14961,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  60,
+                           "memoryUsedMiB":  14949,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  96
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  60,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  63,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  62,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  99
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  61,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  64,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  64,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  62,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  62,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  65,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  99
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  64,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  63,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  62,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  62,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  61,
+                           "memoryUsedMiB":  14941,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  60,
+                           "memoryUsedMiB":  14928,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  63,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  61,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  97
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  60,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  99
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  59,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  59,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  95
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  58,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  99
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  60,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  58,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  96
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  57,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  94
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  99
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  52,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  51,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  51,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  99
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  96
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  52,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  99
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  52,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  51,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  99
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  51,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  91
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  49,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  97
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  51,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  49,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  95
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  52,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  97
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  49,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  52,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  49,
+                           "memoryUsedMiB":  14915,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14934,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  94
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  14955,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  94
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  51,
+                           "memoryUsedMiB":  14961,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  49,
+                           "memoryUsedMiB":  14969,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  96
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  51,
+                           "memoryUsedMiB":  14968,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  49,
+                           "memoryUsedMiB":  14968,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  98
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  15054,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  15129,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  15455,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  52,
+                           "memoryUsedMiB":  15347,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  51,
+                           "memoryUsedMiB":  14643,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14626,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  52,
+                           "memoryUsedMiB":  14624,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14623,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  57,
+                           "memoryUsedMiB":  14620,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14620,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  57,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  59,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  58,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  53,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14617,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14590,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  59,
+                           "memoryUsedMiB":  14590,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  57,
+                           "memoryUsedMiB":  14590,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14590,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14590,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  56,
+                           "memoryUsedMiB":  14590,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  55,
+                           "memoryUsedMiB":  14590,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  8710,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  89
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  14726,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  54,
+                           "memoryUsedMiB":  8358,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  66
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  49,
+                           "memoryUsedMiB":  8358,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  62
+                       },
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  50,
+                           "memoryUsedMiB":  8362,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  100
+                       }
+                   ],
+    "promptId":  "1553851c-dec8-4d40-b321-95889393670a",
+    "terminalStatus":  "success",
+    "elapsedSeconds":  264.215,
+    "history":  {
+                    "prompt":  [
+                                   0,
+                                   "1553851c-dec8-4d40-b321-95889393670a",
+                                   {
+                                       "5":  {
+                                                 "inputs":  {
+                                                                "seconds":  [
+                                                                                "22",
+                                                                                1
+                                                                            ],
+                                                                "batch_size":  1
+                                                            },
+                                                 "class_type":  "EmptyYuE2LatentAudio",
+                                                 "_meta":  {
+                                                               "title":  "Empty YuE2 Latent Audio"
+                                                           }
+                                             },
+                                       "8":  {
+                                                 "inputs":  {
+                                                                "seed":  7,
+                                                                "steps":  32,
+                                                                "cfg":  1.0,
+                                                                "sampler_name":  "dpm_2",
+                                                                "scheduler":  "sgm_uniform",
+                                                                "denoise":  1.0,
+                                                                "model":  [
+                                                                              "15",
+                                                                              0
+                                                                          ],
+                                                                "positive":  [
+                                                                                 "22",
+                                                                                 0
+                                                                             ],
+                                                                "negative":  [
+                                                                                 "22",
+                                                                                 0
+                                                                             ],
+                                                                "latent_image":  [
+                                                                                     "5",
+                                                                                     0
+                                                                                 ]
+                                                            },
+                                                 "class_type":  "KSampler",
+                                                 "_meta":  {
+                                                               "title":  "KSampler"
+                                                           }
+                                             },
+                                       "9":  {
+                                                 "inputs":  {
+                                                                "samples":  [
+                                                                                "8",
+                                                                                0
+                                                                            ],
+                                                                "vae":  [
+                                                                            "15",
+                                                                            2
+                                                                        ]
+                                                            },
+                                                 "class_type":  "VAEDecodeAudio",
+                                                 "_meta":  {
+                                                               "title":  "VAE Decode Audio"
+                                                           }
+                                             },
+                                       "10":  {
+                                                  "inputs":  {
+                                                                 "filename_prefix":  "audio/YuE2",
+                                                                 "format":  "mp3",
+                                                                 "format.quality":  "V0",
+                                                                 "audio":  [
+                                                                               "9",
+                                                                               0
+                                                                           ]
+                                                             },
+                                                  "class_type":  "SaveAudioAdvanced",
+                                                  "_meta":  {
+                                                                "title":  "Save Audio (Advanced)"
+                                                            }
+                                              },
+                                       "14":  {
+                                                  "inputs":  {
+                                                                 "source":  [
+                                                                                "35",
+                                                                                0
+                                                                            ]
+                                                             },
+                                                  "class_type":  "PreviewAny",
+                                                  "_meta":  {
+                                                                "title":  "Preview as Text"
+                                                            }
+                                              },
+                                       "15":  {
+                                                  "inputs":  {
+                                                                 "ckpt_name":  "yue2_3b_bf16.safetensors"
+                                                             },
+                                                  "class_type":  "CheckpointLoaderSimple",
+                                                  "_meta":  {
+                                                                "title":  "Load Checkpoint"
+                                                            }
+                                              },
+                                       "18":  {
+                                                  "inputs":  {
+                                                                 "audio_encoder_name":  "sheetsage2_bf16.safetensors"
+                                                             },
+                                                  "class_type":  "AudioEncoderLoader",
+                                                  "_meta":  {
+                                                                "title":  "Load Audio Encoder"
+                                                            }
+                                              },
+                                       "19":  {
+                                                  "inputs":  {
+                                                                 "mode":  "melody",
+                                                                 "audio_encoder":  [
+                                                                                       "18",
+                                                                                       0
+                                                                                   ],
+                                                                 "audio":  [
+                                                                               "33",
+                                                                               0
+                                                                           ]
+                                                             },
+                                                  "class_type":  "SheetSage2AudioToABC",
+                                                  "_meta":  {
+                                                                "title":  "SheetSage2 Audio to ABC"
+                                                            }
+                                              },
+                                       "21":  {
+                                                  "inputs":  {
+                                                                 "source":  [
+                                                                                "19",
+                                                                                0
+                                                                            ]
+                                                             },
+                                                  "class_type":  "PreviewAny",
+                                                  "_meta":  {
+                                                                "title":  "Preview as Text"
+                                                            }
+                                              },
+                                       "22":  {
+                                                  "inputs":  {
+                                                                 "style":  "A reckless, high-speed pop-punk and alt-rock anthem exploding from a feedback-laced intro into a sharp, distorted guitar hook that instantly locks inâ€”raw, urgent, and unapologetically loud, The harmony rides bold, hook-heavy major progressions with gritty minor pivots, channeling early-2000s DIY energy, Verses punch forward with tight, snare-cracking drums and a gritty bassline glued to palm-muted guitars, while the canadian female lead vocal delivers brash, natural attitudeâ€”confident, chaotic, and emotionally charged, The chorus detonates into huge open chords and doubled vocals stacked with group shouts, built for sweat-soaked singalongs.",
+                                                                 "lyrics":  "[Intro, instrumental]\n\n[Verse]\nla la la la\nla la la la la la la-la laaa\nla la la la\nla la la la la la la-la laaa\n\n[Chorus]\nla la la la la la la\nla la la la la la\nla la, la la la la la la\nla la la la la-la laa\n\n[Verse]\nla la la la\nla la la la la la la-la laaa\nla la la la\nla la la la la la la-la laaa\n\n[Chorus]\nla la la la la la la\nla la la la la la la\nla la la la la la-la\nla la la la la la\n\n[Bridge]\nla la, la la la la la la\nla la, la la la la la la\nla la la la la la la la\nla la la la la-la-la la laa\n\n[Chorus]\nla la la la la la la\nla la la la la la la\nLa la, la la la la la la\nla la la la la-la\n\n[Chorus]\nla la la la la la la\nlaa, la la la la la la\nla la la la la la-la\nla la la la la la\n\n[Outro]\nla la la la la la la la\nla la la la la la la la\nla la la la la la la\nla la la la la-la-la la la",
+                                                                 "abc":  [
+                                                                             "14",
+                                                                             0
+                                                                         ],
+                                                                 "seed":  42,
+                                                                 "mode":  "full",
+                                                                 "max_duration":  240.0,
+                                                                 "temperature":  1.0,
+                                                                 "top_p":  0.95,
+                                                                 "top_k":  100,
+                                                                 "repetition_penalty":  1.2,
+                                                                 "clip":  [
+                                                                              "15",
+                                                                              1
+                                                                          ]
+                                                             },
+                                                  "class_type":  "YuE2GenerateMusic",
+                                                  "_meta":  {
+                                                                "title":  "YuE2 Generate Music"
+                                                            }
+                                              },
+                                       "23":  {
+                                                  "inputs":  {
+                                                                 "style":  "A reckless, high-speed pop-punk and alt-rock anthem exploding from a feedback-laced intro into a sharp, distorted guitar hook that instantly locks inâ€”raw, urgent, and unapologetically loud, The harmony rides bold, hook-heavy major progressions with gritty minor pivots, channeling early-2000s DIY energy, Verses punch forward with tight, snare-cracking drums and a gritty bassline glued to palm-muted guitars, while the canadian female lead vocal delivers brash, natural attitudeâ€”confident, chaotic, and emotionally charged, The chorus detonates into huge open chords and doubled vocals stacked with group shouts, built for sweat-soaked singalongs.",
+                                                                 "lyrics":  "[Intro, instrumental]\n\n[Verse]\nla la la la\nla la la la la la la-la laaa\nla la la la\nla la la la la la la-la laaa\n\n[Chorus]\nla la la la la la la\nla la la la la la\nla la, la la la la la la\nla la la la la-la laa\n\n[Verse]\nla la la la\nla la la la la la la-la laaa\nla la la la\nla la la la la la la-la laaa\n\n[Chorus]\nla la la la la la la\nla la la la la la la\nla la la la la la-la\nla la la la la la\n\n[Bridge]\nla la, la la la la la la\nla la, la la la la la la\nla la la la la la la la\nla la la la la-la-la la laa\n\n[Chorus]\nla la la la la la la\nla la la la la la la\nLa la, la la la la la la\nla la la la la-la\n\n[Chorus]\nla la la la la la la\nlaa, la la la la la la\nla la la la la la-la\nla la la la la la\n\n[Outro]\nla la la la la la la la\nla la la la la la la la\nla la la la la la la\nla la la la la-la-la la la",
+                                                                 "seed":  875558237913091,
+                                                                 "mode":  "full",
+                                                                 "max_abc_tokens":  8192,
+                                                                 "temperature":  0.7,
+                                                                 "top_p":  0.9,
+                                                                 "top_k":  30,
+                                                                 "repetition_penalty":  1.005,
+                                                                 "penalty_window":  100,
+                                                                 "clip":  [
+                                                                              "15",
+                                                                              1
+                                                                          ]
+                                                             },
+                                                  "class_type":  "YuE2GenerateABC",
+                                                  "_meta":  {
+                                                                "title":  "YuE2 Generate ABC"
+                                                            }
+                                              },
+                                       "33":  {
+                                                  "inputs":  {
+                                                                 "audio":  "Lesley Gore - You Dont Own Me.mp3"
+                                                             },
+                                                  "class_type":  "LoadAudio",
+                                                  "_meta":  {
+                                                                "title":  "Load Audio"
+                                                            }
+                                              },
+                                       "35":  {
+                                                  "inputs":  {
+                                                                 "input_1":  [
+                                                                                 "23",
+                                                                                 0
+                                                                             ],
+                                                                 "input_2":  [
+                                                                                 "21",
+                                                                                 0
+                                                                             ],
+                                                                 "SwitchState":  "2"
+                                                             },
+                                                  "class_type":  "PixaromaSwitch",
+                                                  "_meta":  {
+                                                                "title":  "Switch Pixaroma"
+                                                            }
+                                              }
+                                   },
+                                   {
+                                       "client_id":  "aae11e0e-03f0-4d8e-9a8e-219f7c5c27e5",
+                                       "create_time":  1789633815533
+                                   },
+                                   [
+                                       "10",
+                                       "21",
+                                       "14"
+                                   ]
+                               ],
+                    "outputs":  {
+                                    "21":  {
+                                               "text":  [
+                                                            "X:1\nT:\nM:6/8\nL:1/32\nQ:1/4=101\nV: Vocal clef=treble name=\"Vocal Melody\" snm=\"Vocal\"\nV: Ins clef=treble name=\"Ins Melody\" snm=\"Inst.\"\nK:Gm\n% intro\nV: Vocal\nZ4|\nV: Ins\nz16B4A4|G4G4G4G4G4G4|G4G4G4G4G4B2A2|G4G4G4G4G4G4|\nV: Vocal\nZ|\nV: Ins\nG4G4G4G4G4B2A2|\n% verse\nV: Vocal\nz16d4B4|e8c16|z12d4c4A4|c2d2c12B2A6|\nV: Ins\nG4z16z4|Z3|\nV: Vocal\nG12z4d4B4|e8c16|z12d4c4A4|c4d4c4z4B2A6|\nV: Ins\nZ4|\nV: Vocal\nG24-|G8z12d4|\nV: Ins\nZ2|\n% chorus\nV: Vocal\ng16g4a4|=b4a2g2z16|g16g4a4|=b4a2g6z8g4|\nV: Ins\nZ4|\nV: Vocal\ng12g2g2g4a4|=b4a2g2g2z12z2|a12a8=b4|c\u00274=b4a8d8-|\nV: Ins\nZ4|\n% verse\nV: Vocal\nd8z8d4B4|e6c2c12z4|z12d4c4A4|c4d4c8B2A6|\nV: Ins\nZ4|\nV: Vocal\nG12z4d4B4|e6c2c16|z12d4c4A4|c4d4c8B2A6|\nV: Ins\nZ4|\nV: Vocal\nG24-|G8z12=b4-|\nV: Ins\nZ2|\n% chorus\nV: Vocal\n=b8g8g4a4|=b4a2g2g2z8z2g4|g12g8a4|=b4a2g6z12|\nV: Ins\nZ4|\nV: Vocal\nM:1/8\ng4|\nV: Ins\nM:1/8\nZ|\nV: Vocal\nM:6/8\ng12g8a4|=b4a4g8z8|\nV: Ins\nM:6/8\nZ2|\nV: Vocal\nM:2/8\nZ|\nV: Ins\nM:2/8\nZ|\nV: Vocal\nM:6/8\na12a8=b4|c\u00274=b4a8z4a4|\nV: Ins\nM:6/8\nZ2|\nV: Vocal\nK:Ab\na16z4=b4|=b4a2_b2a8z8|a4a12z4a4-|a4b4c\u00274a2b2a8|\nV: Ins\nK:Ab\nZ4|\nV: Vocal\na2b2a8z4a4a4|a4a8b4b4b4|c\u00274b4a4z8a4|b8b4b8c\u00274|\nV: Ins\nZ4|\nV: Vocal\nd\u00272b2b4c\u00274b12|\nV: Ins\nZ|\n% interlude\nV: Vocal\nK:G#m\nZ4|\nV: Ins\nK:G#m\nd\u002716z4b4|e\u00278c\u002716-|c\u00278z4d\u00274c\u00274a4|c\u00274d\u00274c\u00274b8a4|\nV: Vocal\nZ4|\nV: Ins\ng12d\u00278b4|g12d\u00278b4|e\u00278c\u002716-|c\u00278z4d\u00274c\u00274a4|\nV: Vocal\nZ2|z16^b2z2b4-|\nV: Ins\nc\u00274d\u00274c\u00274b8a4|g16^B4d4|g4^b4b4b4z8|\n% chorus\nV: Vocal\n^b4a4a4z8b4|^b8b4d\u00274b4a4|a4g4^b4b4a4a4|z4^b4b8b4b4|\nV: Ins\nZ4|\nV: Vocal\n^b4a4g2z6b4b4|^b8z4b4b4b4|^b4a4g4z12|a12a8a4-|\nV: Ins\nZ4|\nV: Vocal\na4^b4b4c\u00274b4a4|z8a4=a12|=a8b4b4b4a4|b4b4=a4a4b4z4|\nV: Ins\nZ4|\nV: Vocal\n=a4a4a8a4b4|=a4z4a4a4a8|=a8b4a4b4b4|c\u00274b4=a4a4z8|\nV: Ins\nZ4|\nV: Vocal\nz8b12b4-|b4c\u00274^^c\u00274b4b4b4|b4a4z16|c\u00274c\u00274c\u00274b4b4a4|\nV: Ins\nZ4|\nV: Vocal\na2z12z2a2z6|Z2|z16z3[K:Gm]z4z|\nV: Ins\nZ|z8c\u00274c\u00274^^c\u00274a4|a4a4a4a4a4a4|a4a4a4a4a3[K:Gm]z4z|\n"
+                                                        ]
+                                           },
+                                    "14":  {
+                                               "text":  [
+                                                            "X:1\nT:\nM:6/8\nL:1/32\nQ:1/4=101\nV: Vocal clef=treble name=\"Vocal Melody\" snm=\"Vocal\"\nV: Ins clef=treble name=\"Ins Melody\" snm=\"Inst.\"\nK:Gm\n% intro\nV: Vocal\nZ4|\nV: Ins\nz16B4A4|G4G4G4G4G4G4|G4G4G4G4G4B2A2|G4G4G4G4G4G4|\nV: Vocal\nZ|\nV: Ins\nG4G4G4G4G4B2A2|\n% verse\nV: Vocal\nz16d4B4|e8c16|z12d4c4A4|c2d2c12B2A6|\nV: Ins\nG4z16z4|Z3|\nV: Vocal\nG12z4d4B4|e8c16|z12d4c4A4|c4d4c4z4B2A6|\nV: Ins\nZ4|\nV: Vocal\nG24-|G8z12d4|\nV: Ins\nZ2|\n% chorus\nV: Vocal\ng16g4a4|=b4a2g2z16|g16g4a4|=b4a2g6z8g4|\nV: Ins\nZ4|\nV: Vocal\ng12g2g2g4a4|=b4a2g2g2z12z2|a12a8=b4|c\u00274=b4a8d8-|\nV: Ins\nZ4|\n% verse\nV: Vocal\nd8z8d4B4|e6c2c12z4|z12d4c4A4|c4d4c8B2A6|\nV: Ins\nZ4|\nV: Vocal\nG12z4d4B4|e6c2c16|z12d4c4A4|c4d4c8B2A6|\nV: Ins\nZ4|\nV: Vocal\nG24-|G8z12=b4-|\nV: Ins\nZ2|\n% chorus\nV: Vocal\n=b8g8g4a4|=b4a2g2g2z8z2g4|g12g8a4|=b4a2g6z12|\nV: Ins\nZ4|\nV: Vocal\nM:1/8\ng4|\nV: Ins\nM:1/8\nZ|\nV: Vocal\nM:6/8\ng12g8a4|=b4a4g8z8|\nV: Ins\nM:6/8\nZ2|\nV: Vocal\nM:2/8\nZ|\nV: Ins\nM:2/8\nZ|\nV: Vocal\nM:6/8\na12a8=b4|c\u00274=b4a8z4a4|\nV: Ins\nM:6/8\nZ2|\nV: Vocal\nK:Ab\na16z4=b4|=b4a2_b2a8z8|a4a12z4a4-|a4b4c\u00274a2b2a8|\nV: Ins\nK:Ab\nZ4|\nV: Vocal\na2b2a8z4a4a4|a4a8b4b4b4|c\u00274b4a4z8a4|b8b4b8c\u00274|\nV: Ins\nZ4|\nV: Vocal\nd\u00272b2b4c\u00274b12|\nV: Ins\nZ|\n% interlude\nV: Vocal\nK:G#m\nZ4|\nV: Ins\nK:G#m\nd\u002716z4b4|e\u00278c\u002716-|c\u00278z4d\u00274c\u00274a4|c\u00274d\u00274c\u00274b8a4|\nV: Vocal\nZ4|\nV: Ins\ng12d\u00278b4|g12d\u00278b4|e\u00278c\u002716-|c\u00278z4d\u00274c\u00274a4|\nV: Vocal\nZ2|z16^b2z2b4-|\nV: Ins\nc\u00274d\u00274c\u00274b8a4|g16^B4d4|g4^b4b4b4z8|\n% chorus\nV: Vocal\n^b4a4a4z8b4|^b8b4d\u00274b4a4|a4g4^b4b4a4a4|z4^b4b8b4b4|\nV: Ins\nZ4|\nV: Vocal\n^b4a4g2z6b4b4|^b8z4b4b4b4|^b4a4g4z12|a12a8a4-|\nV: Ins\nZ4|\nV: Vocal\na4^b4b4c\u00274b4a4|z8a4=a12|=a8b4b4b4a4|b4b4=a4a4b4z4|\nV: Ins\nZ4|\nV: Vocal\n=a4a4a8a4b4|=a4z4a4a4a8|=a8b4a4b4b4|c\u00274b4=a4a4z8|\nV: Ins\nZ4|\nV: Vocal\nz8b12b4-|b4c\u00274^^c\u00274b4b4b4|b4a4z16|c\u00274c\u00274c\u00274b4b4a4|\nV: Ins\nZ4|\nV: Vocal\na2z12z2a2z6|Z2|z16z3[K:Gm]z4z|\nV: Ins\nZ|z8c\u00274c\u00274^^c\u00274a4|a4a4a4a4a4a4|a4a4a4a4a3[K:Gm]z4z|\n"
+                                                        ]
+                                           },
+                                    "10":  {
+                                               "audio":  [
+                                                             {
+                                                                 "filename":  "YuE2_00002.mp3",
+                                                                 "subfolder":  "audio",
+                                                                 "type":  "output"
+                                                             }
+                                                         ]
+                                           }
+                                },
+                    "status":  {
+                                   "status_str":  "success",
+                                   "completed":  true,
+                                   "messages":  [
+                                                    [
+                                                        "execution_start",
+                                                        {
+                                                            "prompt_id":  "1553851c-dec8-4d40-b321-95889393670a",
+                                                            "timestamp":  1789633815534
+                                                        }
+                                                    ],
+                                                    [
+                                                        "execution_cached",
+                                                        {
+                                                            "nodes":  [
+
+                                                                      ],
+                                                            "prompt_id":  "1553851c-dec8-4d40-b321-95889393670a",
+                                                            "timestamp":  1789633815544
+                                                        }
+                                                    ],
+                                                    [
+                                                        "execution_success",
+                                                        {
+                                                            "prompt_id":  "1553851c-dec8-4d40-b321-95889393670a",
+                                                            "timestamp":  1789634071887
+                                                        }
+                                                    ]
+                                                ]
+                               },
+                    "meta":  {
+                                 "21":  {
+                                            "node_id":  "21",
+                                            "display_node":  "21",
+                                            "parent_node":  null,
+                                            "real_node_id":  "21"
+                                        },
+                                 "14":  {
+                                            "node_id":  "14",
+                                            "display_node":  "14",
+                                            "parent_node":  null,
+                                            "real_node_id":  "14"
+                                        },
+                                 "10":  {
+                                            "node_id":  "10",
+                                            "display_node":  "10",
+                                            "parent_node":  null,
+                                            "real_node_id":  "10"
+                                        }
+                             }
+                }
+}

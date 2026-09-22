@@ -1,0 +1,208 @@
+{
+  "5": {
+    "inputs": {
+      "seconds": [
+        "22",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyYuE2LatentAudio",
+    "_meta": {
+      "title": "Empty YuE2 Latent Audio"
+    }
+  },
+  "8": {
+    "inputs": {
+      "seed": 7,
+      "steps": 32,
+      "cfg": 1,
+      "sampler_name": "dpm_2",
+      "scheduler": "sgm_uniform",
+      "denoise": 1,
+      "model": [
+        "15",
+        0
+      ],
+      "positive": [
+        "22",
+        0
+      ],
+      "negative": [
+        "22",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "9": {
+    "inputs": {
+      "samples": [
+        "8",
+        0
+      ],
+      "vae": [
+        "15",
+        2
+      ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
+    }
+  },
+  "10": {
+    "inputs": {
+      "filename_prefix": "audio/YuE2",
+      "format": "mp3",
+      "format.quality": "V0",
+      "audio": [
+        "9",
+        0
+      ]
+    },
+    "class_type": "SaveAudioAdvanced",
+    "_meta": {
+      "title": "Save Audio (Advanced)"
+    }
+  },
+  "14": {
+    "inputs": {
+      "source": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "PreviewAny",
+    "_meta": {
+      "title": "Preview as Text"
+    }
+  },
+  "15": {
+    "inputs": {
+      "ckpt_name": "yue2_3b_bf16.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "18": {
+    "inputs": {
+      "audio_encoder_name": "sheetsage2_bf16.safetensors"
+    },
+    "class_type": "AudioEncoderLoader",
+    "_meta": {
+      "title": "Load Audio Encoder"
+    }
+  },
+  "19": {
+    "inputs": {
+      "mode": "melody",
+      "audio_encoder": [
+        "18",
+        0
+      ],
+      "audio": [
+        "33",
+        0
+      ]
+    },
+    "class_type": "SheetSage2AudioToABC",
+    "_meta": {
+      "title": "SheetSage2 Audio to ABC"
+    }
+  },
+  "21": {
+    "inputs": {
+      "source": [
+        "19",
+        0
+      ]
+    },
+    "class_type": "PreviewAny",
+    "_meta": {
+      "title": "Preview as Text"
+    }
+  },
+  "22": {
+    "inputs": {
+      "style": "A reckless, high-speed pop-punk and alt-rock anthem exploding from a feedback-laced intro into a sharp, distorted guitar hook that instantly locks in—raw, urgent, and unapologetically loud, The harmony rides bold, hook-heavy major progressions with gritty minor pivots, channeling early-2000s DIY energy, Verses punch forward with tight, snare-cracking drums and a gritty bassline glued to palm-muted guitars, while the canadian female lead vocal delivers brash, natural attitude—confident, chaotic, and emotionally charged, The chorus detonates into huge open chords and doubled vocals stacked with group shouts, built for sweat-soaked singalongs.",
+      "lyrics": "[Intro, instrumental]\n\n[Verse]\nla la la la\nla la la la la la la-la laaa\nla la la la\nla la la la la la la-la laaa\n\n[Chorus]\nla la la la la la la\nla la la la la la\nla la, la la la la la la\nla la la la la-la laa\n\n[Verse]\nla la la la\nla la la la la la la-la laaa\nla la la la\nla la la la la la la-la laaa\n\n[Chorus]\nla la la la la la la\nla la la la la la la\nla la la la la la-la\nla la la la la la\n\n[Bridge]\nla la, la la la la la la\nla la, la la la la la la\nla la la la la la la la\nla la la la la-la-la la laa\n\n[Chorus]\nla la la la la la la\nla la la la la la la\nLa la, la la la la la la\nla la la la la-la\n\n[Chorus]\nla la la la la la la\nlaa, la la la la la la\nla la la la la la-la\nla la la la la la\n\n[Outro]\nla la la la la la la la\nla la la la la la la la\nla la la la la la la\nla la la la la-la-la la la",
+      "abc": [
+        "14",
+        0
+      ],
+      "seed": 42,
+      "mode": "full",
+      "max_duration": 240,
+      "temperature": 1,
+      "top_p": 0.95,
+      "top_k": 100,
+      "repetition_penalty": 1.2,
+      "clip": [
+        "15",
+        1
+      ]
+    },
+    "class_type": "YuE2GenerateMusic",
+    "_meta": {
+      "title": "YuE2 Generate Music"
+    }
+  },
+  "23": {
+    "inputs": {
+      "style": "A reckless, high-speed pop-punk and alt-rock anthem exploding from a feedback-laced intro into a sharp, distorted guitar hook that instantly locks in—raw, urgent, and unapologetically loud, The harmony rides bold, hook-heavy major progressions with gritty minor pivots, channeling early-2000s DIY energy, Verses punch forward with tight, snare-cracking drums and a gritty bassline glued to palm-muted guitars, while the canadian female lead vocal delivers brash, natural attitude—confident, chaotic, and emotionally charged, The chorus detonates into huge open chords and doubled vocals stacked with group shouts, built for sweat-soaked singalongs.",
+      "lyrics": "[Intro, instrumental]\n\n[Verse]\nla la la la\nla la la la la la la-la laaa\nla la la la\nla la la la la la la-la laaa\n\n[Chorus]\nla la la la la la la\nla la la la la la\nla la, la la la la la la\nla la la la la-la laa\n\n[Verse]\nla la la la\nla la la la la la la-la laaa\nla la la la\nla la la la la la la-la laaa\n\n[Chorus]\nla la la la la la la\nla la la la la la la\nla la la la la la-la\nla la la la la la\n\n[Bridge]\nla la, la la la la la la\nla la, la la la la la la\nla la la la la la la la\nla la la la la-la-la la laa\n\n[Chorus]\nla la la la la la la\nla la la la la la la\nLa la, la la la la la la\nla la la la la-la\n\n[Chorus]\nla la la la la la la\nlaa, la la la la la la\nla la la la la la-la\nla la la la la la\n\n[Outro]\nla la la la la la la la\nla la la la la la la la\nla la la la la la la\nla la la la la-la-la la la",
+      "seed": 875558237913091,
+      "mode": "full",
+      "max_abc_tokens": 8192,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "top_k": 30,
+      "repetition_penalty": 1.005,
+      "penalty_window": 100,
+      "clip": [
+        "15",
+        1
+      ]
+    },
+    "class_type": "YuE2GenerateABC",
+    "_meta": {
+      "title": "YuE2 Generate ABC"
+    }
+  },
+  "33": {
+    "inputs": {
+      "audio": "Lesley Gore - You Dont Own Me.mp3"
+    },
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "Load Audio"
+    }
+  },
+  "35": {
+    "inputs": {
+      "input_1": [
+        "23",
+        0
+      ],
+      "input_2": [
+        "21",
+        0
+      ],
+      "SwitchState": "2"
+    },
+    "class_type": "PixaromaSwitch",
+    "_meta": {
+      "title": "Switch Pixaroma"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+﻿{
+    "profileId":  "comfy-yue2-bf16-cover-v1",
+    "runMode":  "preflight-only",
+    "startedAtUtc":  "2026-09-15T16:05:13.5982600Z",
+    "baseUrl":  "http://127.0.0.1:8188",
+    "workflowPath":  "D:\\AI Music Studio v2\\yue2_comfyui.json",
+    "workflowSha256":  "e284e8dcc0e38e7406027eed349f4f0aaba7986f8cda712daff4e1563df56747",
+    "systemStats":  {
+                        "system":  {
+                                       "os":  "win32",
+                                       "ram_total":  33157967872,
+                                       "ram_free":  8819834880,
+                                       "comfyui_version":  "0.35.0",
+                                       "required_frontend_version":  "1.52.7",
+                                       "installed_templates_version":  "0.11.60",
+                                       "required_templates_version":  "0.11.60",
+                                       "comfy_package_versions":  [
+                                                                      {
+                                                                          "name":  "comfyui-frontend-package",
+                                                                          "installed":  "1.52.7",
+                                                                          "required":  "1.52.7"
+                                                                      },
+                                                                      {
+                                                                          "name":  "comfyui-workflow-templates",
+                                                                          "installed":  "0.11.60",
+                                                                          "required":  "0.11.60"
+                                                                      },
+                                                                      {
+                                                                          "name":  "comfyui-embedded-docs",
+                                                                          "installed":  "0.5.11",
+                                                                          "required":  "0.5.11"
+                                                                      },
+                                                                      {
+                                                                          "name":  "comfy-kitchen",
+                                                                          "installed":  "0.2.34",
+                                                                          "required":  "0.2.34"
+                                                                      },
+                                                                      {
+                                                                          "name":  "comfy-aimdo",
+                                                                          "installed":  "0.5.3",
+                                                                          "required":  "0.5.3"
+                                                                      }
+                                                                  ],
+                                       "python_version":  "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+                                       "pytorch_version":  "2.11.0+cu130",
+                                       "embedded_python":  true,
+                                       "deploy_environment":  "local-git",
+                                       "argv":  [
+                                                    "D:\\ComfyUI-Easy-Install\\ComfyUI\\main.py",
+                                                    "--windows-standalone-build",
+                                                    "--use-ck-attention",
+                                                    "--disable-auto-launch"
+                                                ]
+                                   },
+                        "devices":  [
+                                        {
+                                            "name":  "cuda:0 NVIDIA GeForce RTX 4060 Ti : cudaMallocAsync",
+                                            "type":  "cuda",
+                                            "index":  0,
+                                            "vram_total":  17175150592,
+                                            "vram_free":  4532410803,
+                                            "torch_vram_total":  67108864,
+                                            "torch_vram_free":  48150964
+                                        }
+                                    ]
+                    },
+    "requiredClasses":  [
+                            "EmptyYuE2LatentAudio",
+                            "KSampler",
+                            "VAEDecodeAudio",
+                            "SaveAudioAdvanced",
+                            "PreviewAny",
+                            "CheckpointLoaderSimple",
+                            "AudioEncoderLoader",
+                            "SheetSage2AudioToABC",
+                            "YuE2GenerateMusic",
+                            "YuE2GenerateABC",
+                            "LoadAudio",
+                            "PixaromaSwitch"
+                        ],
+    "missingClasses":  [
+
+                       ],
+    "gpuSamples":  [
+                       {
+                           "name":  "NVIDIA GeForce RTX 4060 Ti",
+                           "temperatureC":  39,
+                           "memoryUsedMiB":  11499,
+                           "memoryTotalMiB":  16380,
+                           "utilizationPercent":  25
+                       }
+                   ],
+    "promptId":  null,
+    "terminalStatus":  "preflight-passed",
+    "elapsedSeconds":  7.067,
+    "history":  null
+}
