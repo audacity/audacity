@@ -118,7 +118,6 @@ private:
     std::optional<ItemSelectionAnchor> m_itemSelectionAnchor;
     void resetItemSelectionAnchorIfNoSelection();
     void addSelectedTrack(const trackedit::TrackId& trackId);
-    void updateSelectionController();
     void onHistoryEvent(const trackedit::HistoryEvent& event);
     ClipKeyList findClipsIntersectingRangeSelection() const;
     LabelKeyList findLabelsIntersectingRangeSelection() const;
@@ -127,6 +126,8 @@ private:
     LabelKeyList labelKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const;
 
     au3::Au3Project& projectRef() const;
+
+    friend class Au3SelectionControllerTests;
     Observer::Subscription m_tracksSubc;
 
     template<typename T>
@@ -139,15 +140,27 @@ private:
         muse::async::Channel<T> changed;
         muse::async::Channel<T> selected;
 
-        void set(const T& v, bool complete)
+        bool assign(const T& v)
         {
             if (val == v) {
-                return;
+                return false;
             }
             val = v;
-            changed.send(v);
+            return true;
+        }
+
+        void notify(bool complete)
+        {
+            changed.send(val);
             if (complete) {
-                selected.send(v);
+                selected.send(val);
+            }
+        }
+
+        void set(const T& v, bool complete)
+        {
+            if (assign(v)) {
+                notify(complete);
             }
         }
     };
