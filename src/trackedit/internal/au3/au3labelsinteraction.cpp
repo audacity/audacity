@@ -385,7 +385,7 @@ muse::RetVal<LabelKeyList> Au3LabelsInteraction::moveLabels(const LabelKeyList& 
         if (moveToAnotherTrack) {
             Au3LabelTrack* toLabelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(toTrackId));
 
-            int64_t newLabelId = toLabelTrack->AddLabel(au3Label.getSelectedRegion(), au3Label.title);
+            int64_t newLabelId = toLabelTrack->AddLabel(au3Label);
             labelTrack->DeleteLabelById(au3Label.GetId());
 
             changedTracks.insert(labelTrack);
@@ -457,7 +457,7 @@ muse::RetVal<LabelKeyList> Au3LabelsInteraction::moveLabelsToTrack(const LabelKe
             continue;
         }
 
-        int64_t newLabelId = toLabelTrack->AddLabel(au3Label->getSelectedRegion(), au3Label->title);
+        int64_t newLabelId = toLabelTrack->AddLabel(*au3Label);
         labelTrack->DeleteLabelById(au3Label->GetId());
 
         changedTracks.push_back(labelTrack);
