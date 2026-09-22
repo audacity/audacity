@@ -705,16 +705,16 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
         }
     }
 
-    std::vector<Au3WaveTrack*> waveCopies;
+    std::vector<Au3Track*> trackCopies;
     for (const auto& copy : copies) {
         if (auto waveCopy = dynamic_cast<Au3WaveTrack*>(copy.get())) {
             for (const auto& clip : DomAccessor::waveClipsAsList(waveCopy)) {
                 clip->SetId(Au3WaveClip::NewID());
             }
-            waveCopies.push_back(waveCopy);
         }
+        trackCopies.push_back(copy.get());
     }
-    utils::remapCopiedClipGroups(*prj, tracks, waveCopies);
+    utils::remapCopiedItemGroups(*prj, tracks, trackCopies);
 
     for (const auto& dest : copies) {
         tracks.Add(dest);
@@ -865,13 +865,11 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
         clones.push_back(au3Clone);
     }
 
-    std::vector<Au3WaveTrack*> waveClones;
+    std::vector<Au3Track*> trackClones;
     for (const auto& clone : clones) {
-        if (auto waveClone = dynamic_cast<Au3WaveTrack*>(clone.get())) {
-            waveClones.push_back(waveClone);
-        }
+        trackClones.push_back(clone.get());
     }
-    utils::remapCopiedClipGroups(*prj, tracks, waveClones);
+    utils::remapCopiedItemGroups(*prj, tracks, trackClones);
 
     for (const auto& au3Clone : clones) {
         tracks.Add(au3Clone, ::TrackList::DoAssignId::Yes);

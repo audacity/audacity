@@ -346,49 +346,63 @@ void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& p
     }
 }
 
-void au::trackedit::utils::remapCopiedClipGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks,
-                                                 const std::vector<au3::Au3WaveTrack*>& copies)
+namespace {
+template<typename Fn>
+void forEachGroupedItem(au::au3::Au3Track* track, Fn&& fn)
 {
-    std::map<int64_t, size_t> copiedClipCounts;
-    for (au3::Au3WaveTrack* copy : copies) {
-        for (const auto& clip : copy->Intervals()) {
-            const int64_t groupId = clip->GetGroupId();
-            if (groupId != -1) {
-                ++copiedClipCounts[groupId];
+    if (auto waveTrack = dynamic_cast<au::au3::Au3WaveTrack*>(track)) {
+        for (const auto& clip : waveTrack->Intervals()) {
+            if (clip->GetGroupId() != -1) {
+                fn(clip->GetGroupId(), [&clip](int64_t id) { clip->SetGroupId(id); });
+            }
+        }
+    } else if (auto labelTrack = dynamic_cast<au::au3::Au3LabelTrack*>(track)) {
+        const LabelArray& labels = labelTrack->GetLabels();
+        for (size_t i = 0; i < labels.size(); ++i) {
+            if (labels[i].GetGroupId() != -1) {
+                fn(labels[i].GetGroupId(), [labelTrack, i](int64_t id) {
+                    au::au3::Au3Label label = labelTrack->GetLabels()[i];
+                    label.SetGroupId(id);
+                    labelTrack->SetLabel(i, label);
+                });
             }
         }
     }
+}
+}
 
-    if (copiedClipCounts.empty()) {
+void au::trackedit::utils::remapCopiedItemGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks,
+                                                 const std::vector<au3::Au3Track*>& copies)
+{
+    std::map<int64_t, size_t> copiedItemCounts;
+    for (au3::Au3Track* copy : copies) {
+        forEachGroupedItem(copy, [&copiedItemCounts](int64_t groupId, auto&&) {
+            ++copiedItemCounts[groupId];
+        });
+    }
+
+    if (copiedItemCounts.empty()) {
         return;
     }
 
-    std::map<int64_t, size_t> projectClipCounts;
+    std::map<int64_t, size_t> projectItemCounts;
     for (const au3::Au3Track* track : projectTracks) {
-        const auto waveTrack = dynamic_cast<const au3::Au3WaveTrack*>(track);
-        if (!waveTrack) {
-            continue;
-        }
-        for (const auto& clip : waveTrack->Intervals()) {
-            const int64_t groupId = clip->GetGroupId();
-            if (muse::contains(copiedClipCounts, groupId)) {
-                ++projectClipCounts[groupId];
+        forEachGroupedItem(const_cast<au3::Au3Track*>(track), [&](int64_t groupId, auto&&) {
+            if (muse::contains(copiedItemCounts, groupId)) {
+                ++projectItemCounts[groupId];
             }
-        }
+        });
     }
 
+    //! NOTE A group copied only partially is dissolved in the copy; a fully copied
+    //! group gets a fresh id so it does not merge with the original
     std::map<int64_t, int64_t> remappedGroupIds;
     int64_t searchFrom = 0;
-    for (au3::Au3WaveTrack* copy : copies) {
-        for (const auto& clip : copy->Intervals()) {
-            const int64_t oldGroupId = clip->GetGroupId();
-            if (oldGroupId == -1) {
-                continue;
-            }
-
-            if (copiedClipCounts[oldGroupId] != projectClipCounts[oldGroupId]) {
-                clip->SetGroupId(-1);
-                continue;
+    for (au3::Au3Track* copy : copies) {
+        forEachGroupedItem(copy, [&](int64_t oldGroupId, auto&& setGroupId) {
+            if (copiedItemCounts[oldGroupId] != projectItemCounts[oldGroupId]) {
+                setGroupId(-1);
+                return;
             }
 
             auto it = remappedGroupIds.find(oldGroupId);
@@ -397,7 +411,7 @@ void au::trackedit::utils::remapCopiedClipGroups(const ITrackeditProject& prj, c
                 searchFrom = newGroupId + 1;
                 it = remappedGroupIds.insert({ oldGroupId, newGroupId }).first;
             }
-            clip->SetGroupId(it->second);
-        }
+            setGroupId(it->second);
+        });
     }
 }

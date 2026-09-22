@@ -620,12 +620,12 @@ bool Au3ClipsInteraction::duplicateClips(const ClipKeyList& clipKeyList)
         newTracks.push_back(newTrack);
     }
 
-    std::vector<Au3WaveTrack*> copies;
+    std::vector<Au3Track*> copies;
     copies.reserve(newTracks.size());
     for (const auto& newTrack : newTracks) {
         copies.push_back(newTrack.get());
     }
-    utils::remapCopiedClipGroups(*prj, projectTracks, copies);
+    utils::remapCopiedItemGroups(*prj, projectTracks, copies);
 
     for (const auto& newTrack : newTracks) {
         projectTracks.Add(newTrack);
