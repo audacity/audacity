@@ -266,11 +266,11 @@ TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
 {
     TrackItemKeyList result = selectionController()->selectedLabels();
 
-    trackedit::TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+    const std::optional<trackedit::TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (focusedItemKey && !muse::contains(result, *focusedItemKey)) {
         const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        if (prj && prj->track(focusedItemKey.trackId)->type == TrackType::Label) {
-            result.insert(result.cbegin(), focusedItemKey);
+        if (prj && prj->track(focusedItemKey->trackId)->type == TrackType::Label) {
+            result.insert(result.cbegin(), *focusedItemKey);
         }
     }
 
@@ -286,7 +286,8 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const LabelKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
+        const trackedit::TrackItemKey anchor = trackNavigationController()->focus().itemKey().value_or(trackedit::TrackItemKey {});
+        const LabelKeyList rangeKeys = trackNavigationController()->itemKeysInRange(anchor, key.key);
         if (!rangeKeys.empty()) {
             selectionController()->resetDataSelection();
             selectionController()->resetSelectedClips();

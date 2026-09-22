@@ -35,8 +35,8 @@ public:
         m_requests = std::make_shared<TracksViewRequestsService>(m_testCtx);
         m_controller->tracksViewRequestsService.set(m_requests);
 
-        ON_CALL(*m_trackNavigationController, focusedItem())
-        .WillByDefault(Return(TrackItemKey { INVALID_TRACK, INVALID_TRACK_ITEM }));
+        ON_CALL(*m_trackNavigationController, focus())
+        .WillByDefault(Return(TrackFocus::track(INVALID_TRACK)));
 
         ON_CALL(*m_selectionController, selectedClips())
         .WillByDefault(Return(ClipKeyList {}));
@@ -117,7 +117,7 @@ TEST_F(TrackeditActionsControllerTests, CancelDragPreservesTimeSelectionUntilNex
     });
     EXPECT_CALL(*m_trackeditInteraction, notifyAboutCancelDragEdit());
     EXPECT_CALL(*m_selectionController, resetTimeSelection());
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(5, false));
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::track(5), false));
 
     cancel();
     cancel();
@@ -130,13 +130,12 @@ TEST_F(TrackeditActionsControllerTests, CancelDragPreservesTimeSelectionUntilNex
 TEST_F(TrackeditActionsControllerTests, ClipFocusNoSelection_DropsFocusAndFocusesTrack)
 {
     //! [GIVEN] A clip is focused on track 1, nothing is selected
-    ON_CALL(*m_trackNavigationController, focusedItem())
-    .WillByDefault(Return(TrackItemKey { 1, 100 }));
+    ON_CALL(*m_trackNavigationController, focus())
+    .WillByDefault(Return(TrackFocus::item({ 1, 100 })));
 
     //! [EXPECT] The focus is dropped and moved to the focused clip's track (no item focus)
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(1, false)).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedItem(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::track(1), false)).Times(1);
 
     cancel();
 }
@@ -148,15 +147,14 @@ TEST_F(TrackeditActionsControllerTests, ClipFocusNoSelection_DropsFocusAndFocuse
 TEST_F(TrackeditActionsControllerTests, ClipFocusWithClipSelection_MovesFocusToSelectedClip)
 {
     //! [GIVEN] A clip is focused, and clip {2, 200} is selected
-    ON_CALL(*m_trackNavigationController, focusedItem())
-    .WillByDefault(Return(TrackItemKey { 1, 100 }));
+    ON_CALL(*m_trackNavigationController, focus())
+    .WillByDefault(Return(TrackFocus::item({ 1, 100 })));
     ON_CALL(*m_selectionController, selectedClips())
     .WillByDefault(Return(ClipKeyList { { 2, 200 } }));
 
     //! [EXPECT] The focus is dropped and moved onto the selected clip
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedItem(TrackItemKey { 2, 200 }, false)).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::item({ 2, 200 }), false)).Times(1);
     EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(0);
 
     cancel();
@@ -169,15 +167,14 @@ TEST_F(TrackeditActionsControllerTests, ClipFocusWithClipSelection_MovesFocusToS
 TEST_F(TrackeditActionsControllerTests, ClipFocusWithLabelSelection_MovesFocusToSelectedLabel)
 {
     //! [GIVEN] A clip is focused, no clips selected, label {3, 300} is selected
-    ON_CALL(*m_trackNavigationController, focusedItem())
-    .WillByDefault(Return(TrackItemKey { 1, 100 }));
+    ON_CALL(*m_trackNavigationController, focus())
+    .WillByDefault(Return(TrackFocus::item({ 1, 100 })));
     ON_CALL(*m_selectionController, selectedLabels())
     .WillByDefault(Return(LabelKeyList { { 3, 300 } }));
 
     //! [EXPECT] The focus is dropped and moved onto the selected label
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedItem(TrackItemKey { 3, 300 }, false)).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::item({ 3, 300 }), false)).Times(1);
 
     cancel();
 }
@@ -189,16 +186,15 @@ TEST_F(TrackeditActionsControllerTests, ClipFocusWithLabelSelection_MovesFocusTo
 TEST_F(TrackeditActionsControllerTests, ClipFocusOnSelectedClip_DeselectsAndFocusesTrack)
 {
     //! [GIVEN] Clip {2, 200} is focused and is part of the clip selection
-    ON_CALL(*m_trackNavigationController, focusedItem())
-    .WillByDefault(Return(TrackItemKey { 2, 200 }));
+    ON_CALL(*m_trackNavigationController, focus())
+    .WillByDefault(Return(TrackFocus::item({ 2, 200 })));
     ON_CALL(*m_selectionController, selectedClips())
     .WillByDefault(Return(ClipKeyList { { 2, 200 } }));
 
     //! [EXPECT] The focus is dropped, the clip selection cleared and the clip's track focused
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(1);
     EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(2, false)).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedItem(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::track(2), false)).Times(1);
 
     cancel();
 }
@@ -210,16 +206,15 @@ TEST_F(TrackeditActionsControllerTests, ClipFocusOnSelectedClip_DeselectsAndFocu
 TEST_F(TrackeditActionsControllerTests, LabelFocusOnSelectedLabel_DeselectsAndFocusesTrack)
 {
     //! [GIVEN] Label {3, 300} is focused and is part of the label selection (no clips selected)
-    ON_CALL(*m_trackNavigationController, focusedItem())
-    .WillByDefault(Return(TrackItemKey { 3, 300 }));
+    ON_CALL(*m_trackNavigationController, focus())
+    .WillByDefault(Return(TrackFocus::item({ 3, 300 })));
     ON_CALL(*m_selectionController, selectedLabels())
     .WillByDefault(Return(LabelKeyList { { 3, 300 } }));
 
     //! [EXPECT] The focus is dropped, the label selection cleared and the label's track focused
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(1);
     EXPECT_CALL(*m_selectionController, resetSelectedLabels()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(3, false)).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedItem(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::track(3), false)).Times(1);
 
     cancel();
 }
@@ -231,14 +226,13 @@ TEST_F(TrackeditActionsControllerTests, LabelFocusOnSelectedLabel_DeselectsAndFo
 TEST_F(TrackeditActionsControllerTests, TrackFocusNoSelection_OnlyCancelsDragEdit)
 {
     //! [GIVEN] A track (no item) is focused, nothing is selected
-    ON_CALL(*m_trackNavigationController, focusedItem())
-    .WillByDefault(Return(TrackItemKey { 1, INVALID_TRACK_ITEM }));
+    ON_CALL(*m_trackNavigationController, focus())
+    .WillByDefault(Return(TrackFocus::track(1)));
 
     //! [EXPECT] Only the drag edit is cancelled
     EXPECT_CALL(*m_trackeditInteraction, notifyAboutCancelDragEdit()).Times(1);
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(0);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedItem(::testing::_, ::testing::_)).Times(0);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(::testing::_, ::testing::_)).Times(0);
 
     cancel();
 }
@@ -250,14 +244,14 @@ TEST_F(TrackeditActionsControllerTests, TrackFocusNoSelection_OnlyCancelsDragEdi
 TEST_F(TrackeditActionsControllerTests, TrackFocusWithClipSelection_ResetsSelectionAndFocusesTrack)
 {
     //! [GIVEN] Track 1 is focused (no item), and clip {2, 200} is selected
-    ON_CALL(*m_trackNavigationController, focusedItem())
-    .WillByDefault(Return(TrackItemKey { 1, INVALID_TRACK_ITEM }));
+    ON_CALL(*m_trackNavigationController, focus())
+    .WillByDefault(Return(TrackFocus::track(1)));
     ON_CALL(*m_selectionController, selectedClips())
     .WillByDefault(Return(ClipKeyList { { 2, 200 } }));
 
     //! [EXPECT] The clip selection is reset and the current (focused) track is focused
     EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(1, false)).Times(1);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::track(1), false)).Times(1);
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(0);
 
     cancel();
@@ -277,7 +271,7 @@ TEST_F(TrackeditActionsControllerTests, ClipSelectionNoFocus_ResetsSelectionAndF
 
     //! [EXPECT] The clip selection is reset and the clip's track is focused
     EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(2, false)).Times(1);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::track(2), false)).Times(1);
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(0);
 
     cancel();
@@ -297,7 +291,7 @@ TEST_F(TrackeditActionsControllerTests, LabelSelectionNoFocus_ResetsSelectionAnd
 
     //! [EXPECT] The label selection is reset and the label's track is focused
     EXPECT_CALL(*m_selectionController, resetSelectedLabels()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(3, false)).Times(1);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::track(3), false)).Times(1);
     EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(0);
 
     cancel();
@@ -317,7 +311,7 @@ TEST_F(TrackeditActionsControllerTests, TimeSelectionNoFocus_ResetsTimeSelection
 
     //! [EXPECT] The time selection is reset and the selected track is focused
     EXPECT_CALL(*m_selectionController, resetTimeSelection()).Times(1);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(5, false)).Times(1);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(TrackFocus::track(5), false)).Times(1);
     EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(0);
     EXPECT_CALL(*m_selectionController, resetSelectedLabels()).Times(0);
 
@@ -332,8 +326,7 @@ TEST_F(TrackeditActionsControllerTests, NoFocusNoSelection_OnlyCancelsDragEdit)
     //! [EXPECT] Only the drag edit is cancelled, nothing else changes
     EXPECT_CALL(*m_trackeditInteraction, notifyAboutCancelDragEdit()).Times(1);
     EXPECT_CALL(*m_trackNavigationController, resetNavigation()).Times(0);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedTrack(::testing::_, ::testing::_)).Times(0);
-    EXPECT_CALL(*m_trackNavigationController, setFocusedItem(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackNavigationController, setFocus(::testing::_, ::testing::_)).Times(0);
     EXPECT_CALL(*m_selectionController, resetTimeSelection()).Times(0);
 
     cancel();

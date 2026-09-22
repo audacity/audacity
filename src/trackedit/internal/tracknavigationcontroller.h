@@ -44,18 +44,18 @@ public:
     muse::async::Notification isNavigationActiveChanged() const override;
 
     TrackId focusedTrack() const override;
-    void setFocusedTrack(const TrackId& trackId, bool highlight = false) override;
     muse::async::Channel<TrackId, bool /*highlight*/> focusedTrackChanged() const override;
 
-    TrackItemKey focusedItem() const override;
-    void setFocusedItem(const TrackItemKey& key, bool highlight = false) override;
-    muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const override;
+    TrackFocus focus() const override;
+    void setFocus(const TrackFocus& focus, bool highlight = false) override;
+    muse::async::Channel<TrackFocus, bool /*highlight*/> focusChanged() const override;
 
     TrackItemKeyList itemKeysInRange(const TrackItemKey& anchor, const TrackItemKey& target) const override;
 
     void resetNavigation() override;
 
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
+    muse::async::Channel<TrackId> openRulerContextMenuRequested() const override;
 
 private:
     friend class TrackNavigationControllerTests;
@@ -82,6 +82,7 @@ private:
 
     void navigateToAboveItem();
     void navigateToBelowItem();
+    void navigateToAdjacentRuler(SelectionDirection direction);
     void navigateToFirstItem();
     void navigateToLastItem();
 
@@ -99,6 +100,7 @@ private:
     void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
 
     void openContextMenuForFocusedItem();
+    void openContextMenuForFocusedRuler();
 
     void au3SetTrackFocused(const TrackId& trackId);
 
@@ -113,10 +115,11 @@ private:
 
     std::optional<double> m_savedItemStartTime;
 
-    TrackItemKey m_focusedItemKey;
-    muse::async::Channel<TrackItemKey, bool /*highlight*/> m_focusedItemChanged;
+    TrackFocus m_focus;
+    muse::async::Channel<TrackFocus, bool /*highlight*/> m_focusChanged;
     muse::async::Channel<TrackId, bool /*highlight*/> m_focusedTrackChanged;
 
     muse::async::Channel<TrackItemKey> m_openContextMenuRequested;
+    muse::async::Channel<TrackId> m_openRulerContextMenuRequested;
 };
 }
