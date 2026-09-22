@@ -3,6 +3,8 @@
 */
 #include "trackeditactionscontroller.h"
 
+#include "global/containers.h"
+
 #include <algorithm>
 #include <limits>
 
@@ -100,8 +102,8 @@ static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
 
 static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
-static const ActionCode GROUP_CLIPS_CODE("group-clips");
-static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
+static const ActionCode GROUP_ITEMS_CODE("group-items");
+static const ActionCode UNGROUP_ITEMS_CODE("ungroup-items");
 static const ActionCode RENAME_ITEM_CODE("rename-item");
 
 static const ActionCode SELECT_ALL("select-all");
@@ -203,8 +205,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_CHANGE_RATE_CUSTOM,
     TRACK_MAKE_STEREO,
     TRACK_RESAMPLE,
-    GROUP_CLIPS_CODE,
-    UNGROUP_CLIPS_CODE,
+    GROUP_ITEMS_CODE,
+    UNGROUP_ITEMS_CODE,
 };
 
 void TrackeditActionsController::init()
@@ -286,8 +288,8 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, STRETCH_ENABLED_CODE, this, &TrackeditActionsController::toggleStretchClipToMatchTempo);
 
-    dispatcher()->reg(this, GROUP_CLIPS_CODE, this, &TrackeditActionsController::groupClips);
-    dispatcher()->reg(this, UNGROUP_CLIPS_CODE, this, &TrackeditActionsController::ungroupClips);
+    dispatcher()->reg(this, GROUP_ITEMS_CODE, this, &TrackeditActionsController::groupItems);
+    dispatcher()->reg(this, UNGROUP_ITEMS_CODE, this, &TrackeditActionsController::ungroupItems);
 
     dispatcher()->reg(this, SELECT_ALL, this, &TrackeditActionsController::selectAll);
     dispatcher()->reg(this, SELECT_CLEAR, this, &TrackeditActionsController::selectNone);
@@ -342,14 +344,16 @@ void TrackeditActionsController::init()
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
-        notifyActionEnabledChanged(GROUP_CLIPS_CODE);
-        notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+        notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+        notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
         notifyActionEnabledChanged(JOIN_CODE);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
         notifyActionEnabledChanged(RENAME_ITEM_CODE);
     });
 
     selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList&) {
+        notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+        notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
         notifyActionEnabledChanged(RENAME_ITEM_CODE);
     });
 
@@ -428,6 +432,36 @@ bool TrackeditActionsController::isFocusedItemLabel() const
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     return prj ? prj->track(focusedItemKey->trackId)->type == TrackType::Label : false;
+}
+
+bool TrackeditActionsController::anyItemGrouped(const TrackItemKeyList& items) const
+{
+    return std::any_of(items.begin(), items.end(), [this](const TrackItemKey& key) {
+        return trackeditInteraction()->itemGroupId(key) != -1;
+    });
+}
+
+bool TrackeditActionsController::itemsShareOneGroup(const TrackItemKeyList& items) const
+{
+    if (items.empty()) {
+        return false;
+    }
+
+    const int64_t groupId = trackeditInteraction()->itemGroupId(items.front());
+    if (groupId == -1) {
+        return false;
+    }
+
+    return std::all_of(items.begin(), items.end(), [this, groupId](const TrackItemKey& key) {
+        return trackeditInteraction()->itemGroupId(key) == groupId;
+    });
+}
+
+TrackItemKeyList TrackeditActionsController::itemsForInteraction() const
+{
+    TrackItemKeyList result = clipsForInteraction();
+    muse::join(result, labelsForInteraction());
+    return result;
 }
 
 LabelKeyList TrackeditActionsController::labelsForInteraction() const
@@ -1858,22 +1892,20 @@ void TrackeditActionsController::resetClipPitchAndSpeed(const muse::actions::Act
     trackeditInteraction()->resetClipPitchAndSpeed(clipKey);
 }
 
-void TrackeditActionsController::groupClips()
+void TrackeditActionsController::groupItems()
 {
-    const auto selectedClips = clipsForInteraction();
+    trackeditInteraction()->groupItems(itemsForInteraction());
 
-    trackeditInteraction()->groupClips(selectedClips);
-
-    notifyActionEnabledChanged(GROUP_CLIPS_CODE);
-    notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+    notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+    notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
 }
 
-void TrackeditActionsController::ungroupClips()
+void TrackeditActionsController::ungroupItems()
 {
-    trackeditInteraction()->ungroupClips(clipsForInteraction());
+    trackeditInteraction()->ungroupItems(itemsForInteraction());
 
-    notifyActionEnabledChanged(GROUP_CLIPS_CODE);
-    notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+    notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+    notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
 }
 
 void TrackeditActionsController::selectAll()
@@ -2301,10 +2333,11 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return trackeditInteraction()->canUndo();
     } else if (actionCode == TRACKEDIT_REDO) {
         return trackeditInteraction()->canRedo();
-    } else if (actionCode == GROUP_CLIPS_CODE) {
-        return clipsForInteraction().size() > 1 && !selectionController()->isSelectionGrouped();
-    } else if (actionCode == UNGROUP_CLIPS_CODE) {
-        return clipsForInteraction().size() > 1 && selectionController()->selectionContainsGroup();
+    } else if (actionCode == GROUP_ITEMS_CODE) {
+        const TrackItemKeyList items = itemsForInteraction();
+        return items.size() > 1 && !itemsShareOneGroup(items);
+    } else if (actionCode == UNGROUP_ITEMS_CODE) {
+        return anyItemGrouped(itemsForInteraction());
     } else if (actionCode == JOIN_CODE) {
         if (!selectionController()->timeSelectionIsEmpty()) {
             return rangeSelectionCoversMultipleClips();

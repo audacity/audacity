@@ -108,10 +108,6 @@ public:
 
     virtual void initSelectionAtPlayhead() = 0;
 
-    // grouping
-    virtual bool selectionContainsGroup() const = 0;
-    virtual bool isSelectionGrouped() const = 0;
-
     virtual void resetTimeSelection() = 0;
 
     virtual int trackDistance(const TrackId previous, const TrackId next) const = 0;

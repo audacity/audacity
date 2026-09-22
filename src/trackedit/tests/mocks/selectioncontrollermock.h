@@ -82,9 +82,6 @@ public:
 
     MOCK_METHOD(void, initSelectionAtPlayhead, (), (override));
 
-    MOCK_METHOD(bool, selectionContainsGroup, (), (const, override));
-    MOCK_METHOD(bool, isSelectionGrouped, (), (const, override));
-
     MOCK_METHOD(void, resetTimeSelection, (), (override));
 
     MOCK_METHOD(int, trackDistance, (TrackId previous, TrackId next), (const, override));
