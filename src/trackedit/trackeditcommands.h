@@ -49,8 +49,8 @@ inline static const muse::rcommand::Command TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTI
     "command://trackedit/trim-audio-outside-selection");
 inline static const muse::rcommand::Command TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND("command://trackedit/silence-audio-selection");
 
-inline static const muse::rcommand::Command TRACKEDIT_GROUP_CLIPS_COMMAND("command://trackedit/group-clips");
-inline static const muse::rcommand::Command TRACKEDIT_UNGROUP_CLIPS_COMMAND("command://trackedit/ungroup-clips");
+inline static const muse::rcommand::Command TRACKEDIT_GROUP_ITEMS_COMMAND("command://trackedit/group-items");
+inline static const muse::rcommand::Command TRACKEDIT_UNGROUP_ITEMS_COMMAND("command://trackedit/ungroup-items");
 
 inline static const muse::rcommand::Command TRACKEDIT_SELECT_ALL_COMMAND("command://trackedit/select-all");
 inline static const muse::rcommand::Command TRACKEDIT_CLEAR_SELECTION_COMMAND("command://trackedit/clear-selection");
