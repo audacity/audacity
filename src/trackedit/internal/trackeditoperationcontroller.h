@@ -18,6 +18,7 @@
 
 #include "itrackeditinteraction.h"
 #include "iundomanager.h"
+#include "itracknavigationcontroller.h"
 
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Contextable, public muse::async::Asyncable
@@ -31,6 +32,7 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::ContextInject<importexport::IImporter> importer { this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<ITrackNavigationController> trackNavigationController{ this };
 
 public:
     TrackeditOperationController(const muse::modularity::ContextPtr& ctx, std::unique_ptr<IUndoManager> undoManager);

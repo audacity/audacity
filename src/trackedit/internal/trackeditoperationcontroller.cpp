@@ -6,6 +6,8 @@
 
 #include "trackediterrors.h"
 
+#include "framework/global/containers.h"
+
 namespace au::trackedit {
 TrackeditOperationController::TrackeditOperationController(const muse::modularity::ContextPtr& ctx,
                                                            std::unique_ptr<IUndoManager> undoManager)
@@ -348,8 +350,12 @@ muse::RetVal<ItemKeys> TrackeditOperationController::moveItems(
 
     const auto selection = selectionController();
 
-    // Move notifications must not expose selection keys whose items have already changed tracks.
+    // Move notifications must not expose selection or focus keys whose items have already changed tracks.
     selection->setSelectedItems({}, false);
+    const std::optional<TrackItemKey> focused = trackNavigationController()->focus().itemKey();
+    if (focused && (muse::contains(clips, *focused) || muse::contains(labels, *focused))) {
+        trackNavigationController()->setFocus(TrackFocus::track(focused->trackId));
+    }
 
     const auto rollback = [&](const muse::Ret& error) {
         projectHistory()->rollbackState();
