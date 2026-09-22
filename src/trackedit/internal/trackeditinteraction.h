@@ -105,6 +105,11 @@ private:
     void ungroupClips(const trackedit::ClipKeyList& clipKeyList) override;
     ClipKeyList clipsInGroup(int64_t id) const override;
 
+    int64_t itemGroupId(const TrackItemKey& key) const override;
+    void groupItems(const TrackItemKeyList& keys) override;
+    void ungroupItems(const TrackItemKeyList& keys) override;
+    ItemKeys itemsInGroup(int64_t id) const override;
+
     bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
     bool changeTracksRate(const TrackIdList& tracksIds, int rate) override;
 

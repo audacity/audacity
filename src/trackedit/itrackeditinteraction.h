@@ -116,6 +116,11 @@ public:
     virtual void ungroupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
     virtual ClipKeyList clipsInGroup(int64_t id) const = 0;
 
+    virtual int64_t itemGroupId(const TrackItemKey& key) const = 0;
+    virtual void groupItems(const TrackItemKeyList& keys) = 0;
+    virtual void ungroupItems(const TrackItemKeyList& keys) = 0;
+    virtual ItemKeys itemsInGroup(int64_t id) const = 0;
+
     virtual bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) = 0;
     virtual bool changeTracksRate(const TrackIdList& tracksIds, int rate) = 0;
 
