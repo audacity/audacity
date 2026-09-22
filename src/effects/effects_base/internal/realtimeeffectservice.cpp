@@ -271,7 +271,7 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
         LOGW() << "cannot load the effect: " << effectId;
         return nullptr;
     }
-    if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString())) {
+    if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, au3::wxFromString(effectId))) {
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
         projectHistory()->pushHistoryState(
@@ -336,7 +336,7 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         return nullptr;
     }
     const auto oldState = data->effectList->GetStateAt(effectListIndex);
-    if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString())) {
+    if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, au3::wxFromString(newEffectId))) {
         const auto oldEffectName = getEffectName(*oldState);
         const auto newEffectName = getEffectName(*newState);
         projectHistory()->pushHistoryState(
