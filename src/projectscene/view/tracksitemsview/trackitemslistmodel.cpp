@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+#include "global/containers.h"
+
 #include "global/realfn.h"
 
 using namespace au::projectscene;
@@ -355,6 +357,71 @@ Qt::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
     }
 
     return modifiers;
+}
+
+bool TrackItemsListModel::selectItemGroup(const trackedit::TrackItemKey& key, trackedit::SelectionMode mode, bool complete)
+{
+    const int64_t groupId = trackeditInteraction()->itemGroupId(key);
+    if (groupId == -1) {
+        return false;
+    }
+
+    const trackedit::ItemKeys group = trackeditInteraction()->itemsInGroup(groupId);
+
+    if (mode == trackedit::SelectionMode::Toggle) {
+        const trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
+        const trackedit::LabelKeyList selectedLabels = selectionController()->selectedLabels();
+        const bool allSelected = std::all_of(group.clips.cbegin(), group.clips.cend(), [&selectedClips](const trackedit::ClipKey& clipKey) {
+            return muse::contains(selectedClips, clipKey);
+        }) && std::all_of(group.labels.cbegin(), group.labels.cend(), [&selectedLabels](const trackedit::LabelKey& labelKey) {
+            return muse::contains(selectedLabels, labelKey);
+        });
+
+        if (allSelected) {
+            m_pendingToggleDeselect = group;
+        } else {
+            for (const trackedit::ClipKey& clipKey : group.clips) {
+                selectionController()->addSelectedClip(clipKey);
+            }
+            for (const trackedit::LabelKey& labelKey : group.labels) {
+                selectionController()->addSelectedLabel(labelKey);
+            }
+        }
+        return true;
+    }
+
+    trackedit::TrackIdList groupTracks;
+    for (const trackedit::TrackItemKey& itemKey : group.clips) {
+        if (!muse::contains(groupTracks, itemKey.trackId)) {
+            groupTracks.push_back(itemKey.trackId);
+        }
+    }
+    for (const trackedit::TrackItemKey& itemKey : group.labels) {
+        if (!muse::contains(groupTracks, itemKey.trackId)) {
+            groupTracks.push_back(itemKey.trackId);
+        }
+    }
+
+    selectionController()->setSelectedClips(group.clips, complete);
+    selectionController()->setSelectedLabels(group.labels, complete);
+    selectionController()->setSelectedTracks(groupTracks, complete);
+
+    return true;
+}
+
+void TrackItemsListModel::handleItemRelease(const trackedit::TrackItemKey& key)
+{
+    if (!muse::contains(m_pendingToggleDeselect.clips, key) && !muse::contains(m_pendingToggleDeselect.labels, key)) {
+        return;
+    }
+
+    for (const trackedit::ClipKey& clipKey : m_pendingToggleDeselect.clips) {
+        selectionController()->removeClipSelection(clipKey);
+    }
+    for (const trackedit::LabelKey& labelKey : m_pendingToggleDeselect.labels) {
+        selectionController()->removeLabelSelection(labelKey);
+    }
+    m_pendingToggleDeselect = {};
 }
 
 au::trackedit::SelectionMode TrackItemsListModel::selectionMode() const

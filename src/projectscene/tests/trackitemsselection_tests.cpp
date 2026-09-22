@@ -38,7 +38,7 @@ protected:
         m_model->trackNavigationController.set(m_trackNavController);
         m_model->trackeditInteraction.set(m_trackeditInteraction);
 
-        ON_CALL(*m_trackeditInteraction, clipGroupId(_))
+        ON_CALL(*m_trackeditInteraction, itemGroupId(_))
         .WillByDefault(Return(int64_t(-1)));
     }
 
@@ -98,10 +98,10 @@ TEST_F(TrackClipsSelectionTests, SelectClip_SetsFocusedItem_GroupedClip)
     auto other = makeKey(1, 43);
     int64_t groupId = 7;
 
-    ON_CALL(*m_trackeditInteraction, clipGroupId(_))
+    ON_CALL(*m_trackeditInteraction, itemGroupId(_))
     .WillByDefault(Return(groupId));
-    ON_CALL(*m_trackeditInteraction, clipsInGroup(groupId))
-    .WillByDefault(Return(trackedit::ClipKeyList { key.key, other.key }));
+    ON_CALL(*m_trackeditInteraction, itemsInGroup(groupId))
+    .WillByDefault(Return(trackedit::ItemKeys { { key.key, other.key }, {} }));
 
     EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::track(key.key.trackId), _)).Times(1);
     EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::item(key.key), _)).Times(1);
@@ -122,9 +122,14 @@ protected:
 
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
         m_trackNavController = std::make_shared<NiceMock<trackedit::TrackNavigationControllerMock> >();
+        m_trackeditInteraction = std::make_shared<NiceMock<trackedit::TrackeditInteractionMock> >();
 
         m_model->selectionController.set(m_selectionController);
         m_model->trackNavigationController.set(m_trackNavController);
+        m_model->trackeditInteraction.set(m_trackeditInteraction);
+
+        ON_CALL(*m_trackeditInteraction, itemGroupId(_))
+        .WillByDefault(Return(int64_t(-1)));
     }
 
     void TearDown() override
@@ -135,6 +140,7 @@ protected:
     TrackLabelsListModel* m_model = nullptr;
     std::shared_ptr<NiceMock<trackedit::SelectionControllerMock> > m_selectionController;
     std::shared_ptr<NiceMock<trackedit::TrackNavigationControllerMock> > m_trackNavController;
+    std::shared_ptr<NiceMock<trackedit::TrackeditInteractionMock> > m_trackeditInteraction;
 };
 
 TEST_F(TrackLabelsSelectionTests, SelectLabel_SelectsLabel_WhenNothingSelected)

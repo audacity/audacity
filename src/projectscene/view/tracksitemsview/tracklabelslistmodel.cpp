@@ -309,9 +309,19 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         return;
     }
 
+    if (trackeditInteraction()->itemGroupId(key.key) != -1) {
+        if (mode != SelectionMode::Toggle) {
+            selectionController()->resetDataSelection();
+        }
+        selectItemGroup(key.key, mode, true);
+        m_needToSelectTracksData = false;
+        setFocusedItem(key);
+        return;
+    }
+
     if (mode == SelectionMode::Toggle) {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
-            m_pendingToggleDeselect = key.key;
+            m_pendingToggleDeselect.labels = { key.key };
         } else {
             selectionController()->addSelectedLabel(key.key);
         }
@@ -392,9 +402,8 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
         return;
     }
 
-    if (m_pendingToggleDeselect.isValid() && m_pendingToggleDeselect == key.key) {
-        selectionController()->removeLabelSelection(key.key);
-        m_pendingToggleDeselect = {};
+    if (muse::contains(m_pendingToggleDeselect.labels, key.key)) {
+        handleItemRelease(key.key);
         return;
     }
 

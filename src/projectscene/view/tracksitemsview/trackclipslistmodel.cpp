@@ -29,7 +29,7 @@ void TrackClipsListModel::onInit()
     if (moveController()) {
         connect(moveController(), &TrackItemsMoveController::activeChanged, this, [this] {
             if (!moveController()->active()) {
-                m_pendingToggleDeselect.clear();
+                m_pendingToggleDeselect = {};
             }
         });
     }
@@ -715,32 +715,14 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
         return;
     }
 
-    const auto clipGroupId = trackeditInteraction()->clipGroupId(key.key);
-    if (clipGroupId != -1) {
-        //! NOTE: clip belongs to a group, select the whole group
-        if (mode == SelectionMode::Toggle) {
-            const auto groupedClips = trackeditInteraction()->clipsInGroup(clipGroupId);
-            const auto selectedClips = selectionController()->selectedClips();
-            const bool allGroupClipsSelected = std::all_of(groupedClips.cbegin(), groupedClips.cend(), [&](const auto& groupClipKey) {
-                return muse::contains(selectedClips, groupClipKey);
-            });
-
-            if (allGroupClipsSelected) {
-                m_pendingToggleDeselect = groupedClips;
-            } else {
-                for (const auto& groupClipKey : groupedClips) {
-                    selectionController()->addSelectedClip(groupClipKey);
-                }
-            }
-        } else {
-            selectionController()->resetSelectedLabels();
-            selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);
+    if (selectItemGroup(key.key, mode, complete)) {
+        if (mode != SelectionMode::Toggle) {
             trackNavigationController()->setFocus(TrackFocus::track(key.key.trackId));
         }
     } else {
         if (mode == SelectionMode::Toggle) {
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
-                m_pendingToggleDeselect = { key.key };
+                m_pendingToggleDeselect.clips = { key.key };
             } else {
                 selectionController()->addSelectedClip(key.key);
             }
@@ -760,19 +742,14 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
 
 void TrackClipsListModel::handleClipRelease(const ClipKey& key)
 {
-    if (!m_pendingToggleDeselect.empty() && muse::contains(m_pendingToggleDeselect, key.key)) {
-        for (const auto& clipKey : m_pendingToggleDeselect) {
-            selectionController()->removeClipSelection(clipKey);
-        }
-        m_pendingToggleDeselect.clear();
-    }
+    handleItemRelease(key.key);
 }
 
 void TrackClipsListModel::endEditItem(const TrackItemKey& key)
 {
     TrackItemsListModel::endEditItem(key);
 
-    m_pendingToggleDeselect.clear();
+    m_pendingToggleDeselect = {};
 }
 
 void TrackClipsListModel::resetSelectedClips()
