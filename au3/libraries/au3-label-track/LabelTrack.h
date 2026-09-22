@@ -85,6 +85,9 @@ public:
     bool GetSelected() const;
     void SetSelected(bool selected);
 
+    int64_t GetGroupId() const;
+    void SetGroupId(int64_t id);
+
 public:
     SelectedRegion selectedRegion;
     wxString title; /// Text of the label.
@@ -101,6 +104,7 @@ public:
 private:
     int64_t mId{ 0 };
     bool mSelected{ false };
+    int64_t mGroupId{ -1 };
 };
 
 using LabelArray = std::vector<LabelStruct>;
