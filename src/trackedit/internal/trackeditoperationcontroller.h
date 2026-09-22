@@ -126,6 +126,11 @@ public:
     void ungroupClips(const trackedit::ClipKeyList& clipKeyList) override;
     ClipKeyList clipsInGroup(int64_t id) const override;
 
+    int64_t itemGroupId(const TrackItemKey& key) const override;
+    void groupItems(const TrackItemKeyList& keys) override;
+    void ungroupItems(const TrackItemKeyList& keys) override;
+    ItemKeys itemsInGroup(int64_t id) const override;
+
     bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
     bool changeTracksRate(const TrackIdList& tracksIds, int rate) override;
 
@@ -162,6 +167,9 @@ public:
     muse::Progress progress() const override;
 
 private:
+    bool isLabelItem(const TrackItemKey& key) const;
+    void setItemGroupId(const TrackItemKey& key, int64_t id);
+
     muse::RetVal<ItemKeys> moveItems(const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset);
 
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);

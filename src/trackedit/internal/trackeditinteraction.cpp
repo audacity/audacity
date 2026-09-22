@@ -396,6 +396,26 @@ ClipKeyList TrackeditInteraction::clipsInGroup(int64_t id) const
     return m_interaction->clipsInGroup(id);
 }
 
+int64_t TrackeditInteraction::itemGroupId(const TrackItemKey& key) const
+{
+    return m_interaction->itemGroupId(key);
+}
+
+void TrackeditInteraction::groupItems(const TrackItemKeyList& keys)
+{
+    m_interaction->groupItems(keys);
+}
+
+void TrackeditInteraction::ungroupItems(const TrackItemKeyList& keys)
+{
+    m_interaction->ungroupItems(keys);
+}
+
+ItemKeys TrackeditInteraction::itemsInGroup(int64_t id) const
+{
+    return m_interaction->itemsInGroup(id);
+}
+
 bool TrackeditInteraction::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
 {
     return withProgress([&, this]() {

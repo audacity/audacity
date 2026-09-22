@@ -127,6 +127,34 @@ public:
     TrackId m_destinationLabelTrack;
 };
 
+TEST_P(TrackeditOperationMoveTests, GroupItemsJoinsClipAndLabelUnderOneId)
+{
+    //! [GIVEN] The project resolves track types and hands out group id 7
+    ON_CALL(*m_trackEditProject, track(_)).WillByDefault([this](TrackId id) -> std::optional<Track> {
+        const auto* track = DomAccessor::findTrack(projectRef(), Au3TrackId(id));
+        return track ? std::optional<Track>(DomConverter::track(track)) : std::nullopt;
+    });
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault(Return(int64_t(7)));
+
+    //! [WHEN] The clip and the label are grouped
+    m_operation->groupItems({ m_sourceClip, m_sourceLabel });
+
+    //! [THEN] Both share the id and the group lists each of them
+    EXPECT_EQ(m_operation->itemGroupId(m_sourceClip), 7);
+    EXPECT_EQ(m_operation->itemGroupId(m_sourceLabel), 7);
+    const ItemKeys group = m_operation->itemsInGroup(7);
+    EXPECT_EQ(group.clips, ClipKeyList { m_sourceClip });
+    EXPECT_EQ(group.labels, LabelKeyList { m_sourceLabel });
+
+    //! [WHEN] The label is ungrouped on its own
+    m_operation->ungroupItems({ m_sourceLabel });
+
+    //! [THEN] It leaves the group and the clip stays
+    EXPECT_EQ(m_operation->itemGroupId(m_sourceLabel), -1);
+    EXPECT_EQ(m_operation->itemGroupId(m_sourceClip), 7);
+    EXPECT_TRUE(m_operation->itemsInGroup(7).labels.empty());
+}
+
 TEST_P(TrackeditOperationMoveTests, MixedMoveUpdatesBothSelectionsBeforeHistory)
 {
     EXPECT_CALL(*m_history, pushHistoryState(_, _)).WillOnce([this](const std::string& description, const std::string& action) {

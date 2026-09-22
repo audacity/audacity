@@ -850,6 +850,63 @@ ClipKeyList TrackeditOperationController::clipsInGroup(int64_t id) const
     return clipsInteraction()->clipsInGroup(id);
 }
 
+bool TrackeditOperationController::isLabelItem(const TrackItemKey& key) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    const std::optional<Track> track = prj ? prj->track(key.trackId) : std::nullopt;
+    return track.has_value() && track->type == TrackType::Label;
+}
+
+int64_t TrackeditOperationController::itemGroupId(const TrackItemKey& key) const
+{
+    return isLabelItem(key) ? labelsInteraction()->labelGroupId(key) : clipsInteraction()->clipGroupId(key);
+}
+
+void TrackeditOperationController::setItemGroupId(const TrackItemKey& key, int64_t id)
+{
+    if (isLabelItem(key)) {
+        labelsInteraction()->setLabelGroupId(key, id);
+    } else {
+        clipsInteraction()->setClipGroupId(key, id);
+    }
+}
+
+void TrackeditOperationController::groupItems(const TrackItemKeyList& keys)
+{
+    //! NOTE Items already grouped pull the others into their group; with several
+    //! groups involved the first one found wins
+    int64_t id = -1;
+    for (const TrackItemKey& key : keys) {
+        id = itemGroupId(key);
+        if (id != -1) {
+            break;
+        }
+    }
+    if (id == -1) {
+        id = globalContext()->currentTrackeditProject()->createNewGroupID();
+    }
+
+    for (const TrackItemKey& key : keys) {
+        setItemGroupId(key, id);
+    }
+
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Items grouped"), muse::trc("trackedit", "Items grouped"));
+}
+
+void TrackeditOperationController::ungroupItems(const TrackItemKeyList& keys)
+{
+    for (const TrackItemKey& key : keys) {
+        setItemGroupId(key, -1);
+    }
+
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Items ungrouped"), muse::trc("trackedit", "Items ungrouped"));
+}
+
+ItemKeys TrackeditOperationController::itemsInGroup(int64_t id) const
+{
+    return { clipsInteraction()->clipsInGroup(id), labelsInteraction()->labelsInGroup(id) };
+}
+
 bool TrackeditOperationController::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
 {
     if (tracksInteraction()->changeTracksFormat(tracksIds, format)) {

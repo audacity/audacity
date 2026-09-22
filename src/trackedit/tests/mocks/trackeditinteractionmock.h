@@ -97,6 +97,10 @@ public:
     MOCK_METHOD(void, groupClips, (const trackedit::ClipKeyList&), (override));
     MOCK_METHOD(void, ungroupClips, (const trackedit::ClipKeyList&), (override));
     MOCK_METHOD(ClipKeyList, clipsInGroup, (int64_t), (const, override));
+    MOCK_METHOD(int64_t, itemGroupId, (const TrackItemKey&), (const, override));
+    MOCK_METHOD(void, groupItems, (const TrackItemKeyList&), (override));
+    MOCK_METHOD(void, ungroupItems, (const TrackItemKeyList&), (override));
+    MOCK_METHOD(ItemKeys, itemsInGroup, (int64_t), (const, override));
 
     MOCK_METHOD(bool, changeTracksFormat, (const TrackIdList&, trackedit::TrackFormat), (override));
     MOCK_METHOD(bool, changeTracksRate, (const TrackIdList&, int), (override));

@@ -899,22 +899,25 @@ void Au3ClipsInteraction::ungroupClips(const ClipKeyList& clipKeyList)
 
 ClipKeyList Au3ClipsInteraction::clipsInGroup(int64_t id) const
 {
+    ClipKeyList clips;
     if (id == -1) {
-        return ClipKeyList();
+        return clips;
     }
 
-    ClipKeyList groupedClips;
+    for (const Au3Track* track : Au3TrackList::Get(projectRef())) {
+        const auto waveTrack = dynamic_cast<const Au3WaveTrack*>(track);
+        if (!waveTrack) {
+            continue;
+        }
 
-    auto prj = globalContext()->currentTrackeditProject();
-    for (const auto& trackId : prj->trackIdList()) {
-        for (const auto& clipKey : prj->clipList(trackId)) {
-            if (clipGroupId(clipKey.key) == id) {
-                groupedClips.push_back(clipKey.key);
+        for (const auto& clip : waveTrack->Intervals()) {
+            if (clip->GetGroupId() == id) {
+                clips.push_back(ClipKey { waveTrack->GetId(), clip->GetId() });
             }
         }
     }
 
-    return groupedClips;
+    return clips;
 }
 
 int64_t Au3ClipsInteraction::determineNewGroupId(const ClipKeyList& clipKeyList) const
