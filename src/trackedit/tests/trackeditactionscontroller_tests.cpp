@@ -78,6 +78,25 @@ public:
     std::shared_ptr<TracksViewRequestsService> m_requests;
 };
 
+TEST_F(TrackeditActionsControllerTests, UngroupIsAvailableForASingleGroupedItem)
+{
+    //! [GIVEN] One selected clip that still carries a group id, the rest of its group having been removed
+    const ClipKey clipKey { 1, 10 };
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList { clipKey }));
+    ON_CALL(*m_trackeditInteraction, itemGroupId(clipKey)).WillByDefault(Return(int64_t(7)));
+
+    //! [THEN] Ungroup can clear that id, while Group needs more than one item
+    EXPECT_TRUE(m_controller->canReceiveAction("ungroup-items"));
+    EXPECT_FALSE(m_controller->canReceiveAction("group-items"));
+
+    //! [WHEN] The clip is not grouped
+    ON_CALL(*m_trackeditInteraction, itemGroupId(clipKey)).WillByDefault(Return(int64_t(-1)));
+
+    //! [THEN] Neither action applies to it alone
+    EXPECT_FALSE(m_controller->canReceiveAction("ungroup-items"));
+    EXPECT_FALSE(m_controller->canReceiveAction("group-items"));
+}
+
 TEST_F(TrackeditActionsControllerTests, KeyboardMoveRequestsPreviewInsteadOfEditingItems)
 {
     std::vector<std::pair<secs_t, int> > steps;

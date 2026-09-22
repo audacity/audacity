@@ -105,10 +105,6 @@ public:
 
     void initSelectionAtPlayhead() override;
 
-    // grouping
-    bool selectionContainsGroup() const override;
-    bool isSelectionGrouped() const override;
-
     void resetTimeSelection() override;
 
     int trackDistance(const TrackId previous, const TrackId next) const override;
