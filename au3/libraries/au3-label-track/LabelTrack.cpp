@@ -1156,19 +1156,29 @@ int LabelTrack::GetLabelIndex(int64_t labelId) const
 int64_t LabelTrack::AddLabel(const SelectedRegion& selectedRegion,
                              const wxString& title)
 {
-    LabelStruct l { selectedRegion, title };
+    return InsertLabel(LabelStruct { selectedRegion, title });
+}
 
+int64_t LabelTrack::AddLabel(const LabelStruct& label)
+{
+    LabelStruct l = label;
+    l.SetId(LabelStruct::NewID());
+    return InsertLabel(l);
+}
+
+int64_t LabelTrack::InsertLabel(const LabelStruct& l)
+{
     int len = mLabels.size();
     int pos = 0;
 
-    while (pos < len && mLabels[pos].getT0() < selectedRegion.t0()) {
+    while (pos < len && mLabels[pos].getT0() < l.getT0()) {
         pos++;
     }
 
     mLabels.insert(mLabels.begin() + pos, l);
 
     Publish({ LabelTrackEvent::Addition,
-              this->SharedPointer<LabelTrack>(), title, -1, pos });
+              this->SharedPointer<LabelTrack>(), l.title, -1, pos });
 
     return l.GetId();
 }
