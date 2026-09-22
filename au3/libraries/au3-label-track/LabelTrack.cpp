@@ -90,6 +90,16 @@ void LabelStruct::SetSelected(bool selected)
     mSelected = selected;
 }
 
+int64_t LabelStruct::GetGroupId() const
+{
+    return mGroupId;
+}
+
+void LabelStruct::SetGroupId(int64_t id)
+{
+    mGroupId = id;
+}
+
 LabelTrack::Interval::~Interval() = default;
 
 double LabelTrack::Interval::Start() const
@@ -169,6 +179,7 @@ LabelTrack::LabelTrack(const LabelTrack& orig, ProtectedCreationArg&& a)
         LabelStruct l { original.selectedRegion, original.title };
         l.SetId(LabelStruct::NewID());
         l.SetSelected(original.GetSelected());
+        l.SetGroupId(original.GetGroupId());
         mLabels.push_back(l);
     }
 }
@@ -790,6 +801,7 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList&
         SelectedRegion selectedRegion;
         wxString title;
         bool selected = false;
+        long groupId = -1;
 
         // loop through attrs, which is a null-terminated list of
         // attribute-value pairs
@@ -804,6 +816,8 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList&
                 title = value.ToWString();
             } else if (attr == "isSelected") {
                 value.TryGet(selected);
+            } else if (attr == "groupId") {
+                value.TryGet(groupId);
             }
         } // while
 
@@ -816,6 +830,7 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList&
 
         LabelStruct l { selectedRegion, title };
         l.SetSelected(selected);
+        l.SetGroupId(groupId);
         mLabels.push_back(l);
 
         return true;
@@ -867,6 +882,7 @@ void LabelTrack::WriteXML(XMLWriter& xmlFile) const
         // PRL: to do: write other selection fields
         xmlFile.WriteAttr(wxT("title"), labelStruct.title);
         xmlFile.WriteAttr(wxT("isSelected"), labelStruct.GetSelected());
+        xmlFile.WriteAttr(wxT("groupId"), static_cast<long>(labelStruct.GetGroupId()));
         xmlFile.EndTag(wxT("label"));
     }
 
@@ -909,6 +925,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 labelStruct.getT1() - t0,
                 labelStruct.title
             };
+            l.SetGroupId(labelStruct.GetGroupId());
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::WITHIN_LABEL) {
             LabelStruct l {
@@ -917,6 +934,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 t1 - t0,
                 labelStruct.title
             };
+            l.SetGroupId(labelStruct.GetGroupId());
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
             LabelStruct l {
@@ -925,6 +943,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 labelStruct.getT1() - t0,
                 labelStruct.title
             };
+            l.SetGroupId(labelStruct.GetGroupId());
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::ENDS_IN_LABEL) {
             LabelStruct l {
@@ -933,6 +952,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 t1 - t0,
                 labelStruct.title
             };
+            l.SetGroupId(labelStruct.GetGroupId());
             lt->mLabels.push_back(l);
         }
     }
@@ -958,6 +978,7 @@ bool LabelTrack::PasteOver(double t, const Track& src)
                 labelStruct.getT1() + t,
                 labelStruct.title
             };
+            l.SetGroupId(labelStruct.GetGroupId());
             mLabels.insert(mLabels.begin() + pos++, l);
         }
 
@@ -1020,6 +1041,7 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
                     label.getT1() + j * tLen,
                     label.title
                 };
+                l.SetGroupId(label.GetGroupId());
 
                 // Figure out where to insert
                 while (pos < mLabels.size()
@@ -1057,6 +1079,7 @@ void LabelTrack::Silence(double t0, double t1, ProgressReporter)
                 label.getT1(),
                 label.title
             };
+            l.SetGroupId(label.GetGroupId());
 
             mLabels[i].selectedRegion.setT1(t0);
 
