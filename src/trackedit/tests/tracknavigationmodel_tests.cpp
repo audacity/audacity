@@ -3,8 +3,10 @@
 */
 #include <gtest/gtest.h>
 
+#include <QEventLoop>
 #include <QQmlEngine>
 #include <QQmlContext>
+#include <QTimer>
 
 #include "../view/tracknavigationmodel.h"
 
@@ -85,8 +87,8 @@ public:
         //! NOTE The tracks navigation controller channels the model subscribes to
         ON_CALL(*m_tracksNavigationController, focusedTrackChanged())
         .WillByDefault(Return(m_focusedTrackChanged));
-        ON_CALL(*m_tracksNavigationController, focusedItemChanged())
-        .WillByDefault(Return(m_focusedItemChanged));
+        ON_CALL(*m_tracksNavigationController, focusChanged())
+        .WillByDefault(Return(m_focusChanged));
         ON_CALL(*m_tracksNavigationController, focusedTrack())
         .WillByDefault(Return(INVALID_TRACK));
 
@@ -152,6 +154,7 @@ public:
     static QString trackPanelName(TrackId id) { return QString("Track %1 Panel").arg(id); }
     static QString headerPanelName(TrackId id) { return QString("Track %1 Header Panel").arg(id); }
     static QString itemsPanelName(TrackId id) { return QString("Track %1 Items Panel").arg(id); }
+    static QString rulerPanelName(TrackId id) { return QString("Track %1 Ruler Panel").arg(id); }
 
     //! NOTE Add an item control (a clip/label) to a panel, ordered by column, as QML does
     muse::ui::NavigationControl* addItemControl(muse::ui::NavigationPanel* panel, const QString& name, int column)
@@ -214,11 +217,22 @@ public:
         return event->data.value("controlName").toString();
     }
 
-    //! NOTE Deliver a navigation event (e.g. Escape) to a panel, as navigation system would
-    static void sendPanelEvent(muse::ui::NavigationPanel* panel, muse::ui::INavigation::Event::Type type)
+    //! NOTE The model activates the navigation on a focus change from a deferred call,
+    //! let the event loop run it
+    static void waitForDeferredActivation()
+    {
+        QEventLoop loop;
+        QTimer::singleShot(50, &loop, &QEventLoop::quit);
+        loop.exec();
+    }
+
+    //! NOTE Deliver a navigation event (e.g. Escape) to a panel, as navigation system would,
+    //! and return whether the panel accepted it
+    static bool sendPanelEvent(muse::ui::NavigationPanel* panel, muse::ui::INavigation::Event::Type type)
     {
         auto event = muse::ui::INavigation::Event::make(type);
         panel->onEvent(event);
+        return event->accepted;
     }
 
     QQmlEngine m_engine;
@@ -242,7 +256,7 @@ public:
     muse::async::Channel<Track, int> m_trackInserted;
     muse::async::Channel<Track, int> m_trackMoved;
     muse::async::Channel<TrackId, bool> m_focusedTrackChanged;
-    muse::async::Channel<TrackItemKey, bool> m_focusedItemChanged;
+    muse::async::Channel<TrackFocus, bool> m_focusChanged;
 
     std::vector<muse::ui::NavigationControl*> m_controls;
     std::vector<muse::ui::NavigationPanel*> m_extraPanels;
@@ -251,25 +265,27 @@ public:
 };
 
 /**
- * Every track exposes three panels (track, header, clips/labels), the lists are
- * kept per track and the panel orders are laid out in blocks after the reserved
- * order 0 of the empty-project default panel.
+ * Every track exposes four panels (track, header, clips/labels, vertical ruler), the
+ * lists are kept per track and the panel orders are laid out in blocks after the
+ * reserved order 0 of the empty-project default panel.
  */
-TEST_F(TrackNavigationModelTests, InitialLoadCreatesThreePanelsPerTrack)
+TEST_F(TrackNavigationModelTests, InitialLoadCreatesFourPanelsPerTrack)
 {
     //! [GIVEN] A project with two tracks
     //! [WHEN] The model is loaded
     loadWithTracks({ makeTrack(10), makeTrack(20) });
 
-    //! [THEN] There are three panel lists, one panel per track in each
+    //! [THEN] There are four panel lists, one panel per track in each
     ASSERT_EQ(m_model->trackItemPanels().size(), 2);
     ASSERT_EQ(m_model->trackHeaderPanels().size(), 2);
     ASSERT_EQ(m_model->viewItemPanels().size(), 2);
+    ASSERT_EQ(m_model->rulerPanels().size(), 2);
 
     //! [AND] The panels are named after their tracks
     EXPECT_EQ(m_model->trackItemPanels().at(0)->name(), trackPanelName(10));
     EXPECT_EQ(m_model->trackHeaderPanels().at(0)->name(), headerPanelName(10));
     EXPECT_EQ(m_model->viewItemPanels().at(0)->name(), itemsPanelName(10));
+    EXPECT_EQ(m_model->rulerPanels().at(0)->name(), rulerPanelName(10));
 
     EXPECT_EQ(m_model->trackItemPanels().at(1)->name(), trackPanelName(20));
 
@@ -277,14 +293,16 @@ TEST_F(TrackNavigationModelTests, InitialLoadCreatesThreePanelsPerTrack)
     EXPECT_EQ(m_model->trackItemPanels().at(0)->order(), 1);
     EXPECT_EQ(m_model->trackHeaderPanels().at(0)->order(), 2);
     EXPECT_EQ(m_model->viewItemPanels().at(0)->order(), 3);
+    EXPECT_EQ(m_model->rulerPanels().at(0)->order(), 4);
 
     EXPECT_EQ(m_model->trackItemPanels().at(1)->order(), 5);
     EXPECT_EQ(m_model->trackHeaderPanels().at(1)->order(), 6);
     EXPECT_EQ(m_model->viewItemPanels().at(1)->order(), 7);
+    EXPECT_EQ(m_model->rulerPanels().at(1)->order(), 8);
 }
 
 /**
- * Adding a track appends its three panels after the existing ones.
+ * Adding a track appends its four panels after the existing ones.
  */
 TEST_F(TrackNavigationModelTests, TrackAddedAppendsPanels)
 {
@@ -300,6 +318,7 @@ TEST_F(TrackNavigationModelTests, TrackAddedAppendsPanels)
     EXPECT_EQ(m_model->trackItemPanels().at(1)->name(), trackPanelName(20));
     EXPECT_EQ(m_model->trackItemPanels().at(1)->order(), 5);
     EXPECT_EQ(m_model->viewItemPanels().at(1)->order(), 7);
+    EXPECT_EQ(m_model->rulerPanels().at(1)->order(), 8);
 }
 
 /**
@@ -315,7 +334,7 @@ TEST_F(TrackNavigationModelTests, FirstAddedTrackFocusWaitsForNavigationControl)
     m_trackAdded.send(makeTrack(20));
 
     //! [AND] The tracks controller focuses it
-    m_focusedTrackChanged.send(20, false);
+    m_focusChanged.send(TrackFocus::track(20), false);
 
     //! [THEN] Creating the control synchronizes navigation with the focused track
     EXPECT_CALL(*m_navigationController,
@@ -337,7 +356,7 @@ TEST_F(TrackNavigationModelTests, FirstInsertedTrackFocusWaitsForNavigationContr
     m_trackInserted.send(makeTrack(20), 0);
 
     //! [AND] The tracks controller focuses it before its control exists
-    m_focusedTrackChanged.send(20, false);
+    m_focusChanged.send(TrackFocus::track(20), false);
 
     //! [THEN] Creating the control synchronizes navigation with the focused track
     EXPECT_CALL(*m_navigationController, requestActivateByName(
@@ -355,7 +374,7 @@ TEST_F(TrackNavigationModelTests, FocusedItemWaitsForNavigationControl)
     loadWithTracks({ makeTrack(20) });
 
     //! [WHEN] An item is focused
-    m_focusedItemChanged.send({ 20, 200 }, false);
+    m_focusChanged.send(TrackFocus::item({ 20, 200 }), false);
 
     //! [THEN] Creating the navigation control executes pending navigation request
     EXPECT_CALL(*m_navigationController, requestActivateByName(
@@ -388,7 +407,7 @@ TEST_F(TrackNavigationModelTests, TrackInsertedPlacesPanelsAtPosition)
 }
 
 /**
- * Removing a track drops its three panels and reorders the rest.
+ * Removing a track drops its four panels and reorders the rest.
  */
 TEST_F(TrackNavigationModelTests, TrackRemovedRemovesTrackPanels)
 {
@@ -401,6 +420,7 @@ TEST_F(TrackNavigationModelTests, TrackRemovedRemovesTrackPanels)
     //! [THEN] Only the remaining tracks keep their panels
     ASSERT_EQ(m_model->trackItemPanels().size(), 2);
     ASSERT_EQ(m_model->viewItemPanels().size(), 2);
+    ASSERT_EQ(m_model->rulerPanels().size(), 2);
     EXPECT_EQ(m_model->trackItemPanels().at(0)->name(), trackPanelName(10));
     EXPECT_EQ(m_model->trackItemPanels().at(1)->name(), trackPanelName(30));
 
@@ -452,7 +472,7 @@ TEST_F(TrackNavigationModelTests, NavigationOnItemsPanelFocusesItem)
     .WillByDefault(Return(clipControl));
 
     //! [EXPECT] The focused item is set to that clip on that track
-    EXPECT_CALL(*m_tracksNavigationController, setFocusedItem(TrackItemKey { 10, 200 }, _)).Times(1);
+    EXPECT_CALL(*m_tracksNavigationController, setFocus(TrackFocus::item({ 10, 200 }), _)).Times(1);
 
     //! [WHEN] The navigation changes
     m_navigationChanged.notify();
@@ -477,10 +497,78 @@ TEST_F(TrackNavigationModelTests, NavigationOnTrackPanelFocusesTrackWithoutItem)
     .WillByDefault(Return(nullptr));
 
     //! [EXPECT] The track is focused, without an item
-    EXPECT_CALL(*m_tracksNavigationController, setFocusedItem(TrackItemKey { 10, INVALID_TRACK_ITEM }, _)).Times(1);
+    EXPECT_CALL(*m_tracksNavigationController, setFocus(TrackFocus::track(10), _)).Times(1);
 
     //! [WHEN] The navigation changes
     m_navigationChanged.notify();
+}
+
+/**
+ * Landing on a vertical ruler panel focuses the ruler of its track and, like the track
+ * panel, keeps the general navigation off: the arrows are handled by the project's
+ * track/item navigation (Left/Right move the play cursor, Up/Down navigate the rulers).
+ */
+TEST_F(TrackNavigationModelTests, NavigationOnRulerPanelFocusesRulerWithProjectNavigation)
+{
+    //! [GIVEN] A project with one track
+    loadWithTracks({ makeTrack(10) });
+
+    muse::ui::NavigationPanel* rulerPanel = m_model->rulerPanels().at(0);
+
+    //! [AND] An active ruler control on the track's ruler panel
+    muse::ui::NavigationControl* rulerControl = addItemControl(rulerPanel, "VerticalRuler", 0);
+
+    ON_CALL(*m_navigationController, activePanel())
+    .WillByDefault(Return(rulerPanel));
+    ON_CALL(*m_navigationController, activeControl())
+    .WillByDefault(Return(rulerControl));
+
+    //! [EXPECT] The ruler of the track is focused and the general navigation is off
+    EXPECT_CALL(*m_tracksNavigationController, setFocus(TrackFocus::ruler(10), _)).Times(1);
+    EXPECT_CALL(*m_tracksNavigationController, setIsNavigationActive(false)).Times(1);
+
+    //! [WHEN] The navigation changes
+    m_navigationChanged.notify();
+}
+
+/**
+ * A ruler focus reported by the tracks controller (Up/Down from another ruler) lands the
+ * navigation on the ruler control of that track, as an item focus lands on its clip.
+ */
+TEST_F(TrackNavigationModelTests, RulerFocusChangeActivatesRulerOfTrack)
+{
+    //! [GIVEN] A project with two tracks, each with a ruler control
+    loadWithTracks({ makeTrack(10), makeTrack(20) });
+    addItemControl(m_model->rulerPanels().at(0), "VerticalRuler", 0);
+    addItemControl(m_model->rulerPanels().at(1), "VerticalRuler", 0);
+
+    //! [EXPECT] The ruler of the second track is activated, highlighted
+    EXPECT_CALL(*m_navigationController, setIsHighlight(true)).Times(1);
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), rulerPanelName(20).toStdString(), std::string("VerticalRuler"))).Times(1);
+
+    //! [WHEN] The tracks controller reports the ruler of the second track as focused
+    m_focusChanged.send(TrackFocus::ruler(20), true);
+    waitForDeferredActivation();
+}
+
+/**
+ * A ruler focus on a track whose ruler has no control (hidden rulers) falls back to the
+ * track panel, so the navigation always lands somewhere on the focused track.
+ */
+TEST_F(TrackNavigationModelTests, RulerFocusChangeWithoutRulerControlFallsBackToTrackPanel)
+{
+    //! [GIVEN] A project with one track with a track control and no ruler control
+    loadWithTracks({ makeTrack(10) });
+    addItemControl(m_model->trackItemPanels().at(0), "Track", 0);
+
+    //! [EXPECT] The track panel is activated
+    EXPECT_CALL(*m_navigationController, requestActivateByName(
+                    std::string(SECTION_NAME), trackPanelName(10).toStdString(), std::string("Track"))).Times(1);
+
+    //! [WHEN] The tracks controller reports the ruler of the track as focused
+    m_focusChanged.send(TrackFocus::ruler(10), true);
+    waitForDeferredActivation();
 }
 
 /**

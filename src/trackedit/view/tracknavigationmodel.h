@@ -28,11 +28,12 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable, publ
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
     muse::ContextInject<ITrackNavigationController> tracksNavigationController{ this };
 
-    //! NOTE: three panels per track, in the tab order:
-    //! the track itself, the controls of its header, its clips/labels
+    //! NOTE: four panels per track, in the tab order:
+    //! the track itself, the controls of its header, its clips/labels, its vertical ruler
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackItemPanels READ trackItemPanels NOTIFY panelsChanged)
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackHeaderPanels READ trackHeaderPanels NOTIFY panelsChanged)
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> viewItemPanels READ viewItemPanels NOTIFY panelsChanged)
+    Q_PROPERTY(QList<muse::ui::NavigationPanel*> rulerPanels READ rulerPanels NOTIFY panelsChanged)
 
     //! NOTE: the control the page provides to become its default navigation control
     //! when the project has no tracks
@@ -57,6 +58,7 @@ public:
     QList<muse::ui::NavigationPanel*> trackItemPanels() const;
     QList<muse::ui::NavigationPanel*> trackHeaderPanels() const;
     QList<muse::ui::NavigationPanel*> viewItemPanels() const;
+    QList<muse::ui::NavigationPanel*> rulerPanels() const;
 
     muse::ui::NavigationControl* fallbackNavigationControl() const;
     void setFallbackNavigationControl(muse::ui::NavigationControl* control);
@@ -80,11 +82,12 @@ private:
         muse::ui::NavigationPanel* track = nullptr;
         muse::ui::NavigationPanel* header = nullptr;
         muse::ui::NavigationPanel* items = nullptr;
+        muse::ui::NavigationPanel* ruler = nullptr;
     };
 
     struct NavigationRequest
     {
-        TrackItemKey itemKey;
+        TrackFocus focus;
         bool highlight = false;
     };
 
@@ -102,7 +105,7 @@ private:
     QList<muse::ui::NavigationPanel*> panelsList(muse::ui::NavigationPanel* TrackPanels::* panel) const;
     void updateNavigationActive(const muse::ui::INavigationPanel* activePanel);
     void syncFocusedItem(const muse::ui::INavigationPanel* activePanel, const muse::ui::INavigationControl* activeControl);
-    void requestNavigation(const TrackItemKey& itemKey, bool highlight);
+    void requestNavigation(const TrackFocus& focus, bool highlight);
     void updatePendingNavigation();
 
     void addDefaultNavigation();

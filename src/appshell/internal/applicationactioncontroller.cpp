@@ -42,6 +42,7 @@ using namespace muse::actions;
 
 static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
 static const QString TIMELINE_SECTION_NAME("TimelineSection");
+static const QString VERTICAL_RULER_CONTROL_NAME("VerticalRuler");
 
 void ApplicationActionController::preInit()
 {
@@ -590,6 +591,12 @@ void ApplicationActionController::doGlobalContextMenu()
     }
 
     if (activeSection->name() == TRACK_VIEW_SECTION_NAME) {
+        const muse::ui::INavigationControl* activeControl = navigationController()->activeControl();
+        if (activeControl && activeControl->name() == VERTICAL_RULER_CONTROL_NAME) {
+            dispatcher()->dispatch("track-view-ruler-context-menu");
+            return;
+        }
+
         dispatcher()->dispatch("track-view-item-context-menu");
     } else if (activeSection->name() == TIMELINE_SECTION_NAME) {
         dispatcher()->dispatch("timeline-context-menu");

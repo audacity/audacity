@@ -58,6 +58,18 @@ StyledPopupView {
 
             spacing: uiModel.btnSpacing
 
+            NavigationPanel {
+                id: zoomNavPanel
+
+                name: "TrackRulerZoom"
+                section: root.navigationSection
+                enabled: root.isOpened
+                direction: NavigationPanel.Horizontal
+                order: 1
+
+                accessible.name: qsTrc("trackruler", "Zoom")
+            }
+
             FlatButton {
                 id: zoomInBtn
 
@@ -69,6 +81,11 @@ StyledPopupView {
                 icon: IconCode.ZOOM_IN
 
                 enabled: !isMaxZoom
+
+                navigation.name: "ZoomIn"
+                navigation.panel: zoomNavPanel
+                navigation.order: 1
+                navigation.accessible.name: qsTrc("trackruler", "Zoom in")
 
                 onClicked: {
                     root.zoomInRequested()
@@ -86,6 +103,11 @@ StyledPopupView {
                 icon: IconCode.ZOOM_OUT
 
                 enabled: !isMinZoom
+
+                navigation.name: "ZoomOut"
+                navigation.panel: zoomNavPanel
+                navigation.order: 2
+                navigation.accessible.name: qsTrc("trackruler", "Zoom out")
 
                 onClicked: {
                     root.zoomOutRequested()
@@ -108,6 +130,10 @@ StyledPopupView {
 
                 enabled: !isDefaultZoom
 
+                navigation.name: "ZoomReset"
+                navigation.panel: zoomNavPanel
+                navigation.order: 3
+
                 onClicked: {
                     root.zoomResetRequested()
                 }
@@ -124,11 +150,28 @@ StyledPopupView {
 
             value: root.rulerType
 
+            navPanel.name: "TrackRulerFormat"
+            navPanel.section: root.navigationSection
+            navPanel.order: 2
+            navPanel.enabled: root.isOpened
+            navPanel.accessible.name: title
+
             model: root.availableRulerTypes
 
             onValueChangeRequested: function (value) {
                 root.rulerTypeChangeRequested(value)
             }
+        }
+
+        NavigationPanel {
+            id: halfWaveNavPanel
+
+            name: "TrackRulerHalfWave"
+            section: root.navigationSection
+            enabled: root.isOpened
+            order: 3
+
+            accessible.name: halfwave.text
         }
 
         CheckBox {
@@ -137,6 +180,10 @@ StyledPopupView {
             text: qsTrc("trackruler", "Half wave")
 
             checked: root.isHalfWave
+
+            navigation.name: "HalfWave"
+            navigation.panel: halfWaveNavPanel
+            navigation.order: 1
 
             onClicked: {
                 root.toggleHalfWaveRequested()
