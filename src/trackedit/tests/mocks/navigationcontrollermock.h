@@ -29,6 +29,7 @@ public:
     MOCK_METHOD(const INavigationControl*, findControl, (const std::string&, const std::string&, const std::string&), (const, override));
 
     MOCK_METHOD(void, setDefaultNavigationControl, (INavigationControl*), (override));
+    MOCK_METHOD(void, setPrioritySection, (INavigationSection*), (override));
 
     MOCK_METHOD(async::Notification, navigationChanged, (), (const, override));
 
