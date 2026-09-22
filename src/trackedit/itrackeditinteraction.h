@@ -110,12 +110,6 @@ public:
 
     virtual bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) = 0;
 
-    virtual int64_t clipGroupId(const trackedit::ClipKey& clipKey) const = 0;
-    virtual void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) = 0;
-    virtual void groupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
-    virtual void ungroupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
-    virtual ClipKeyList clipsInGroup(int64_t id) const = 0;
-
     virtual int64_t itemGroupId(const TrackItemKey& key) const = 0;
     virtual void groupItems(const TrackItemKeyList& keys) = 0;
     virtual void ungroupItems(const TrackItemKeyList& keys) = 0;

@@ -120,12 +120,6 @@ public:
 
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
-    int64_t clipGroupId(const trackedit::ClipKey& clipKey) const override;
-    void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) override;
-    void groupClips(const trackedit::ClipKeyList& clipKeyList) override;
-    void ungroupClips(const trackedit::ClipKeyList& clipKeyList) override;
-    ClipKeyList clipsInGroup(int64_t id) const override;
-
     int64_t itemGroupId(const TrackItemKey& key) const override;
     void groupItems(const TrackItemKeyList& keys) override;
     void ungroupItems(const TrackItemKeyList& keys) override;

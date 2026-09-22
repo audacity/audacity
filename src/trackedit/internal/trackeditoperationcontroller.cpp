@@ -823,33 +823,6 @@ bool TrackeditOperationController::toggleStretchToMatchProjectTempo(const ClipKe
     return clipsInteraction()->toggleStretchToMatchProjectTempo(clipKey);
 }
 
-int64_t TrackeditOperationController::clipGroupId(const trackedit::ClipKey& clipKey) const
-{
-    return clipsInteraction()->clipGroupId(clipKey);
-}
-
-void TrackeditOperationController::setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id)
-{
-    clipsInteraction()->setClipGroupId(clipKey, id);
-}
-
-void TrackeditOperationController::groupClips(const trackedit::ClipKeyList& clipKeyList)
-{
-    clipsInteraction()->groupClips(clipKeyList);
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Clips grouped"), muse::trc("trackedit", "Clips grouped"));
-}
-
-void TrackeditOperationController::ungroupClips(const trackedit::ClipKeyList& clipKeyList)
-{
-    clipsInteraction()->ungroupClips(clipKeyList);
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Clips ungrouped"), muse::trc("trackedit", "Clips ungrouped"));
-}
-
-ClipKeyList TrackeditOperationController::clipsInGroup(int64_t id) const
-{
-    return clipsInteraction()->clipsInGroup(id);
-}
-
 bool TrackeditOperationController::isLabelItem(const TrackItemKey& key) const
 {
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();

@@ -881,22 +881,6 @@ void Au3ClipsInteraction::setClipGroupId(const ClipKey& clipKey, int64_t id)
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 }
 
-void Au3ClipsInteraction::groupClips(const ClipKeyList& clipKeyList)
-{
-    const auto newGroupId = determineNewGroupId(clipKeyList);
-
-    for (const auto& clipKey : clipKeyList) {
-        setClipGroupId(clipKey, newGroupId);
-    }
-}
-
-void Au3ClipsInteraction::ungroupClips(const ClipKeyList& clipKeyList)
-{
-    for (const auto& clipKey : clipKeyList) {
-        setClipGroupId(clipKey, -1);
-    }
-}
-
 ClipKeyList Au3ClipsInteraction::clipsInGroup(int64_t id) const
 {
     ClipKeyList clips;
@@ -918,22 +902,6 @@ ClipKeyList Au3ClipsInteraction::clipsInGroup(int64_t id) const
     }
 
     return clips;
-}
-
-int64_t Au3ClipsInteraction::determineNewGroupId(const ClipKeyList& clipKeyList) const
-{
-    if (!clipKeyList.empty()) {
-        //! NOTE: Check if any clip already belongs to a group.
-        //        If there are multiple groups, the first group is used.
-
-        for (const auto& selectedClip : clipKeyList) {
-            if (clipGroupId(selectedClip) != -1) {
-                return clipGroupId(selectedClip);
-            }
-        }
-    }
-
-    return globalContext()->currentTrackeditProject()->createNewGroupID();
 }
 
 NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset)
