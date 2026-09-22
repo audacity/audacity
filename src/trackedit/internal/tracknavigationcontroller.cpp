@@ -82,6 +82,12 @@ void TrackNavigationController::init()
 
     m_selectionStart = std::nullopt;
 
+    //! NOTE Undo and redo recreate labels under new ids and can remove the focused item altogether,
+    //! and this receiver runs before the selection is re-published from the restored project
+    projectHistory()->historyChanged().onReceive(this, [this](HistoryEvent) {
+        revalidateFocusedItem();
+    });
+
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         muse::async::Async::call(this, [this]() {
             ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -194,11 +200,8 @@ bool TrackNavigationController::isFocusedItemValid() const
 bool TrackNavigationController::isFocusedItemLabel() const
 {
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return false;
-    }
-
-    return prj->track(m_focus.trackId)->type == TrackType::Label;
+    const std::optional<Track> track = prj ? prj->track(m_focus.trackId) : std::nullopt;
+    return track.has_value() && track->type == TrackType::Label;
 }
 
 TrackItemKeyList TrackNavigationController::sortedItemsKeys(const TrackId& trackId) const
@@ -826,6 +829,24 @@ void TrackNavigationController::au3SetTrackFocused(const TrackId& trackId)
         auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
         au3::DomAccessor::clearAllTrackFocus(*au3Project);
         au3::DomAccessor::setTrackFocused(*au3Project, trackId, true);
+    }
+}
+
+void TrackNavigationController::revalidateFocusedItem()
+{
+    const std::optional<TrackItemKey> key = m_focus.itemKey();
+    if (!key.has_value()) {
+        return;
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    const bool exists = isFocusedItemLabel() ? prj->label(*key).isValid() : prj->clip(*key).isValid();
+    if (!exists) {
+        setFocus(TrackFocus::track(key->trackId));
     }
 }
 
