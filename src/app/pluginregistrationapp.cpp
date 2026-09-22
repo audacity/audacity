@@ -25,6 +25,8 @@ void PluginRegistrationApp::applyCommandLineOptions(const std::shared_ptr<muse::
 {
     BaseApplication::applyCommandLineOptions(options);
 
+    diagnosticsConfiguration()->setSystemCrashReporterForwardingEnabled(false);
+
     const auto audacityOptions = std::dynamic_pointer_cast<AudacityCmdOptions>(options);
     IF_ASSERT_FAILED(audacityOptions) {
         return;
@@ -41,8 +43,6 @@ void PluginRegistrationApp::applyCommandLineOptions(const std::shared_ptr<muse::
         diagnosticsConfiguration()->setCrashReportTags({ { muse::String { "plugin-validation" },
                                                            io::filename(pluginPath).toString() } });
     }
-
-    diagnosticsConfiguration()->setSystemCrashReporterForwardingEnabled(false);
 }
 
 void PluginRegistrationApp::startupScenario(const muse::modularity::ContextPtr& ctxId)
