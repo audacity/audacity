@@ -1476,14 +1476,19 @@ muse::Ret TrackeditActionsController::multiClipCopy()
             continue;
         }
 
-        ClipKeyList selectedTrackClips;
+        TrackItemKeyList selectedTrackItems;
         for (const auto& clip : selectedClips) {
             if (clip.trackId == track.id) {
-                selectedTrackClips.push_back(clip);
+                selectedTrackItems.push_back(clip);
+            }
+        }
+        for (const auto& label : selectedLabels) {
+            if (label.trackId == track.id) {
+                selectedTrackItems.push_back(label);
             }
         }
 
-        copied = trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackClips, offset) && copied;
+        copied = trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackItems, offset) && copied;
     }
 
     return Ret(copied);
