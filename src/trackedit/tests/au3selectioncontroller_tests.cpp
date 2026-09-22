@@ -261,4 +261,56 @@ TEST_F(Au3SelectionControllerTests, SetSelectedItemsWithOnlyClipsKeepsTheirTrack
     // Cleanup
     removeTrack(waveTrackId);
 }
+
+TEST_F(Au3SelectionControllerTests, HistoryResyncPublishesClipsAndLabelsConsistently)
+{
+    //! [GIVEN] Two selected clips and two selected labels
+    const TrackId waveTrackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
+            { 0.0, 1.0, "First" },
+            { 2.0, 3.0, "Second" }
+        });
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrackId));
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(waveTrack, nullptr);
+    ASSERT_NE(labelTrack, nullptr);
+
+    const ClipKey firstClip { waveTrackId, waveTrack->GetClip(0)->GetId() };
+    const ClipKey secondClip { waveTrackId, waveTrack->GetClip(1)->GetId() };
+    const LabelKey firstLabel { labelTrackId, labelTrack->GetLabel(0)->GetId() };
+    const LabelKey secondLabel { labelTrackId, labelTrack->GetLabel(1)->GetId() };
+    m_selectionController->setSelectedClips({ firstClip, secondClip }, true);
+    m_selectionController->setSelectedLabels({ firstLabel, secondLabel }, true);
+
+    //! [GIVEN] A receiver that, like the timeline, reads both selections whenever either one changes
+    int notifications = 0;
+    const auto readBothSelections = [&]() {
+        ++notifications;
+        EXPECT_EQ(m_selectionController->selectedClips(), ClipKeyList { firstClip });
+        EXPECT_EQ(m_selectionController->selectedLabels(), LabelKeyList { firstLabel });
+        m_selectionController->leftMostSelectedItemStartTime();
+        m_selectionController->rightMostSelectedItemEndTime();
+    };
+    m_selectionController->clipsSelected().onReceive(m_selectionController.get(), [&](const ClipKeyList&) {
+        readBothSelections();
+    });
+    m_selectionController->labelsSelected().onReceive(m_selectionController.get(), [&](const LabelKeyList&) {
+        readBothSelections();
+    });
+
+    //! [WHEN] Undo removes the second clip and label and the history reports the restored state
+    waveTrack->RemoveInterval(waveTrack->GetClip(1));
+    labelTrack->DeleteLabelById(secondLabel.itemId);
+    m_historyChanged.send(HistoryEvent::RestoredState);
+
+    //! [THEN] Both selections were published once, each seeing the other already restored
+    EXPECT_EQ(notifications, 2);
+    EXPECT_EQ(m_selectionController->selectedClips(), ClipKeyList { firstClip });
+    EXPECT_EQ(m_selectionController->selectedLabels(), LabelKeyList { firstLabel });
+
+    // Cleanup
+    removeTrack(waveTrackId);
+    removeTrack(labelTrackId);
+}
 }

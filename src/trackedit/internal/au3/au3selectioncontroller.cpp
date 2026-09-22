@@ -96,18 +96,33 @@ void Au3SelectionController::onHistoryEvent(const trackedit::HistoryEvent& event
             << " tracks=" << restoredSelectedTracks.size()
             << " focusedTrack=" << restoredFocusedTrack;
 
-    m_selectedStartTime.set(selectedRegion.t0(), true);
-    m_selectedEndTime.set(selectedRegion.t1(), true);
+    //! NOTE Receivers read the other selections too, so every value is restored
+    //! before any change is published
+    const bool startTimeChanged = m_selectedStartTime.assign(selectedRegion.t0());
+    const bool endTimeChanged = m_selectedEndTime.assign(selectedRegion.t1());
+    const bool clipsChanged = m_selectedClips.assign(restoredSelectedClips);
+    const bool labelsChanged = m_selectedLabels.assign(restoredSelectedLabels);
+    const bool tracksChanged = m_selectedTracks.assign(restoredSelectedTracks);
+    const bool focusedTrackChanged = restoredFocusedTrack != INVALID_TRACK && m_focusedTrack.assign(restoredFocusedTrack);
 
-    m_selectedClips.set(restoredSelectedClips, true);
-    setSelectedLabels(restoredSelectedLabels, true);
-    setSelectedTracks(restoredSelectedTracks, true);
-
-    if (restoredFocusedTrack != INVALID_TRACK) {
-        m_focusedTrack.set(restoredFocusedTrack, true);
+    if (startTimeChanged) {
+        m_selectedStartTime.publish(true);
     }
-
-    updateSelectionController();
+    if (endTimeChanged) {
+        m_selectedEndTime.publish(true);
+    }
+    if (clipsChanged) {
+        m_selectedClips.publish(true);
+    }
+    if (labelsChanged) {
+        m_selectedLabels.publish(true);
+    }
+    if (tracksChanged) {
+        m_selectedTracks.publish(true);
+    }
+    if (focusedTrackChanged) {
+        m_focusedTrack.publish(true);
+    }
 
     if (event == HistoryEvent::RestoredState) {
         frequencySelectionController()->restoreFrequencySelection();
@@ -1095,17 +1110,6 @@ secs_t Au3SelectionController::selectionStartTime() const
 void Au3SelectionController::setSelectionStartTime(secs_t time)
 {
     m_selectionStartTime.set(time, true);
-}
-
-void Au3SelectionController::updateSelectionController()
-{
-    auto& tracks = Au3TrackList::Get(projectRef());
-    TrackIdList selectedTracks;
-    for (const auto& selectedTrack : tracks.Selected()) {
-        selectedTracks.push_back(selectedTrack->GetId());
-    }
-
-    m_selectedTracks.set(selectedTracks, true);
 }
 
 int Au3SelectionController::trackDistance(const TrackId previous, const TrackId next) const

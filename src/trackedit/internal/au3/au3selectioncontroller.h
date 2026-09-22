@@ -120,7 +120,6 @@ private:
     std::optional<ItemSelectionAnchor> m_itemSelectionAnchor;
     void resetItemSelectionAnchorIfNoSelection();
     void addSelectedTrack(const trackedit::TrackId& trackId);
-    void updateSelectionController();
     void onHistoryEvent(const trackedit::HistoryEvent& event);
     ClipKeyList findClipsIntersectingRangeSelection() const;
     LabelKeyList findLabelsIntersectingRangeSelection() const;
