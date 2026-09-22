@@ -91,6 +91,9 @@ DockWindow {
         HomePage {
             window: root.window
         },
+        LibraryPage {
+            window: root.window
+        },
         ProjectPage {
             topToolKeyNavSec: root.topToolKeyNavSec
         },

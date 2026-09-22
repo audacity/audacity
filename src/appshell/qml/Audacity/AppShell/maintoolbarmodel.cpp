@@ -27,6 +27,7 @@
 using namespace au::appshell;
 
 static const QString HOME_PAGE("audacity://home");
+static const QString LIBRARY_PAGE("audacity://library");
 static const QString PROJECT_PAGE("audacity://project");
 static const QString PUBLISH_PAGE("audacity://publish");
 static const QString DEVTOOLS_PAGE("audacity://devtools");
@@ -92,6 +93,7 @@ void MainToolBarModel::load()
 
     m_items.clear();
     m_items << buildItem(muse::qtrc("appshell", "Home"), HOME_PAGE, true);
+    m_items << buildItem(muse::qtrc("aistudio", "Library"), LIBRARY_PAGE, false);
     m_items << buildItem(muse::qtrc("appshell", "Project"), PROJECT_PAGE, false);
     // m_items << buildItem(muse::qtrc("appshell", "Publish"), PUBLISH_PAGE, false);
 
@@ -112,7 +114,7 @@ void MainToolBarModel::updateNotationPageItem()
     for (int i = 0; i < m_items.size(); ++i) {
         QVariantMap& item = m_items[i];
 
-        if (item[URI_KEY] == PROJECT_PAGE) {
+        if (item[URI_KEY] == PROJECT_PAGE || item[URI_KEY] == LIBRARY_PAGE) {
             item[ENABLED_KEY] = context()->currentProject() != nullptr;
             item[IS_TITLE_BOLD_KEY] = context()->currentProject() != nullptr;
 

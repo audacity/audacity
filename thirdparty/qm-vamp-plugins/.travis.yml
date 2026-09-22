@@ -1,0 +1,32 @@
+dist:
+  - xenial
+
+language:
+  - cpp
+
+sudo:
+  - false
+
+os:
+  - linux
+
+addons:
+  apt:
+    packages:
+      - wget
+      - libsndfile-dev
+      - libboost-all-dev
+      - mlton
+      
+before_install:
+  - ( cd ../ ; hg clone https://code.soundsoftware.ac.uk/hg/vamp-plugin-sdk )
+  - ( cd ../ ; hg clone https://code.soundsoftware.ac.uk/hg/vamp-plugin-tester )
+  - ( cd ../vamp-plugin-sdk ; ./configure && make && sudo make install )
+  - ( cd ../vamp-plugin-tester ; ./repoint install && make )
+  - wget https://code.soundsoftware.ac.uk/attachments/download/2250/sonic-annotator_1.5_amd64.deb
+  - sudo apt install -y ./sonic-annotator_1.5_amd64.deb
+  - ./repoint install
+
+script:
+  - make -f build/linux/Makefile.linux64 test
+  - VAMP_PATH=. ../vamp-plugin-tester/vamp-plugin-tester -a

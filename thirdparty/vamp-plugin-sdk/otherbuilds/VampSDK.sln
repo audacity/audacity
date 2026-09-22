@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VampPluginSDK", "VampPluginSDK.vcxproj", "{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VampExamplePlugins", "VampExamplePlugins.vcxproj", "{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5} = {65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Debug|Win32.Build.0 = Debug|Win32
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Debug|x64.ActiveCfg = Debug|x64
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Debug|x64.Build.0 = Debug|x64
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Release|Win32.ActiveCfg = Release|Win32
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Release|Win32.Build.0 = Release|Win32
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Release|x64.ActiveCfg = Release|x64
+		{65EFA7D7-C3CE-4D29-BE96-E27F2B5979A5}.Release|x64.Build.0 = Release|x64
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Debug|Win32.Build.0 = Debug|Win32
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Debug|x64.ActiveCfg = Debug|x64
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Debug|x64.Build.0 = Debug|x64
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Release|Win32.ActiveCfg = Release|Win32
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Release|Win32.Build.0 = Release|Win32
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Release|x64.ActiveCfg = Release|x64
+		{B3D1F5A4-4571-4D20-B184-8ACD03D6C97A}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

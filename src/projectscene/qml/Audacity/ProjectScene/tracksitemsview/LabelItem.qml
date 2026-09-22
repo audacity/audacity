@@ -25,8 +25,11 @@ Item {
     property bool isRightLinked: false
     property bool isLinkedActive: false
     property bool isPoint: false
+    // U+2063 is written only by AI Music beat analysis. It keeps the native
+    // point label intact while allowing the timeline to render a clean tick.
+    readonly property bool isCompactBeatMarker: root.title === "\u2063"
 
-    property int visualWidth: prv.isPoint ? pointStalk.width + header.x + header.width : header.width
+    property int visualWidth: root.isCompactBeatMarker ? pointStalk.width : (prv.isPoint ? pointStalk.width + header.x + header.width : header.width)
     readonly property int headerDefaultHeight: 14
 
     property var container: null
@@ -182,6 +185,7 @@ Item {
         z: root.parent.z
 
         height: root.headerDefaultHeight
+        visible: !root.isCompactBeatMarker
 
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
@@ -230,6 +234,7 @@ Item {
         z: root.parent.z
 
         height: root.headerDefaultHeight
+        visible: !root.isCompactBeatMarker
 
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
@@ -288,7 +293,7 @@ Item {
 
         navigationPanel: root.labelNavigationPanel
 
-        visible: root.visible
+        visible: root.visible && !root.isCompactBeatMarker
 
         onTitleEditAccepted: function (newTitle) {
             root.titleEditAccepted(newTitle)

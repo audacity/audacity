@@ -1,0 +1,23 @@
+dist:
+  - xenial
+
+language:
+  - cpp
+
+sudo:
+  - false
+
+os:
+  - linux
+
+addons:
+  apt:
+    packages:
+      - wget
+      - libsndfile-dev
+      - libboost-all-dev
+      - valgrind
+      
+script:
+  - make -f build/linux/Makefile.linux64 test
+  

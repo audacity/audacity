@@ -1,0 +1,14 @@
+syntax: glob
+*.o
+*~
+*.orig
+*.a
+doc/html/
+tests/test-*
+tests/test.log
+*.rej
+ext/uncertain/
+
+*.obj
+re:^build/msvc/Debug/
+re:^build/msvc/x64/Release/

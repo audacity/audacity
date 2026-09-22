@@ -72,6 +72,7 @@ qt_add_qml_module(appshell_qml
         HomePage/HomeMenu.qml
         HomePage/HomePage.qml
         HomePage/PluginsPage.qml
+        LibraryPage/LibraryPage.qml
         Main.qml
         Main.wasm.qml
         MainToolBar.qml
@@ -79,6 +80,7 @@ qt_add_qml_module(appshell_qml
         platform/AppMenuBar.qml
         platform/PlatformMenuBar.qml
         ProjectPage/ProjectPage.qml
+        ProjectPage/AIStudioPanel.qml
         ProjectPage/ProjectStatusBar.qml
         PublishPage/PublishPage.qml
         PublishPage/PublishToolBar.qml

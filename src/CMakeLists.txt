@@ -46,6 +46,12 @@ endif()
 add_subdirectory(spectrogram)
 
 add_subdirectory(automation)
+add_subdirectory(aimusic)
+add_subdirectory(aicore)
+add_subdirectory(aijobs)
+add_subdirectory(aiproject)
+add_subdirectory(ailibrary)
+add_subdirectory(aistudio)
 
 add_subdirectory(extensions/native)
 add_subdirectory(trackedit)

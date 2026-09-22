@@ -1,0 +1,32 @@
+
+configuration:
+  - Release
+
+platform:
+  - x86
+  - x64
+
+image:
+  - Visual Studio 2019
+
+install:
+  - cinst --allow-empty-checksums smlnj
+  - cinst wget --version 1.20
+  - ps: '"[hostfingerprints]" | Out-File -Encoding "ASCII" -Append $env:USERPROFILE\mercurial.ini'
+  - ps: '"code.soundsoftware.ac.uk = C7:27:7E:2C:1E:67:62:90:E9:8D:27:52:66:30:E6:FE:D4:2C:C5:30" | Out-File -Encoding "ASCII" -Append $env:USERPROFILE\mercurial.ini'
+  - ps: '"[hostsecurity]" | Out-File -Encoding "ASCII" -Append $env:USERPROFILE\mercurial.ini'
+  - ps: '"code.soundsoftware.ac.uk = code.soundsoftware.ac.uk:fingerprints=sha256:AF:67:D8:D6:D8:2F:28:FF:B9:1A:4D:CD:6A:93:25:EC:9E:47:9E:0E:E7:F1:FD:0B:97:B4:7C:D5:FA:2E:10:73" | Out-File -Encoding "ASCII" -Append $env:USERPROFILE\mercurial.ini'
+
+before_build:
+  - set PATH=%PATH%;C:\Program Files (x86)\SMLNJ\bin
+  - c:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate https://code.soundsoftware.ac.uk/attachments/download/2330/vamp-plugin-tester-1.1a-win32.zip https://code.soundsoftware.ac.uk/attachments/download/2331/vamp-plugin-tester-1.1a-win64.zip
+  - ps: Expand-Archive vamp-plugin-tester-1.1a-win32.zip -DestinationPath vamp-plugin-tester-x86
+  - ps: Expand-Archive vamp-plugin-tester-1.1a-win64.zip -DestinationPath vamp-plugin-tester-x64
+  - repoint install
+
+build:
+  project: build\msvc\QMVampPlugins.sln
+  
+test_script:
+  - set VAMP_PATH=%APPVEYOR_BUILD_FOLDER%\build\msvc\Release;%APPVEYOR_BUILD_FOLDER%\build\msvc\x64\Release
+  - vamp-plugin-tester-%PLATFORM%\vamp-plugin-tester\vamp-plugin-tester.exe -a

@@ -1,0 +1,121 @@
+
+The Vamp Plugin SDK -- Platform Notes for Visual C++ on Windows
+===============================================================
+
+This version of the SDK is contains project files for Visual C++ 2013
+or newer. You can build the SDK in either 32-bit or 64-bit (x64) mode,
+but remember that a 32-bit host generally cannot load 64-bit plugins.
+
+
+Visual C++ Projects and Solution Files
+--------------------------------------
+
+Two Visual C++ solution files are included:
+
+ - build/VampSDK.sln
+
+   Builds the plugin SDK and the example plugins.
+   See the VampPluginSDK and VampExamplePlugins projects below.
+
+ - build/VampHostSDK.sln
+
+   Builds the host SDK and the simple-host command-line application.
+   See the VampHostSDK and VampSimpleHost projects below.
+   Note that the VampSimpleHost requires the libsndfile library; if
+   you want to build without that, use the VampHostSDK project rather
+   than this solution.
+
+Four Visual C++ project files are included:
+
+ - build/VampPluginSDK.vcxproj
+
+   This builds the plugin SDK into a single static library, but does
+   not build the example plugins, the host SDK, or the host.  (We
+   recommend using static linkage for the SDK rather than distributing
+   it as a DLL, particularly when building plugins.)
+
+ - build/VampExamplePlugins.vcxproj
+
+   This builds the example plugins DLL, but does not build the plugin
+   or host SDKs or the host.  You don't need to build the plugin SDK
+   before this, because this project simply includes the plugin SDK
+   files rather than using the library.
+
+ - build/VampHostSDK.vcxproj
+
+   This builds the host SDK into a single static library, but does not
+   build the plugin SDK, example plugins, or host.
+
+ - build/VampSimpleHost.vcxproj
+
+   This builds the simple host command line program. You must have
+   the libsndfile library installed in order to build this project.
+
+Of course, when using Visual Studio or another IDE to build a plugin
+or host using the SDK, you may simply add the .h and .cpp files in the
+vamp-sdk or vamp-hostsdk directories to your existing project.  This
+is the approach taken in the VampExamplePlugins project.
+
+
+Installing the Example Plugins
+------------------------------
+
+To install the example plugins so you can load them in Vamp hosts,
+copy the files
+
+   build\release\vamp-example-plugins.dll
+and
+   examples\vamp-example-plugins.cat
+
+to the appropriate location as follows:
+
+ * For 32-bit plugins running on a 32-bit system, and
+   for 64-bit plugins running on a 64-bit system
+
+   C:\Program Files\Vamp Plugins
+
+ * For 32-bit plugins running on a 64-bit system
+
+   C:\Program Files\Vamp Plugins (x86)
+
+You cannot use 64-bit plugins on a 32-bit system.
+
+
+Plugin Linkage
+--------------
+
+Vamp plugins are distributed as dynamic libraries (DLLs).  A properly
+packaged Vamp plugin DLL should export exactly one public symbol,
+namely the Vamp API entry point vampGetPluginDescriptor.
+
+One nice tidy way to achieve this with Visual Studio is to add the
+linker option /EXPORT:vampGetPluginDescriptor to your project.  (All
+of the other symbols will be properly hidden, because that is the
+default for the Visual Studio linker.)  The included example plugins
+project in build/VampExamplePlugins.vcxproj does this.
+
+Alternatively, you may modify vamp/vamp.h to add the
+__declspec(dllexport) attribute to the vampGetPluginDescriptor
+declaration.  This is not present by default, because it isn't
+portable among compilers and, as we only want one symbol exported, the
+above linker option works equally well without code changes.
+
+(If you don't take at least one of these actions, your plugin library
+simply will not load in any host.)
+
+
+Using MinGW/Cygwin
+------------------
+
+Refer to README.linux for build instructions using the GNU toolchain.
+
+
+Test Your Plugins
+-----------------
+
+The Vamp Plugin Tester is a vital utility which you can use to test
+your plugins for common problems.  It can help you if you're having
+problems getting your plugin to work at all, and you're strongly
+advised to use it before you release anything.  Download it from the
+Vamp plugins site now!
+

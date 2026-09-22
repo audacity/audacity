@@ -1,0 +1,18 @@
+{
+    "config": {
+        "extdir": "lib"
+    },
+    "libraries": {
+        "vamp-plugin-sdk": {
+            "vcs": "git",
+            "service": "github",
+            "owner": "c4dm"
+	},
+        "qm-dsp": {
+            "vcs": "git",
+            "service": "github",
+            "owner": "c4dm"
+        }
+    }
+}
+

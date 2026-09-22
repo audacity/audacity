@@ -350,6 +350,8 @@ MenuItem* AppMenuModel::makeViewMenu()
     }
 
     viewItems << makeSeparator()
+              << makeMenuItem("ai.openJobs")
+              << makeSeparator()
               << makeMenuItem("open-label-editor")
               << makeMenuItem("open-metadata-editor")
               << makeMenuItem("toggle-history")
@@ -958,6 +960,8 @@ MenuItemList AppMenuModel::makeToolItems()
 MenuItemList AppMenuModel::makeAnalyzeItems()
 {
     MenuItemList items {
+        makeMenuItem("ai-music-analyze-selection"),
+        makeSeparator(),
         makeMenuItem("plugin-manager"),
         makeSeparator(),
         // makeMenuItem("contrast-analyzer"),

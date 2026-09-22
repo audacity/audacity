@@ -1,0 +1,31 @@
+name: Linux CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: vamp-plugin-sdk
+    - uses: actions/checkout@v4
+      with:
+        repository: vamp-plugins/vamp-test-plugin
+        path: vamp-test-plugin
+    - name: deps
+      run: |
+        sudo apt-get install -y build-essential cmake libsndfile-dev
+    - name: make
+      run: |
+        cd vamp-plugin-sdk
+        mkdir build
+        cd build
+        cmake .. -DVAMPSDK_BUILD_EXAMPLE_PLUGINS=ON -DVAMPSDK_BUILD_SIMPLE_HOST=ON -DVAMPSDK_BUILD_RDFGEN=ON
+        make
+    - name: test-plugin-regression
+      run: |
+        cd vamp-plugin-sdk
+        ./test/run-test-plugin-regression.sh

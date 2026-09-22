@@ -1,0 +1,1218 @@
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix vamp:     <http://purl.org/ontology/vamp/> .
+@prefix plugbase: <http://vamp-plugins.org/rdf/plugins/qm-vamp-plugins#> .
+@prefix owl:      <http://www.w3.org/2002/07/owl#> .
+@prefix dc:       <http://purl.org/dc/elements/1.1/> .
+@prefix af:       <http://purl.org/ontology/af/> .
+@prefix foaf:     <http://xmlns.com/foaf/0.1/> .
+@prefix cc:       <http://web.resource.org/cc/> .
+@prefix doap: 	  <http://usefulinc.com/ns/doap#> .
+@prefix :         <#> .
+
+<>  a   vamp:PluginDescription ;
+    foaf:maker          <http://vamp-plugins.org/rdf/template-generator> ;
+    foaf:primaryTopic   <http://vamp-plugins.org/rdf/plugins/qm-vamp-plugins> .
+
+:maker
+    foaf:name "Queen Mary, University of London" ;
+    foaf:logo <https://vamp-plugins.org/rdf/plugins/makers/qm.png> ;
+    foaf:page <https://c4dm.eecs.qmul.ac.uk/> .
+
+plugbase:library a  vamp:PluginLibrary ;
+    vamp:identifier "qm-vamp-plugins"  ; 
+    dc:title "Queen Mary plugin set" ;
+    foaf:maker :maker ;
+    vamp:available_plugin plugbase:qm-adaptivespectrogram ; 
+    vamp:available_plugin plugbase:qm-barbeattracker ; 
+    vamp:available_plugin plugbase:qm-chromagram ; 
+    vamp:available_plugin plugbase:qm-constantq ; 
+    vamp:available_plugin plugbase:qm-dwt ; 
+    vamp:available_plugin plugbase:qm-keydetector ; 
+    vamp:available_plugin plugbase:qm-mfcc ; 
+    vamp:available_plugin plugbase:qm-onsetdetector ; 
+    vamp:available_plugin plugbase:qm-segmenter ; 
+    vamp:available_plugin plugbase:qm-similarity ; 
+    vamp:available_plugin plugbase:qm-tempotracker ; 
+    vamp:available_plugin plugbase:qm-tonalchange ; 
+    vamp:available_plugin plugbase:qm-transcription ; 
+    foaf:page <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html> ;
+    doap:download-page <https://code.soundsoftware.ac.uk/projects/qm-vamp-plugins/files> ;
+    dc:title "Queen Mary plugin set" ;
+    dc:description """Plugins from the Centre for Digital Music at Queen Mary, University of London""" .
+
+plugbase:qm-adaptivespectrogram a   vamp:Plugin ;
+    dc:title              "Adaptive Spectrogram" ;
+    vamp:name             "Adaptive Spectrogram" ;
+    vamp:category	  "Visualisation" ;
+    dc:description        """Produce an adaptive spectrogram by adaptive selection from spectrograms at multiple resolutions""" ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Wen Xue and Chris Cannam.  Copyright (c) 2009 Wen Xue and QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-adaptivespectrogram" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "1" ;
+    vamp:input_domain     vamp:TimeDomain ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-adaptivespectrogram> ;
+
+    vamp:parameter   plugbase:qm-adaptivespectrogram_param_n ;
+    vamp:parameter   plugbase:qm-adaptivespectrogram_param_w ;
+    vamp:parameter   plugbase:qm-adaptivespectrogram_param_dec ;
+    vamp:parameter   plugbase:qm-adaptivespectrogram_param_coarse ;
+    vamp:parameter   plugbase:qm-adaptivespectrogram_param_threaded ;
+
+    vamp:output      plugbase:qm-adaptivespectrogram_output_output ;
+    .
+plugbase:qm-adaptivespectrogram_param_n a  vamp:QuantizedParameter ;
+    vamp:identifier     "n" ;
+    dc:title            "Number of resolutions" ;
+    dc:format           "" ;
+    vamp:min_value       2 ;
+    vamp:max_value       10 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   3 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-adaptivespectrogram_param_w a  vamp:QuantizedParameter ;
+    vamp:identifier     "w" ;
+    dc:title            "Smallest resolution" ;
+    dc:format           "" ;
+    vamp:min_value       1 ;
+    vamp:max_value       14 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   9 ;
+    vamp:value_names     ( "2" "4" "8" "16" "32" "64" "128" "256" "512" "1024" "2048" "4096" "8192" "16384");
+    .
+plugbase:qm-adaptivespectrogram_param_dec a  vamp:QuantizedParameter ;
+    vamp:identifier     "dec" ;
+    dc:title            "Decimation factor" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       3 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ( "No decimation" "2" "4" "8");
+    .
+plugbase:qm-adaptivespectrogram_param_coarse a  vamp:QuantizedParameter ;
+    vamp:identifier     "coarse" ;
+    dc:title            "Omit alternate resolutions" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-adaptivespectrogram_param_threaded a  vamp:QuantizedParameter ;
+    vamp:identifier     "threaded" ;
+    dc:title            "Multi-threaded processing" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   1 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-adaptivespectrogram_output_output a  vamp:DenseOutput ;
+    vamp:identifier       "output" ;
+    dc:title              "Output" ;
+    dc:description        """The output of the plugin"""  ;
+    vamp:unit             "" ;
+    vamp:computes_signal_type  af:Spectrogram ;
+    .
+plugbase:qm-barbeattracker a   vamp:Plugin ;
+    dc:title              "Bar and Beat Tracker" ;
+    vamp:name             "Bar and Beat Tracker" ;
+    vamp:category	  "Time > Tempo" ;
+    dc:description        """Estimate bar and beat locations""" ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Matthew Davies, Christian Landone and Chris Cannam.  Copyright (c) 2006-2013 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-barbeattracker" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "1" ;
+    vamp:input_domain     vamp:TimeDomain ;
+    foaf:page <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-barbeattracker> ;
+
+    vamp:parameter   plugbase:qm-barbeattracker_param_bpb ;
+    vamp:parameter   plugbase:qm-barbeattracker_param_alpha ;
+    vamp:parameter   plugbase:qm-barbeattracker_param_inputtempo ;
+    vamp:parameter   plugbase:qm-barbeattracker_param_constraintempo ;
+
+    vamp:output      plugbase:qm-barbeattracker_output_beats ;
+    vamp:output      plugbase:qm-barbeattracker_output_bars ;
+    vamp:output      plugbase:qm-barbeattracker_output_beatcounts ;
+    vamp:output      plugbase:qm-barbeattracker_output_beatsd ;
+    .
+plugbase:qm-barbeattracker_param_bpb a  vamp:QuantizedParameter ;
+    vamp:identifier     "bpb" ;
+    dc:title            "Beats per Bar" ;
+    dc:format           "" ;
+    vamp:min_value       2 ;
+    vamp:max_value       16 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   4 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-barbeattracker_param_alpha a  vamp:Parameter ;
+    vamp:identifier     "alpha" ;
+    dc:title            "Alpha" ;
+    dc:format           "" ;
+    vamp:min_value       0.1 ;
+    vamp:max_value       0.99 ;
+    vamp:unit           ""  ;
+    vamp:default_value   0.9 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-barbeattracker_param_inputtempo a  vamp:QuantizedParameter ;
+    vamp:identifier     "inputtempo" ;
+    dc:title            "Tempo Hint" ;
+    dc:format           "BPM" ;
+    vamp:min_value       50 ;
+    vamp:max_value       250 ;
+    vamp:unit           "BPM" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   120 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-barbeattracker_param_constraintempo a  vamp:QuantizedParameter ;
+    vamp:identifier     "constraintempo" ;
+    dc:title            "Constrain Tempo" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-barbeattracker_output_beats a  vamp:SparseOutput ;
+    vamp:identifier       "beats" ;
+    dc:title              "Beats" ;
+    dc:description        """Beat locations labelled with metrical position"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+    vamp:computes_event_type   af:Beat ;
+    .
+plugbase:qm-barbeattracker_output_bars a  vamp:SparseOutput ;
+    vamp:identifier       "bars" ;
+    dc:title              "Bars" ;
+    dc:description        """Bar locations"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+    .
+plugbase:qm-barbeattracker_output_beatcounts a  vamp:SparseOutput ;
+    vamp:identifier       "beatcounts" ;
+    dc:title              "Beat Count" ;
+    dc:description        """Beat counter function"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+    .
+plugbase:qm-barbeattracker_output_beatsd a  vamp:SparseOutput ;
+    vamp:identifier       "beatsd" ;
+    dc:title              "Beat Spectral Difference" ;
+    dc:description        """Beat spectral difference function used for bar-line detection"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-chromagram a   vamp:Plugin ;
+    dc:title              "Chromagram" ;
+    vamp:name             "Chromagram" ;
+    vamp:category	  "Visualisation" ;
+    dc:description        """Extract a series of tonal chroma vectors from the audio""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-chromagram> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Chris Cannam and Christian Landone.  Copyright (c) 2006-2009 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-chromagram" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "5" ;
+    vamp:input_domain     vamp:FrequencyDomain ;
+
+
+    vamp:parameter   plugbase:qm-chromagram_param_minpitch ;
+    vamp:parameter   plugbase:qm-chromagram_param_maxpitch ;
+    vamp:parameter   plugbase:qm-chromagram_param_tuning ;
+    vamp:parameter   plugbase:qm-chromagram_param_bpo ;
+    vamp:parameter   plugbase:qm-chromagram_param_normalization ;
+
+    vamp:output      plugbase:qm-chromagram_output_chromagram ;
+    vamp:output      plugbase:qm-chromagram_output_chromameans ;
+    .
+plugbase:qm-chromagram_param_minpitch a  vamp:QuantizedParameter ;
+    vamp:identifier     "minpitch" ;
+    dc:title            "Minimum Pitch" ;
+    dc:format           "MIDI units" ;
+    vamp:min_value       0 ;
+    vamp:max_value       127 ;
+    vamp:unit           "MIDI units" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   36 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-chromagram_param_maxpitch a  vamp:QuantizedParameter ;
+    vamp:identifier     "maxpitch" ;
+    dc:title            "Maximum Pitch" ;
+    dc:format           "MIDI units" ;
+    vamp:min_value       0 ;
+    vamp:max_value       127 ;
+    vamp:unit           "MIDI units" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   96 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-chromagram_param_tuning a  vamp:Parameter ;
+    vamp:identifier     "tuning" ;
+    dc:title            "Tuning Frequency" ;
+    dc:format           "Hz" ;
+    vamp:min_value       360 ;
+    vamp:max_value       500 ;
+    vamp:unit           "Hz"  ;
+    vamp:default_value   440 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-chromagram_param_bpo a  vamp:QuantizedParameter ;
+    vamp:identifier     "bpo" ;
+    dc:title            "Bins per Octave" ;
+    dc:format           "bins" ;
+    vamp:min_value       2 ;
+    vamp:max_value       480 ;
+    vamp:unit           "bins" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   12 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-chromagram_param_normalization a  vamp:QuantizedParameter ;
+    vamp:identifier     "normalization" ;
+    dc:title            "Normalization" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       2 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ( "None" "Unit Sum" "Unit Maximum");
+    .
+plugbase:qm-chromagram_output_chromagram a  vamp:DenseOutput ;
+    vamp:identifier       "chromagram" ;
+    dc:title              "Chromagram" ;
+    dc:description        """Output of chromagram, as a single vector per process block"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        12 ;
+    vamp:bin_names        ( "C" "C#" "D" "D#" "E" "F" "F#" "G" "G#" "A" "A#" "B");
+    vamp:computes_signal_type  af:Chromagram ;
+    .
+plugbase:qm-chromagram_output_chromameans a  vamp:DenseOutput ;
+    vamp:identifier       "chromameans" ;
+    dc:title              "Chroma Means" ;
+    dc:description        """Mean values of chromagram bins across the duration of the input audio"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        12 ;
+    vamp:bin_names        ( "C" "C#" "D" "D#" "E" "F" "F#" "G" "G#" "A" "A#" "B");
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-constantq a   vamp:Plugin ;
+    dc:title              "Constant-Q Spectrogram" ;
+    vamp:name             "Constant-Q Spectrogram" ;
+    vamp:category	  "Visualisation" ;
+    dc:description        """Extract a spectrogram with constant ratio of centre frequency to resolution from the input audio""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-constantq> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Chris Cannam and Christian Landone.  Copyright (c) 2006-2009 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-constantq" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "4" ;
+    vamp:input_domain     vamp:FrequencyDomain ;
+
+
+    vamp:parameter   plugbase:qm-constantq_param_minpitch ;
+    vamp:parameter   plugbase:qm-constantq_param_maxpitch ;
+    vamp:parameter   plugbase:qm-constantq_param_tuning ;
+    vamp:parameter   plugbase:qm-constantq_param_bpo ;
+    vamp:parameter   plugbase:qm-constantq_param_normalized ;
+
+    vamp:output      plugbase:qm-constantq_output_constantq ;
+    .
+plugbase:qm-constantq_param_minpitch a  vamp:QuantizedParameter ;
+    vamp:identifier     "minpitch" ;
+    dc:title            "Minimum Pitch" ;
+    dc:format           "MIDI units" ;
+    vamp:min_value       0 ;
+    vamp:max_value       127 ;
+    vamp:unit           "MIDI units" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   36 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-constantq_param_maxpitch a  vamp:QuantizedParameter ;
+    vamp:identifier     "maxpitch" ;
+    dc:title            "Maximum Pitch" ;
+    dc:format           "MIDI units" ;
+    vamp:min_value       0 ;
+    vamp:max_value       127 ;
+    vamp:unit           "MIDI units" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   84 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-constantq_param_tuning a  vamp:Parameter ;
+    vamp:identifier     "tuning" ;
+    dc:title            "Tuning Frequency" ;
+    dc:format           "Hz" ;
+    vamp:min_value       360 ;
+    vamp:max_value       500 ;
+    vamp:unit           "Hz"  ;
+    vamp:default_value   440 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-constantq_param_bpo a  vamp:QuantizedParameter ;
+    vamp:identifier     "bpo" ;
+    dc:title            "Bins per Octave" ;
+    dc:format           "bins" ;
+    vamp:min_value       2 ;
+    vamp:max_value       480 ;
+    vamp:unit           "bins" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   12 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-constantq_param_normalized a  vamp:QuantizedParameter ;
+    vamp:identifier     "normalized" ;
+    dc:title            "Normalized" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-constantq_output_constantq a  vamp:DenseOutput ;
+    vamp:identifier       "constantq" ;
+    dc:title              "Constant-Q Spectrogram" ;
+    dc:description        "Output of constant-Q transform, as a single vector per process block"  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:computes_signal_type  af:Spectrogram ;
+    .
+plugbase:qm-dwt a   vamp:Plugin ;
+    dc:title              "Discrete Wavelet Transform" ;
+    vamp:name             "Discrete Wavelet Transform" ;
+    vamp:category	  "Visualisation" ;
+    dc:description        """Visualisation by scalogram""" ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Thomas Wilmering.  Copyright (c) 2009 Thomas Wilmering and QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-dwt" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "1" ;
+    vamp:input_domain     vamp:TimeDomain ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-dwt> ;
+
+    vamp:parameter   plugbase:qm-dwt_param_scales ;
+    vamp:parameter   plugbase:qm-dwt_param_wavelet ;
+    vamp:parameter   plugbase:qm-dwt_param_threshold ;
+    vamp:parameter   plugbase:qm-dwt_param_absolute ;
+
+    vamp:output      plugbase:qm-dwt_output_wcoeff ;
+    .
+plugbase:qm-dwt_param_scales a  vamp:QuantizedParameter ;
+    vamp:identifier     "scales" ;
+    dc:title            "Scales" ;
+    dc:format           "" ;
+    vamp:min_value       1 ;
+    vamp:max_value       16 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   10 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-dwt_param_wavelet a  vamp:QuantizedParameter ;
+    vamp:identifier     "wavelet" ;
+    dc:title            "Wavelet" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       42 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ( "Haar" "Daubechies 2" "Daubechies 3" "Daubechies 4" "Daubechies 5" "Daubechies 6" "Daubechies 7" "Daubechies 8" "Daubechies 9" "Daubechies 10" "Daubechies 20" "Daubechies 40" "Symlet 2" "Symlet 3" "Symlet 4" "Symlet 5" "Symlet 6" "Symlet 7" "Symlet 8" "Symlet 9" "Symlet 10" "Symlet 20" "Symlet 30" "Coiflet 1" "Coiflet 2" "Coiflet 3" "Coiflet 4" "Coiflet 5" "Biorthogonal 1.3" "Biorthogonal 1.5" "Biorthogonal 2.2" "Biorthogonal 2.4" "Biorthogonal 2.6" "Biorthogonal 2.8" "Biorthogonal 3.1" "Biorthogonal 3.3" "Biorthogonal 3.5" "Biorthogonal 3.7" "Biorthogonal 3.9" "Biorthogonal 4.4" "Biorthogonal 5.5" "Biorthogonal 6.8" "Meyer");
+    .
+plugbase:qm-dwt_param_threshold a  vamp:Parameter ;
+    vamp:identifier     "threshold" ;
+    dc:title            "Threshold" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       0.01 ;
+    vamp:unit           ""  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-dwt_param_absolute a  vamp:QuantizedParameter ;
+    vamp:identifier     "absolute" ;
+    dc:title            "Absolute values" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-dwt_output_wcoeff a  vamp:DenseOutput ;
+    vamp:identifier       "wcoeff" ;
+    dc:title              "Wavelet Coefficients" ;
+    dc:description        """Wavelet coefficients"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        10 ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-keydetector a   vamp:Plugin ;
+    dc:title              "Key Detector" ;
+    vamp:name             "Key Detector" ;
+    vamp:category	  "Key and Tonality" ;
+    dc:description        """Estimate the key of the music""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-keydetector> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Katy Noland and Christian Landone.  Copyright (c) 2006-2019 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-keydetector" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "6" ;
+    vamp:input_domain     vamp:TimeDomain ;
+
+    vamp:parameter   plugbase:qm-keydetector_param_tuning ;
+    vamp:parameter   plugbase:qm-keydetector_param_length ;
+
+    vamp:output      plugbase:qm-keydetector_output_tonic ;
+    vamp:output      plugbase:qm-keydetector_output_mode ;
+    vamp:output      plugbase:qm-keydetector_output_key ;
+    vamp:output      plugbase:qm-keydetector_output_keystrength ;
+    vamp:output      plugbase:qm-keydetector_output_mergedkeystrength ;
+    .
+plugbase:qm-keydetector_param_tuning a  vamp:Parameter ;
+    vamp:identifier     "tuning" ;
+    dc:title            "Tuning Frequency" ;
+    dc:format           "Hz" ;
+    vamp:min_value       420 ;
+    vamp:max_value       460 ;
+    vamp:unit           "Hz"  ;
+    vamp:default_value   440 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-keydetector_param_length a  vamp:QuantizedParameter ;
+    vamp:identifier     "length" ;
+    dc:title            "Window Length" ;
+    dc:format           "chroma frames" ;
+    vamp:min_value       1 ;
+    vamp:max_value       30 ;
+    vamp:unit           "chroma frames" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   10 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-keydetector_output_tonic a  vamp:SparseOutput ;
+    vamp:identifier       "tonic" ;
+    dc:title              "Tonic Pitch" ;
+    dc:description        """Tonic of the estimated key (from C = 1 to B = 12)""" ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    a                     vamp:QuantizedOutput ;
+    vamp:quantize_step    1  ;
+    a                 vamp:KnownExtentsOutput ;
+    vamp:min_value    1  ;
+    vamp:max_value    12  ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      1.34583 ;
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-keydetector_output_mode a  vamp:SparseOutput ;
+    vamp:identifier       "mode" ;
+    dc:title              "Key Mode" ;
+    dc:description        """Major or minor mode of the estimated key (major = 0, minor = 1)"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    a                     vamp:QuantizedOutput ;
+    vamp:quantize_step    1  ;
+    a                 vamp:KnownExtentsOutput ;
+    vamp:min_value    0  ;
+    vamp:max_value    1  ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      1.34583 ;
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-keydetector_output_key a  vamp:SparseOutput ;
+    vamp:identifier       "key" ;
+    dc:title              "Key" ;
+    dc:description        """Estimated key (from C major = 1 to B major = 12 and C minor = 13 to B minor = 24)"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    a                     vamp:QuantizedOutput ;
+    vamp:quantize_step    1  ;
+    a                 vamp:KnownExtentsOutput ;
+    vamp:min_value    1  ;
+    vamp:max_value    24  ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      1.34583 ;
+    vamp:computes_event_type   af:KeyChange ;
+    .
+plugbase:qm-keydetector_output_keystrength a  vamp:DenseOutput ;
+    vamp:identifier       "keystrength" ;
+    dc:title              "Key Strength Plot" ;
+    dc:description        """Correlation of the chroma vector with stored key profile for each major and minor key"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        25 ;
+    vamp:bin_names        ( "F# / Gb major" "B major" "E major" "A major" "D major" "G major" "C major" "F major" "Bb major" "Eb major" "Ab major" "Db major" " " "Eb / D# minor" "G# minor" "C# minor" "F# minor" "B minor" "E minor" "A minor" "D minor" "G minor" "C minor" "F minor" "Bb minor");
+    .
+plugbase:qm-keydetector_output_mergedkeystrength a  vamp:DenseOutput ;
+    vamp:identifier       "mergedkeystrength" ;
+    dc:title              "Merged Key Strength Plot" ;
+    dc:description        """Correlation of the chroma vector with stored key profile for each key, with major and minor alternatives merged"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        12 ;
+    vamp:bin_names        ( "F#/Gb maj / Eb/D# min" "B maj / G# min" "E maj / C# min" "A maj / F# min" "D maj / B min" "G maj / E min" "C maj / A min" "F maj / D min" "Bb maj / G min" "Eb maj / C min" "Ab maj / F min" "Db maj / Bb min");
+    .
+plugbase:qm-mfcc a   vamp:Plugin ;
+    dc:title              "Mel-Frequency Cepstral Coefficients" ;
+    vamp:name             "Mel-Frequency Cepstral Coefficients" ;
+    vamp:category	  "Low Level Features" ;
+    dc:description        """Calculate a series of MFCC vectors from the audio""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-mfcc> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Nicolas Chetry and Chris Cannam.  Copyright (c) 2009 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-mfcc" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "1" ;
+    vamp:input_domain     vamp:FrequencyDomain ;
+
+
+    vamp:parameter   plugbase:qm-mfcc_param_nceps ;
+    vamp:parameter   plugbase:qm-mfcc_param_logpower ;
+    vamp:parameter   plugbase:qm-mfcc_param_wantc0 ;
+
+    vamp:output      plugbase:qm-mfcc_output_coefficients ;
+    vamp:output      plugbase:qm-mfcc_output_means ;
+    .
+plugbase:qm-mfcc_param_nceps a  vamp:QuantizedParameter ;
+    vamp:identifier     "nceps" ;
+    dc:title            "Number of Coefficients" ;
+    dc:format           "" ;
+    vamp:min_value       1 ;
+    vamp:max_value       40 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   20 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-mfcc_param_logpower a  vamp:Parameter ;
+    vamp:identifier     "logpower" ;
+    dc:title            "Power for Mel Amplitude Logs" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       5 ;
+    vamp:unit           ""  ;
+    vamp:default_value   1 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-mfcc_param_wantc0 a  vamp:QuantizedParameter ;
+    vamp:identifier     "wantc0" ;
+    dc:title            "Include C0" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   1 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-mfcc_output_coefficients a  vamp:DenseOutput ;
+    vamp:identifier       "coefficients" ;
+    dc:title              "Coefficients" ;
+    dc:description        """MFCC values"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        20 ;
+    vamp:bin_names        ( "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "");
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-mfcc_output_means a  vamp:DenseOutput ;
+    vamp:identifier       "means" ;
+    dc:title              "Means of Coefficients" ;
+    dc:description        """Mean values of MFCCs across duration of audio input"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        20 ;
+    vamp:bin_names        ( "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "");
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-onsetdetector a   vamp:Plugin ;
+    dc:title              "Note Onset Detector" ;
+    vamp:name             "Note Onset Detector" ;
+    vamp:category	  "Time > Onsets" ;
+    dc:description        """Estimate individual note onset positions""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-onsetdetector> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Christian Landone, Chris Duxbury and Juan Pablo Bello.  Copyright (c) 2006-2009 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-onsetdetector" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "3" ;
+    vamp:input_domain     vamp:FrequencyDomain ;
+
+
+    vamp:parameter   plugbase:qm-onsetdetector_param_dftype ;
+    vamp:parameter   plugbase:qm-onsetdetector_param_sensitivity ;
+    vamp:parameter   plugbase:qm-onsetdetector_param_whiten ;
+
+    vamp:output      plugbase:qm-onsetdetector_output_onsets ;
+    vamp:output      plugbase:qm-onsetdetector_output_detection_fn ;
+    vamp:output      plugbase:qm-onsetdetector_output_smoothed_df ;
+    .
+plugbase:qm-onsetdetector_param_dftype a  vamp:QuantizedParameter ;
+    vamp:identifier     "dftype" ;
+    dc:title            "Onset Detection Function Type" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       4 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   3 ;
+    vamp:value_names     ( "High-Frequency Content" "Spectral Difference" "Phase Deviation" "Complex Domain" "Broadband Energy Rise");
+    .
+plugbase:qm-onsetdetector_param_sensitivity a  vamp:QuantizedParameter ;
+    vamp:identifier     "sensitivity" ;
+    dc:title            "Onset Detector Sensitivity" ;
+    dc:format           "%" ;
+    vamp:min_value       0 ;
+    vamp:max_value       100 ;
+    vamp:unit           "%" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   50 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-onsetdetector_param_whiten a  vamp:QuantizedParameter ;
+    vamp:identifier     "whiten" ;
+    dc:title            "Adaptive Whitening" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-onsetdetector_output_onsets a  vamp:SparseOutput ;
+    vamp:identifier       "onsets" ;
+    dc:title              "Note Onsets" ;
+    dc:description        """Perceived note onset positions"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:bin_names        ();
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+    vamp:computes_event_type   af:Onset;
+    .
+plugbase:qm-onsetdetector_output_detection_fn a  vamp:DenseOutput ;
+    vamp:identifier       "detection_fn" ;
+    dc:title              "Onset Detection Function" ;
+    dc:description        """Probability function of note onset likelihood"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:computes_signal_type   af:OnsetDetectionFunction ;
+    .
+plugbase:qm-onsetdetector_output_smoothed_df a  vamp:SparseOutput ;
+    vamp:identifier       "smoothed_df" ;
+    dc:title              "Smoothed Detection Function" ;
+    dc:description        """Smoothed probability function used for peak-picking"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+    vamp:computes_signal_type   af:OnsetDetectionFunction ;
+    .
+plugbase:qm-segmenter a   vamp:Plugin ;
+    dc:title              "Segmenter" ;
+    vamp:name             "Segmenter" ;
+    vamp:category	  "Classification" ;
+    dc:description        """Divide the track into a sequence of consistent segments""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-segmenter> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Mark Levy.  Copyright (c) 2006-2013 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-segmenter" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "3" ;
+    vamp:input_domain     vamp:TimeDomain ;
+
+    vamp:parameter   plugbase:qm-segmenter_param_nSegmentTypes ;
+    vamp:parameter   plugbase:qm-segmenter_param_featureType ;
+    vamp:parameter   plugbase:qm-segmenter_param_neighbourhoodLimit ;
+
+    vamp:output      plugbase:qm-segmenter_output_segmentation ;
+    .
+plugbase:qm-segmenter_param_nSegmentTypes a  vamp:QuantizedParameter ;
+    vamp:identifier     "nSegmentTypes" ;
+    dc:title            "Number of segment-types" ;
+    dc:format           "" ;
+    vamp:min_value       2 ;
+    vamp:max_value       12 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   10 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-segmenter_param_featureType a  vamp:QuantizedParameter ;
+    vamp:identifier     "featureType" ;
+    dc:title            "Feature Type" ;
+    dc:format           "" ;
+    vamp:min_value       1 ;
+    vamp:max_value       3 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   1 ;
+    vamp:value_names     ( "Hybrid (Constant-Q)" "Chromatic (Chroma)" "Timbral (MFCC)");
+    .
+plugbase:qm-segmenter_param_neighbourhoodLimit a  vamp:QuantizedParameter ;
+    vamp:identifier     "neighbourhoodLimit" ;
+    dc:title            "Minimum segment duration" ;
+    dc:format           "s" ;
+    vamp:min_value       1 ;
+    vamp:max_value       15 ;
+    vamp:unit           "s" ;
+    vamp:quantize_step   0.2  ;
+    vamp:default_value   4 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-segmenter_output_segmentation a  vamp:SparseOutput ;
+    vamp:identifier       "segmentation" ;
+    dc:title              "Segmentation" ;
+    dc:description        """Segmentation"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "segment-type" ;
+    a                     vamp:QuantizedOutput ;
+    vamp:quantize_step    1  ;
+    a                 vamp:KnownExtentsOutput ;
+    vamp:min_value    1  ;
+    vamp:max_value    10  ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      5 ;
+    vamp:computes_event_type   af:StructuralSegment ;
+    .
+plugbase:qm-similarity a   vamp:Plugin ;
+    dc:title              "Similarity" ;
+    vamp:name             "Similarity" ;
+    vamp:category	  "Classification" ;
+    dc:description        """Return a distance matrix for similarity between the input audio channels""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-similarity> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Mark Levy, Kurt Jacobson and Chris Cannam.  Copyright (c) 2009 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-similarity" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "1" ;
+    vamp:input_domain     vamp:TimeDomain ;
+
+    vamp:parameter   plugbase:qm-similarity_param_featureType ;
+
+    vamp:output      plugbase:qm-similarity_output_distancematrix ;
+    vamp:output      plugbase:qm-similarity_output_distancevector ;
+    vamp:output      plugbase:qm-similarity_output_sorteddistancevector ;
+    vamp:output      plugbase:qm-similarity_output_means ;
+    vamp:output      plugbase:qm-similarity_output_variances ;
+    vamp:output      plugbase:qm-similarity_output_beatspectrum ;
+    .
+plugbase:qm-similarity_param_featureType a  vamp:QuantizedParameter ;
+    vamp:identifier     "featureType" ;
+    dc:title            "Feature Type" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       4 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   1 ;
+    vamp:value_names     ( "Timbre" "Timbre and Rhythm" "Chroma" "Chroma and Rhythm" "Rhythm only");
+    .
+plugbase:qm-similarity_output_distancematrix a  vamp:DenseOutput ;
+    vamp:identifier       "distancematrix" ;
+    dc:title              "Distance Matrix" ;
+    dc:description        """Distance matrix for similarity metric.  Smaller = more similar.  Should be symmetrical."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:bin_names        ();
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-similarity_output_distancevector a  vamp:DenseOutput ;
+    vamp:identifier       "distancevector" ;
+    dc:title              "Distance from First Channel" ;
+    dc:description        """Distance vector for similarity of each channel to the first channel.  Smaller = more similar."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:bin_names        ();
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-similarity_output_sorteddistancevector a  vamp:DenseOutput ;
+    vamp:identifier       "sorteddistancevector" ;
+    dc:title              "Ordered Distances from First Channel" ;
+    dc:description        """Vector of the order of other channels in similarity to the first, followed by distance vector for similarity of each to the first.  Smaller = more similar."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:bin_names        ();
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-similarity_output_means a  vamp:DenseOutput ;
+    vamp:identifier       "means" ;
+    dc:title              "Feature Means" ;
+    dc:description        """Means of the feature bins.  Feature time (sec) corresponds to input channel.  Number of bins depends on selected feature type."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        20 ;
+    vamp:bin_names        ( "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "");
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-similarity_output_variances a  vamp:DenseOutput ;
+    vamp:identifier       "variances" ;
+    dc:title              "Feature Variances" ;
+    dc:description        """Variances of the feature bins.  Feature time (sec) corresponds to input channel.  Number of bins depends on selected feature type."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        20 ;
+    vamp:bin_names        ( "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "");
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-similarity_output_beatspectrum a  vamp:SparseOutput ;
+    vamp:identifier       "beatspectrum" ;
+    dc:title              "Beat Spectra" ;
+    dc:description        """Rhythmic self-similarity vectors (beat spectra) for the input channels.  Feature time (sec) corresponds to input channel.  Not returned if rhythm weighting is zero."""  ;
+    vamp:fixed_bin_count  "false" ;
+    vamp:unit             "" ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      1 ;
+#   vamp:computes_event_type   <Place event type URI here and uncomment> ;
+#   vamp:computes_feature      <Place feature attribute URI here and uncomment> ;
+#   vamp:computes_signal_type  <Place signal type URI here and uncomment> ;
+    .
+plugbase:qm-tempotracker a   vamp:Plugin ;
+    dc:title              "Tempo and Beat Tracker" ;
+    vamp:name             "Tempo and Beat Tracker" ;
+    vamp:category	  "Time > Tempo" ;
+    dc:description        """Estimate beat locations and tempo""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-tempotracker> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Christian Landone and Matthew Davies.  Copyright (c) 2006-2013 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-tempotracker" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "6" ;
+    vamp:input_domain     vamp:FrequencyDomain ;
+
+
+    vamp:parameter   plugbase:qm-tempotracker_param_method ;
+    vamp:parameter   plugbase:qm-tempotracker_param_dftype ;
+    vamp:parameter   plugbase:qm-tempotracker_param_whiten ;
+    vamp:parameter   plugbase:qm-tempotracker_param_alpha ;
+    vamp:parameter   plugbase:qm-tempotracker_param_inputtempo ;
+    vamp:parameter   plugbase:qm-tempotracker_param_constraintempo ;
+
+    vamp:output      plugbase:qm-tempotracker_output_beats ;
+    vamp:output      plugbase:qm-tempotracker_output_detection_fn ;
+    vamp:output      plugbase:qm-tempotracker_output_tempo ;
+    .
+plugbase:qm-tempotracker_param_method a  vamp:QuantizedParameter ;
+    vamp:identifier     "method" ;
+    dc:title            "Beat Tracking Method" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   1 ;
+    vamp:value_names     ( "Old" "New");
+    .
+plugbase:qm-tempotracker_param_dftype a  vamp:QuantizedParameter ;
+    vamp:identifier     "dftype" ;
+    dc:title            "Onset Detection Function Type" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       4 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   3 ;
+    vamp:value_names     ( "High-Frequency Content" "Spectral Difference" "Phase Deviation" "Complex Domain" "Broadband Energy Rise");
+    .
+plugbase:qm-tempotracker_param_whiten a  vamp:QuantizedParameter ;
+    vamp:identifier     "whiten" ;
+    dc:title            "Adaptive Whitening" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-tempotracker_param_alpha a  vamp:Parameter ;
+    vamp:identifier     "alpha" ;
+    dc:title            "Alpha" ;
+    dc:format           "" ;
+    vamp:min_value       0.1 ;
+    vamp:max_value       0.99 ;
+    vamp:unit           ""  ;
+    vamp:default_value   0.9 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-tempotracker_param_inputtempo a  vamp:QuantizedParameter ;
+    vamp:identifier     "inputtempo" ;
+    dc:title            "Tempo Hint" ;
+    dc:format           "BPM" ;
+    vamp:min_value       50 ;
+    vamp:max_value       250 ;
+    vamp:unit           "BPM" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   120 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-tempotracker_param_constraintempo a  vamp:QuantizedParameter ;
+    vamp:identifier     "constraintempo" ;
+    dc:title            "Constrain Tempo" ;
+    dc:format           "" ;
+    vamp:min_value       0 ;
+    vamp:max_value       1 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   0 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-tempotracker_output_beats a  vamp:SparseOutput ;
+    vamp:identifier       "beats" ;
+    dc:title              "Beats" ;
+    dc:description        """Estimated metrical beat locations"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:bin_names        ();
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+    vamp:computes_event_type   af:Beat;
+    .
+plugbase:qm-tempotracker_output_detection_fn a  vamp:DenseOutput ;
+    vamp:identifier       "detection_fn" ;
+    dc:title              "Onset Detection Function" ;
+    dc:description        """Probability function of note onset likelihood"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:computes_signal_type   af:OnsetDetectionFunction;
+    .
+plugbase:qm-tempotracker_output_tempo a  vamp:SparseOutput ;
+    vamp:identifier       "tempo" ;
+    dc:title              "Tempo" ;
+    dc:description        """Locked tempo estimates"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "bpm" ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+    vamp:computes_event_type   af:Tempo ;
+    .
+plugbase:qm-tonalchange a   vamp:Plugin ;
+    dc:title              "Tonal Change" ;
+    vamp:name             "Tonal Change" ;
+    vamp:category	  "Key and Tonality" ;
+    dc:description        """Detect and return the positions of harmonic changes such as chord boundaries""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-tonalchange> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Martin Gasser and Christopher Harte.  Copyright (c) 2006-2009 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-tonalchange" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "4" ;
+    vamp:input_domain     vamp:TimeDomain ;
+
+    vamp:parameter   plugbase:qm-tonalchange_param_smoothingwidth ;
+    vamp:parameter   plugbase:qm-tonalchange_param_minpitch ;
+    vamp:parameter   plugbase:qm-tonalchange_param_maxpitch ;
+    vamp:parameter   plugbase:qm-tonalchange_param_tuning ;
+
+    vamp:output      plugbase:qm-tonalchange_output_tcstransform ;
+    vamp:output      plugbase:qm-tonalchange_output_tcfunction ;
+    vamp:output      plugbase:qm-tonalchange_output_changepositions ;
+    .
+plugbase:qm-tonalchange_param_smoothingwidth a  vamp:QuantizedParameter ;
+    vamp:identifier     "smoothingwidth" ;
+    dc:title            "Gaussian smoothing" ;
+    dc:format           "frames" ;
+    vamp:min_value       0 ;
+    vamp:max_value       20 ;
+    vamp:unit           "frames" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   5 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-tonalchange_param_minpitch a  vamp:QuantizedParameter ;
+    vamp:identifier     "minpitch" ;
+    dc:title            "Chromagram minimum pitch" ;
+    dc:format           "MIDI units" ;
+    vamp:min_value       0 ;
+    vamp:max_value       127 ;
+    vamp:unit           "MIDI units" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   32 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-tonalchange_param_maxpitch a  vamp:QuantizedParameter ;
+    vamp:identifier     "maxpitch" ;
+    dc:title            "Chromagram maximum pitch" ;
+    dc:format           "MIDI units" ;
+    vamp:min_value       0 ;
+    vamp:max_value       127 ;
+    vamp:unit           "MIDI units" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   108 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-tonalchange_param_tuning a  vamp:Parameter ;
+    vamp:identifier     "tuning" ;
+    dc:title            "Chromagram tuning frequency" ;
+    dc:format           "Hz" ;
+    vamp:min_value       420 ;
+    vamp:max_value       460 ;
+    vamp:unit           "Hz"  ;
+    vamp:default_value   440 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-tonalchange_output_tcstransform a  vamp:DenseOutput ;
+    vamp:identifier       "tcstransform" ;
+    dc:title              "Transform to 6D Tonal Content Space" ;
+    dc:description        """Representation of content in a six-dimensional tonal space"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    a                 vamp:KnownExtentsOutput ;
+    vamp:min_value    -1  ;
+    vamp:max_value    1  ;
+    vamp:bin_count        6 ;
+    vamp:bin_names        ( "" "" "" "" "" "");
+    vamp:computes_signal_type  af:TonalContentSpace;
+    .
+plugbase:qm-tonalchange_output_tcfunction a  vamp:SparseOutput ;
+    vamp:identifier       "tcfunction" ;
+    dc:title              "Tonal Change Detection Function" ;
+    dc:description        """Estimate of the likelihood of a tonal change occurring within each spectral frame"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:bin_names        ( "");
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      21.5332 ;
+    vamp:computes_signal_type  af:TonalChangeDetectionFunction;
+    .
+plugbase:qm-tonalchange_output_changepositions a  vamp:SparseOutput ;
+    vamp:identifier       "changepositions" ;
+    dc:title              "Tonal Change Positions" ;
+    dc:description        """Estimated locations of tonal changes"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:bin_names        ();
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      21.5332 ;
+    vamp:computes_event_type   af:TonalOnset;
+    .
+plugbase:qm-transcription a   vamp:Plugin ;
+    dc:title              "Polyphonic Transcription" ;
+    vamp:name             "Polyphonic Transcription" ;
+    vamp:category	  "Notes" ;
+    dc:description        """Transcribe the input audio to estimated notes""" ;
+    foaf:page             <https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-transcription> ;
+    foaf:maker            :maker ;
+    dc:rights             """Plugin by Dr. Ruohua Zhou.  Copyright (c) 2008-2009 QMUL - All Rights Reserved""" ;
+    cc:license            <https://www.gnu.org/licenses/old-licenses/gpl-2.0> ;
+    vamp:identifier       "qm-transcription" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "1" ;
+    vamp:input_domain     vamp:TimeDomain ;
+    vamp:output      plugbase:qm-transcription_output_transcription ;
+    .
+plugbase:qm-transcription_output_transcription a  vamp:SparseOutput ;
+    vamp:identifier       "transcription" ;
+    dc:title              "Transcription" ;
+    dc:description        """Estimated note pitch (MIDI note number from 0 to 127)"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "MIDI units" ;
+    a                     vamp:QuantizedOutput ;
+    vamp:quantize_step    1  ;
+    a                 vamp:KnownExtentsOutput ;
+    vamp:min_value    0  ;
+    vamp:max_value    127  ;
+    vamp:bin_count        1 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:computes_event_type   af:Note ;
+    .
+
+

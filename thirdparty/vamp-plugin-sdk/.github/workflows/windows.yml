@@ -1,0 +1,23 @@
+name: Windows CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+    - name: deps
+      run: |
+        pip install ninja
+    - name: make
+      run: |
+        mkdir build
+        cd build
+        cmake .. -G Ninja -DVAMPSDK_BUILD_EXAMPLE_PLUGINS=ON -DVAMPSDK_BUILD_RDFGEN=ON
+        ninja

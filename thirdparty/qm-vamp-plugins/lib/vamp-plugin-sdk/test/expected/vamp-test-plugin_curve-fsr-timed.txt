@@ -1,0 +1,11 @@
+=== vamp-test-plugin:vamp-test-plugin:curve-fsr-timed
+ 0.000000000: 0 1 of 10: 0 at 0 snap to 0
+ 0.000000000: 0.1 2 of 10: 0.1 at 0 snap to 0
+ 0.000000000: 0.2 3 of 10: 0.2 at 0.166 snap to 0
+ 0.400000000: 0.3 4 of 10: 0.3 at 0.333 snap to 0.4
+ 2.000000000: 0.4 5 of 10: 0.4 at 2 snap to 2
+ 2.000000000: 0.5 6 of 10: 0.5 at 2 snap to 2
+ 2.000000000: 0.6 7 of 10: 0.6 at 2.166 snap to 2
+ 2.400000000: 0.7 8 of 10: 0.7 at 2.333 snap to 2.4
+ 4.000000000: 0.8 9 of 10: 0.8 at 4 snap to 4
+ 4.000000000: 0.9 10 of 10: 0.9 at 4 snap to 4

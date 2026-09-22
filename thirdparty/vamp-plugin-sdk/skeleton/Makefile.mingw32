@@ -1,0 +1,43 @@
+
+##  Makefile for Vamp plugin using MinGW tools on Windows.
+##
+##  Edit this to adjust compiler and library settings when
+##  building using MinGW.
+##
+##  Note that the list of source files, etc, goes in Makefile.inc
+##  instead so that it can be included by all platform Makefiles.
+
+TOOLPREFIX     ?= 
+CXX		= $(TOOLPREFIX)g++
+CC		= $(TOOLPREFIX)gcc
+LD		= $(TOOLPREFIX)g++
+AR		= $(TOOLPREFIX)ar
+RANLIB		= $(TOOLPREFIX)ranlib
+
+
+# For a debug build...
+
+CFLAGS		:= -Wall -Wextra -g
+
+# ... or for a release build
+
+#CFLAGS		:= -Wall -Wextra -O3 -ftree-vectorize
+
+
+# Location of Vamp plugin SDK relative to the project directory
+
+VAMPSDK_DIR	:= ../vamp-plugin-sdk
+
+
+# Libraries and linker flags required by plugin: add any -l<library>
+# options here
+
+PLUGIN_LDFLAGS	:= -shared -static -Wl,--retain-symbols-file=vamp-plugin.list $(VAMPSDK_DIR)/libvamp-sdk.a
+
+
+# File extension for plugin library on this platform
+
+PLUGIN_EXT	:= .dll
+
+
+include Makefile.inc

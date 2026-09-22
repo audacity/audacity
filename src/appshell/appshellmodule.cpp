@@ -73,6 +73,7 @@ void AppShellModule::resolveImports()
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
     if (ir) {
         ir->registerPageUri(muse::Uri("audacity://home"));
+        ir->registerPageUri(muse::Uri("audacity://library"));
         ir->registerPageUri(muse::Uri("audacity://project"));
         ir->registerPageUri(muse::Uri("audacity://publish"));
         ir->registerPageUri(muse::Uri("audacity://devtools"));

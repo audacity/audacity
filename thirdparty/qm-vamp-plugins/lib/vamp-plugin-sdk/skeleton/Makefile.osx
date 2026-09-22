@@ -1,0 +1,43 @@
+
+##  Makefile for Vamp plugin using command-line tools on OS/X.
+##
+##  Edit this to adjust compiler and library settings when
+##  building for OS/X.
+##
+##  Note that the list of source files, etc, goes in Makefile.inc
+##  instead so that it can be included by all platform Makefiles.
+
+
+# For a debug build...
+
+CFLAGS		:= -Wall -Wextra -g -fPIC
+
+# ... or for a release build
+
+#CFLAGS		:= -Wall -Wextra -O3 -fPIC
+
+
+# Flags to determine processor architecture and system SDK
+
+ARCHFLAGS	?= -mmacosx-version-min=10.7 -arch x86_64 -stdlib=libc++
+
+
+# Location of Vamp plugin SDK relative to the project directory
+
+VAMPSDK_DIR	:= ../vamp-plugin-sdk
+
+
+# Libraries and linker flags required by plugin: add any -l<library>
+# options here
+
+PLUGIN_LDFLAGS	:= -dynamiclib -exported_symbols_list vamp-plugin.list $(VAMPSDK_DIR)/libvamp-sdk.a
+
+
+# File extension for plugin library on this platform
+
+PLUGIN_EXT	:= .dylib
+
+
+include Makefile.inc
+
+

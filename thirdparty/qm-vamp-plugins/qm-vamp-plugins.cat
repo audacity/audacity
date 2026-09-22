@@ -1,0 +1,13 @@
+vamp:qm-vamp-plugins:qm-tempotracker::Time > Tempo
+vamp:qm-vamp-plugins:qm-onsetdetector::Time > Onsets
+vamp:qm-vamp-plugins:qm-chromagram::Visualisation
+vamp:qm-vamp-plugins:qm-constantq::Visualisation
+vamp:qm-vamp-plugins:qm-tonalchange::Key and Tonality
+vamp:qm-vamp-plugins:qm-keydetector::Key and Tonality
+vamp:qm-vamp-plugins:qm-segmenter::Classification
+vamp:qm-vamp-plugins:qm-similarity::Classification
+vamp:qm-vamp-plugins:qm-mfcc::Low Level Features
+vamp:qm-vamp-plugins:qm-barbeattracker::Time > Tempo
+vamp:qm-vamp-plugins:qm-adaptivespectrogram::Visualisation
+vamp:qm-vamp-plugins:qm-dwt::Visualisation
+vamp:qm-vamp-plugins:qm-transcription::Notes

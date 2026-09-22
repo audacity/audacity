@@ -438,6 +438,27 @@ DockPage {
                 navigationSection: historyPanel.navigationSection
                 navigationOrderStart: historyPanel.contentNavigationPanelOrderStart
             }
+        },
+        DockPanel {
+            id: aiStudioPanel
+
+            objectName: "aiStudioPanel"
+            title: qsTrc("aistudio", "AI Studio")
+
+            navigationSection: root.navigationPanelSec(aiStudioPanel.location)
+
+            width: root.verticalPanelDefaultWidth
+            minimumWidth: root.verticalPanelDefaultWidth
+            maximumWidth: root.verticalPanelDefaultWidth
+
+            groupName: root.verticalPanelsGroup
+            location: Location.Right
+            visible: false
+
+            AIStudioPanel {
+                navigationSection: aiStudioPanel.navigationSection
+                navigationOrderStart: aiStudioPanel.contentNavigationPanelOrderStart
+            }
         }
     ]
 

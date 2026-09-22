@@ -1,0 +1,33 @@
+*~
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.msi
+.repoint-*.bin
+build/msvc/Debug
+build/msvc/Release
+build/msvc/x64/Debug
+build/msvc/x64/Release
+re:^build/mingw32/x64/Release/
+.vs
+*.db
+test/tmp
+test/regression-obtained
+*.orig
+.repoint*
+
+# Vendored locally: keep lib/ source (qm-dsp) but exclude generated products.
+build/msvc/QMVampPlugins/x64/
+build/msvc/lib32/*.lib
+build/msvc/lib64/*.lib
+*.pdb
+*.ilk
+*.exp
+*.tlog
+*.lastbuildstate
+
+# Oversized generated regression fixture dumps.
+test/regression-expected/qm-dwt/wcoeff.csv
+test/regression-expected/qm-adaptivespectrogram/output.csv

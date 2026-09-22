@@ -1,0 +1,18 @@
+syntax: glob
+*~
+*.o
+*.obj
+*.so
+*.dll
+*.msi
+glob:.repoint-*.bin
+build/msvc/Debug
+build/msvc/Release
+build/msvc/x64/Debug
+build/msvc/x64/Release
+re:^build/mingw32/x64/Release/
+.vs
+*.db
+test/tmp
+lib/
+*.orig

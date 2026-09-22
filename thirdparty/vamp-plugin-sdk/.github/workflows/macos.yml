@@ -1,0 +1,20 @@
+name: macOS CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: deps
+      run: |
+        brew install cmake libsndfile
+    - name: make
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DVAMPSDK_BUILD_EXAMPLE_PLUGINS=ON -DVAMPSDK_BUILD_SIMPLE_HOST=ON -DVAMPSDK_BUILD_RDFGEN=ON
+        make

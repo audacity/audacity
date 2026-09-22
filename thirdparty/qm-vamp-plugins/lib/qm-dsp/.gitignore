@@ -1,0 +1,12 @@
+*.o
+*~
+*.orig
+*.a
+doc/html/
+tests/test-*
+tests/test.log
+*.rej
+ext/uncertain/
+*.obj
+build/msvc/Debug/
+build/msvc/x64/Release/

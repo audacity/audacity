@@ -1,0 +1,25 @@
+dist:
+  - trusty
+
+language:
+  - cpp
+
+sudo:
+  - false
+
+os:
+  - linux
+  - osx
+
+addons:
+  apt:
+    packages:
+      - libsndfile-dev
+      
+before_install:
+  - ( cd ../ ; hg clone https://code.soundsoftware.ac.uk/hg/vamp-test-plugin )
+  - if [[ "$TRAVIS_OS_NAME" = "osx" ]] ; then brew update ; brew install libsndfile ; fi
+
+script:
+  - if [[ "$TRAVIS_OS_NAME" = "osx" ]] ; then make -f build/Makefile.osx test ; else ./test/run-test-plugin-regression.sh ; fi
+

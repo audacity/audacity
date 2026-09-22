@@ -1,0 +1,4 @@
+-automatic library URI assignment (not is a bit tricky)
+-rules to define TrackLevelOutputs and other exceptions
+-mapping vamp-audio features
+...

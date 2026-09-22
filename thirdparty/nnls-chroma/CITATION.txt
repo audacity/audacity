@@ -1,0 +1,6 @@
+@inproceedings{matthias2010a,
+  author = {Matthias Mauch and Simon Dixon},
+  title = {Approximate Note Transcription for the Improved Identification of Difficult Chords},
+  booktitle = {Proceedings of the 11th International Society for Music Information Retrieval Conference (ISMIR 2010)},
+  year = {2010}
+} 
