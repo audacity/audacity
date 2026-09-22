@@ -1297,14 +1297,19 @@ void TrackeditActionsController::multiClipCopy()
             continue;
         }
 
-        ClipKeyList selectedTrackClips;
+        TrackItemKeyList selectedTrackItems;
         for (const auto& clip : selectedClips) {
             if (clip.trackId == track.id) {
-                selectedTrackClips.push_back(clip);
+                selectedTrackItems.push_back(clip);
+            }
+        }
+        for (const auto& label : selectedLabels) {
+            if (label.trackId == track.id) {
+                selectedTrackItems.push_back(label);
             }
         }
 
-        trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackClips, offset);
+        trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackItems, offset);
     }
 }
 

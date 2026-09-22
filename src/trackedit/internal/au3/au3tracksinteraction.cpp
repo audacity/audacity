@@ -509,7 +509,10 @@ ITrackDataPtr Au3TracksInteraction::copyNonContinuousTrackData(const TrackId tra
             if (Au3Label* label = DomAccessor::findLabel(labelTrack, itemKey.itemId)) {
                 SelectedRegion region;
                 region.setTimes(label->getT0() + offset, label->getT1() + offset);
-                clipboardTrack->AddLabel(region, label->title);
+                const int64_t copiedId = clipboardTrack->AddLabel(region, label->title);
+                if (Au3Label* copied = DomAccessor::findLabel(clipboardTrack.get(), copiedId)) {
+                    copied->SetGroupId(label->GetGroupId());
+                }
             }
         }
 
