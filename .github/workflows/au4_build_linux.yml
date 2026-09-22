@@ -48,7 +48,7 @@ on:
         default: ''
 
 concurrency:
-  group: au4_build_linux-${{ github.ref }}-${{ inputs.framework_ref || '' }}
+  group: au4_build_linux-${{ github.ref }}-${{ github.event.issue.number }}
   cancel-in-progress: true
 
 env:
