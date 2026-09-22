@@ -3,12 +3,10 @@
  */
 #include "aistudiostatusmodel.h"
 
-#include <QCoreApplication>
-
 using namespace au::aistudio;
 
 AIStudioStatusModel::AIStudioStatusModel()
-    : QObject(QCoreApplication::instance()), m_runtimeStatus(tr("Runtime host not started")),
+    : QObject(), m_runtimeStatus(tr("Runtime host not started")),
       m_workspaceStatus(tr("AI workspace not enabled for this project")),
       m_libraryStatus(tr("No Library activity yet"))
 {
@@ -16,8 +14,11 @@ AIStudioStatusModel::AIStudioStatusModel()
 
 AIStudioStatusModel* AIStudioStatusModel::instance()
 {
-    static AIStudioStatusModel model;
-    return &model;
+    // Deliberately leaked. The QML singleton outlives the QApplication, which
+    // is deleted before static destruction in main(); owning it by the app or
+    // by static storage would double-delete it during shutdown.
+    static AIStudioStatusModel* model = new AIStudioStatusModel();
+    return model;
 }
 
 QString AIStudioStatusModel::runtimeStatus() const

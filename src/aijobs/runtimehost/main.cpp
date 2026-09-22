@@ -16,6 +16,7 @@
 #include <QTimer>
 
 #include <cmath>
+#include <cstring>
 
 namespace {
 constexpr int ProtocolVersion = 1;

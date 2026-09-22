@@ -560,6 +560,10 @@ void AIStudioController::deleteLibraryFolder(const QString& folder)
 
 void AIStudioController::renameLibraryAsset(const QString& assetId, const QString& name)
 {
+    if (m_activeWorkspace.isEmpty()) {
+        AIStudioStatusModel::instance()->setLibraryStatus(QObject::tr("Enable the project AI workspace before renaming a Library asset"));
+        return;
+    }
     QString error;
     if (!au::ailibrary::LibraryAssetStore::renameProjectAsset(m_activeWorkspace, assetId, name, &error)) {
         AIStudioStatusModel::instance()->setLibraryStatus(error);
@@ -571,6 +575,10 @@ void AIStudioController::renameLibraryAsset(const QString& assetId, const QStrin
 
 void AIStudioController::deleteLibraryAsset(const QString& assetId)
 {
+    if (m_activeWorkspace.isEmpty()) {
+        AIStudioStatusModel::instance()->setLibraryStatus(QObject::tr("Enable the project AI workspace before removing a Library asset"));
+        return;
+    }
     QString error;
     if (!au::ailibrary::LibraryAssetStore::deleteProjectAsset(m_activeWorkspace, assetId, &error)) {
         AIStudioStatusModel::instance()->setLibraryStatus(error);

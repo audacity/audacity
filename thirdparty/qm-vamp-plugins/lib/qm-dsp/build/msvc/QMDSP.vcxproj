@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5B452691-B096-4129-972B-612BD29C92DF}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>qm-dsp</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>qm-dsp</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>qm-dsp</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>qm-dsp</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;NOMINMAX;ADD_;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\ext\clapack\include;$(ProjectDir)\..\..\ext\kissfft;$(ProjectDir)\..\..\ext\cblas\include;$(ProjectDir)\..\..;$(ProjectDir)\..\..\ext\kissfft\tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_USE_MATH_DEFINES;NOMINMAX;ADD_;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\ext\clapack\include;$(ProjectDir)\..\..\ext\kissfft;$(ProjectDir)\..\..\ext\cblas\include;$(ProjectDir)\..\..;$(ProjectDir)\..\..\ext\kissfft\tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_USE_MATH_DEFINES;NOMINMAX;ADD_;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\ext\clapack\include;$(ProjectDir)\..\..\ext\kissfft;$(ProjectDir)\..\..\ext\cblas\include;$(ProjectDir)\..\..;$(ProjectDir)\..\..\ext\kissfft\tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;NOMINMAX;ADD_;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\ext\clapack\include;$(ProjectDir)\..\..\ext\kissfft;$(ProjectDir)\..\..\ext\cblas\include;$(ProjectDir)\..\..;$(ProjectDir)\..\..\ext\kissfft\tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\base\KaiserWindow.cpp" />
+    <ClCompile Include="..\..\base\Pitch.cpp" />
+    <ClCompile Include="..\..\base\SincWindow.cpp" />
+    <ClCompile Include="..\..\dsp\chromagram\Chromagram.cpp" />
+    <ClCompile Include="..\..\dsp\chromagram\ConstantQ.cpp" />
+    <ClCompile Include="..\..\dsp\keydetection\GetKeyMode.cpp" />
+    <ClCompile Include="..\..\dsp\mfcc\MFCC.cpp" />
+    <ClCompile Include="..\..\dsp\onsets\DetectionFunction.cpp" />
+    <ClCompile Include="..\..\dsp\onsets\PeakPicking.cpp" />
+    <ClCompile Include="..\..\dsp\phasevocoder\PhaseVocoder.cpp" />
+    <ClCompile Include="..\..\dsp\rateconversion\Decimator.cpp" />
+    <ClCompile Include="..\..\dsp\rateconversion\DecimatorB.cpp" />
+    <ClCompile Include="..\..\dsp\rateconversion\Resampler.cpp" />
+    <ClCompile Include="..\..\dsp\rhythm\BeatSpectrum.cpp" />
+    <ClCompile Include="..\..\dsp\segmentation\ClusterMeltSegmenter.cpp" />
+    <ClCompile Include="..\..\dsp\segmentation\cluster_melt.c" />
+    <ClCompile Include="..\..\dsp\segmentation\cluster_segmenter.c" />
+    <ClCompile Include="..\..\dsp\segmentation\Segmenter.cpp" />
+    <ClCompile Include="..\..\dsp\signalconditioning\DFProcess.cpp" />
+    <ClCompile Include="..\..\dsp\signalconditioning\Filter.cpp" />
+    <ClCompile Include="..\..\dsp\signalconditioning\FiltFilt.cpp" />
+    <ClCompile Include="..\..\dsp\signalconditioning\Framer.cpp" />
+    <ClCompile Include="..\..\dsp\tempotracking\DownBeat.cpp" />
+    <ClCompile Include="..\..\dsp\tempotracking\TempoTrack.cpp" />
+    <ClCompile Include="..\..\dsp\tempotracking\TempoTrackV2.cpp" />
+    <ClCompile Include="..\..\dsp\tonal\ChangeDetectionFunction.cpp" />
+    <ClCompile Include="..\..\dsp\tonal\TCSgram.cpp" />
+    <ClCompile Include="..\..\dsp\tonal\TonalEstimator.cpp" />
+    <ClCompile Include="..\..\dsp\transforms\DCT.cpp" />
+    <ClCompile Include="..\..\dsp\transforms\FFT.cpp" />
+    <ClCompile Include="..\..\dsp\wavelet\Wavelet.cpp" />
+    <ClCompile Include="..\..\ext\cblas\src\cblas_ddot.c" />
+    <ClCompile Include="..\..\ext\cblas\src\cblas_dgemm.c" />
+    <ClCompile Include="..\..\ext\cblas\src\cblas_globals.c" />
+    <ClCompile Include="..\..\ext\cblas\src\cblas_xerbla.c" />
+    <ClCompile Include="..\..\ext\cblas\src\ddot.c" />
+    <ClCompile Include="..\..\ext\cblas\src\dgemm.c" />
+    <ClCompile Include="..\..\ext\cblas\src\dgemv.c" />
+    <ClCompile Include="..\..\ext\cblas\src\dger.c" />
+    <ClCompile Include="..\..\ext\cblas\src\dscal.c" />
+    <ClCompile Include="..\..\ext\cblas\src\dswap.c" />
+    <ClCompile Include="..\..\ext\cblas\src\dtrmm.c" />
+    <ClCompile Include="..\..\ext\cblas\src\dtrmv.c" />
+    <ClCompile Include="..\..\ext\cblas\src\dtrsm.c" />
+    <ClCompile Include="..\..\ext\cblas\src\idamax.c" />
+    <ClCompile Include="..\..\ext\cblas\src\lsame.c" />
+    <ClCompile Include="..\..\ext\clapack\src\dgetf2.c" />
+    <ClCompile Include="..\..\ext\clapack\src\dgetrf.c" />
+    <ClCompile Include="..\..\ext\clapack\src\dgetri.c" />
+    <ClCompile Include="..\..\ext\clapack\src\dlaswp.c" />
+    <ClCompile Include="..\..\ext\clapack\src\dtrti2.c" />
+    <ClCompile Include="..\..\ext\clapack\src\dtrtri.c" />
+    <ClCompile Include="..\..\ext\clapack\src\exit_.c" />
+    <ClCompile Include="..\..\ext\clapack\src\f77_aloc.c" />
+    <ClCompile Include="..\..\ext\clapack\src\ieeeck.c" />
+    <ClCompile Include="..\..\ext\clapack\src\ilaenv.c" />
+    <ClCompile Include="..\..\ext\clapack\src\iparmq.c" />
+    <ClCompile Include="..\..\ext\clapack\src\i_nint.c" />
+    <ClCompile Include="..\..\ext\clapack\src\pow_di.c" />
+    <ClCompile Include="..\..\ext\clapack\src\s_cat.c" />
+    <ClCompile Include="..\..\ext\clapack\src\s_cmp.c" />
+    <ClCompile Include="..\..\ext\clapack\src\s_copy.c" />
+    <ClCompile Include="..\..\ext\clapack\src\xerbla.c" />
+    <ClCompile Include="..\..\ext\kissfft\kiss_fft.c" />
+    <ClCompile Include="..\..\ext\kissfft\tools\kiss_fftr.c" />
+    <ClCompile Include="..\..\hmm\hmm.c" />
+    <ClCompile Include="..\..\maths\Correlation.cpp" />
+    <ClCompile Include="..\..\maths\CosineDistance.cpp" />
+    <ClCompile Include="..\..\maths\KLDivergence.cpp" />
+    <ClCompile Include="..\..\maths\MathUtilities.cpp" />
+    <ClCompile Include="..\..\maths\pca\pca.c" />
+    <ClCompile Include="..\..\thread\Thread.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\base\KaiserWindow.h" />
+    <ClInclude Include="..\..\base\Pitch.h" />
+    <ClInclude Include="..\..\base\Restrict.h" />
+    <ClInclude Include="..\..\base\SincWindow.h" />
+    <ClInclude Include="..\..\base\Window.h" />
+    <ClInclude Include="..\..\dsp\chromagram\Chromagram.h" />
+    <ClInclude Include="..\..\dsp\chromagram\ConstantQ.h" />
+    <ClInclude Include="..\..\dsp\keydetection\GetKeyMode.h" />
+    <ClInclude Include="..\..\dsp\mfcc\MFCC.h" />
+    <ClInclude Include="..\..\dsp\onsets\DetectionFunction.h" />
+    <ClInclude Include="..\..\dsp\onsets\PeakPicking.h" />
+    <ClInclude Include="..\..\dsp\phasevocoder\PhaseVocoder.h" />
+    <ClInclude Include="..\..\dsp\rateconversion\Decimator.h" />
+    <ClInclude Include="..\..\dsp\rateconversion\DecimatorB.h" />
+    <ClInclude Include="..\..\dsp\rateconversion\Resampler.h" />
+    <ClInclude Include="..\..\dsp\rhythm\BeatSpectrum.h" />
+    <ClInclude Include="..\..\dsp\segmentation\ClusterMeltSegmenter.h" />
+    <ClInclude Include="..\..\dsp\segmentation\cluster_melt.h" />
+    <ClInclude Include="..\..\dsp\segmentation\cluster_segmenter.h" />
+    <ClInclude Include="..\..\dsp\segmentation\segment.h" />
+    <ClInclude Include="..\..\dsp\segmentation\Segmenter.h" />
+    <ClInclude Include="..\..\dsp\signalconditioning\DFProcess.h" />
+    <ClInclude Include="..\..\dsp\signalconditioning\Filter.h" />
+    <ClInclude Include="..\..\dsp\signalconditioning\FiltFilt.h" />
+    <ClInclude Include="..\..\dsp\signalconditioning\Framer.h" />
+    <ClInclude Include="..\..\dsp\tempotracking\DownBeat.h" />
+    <ClInclude Include="..\..\dsp\tempotracking\TempoTrack.h" />
+    <ClInclude Include="..\..\dsp\tempotracking\TempoTrackV2.h" />
+    <ClInclude Include="..\..\dsp\tonal\ChangeDetectionFunction.h" />
+    <ClInclude Include="..\..\dsp\tonal\TCSgram.h" />
+    <ClInclude Include="..\..\dsp\tonal\TonalEstimator.h" />
+    <ClInclude Include="..\..\dsp\transforms\DCT.h" />
+    <ClInclude Include="..\..\dsp\transforms\FFT.h" />
+    <ClInclude Include="..\..\dsp\wavelet\Wavelet.h" />
+    <ClInclude Include="..\..\ext\cblas\include\cblas_f77.h" />
+    <ClInclude Include="..\..\ext\clapack\include\blaswrap.h" />
+    <ClInclude Include="..\..\ext\clapack\include\f2c.h" />
+    <ClInclude Include="..\..\ext\kissfft\kiss_fft.h" />
+    <ClInclude Include="..\..\ext\kissfft\tools\kiss_fftr.h" />
+    <ClInclude Include="..\..\ext\kissfft\_kiss_fft_guts.h" />
+    <ClInclude Include="..\..\hmm\hmm.h" />
+    <ClInclude Include="..\..\include\cblas.h" />
+    <ClInclude Include="..\..\include\clapack.h" />
+    <ClInclude Include="..\..\maths\Correlation.h" />
+    <ClInclude Include="..\..\maths\CosineDistance.h" />
+    <ClInclude Include="..\..\maths\KLDivergence.h" />
+    <ClInclude Include="..\..\maths\MathAliases.h" />
+    <ClInclude Include="..\..\maths\MathUtilities.h" />
+    <ClInclude Include="..\..\maths\MedianFilter.h" />
+    <ClInclude Include="..\..\maths\nan-inf.h" />
+    <ClInclude Include="..\..\maths\pca\pca.h" />
+    <ClInclude Include="..\..\maths\Polyfit.h" />
+    <ClInclude Include="..\..\thread\AsynchronousTask.h" />
+    <ClInclude Include="..\..\thread\BlockAllocator.h" />
+    <ClInclude Include="..\..\thread\Thread.h" />
+    <ClInclude Include="..\mingw32\mkspecs\win32-x-g++\qplatformdefs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\general\Makefile.inc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

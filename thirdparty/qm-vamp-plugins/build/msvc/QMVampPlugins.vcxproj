@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1F995CF1-8B4B-445C-824D-09B3268DB29D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformMinVersion>10.0</WindowsTargetPlatformMinVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>qm-vamp-plugins</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>qm-vamp-plugins</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>qm-vamp-plugins</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;QMVAMPPLUGINS_EXPORTS;_USE_MATH_DEFINES;NOMINMAX;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\lib\qm-dsp\ext\clapack\include;$(ProjectDir)\..\..\lib\qm-dsp\ext\kissfft;$(ProjectDir)\..\..\lib\qm-dsp\ext\cblas\include;$(ProjectDir)\..\..\lib\qm-dsp;$(ProjectDir)\..\..\lib\vamp-plugin-sdk;$(ProjectDir)\..\..\lib\qm-dsp\ext\kissfft\tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>$(SolutionDir)\$(Configuration)\qm-dsp.lib;$(ProjectDir)\lib32\atlas.lib;$(ProjectDir)\lib32\cblas.lib;$(ProjectDir)\lib32\lapack.lib;$(ProjectDir)\lib32\f77blas.lib;$(ProjectDir)\lib32\g2cstubs.lib;$(ProjectDir)\lib32\no-vprintf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/EXPORT:vampGetPluginDescriptor %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;QMVAMPPLUGINS_EXPORTS;_USE_MATH_DEFINES;NOMINMAX;ADD_;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\lib\qm-dsp\ext\clapack\include;$(ProjectDir)\..\..\lib\qm-dsp\ext\kissfft;$(ProjectDir)\..\..\lib\qm-dsp\ext\cblas\include;$(ProjectDir)\..\..\lib\qm-dsp;$(ProjectDir)\..\..\lib\vamp-plugin-sdk;$(ProjectDir)\..\..\lib\qm-dsp\ext\kissfft\tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalOptions>/EXPORT:vampGetPluginDescriptor %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(SolutionDir)\$(Configuration)\qm-dsp.lib;$(ProjectDir)\lib32\atlas.lib;$(ProjectDir)\lib32\cblas.lib;$(ProjectDir)\lib32\lapack.lib;$(ProjectDir)\lib32\f77blas.lib;$(ProjectDir)\lib32\g2cstubs.lib;$(ProjectDir)\lib32\no-vprintf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\lib\qm-dsp\ext\clapack\include;$(ProjectDir)\..\..\lib\qm-dsp\ext\kissfft;$(ProjectDir)\..\..\lib\qm-dsp\ext\cblas\include;$(ProjectDir)\..\..\lib\qm-dsp;$(ProjectDir)\..\..\lib\vamp-plugin-sdk;$(ProjectDir)\..\..\lib\qm-dsp\ext\kissfft\tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_USRDLL;QMVAMPPLUGINS_EXPORTS;_USE_MATH_DEFINES;NOMINMAX;ADD_;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/EXPORT:vampGetPluginDescriptor %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(SolutionDir)\$(Platform)\$(Configuration)\qm-dsp.lib;$(ProjectDir)\lib64\libopenblas.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\lib\qm-dsp\ext\clapack\include;$(ProjectDir)\..\..\lib\qm-dsp\ext\kissfft;$(ProjectDir)\..\..\lib\qm-dsp\ext\cblas\include;$(ProjectDir)\..\..\lib\qm-dsp;$(ProjectDir)\..\..\lib\vamp-plugin-sdk;$(ProjectDir)\..\..\lib\qm-dsp\ext\kissfft\tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;QMVAMPPLUGINS_EXPORTS;_USE_MATH_DEFINES;NOMINMAX;ADD_;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)\$(Platform)\$(Configuration)\qm-dsp.lib;$(ProjectDir)\lib64\libopenblas.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\libmain.cpp" />
+    <ClCompile Include="..\..\lib\vamp-plugin-sdk\src\vamp-sdk\FFT.cpp" />
+    <ClCompile Include="..\..\lib\vamp-plugin-sdk\src\vamp-sdk\PluginAdapter.cpp" />
+    <ClCompile Include="..\..\lib\vamp-plugin-sdk\src\vamp-sdk\RealTime.cpp" />
+    <ClCompile Include="..\..\plugins\AdaptiveSpectrogram.cpp" />
+    <ClCompile Include="..\..\plugins\BarBeatTrack.cpp" />
+    <ClCompile Include="..\..\plugins\BeatTrack.cpp" />
+    <ClCompile Include="..\..\plugins\ChromagramPlugin.cpp" />
+    <ClCompile Include="..\..\plugins\ConstantQSpectrogram.cpp" />
+    <ClCompile Include="..\..\plugins\DWT.cpp" />
+    <ClCompile Include="..\..\plugins\KeyDetect.cpp" />
+    <ClCompile Include="..\..\plugins\MFCCPlugin.cpp" />
+    <ClCompile Include="..\..\plugins\OnsetDetect.cpp" />
+    <ClCompile Include="..\..\plugins\SegmenterPlugin.cpp" />
+    <ClCompile Include="..\..\plugins\SimilarityPlugin.cpp" />
+    <ClCompile Include="..\..\plugins\TonalChangeDetect.cpp" />
+    <ClCompile Include="..\..\plugins\Transcription.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\plugins\AdaptiveSpectrogram.h" />
+    <ClInclude Include="..\..\plugins\BarBeatTrack.h" />
+    <ClInclude Include="..\..\plugins\BeatTrack.h" />
+    <ClInclude Include="..\..\plugins\ChromagramPlugin.h" />
+    <ClInclude Include="..\..\plugins\ConstantQSpectrogram.h" />
+    <ClInclude Include="..\..\plugins\DWT.h" />
+    <ClInclude Include="..\..\plugins\KeyDetect.h" />
+    <ClInclude Include="..\..\plugins\MFCCPlugin.h" />
+    <ClInclude Include="..\..\plugins\OnsetDetect.h" />
+    <ClInclude Include="..\..\plugins\SegmenterPlugin.h" />
+    <ClInclude Include="..\..\plugins\SimilarityPlugin.h" />
+    <ClInclude Include="..\..\plugins\TonalChangeDetect.h" />
+    <ClInclude Include="..\..\plugins\Transcription.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

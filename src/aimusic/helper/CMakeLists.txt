@@ -14,14 +14,48 @@ if (OS_IS_WIN)
     if (NOT EXISTS ${NNLS_CHROMA_DLL})
         message(FATAL_ERROR "Bundled NNLS Chroma / Chordino DLL is missing.")
     endif()
-    set(QM_VAMP_MSBUILD "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe")
-    if (NOT EXISTS ${QM_VAMP_MSBUILD})
-        message(FATAL_ERROR "QM Vamp Plugins requires Visual Studio 2022 MSBuild on Windows.")
+
+    # Locate MSBuild instead of assuming one Visual Studio edition and install
+    # path. Any VS 2022 edition or the Build Tools is acceptable.
+    set(QM_VAMP_PLATFORM_TOOLSET "v143" CACHE STRING "MSBuild platform toolset for the bundled QM Vamp plugins")
+    set(QM_VAMP_SDK_VERSION "10.0" CACHE STRING "Windows SDK version (10.0 selects the latest installed)")
+
+    find_program(QM_VAMP_MSBUILD
+        NAMES MSBuild.exe
+        HINTS
+            "$ENV{ProgramFiles}/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64"
+            "$ENV{ProgramFiles}/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64"
+            "$ENV{ProgramFiles}/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/amd64"
+            "$ENV{ProgramFiles}/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64"
+            "$ENV{ProgramFiles(x86)}/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64"
+    )
+    if (NOT QM_VAMP_MSBUILD)
+        # vswhere is the supported way to find any installed MSBuild regardless
+        # of edition, install location, or preview channel.
+        set(_vswhere "$ENV{ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe")
+        if (EXISTS "${_vswhere}")
+            execute_process(
+                COMMAND "${_vswhere}" -latest -products * -requires Microsoft.Component.MSBuild
+                        -find "MSBuild/**/Bin/**/MSBuild.exe"
+                OUTPUT_VARIABLE _vswhere_msbuild
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
+            if (_vswhere_msbuild)
+                set(QM_VAMP_MSBUILD "${_vswhere_msbuild}")
+            endif()
+        endif()
+    endif()
+    if (NOT QM_VAMP_MSBUILD OR NOT EXISTS "${QM_VAMP_MSBUILD}")
+        message(FATAL_ERROR
+            "QM Vamp Plugins need MSBuild from Visual Studio 2022 or the Build Tools "
+            "(Desktop C++ workload). Install it, or configure with "
+            "-DQM_VAMP_MSBUILD=<path to MSBuild.exe>.")
     endif()
 
     add_custom_command(
         OUTPUT ${QM_VAMP_DLL}
-        COMMAND ${QM_VAMP_MSBUILD} ${QM_VAMP_SOLUTION} /t:Build /p:Configuration=Release /p:Platform=x64 /p:WindowsTargetPlatformVersion=10.0.26100.0 /p:PlatformToolset=v143 /m
+        COMMAND "${QM_VAMP_MSBUILD}" ${QM_VAMP_SOLUTION} /t:Build /p:Configuration=Release /p:Platform=x64
+                /p:WindowsTargetPlatformVersion=${QM_VAMP_SDK_VERSION}
+                /p:PlatformToolset=${QM_VAMP_PLATFORM_TOOLSET} /m
         WORKING_DIRECTORY ${QM_VAMP_ROOT}
         DEPENDS ${QM_VAMP_SOLUTION}
         COMMENT "Building bundled QM Vamp tempo and key analyzer")

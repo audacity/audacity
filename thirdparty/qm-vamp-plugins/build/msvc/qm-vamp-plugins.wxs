@@ -1,0 +1,123 @@
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <Product
+      Name="QM Vamp Plugins" 
+      Id="*"
+      Language="1033"
+      Codepage="1252" 
+      Version="1.8"
+      UpgradeCode="7d427a49-7a1e-45d4-a181-c75fe8f489b7"
+      Manufacturer="Queen Mary, University of London">
+    
+    <Package
+        Id="*"
+        Keywords="Installer"
+        Description="QM Vamp Plugins 64-bit Installer"
+        Comments="Copyright (c) 2018 Queen Mary, University of London"
+        Manufacturer="Queen Mary, University of London" 
+        InstallerVersion="200"
+        Languages="1033" 
+        Compressed="yes" 
+        Platform="x64"
+        SummaryCodepage="1252"/>
+
+    <MajorUpgrade DowngradeErrorMessage="A later version of the QM Vamp Plugins set is already installed. Setup will now exit."/>
+
+    <Media Id="1" Cabinet="QMVampPlugins.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1"/>
+    <Property Id="DiskPrompt" Value="QM Vamp Plugins Installation [1]"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+
+      <Directory Id="ProgramFiles64Folder" Name="PFiles64">
+        <Directory Id="VampPlugins" Name="Vamp Plugins">
+
+          <Component Win64="yes"
+              Id="Plugin64"
+              Guid="7df55391-7d82-4f4f-a4e1-e0bba6b339fc">
+            <File
+                Id="README64"
+                Name="qm-vamp-plugins-README.txt"
+                Source="..\general\README.txt"/>
+            <File
+                Id="COPYING64"
+                Name="qm-vamp-plugins-COPYING.txt"
+                Source="..\..\COPYING"/>
+            <File
+                Id="Cat64"
+                Name="qm-vamp-plugins.cat"
+                Source="..\..\qm-vamp-plugins.cat"/>
+            <File
+                Id="Turtle64"
+                Name="qm-vamp-plugins.n3"
+                Source="..\..\qm-vamp-plugins.n3"/>
+            <File
+                Id="PluginLibrary64"
+                Name="qm-vamp-plugins.dll"
+                Source="x64\Release\qm-vamp-plugins.dll"/>
+          </Component>
+
+	</Directory> <!-- vamp -->
+      </Directory> <!-- pfiles64 -->
+
+      <Directory Id="ProgramFilesFolder" Name="PFiles">
+        <Directory Id="Vamp32Plugins" Name="Vamp Plugins">
+        
+          <Component
+              Id="Plugin32"
+              Guid="9401a7ab-f3fa-499e-bb51-2231707daf7c">
+            <File
+                Id="README32"
+                Name="qm-vamp-plugins-README.txt"
+                Source="..\general\README.txt"/>
+            <File
+                Id="COPYING32"
+                Name="qm-vamp-plugins-COPYING.txt"
+                Source="..\..\COPYING"/>
+            <File
+                Id="Cat32"
+                Name="qm-vamp-plugins.cat"
+                Source="..\..\qm-vamp-plugins.cat"/>
+            <File
+                Id="Turtle32"
+                Name="qm-vamp-plugins.n3"
+                Source="..\..\qm-vamp-plugins.n3"/>
+            <File
+                Id="PluginLibrary32"
+                Name="qm-vamp-plugins.dll"
+                Source="Release\qm-vamp-plugins.dll"/>
+          </Component>
+          
+        </Directory>
+      </Directory>
+
+    </Directory>
+
+    <Feature 
+	Id="Complete"
+	Title="Required files"
+	Description="Installs the required files for the QM Vamp Plugins."
+	AllowAdvertise="no"
+	Absent="disallow"
+	Level="1">
+      <ComponentRef Id="Plugin64"/>
+      <ComponentRef Id="Plugin32"/>
+    </Feature>
+
+    <UI>
+      <UIRef Id="WixUI_Minimal" />
+      <UIRef Id="WixUI_ErrorProgressText" />
+    </UI>
+
+    <Property Id="WIXUI_DONTVALIDATEPATH" Value="1" />
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    
+    <Icon Id="winicon.ico" SourceFile="sv-winicon.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="winicon.ico" />
+
+    <WixVariable Id="WixUIBannerBmp" Value="top.bmp"/>
+    <WixVariable Id="WixUIDialogBmp" Value="main.bmp"/>
+
+  </Product>
+</Wix>
+
