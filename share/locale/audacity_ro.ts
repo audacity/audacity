@@ -54,6 +54,22 @@
         <translation>&amp;Ecran întreg</translation>
     </message>
     <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="238"/>
+        <source>Shift+&amp;Enter</source>
+        <translation>Shift+&amp;Enter</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
+        <source>Trigger the focused control or make a range selection of track items</source>
+        <translation>Acționează controlul în focus sau fă o selecție de interval a elementelor de pistă</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
+        <source>Open item context menu</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Deschide meniul contextual al elementului</translation>
+    </message>
+    <message>
         <source>Full screen</source>
         <translation type="vanished">Ecran întreg</translation>
     </message>
@@ -338,13 +354,13 @@
         <translation>Redare/Oprire</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Redare/Pauză de la cursor</translation>
+        <translation type="vanished">Redare/Pauză de la cursor</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="65"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="66"/>
         <source>Play selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Redă selecția</translation>
@@ -354,14 +370,14 @@
         <translation type="vanished">Redă intervalul de timp selectat</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="73"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
         <source>Pause</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Pauză</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="82"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
         <source>Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -372,19 +388,19 @@
         <translation type="vanished">Oprește redarea</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="91"/>
         <source>Rewind to start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Derulează la început</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="103"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="100"/>
         <source>Rewind to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Derulează la sfârșit</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="109"/>
         <source>Loop playback</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Redare în buclă</translation>
@@ -394,7 +410,7 @@
         <translation type="vanished">Comută „Redare în buclă”</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
         <source>Audio setup</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Setări audio</translation>
@@ -404,7 +420,7 @@
         <translation type="vanished">Deschide meniul contextual setări audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="128"/>
         <source>Get effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Obține efecte</translation>
@@ -414,7 +430,7 @@
         <translation type="vanished">Deschide dialogul Obține efecte</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="137"/>
         <source>Audio settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Setări audio</translation>
@@ -424,13 +440,13 @@
         <translation type="vanished">Deschide dialogul setări audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="145"/>
         <source>Rescan audio devices</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Rescanează dispozitive audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="156"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="153"/>
         <source>Metronome</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Metronom</translation>
@@ -440,7 +456,7 @@
         <translation type="vanished">Comută redare metronom</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="166"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="163"/>
         <source>Timecode</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Cod de timp</translation>
@@ -450,7 +466,7 @@
         <translation type="vanished">Setează timp redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="172"/>
         <source>Tempo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tempo</translation>
@@ -460,7 +476,7 @@
         <translation type="vanished">Setează tempo redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="184"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
         <source>Time signature</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Metrică</translation>
@@ -470,7 +486,7 @@
         <translation type="vanished">Setează metrică redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="190"/>
         <source>Playback level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Nivel redare</translation>
@@ -480,73 +496,115 @@
         <translation type="vanished">Setează nivel redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
+        <source>Play/Stop and set cursor</source>
+        <translation>Redare/Oprire și setare cursor</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
         <source>Change audio host</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Schimbă gazdă audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="211"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="208"/>
         <source>Change playback device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Schimbă dispozitiv redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="220"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
         <source>Change recording device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Schimbă dispozitiv înregistrare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="229"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="226"/>
         <source>Change input channels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Schimbă canale intrare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="238"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="235"/>
         <source>Toggle loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Comută regiune buclă</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="247"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="244"/>
         <source>Clear loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Elimină regiune buclă</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="255"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="252"/>
         <source>Set loop region to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Setează regiune buclă la selecție</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="263"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="260"/>
         <source>Set selection to loop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Setează selecția la buclă</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="271"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="268"/>
         <source>Set loop region in out</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Setează regiunea de repetare intrare ieșire</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="279"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="276"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Crearea unei bucle de asemenea selectează audio</translation>
     </message>
     <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="284"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="285"/>
+        <source>Mute/unmute focused track</source>
+        <translation>Mut/anulează mut pentru pista în focus</translation>
+    </message>
+    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="292"/>
+        <source>Solo/unsolo focused track</source>
+        <translation>Solo/anulează solo pentru pista în focus</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="298"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="299"/>
+        <source>Mute all tracks</source>
+        <translation>Pune pe mut toate pistele</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="305"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="306"/>
+        <source>Unmute all tracks</source>
+        <translation>Anulează mut pentru toate pistele</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="312"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="313"/>
+        <source>Mute selected tracks</source>
+        <translation>Pune pe mut pistele selectate</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="319"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="320"/>
+        <source>Unmute selected tracks</source>
+        <translation>Anulează mut pentru pistele selectate</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="330"/>
         <source>Play repeats</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Repetări redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="301"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="340"/>
         <source>Pan automatically</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Panoramează automat</translation>
@@ -1865,18 +1923,17 @@
         <translation>Selecție multi-pistă înainte</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="661"/>
         <source>Open item’s context menu</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Deschide meniul contextual al elementului</translation>
+        <translation type="vanished">Deschide meniul contextual al elementului</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="684"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="675"/>
         <source>Change track format</source>
         <translation>Schimbă formatul pistei</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="697"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="688"/>
         <source>Change track sample rate</source>
         <translation>Schimbă rata de eșantionare a pistei</translation>
     </message>
@@ -2179,6 +2236,12 @@
         <translation>Acționează controlul în focus sau selectează elementul de pistă selectat</translation>
     </message>
     <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="247"/>
+        <source>Open the context menu of the focused item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Deschide meniul contextual al elementului în focus</translation>
+    </message>
+    <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
         <source>View project on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
@@ -2221,170 +2284,168 @@
         <translation>Redare/Oprire</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Redare/Pauză de la cursor</translation>
+        <translation type="vanished">Redare/Pauză de la cursor</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
         <source>Play the selected time range</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Redă intervalul de timp selectat</translation>
+        <translation type="vanished">Redă intervalul de timp selectat</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="75"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
         <source>Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Pauză</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="84"/>
         <source>Stop playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Oprește redarea</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="93"/>
         <source>Rewind to start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Derulează la început</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="102"/>
         <source>Rewind to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Derulează la sfârșit</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="111"/>
         <source>Toggle ‘Loop playback’</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Comută „Redare în buclă”</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="124"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="121"/>
         <source>Open audio setup context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Deschide meniul contextual setări audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="130"/>
         <source>Open Get effects dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Deschide dialogul Obține efecte</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="142"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="139"/>
         <source>Open audio setup dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Deschide dialogul setări audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="150"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <source>Rescan audio devices</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Rescanează dispozitive audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="158"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Toggle metronome playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Comută redare metronom</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="165"/>
         <source>Set playback time</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Setează timp redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="177"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="174"/>
         <source>Set playback tempo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Setează tempo redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="186"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="183"/>
         <source>Set playback time signature</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Setează metrică redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="192"/>
         <source>Set playback level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Setează nivel redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="201"/>
         <source>Change audio host</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Schimbă gazdă audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="213"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
         <source>Change playback device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Schimbă dispozitiv redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="222"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="219"/>
         <source>Change recording device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Schimbă dispozitiv înregistrare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="231"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="228"/>
         <source>Change input channels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Schimbă canale intrare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="240"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="237"/>
         <source>Toggle loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Comută regiune buclă</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="249"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="246"/>
         <source>Clear loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Elimină regiune buclă</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="257"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="254"/>
         <source>Set loop region to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Setează regiune buclă la selecție</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="265"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="262"/>
         <source>Set selection to loop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Setează selecția la buclă</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="273"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="270"/>
         <source>Set loop region in out</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Setează regiunea de repetare intrare ieșire</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="281"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="278"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Crearea unei bucle de asemenea selectează audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="293"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="332"/>
         <source>Play repeats</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Repetări redare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="303"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="342"/>
         <source>Pan automatically during playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Panoramează automat în timpul redări</translation>
@@ -3617,18 +3678,17 @@
         <translation>Selecție multi-pistă înainte</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="663"/>
         <source>Open item’s context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Deschide meniul contextual al elementului</translation>
+        <translation type="vanished">Deschide meniul contextual al elementului</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="683"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="674"/>
         <source>Change track format</source>
         <translation>Schimbă formatul pistei</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="696"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="687"/>
         <source>Change track sample rate</source>
         <translation>Schimbă rata de eșantionare a pistei</translation>
     </message>
@@ -3637,17 +3697,17 @@
     <name>appshell</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="64"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="65"/>
         <source>Cloud account</source>
         <translation>Cont Cloud</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="54"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="55"/>
         <source>Home menu</source>
         <translation>Meniul acasă</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="95"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="95"/>
         <source>Project</source>
         <translation>Proiect</translation>
@@ -3690,37 +3750,42 @@
         <translation>Meniu aplicație</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="160"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="76"/>
+        <source>Real-time effects panel</source>
+        <translation>Panou efecte în timp real</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="170"/>
         <source>Project toolbar</source>
         <translation>Bară de unelte proiect</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="183"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="193"/>
         <source>Workspaces toolbar</source>
         <translation>Bară de unelte spații de lucru</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="206"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="216"/>
         <source>Undo/redo toolbar</source>
         <translation>Bară de unelte anulare/refacere</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="228"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="238"/>
         <source>Play toolbar</source>
         <translation>Bara de unelte de redare</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="294"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="304"/>
         <source>Tracks</source>
         <translation>Piste</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="397"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="405"/>
         <source>Playback meter</source>
         <translation>Indicator redare</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="421"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="429"/>
         <source>History</source>
         <translation>Istoric</translation>
     </message>
@@ -3730,44 +3795,44 @@
         <translation>Generează ieșire MIDI 2.0 dacă este suportat de receptor</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="432"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Ești sigur că dorești să revii la setările din fabrică?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="433"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="448"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
         <translation>Această acțiune va reseta toate preferințele aplicației și configurațiile personalizate ale interfeței. De asemenea va șterge spațiile de lucru și scurtăturile. Va trebui apoi să scanezi din nou toate plugin-urile terțe.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="445"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
         <source>Revert</source>
         <translation>Revino</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="462"/>
         <source>Revert to factory settings</source>
         <translation>Restaurează setările din fabrică</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="459"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="474"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Dorești să repornești Audacity acum?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="475"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Audacity trebuie să fie repornit pentru ca schimbările să fie aplicate.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="481"/>
         <source>Restart</source>
         <translation>Repornește</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="483"/>
         <source>Restart Audacity</source>
         <translation>Repornește Audacity</translation>
     </message>
@@ -3797,42 +3862,42 @@ This action will not delete any of your projects.</source>
         <translation>Se încarcă proiectul...</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
         <source>Validate audio plugins</source>
         <translation>Validează plugin-urile audio</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="36"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
         <translation>Audacity a găsit plugin-uri care trebuie să fie validate înainte de a fi utilizate. Dorești să le validezi acum, sau să le omiți?</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Skip this time</source>
         <translation>Omite de data asta</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="38"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="44"/>
         <source>Validate</source>
         <translation>Validează</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="48"/>
         <source>Audio plugin validation</source>
         <translation>Validare plugin audio</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="325"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="306"/>
         <source>The previous session quit unexpectedly.</source>
         <translation>Sesiunea anterioară s-a închis neașteptat.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="326"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="307"/>
         <source>Do you want to restore the session?</source>
         <translation>Dorești să restaurezi sesiunea?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="329"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="310"/>
         <source>Restore session</source>
         <translation>Restaurează sesiunea</translation>
     </message>
@@ -4363,17 +4428,17 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell/dock</name>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="65"/>
         <source>Close</source>
         <translation>Închide</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Dock</source>
         <translation>Atașează</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Undock</source>
         <translation>Desprinde</translation>
     </message>
@@ -4878,41 +4943,46 @@ This action will not delete any of your projects.</source>
         <translation>Previzualizare a spațiului de lucru selectat afișând amplasamentul elementelor interfeței</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="49"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="120"/>
         <source>Authorization failed</source>
         <translation>Autorizarea a eșuat</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="62"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="34"/>
         <source>No access token</source>
         <translation>Niciun jeton de acces</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="112"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="84"/>
         <source>Not authorized</source>
         <translation>Neautorizat</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="129"/>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="136"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="141"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="148"/>
         <source>Registration failed. Please try again.</source>
         <translation>Înregistrarea a eșuat. Încearcă din nou.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="150"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="162"/>
         <source>Incorrect email or password. Please try again.</source>
         <translation>Email sau parolă incorecte. Încearcă din nou.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="158"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="170"/>
         <source>Authentication failed. Please try again.</source>
         <translation>Autentificarea a eșuat. Încearcă din nou.</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="178"/>
+        <source>Could not start the sign-in process. Please try again.</source>
+        <translation>Nu s-a putut porni procesul de autentificare. Încearcă din nou.</translation>
     </message>
 </context>
 <context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="712"/>
         <source>Edit metadata</source>
         <translation>Editează metadatele</translation>
     </message>
@@ -5394,7 +5464,7 @@ This action will not delete any of your projects.</source>
         <translation>Elementul următor</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="269"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="276"/>
         <source>Don’t show welcome dialog on startup</source>
         <translation>Nu arăta dialogul de bun venit la pornire</translation>
     </message>
@@ -5470,7 +5540,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>audacity</name>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="712"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="717"/>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
@@ -5480,17 +5550,17 @@ This action will not delete any of your projects.</source>
 <context>
     <name>audio</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>Audio plugins scan completed</source>
         <translation>Scanarea plugin-urilor audio s-a terminat</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>All audio plugins are up to date.</source>
         <translation>Toate plugin-urile audio sunt la zi</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="85"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
         <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
         <source>Validating audio plugins</source>
@@ -5793,20 +5863,18 @@ This action will not delete any of your projects.</source>
         <translation>Audio Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
         <source>Error opening recording device.
 Error code: %1</source>
-        <translation>Eroare la deschiderea dispozitivului de înregistrare.
+        <translation type="vanished">Eroare la deschiderea dispozitivului de înregistrare.
 Cod eroare: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="895"/>
         <source>Error</source>
-        <translation>Eroare</translation>
+        <translation type="vanished">Eroare</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1485"/>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1520"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1481"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1516"/>
         <source>Out of memory!</source>
         <translation>Rămas fără memorie!</translation>
     </message>
@@ -6673,12 +6741,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
         <source>Select</source>
         <translation>Selectează</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
         <source>Deselect</source>
         <translation>Deselectează</translation>
     </message>
@@ -6735,8 +6803,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="566"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="700"/>
         <source>Save</source>
         <translation>Salvează</translation>
     </message>
@@ -6747,70 +6815,70 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Nu ești conectat</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="401"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="470"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="487"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="565"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="577"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="582"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="631"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="751"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="402"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="471"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="488"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="566"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="578"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="583"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="633"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="753"/>
         <source>Invalid project</source>
         <extracomment>Error message of a failed cloud operation</extracomment>
         <translation>Proiect invalid</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="481"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="544"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="625"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="995"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="482"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="545"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="627"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="997"/>
         <source>Service destroyed</source>
         <extracomment>Error message shown when a cloud operation is interrupted by the application closing</extracomment>
         <translation>Serviciul a fost distrus</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="500"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="501"/>
         <source>Internal error</source>
         <translation>Eroare internă</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="587"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="593"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="588"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="594"/>
         <source>Project is not saved to the cloud</source>
         <translation>Proiectul nu este salvat în Cloud</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="600"/>
         <source>Project is not synced with the cloud</source>
         <translation>Proiectul nu este sincronizat cu Cloud-ul</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="707"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="709"/>
         <source>Failed to get audio preview upload URLs</source>
         <translation>A eșuat obținerea URL-ului de încărcare a previzualizării audio</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="857"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="859"/>
         <source>Invalid audio ID</source>
         <translation>ID audio invalid</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="924"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="926"/>
         <source>Project not found in cloud database</source>
         <translation>Proiectul nu a fost găsit în baza de date din Cloud</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1007"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1009"/>
         <source>No valid current project</source>
         <translation>Niciun proiect curent valid</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1070"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1072"/>
         <source>Upload succeeded but payload is missing</source>
         <translation>Încărcarea a fost cu succes, dar conținutul lipsește</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1095"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1097"/>
         <source>Failed to delete cloud project from database</source>
         <translation>A eșuat ștergerea proiectului Cloud din baza de date</translation>
     </message>
@@ -6825,112 +6893,110 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Autentificarea a eșuat. Întoarce-te la Audacity și încearcă din nou.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1137"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1374"/>
         <source>View on audio.com</source>
         <translation>Vezi pe audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1346"/>
         <source>Track title</source>
         <translation>Titlu pistă</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1347"/>
         <source>Share audio</source>
         <translation>Partajează audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1348"/>
         <source>Share</source>
         <translation>Partajează</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1369"/>
         <source>Audio shared to audio.com</source>
         <translation>Audio partajat pe audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1389"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Se partajează audio pe audio.com...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1411"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
         <source>Downloading audio from cloud…</source>
         <translation>Se descarcă audio din Cloud...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1486"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation>Proiectul trebuie salvat înainte de a actualiza previzualizarea audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1487"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation>Salvează-ți modificările pentru a continua sau anulează actualizarea.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1491"/>
         <source>Unsaved changes</source>
         <translation>Modificări nesalvate</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1506"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1519"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1512"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1548"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1561"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1574"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1581"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1588"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation>Generează previzualizare audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
-        <translation>Previzualizarea audio din Cloud a fost actualizată</translation>
+        <translation type="vanished">Previzualizarea audio din Cloud a fost actualizată</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
-        <translation>Previzualizarea audio a fost încărcată pe audio.com</translation>
+        <translation type="vanished">Previzualizarea audio a fost încărcată pe audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1542"/>
         <source>Audio preview is up to date</source>
         <translation>Previzualizarea audio este la zi</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1543"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation>Previzualizarea audio deja se potrivește cu ultima versiune salvată a acestui proiect</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1553"/>
         <source>Updating cloud audio preview…</source>
         <translation>Se actualizează previzualizarea audio din Cloud...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1582"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation>Nu s-a putut determina calea locală a proiectului descărcat</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="736"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="561"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="682"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Save to audio.com</source>
         <translation>Salvează pe audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
         <source>Audio download failed</source>
         <translation>Descărcarea audio a eșuat</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="849"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="795"/>
         <source>Open audio from cloud</source>
         <translation>Deschide audio din Cloud</translation>
     </message>
@@ -7016,7 +7082,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>A eșuat deserializarea răspunsului</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="616"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="617"/>
         <source>Cannot proceed to upload.</source>
         <translation>Nu se poate continua cu încărcarea pe server.</translation>
     </message>
@@ -7131,8 +7197,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
+        <source>Show commands list</source>
+        <translation>Arată lista de comenzi</translation>
+    </message>
+    <message>
         <source>Show rcommands list</source>
-        <translation>Arată lista de rcommands</translation>
+        <translation type="vanished">Arată lista de rcommands</translation>
     </message>
     <message>
         <source>Test query action</source>
@@ -7554,7 +7624,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Nepotrivire presetare</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="412"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="413"/>
         <source>Applied effect: %1</source>
         <translation>Efect aplicat: %1</translation>
     </message>
@@ -7604,19 +7674,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>%1: este pentru un alt efect, generator sau analizor.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="669"/>
         <source>Generating %1…</source>
         <translation>Se generează %1...</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="669"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
         <translation>Se aplică %1...</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="899"/>
         <source>Effect preview</source>
         <translation>Previzualizare efect</translation>
     </message>
@@ -7633,60 +7703,60 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Comută între interfața furnizorului și cea de rezervă</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="239"/>
         <source>Master</source>
         <translation>Principal</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="278"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
         <translation>S-a adăugat %1 la %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="281"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
         <translation>Adaugă %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="319"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
         <translation>S-a eliminat %1 din %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="322"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
         <translation>Elimină %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="344"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
         <translation>S-a înlocuit %1 cu %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="347"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
         <translation>Înlocuiește %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="383"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
         <translation>S-a mutat %1 mai sus în %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="387"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
         <translation>S-a mutat %1 mai jos în %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="391"/>
         <source>Change effect order</source>
         <translation>Schimbă ordinea efectului</translation>
     </message>
@@ -7938,7 +8008,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Tip</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
         <translation>Lipsă - „%1”</translation>
@@ -8186,7 +8256,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>effects-effects_base</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="864"/>
         <source>Preparing preview</source>
         <translation>Se pregătește previzualizarea</translation>
     </message>
@@ -8430,17 +8500,17 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Încorporat</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="104"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="106"/>
         <source>Nyquist Effects</source>
         <translation>Efecte Nyquist</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="109"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="111"/>
         <source>The Audacity Team</source>
         <translation>Echipa Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="120"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="122"/>
         <source>Provides Nyquist Effects support to Audacity</source>
         <translation>Oferă suport de efecte Nyquist în Audacity</translation>
     </message>
@@ -10955,33 +11025,33 @@ Selectează o arie de reparat cu audio pe cel puțin o parte (cu cât mai mult, 
         <translation>Durată</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="181"/>
         <source>Tone/silence ratio</source>
         <translation>Raport ton/liniște</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="230"/>
         <source>Duty cycle</source>
         <translation>Factor de umplere</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="234"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="244"/>
         <source>Tone duration</source>
         <translation>Durată ton</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="271"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="248"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="262"/>
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="258"/>
         <source>Silence duration</source>
         <translation>Durată liniște</translation>
     </message>
@@ -11044,7 +11114,7 @@ Selectează o arie de reparat cu audio pe cel puțin o parte (cu cât mai mult, 
         <translation>Inversează</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
+        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="205"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
@@ -11637,7 +11707,7 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="388"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="443"/>
         <source>Edit mapping</source>
         <translation>Editează asocierea</translation>
     </message>
@@ -11653,8 +11723,8 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="714"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="698"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="864"/>
         <source>Export audio</source>
         <translation>Exportă audio</translation>
     </message>
@@ -11676,82 +11746,107 @@ Informează echipa Audacity la https://forum.audacityteam.org/.</translation>
         <translation>Fișier</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="144"/>
+        <source>File name preview</source>
+        <translation>Previzualizarea numelui fișierului</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation>Nume fișier</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
+        <source>File name prefix</source>
+        <translation>Prefixul numelui fișierului</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <source>Number files in label order</source>
+        <translation>Numerotează fișierele în ordinea etichetelor</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <source>Number files in track order</source>
+        <translation>Numerotează fișierele în ordinea pistelor</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="232"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation>Dosar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="245"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="300"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="282"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="337"/>
         <source>Audio options</source>
         <translation>Opțiuni audio</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="299"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="354"/>
         <source>Channels</source>
         <translation>Canale</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="324"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="379"/>
         <source>Mono</source>
         <translation>Mono</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="342"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="397"/>
         <source>Stereo</source>
         <translation>Stereo</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="359"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="414"/>
         <source>Custom mapping</source>
         <translation>Asociere personalizată</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="406"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="461"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="220"/>
         <source>Sample rate</source>
         <translation>Rată de eșantionare</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="451"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="506"/>
         <source>Open custom FFmpeg format options</source>
         <translation>Deschide opțiuni personalizate de format FFmpeg</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="527"/>
         <source>Format:</source>
         <translation>Format:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="551"/>
         <source>Codec:</source>
         <translation>Codec:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="588"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="643"/>
         <source>Effective bit rate may vary</source>
         <translation>Rata de biți efectivă poate varia</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="598"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="653"/>
         <source>Rendering</source>
         <translation>Randare</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="608"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="665"/>
         <source>Trim blank space before first clip</source>
         <translation>Suprimă spațiul liber precedent primului clip</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="682"/>
+        <source>Include audio before first label</source>
+        <translation>Include audio de dinaintea primei etichete</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
@@ -12015,82 +12110,152 @@ Recomandat - 192000</translation>
         <translation>Localizează instalare existentă</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="266"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="325"/>
         <source>All selected audio is muted</source>
         <translation>Tot audioul selectat este pe mut</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="454"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="530"/>
+        <source>untitled</source>
+        <translation>fără titlu</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="573"/>
+        <source>No labels to export.</source>
+        <translation>Nu există etichete de exportat.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="578"/>
+        <source>There are no tracks to export</source>
+        <translation>Nu există piste de exportat</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="44"/>
         <source>Other…</source>
         <translation>Altele...</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>%1 Hz (custom)</source>
         <translation>%1 Hz (personalizat)</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
         <source>Export full project audio</source>
-        <translation>Exportă audio din întreg proiectul</translation>
+        <translation type="vanished">Exportă audio din întreg proiectul</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>Export selected audio</source>
-        <translation>Exporă audio selectat</translation>
+        <translation type="vanished">Exporă audio selectat</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>Export audio in loop region</source>
-        <translation>Exportă audio din zona buclei</translation>
+        <translation type="vanished">Exportă audio din zona buclei</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="198"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="220"/>
         <source>No loop region</source>
         <translation>Nicio regiune de buclă</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="199"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="221"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation>Exportarea audioului din regiunea de buclă necesită o buclă în proiect. Mergi înapoi, creează o buclă și apoi reîncearcă.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="210"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="232"/>
         <source>No selected audio</source>
         <translation>Niciun fragment audio selectat</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="211"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="233"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation>Exportarea audioului selectat necesită o selecție de date audio din proiect. Întoarce-te la proiect, fă o selecție și încearcă din nou.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
+        <source>No labels</source>
+        <translation>Nicio etichetă</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="240"/>
+        <source>Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</source>
+        <translation>Exportarea regiunilor etichetate ca fișiere audio separate necesită cel puțin o etichetă pe prima pistă de etichete. Întoarce-te la proiect, adaugă etichete și încearcă din nou.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="334"/>
+        <source>LabelName</source>
+        <extracomment>Placeholder for a label's name in the export file name preview</extracomment>
+        <translation>NumeEtichetă</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="336"/>
+        <source>TrackName</source>
+        <extracomment>Placeholder for a track's name in the export file name preview</extracomment>
+        <translation>NumePistă</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="558"/>
         <source>Set sample rate</source>
         <translation>Setează rata de eșantionare</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="699"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
         <translation>Nu s-a putut exporta în „%1”: dosarul destinație nu a putut fi creat. Verifică dacă calea este validă și dacă ai permisiune să scrii în aceasta.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
+        <source>Export failed</source>
+        <translation>Exportul a eșuat</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="760"/>
         <source>Do you want to overwrite?</source>
         <translation>Dorești să suprascrii?</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="639"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="781"/>
+        <source>Some of the files already exist. Do you want to overwrite them?</source>
+        <translation>Unele fișiere există deja. Dorești să le suprascrii?</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="791"/>
         <source>Overwrite</source>
         <translation>Suprascrie</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="651"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="749"/>
         <source>Export error</source>
         <translation>Eroare la export</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="715"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="54"/>
+        <source>Full project audio</source>
+        <translation>Audio din întreg proiectul</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="55"/>
+        <source>Selected audio</source>
+        <translation>Audio selectat</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="56"/>
+        <source>Audio in loop region</source>
+        <translation>Audio din zona buclei</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="57"/>
+        <source>Tracks as separate audio files</source>
+        <translation>Piste ca fișiere audio separate</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="58"/>
+        <source>Labeled regions as separate audio files</source>
+        <translation>Regiuni etichetate ca fișiere audio separate</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="865"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -12252,9 +12417,7 @@ Efectele principale vor fi pornite imediat după export.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="124"/>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="133"/>
         <source>Not defined</source>
-        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
         <translation>Nedefinită</translation>
     </message>
     <message>
@@ -12369,56 +12532,56 @@ Poate %1 nu are drepturi de scriere sau discul este plin.</translation>
         <translation>Eroare fișier</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="48"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="53"/>
         <source>All files</source>
         <translation>Toate fișierele</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="51"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
         <source>AUP3 project files</source>
         <extracomment>an Audacity project is the state of the program, stored as files that can be reopened to resume the session later</extracomment>
         <translation>Fișiere proiect AUP3</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="54"/>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="58"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="59"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="63"/>
         <source>Dynamically Linked Libraries</source>
         <translation>Biblioteci legate dinamic</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
         <source>Dynamic Libraries</source>
         <translation>Biblioteci dinamice</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="66"/>
         <source>Text files</source>
         <translation>Fișiere text</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="62"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="67"/>
         <source>XML files</source>
         <translation>Fișiere XML</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="108"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>, </source>
         <translation>, </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="118"/>
         <source>%1 files</source>
         <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
         <translation>Fișiere %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="143"/>
         <source>(%1)</source>
         <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
         <translation>(%1)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="710"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="758"/>
         <source>
 %1 does not have write permissions.</source>
         <extracomment>%1 is the folder path that is not writable</extracomment>
@@ -12426,7 +12589,7 @@ Poate %1 nu are drepturi de scriere sau discul este plin.</translation>
 %1 nu are permisiuni de scriere.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="712"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="760"/>
         <source>Error</source>
         <translation>Eroare</translation>
     </message>
@@ -12460,11 +12623,11 @@ Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajuto
     <name>global</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="146"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="299"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
         <source>OK</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>OK</translation>
@@ -12498,17 +12661,17 @@ Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajuto
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="105"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="155"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="97"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="654"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="728"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="115"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="504"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Renunță</translation>
@@ -12517,15 +12680,15 @@ Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajuto
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="366"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="108"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="153"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
         <source>Apply</source>
         <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>Aplică</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="672"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="746"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <extracomment>Label of the button that starts the export</extracomment>
@@ -12536,7 +12699,7 @@ Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajuto
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
         <source>Close</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Închide</translation>
@@ -12670,26 +12833,28 @@ Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajuto
         <translation>Toate fișierele</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="714"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1368"/>
         <source>Success</source>
         <translation>Succes</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="73"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="61"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1373"/>
         <source>Dismiss</source>
         <translation>Înlătură</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="625"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
         <source>Save</source>
         <translation>Salvează</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="640"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Deschide</translation>
@@ -12701,8 +12866,8 @@ Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajuto
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="727"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1119"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="745"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
@@ -12882,82 +13047,82 @@ Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajuto
         <translation><numerusform>%Ln de octet</numerusform><numerusform>%Ln octeți</numerusform><numerusform>%Ln de octeți</numerusform></translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Save all</source>
         <translation>Salvează tot</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
         <source>Don’t save</source>
         <translation>Nu salva</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
         <source>Yes</source>
         <translation>Da</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
         <source>Yes to all</source>
         <translation>Da pentru toate</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
         <source>No</source>
         <translation>Nu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
         <source>No to all</source>
         <translation>Nu pentru toate</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
         <source>Abort</source>
         <translation>Anulează</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Retry</source>
         <translation>Reîncercați</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Ignore</source>
         <translation>Ignoră</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Discard</source>
         <translation>Revenire</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
         <source>Help</source>
         <translation>Ajutor</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
         <source>Reset</source>
         <translation>Resetează</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="139"/>
         <source>Continue</source>
         <translation>Continuă</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="374"/>
         <source>Checking for updates…</source>
         <translation>Se caută actualizări...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="527"/>
         <source>Downloading %1…</source>
         <translation>Se descarcă %1...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="542"/>
         <source>Unpacking %1…</source>
         <translation>Se despachetează %1...</translation>
     </message>
@@ -14214,7 +14379,7 @@ Pentru sfaturi cu privire la unitățile potrivite, fă clic pe butonul de ajuto
 <context>
     <name>import-export</name>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="123"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="142"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
         <extracomment>Title of the export progress dialog</extracomment>
@@ -16257,14 +16422,14 @@ Mai mult, „Aprofundare MuseScore” are o comunitate primitoare de muzicieni, 
         <translation>COMENTARII</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="171"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="136"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="175"/>
         <source>Error loading template</source>
         <translation>Eroare la încărcarea șablonului</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="133"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="172"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="137"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="176"/>
         <source>Unable to load metadata template from given file.</source>
         <translation>Nu s-a putut încărca șablonul metadatelor din fișierul dat.</translation>
     </message>
@@ -16302,12 +16467,12 @@ Mai mult, „Aprofundare MuseScore” are o comunitate primitoare de muzicieni, 
 <context>
     <name>module-manager</name>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="70"/>
         <source>Module Unsuitable</source>
         <translation>Modul nepotrivit</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="93"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="94"/>
         <source>Unable to load the “%1” module.
 
 Error: %2</source>
@@ -16317,7 +16482,7 @@ Error: %2</source>
 Eroare: %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="125"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="126"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
@@ -16326,7 +16491,7 @@ It will not be loaded.</source>
 Acesta nu va fi încărcat.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="137"/>
         <source>The module “%1” is matched with Audacity version “%2”.
 
 It will not be loaded.</source>
@@ -16336,7 +16501,7 @@ It will not be loaded.</source>
 Acesta nu va fi încărcat.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="159"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="160"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
@@ -16345,12 +16510,12 @@ It will not be loaded.</source>
 Acesta nu va fi încărcat.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
         <source>Module “%1” found.</source>
         <translation>Modulul „%1” nu a fost găsit.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="321"/>
         <source>
 
 Only use modules from trusted sources</source>
@@ -16359,27 +16524,27 @@ Only use modules from trusted sources</source>
 Folosește module doar din surse sigure</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="323"/>
         <source>Yes</source>
         <translation>Da</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="323"/>
         <source>No</source>
         <translation>Nu</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="325"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="326"/>
         <source>Audacity Module Loader</source>
         <translation>Încărcător de module Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="328"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="329"/>
         <source>Try and load this module?</source>
         <translation>Încercți să încarci acest modul?</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="353"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="354"/>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
@@ -16388,22 +16553,22 @@ It will not be loaded.</source>
 Acesta nu va fi încărcat.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="414"/>
         <source>Overwrite the plug-in file %1?</source>
         <translation>Suprascrii fișierul plugin %1?</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="424"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="417"/>
         <source>Plug-in already exists</source>
         <translation>Plugin-ul deja există</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="447"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="440"/>
         <source>Plug-in file is in use. Failed to overwrite</source>
         <translation>Fișierul plugin este în uz. A eșuat suprascrierea</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="469"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="462"/>
         <source>Failed to register:
 %1</source>
         <extracomment>%1 is the error message explaining why registration failed</extracomment>
@@ -16418,7 +16583,7 @@ Acesta nu va fi încărcat.</translation>
         <translation type="vanished"><numerusform>Activezi acest plugin?</numerusform><numerusform>Activezi aceste plugin-uri?</numerusform><numerusform>Activezi aceste plugin-uri?</numerusform></translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="479"/>
         <source>Enable new plug-ins</source>
         <translation>Activează noile plugin-uri</translation>
     </message>
@@ -17149,7 +17314,7 @@ Acesta nu va fi încărcat.</translation>
         <translation>Mutat glisor de volum</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="89"/>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="40"/>
         <source>Volume</source>
         <translation>Volum</translation>
@@ -17166,7 +17331,7 @@ Acesta nu va fi încărcat.</translation>
         <translation>Panoramare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="79"/>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
         <source>Playback volume</source>
         <translation>Volum redare</translation>
@@ -17219,68 +17384,68 @@ Acesta nu va fi încărcat.</translation>
         <translation>A apărut o eroare internă la schimbarea setărilor audio.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="155"/>
         <source>No playback device is available.</source>
         <translation>Niciun dispozitiv de redare nu este disponibil.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="156"/>
         <source>“%1” is now used for playback.</source>
         <translation>„%1” este acum folosit pentru redare.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="158"/>
         <source>Playback device changed</source>
         <translation>Dispozitivul de redare a fost schimbat</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="163"/>
         <source>No recording device is available.</source>
         <translation>Niciun dispozitiv de înregistrare nu este disponibil.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="164"/>
         <source>“%1” is now used for recording.</source>
         <translation>„%1” este acum folosit pentru înregistrare.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="151"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="166"/>
         <source>Recording device changed</source>
         <translation>Dispozitivul de înregistrare a fost schimbat</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1019"/>
         <source>The previous audio state could not be restored.</source>
         <translation>Starea audio anterioară nu a putut fi restaurată.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="996"/>
         <source>Unable to rescan audio devices</source>
         <translation>Nu s-au putut rescana dispozitivele audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1002"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
         <translation>Fluxul audio nu a putut fi restaurat după rescanarea dispozitivelor audio.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1004"/>
         <source>Audio devices</source>
         <translation>Dispozitive audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1020"/>
         <source>Unable to change audio settings</source>
         <translation>Nu s-au putut schimba setările audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1029"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
         <translation>Fluxul audio nu a putut fi restaurat după schimbarea setărilor audio.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1031"/>
         <source>Audio settings</source>
         <translation>Setări audio</translation>
     </message>
@@ -17293,7 +17458,7 @@ Acesta nu va fi încărcat.</translation>
         <translation>Început buclă</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="110"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="101"/>
         <source>Loop out</source>
         <translation>Sfârșit buclă</translation>
     </message>
@@ -18353,7 +18518,7 @@ Acesta nu va fi încărcat.</translation>
         <translation>Culoare accent</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="529"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="530"/>
         <source>Could not save project locally</source>
         <translation>Nu s-a putut salva proiectul local</translation>
     </message>
@@ -18363,9 +18528,9 @@ Acesta nu va fi încărcat.</translation>
         <translation>Încărcarea proiectului a eșuat</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="712"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="825"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
         <source>All supported files</source>
         <translation>Toate fișierele suportate</translation>
     </message>
@@ -18391,189 +18556,189 @@ Acesta nu va fi încărcat.</translation>
         <translation>S-au importat mai multe fișiere</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="397"/>
         <source>Error opening file</source>
         <translation>Eroare la deschiderea fișierului</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="398"/>
         <source>Could not open file: %1</source>
         <translation>Nu s-a putut deschide fișierul: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="721"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="744"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1136"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Înlătură</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="738"/>
         <source>Upload project to audio.com…</source>
         <translation>Încarcă proiectul pe audio.com...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="826"/>
         <source>Audacity project files</source>
         <translation>Fișiere proiect Audacity</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="827"/>
         <source>Audacity 3 files</source>
         <translation>Fișiere Audacity 3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="828"/>
         <source>Audacity 4 files</source>
         <translation>Fișiere Audacity 4</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <source>Cloud sync failed</source>
         <translation>Sincronizarea în Cloud a eșuat</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
         <source>Project unavailable</source>
         <translation>Proiect indisponibil</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="586"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="740"/>
         <source>Access denied</source>
         <translation>Acces refuzat</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="720"/>
         <source>Version conflict</source>
         <translation>Conflict de versiune</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="621"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
         <source>Visit audio.com</source>
         <translation>Vizitează audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="623"/>
         <source>Load latest</source>
         <translation>Încarcă ultima</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="630"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
         <source>Project incomplete</source>
         <translation>Proiect incomplet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="757"/>
         <source>Network error</source>
         <translation>Eroare rețea</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1094"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="715"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1131"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>Toate schimbările salvate vor fi acum actualizate în Cloud.
 Poți administra acest fișier din pagina de proiecte actualizate de pe audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="829"/>
         <source>Importable audio and media files</source>
         <translation>Fișiere audio și media importabile</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="806"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="856"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="893"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="875"/>
         <source>Audio files</source>
         <translation>Fișiere audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="876"/>
         <source>Video files</source>
         <translation>Fișiere video</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
         <source>Game media files</source>
         <translation>Fișiere media jocuri</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
         <source>Streaming files</source>
         <translation>Fișiere streaming</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="879"/>
         <source>Animation and image files</source>
         <translation>Fișiere animație și imagini</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="880"/>
         <source>Raw files</source>
         <translation>Fișiere brute</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="909"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Dorești să salvezi modificările acestui proiect înainte de a-l închide?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="911"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Dorești să salvezi modificările în proiectul „%1” înainte de a-l închide?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="915"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Modificările tale vor fi pierdute dacă nu le salvezi.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="922"/>
         <source>Unsaved changes</source>
         <translation>Modificări nesalvate</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1149"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Se reia sincronizarea către audio.com...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1556"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1167"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1598"/>
         <source>Syncing project from cloud…</source>
         <translation>Se sincronizează proiectul în Cloud...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1291"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1328"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Nu se poate citi fișierul %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1333"/>
         <source>An error occurred while reading this file.</source>
         <translation>A apărut o eroare la citirea acestui fișier.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="747"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="693"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="733"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Salvează pe calculator</translation>
@@ -18659,11 +18824,11 @@ Elimină protecția la scriere verificând proprietățile fișierului, asigurâ
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="563"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="564"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="460"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="488"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2290"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2771"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2293"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2774"/>
         <source>Warning</source>
         <translation>Avertisment</translation>
     </message>
@@ -18687,40 +18852,40 @@ Elimină protecția la scriere verificând proprietățile fișierului, asigurâ
         <translation>(%1): %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="186"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="187"/>
         <source>Failed to set page size for database %1</source>
         <translation>A eșuat setarea mărimii paginii pentru baza de date %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="195"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="196"/>
         <source>Failed to set safe mode on primary connection to %1</source>
         <translation>A eșuat setarea unui mod sigur al conexiunii primare la %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="213"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="214"/>
         <source>Failed to set safe mode on checkpoint connection to %1</source>
         <translation>A eșuat setarea unui mod sigur al conexiunii al punctului de control la %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="243"/>
         <source>Checkpointing project</source>
         <translation>Se realizează puncte de control ale proiectului</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="248"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="249"/>
         <source>Checkpointing %1</source>
         <extracomment>%1 is the name of the project being checkpointed</extracomment>
         <translation>Se creează un punct de control pentru %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="254"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="255"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
         <source>This may take several seconds</source>
         <translation>Acest lucru poate dura câteva secunde</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="548"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="549"/>
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
@@ -18728,7 +18893,7 @@ Elimină protecția la scriere verificând proprietățile fișierului, asigurâ
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="551"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="552"/>
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
@@ -18736,7 +18901,7 @@ Elimină protecția la scriere verificând proprietățile fișierului, asigurâ
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="638"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="639"/>
         <source>Failed to create savepoint:
 
 %1</source>
@@ -18746,8 +18911,8 @@ Elimină protecția la scriere verificând proprietățile fișierului, asigurâ
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="662"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="685"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="663"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="686"/>
         <source>Failed to release savepoint:
 
 %1</source>
@@ -19039,35 +19204,35 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
         <translation>Fișierul de proiect este disponibil doar în citire.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2194"/>
         <source>Unable to parse project information.</source>
         <translation>Nu s-au putut parcurge informațiile de proiect.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2291"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2294"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
         <translation>Baza de date a proiectului nu s-a putut redeschide, posibil din cauza spațiului limitat de pe dispozitivul de stocare.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2307"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2310"/>
         <source>Saving project</source>
         <translation>Se salvează proiectul</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2309"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2363"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2383"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2425"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2312"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2366"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2386"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2428"/>
         <source>Error Saving Project</source>
         <translation>Eroare la salvarea proiectului</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
         <source>Syncing</source>
         <translation>Se sincronizează</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2365"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2368"/>
         <source>The project failed to open, possibly due to limited space
 on the storage device.
 
@@ -19079,7 +19244,7 @@ limitat de pe dispozitivul de stocare.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2385"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2388"/>
         <source>Unable to remove autosave information, possibly due to limited space
 on the storage device.
 
@@ -19091,12 +19256,12 @@ limitat pe unitatea de stocare.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2451"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2454"/>
         <source>Backing up project</source>
         <translation>Se face un backup al proiectului</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2770"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2773"/>
         <source>Automatic database backup failed.</source>
         <translation>Crearea automată a unui backup al bazei de date a eșuat.</translation>
     </message>
@@ -19225,57 +19390,57 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="432"/>
         <source>Audacity 3 project</source>
         <translation>Proiect Audacity 3</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="433"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Ai deschis un proiect Audacity 3. Acesta trebuie să fie convertit înainte de a-l putea utiliza în Audacity 4.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="438"/>
         <source>Cancel</source>
         <translation>Renunță</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="495"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="441"/>
         <source>Save as new project</source>
         <translation>Salvează ca proiect nou</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="444"/>
         <source>Legacy project</source>
         <translation>Proiect învechit</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="469"/>
         <source>The project was saved as “%1”</source>
         <translation>Proiectul a fost salvat ca „%1”</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="472"/>
         <source>Continue</source>
         <translation>Continuă</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="475"/>
         <source>Project saved</source>
         <translation>Proiect salvat</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1193"/>
         <source>Time Track not supported</source>
         <translation>Pista de timp nu este suportată</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1194"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>Proiectul conține o pistă de timp care la moment nu este suportată în Audacity 4, prin urmare va trebui eliminată. Acest lucru nu afectează proiectul original Audacity 3.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1198"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -19354,7 +19519,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="505"/>
         <source>Save to computer</source>
         <translation>Salvează pe calculator</translation>
     </message>
@@ -19382,41 +19547,40 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <translation>selecție</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
-        <translation>Autentifică-te sau creează-ți un cont nou pe Audio.com pentru a-ți partaja muzica.</translation>
+        <translation type="vanished">Autentifică-te sau creează-ți un cont nou pe Audio.com pentru a-ți partaja muzica.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="483"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Publică</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>Publish changes online?</source>
         <translation>Publici modificările online?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="488"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Modificările salvate vor fi vizibile public. Va trebui de asemenea să generăm un nou MP3 pentru redare publică.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="563"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="499"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="509"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Verifică conexiunea la internet sau încearcă din nou mai târziu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="508"/>
         <source>Unable to connect to the cloud</source>
         <translation>Nu s-a putut realiza conexiunea la Cloud</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="522"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Nu s-a putut realiza conexiunea la Audio.com</translation>
     </message>
@@ -19476,34 +19640,34 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="858"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="804"/>
         <source>Your audio could not be shared</source>
         <translation>Audioul tău nu s-a putut partaja</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>Contul tău Audio.com trebuie să fie verificat mai întâi. Activează-ți contul folosind legătura din email-ul de activare.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="818"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com a întors un cod de eroare necunoscut: %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="821"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com a întors un cod de eroare necunoscut.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="823"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="830"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Reîncearcă mai târziu sau obține ajutor în legătură cu această problemă pe audio.com.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="826"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>Nu s-a putut realiza conexiunea la audio.com. Verifică conexiunea la internet sau reîncearcă mai târziu.</translation>
     </message>
@@ -19575,8 +19739,8 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml" line="43"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="348"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="355"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="350"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="357"/>
         <source>Customize toolbar</source>
         <extracomment>Tooltip of the toolbar customization button</extracomment>
         <translation>Personalizează bara de unelte</translation>
@@ -19592,23 +19756,23 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <translation>Poziție redare:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap</source>
         <extracomment>Noun: label of the snapping control in the playback toolbar</extracomment>
         <translation>Fixează la</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="313"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="315"/>
         <source>Snapping</source>
         <translation>Fixare</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="316"/>
         <source>Snap to</source>
         <translation>Fixează la</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="351"/>
         <source>Show/hide toolbar buttons</source>
         <translation>Arată/ascunde butoane bară de unelte</translation>
     </message>
@@ -19624,7 +19788,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="15"/>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="434"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="438"/>
         <source>New label track</source>
         <translation>Pistă etichete nouă</translation>
     </message>
@@ -19728,72 +19892,69 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <translation>Etichetă</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="20"/>
         <source>Pan: 100R</source>
-        <translation>Panoramare: 100R</translation>
+        <translation type="vanished">Panoramare: 100R</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="33"/>
         <source>Pan:</source>
-        <translation>Panoramare:</translation>
+        <translation type="vanished">Panoramare:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all master effects</source>
         <translation>Comută toate efectele principale</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all effects</source>
         <translation>Comută toate efectele</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="132"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="136"/>
         <source>Add effect</source>
         <translation>Adaugă efect</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
         <source>Add master effect</source>
         <translation>Adaugă un efect principal</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="158"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="162"/>
         <source>Realtime effects are non-destructive and can be changed at any time.</source>
         <translation>Efectele în timp real sunt non-distructive și pot fi schimbate în orice moment.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="163"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Urmărește video&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
         <source>Real-time effects panel</source>
-        <translation>Panou efecte în timp real</translation>
+        <translation type="vanished">Panou efecte în timp real</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
         <source>Realtime effects</source>
         <translation>Efecte în timp real</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="91"/>
         <source>Close real-time effects panel</source>
         <extracomment>Tooltip of the button that closes the panel</extracomment>
         <translation>Închide panoul de efecte în timp real</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="121"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="149"/>
         <source>Add track</source>
         <translation>Adaugă pistă</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="139"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="129"/>
         <source>Tracks</source>
         <translation>Piste</translation>
     </message>
@@ -19977,7 +20138,7 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <translation>Frecvență înaltă</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="29"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="30"/>
         <source>Remove effect</source>
         <translation>Elimină efectul</translation>
     </message>
@@ -19997,12 +20158,12 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <translation>Clip: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="695"/>
         <source>Clip name: %1</source>
         <translation>Nume clip: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="837"/>
         <source>Clip menu</source>
         <translation>Meniu clip</translation>
     </message>
@@ -20046,28 +20207,28 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <translation>Meniu pistă</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="235"/>
         <source>Track %1: %2, audio track, selected</source>
         <translation>Pista %1: %2, pistă audio, selectată</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="235"/>
         <source>Track %1: %2, audio track</source>
         <translation>Pista %1: %2, pistă audio</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="236"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Press Enter to select or deselect</source>
         <translation>Apasă Enter pentru selectare sau deselectare</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
         <source>Track %1: %2, label track, selected</source>
         <translation>Pista %1: %2, pistă de etichete, selectată</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
         <source>Track %1: %2, label track</source>
         <translation>Pista %1: %2, pistă de etichete</translation>
     </message>
@@ -20126,6 +20287,17 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <source>Cyan</source>
         <translation>Cyan</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="55"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="66"/>
+        <source>Timeline</source>
+        <translation>Cronologie</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
+        <source>Pan: %1</source>
+        <translation>Panoramare: %1</translation>
+    </message>
 </context>
 <context>
     <name>projectscene/silence</name>
@@ -20183,13 +20355,13 @@ Va trebui să rulezi acea versiune de Audacity pentru a putea recupera proiectul
         <translation>Arată nivel microfon când nu se înregistrează</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="970"/>
         <source>Record</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Înregistrează</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="971"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="968"/>
         <source>Recorded audio</source>
         <translation>Audio înregistrat</translation>
     </message>
@@ -21199,6 +21371,41 @@ Conectează un dispozitiv de intrare și rescanează.</translation>
         <comment>amount of time left until the requested operation is finished</comment>
         <translation><numerusform>%n secundă rămasă</numerusform><numerusform>%n secunde rămase</numerusform><numerusform>%n de secunde rămase</numerusform></translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="98"/>
+        <source>%1 of %2</source>
+        <translation>%1 din %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="256"/>
+        <source>Dismiss</source>
+        <translation>Închide</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="43"/>
+        <source>Error</source>
+        <translation>Eroare</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="45"/>
+        <source>Warning</source>
+        <translation>Avertisment</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="47"/>
+        <source>Information</source>
+        <translation>Informație</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="49"/>
+        <source>Success</source>
+        <translation>Succes</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="106"/>
+        <source>Press F6 to go to the notification.</source>
+        <translation>Apasă F6 pentru a merge la notificare.</translation>
+    </message>
 </context>
 <context>
     <name>track</name>
@@ -21309,38 +21516,38 @@ Conectează un dispozitiv de intrare și rescanează.</translation>
         <translation>Mutat punct plic</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="861"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="897"/>
         <source>Set looping region in/out</source>
         <translation>Setează intrare/ieșire regiune de buclă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="41"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="42"/>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="48"/>
         <source>Mixing down to mono…</source>
         <translation>Se mixează la mono...</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="277"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="278"/>
         <source>Rendering pitch and speed…</source>
         <translation>Se randează înălțimea și viteza...</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1413"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1368"/>
         <source>Mix down to mono</source>
         <translation>Mixează la mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1414"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1369"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
         <translation>Această acțiune necesită ca unul sau mai multe clipuri să fie convertite la mono. Dorești să continui?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1573"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1576"/>
         <source>Combine mono tracks to stereo</source>
         <translation>Combină pistele mono în stereo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1574"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1577"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -21363,39 +21570,39 @@ Dorești să continui?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="827"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="850"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="873"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="904"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="833"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="856"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="879"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="910"/>
         <source>No audio selected</source>
         <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Niciun audio selectat</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="828"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="851"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="874"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="905"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="834"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="857"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="880"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="911"/>
         <source>Select the audio to delete and try again.</source>
         <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Selectează audio pentru ștergere și încearcă din nou.</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1340"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1354"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1368"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1346"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1360"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1374"/>
         <source>Paste error</source>
         <translation>Eroare lipire</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2091"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2097"/>
         <source>Set rate</source>
         <translation>Setează rata</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2250"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2267"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resample track</source>
         <translation>Reeșantionează pista</translation>
     </message>
@@ -21464,7 +21671,7 @@ Dorești să continui?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="656"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="687"/>
         <source>Changed Speed</source>
         <translation>Viteza a fost schimbată</translation>
     </message>
@@ -21513,13 +21720,13 @@ Dorești să continui?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
         <source>Cut</source>
         <translation>Decupează</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
         <source>Remove multiple items</source>
         <translation>Eliminat multiple elemente</translation>
     </message>
@@ -21530,15 +21737,15 @@ Dorești să continui?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Remove</source>
         <translation>Șterge</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1156"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1137"/>
         <source>Delete</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Șterge</translation>
@@ -21549,369 +21756,374 @@ Dorești să continui?</translation>
         <translation>Șterge și elimină spațiul</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="392"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
         <source>Items moved</source>
         <translation>Elemente mutate</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="395"/>
         <source>Clip moved</source>
         <translation>Clip mutat</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="396"/>
         <source>Move clip</source>
         <translation>Mută clipul</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="393"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
         <source>Move items</source>
         <translation>Mută elementele</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="398"/>
+        <source>Label moved</source>
+        <translation>Etichetă mutată</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="399"/>
+        <source>Move label</source>
+        <translation>Mută eticheta</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
         <source>Split</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Divide</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
         <source>Split clips at silence</source>
         <translation>Divide clipurile în zonele de liniște</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
         <source>Split at silence</source>
         <translation>Divide la liniște</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="473"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="495"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="504"/>
         <source>Split into new track</source>
         <translation>Divide într-o nouă pistă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
         <source>Split-cut to the clipboard</source>
         <translation>Divide și decupează în Clipboard</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
         <source>Split cut</source>
         <translation>Divide și decupează</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
         <source>Trim items left</source>
         <translation>Taie elementele la stânga</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
         <source>Trim clip left</source>
         <translation>Tale clipul la stânga</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="596"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="605"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="627"/>
         <source>Trim</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Taie</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
         <source>Trim items right</source>
         <translation>Taie elementele la dreapta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
         <source>Trim clip right</source>
         <translation>Taie clipul la dreapta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="688"/>
         <source>Changed speed to: %1%</source>
         <translation>Schimbă viteza la: %1%</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Stretch Left</source>
         <translation>Întinde la stânga</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
         <source>Stretch items left</source>
         <translation>Întinde elementele la stânga</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
         <source>Stretch clips left</source>
         <translation>Întinde clipurile la stânga</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Stretch Right</source>
         <translation>Întinde la dreapta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
         <source>Stretch items right</source>
         <translation>Întinde elementele la dreapta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
         <source>Stretch clips right</source>
         <translation>Întinde clipurile la dreapta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
         <source>Created new mono track</source>
         <translation>Creat pistă mono nouă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
         <source>New mono track</source>
         <translation>Pistă mono nouă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
         <source>Created new stereo track</source>
         <translation>Creat pistă stereo nouă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
         <source>New stereo track</source>
         <translation>Pistă stereo nouă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
         <source>Created label track</source>
         <translation>Creat pistă de etichete</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
         <source>New label track</source>
         <translation>Pistă etichete nouă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="712"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="743"/>
         <source>Delete track</source>
         <translation>Șterge pista</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="721"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
         <source>Duplicate track</source>
         <translation>Duplică pista</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="761"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="768"/>
         <source>Move track</source>
         <translation>Mută pista</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="815"/>
         <source>Insert silence</source>
         <translation>Inserează liniște</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="839"/>
         <source>Clips grouped</source>
         <translation>Grupat clipuri</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="845"/>
         <source>Clips ungrouped</source>
         <translation>Degrupat clipuri</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="856"/>
         <source>Changed track format</source>
         <translation>Schimbat format pistă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="865"/>
         <source>Changed track rate</source>
         <translation>Schimbat rată pistă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="874"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="875"/>
         <source>Swapped stereo channels</source>
         <translation>Interschimbat canalele stereo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="884"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="885"/>
         <source>Split stereo tracks to L/R mono</source>
         <translation>Împărțit pistele stereo la mono S/D</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="895"/>
         <source>Split stereo tracks to center mono</source>
         <translation>Împărțit pistele mono la mono central</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
         <source>Make stereo track</source>
         <translation>Fă pista stereo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resampled audio track(s)</source>
         <translation>S-au reeșantionat pistele audio</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Label added</source>
         <translation>Etichetă adăugată</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Add label</source>
         <translation>Adaugă etichetă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
         <source>Label title changed</source>
         <translation>Schimbat titlu etichetă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
         <source>Changed label title</source>
         <translation>Schimbă titlu etichetă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="950"/>
         <source>Label low frequency changed</source>
         <translation>Schimbat etichetă frecvență joasă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Change label low frequency</source>
         <translation>Schimbă etichetă frecvență joasă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="960"/>
         <source>Label high frequency changed</source>
         <translation>Schimbat etichetă frecvență înaltă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
         <source>Change label high frequency</source>
         <translation>Schimbă etichetă frecvență înaltă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
         <source>Cut label</source>
         <translation>Decupează eticheta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
         <source>Remove label</source>
         <translation>Elimină eticheta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Remove multiple labels</source>
         <translation>Elimină mai multe etichete</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Move labels</source>
         <translation>Mută etichetele</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
         <source>Move</source>
-        <translation>Mută</translation>
+        <translation type="vanished">Mută</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Labels moved</source>
         <translation>Etichete mutate</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
         <source>Label stretched</source>
         <translation>Etichetă întinsă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
         <source>Stretch label left</source>
         <translation>Întinde eticheta la stânga</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
         <source>Stretch labels left</source>
         <translation>Întinde etichetele la stânga</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1111"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1092"/>
         <source>Stretch</source>
         <translation>Întinsă</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
         <source>Stretch label right</source>
         <translation>Întinde eticheta la dreapta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
         <source>Stretch labels right</source>
         <translation>Întinde etichetele la dreapta</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1112"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation>Alipit %1 secunde la %2</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1115"/>
         <source>Join</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Unește</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1120"/>
         <source>Duplicated</source>
         <translation>Duplicat</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1122"/>
         <source>Duplicate</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Duplică</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Split-deleted clips</source>
         <translation>Împărțit-șters clipurile</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Split delete</source>
         <translation>Împarte și șterge</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1135"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation>Șters %1 secunde la %2</translation>
@@ -21927,17 +22139,17 @@ Dorești să continui?</translation>
         <translation>Piste: Gol</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="458"/>
         <source>Tempo changed</source>
         <translation>Schimbat tempo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="463"/>
         <source>Upper time signature changed</source>
         <translation>Schimbat numărător metrică</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="468"/>
         <source>Lower time signature changed</source>
         <translation>Schimbat numitor metrică</translation>
     </message>
@@ -22100,7 +22312,7 @@ Dorești să continui?</translation>
 <context>
     <name>ui</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="219"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="274"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
         <source>Browse</source>
         <translation>Răsfoiește</translation>
@@ -22561,14 +22773,30 @@ Dorești să continui?</translation>
 <context>
     <name>update</name>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="85"/>
+        <source>A new update is ready to install</source>
+        <translation>O nouă actualizare este gata de instalat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="86"/>
         <source>A new version of %1 is available!</source>
         <translation>O nouă versiune de %1 este disponibilă!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="97"/>
+        <source>%1 has downloaded an update and is ready to install. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
+        <translation>%1 a descărcat o actualizare și este gata să o instaleze. %1 va reporni pentru a finaliza instalarea. Dacă ai modificări nesalvate, ți se va cere mai întâi să le salvezi.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="110"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="132"/>
         <source>Release notes</source>
         <translation>Note despre versiune</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="131"/>
+        <source>%1 Release notes</source>
+        <translation>Note despre versiunea %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
@@ -22581,9 +22809,13 @@ Dorești să continui?</translation>
         <translation>Amintește-mi mai târziu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="89"/>
+        <source>Update now</source>
+        <translation>Actualizează acum</translation>
+    </message>
+    <message>
         <source>Install update</source>
-        <translation>Instalează actualizare</translation>
+        <translation type="vanished">Instalează actualizare</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22591,39 +22823,55 @@ Dorești să continui?</translation>
         <translation>Citește informațiile de versiune %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="136"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
         <translation>Ai deja ultima versiune de %1. Vizitează &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; pentru a afla ce urmează.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="143"/>
         <source>You’re up to date!</source>
         <translation>Ești la zi!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="175"/>
         <source>Cannot connect to server</source>
         <translation>Nu se poate conecta la server</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="176"/>
         <source>Sorry - please try again later</source>
         <translation>Scuze! Încearcă mai târziu!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="178"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="190"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
         <translation>Verifică pentru actualizare</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="188"/>
+        <source>Not enough disk space</source>
+        <translation>Spațiu insuficient pe disc</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="265"/>
+        <source>%1 has downloaded an update and is ready to install it. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
+        <translation>%1 a descărcat o actualizare și este gata să o instaleze. %1 va reporni pentru a finaliza instalarea. Dacă ai modificări nesalvate, ți se va cere mai întâi să le salvezi.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="272"/>
+        <source>Restart</source>
+        <translation>Repornește</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="302"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
         <translation>%1 trebuie să se închidă pentru a finaliza instalarea. Dacă ai modificări nesalvate, vei fi întrebat dacă dorești să le salvezi înainte ca %1 să se închidă.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="308"/>
         <source>Close</source>
         <translation>Închide</translation>
     </message>
@@ -22637,6 +22885,41 @@ Dorești să continui?</translation>
         <source>Downloading %1 %2</source>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
         <translation>Se descarcă %1 %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="65"/>
+        <source>Updated successfully</source>
+        <translation>Actualizat cu succes</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="53"/>
+        <source>Update available</source>
+        <translation>Actualizare disponibilă</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="87"/>
+        <source>See details</source>
+        <translation>Vezi detalii</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="97"/>
+        <source>Update</source>
+        <translation>Actualizează</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="375"/>
+        <source>Free up at least %1 MB of disk space and try again.</source>
+        <translation>Eliberează cel puțin %1 MB de spațiu pe disc și încearcă din nou.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="546"/>
+        <source>Installing %1</source>
+        <translation>Se instalează %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="547"/>
+        <source>Installing %1 %2</source>
+        <translation>Se instalează %1 %2</translation>
     </message>
 </context>
 <context>
@@ -22680,48 +22963,48 @@ Dorești să continui?</translation>
         <translation>Subcategorii: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="115"/>
         <source>Searching VST3 in: %1</source>
         <translation>Se caută VST3 în: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="162"/>
         <source>VST3 Effects</source>
         <translation>Efecte VST3</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="166"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="167"/>
         <source>The Audacity Team</source>
         <translation>Echipa Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="176"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="177"/>
         <source>Adds the ability to use VST3 effects in Audacity.</source>
         <translation>Adaugă posibilitatea de a folosi efecte VST3 în Audacity.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="274"/>
         <source>Looking in: %1</source>
         <translation>Se caută în: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="343"/>
         <source>VST3 module error: %1</source>
         <translation>Eroare modul VST3: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="752"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="758"/>
         <source>Unable to apply VST3 preset file %1</source>
         <translation>Nu s-a putut aplica fișierul de presetare VST3 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="753"/>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="770"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="759"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="776"/>
         <source>Error</source>
         <translation>Eroare</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="769"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="775"/>
         <source>Failed to save VST3 preset to file</source>
         <translation>A eșuat salvarea presetărilor VST3 în fișier</translation>
     </message>
@@ -22787,7 +23070,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>%1.%2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2823"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2828"/>
         <source>A track has a corrupted sample sequence.</source>
         <translation>O pistă conține o secvență de eșantioane coruptă.</translation>
     </message>
@@ -22818,41 +23101,49 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Liniar (dB)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="211"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="227"/>
         <source>-36 dB (shallow range for high-amplitude editing)</source>
         <translation>-36 dB (interval mic pentru editare de amplitudine înaltă)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="213"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
         <translation>-48 dB (interval PCM de eșantioane de 8 biți)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="215"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
         <translation>-60 dB (interval PCM de eșantioane de 10 biți)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="217"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
         <translation>-72 dB (interval PCM de eșantioane de 12 biți)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="219"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
         <translation>-84 dB (interval PCM de eșantioane de 14 biți)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="221"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
         <translation>-96 dB (interval PCM de eșantioane de 16 biți)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="223"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
         <source>-120 dB (approximate limit of human hearing)</source>
         <translation>-120 dB (limita aproximativă a auzului uman)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="225"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
         <translation>-145 dB (interval PCM de eșantioane de 24 de biți)</translation>
