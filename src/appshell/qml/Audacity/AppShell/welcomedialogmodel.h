@@ -65,6 +65,7 @@ public:
     QVariantMap currentItem() const;
     int currentIndex() const { return static_cast<int>(m_currentIndex); }
 
+    Q_INVOKABLE void setCurrentIndex(int index);
     Q_INVOKABLE void nextItem();
     Q_INVOKABLE void prevItem();
 
