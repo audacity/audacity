@@ -5,6 +5,7 @@
 #include "project/iaudacityproject.h"
 
 #include "projectsceneactionscontroller.h"
+#include "projectsceneuiactions.h"
 
 using namespace muse;
 using namespace au::projectscene;
@@ -23,6 +24,9 @@ static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-play
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("open-label-editor");
 static const ActionCode CLIP_GAIN_CODE("clip-gain");
+static const ActionCode TOGGLE_PLAY_AT_SPEED_CODE("toggle-play-at-speed");
+static const ActionCode PLAY_AT_SPEED_ACTION_CODE("play-at-speed");
+static const QString PLAYBACK_TOOLBAR_NAME("playbackToolBar");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -43,10 +47,15 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
     dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
+    dispatcher()->reg(this, TOGGLE_PLAY_AT_SPEED_CODE, this, &ProjectSceneActionsController::togglePlayAtSpeed);
 
     projectSceneUiState()->timelineRulerModeChanged().onNotify(this, [this]() {
         notifyActionCheckedChanged(MINUTES_SECONDS_RULER);
         notifyActionCheckedChanged(BEATS_MEASURES_RULER);
+    });
+
+    uiState()->toolConfigChanged(PLAYBACK_TOOLBAR_NAME).onNotify(this, [this]() {
+        notifyActionCheckedChanged(TOGGLE_PLAY_AT_SPEED_CODE);
     });
 }
 
@@ -84,6 +93,47 @@ void ProjectSceneActionsController::toggleClippingInWaveform()
     bool clippingVisible = configuration()->isClippingInWaveformVisible();
     configuration()->setClippingInWaveformVisible(!clippingVisible);
     notifyActionCheckedChanged(CLIPPING_IN_WAVEFORM_CODE);
+}
+
+bool ProjectSceneActionsController::isPlayAtSpeedVisible() const
+{
+    const muse::ui::ToolConfig toolConfig = uiState()->toolConfig(
+        PLAYBACK_TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+
+    for (const muse::ui::ToolConfig::Item& item : toolConfig.items) {
+        if (item.intent == PLAY_AT_SPEED_ACTION_CODE) {
+            return item.show;
+        }
+    }
+
+    return true;
+}
+
+void ProjectSceneActionsController::togglePlayAtSpeed()
+{
+    muse::ui::ToolConfig toolConfig = uiState()->toolConfig(
+        PLAYBACK_TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+
+    bool found = false;
+    for (muse::ui::ToolConfig::Item& item : toolConfig.items) {
+        if (item.intent == PLAY_AT_SPEED_ACTION_CODE) {
+            item.show = !item.show;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        muse::ui::ToolConfig::Item item;
+        item.intent = PLAY_AT_SPEED_ACTION_CODE;
+        // Missing from an older config: treat as currently "shown" for the
+        // menu checkmark (isPlayAtSpeedVisible), so the first toggle hides it.
+        item.show = false;
+        toolConfig.items.append(item);
+    }
+
+    uiState()->setToolConfig(PLAYBACK_TOOLBAR_NAME, toolConfig);
+    notifyActionCheckedChanged(TOGGLE_PLAY_AT_SPEED_CODE);
 }
 
 void ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying()
@@ -180,7 +230,8 @@ bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) 
         { BEATS_MEASURES_RULER, projectSceneUiState()->timelineRulerMode() == TimelineRulerMode::BEATS_AND_MEASURES },
         { TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, configuration()->playbackOnRulerClickEnabled() },
         { TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, configuration()->updateDisplayWhilePlayingEnabled() },
-        { TOGGLE_PINNED_PLAY_HEAD_CODE, configuration()->pinnedPlayHeadEnabled() }
+        { TOGGLE_PINNED_PLAY_HEAD_CODE, configuration()->pinnedPlayHeadEnabled() },
+        { TOGGLE_PLAY_AT_SPEED_CODE, isPlayAtSpeedVisible() }
     };
 
     return isChecked[actionCode];

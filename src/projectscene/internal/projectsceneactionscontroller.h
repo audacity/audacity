@@ -10,6 +10,7 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/actions/actionable.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/ui/iuistate.h"
 
 #include "context/iglobalcontext.h"
 #include "../iprojectsceneactionscontroller.h"
@@ -26,6 +27,7 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::ui::IUiState> uiState { this };
 
 public:
     ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx)
@@ -51,6 +53,8 @@ private:
     void togglePlaybackOnRulerClickEnabled();
     void toggleAutomation();
     void toggleTrackHalfWave(const muse::actions::ActionQuery& q);
+    void togglePlayAtSpeed();
+    bool isPlayAtSpeedVisible() const;
 
     void changeFontForLabels();
 

@@ -158,6 +158,15 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action_description", "Show vertical rulers"),
              Checkable::Yes
              ),
+    UiAction("toggle-play-at-speed",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Play-at-Speed"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Show or hide Play-at-Speed in the playback toolbar"),
+             Checkable::Yes
+             ),
     UiAction("show-master-track",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -464,6 +473,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "playback-time", true },
             { "playback-bpm", false },
             { "playback-time-signature", false },
+            { "play-at-speed", true },
             { "", true },
             { "snap", true },
             { "", true },

@@ -78,6 +78,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarbpmitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarbpmitem.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playatspeedmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playatspeedmodel.h
+
     )
 
 set(MODULE_LINK

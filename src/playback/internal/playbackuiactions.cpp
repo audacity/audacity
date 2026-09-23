@@ -183,6 +183,15 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action_description", "Set playback time signature"),
              IconCode::Code::TIME_SIGNATURE
              ),
+    UiAction("play-at-speed",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Play-at-Speed"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Play at a configurable playback speed"),
+             IconCode::Code::PLAY_FILL
+             ),
     UiAction(PLAYBACK_LEVEL_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,

@@ -14,6 +14,7 @@
 #include "playback/view/toolbars/playbacktoolbartimesignatureitem.h"
 #include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
 #include "projectscene/view/toolbars/snaptoolbaritem.h"
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 using namespace muse::uicomponents;
 using namespace muse::ui;
@@ -46,6 +47,7 @@ static const ActionCode PLAYBACK_BPM("playback-bpm");
 static const ActionCode PLAYBACK_TIME_SIGNATURE("playback-time-signature");
 
 static const ActionCode SNAP_ACTION_CODE("snap");
+static const ActionCode PLAY_AT_SPEED_ACTION_CODE("play-at-speed");
 
 static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
 {
@@ -64,7 +66,8 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { CLIP_GAIN_AUTOMATION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SPLIT_TOOL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
+        { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP },
+        { PLAY_AT_SPEED_ACTION_CODE, PlaybackToolBarModel::PLAY_AT_SPEED }
     };
 
     return muse::value(types, actionCode, PlaybackToolBarModel::PROJECT_CONTROL);
@@ -378,6 +381,9 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
     }
     case PlaybackToolBarModel::SNAP:
         result = new projectscene::SnapToolBarItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        break;
+    case PlaybackToolBarModel::PLAY_AT_SPEED:
+        result = new ToolBarItem(action, static_cast<ToolBarItemType::Type>(type), this);
         break;
     default:
         break;

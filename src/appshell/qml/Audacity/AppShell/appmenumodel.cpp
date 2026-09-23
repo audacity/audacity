@@ -355,15 +355,17 @@ MenuItem* AppMenuModel::makeViewMenu()
               << makeMenuItem("open-metadata-editor")
               << makeMenuItem("toggle-history")
               << makeSeparator()
+              << makeMenuItem("toggle-play-at-speed")
 #ifdef MUSE_MODULE_WORKSPACE
+        << makeSeparator()
         << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"),
                     au::shared::translateWorkspaceTitles(m_workspacesMenuModel->items()), "menu-workspaces")
-        << makeSeparator()
 #endif
 #ifndef Q_OS_MAC
-        << makeMenuItem("fullscreen")
         << makeSeparator()
+        << makeMenuItem("fullscreen")
 #endif
+        << makeSeparator()
         << makeMenuItem("toggle-clipping-in-waveform")
         << makeMenuItem("toggle-rms-in-waveform")
         << makeMenuItem("toggle-vertical-rulers")

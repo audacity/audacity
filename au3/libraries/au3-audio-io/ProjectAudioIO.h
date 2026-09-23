@@ -82,8 +82,9 @@ private:
     std::shared_ptr<IMeterSender> mCaptureMeter;
 
     // This is atomic because scrubber may read it in a separate thread from
-    // the main
-    std::atomic<double> mPlaySpeed{};
+    // the main. Default to 1.0 (normal speed) so variable-speed playback works
+    // before any UI sets a value.
+    std::atomic<double> mPlaySpeed{ 1.0 };
 
     int mAudioIOToken{ -1 };
 };
