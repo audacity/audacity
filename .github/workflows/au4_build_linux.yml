@@ -148,6 +148,11 @@ jobs:
           fi
         fi
 
+        # Sandbox builds are superseded daily; their symbols would only pile up on the server.
+        if [ "$SENTRY_PROJECT" == "au4-sandbox" ]; then
+          DO_UPLOAD_SYMBOLS=false
+        fi
+
         echo "DO_BUILD=$DO_BUILD" >> $GITHUB_ENV
         echo "DO_BUILD: $DO_BUILD"
         echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" >> $GITHUB_ENV

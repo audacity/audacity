@@ -149,6 +149,11 @@ jobs:
           fi
         fi
 
+        # Sandbox builds are superseded daily; their symbols would only pile up on the server.
+        if [ "$SENTRY_PROJECT" == "au4-sandbox" ]; then
+          DO_UPLOAD_SYMBOLS=false
+        fi
+
         # Skip crash reporting and symbols for WoA
         if [ "${{ matrix.arch }}" == "aarch64" ]; then
           DO_UPLOAD_SYMBOLS='false'
