@@ -71,6 +71,10 @@ Item {
             Layout.preferredWidth: 100
             Layout.preferredHeight: 28
 
+            readonly property real normalSpeed: 1.0
+            // ~8px sticky zone on a 100px track over [0.01, 3.0]
+            readonly property real snapThreshold: 0.12
+
             from: 0.01
             to: 3.0
             stepSize: 0.01
@@ -78,8 +82,15 @@ Item {
             enabled: root.enabled && model.isEnabled
             wheelEnabled: true
 
+            function snappedSpeed(v) {
+                return Math.abs(v - normalSpeed) <= snapThreshold ? normalSpeed : v
+            }
+
             onMoved: {
-                model.speed = value
+                // Snap only while dragging with the mouse; wheel/keyboard use stepSize.
+                model.speed = pressed ? snappedSpeed(value) : value
+                // Resync the handle when the model snaps or rejects the value.
+                value = Qt.binding(function() { return model.speed })
             }
 
             background: Rectangle {
@@ -97,6 +108,18 @@ Item {
                     height: parent.height
                     color: ui.theme.accentColor
                     radius: 2
+                }
+
+                // Marker at 1.0x
+                Rectangle {
+                    readonly property real t: (speedSlider.normalSpeed - speedSlider.from)
+                                             / (speedSlider.to - speedSlider.from)
+                    x: parent.width * t - width / 2
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 1
+                    height: 12
+                    color: ui.theme.fontPrimaryColor
+                    opacity: 0.55
                 }
             }
 
