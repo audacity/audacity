@@ -152,7 +152,10 @@ void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
         IF_ASSERT_FAILED(e.mId.has_value()) {
             return;
         }
-        unregisterRealtimeEffectList(*e.mId);
+        const bool isTrackReplaced = e.mExtra == 1;
+        if (!isTrackReplaced) {
+            unregisterRealtimeEffectList(*e.mId);
+        }
     }
     break;
     case TrackListEvent::UNDO_REDO_BEGIN:
