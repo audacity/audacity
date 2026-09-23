@@ -16,10 +16,10 @@ using namespace muse::actions;
 using namespace muse::rcommand;
 
 namespace {
-const ActionQuery SHOW_TOUR_PAGE_ACTION("audacity://cloud/show-tour-page");
-const ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("audacity://cloud/open-project-page");
-const ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("audacity://cloud/open-audio-page");
-const ActionQuery OPEN_CLOUD_PROFILE_PAGE_ACTION("audacity://cloud/open-profile-page");
+const ActionQuery SHOW_TOUR_PAGE_ACTION("action://cloud/show-tour-page");
+const ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("action://cloud/open-project-page");
+const ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("action://cloud/open-audio-page");
+const ActionQuery OPEN_CLOUD_PROFILE_PAGE_ACTION("action://cloud/open-profile-page");
 const ActionCode OPEN_URL_ACTION("open-url");
 
 CommandQuery queryParamsConv(const Command& command, const ActionData& args)

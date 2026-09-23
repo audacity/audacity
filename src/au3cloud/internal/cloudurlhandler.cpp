@@ -74,7 +74,7 @@ bool CloudUrlHandler::tryHandleGenerateAudioLink(const QUrl& parsed)
         return false;
     }
 
-    muse::actions::ActionQuery action("audacity://cloud/update-audio-preview-for-project");
+    muse::actions::ActionQuery action("action://cloud/update-audio-preview-for-project");
     action.addParam("id", muse::Val(projectId));
 
     dispatcher()->dispatch(action);
@@ -94,7 +94,7 @@ bool CloudUrlHandler::tryHandleAudioLink(const QUrl& parsed)
         return false;
     }
 
-    muse::actions::ActionQuery action("audacity://cloud/open-audio-file");
+    muse::actions::ActionQuery action("action://cloud/open-audio-file");
     action.addParam("audioId", muse::Val(audioId.toStdString()));
 
     dispatcher()->dispatch(action);
