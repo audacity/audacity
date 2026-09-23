@@ -287,9 +287,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
 
     if (mode == SelectionMode::Range) {
         const ItemKeys box = m_context
-                                     ? selectionController()->itemsTouchingSelectionBox(
+                             ? selectionController()->itemsTouchingSelectionBox(
             m_context->mousePositionTime(), m_trackId)
-                                     : ItemKeys();
+                             : ItemKeys();
         if (!box.empty()) {
             selectionController()->resetDataSelection();
             selectionController()->setSelectedClips(box.clips, true);
