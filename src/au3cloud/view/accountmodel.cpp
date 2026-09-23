@@ -67,5 +67,5 @@ void AccountModel::openCreateAccountDialog() const
 
 void AccountModel::openProfile() const
 {
-    dispatcher()->dispatch(muse::actions::ActionQuery("audacity://cloud/open-profile-page"));
+    dispatcher()->dispatch(muse::actions::ActionQuery("action://cloud/open-profile-page"));
 }
