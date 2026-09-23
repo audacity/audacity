@@ -39,6 +39,8 @@ public:
     MOCK_METHOD(bool, cutItemDataIntoClipboard, (const TrackIdList&, secs_t, secs_t, bool, bool), (override));
     MOCK_METHOD(bool, copyClipIntoClipboard, (const ClipKey&), (override));
     MOCK_METHOD(bool, copyNonContinuousTrackDataIntoClipboard, (const TrackId, const TrackItemKeyList&, secs_t), (override));
+    MOCK_METHOD(bool, copyItems, (const ClipKeyList&, const LabelKeyList&), (override));
+    MOCK_METHOD(bool, cutItems, (const ClipKeyList&, const LabelKeyList&, bool), (override));
     MOCK_METHOD(bool, copyContinuousTrackDataIntoClipboard, (const TrackId, secs_t, secs_t), (override));
     MOCK_METHOD(bool, removeClip, (const ClipKey&), (override));
     MOCK_METHOD(bool, removeClips, (const ClipKeyList&, bool), (override));

@@ -45,6 +45,8 @@ private:
     bool cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips, bool isRangeSelection) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
+    bool copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys) override;
+    bool cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips) override;
     bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) override;

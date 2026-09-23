@@ -53,6 +53,8 @@ public:
                                           bool isRangeSelection) = 0;
     virtual bool copyClipIntoClipboard(const ClipKey& clipKey) = 0;
     virtual bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const TrackItemKeyList& itemKeys, secs_t offset) = 0;
+    virtual bool copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys) = 0;
+    virtual bool cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips) = 0;
     virtual bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
