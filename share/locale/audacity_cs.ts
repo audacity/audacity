@@ -39,75 +39,91 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ukončit</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="55"/>
         <source>Restart</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Restartovat</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="61"/>
         <source>&amp;Full screen</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Celá obrazovka</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="238"/>
+        <source>Shift+&amp;Enter</source>
+        <translation>Shift+&amp;Enter</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
+        <source>Trigger the focused control or make a range selection of track items</source>
+        <translation>Aktivovat zaměřený ovládací prvek nebo provést rozsahový výběr položek stopy</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
+        <source>Open item context menu</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Otevřít kontextovou nabídku položky</translation>
     </message>
     <message>
         <source>Full screen</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Celá obrazovka</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
         <source>About &amp;Qt…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>O systému &amp;Qt…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
         <source>Online &amp;handbook</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Online &amp;příručka</translation>
     </message>
     <message>
         <source>Open online handbook</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Otevřít online příručku</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="90"/>
         <source>As&amp;k for help</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Po&amp;žádat o pomoc</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="96"/>
         <source>Revert to &amp;factory settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Obnovit &amp;tovární nastavení</translation>
     </message>
     <message>
         <source>Revert to factory settings</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Obnovit tovární nastavení</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
         <source>Restore the &amp;default layout</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Obnovit &amp;výchozí rozložení</translation>
     </message>
     <message>
         <source>Restore the default layout</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Obnovit výchozí rozložení</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
         <source>&amp;Playback controls</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Ovládání přehrávání</translation>
     </message>
     <message>
         <source>Show/hide playback controls</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zobrazit/skrýt ovládání přehrávání</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
@@ -117,33 +133,33 @@
     </message>
     <message>
         <source>Show/hide tracks</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zobrazit/skrýt stopy</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="70"/>
         <source>&amp;About Audacity…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;O programu Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="136"/>
         <source>&amp;Status bar</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Stavový řádek</translation>
     </message>
     <message>
         <source>Show/hide status bar</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zobrazit/skrýt stavový řádek</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
         <source>&amp;Preferences</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Nastavení</translation>
     </message>
     <message>
         <source>Preferences…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Nastavení...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
@@ -188,7 +204,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
         <source>&amp;Redo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Z&amp;novu</translation>
+        <translation>&amp;Znovu</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
@@ -224,11 +240,11 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
         <source>&amp;Trigger</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Spouštěč</translation>
     </message>
     <message>
         <source>Trigger</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Spouštěč</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="231"/>
@@ -244,124 +260,124 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>Zrušit „%1“</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>Zopakovat „%1“</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
         <source>Silence audio</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Výběr přeměnit na ticho</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit projekt na audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
         <source>View on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit na audio.com</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
         <source>Repeat last effect</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Opakovat poslední efekt</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="33"/>
         <source>Remove realtime effect</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Odstranit efekt v reálném čase</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="41"/>
         <source>&amp;Apply preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Použít přednastavení</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="47"/>
         <source>Save preset as…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Uložit přednastavení jako...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="53"/>
         <source>&amp;Save preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Uložit přednastavení</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="59"/>
         <source>&amp;Delete preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Smazat přednastavení</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
         <source>&amp;Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Zavést...</translation>
     </message>
     <message>
         <source>Import preset</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zavést přednastavení</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
         <source>&amp;Export…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Vyvést…</translation>
     </message>
     <message>
         <source>Export preset</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Vyvést přednastavení</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
         <source>Play/Pause</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přehrát/Pozastavit</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
         <source>Play/Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přehrát/Zastavit</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation type="vanished">Přehrát/Pozastavit od kurzoru</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="65"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="66"/>
         <source>Play selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přehrát výběr</translation>
     </message>
     <message>
         <source>Play the selected time range</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Přehrát vybraný rozsah</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="73"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
         <source>Pause</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Pozastavit</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="82"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
         <source>Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -369,184 +385,226 @@
     </message>
     <message>
         <source>Stop playback</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zastavit přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="91"/>
         <source>Rewind to start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přeskočit na začátek</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="103"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="100"/>
         <source>Rewind to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přeskočit na konec</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="109"/>
         <source>Loop playback</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přehrávat ve smyčce</translation>
     </message>
     <message>
         <source>Toggle ‘Loop playback’</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zapnout/vypnout „Přehrávat ve smyčce“</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
         <source>Audio setup</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nastavení zvuku</translation>
     </message>
     <message>
         <source>Open audio setup context menu</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Otevřít okno nastavení zvuku</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="128"/>
         <source>Get effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Získat efekty</translation>
     </message>
     <message>
         <source>Open Get effects dialog</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Otevřít okno „Získat efekty“</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="137"/>
         <source>Audio settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nastavení zvuku</translation>
     </message>
     <message>
         <source>Open audio setup dialog</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Otevřít okno nastavení zvuku</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="145"/>
         <source>Rescan audio devices</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Prohledat zvuková zařízení</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="156"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="153"/>
         <source>Metronome</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Metronom</translation>
     </message>
     <message>
         <source>Toggle metronome playback</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zapnout/vypnout metronom</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="166"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="163"/>
         <source>Timecode</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
         <source>Set playback time</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zadat čas přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="172"/>
         <source>Tempo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tempo</translation>
     </message>
     <message>
         <source>Set playback tempo</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zadat tempo přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="184"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
         <source>Time signature</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Předznamenání</translation>
     </message>
     <message>
         <source>Set playback time signature</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zadat předznamenání přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="190"/>
         <source>Playback level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Úroveň přehrávání</translation>
     </message>
     <message>
         <source>Set playback level</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zadat úroveň přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
+        <source>Play/Stop and set cursor</source>
+        <translation>Přehrát/Zastavit a nastavit kurzor</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
         <source>Change audio host</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Změnit zvukovou &amp;architekturu</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="211"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="208"/>
         <source>Change playback device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Změnit přehrávací zařízení</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="220"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
         <source>Change recording device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Změnit nahrávací zařízení</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="229"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="226"/>
         <source>Change input channels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Změnit nahrávací kanály</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="238"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="235"/>
         <source>Toggle loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přepnout rozsah smyčky</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="247"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="244"/>
         <source>Clear loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vyčistit rozsah smyčky</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="255"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="252"/>
         <source>Set loop region to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nastavit smyčku na výběr</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="263"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="260"/>
         <source>Set selection to loop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nastavit výběr na smyčku</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="271"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="268"/>
         <source>Set loop region in out</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="279"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="276"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="284"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="285"/>
+        <source>Mute/unmute focused track</source>
+        <translation>Ztlumit/zrušit ztlumení zaměřené stopy</translation>
+    </message>
+    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="292"/>
+        <source>Solo/unsolo focused track</source>
+        <translation>Sólo/zrušit sólo zaměřené stopy</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="298"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="299"/>
+        <source>Mute all tracks</source>
+        <translation>Ztlumit všechny stopy</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="305"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="306"/>
+        <source>Unmute all tracks</source>
+        <translation>Zrušit ztlumení všech stop</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="312"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="313"/>
+        <source>Mute selected tracks</source>
+        <translation>Ztlumit vybrané stopy</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="319"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="320"/>
+        <source>Unmute selected tracks</source>
+        <translation>Zrušit ztlumení vybraných stop</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="330"/>
         <source>Play repeats</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="301"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="340"/>
         <source>Pan automatically</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
@@ -559,31 +617,31 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
         <source>&amp;New…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Nový…</translation>
     </message>
     <message>
         <source>New…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Nový...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
         <source>&amp;Open…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Otevřít...</translation>
     </message>
     <message>
         <source>Open…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Otevřít...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
         <source>Open recent</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otevřít nedávné</translation>
     </message>
     <message>
         <source>Open recent project</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Otevřít poslední projekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
@@ -597,37 +655,37 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
         <source>&amp;Clear recent files</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Vyčistit nedávné soubory</translation>
     </message>
     <message>
         <source>Clear recent files</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Vyčistit nedávné soubory</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
         <source>Save &amp;as…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Uložit &amp;jako…</translation>
     </message>
     <message>
         <source>Save as…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Uložit jako…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="125"/>
         <source>&amp;Export labels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Uložit štítky jako</translation>
     </message>
     <message>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Uložit štítky jako</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
         <source>&amp;Export MIDI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Vyvést MIDI</translation>
     </message>
     <message>
         <source>Export MIDI</source>
@@ -637,11 +695,11 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
         <source>&amp;Close project</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Zavřít projekt</translation>
     </message>
     <message>
         <source>Close project</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Zavřít projekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
@@ -656,25 +714,25 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
         <source>Insert</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vložit</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
         <source>Trim clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Oříznout klip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="175"/>
         <source>Split into new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rozdělit do nové stopy</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
         <source>Paste new label</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vložit nový štítek</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
@@ -684,20 +742,20 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="296"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation>Editor metadat</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="192"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <source>Select all</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vybrat vše</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
         <source>Select all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vybrat všechny stopy</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
@@ -823,7 +881,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
         <source>Show metadata editor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit editor metadat</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="347"/>
@@ -865,7 +923,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
         <source>Remove tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Odstranit stopy</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
@@ -989,11 +1047,11 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Vyvést zvuk v jiném formátu...</translation>
     </message>
     <message>
         <source>Export audio…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Vyvést zvuk v jiném formátu...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
@@ -1183,19 +1241,19 @@
     </message>
     <message>
         <source>Save to cloud…</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Uložit do cloudu…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="764"/>
         <source>Share audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sdílet zvuk</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="773"/>
         <source>Update cloud audio preview</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Aktualizovat náhled v cloudu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="781"/>
@@ -1502,7 +1560,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Odstranit a zavřít mezeru (pro každý klip)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="149"/>
@@ -1538,7 +1596,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="201"/>
         <source>Rename</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přejmenovat</translation>
     </message>
     <message>
         <source>Rename track</source>
@@ -1556,25 +1614,25 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="225"/>
         <source>Move track up</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu nahoru</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="233"/>
         <source>Move track down</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu dolů</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="241"/>
         <source>Move track to top</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu úplně nahoru</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Move track to bottom</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu úplně dolů</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
@@ -1718,19 +1776,19 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="437"/>
         <source>New mono track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nová mono stopa</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="445"/>
         <source>New stereo track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nová stereo stopa</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
         <source>New label track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nová popisová stopa</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="461"/>
@@ -1865,18 +1923,17 @@
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="661"/>
         <source>Open item’s context menu</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="684"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="675"/>
         <source>Change track format</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="697"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="688"/>
         <source>Change track sample rate</source>
         <translation type="unfinished"/>
     </message>
@@ -2067,55 +2124,55 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
         <source>Exit</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ukončit</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="63"/>
         <source>Full screen</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Celá obrazovka</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="84"/>
         <source>Open online handbook</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otevřít online příručku</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="98"/>
         <source>Revert to factory settings</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Obnovit tovární nastavení</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
         <source>Restore the default layout</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Obnovit výchozí rozložení</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
         <source>Show/hide playback controls</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit/skrýt ovládání přehrávání</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="128"/>
         <source>Show/hide tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit/skrýt stopy</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="138"/>
         <source>Show/hide status bar</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit/skrýt stavový řádek</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
         <source>Preferences…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nastavení...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
@@ -2170,7 +2227,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
         <source>Trigger</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spouštěč</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
@@ -2179,212 +2236,216 @@
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="247"/>
+        <source>Open the context menu of the focused item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Otevřít kontextovou nabídku zaměřené položky</translation>
+    </message>
+    <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
         <source>View project on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit projekt na audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
         <source>View on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit na audio.com</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
         <source>Remove realtime effect</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Odstranit efekt v reálném čase</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
         <source>Import preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zavést přednastavení</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="76"/>
         <source>Export preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vyvést přednastavení</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
         <source>Play/Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přehrát/Pozastavit</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="51"/>
         <source>Play/Stop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přehrát/Zastavit</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation type="vanished">Přehrát/Pozastavit od kurzoru</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
         <source>Play the selected time range</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation type="vanished">Přehrát vybraný rozsah</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="75"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
         <source>Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Pozastavit</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="84"/>
         <source>Stop playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zastavit přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="93"/>
         <source>Rewind to start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přeskočit na začátek</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="102"/>
         <source>Rewind to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přeskočit na konec</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="111"/>
         <source>Toggle ‘Loop playback’</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zapnout/vypnout „Přehrávat ve smyčce“</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="124"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="121"/>
         <source>Open audio setup context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otevřít okno nastavení zvuku</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="130"/>
         <source>Open Get effects dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otevřít dialogové okno „Získat efekty“</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="142"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="139"/>
         <source>Open audio setup dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otevřít okno nastavení zvuku</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="150"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <source>Rescan audio devices</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Prohledat zvuková zařízení</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="158"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Toggle metronome playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zapnout/vypnout metronom</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="165"/>
         <source>Set playback time</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zadat čas přehrání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="177"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="174"/>
         <source>Set playback tempo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zadat tempo přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="186"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="183"/>
         <source>Set playback time signature</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zadat předznamenání přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="192"/>
         <source>Set playback level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zadat úroveň přehrávání</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="201"/>
         <source>Change audio host</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Změnit zvukovou &amp;architekturu</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="213"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
         <source>Change playback device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Změnit přehrávací zařízení</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="222"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="219"/>
         <source>Change recording device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Změnit nahrávací zařízení</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="231"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="228"/>
         <source>Change input channels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Změnit nahrávací kanály</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="240"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="237"/>
         <source>Toggle loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přepnout oblast smyčky</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="249"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="246"/>
         <source>Clear loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vyčistit rozsah smyčky</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="257"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="254"/>
         <source>Set loop region to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nastavit smyčku na výběr</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="265"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="262"/>
         <source>Set selection to loop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nastavit výběr na smyčku</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="273"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="270"/>
         <source>Set loop region in out</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="281"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="278"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="293"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="332"/>
         <source>Play repeats</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="303"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="342"/>
         <source>Pan automatically during playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished"/>
@@ -2393,13 +2454,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="31"/>
         <source>New…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nový...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
         <source>Open…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otevřít...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
@@ -2411,7 +2472,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="63"/>
         <source>Open recent project</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otevřít poslední projekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
@@ -2424,7 +2485,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="87"/>
         <source>Clear recent files</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vyčistit nedávné soubory</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
@@ -2442,19 +2503,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="111"/>
         <source>Save as…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Uložit jako…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="119"/>
         <source>Export audio…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vyvést zvuk v jiném formátu...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
         <source>Export labels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Uložit štítky jako</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
@@ -2466,7 +2527,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="143"/>
         <source>Close project</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zavřít projekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="153"/>
@@ -2480,38 +2541,38 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
         <source>Insert</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vložit</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
         <source>Trim clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Oříznout klip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="177"/>
         <source>Split into new track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rozdělit do nové stopy</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
         <source>Paste new label</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vložit nový štítek</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="81"/>
         <source>Select all</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vybrat vše</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
         <source>Select all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vybrat všechny stopy</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="210"/>
@@ -2613,7 +2674,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="341"/>
         <source>Show metadata editor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zobrazit editor metadat</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
@@ -2643,7 +2704,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="394"/>
         <source>Remove tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Odstranit stopy</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="402"/>
@@ -2907,19 +2968,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="757"/>
         <source>Save to cloud…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Uložit do cloudu…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="766"/>
         <source>Share audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sdílet audio</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
         <source>Update cloud audio preview</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Aktualizovat náhled v cloudu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="783"/>
@@ -3260,7 +3321,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="142"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Odstranit a zavřít mezeru (pro každý klip)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="151"/>
@@ -3314,25 +3375,25 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
         <source>Move track up</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu nahoru</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="235"/>
         <source>Move track down</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu dolů</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="243"/>
         <source>Move track to top</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu úplně nahoru</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="251"/>
         <source>Move track to bottom</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu úplně dolů</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="259"/>
@@ -3458,19 +3519,19 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="439"/>
         <source>New mono track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nová mono stopa</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
         <source>New stereo track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nová stereo stopa</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="455"/>
         <source>New label track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nová popisová stopa</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="463"/>
@@ -3617,18 +3678,17 @@
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="663"/>
         <source>Open item’s context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="683"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="674"/>
         <source>Change track format</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="696"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="687"/>
         <source>Change track sample rate</source>
         <translation type="unfinished"/>
     </message>
@@ -3637,17 +3697,17 @@
     <name>appshell</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="64"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="65"/>
         <source>Cloud account</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="54"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="55"/>
         <source>Home menu</source>
-        <translation type="unfinished"/>
+        <translation>Domovská složka</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="95"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="95"/>
         <source>Project</source>
         <translation>Projekt</translation>
@@ -3690,37 +3750,42 @@
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="160"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="76"/>
+        <source>Real-time effects panel</source>
+        <translation>Panel efektů v reálném čase</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="170"/>
         <source>Project toolbar</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="183"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="193"/>
         <source>Workspaces toolbar</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="206"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="216"/>
         <source>Undo/redo toolbar</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="228"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="238"/>
         <source>Play toolbar</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="294"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="304"/>
         <source>Tracks</source>
         <translation>Stopy</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="397"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="405"/>
         <source>Playback meter</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="421"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="429"/>
         <source>History</source>
         <translation>Historie</translation>
     </message>
@@ -3730,44 +3795,46 @@
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="432"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="433"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="448"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation type="unfinished"/>
+        <translation>Tímto krokem dojde k resetu všech nastavení aplikace a uživatelského rozhraní. Rovněž dojde k odstranění vašich pracovních prostorů a zkratek. Budete také muset znovu prohledat všechny přídavné moduly třetích stran.
+
+Nedojde k smazání žádného z vašich projektů.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="445"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
         <source>Revert</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="462"/>
         <source>Revert to factory settings</source>
-        <translation type="unfinished"/>
+        <translation>Obnovit tovární nastavení</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="459"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="474"/>
         <source>Would you like to restart Audacity now?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="475"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="481"/>
         <source>Restart</source>
-        <translation type="unfinished"/>
+        <translation>Restartovat</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="483"/>
         <source>Restart Audacity</source>
         <translation type="unfinished"/>
     </message>
@@ -3797,49 +3864,49 @@ This action will not delete any of your projects.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
         <source>Validate audio plugins</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="36"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Skip this time</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="38"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="44"/>
         <source>Validate</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="48"/>
         <source>Audio plugin validation</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="296"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="306"/>
         <source>The previous session quit unexpectedly.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="297"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="307"/>
         <source>Do you want to restore the session?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="300"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="310"/>
         <source>Restore session</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="94"/>
         <source>Home</source>
-        <translation type="unfinished"/>
+        <translation>Domovská složka</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="99"/>
@@ -3893,7 +3960,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Clip</source>
-        <translation type="unfinished"/>
+        <translation>Klip</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="619"/>
@@ -3985,7 +4052,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="416"/>
         <source>&amp;Effect</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Efekty</translation>
     </message>
 </context>
 <context>
@@ -4162,7 +4229,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="323"/>
         <source>Region</source>
-        <translation type="unfinished"/>
+        <translation>Oblast</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="327"/>
@@ -4202,7 +4269,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="426"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Nástroje</translation>
     </message>
 </context>
 <context>
@@ -4363,7 +4430,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell/dock</name>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="65"/>
         <source>Close</source>
         <translation>Zavřít</translation>
     </message>
@@ -4382,7 +4449,7 @@ This action will not delete any of your projects.</source>
     <name>appshell/gettingstarted</name>
     <message>
         <source>Preferences → Application</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Nastavení → Aplikace</translation>
     </message>
     <message>
         <source>App Updates</source>
@@ -4406,7 +4473,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
         <source>Preferences → General</source>
-        <translation type="unfinished"/>
+        <translation>Nastavení → Obecné</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
@@ -4481,7 +4548,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/PlaybackPage.qml" line="36"/>
         <source>Watch video</source>
-        <translation>Podívat se na obrazový záznam</translation>
+        <translation>Shlédnout video</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="16"/>
@@ -4489,63 +4556,62 @@ This action will not delete any of your projects.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
         <source>Continue with Google</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="31"/>
         <source>Continue with Facebook</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="32"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
         <source>Or use email and password</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="36"/>
         <source>Email</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="39"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="37"/>
         <source>Password</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
         <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
         <source>Don’t have an account?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="41"/>
         <source>Create new account</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="44"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
         <source>Already have an account?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="45"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="49"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="47"/>
         <source>Sign in</source>
         <translation>Přihlásit se</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="46"/>
         <source>Loading…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="50"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
         <source>Create account</source>
         <translation>Vytvořit účet</translation>
     </message>
@@ -4555,33 +4621,33 @@ This action will not delete any of your projects.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="199"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="164"/>
         <source>Email field</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="259"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="224"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="231"/>
         <source>Forgot password</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="301"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
         <source>Password field</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="346"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="311"/>
         <source>Form action</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Sign in link</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Create account link</source>
         <translation type="unfinished"/>
     </message>
@@ -4692,20 +4758,20 @@ This action will not delete any of your projects.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="121"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="122"/>
         <source>Getting started</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Accept &amp; continue</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="145"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="146"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 z %2</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="164"/>
@@ -4878,41 +4944,46 @@ This action will not delete any of your projects.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="49"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="120"/>
         <source>Authorization failed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="62"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="34"/>
         <source>No access token</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="112"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="84"/>
         <source>Not authorized</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="129"/>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="136"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="141"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="148"/>
         <source>Registration failed. Please try again.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="150"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="162"/>
         <source>Incorrect email or password. Please try again.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="158"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="170"/>
         <source>Authentication failed. Please try again.</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="178"/>
+        <source>Could not start the sign-in process. Please try again.</source>
+        <translation>Proces přihlášení se nepodařilo spustit. Zkuste to prosím znovu.</translation>
     </message>
 </context>
 <context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="712"/>
         <source>Edit metadata</source>
         <translation type="unfinished"/>
     </message>
@@ -5151,7 +5222,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PreferencesButtonsPanel.qml" line="50"/>
         <source>Reset preferences</source>
-        <translation type="unfinished"/>
+        <translation>Obnovit nastavení</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="32"/>
@@ -5176,7 +5247,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="33"/>
         <source>Save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Uložit do cloudu</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="43"/>
@@ -5394,7 +5465,7 @@ This action will not delete any of your projects.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="269"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="276"/>
         <source>Don’t show welcome dialog on startup</source>
         <translation type="unfinished"/>
     </message>
@@ -5414,22 +5485,22 @@ This action will not delete any of your projects.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="75"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="77"/>
         <source>Help us decide the future of Audacity</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="78"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="80"/>
         <source>Take part in survey</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="84"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="86"/>
         <source>Soap Voice Cleaner: studio-quality voice-over sound</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="87"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="89"/>
         <source>Get it on MuseHub</source>
         <translation type="unfinished"/>
     </message>
@@ -5439,12 +5510,12 @@ This action will not delete any of your projects.</source>
         <translation>Pokračovat</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="66"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="67"/>
         <source>Explore free plugins for sculpting your audio</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="70"/>
         <source>View free plugins</source>
         <translation type="unfinished"/>
     </message>
@@ -5461,11 +5532,16 @@ This action will not delete any of your projects.</source>
         <source>Decrease BPM</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
+        <source>Time Signature: %1/%2</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>audacity</name>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="712"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="717"/>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
@@ -5475,17 +5551,17 @@ This action will not delete any of your projects.</source>
 <context>
     <name>audio</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>Audio plugins scan completed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>All audio plugins are up to date.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="85"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
         <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
         <source>Validating audio plugins</source>
@@ -5785,20 +5861,18 @@ This action will not delete any of your projects.</source>
         <translation>Zvuk Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
         <source>Error opening recording device.
 Error code: %1</source>
-        <translation>Chyba při otevírání nahrávacího (zvukového) zařízení.
+        <translation type="vanished">Chyba při otevírání nahrávacího (zvukového) zařízení.
 Kód chyby: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="895"/>
         <source>Error</source>
-        <translation>Chyba</translation>
+        <translation type="vanished">Chyba</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1485"/>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1520"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1481"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1516"/>
         <source>Out of memory!</source>
         <translation>Nedostatek paměti!</translation>
     </message>
@@ -6389,7 +6463,7 @@ Zpráva o chybě říká:
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="186"/>
         <source>%1 of %2</source>
         <comment>find clipping</comment>
-        <translation type="unfinished"/>
+        <translation>%1 z %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/Generator.cpp" line="51"/>
@@ -6419,7 +6493,7 @@ Zpráva o chybě říká:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="65"/>
         <source>To plot the spectrum, all selected tracks must have the same sample rate.</source>
-        <translation type="unfinished"/>
+        <translation>Pro vykreslení spektra musí mít všechny vybrané stopy stejný vzorkovací kmitočet.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="66"/>
@@ -6665,12 +6739,12 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
         <source>Select</source>
         <translation>Vybrat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
         <source>Deselect</source>
         <translation type="unfinished"/>
     </message>
@@ -6727,8 +6801,8 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="566"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="700"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
@@ -6739,70 +6813,70 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation>Nejste přihlášen</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="401"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="470"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="487"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="565"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="577"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="582"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="631"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="751"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="402"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="471"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="488"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="566"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="578"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="583"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="633"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="753"/>
         <source>Invalid project</source>
         <extracomment>Error message of a failed cloud operation</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="481"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="544"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="625"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="995"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="482"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="545"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="627"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="997"/>
         <source>Service destroyed</source>
         <extracomment>Error message shown when a cloud operation is interrupted by the application closing</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="500"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="501"/>
         <source>Internal error</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="587"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="593"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="588"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="594"/>
         <source>Project is not saved to the cloud</source>
-        <translation type="unfinished"/>
+        <translation>Projekt v cloudu není uložen</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="600"/>
         <source>Project is not synced with the cloud</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="707"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="709"/>
         <source>Failed to get audio preview upload URLs</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="857"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="859"/>
         <source>Invalid audio ID</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="924"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="926"/>
         <source>Project not found in cloud database</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1007"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1009"/>
         <source>No valid current project</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1070"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1072"/>
         <source>Upload succeeded but payload is missing</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1095"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1097"/>
         <source>Failed to delete cloud project from database</source>
         <translation type="unfinished"/>
     </message>
@@ -6817,112 +6891,110 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1137"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1374"/>
         <source>View on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Zobrazit na audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1346"/>
         <source>Track title</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1347"/>
         <source>Share audio</source>
-        <translation type="unfinished"/>
+        <translation>Sdílet audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1348"/>
         <source>Share</source>
         <translation>Sdílet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1369"/>
         <source>Audio shared to audio.com</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1389"/>
         <source>Sharing audio to audio.com…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1411"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
         <source>Downloading audio from cloud…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1486"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1487"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1491"/>
         <source>Unsaved changes</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1506"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1519"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1512"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1548"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1561"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1574"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1581"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1588"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1542"/>
         <source>Audio preview is up to date</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1543"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1553"/>
         <source>Updating cloud audio preview…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1582"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="736"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="561"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="682"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Save to audio.com</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
         <source>Audio download failed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="849"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="795"/>
         <source>Open audio from cloud</source>
         <translation type="unfinished"/>
     </message>
@@ -6980,7 +7052,7 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="178"/>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="189"/>
         <source>Export failed</source>
-        <translation type="unfinished"/>
+        <translation>Export se nezdařil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="196"/>
@@ -7008,7 +7080,7 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="616"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="617"/>
         <source>Cannot proceed to upload.</source>
         <translation>Nelze pokračovat v nahrávání.</translation>
     </message>
@@ -7034,69 +7106,97 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation>Tím se vytvoří soubor .zip s údaji o nastavení aplikace MuseScore Studio, který vývojářům pomůže diagnostikovat případné problémy. Obsah tohoto souboru můžete zkontrolovat předtím, než jej někomu odešlete.</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>Uložit diagnostické soubory</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
         <source>Show paths…</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
         <source>Show paths</source>
-        <translation type="vanished">Zobrazit cesty</translation>
+        <translation>Zobrazit cesty</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation type="vanished">Zobrazit profiler</translation>
+        <translation>Zobrazit profiler</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation type="vanished">Zobrazit informace o grafice</translation>
+        <translation>Zobrazit informace o grafice</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
         <source>Show navigation tree…</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
         <source>Show navigation tree</source>
-        <translation type="vanished">Zobrazit navigační strom</translation>
+        <translation>Zobrazit navigační strom</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
         <source>Show accessibility tree…</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
         <source>Show accessibility tree</source>
-        <translation type="vanished">Zobrazit dostupné prvky</translation>
+        <translation>Zobrazit dostupné prvky</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
         <source>Dump accessibility tree to console</source>
-        <translation type="vanished">Zobrazit dostupné prvky v terminálu</translation>
+        <translation>Zobrazit dostupné prvky v terminálu</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation type="vanished">Zobrazit rozmístění prvků</translation>
+        <translation>Zobrazit rozmístění prvků</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation type="vanished">Zobrazit historii úprav notosazby</translation>
+        <translation>Zobrazit historii úprav notosazby</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation type="vanished">Zobrazit seznam voleb pro notosazbu a styly</translation>
+        <translation>Zobrazit seznam voleb pro notosazbu a styly</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
         <source>Show actions list</source>
-        <translation type="vanished">Zobrazit seznam akcí</translation>
+        <translation>Zobrazit seznam akcí</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
+        <source>Show commands list</source>
+        <translation>Zobrazit seznam příkazů</translation>
     </message>
     <message>
         <source>Show rcommands list</source>
@@ -7522,7 +7622,7 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="412"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="413"/>
         <source>Applied effect: %1</source>
         <translation>Použitý efekt: %1</translation>
     </message>
@@ -7572,19 +7672,19 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="669"/>
         <source>Generating %1…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="669"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="899"/>
         <source>Effect preview</source>
         <translation type="unfinished"/>
     </message>
@@ -7601,60 +7701,60 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="239"/>
         <source>Master</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="278"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="281"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="319"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="322"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="344"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="347"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="383"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="387"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="391"/>
         <source>Change effect order</source>
         <translation>Změnit pořadí efektu</translation>
     </message>
@@ -7672,7 +7772,7 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
     <message>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="86"/>
         <source>Save as…</source>
-        <translation type="unfinished"/>
+        <translation>Uložit jako…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="56"/>
@@ -7906,7 +8006,7 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation>Typ</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
         <translation type="unfinished"/>
@@ -8102,7 +8202,7 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="75"/>
         <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation type="unfinished"/>
+        <translation>Odstranění praskání je navrženo k odstranění praskání ve zvukových stopách</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
@@ -8154,7 +8254,7 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
 <context>
     <name>effects-effects_base</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="864"/>
         <source>Preparing preview</source>
         <translation>Připravuje se náhled</translation>
     </message>
@@ -8393,17 +8493,17 @@ Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyren
         <translation>Vestavěno</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="104"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="106"/>
         <source>Nyquist Effects</source>
         <translation>Efekty Nyquist</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="109"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="111"/>
         <source>The Audacity Team</source>
         <translation>Tým Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="120"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="122"/>
         <source>Provides Nyquist Effects support to Audacity</source>
         <translation>Poskytuje Audacity podporu pro efekty Nyquist</translation>
     </message>
@@ -10872,33 +10972,33 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Doba trvání</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="181"/>
         <source>Tone/silence ratio</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="230"/>
         <source>Duty cycle</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="234"/>
         <source>%1%</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="244"/>
         <source>Tone duration</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="271"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="248"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="262"/>
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="258"/>
         <source>Silence duration</source>
         <translation type="unfinished"/>
     </message>
@@ -10961,7 +11061,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Obrátit</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
+        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="205"/>
         <source>%1 Hz</source>
         <translation type="unfinished"/>
     </message>
@@ -11103,7 +11203,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="131"/>
         <source>Select all of the audio you want filtered, choose how much noise you want filtered out, and then click “Apply” to reduce noise.</source>
-        <translation type="unfinished"/>
+        <translation>Vyberte veškerý zvuk, který chcete filtrovat, zvolte, kolik šumu chcete odstranit, a poté klikněte na „Použít“, aby se šum potlačil.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
@@ -11551,7 +11651,7 @@ Dejte, prosím, vědět týmu Audacity na https://forum.audacityteam.org/.</tran
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="388"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="443"/>
         <source>Edit mapping</source>
         <translation type="unfinished"/>
     </message>
@@ -11567,8 +11667,8 @@ Dejte, prosím, vědět týmu Audacity na https://forum.audacityteam.org/.</tran
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="714"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="698"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="864"/>
         <source>Export audio</source>
         <translation type="unfinished"/>
     </message>
@@ -11590,82 +11690,107 @@ Dejte, prosím, vědět týmu Audacity na https://forum.audacityteam.org/.</tran
         <translation>Soubor</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="144"/>
+        <source>File name preview</source>
+        <translation>Náhled názvu souboru</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
+        <source>File name prefix</source>
+        <translation>Předpona názvu souboru</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <source>Number files in label order</source>
+        <translation>Číslovat soubory v pořadí štítků</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <source>Number files in track order</source>
+        <translation>Číslovat soubory v pořadí stop</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="232"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="245"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="300"/>
         <source>Format</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="282"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="337"/>
         <source>Audio options</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="299"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="354"/>
         <source>Channels</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="324"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="379"/>
         <source>Mono</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="342"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="397"/>
         <source>Stereo</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="359"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="414"/>
         <source>Custom mapping</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="406"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="461"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="220"/>
         <source>Sample rate</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="451"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="506"/>
         <source>Open custom FFmpeg format options</source>
         <translation>Otevřít vlastní volby pro formát FFmpeg</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="527"/>
         <source>Format:</source>
         <translation>Formát:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="551"/>
         <source>Codec:</source>
         <translation>Kodek:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="588"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="643"/>
         <source>Effective bit rate may vary</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="598"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="653"/>
         <source>Rendering</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="608"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="665"/>
         <source>Trim blank space before first clip</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="682"/>
+        <source>Include audio before first label</source>
+        <translation>Zahrnout zvuk před prvním štítkem</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
@@ -11842,7 +11967,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="17"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation>Editor metadat</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
@@ -11898,7 +12023,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation>Uložit štítky jako</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
@@ -11926,82 +12051,152 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="266"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="325"/>
         <source>All selected audio is muted</source>
-        <translation type="unfinished"/>
+        <translation>Všechen vybraný zvuk je ztlumen.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="454"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="530"/>
+        <source>untitled</source>
+        <translation>Bez názvu</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="573"/>
+        <source>No labels to export.</source>
+        <translation>Žádné štítky k exportu.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="578"/>
+        <source>There are no tracks to export</source>
+        <translation>Nejsou žádné stopy k exportu</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="44"/>
         <source>Other…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>%1 Hz (custom)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
         <source>Export full project audio</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>Export selected audio</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>Export audio in loop region</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="198"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="220"/>
         <source>No loop region</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="199"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="221"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="210"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="232"/>
         <source>No selected audio</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="211"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="233"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
+        <source>No labels</source>
+        <translation>Žádné štítky</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="240"/>
+        <source>Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</source>
+        <translation>Export oblastí se štítky jako oddělených zvukových souborů vyžaduje alespoň jeden štítek na první stopě štítků. Vraťte se do projektu, přidejte štítky a zkuste to znovu.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="334"/>
+        <source>LabelName</source>
+        <extracomment>Placeholder for a label's name in the export file name preview</extracomment>
+        <translation>NázevŠtítku</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="336"/>
+        <source>TrackName</source>
+        <extracomment>Placeholder for a track's name in the export file name preview</extracomment>
+        <translation>NázevStopy</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="558"/>
         <source>Set sample rate</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="699"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
+        <source>Export failed</source>
+        <translation>Export se nezdařil</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="760"/>
         <source>Do you want to overwrite?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="639"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="781"/>
+        <source>Some of the files already exist. Do you want to overwrite them?</source>
+        <translation>Některé soubory již existují. Chcete je přepsat?</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="791"/>
         <source>Overwrite</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="651"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="749"/>
         <source>Export error</source>
         <translation>Chyba při vyvádění</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="715"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="54"/>
+        <source>Full project audio</source>
+        <translation>Zvuk celého projektu</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="55"/>
+        <source>Selected audio</source>
+        <translation>Vybraný zvuk</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="56"/>
+        <source>Audio in loop region</source>
+        <translation>Zvuk v oblasti smyčky</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="57"/>
+        <source>Tracks as separate audio files</source>
+        <translation>Stopy jako oddělené zvukové soubory</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="58"/>
+        <source>Labeled regions as separate audio files</source>
+        <translation>Oblasti se štítky jako oddělené zvukové soubory</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="865"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -12022,34 +12217,33 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
-        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
         <source>Disabled</source>
         <translation>Zakázáno</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="187"/>
         <source>Version:</source>
         <translation>Verze:</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
         <source>Shortcut:</source>
         <extracomment>Keyboard shortcut</extracomment>
         <translation>Klávesová zkratka:</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="54"/>
         <source>Edit shortcut</source>
         <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
         <translation>Upravit klávesovou zkratku</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="99"/>
         <source>Enable</source>
         <translation>Povolit</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="99"/>
         <source>Disable</source>
         <translation>Zakázat</translation>
     </message>
@@ -12069,9 +12263,8 @@ Master effects will be turned back on after export.</source>
         <translation>Přídavný modul není ve správném formátu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
         <source>Manually</source>
-        <translation>Ručně</translation>
+        <translation type="vanished">Ručně</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
@@ -12116,58 +12309,61 @@ Master effects will be turned back on after export.</source>
         <translation>Kód chyby: %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="74"/>
         <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
         <translation>Přídavný modul „%1” je v současné době zakázán. Chcete jej nyní povolit?</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="75"/>
         <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
         <translation>Případně jej můžete kdykoli povolit v nabídce Domů → Zásuvné moduly.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="101"/>
         <source>Composing/arranging tools</source>
         <translation>Nástroje pro komponování/aranžování</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="102"/>
         <source>Color notes</source>
         <translation>Obarvit noty</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="103"/>
         <source>Playback</source>
         <translation>Přehrávání</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="47"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="104"/>
         <source>Lyrics</source>
         <translation>Zpěvní text</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
         <source>Run plugin %1</source>
         <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation>Spustit přídavný modul %1</translation>
+        <translation type="vanished">Spustit přídavný modul %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
         <source>Run plugin %1: %2</source>
         <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation>Spustit zásuvný modul %1: %2</translation>
+        <translation type="vanished">Spustit zásuvný modul %1: %2</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="118"/>
         <source>Not specified</source>
         <extracomment>No version is specified for this plugin.</extracomment>
         <translation>Nestanoveno</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="124"/>
         <source>Not defined</source>
-        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
         <translation>Nedefinováno</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="35"/>
+        <source>Show API dump</source>
+        <translation>Zobrazit výpis API</translation>
     </message>
 </context>
 <context>
@@ -12274,56 +12470,56 @@ Perhaps %1 is not writable or the disk is full.</source>
         <translation>Chyba v souboru</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="48"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="53"/>
         <source>All files</source>
         <translation>Všechny soubory</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="51"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
         <source>AUP3 project files</source>
         <extracomment>an Audacity project is the state of the program, stored as files that can be reopened to resume the session later</extracomment>
         <translation>Soubory projektu AUP3</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="54"/>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="58"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="59"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="63"/>
         <source>Dynamically Linked Libraries</source>
         <translation>Dynamicky propojené knihovny</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
         <source>Dynamic Libraries</source>
         <translation>Dynamické knihovny</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="66"/>
         <source>Text files</source>
         <translation>Textové soubory</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="62"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="67"/>
         <source>XML files</source>
         <translation>Soubory XML</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="108"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>, </source>
         <translation>, </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="118"/>
         <source>%1 files</source>
         <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
         <translation>% souborů</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="143"/>
         <source>(%1)</source>
         <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
         <translation>(%1)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="710"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="758"/>
         <source>
 %1 does not have write permissions.</source>
         <extracomment>%1 is the folder path that is not writable</extracomment>
@@ -12331,7 +12527,7 @@ Perhaps %1 is not writable or the disk is full.</source>
 %1 nemá oprávnění k zápisu.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="712"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="760"/>
         <source>Error</source>
         <translation>Chyba</translation>
     </message>
@@ -12365,11 +12561,11 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
     <name>global</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="146"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="299"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
         <source>OK</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>OK</translation>
@@ -12403,17 +12599,17 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="105"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="155"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="97"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="654"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="728"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="115"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="504"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Zrušit</translation>
@@ -12422,15 +12618,15 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="366"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="108"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="153"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
         <source>Apply</source>
         <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>Použít</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="672"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="746"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <extracomment>Label of the button that starts the export</extracomment>
@@ -12441,7 +12637,7 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
         <source>Close</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Zavřít</translation>
@@ -12449,7 +12645,7 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="114"/>
         <source>Select all</source>
-        <translation type="unfinished"/>
+        <translation>Vybrat vše</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
@@ -12527,19 +12723,19 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Prověřte, prosím, své internetové připojení nebo to zkuste později.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="125"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="127"/>
         <source>Back</source>
         <translation>Zpět</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="136"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Next</source>
         <translation>Další</translation>
     </message>
@@ -12554,7 +12750,7 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="137"/>
         <source>Skip</source>
         <translation type="unfinished"/>
     </message>
@@ -12575,26 +12771,28 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
         <translation>Všechny soubory</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="714"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1368"/>
         <source>Success</source>
         <translation>Úspěch</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="73"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="61"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1373"/>
         <source>Dismiss</source>
-        <translation type="unfinished"/>
+        <translation>Zavřít</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="625"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="640"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Otevřít</translation>
@@ -12606,8 +12804,8 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="727"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1119"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="745"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>Stop</source>
         <translation>Zastavit</translation>
     </message>
@@ -12787,82 +12985,82 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
         <translation><numerusform>%Ln bajt</numerusform><numerusform>%Ln bajty</numerusform><numerusform>%Ln bajtů</numerusform><numerusform>%Ln bajtu</numerusform></translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Save all</source>
         <translation>Uložit vše</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
         <source>Don’t save</source>
         <translation>Neukládat</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
         <source>Yes</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
         <source>Yes to all</source>
         <translation>Ano pro všechny</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
         <source>No</source>
         <translation>Ne</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
         <source>No to all</source>
         <translation>Ne pro všechny</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
         <source>Abort</source>
         <translation>Přerušit</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Retry</source>
         <translation>Opakovat</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Ignore</source>
         <translation>Přehlížet</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Discard</source>
         <translation>Zahodit</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
         <source>Help</source>
         <translation>Nápověda</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
         <source>Reset</source>
         <translation>Obnovit nastavení</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="139"/>
         <source>Continue</source>
         <translation>Pokračovat</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="374"/>
         <source>Checking for updates…</source>
         <translation>Hledají se aktualizace...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="527"/>
         <source>Downloading %1…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="542"/>
         <source>Unpacking %1…</source>
         <translation type="unfinished"/>
     </message>
@@ -14119,7 +14317,7 @@ Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy.</trans
 <context>
     <name>import-export</name>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="123"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="142"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
         <extracomment>Title of the export progress dialog</extracomment>
@@ -15764,7 +15962,7 @@ Libsndfile says “%2”</source>
         <translation>Otevřít %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
         <source>Sorry, we are unable to load these videos right now</source>
         <translation>Omlouváme se, ale tato videa se nám nyní nedaří načíst</translation>
     </message>
@@ -15775,19 +15973,19 @@ Libsndfile says “%2”</source>
         <translation>Učení</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
         <source>Learn tab bar</source>
         <translation>Panel karty Učení</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
         <source>Get started</source>
         <translation>Začínáme</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
         <source>Classes</source>
         <translation>Třídy</translation>
     </message>
@@ -15797,22 +15995,22 @@ Libsndfile says “%2”</source>
         <translation>Přijatý seznam skladeb je prázdný.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
         <source>Marc Sabatella</source>
         <translation>Marc Sabatella</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
         <source>Instructor</source>
         <translation>Učitel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
         <source>Creator, Mastering MuseScore</source>
         <translation>Autor, Mastering MuseScore</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -15829,7 +16027,7 @@ Kromě toho nabízí Mastering MuseScore podpůrnou komunitu hudebníků s prost
 (Poznámka: kurz Mastering MuseScore je k dostupný pouze v angličtině)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Mastering MuseScore</source>
         <translation>Osvojení si MuseScore</translation>
     </message>
@@ -16118,14 +16316,14 @@ Kromě toho nabízí Mastering MuseScore podpůrnou komunitu hudebníků s prost
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="171"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="136"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="175"/>
         <source>Error loading template</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="133"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="172"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="137"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="176"/>
         <source>Unable to load metadata template from given file.</source>
         <translation type="unfinished"/>
     </message>
@@ -16163,12 +16361,12 @@ Kromě toho nabízí Mastering MuseScore podpůrnou komunitu hudebníků s prost
 <context>
     <name>module-manager</name>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="70"/>
         <source>Module Unsuitable</source>
         <translation>Modul nevyhovuje</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="93"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="94"/>
         <source>Unable to load the “%1” module.
 
 Error: %2</source>
@@ -16176,14 +16374,14 @@ Error: %2</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="125"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="126"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="137"/>
         <source>The module “%1” is matched with Audacity version “%2”.
 
 It will not be loaded.</source>
@@ -16191,19 +16389,19 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="159"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="160"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
         <source>Module “%1” found.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="321"/>
         <source>
 
 Only use modules from trusted sources</source>
@@ -16212,49 +16410,49 @@ Only use modules from trusted sources</source>
 Používejte pouze moduly z důvěryhodných zdrojů</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="323"/>
         <source>Yes</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="323"/>
         <source>No</source>
         <translation>Ne</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="325"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="326"/>
         <source>Audacity Module Loader</source>
         <translation>Nahrávač modulů Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="328"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="329"/>
         <source>Try and load this module?</source>
         <translation>Vyzkoušet a nahrát tento modul?</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="353"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="354"/>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="414"/>
         <source>Overwrite the plug-in file %1?</source>
         <translation>Přepsat soubory s přídavným modulem %1?</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="424"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="417"/>
         <source>Plug-in already exists</source>
         <translation>Přídavný modul již existuje</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="447"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="440"/>
         <source>Plug-in file is in use. Failed to overwrite</source>
         <translation>Soubor s přídavným modulem se používá. Nepodařilo se jej přepsat</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="469"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="462"/>
         <source>Failed to register:
 %1</source>
         <extracomment>%1 is the error message explaining why registration failed</extracomment>
@@ -16269,7 +16467,7 @@ It will not be loaded.</source>
         <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="479"/>
         <source>Enable new plug-ins</source>
         <translation>Povolit nové přídavné moduly</translation>
     </message>
@@ -16326,10 +16524,12 @@ It will not be loaded.</source>
 <context>
     <name>multiwindows</name>
     <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
         <translation type="unfinished"/>
     </message>
@@ -16990,7 +17190,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml" line="44"/>
         <source>Time signature</source>
-        <translation type="unfinished"/>
+        <translation>Předznamenání</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="39"/>
@@ -16998,7 +17198,7 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="89"/>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="40"/>
         <source>Volume</source>
         <translation type="unfinished"/>
@@ -17015,7 +17215,7 @@ It will not be loaded.</source>
         <translation>Vyvážení</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="79"/>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
         <source>Playback volume</source>
         <translation type="unfinished"/>
@@ -17068,70 +17268,70 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="155"/>
         <source>No playback device is available.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="156"/>
         <source>“%1” is now used for playback.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="158"/>
         <source>Playback device changed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="163"/>
         <source>No recording device is available.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="164"/>
         <source>“%1” is now used for recording.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="151"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="166"/>
         <source>Recording device changed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1019"/>
         <source>The previous audio state could not be restored.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="996"/>
         <source>Unable to rescan audio devices</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1002"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1004"/>
         <source>Audio devices</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1020"/>
         <source>Unable to change audio settings</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1029"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1031"/>
         <source>Audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Nastavení zvuku</translation>
     </message>
 </context>
 <context>
@@ -17142,7 +17342,7 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="110"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="101"/>
         <source>Loop out</source>
         <translation type="unfinished"/>
     </message>
@@ -17282,7 +17482,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectBehaviorSection.qml" line="29"/>
         <source>Apply effects to all audio when no selection is made</source>
-        <translation type="unfinished"/>
+        <translation>Použít efekty na veškerý zvuk, pokud není nic vybráno</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="14"/>
@@ -17705,7 +17905,7 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="266"/>
         <source>Audio settings</source>
         <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nastavení zvuku</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
@@ -18202,7 +18402,7 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="529"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="530"/>
         <source>Could not save project locally</source>
         <translation type="unfinished"/>
     </message>
@@ -18212,9 +18412,9 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="712"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="825"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
         <source>All supported files</source>
         <translation>Všechny podporované soubory</translation>
     </message>
@@ -18240,188 +18440,188 @@ It will not be loaded.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="397"/>
         <source>Error opening file</source>
         <translation>Chyba při otevírání souboru</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="398"/>
         <source>Could not open file: %1</source>
         <translation>Nelze otevřít soubor: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="721"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="744"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1136"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zavřít</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="738"/>
         <source>Upload project to audio.com…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="826"/>
         <source>Audacity project files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="827"/>
         <source>Audacity 3 files</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="828"/>
         <source>Audacity 4 files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <source>Cloud sync failed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
         <source>Project unavailable</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="586"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="740"/>
         <source>Access denied</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="720"/>
         <source>Version conflict</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="621"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
         <source>Visit audio.com</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="623"/>
         <source>Load latest</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="630"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
         <source>Project incomplete</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="757"/>
         <source>Network error</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1094"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="715"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1131"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="829"/>
         <source>Importable audio and media files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="806"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="856"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="893"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Otevřít</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="875"/>
         <source>Audio files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="876"/>
         <source>Video files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
         <source>Game media files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
         <source>Streaming files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="879"/>
         <source>Animation and image files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="880"/>
         <source>Raw files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="909"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="911"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="915"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="922"/>
         <source>Unsaved changes</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1149"/>
         <source>Resuming sync to audio.com…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1556"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1167"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1598"/>
         <source>Syncing project from cloud…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1291"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1328"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1333"/>
         <source>An error occurred while reading this file.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="747"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="693"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="733"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Uložit do počítače</translation>
@@ -18499,11 +18699,11 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="563"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="564"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="460"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="488"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2290"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2771"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2293"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2774"/>
         <source>Warning</source>
         <translation>Varování </translation>
     </message>
@@ -18527,40 +18727,40 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>(%1): %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="186"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="187"/>
         <source>Failed to set page size for database %1</source>
         <translation>Nepodařilo se nastavit velikost stránky pro databázi %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="195"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="196"/>
         <source>Failed to set safe mode on primary connection to %1</source>
         <translation>Nepodařilo se nastavit nouzový režim na hlavním připojení k %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="213"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="214"/>
         <source>Failed to set safe mode on checkpoint connection to %1</source>
         <translation>Nepodařilo se nastavit nouzový režim při připojení ke kontrolnímu bodu %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="243"/>
         <source>Checkpointing project</source>
         <translation>Kontrola projektu</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="248"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="249"/>
         <source>Checkpointing %1</source>
         <extracomment>%1 is the name of the project being checkpointed</extracomment>
         <translation>Kontrola %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="254"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="255"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
         <source>This may take several seconds</source>
         <translation>To může trvat několik sekund</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="548"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="549"/>
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
@@ -18568,14 +18768,14 @@ Please remove the write protection by checking the file’s properties, ensuring
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="551"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="552"/>
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="638"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="639"/>
         <source>Failed to create savepoint:
 
 %1</source>
@@ -18585,8 +18785,8 @@ Please remove the write protection by checking the file’s properties, ensuring
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="662"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="685"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="663"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="686"/>
         <source>Failed to release savepoint:
 
 %1</source>
@@ -18876,35 +19076,35 @@ Používáte Audacity %2. Pro otevření tohoto souboru bude třeba, abyste prog
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2194"/>
         <source>Unable to parse project information.</source>
         <translation>Nelze zpracovat informace o projektu.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2291"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2294"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2307"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2310"/>
         <source>Saving project</source>
         <translation>Ukládá se projekt</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2309"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2363"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2383"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2425"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2312"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2366"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2386"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2428"/>
         <source>Error Saving Project</source>
         <translation>Chyba při ukládání projektu</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
         <source>Syncing</source>
         <translation>Seřizuje se</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2365"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2368"/>
         <source>The project failed to open, possibly due to limited space
 on the storage device.
 
@@ -18916,7 +19116,7 @@ na úložném zařízení.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2385"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2388"/>
         <source>Unable to remove autosave information, possibly due to limited space
 on the storage device.
 
@@ -18928,12 +19128,12 @@ na úložném zařízení.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2451"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2454"/>
         <source>Backing up project</source>
         <translation>Zálohování projektu</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2770"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2773"/>
         <source>Automatic database backup failed.</source>
         <translation>Automatické zálohování databáze selhalo.</translation>
     </message>
@@ -19062,57 +19262,57 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="432"/>
         <source>Audacity 3 project</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="433"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="438"/>
         <source>Cancel</source>
         <translation>Zrušit</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="495"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="441"/>
         <source>Save as new project</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="444"/>
         <source>Legacy project</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="469"/>
         <source>The project was saved as “%1”</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="472"/>
         <source>Continue</source>
         <translation>Pokračovat</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="475"/>
         <source>Project saved</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1193"/>
         <source>Time Track not supported</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1194"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
-        <translation type="unfinished"/>
+        <translation>Projekt obsahuje časovou stopu, která v Audacity 4 zatím není podporována, a bude nutné ji odstranit. To nijak neovlivní váš původní projekt z Audacity 3.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1198"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -19171,7 +19371,7 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
         <source>Save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Uložit do cloudu</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
@@ -19191,7 +19391,7 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="505"/>
         <source>Save to computer</source>
         <translation>Uložit do počítače</translation>
     </message>
@@ -19219,41 +19419,40 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="483"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Zveřejnit</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>Publish changes online?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="488"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="563"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="499"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="509"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Prověřte, prosím, své internetové připojení nebo to zkuste později.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="508"/>
         <source>Unable to connect to the cloud</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="522"/>
         <source>Unable to connect to Audio.com</source>
         <translation type="unfinished"/>
     </message>
@@ -19313,34 +19512,34 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="858"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="804"/>
         <source>Your audio could not be shared</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="818"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="821"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="823"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="830"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="826"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation type="unfinished"/>
     </message>
@@ -19383,7 +19582,7 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>
         <source>Get effects</source>
-        <translation type="unfinished"/>
+        <translation>Získat efekty</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="52"/>
@@ -19412,8 +19611,8 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml" line="43"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="348"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="355"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="350"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="357"/>
         <source>Customize toolbar</source>
         <extracomment>Tooltip of the toolbar customization button</extracomment>
         <translation type="unfinished"/>
@@ -19429,23 +19628,23 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap</source>
         <extracomment>Noun: label of the snapping control in the playback toolbar</extracomment>
         <translation>Přichytávat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="313"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="315"/>
         <source>Snapping</source>
         <translation>Přichytávání</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="316"/>
         <source>Snap to</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="351"/>
         <source>Show/hide toolbar buttons</source>
         <translation type="unfinished"/>
     </message>
@@ -19461,9 +19660,9 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="15"/>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="434"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="438"/>
         <source>New label track</source>
-        <translation type="unfinished"/>
+        <translation>Nová popisová stopa</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="66"/>
@@ -19565,72 +19764,69 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <translation>Štítek</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="20"/>
         <source>Pan: 100R</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="33"/>
         <source>Pan:</source>
-        <translation>Vyvážení:</translation>
+        <translation type="vanished">Vyvážení:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all master effects</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all effects</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="132"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="136"/>
         <source>Add effect</source>
         <translation>Přidat efekt</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
         <source>Add master effect</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="158"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="162"/>
         <source>Realtime effects are non-destructive and can be changed at any time.</source>
         <translation>Efekty v reálném čase jsou nedestruktivní a lze je kdykoli změnit.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="163"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
         <source>Real-time effects panel</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Panel efektů v reálném čase</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
         <source>Realtime effects</source>
         <translation>Efekty v reálném čase</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="91"/>
         <source>Close real-time effects panel</source>
         <extracomment>Tooltip of the button that closes the panel</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="121"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="149"/>
         <source>Add track</source>
-        <translation type="unfinished"/>
+        <translation>Přidat stopu</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="139"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="129"/>
         <source>Tracks</source>
         <translation>Stopy</translation>
     </message>
@@ -19814,7 +20010,7 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="29"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="30"/>
         <source>Remove effect</source>
         <translation type="unfinished"/>
     </message>
@@ -19834,12 +20030,12 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="695"/>
         <source>Clip name: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="837"/>
         <source>Clip menu</source>
         <translation type="unfinished"/>
     </message>
@@ -19883,28 +20079,28 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="235"/>
         <source>Track %1: %2, audio track, selected</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="235"/>
         <source>Track %1: %2, audio track</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="236"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Press Enter to select or deselect</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
         <source>Track %1: %2, label track, selected</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
         <source>Track %1: %2, label track</source>
         <translation type="unfinished"/>
     </message>
@@ -19963,6 +20159,17 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <source>Cyan</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="55"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="66"/>
+        <source>Timeline</source>
+        <translation>Časová osa</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
+        <source>Pan: %1</source>
+        <translation>Vyvážení: %1</translation>
+    </message>
 </context>
 <context>
     <name>projectscene/silence</name>
@@ -20020,13 +20227,13 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="970"/>
         <source>Record</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Nahrávat</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="971"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="968"/>
         <source>Recorded audio</source>
         <translation type="unfinished"/>
     </message>
@@ -20296,17 +20503,17 @@ Please connect an input device and rescan.</source>
         <translation>Znovu přiřadit klávesovou zkratku</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="38"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>Soubor klávesových zkratek MuseScore Studio</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="193"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
         <source>Import shortcuts</source>
         <translation>Zavést klávesové zkratky</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="205"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
         <source>Export shortcuts</source>
         <translation>Vyvést klávesové zkratky</translation>
     </message>
@@ -20985,10 +21192,12 @@ Please connect an input device and rescan.</source>
 <context>
     <name>testflow</name>
     <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
         <source>Show scripts</source>
-        <translation type="vanished">Zobrazit skripty</translation>
+        <translation>Zobrazit skripty</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
         <source>Show scripts…</source>
         <translation type="unfinished"/>
     </message>
@@ -21011,6 +21220,62 @@ Please connect an input device and rescan.</source>
     </message>
 </context>
 <context>
+    <name>toast</name>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
+        <source>%n hour(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
+        <source>%n minute(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
+        <source>%n second(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="98"/>
+        <source>%1 of %2</source>
+        <translation>%1 z %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="256"/>
+        <source>Dismiss</source>
+        <translation>Zavřít</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="43"/>
+        <source>Error</source>
+        <translation>Chyba</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="45"/>
+        <source>Warning</source>
+        <translation>Varování </translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="47"/>
+        <source>Information</source>
+        <translation>Informace</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="49"/>
+        <source>Success</source>
+        <translation>Úspěch</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="106"/>
+        <source>Press F6 to go to the notification.</source>
+        <translation>Stisknutím F6 přejdete na oznámení.</translation>
+    </message>
+</context>
+<context>
     <name>track</name>
     <message>
         <location filename="../../au3/libraries/au3-track/Track.cpp" line="879"/>
@@ -21025,7 +21290,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="85"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="108"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
@@ -21119,44 +21384,48 @@ Please connect an input device and rescan.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="861"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="897"/>
         <source>Set looping region in/out</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="41"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="42"/>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="48"/>
         <source>Mixing down to mono…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="277"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="278"/>
         <source>Rendering pitch and speed…</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1413"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1368"/>
         <source>Mix down to mono</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1414"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1369"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1573"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1576"/>
         <source>Combine mono tracks to stereo</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1574"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1577"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
 
 Do you wish to continue?</source>
-        <translation type="unfinished"/>
+        <translation>Stopy, které se pokoušíte sloučit do stereo formátu, obsahují klipy na různých pozicích nebo se jinak neshodují. Jejich sloučením dojde k zapečení stop.
+
+To způsobí, že se na vlnovou křivku aplikují všechny efekty a skrytá data budou odstraněna. Navíc se celá stopa stane jedním velkým klipem.
+
+Chcete pokračovat?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="21"/>
@@ -21165,39 +21434,39 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="827"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="850"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="873"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="904"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="833"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="856"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="879"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="910"/>
         <source>No audio selected</source>
         <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="828"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="851"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="874"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="905"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="834"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="857"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="880"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="911"/>
         <source>Select the audio to delete and try again.</source>
         <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1340"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1354"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1368"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1346"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1360"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1374"/>
         <source>Paste error</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2091"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2097"/>
         <source>Set rate</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2250"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2267"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resample track</source>
         <translation type="unfinished"/>
     </message>
@@ -21266,7 +21535,7 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="656"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="687"/>
         <source>Changed Speed</source>
         <translation type="unfinished"/>
     </message>
@@ -21315,13 +21584,13 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
         <source>Cut</source>
         <translation>Vyjmout</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
         <source>Remove multiple items</source>
         <translation type="unfinished"/>
     </message>
@@ -21332,15 +21601,15 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Remove</source>
         <translation>Odebrat</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1156"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1137"/>
         <source>Delete</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Smazat</translation>
@@ -21351,369 +21620,374 @@ Do you wish to continue?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="392"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
         <source>Items moved</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="395"/>
         <source>Clip moved</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="396"/>
         <source>Move clip</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="393"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
         <source>Move items</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="398"/>
+        <source>Label moved</source>
+        <translation>Štítek přesunut</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="399"/>
+        <source>Move label</source>
+        <translation>Přesunout štítek</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
         <source>Split</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Rozdělit</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
         <source>Split clips at silence</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
         <source>Split at silence</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="473"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="495"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="504"/>
         <source>Split into new track</source>
-        <translation type="unfinished"/>
+        <translation>Rozdělit do nové stopy</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
         <source>Split-cut to the clipboard</source>
         <translation>Vyjmout a rozdělit a zkopírovat do schránky</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
         <source>Split cut</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
         <source>Trim items left</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
         <source>Trim clip left</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="596"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="605"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="627"/>
         <source>Trim</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
         <source>Trim items right</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
         <source>Trim clip right</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="688"/>
         <source>Changed speed to: %1%</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Stretch Left</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
         <source>Stretch items left</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
         <source>Stretch clips left</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Stretch Right</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
         <source>Stretch items right</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
         <source>Stretch clips right</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
         <source>Created new mono track</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
         <source>New mono track</source>
-        <translation type="unfinished"/>
+        <translation>Nová mono stopa</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
         <source>Created new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Vytvořena nová stereo stopa</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
         <source>New stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Nová stereo stopa</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
         <source>Created label track</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
         <source>New label track</source>
-        <translation type="unfinished"/>
+        <translation>Nová popisová stopa</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="712"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="743"/>
         <source>Delete track</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="721"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
         <source>Duplicate track</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="761"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="768"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>Přesunout stopu</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="815"/>
         <source>Insert silence</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="839"/>
         <source>Clips grouped</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="845"/>
         <source>Clips ungrouped</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="856"/>
         <source>Changed track format</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="865"/>
         <source>Changed track rate</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="874"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="875"/>
         <source>Swapped stereo channels</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="884"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="885"/>
         <source>Split stereo tracks to L/R mono</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="895"/>
         <source>Split stereo tracks to center mono</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
         <source>Make stereo track</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resampled audio track(s)</source>
         <translation>Převzorkovaná zvuková stopa(y)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Label added</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Add label</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
         <source>Label title changed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
         <source>Changed label title</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="950"/>
         <source>Label low frequency changed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Change label low frequency</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="960"/>
         <source>Label high frequency changed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
         <source>Change label high frequency</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
         <source>Cut label</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
         <source>Remove label</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Remove multiple labels</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Move labels</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
         <source>Move</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Labels moved</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
         <source>Label stretched</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
         <source>Stretch label left</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
         <source>Stretch labels left</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1111"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1092"/>
         <source>Stretch</source>
         <translation>Protáhnout</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
         <source>Stretch label right</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
         <source>Stretch labels right</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1112"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1115"/>
         <source>Join</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Spojit</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1120"/>
         <source>Duplicated</source>
         <translation>Zdvojeno</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1122"/>
         <source>Duplicate</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Zdvojit</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Split-deleted clips</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Split delete</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1135"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation type="unfinished"/>
@@ -21729,17 +22003,17 @@ Do you wish to continue?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="458"/>
         <source>Tempo changed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="463"/>
         <source>Upper time signature changed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="468"/>
         <source>Lower time signature changed</source>
         <translation type="unfinished"/>
     </message>
@@ -21814,32 +22088,32 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="63"/>
         <source>All clips on the same track move back to fill the gap</source>
-        <translation type="unfinished"/>
+        <translation>Všechny klipy na stejné stopě se posunou dozadu, a zaplní mezeru</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="65"/>
         <source>All clips on all tracks move back to fill the gap</source>
-        <translation type="unfinished"/>
+        <translation>Všechny klipy na všech stopách se posunou dozadu, a zaplní mezeru</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="76"/>
         <source>Leave gap</source>
-        <translation type="unfinished"/>
+        <translation>Nechat mezeru</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="79"/>
         <source>Close gap (ripple)</source>
-        <translation type="unfinished"/>
+        <translation>Zavřít mezeru (kaskáda)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="61"/>
         <source>Pasting audio pushes other clips on the same track</source>
-        <translation type="unfinished"/>
+        <translation>Vložení zvuku posune ostatní klipy na stejné stopě</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="63"/>
         <source>Pasting audio pushes all clips on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>Vložení zvuku posune všechny klipy na všech stopách</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="74"/>
@@ -21902,7 +22176,7 @@ Do you wish to continue?</source>
 <context>
     <name>ui</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="219"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="274"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
         <source>Browse</source>
         <translation>Procházet</translation>
@@ -21952,7 +22226,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -21961,7 +22235,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -22036,17 +22310,18 @@ Do you wish to continue?</source>
         <translation>Hodnota</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="160"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
         <translation>Záhlaví panelu seznamu hodnot</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="254"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
         <translation>Panel seznamu hodnot</translation>
@@ -22101,10 +22376,12 @@ Do you wish to continue?</source>
         <translation>směr je obojí</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
         <translation type="unfinished"/>
     </message>
@@ -22360,14 +22637,30 @@ Do you wish to continue?</source>
 <context>
     <name>update</name>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="85"/>
+        <source>A new update is ready to install</source>
+        <translation>Nová aktualizace je připravena k instalaci</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="86"/>
         <source>A new version of %1 is available!</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="97"/>
+        <source>%1 has downloaded an update and is ready to install. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
+        <translation>%1 stáhl aktualizaci a je připraven ji nainstalovat. %1 se restartuje, aby se instalace dokončila. Pokud máte neuložené změny, budete nejprve vyzváni k jejich uložení.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="110"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="132"/>
         <source>Release notes</source>
         <translation>Poznámky k vydání</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="131"/>
+        <source>%1 Release notes</source>
+        <translation>Poznámky k vydání %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
@@ -22380,9 +22673,13 @@ Do you wish to continue?</source>
         <translation>Připomenout později</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="89"/>
+        <source>Update now</source>
+        <translation>Aktualizovat nyní</translation>
+    </message>
+    <message>
         <source>Install update</source>
-        <translation>Nainstalovat aktualizaci</translation>
+        <translation type="vanished">Nainstalovat aktualizaci</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22390,37 +22687,55 @@ Do you wish to continue?</source>
         <translation>Přečtěte si poznámky k verzi %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="136"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="143"/>
         <source>You’re up to date!</source>
         <translation>Jste aktuální!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="175"/>
         <source>Cannot connect to server</source>
         <translation>Nelze se připojit k serveru</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="176"/>
         <source>Sorry - please try again later</source>
         <translation>Promiňte – zkuste to prosím později</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="178"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="190"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="188"/>
+        <source>Not enough disk space</source>
+        <translation>Nedostatek místa na disku</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="265"/>
+        <source>%1 has downloaded an update and is ready to install it. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
+        <translation>%1 stáhl aktualizaci a je připraven ji nainstalovat. %1 se restartuje, aby se instalace dokončila. Pokud máte neuložené změny, budete nejprve vyzváni k jejich uložení.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="272"/>
+        <source>Restart</source>
+        <translation>Restartovat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="302"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="308"/>
         <source>Close</source>
         <translation>Zavřít</translation>
     </message>
@@ -22435,22 +22750,65 @@ Do you wish to continue?</source>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="65"/>
+        <source>Updated successfully</source>
+        <translation>Úspěšně aktualizováno</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="53"/>
+        <source>Update available</source>
+        <translation>Je k dispozici aktualizace</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="87"/>
+        <source>See details</source>
+        <translation>Zobrazit podrobnosti</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="97"/>
+        <source>Update</source>
+        <translation>Aktualizovat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="375"/>
+        <source>Free up at least %1 MB of disk space and try again.</source>
+        <translation>Uvolněte alespoň %1 MB místa na disku a zkuste to znovu.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="546"/>
+        <source>Installing %1</source>
+        <translation>Instaluje se %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="547"/>
+        <source>Installing %1 %2</source>
+        <translation>Instaluje se %1 %2</translation>
+    </message>
 </context>
 <context>
     <name>vst</name>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
         <source>Use old view</source>
-        <translation type="vanished">Použít staré zobrazení</translation>
+        <translation>Použít staré zobrazení</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
         <source>Use new view</source>
-        <translation type="vanished">Použít nové zobrazení</translation>
+        <translation>Použít nové zobrazení</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
         <translation type="unfinished"/>
     </message>
@@ -22469,48 +22827,48 @@ Do you wish to continue?</source>
         <translation>Podskupiny: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="115"/>
         <source>Searching VST3 in: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="162"/>
         <source>VST3 Effects</source>
         <translation>Efekty VST3</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="166"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="167"/>
         <source>The Audacity Team</source>
         <translation>Tým Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="176"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="177"/>
         <source>Adds the ability to use VST3 effects in Audacity.</source>
         <translation>Přidá schopnost použít efekty VST3 v Audacity.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="274"/>
         <source>Looking in: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="343"/>
         <source>VST3 module error: %1</source>
         <translation>Chyba v modulu VST3: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="752"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="758"/>
         <source>Unable to apply VST3 preset file %1</source>
         <translation>Nelze použít soubor s přednastavením VST3 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="753"/>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="770"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="759"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="776"/>
         <source>Error</source>
         <translation>Chyba</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="769"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="775"/>
         <source>Failed to save VST3 preset to file</source>
         <translation>Nepodařilo se uložit přednastavení VST3 do souboru</translation>
     </message>
@@ -22576,7 +22934,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2823"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2828"/>
         <source>A track has a corrupted sample sequence.</source>
         <translation>Skladba obsahuje poškozenou sekvenci vzorků.</translation>
     </message>
@@ -22607,41 +22965,49 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Lineární (dB)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="211"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="227"/>
         <source>-36 dB (shallow range for high-amplitude editing)</source>
         <translation>-36 dB (dynamika audiokazety - mělký rozsah pro vysokofrekvenční úpravy)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="213"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
         <translation>-48 dB (dynamika 8 bitových vzorků)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="215"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
         <translation>-60 dB (dynamika 10 bitových vzorků)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="217"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
         <translation>-72 dB (dynamika 12 bitových vzorků)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="219"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
         <translation>-84 dB (dynamika 14 bitových vzorků)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="221"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
         <translation>-96 dB (dynamika 16 bitových vzorků)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="223"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
         <source>-120 dB (approximate limit of human hearing)</source>
         <translation>-120 dB (přibližná mez lidského sluchu)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="225"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
         <translation>-145 dB (dynamika 24 bitových vzorků)</translation>
@@ -22650,7 +23016,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
 <context>
     <name>workspace</name>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="79"/>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
         <source>Remove</source>
         <translation>Odebrat</translation>
@@ -22687,6 +23053,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces</source>
         <translation>Upravit pracovní plochy</translation>
     </message>
@@ -22750,20 +23117,25 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
         <source>Select workspace</source>
-        <translation type="vanished">Vybrat pracovní plochu</translation>
+        <translation>Vybrat pracovní plochu</translation>
     </message>
     <message>
         <source>Edit workspaces…</source>
         <translation type="vanished">Upravit pracovní plochy…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
         <source>Create new workspace</source>
-        <translation type="vanished">Vytvořit novou pracovní plochu</translation>
+        <translation>Vytvořit novou pracovní plochu</translation>
     </message>
 </context>
 <context>

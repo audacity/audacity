@@ -4,12 +4,12 @@
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="72"/>
         <source>Meter style</source>
-        <translation>Kiểu hiển thị thanh đo</translation>
+        <translation>Kiểu Thanh đo</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="108"/>
         <source>Meter type</source>
-        <translation>Loại thanh đo</translation>
+        <translation>Loại Thanh đo</translation>
     </message>
 </context>
 <context>
@@ -17,7 +17,7 @@
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
         <source>Enabled</source>
-        <translation>Đã bật</translation>
+        <translation>Đã Bật</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
@@ -30,7 +30,7 @@
     <message>
         <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
         <source>%1 panel</source>
-        <translation>%1 bảng</translation>
+        <translation>%1 Bảng</translation>
     </message>
 </context>
 <context>
@@ -51,63 +51,79 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="61"/>
         <source>&amp;Full screen</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Toàn màn hình</translation>
+        <translation>&amp;Toàn Màn hình</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="238"/>
+        <source>Shift+&amp;Enter</source>
+        <translation>Shift+&amp;Enter</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
+        <source>Trigger the focused control or make a range selection of track items</source>
+        <translation>Kích hoạt Điều khiển Lựa chọn hoặc Chọn Phạm vi Các Mục Track</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
+        <source>Open item context menu</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Chuột Phải - Menu Ngữ cảnh </translation>
     </message>
     <message>
         <source>Full screen</source>
-        <translation type="vanished">Toàn màn hình</translation>
+        <translation type="vanished">Toàn Màn hình</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
         <source>About &amp;Qt…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Giới thiệu về &amp;Qt</translation>
+        <translation>Giới thiệu về &amp;Qt...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
         <source>Online &amp;handbook</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Hướng dẫn trực tuyến</translation>
+        <translation>&amp;Hướng dẫn Trực tuyến</translation>
     </message>
     <message>
         <source>Open online handbook</source>
-        <translation type="vanished">Mở hướng dẫn trực tuyến</translation>
+        <translation type="vanished">Mở Hướng dẫn Trực tuyến</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="90"/>
         <source>As&amp;k for help</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Yêu cầu trợ giúp</translation>
+        <translation>&amp;Yêu cầu Trợ giúp</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="96"/>
         <source>Revert to &amp;factory settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Khôi phục &amp;cài đặt gốc</translation>
+        <translation>Khôi phục &amp;Cài đặt Gốc</translation>
     </message>
     <message>
         <source>Revert to factory settings</source>
-        <translation type="vanished">Khôi phục cài đặt gốc</translation>
+        <translation type="vanished">Khôi phục Cài đặt Gốc</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
         <source>Restore the &amp;default layout</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Khôi phục bố cục &amp;mặc định</translation>
+        <translation>Khôi phục Bố cục &amp;Mặc định</translation>
     </message>
     <message>
         <source>Restore the default layout</source>
-        <translation type="vanished">Khôi phục bố cục mặc định</translation>
+        <translation type="vanished">Khôi phục Bố cục Mặc định</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
         <source>&amp;Playback controls</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Bộ điều khiển &amp;phát lại</translation>
+        <translation>Bộ Điều khiển &amp;Phát lại</translation>
     </message>
     <message>
         <source>Show/hide playback controls</source>
-        <translation type="vanished">Hiện/Ẩn bộ điều khiển phát lại</translation>
+        <translation type="vanished">Hiện/Ẩn Bộ Điều khiển Phát lại</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
@@ -117,7 +133,7 @@
     </message>
     <message>
         <source>Show/hide tracks</source>
-        <translation type="vanished">Hiện/Ẩn tracks</translation>
+        <translation type="vanished">Hiện/Ẩn Tracks</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="70"/>
@@ -129,11 +145,11 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="136"/>
         <source>&amp;Status bar</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Thanh trạng thái</translation>
+        <translation>&amp;Thanh Trạng thái</translation>
     </message>
     <message>
         <source>Show/hide status bar</source>
-        <translation type="vanished">Hiện/Ẩn thanh trạng thái</translation>
+        <translation type="vanished">Hiện/Ẩn Thanh Trạng thái</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
@@ -143,14 +159,14 @@
     </message>
     <message>
         <source>Preferences…</source>
-        <translation type="vanished">Tùy chọn</translation>
+        <translation type="vanished">Tùy chọn...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="33"/>
         <source>Copy</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chép</translation>
+        <translation>Sao chép</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
@@ -238,7 +254,7 @@
     </message>
     <message>
         <source>Trigger the focused control or select the focused track item</source>
-        <translation type="vanished">Kích hoạt điều khiển đang chọn hoặc chọn mục track tương ứng</translation>
+        <translation type="vanished">Kích hoạt Điều khiển Lựa chọn hoặc Chọn Mục Track Tương ứng</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
@@ -255,7 +271,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
         <source>Silence audio</source>
-        <translation>Tắt tiếng audio</translation>
+        <translation>Tắt Âm Audio</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
@@ -273,37 +289,37 @@
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
         <source>Repeat last effect</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lặp lại hiệu ứng trước đó</translation>
+        <translation>Lặp lại Hiệu ứng Trước</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="33"/>
         <source>Remove realtime effect</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Loại bỏ hiệu ứng thời gian thực</translation>
+        <translation>Loại bỏ Hiệu ứng Thời gian thực</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="41"/>
         <source>&amp;Apply preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Áp dụng cài đặt có sẵn</translation>
+        <translation>&amp;Áp dụng Cài đặt có sẵn</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="47"/>
         <source>Save preset as…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lưu cài đặt có sẵn thành...</translation>
+        <translation>Lưu Cài đặt có sẵn thành...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="53"/>
         <source>&amp;Save preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Lưu cài đặt có sẵn</translation>
+        <translation>&amp;Lưu Cài đặt có sẵn</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="59"/>
         <source>&amp;Delete preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Xóa cài đặt có sẵn</translation>
+        <translation>&amp;Xóa Cài đặt có sẵn</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
@@ -313,7 +329,7 @@
     </message>
     <message>
         <source>Import preset</source>
-        <translation type="vanished">Nhập cài đặt có sẵn</translation>
+        <translation type="vanished">Nhập Cài đặt có sẵn</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
@@ -323,7 +339,7 @@
     </message>
     <message>
         <source>Export preset</source>
-        <translation type="vanished">Xuất cài đặt có sẵn</translation>
+        <translation type="vanished">Xuất Cài đặt có sẵn</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
@@ -335,33 +351,33 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
         <source>Play/Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Phát / Dừng</translation>
+        <translation>Phát/Dừng</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Phát/Tạm dừng từ vị trí con trỏ</translation>
+        <translation type="vanished">Phát/Tạm dừng từ Con trỏ</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="65"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="66"/>
         <source>Play selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Phát vùng chọn</translation>
+        <translation>Phát Vùng chọn</translation>
     </message>
     <message>
         <source>Play the selected time range</source>
-        <translation type="vanished">Phát khoảng thời gian đã chọn</translation>
+        <translation type="vanished">Phát Vùng Thời gian Đã Chọn</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="73"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
         <source>Pause</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tạm dừng</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="82"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
         <source>Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -369,201 +385,243 @@
     </message>
     <message>
         <source>Stop playback</source>
-        <translation type="vanished">Dừng trình phát lại</translation>
+        <translation type="vanished">Dừng Trình phát lại</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="91"/>
         <source>Rewind to start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tua lại về đầu</translation>
+        <translation>Tua về Đầu</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="103"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="100"/>
         <source>Rewind to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tua lại về đoạn cuối</translation>
+        <translation>Tua về Cuối</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="109"/>
         <source>Loop playback</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Phát lặp lại</translation>
+        <translation>Phát Lặp lại</translation>
     </message>
     <message>
         <source>Toggle ‘Loop playback’</source>
-        <translation type="vanished">Chuyển đổi &apos;chế độ phát lặp lại&apos;</translation>
+        <translation type="vanished">Bật/Tắt &apos;Phát Lặp lại&apos;</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
         <source>Audio setup</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thiết lập audio</translation>
+        <translation>Thiết lập Audio</translation>
     </message>
     <message>
         <source>Open audio setup context menu</source>
-        <translation type="vanished">Mở menu cài đặt âm thanh</translation>
+        <translation type="vanished">Mở Mục Cài đặt Audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="128"/>
         <source>Get effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lấy hiệu ứng</translation>
+        <translation>Lấy Hiệu ứng</translation>
     </message>
     <message>
         <source>Open Get effects dialog</source>
-        <translation type="vanished">Mở hộp thoại Lấy hiệu ứng</translation>
+        <translation type="vanished">Mở Hộp thoại Lấy Hiệu ứng</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="137"/>
         <source>Audio settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thiết lập audio</translation>
+        <translation>Cài đặt Audio</translation>
     </message>
     <message>
         <source>Open audio setup dialog</source>
-        <translation type="vanished">Mở hộp thoại Thiết lập audio</translation>
+        <translation type="vanished">Mở Hộp thoại Thiết lập Audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="145"/>
         <source>Rescan audio devices</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Quét lại thiết bị audio</translation>
+        <translation>Quét lại Thiết bị Audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="156"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="153"/>
         <source>Metronome</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Bộ gõ nhịp</translation>
     </message>
     <message>
         <source>Toggle metronome playback</source>
-        <translation type="vanished">Chuyển đổi trình phát của bộ gõ nhịp</translation>
+        <translation type="vanished">Bật/Tắt Trình phát Bộ gõ nhịp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="166"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="163"/>
         <source>Timecode</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Mã thời gian</translation>
     </message>
     <message>
         <source>Set playback time</source>
-        <translation type="vanished">Thiết lập thời gian phát</translation>
+        <translation type="vanished">Đặt Thời gian Phát</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="172"/>
         <source>Tempo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Nhịp độ</translation>
     </message>
     <message>
         <source>Set playback tempo</source>
-        <translation type="vanished">Thiết lập nhịp độ phát</translation>
+        <translation type="vanished">Thiết lập Nhịp độ Phát</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="184"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
         <source>Time signature</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Số chỉ nhịp</translation>
+        <translation>Nhịp điệu</translation>
     </message>
     <message>
         <source>Set playback time signature</source>
-        <translation type="vanished">Cài đặt số chỉ nhịp khi phát lại âm thanh</translation>
+        <translation type="vanished">Đặt Nhịp điệu Khi Phát lại</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="190"/>
         <source>Playback level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Mức âm lượng âm thanh khi phát</translation>
+        <translation>Mức Âm Phát lại</translation>
     </message>
     <message>
         <source>Set playback level</source>
-        <translation type="vanished">Cài đặt mức âm lượng âm thanh khi phát</translation>
+        <translation type="vanished">Đặt Mức Âm Phát lại</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
+        <source>Play/Stop and set cursor</source>
+        <translation>Phát/Dừng và Đặt Con trỏ</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
         <source>Change audio host</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thay đổi trình chủ âm thanh</translation>
+        <translation>Đổi Máy chủ Âm thanh</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="211"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="208"/>
         <source>Change playback device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thay đổi thiết bị phát lại</translation>
+        <translation>Đổi Thiết bị Phát lại</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="220"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
         <source>Change recording device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thay đổi thiết bị ghi âm</translation>
+        <translation>Đổi Thiết bị Ghi âm</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="229"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="226"/>
         <source>Change input channels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thay đổi kênh đầu vào</translation>
+        <translation>Đổi Kênh Vào</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="238"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="235"/>
         <source>Toggle loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chuyển đổi chế độ phát vòng lặp</translation>
+        <translation>Bật/Tắt Chế độ Phát Vòng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="247"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="244"/>
         <source>Clear loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Xóa chế độ phát vòng lặp</translation>
+        <translation>Xóa Chế độ Phát Vòng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="255"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="252"/>
         <source>Set loop region to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cài đặt vùng lặp theo vùng đã chọn</translation>
+        <translation>Đặt Vùng lặp theo Lựa chọn</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="263"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="260"/>
         <source>Set selection to loop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chọn vùng lặp</translation>
+        <translation>Chọn Vùng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="271"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="268"/>
         <source>Set loop region in out</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cài đặt điểm đầu và điểm cuối của vùng lặp</translation>
+        <translation>Đặt Phạm vi của Vùng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="279"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="276"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tạo vùng lặp và chọn audio</translation>
+        <translation>Tạo Vùng lặp và Chọn Audio</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="284"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="285"/>
+        <source>Mute/unmute focused track</source>
+        <translation>Bật/Tắt Âm Track Đang Chọn</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
-        <source>Play repeats</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Phát lặp lại</translation>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="292"/>
+        <source>Solo/unsolo focused track</source>
+        <translation>Bật/Tắt Solo Track Đang Chọn</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="301"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="298"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="299"/>
+        <source>Mute all tracks</source>
+        <translation>Tắt Âm Tất cả Track</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="305"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="306"/>
+        <source>Unmute all tracks</source>
+        <translation>Bật Âm Tất cả Track</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="312"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="313"/>
+        <source>Mute selected tracks</source>
+        <translation>Tắt Âm Mọi Track Đã Chọn</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="319"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="320"/>
+        <source>Unmute selected tracks</source>
+        <translation>Bật Âm Mọi Track Đã Chọn</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="330"/>
+        <source>Play repeats</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Phát Lặp lại</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="340"/>
         <source>Pan automatically</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dịch chuyển âm thanh tự động</translation>
+        <translation>Di chuyển Âm Tự động</translation>
     </message>
     <message>
         <source>Pan automatically during playback</source>
-        <translation type="vanished">Dịch chuyển âm thanh tự động khi phát lại</translation>
+        <translation type="vanished">Di chuyển Âm Tự động Khi Phát lại</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
         <source>&amp;New…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Mới...</translation>
+        <translation>&amp;Tạo Mới...</translation>
     </message>
     <message>
         <source>New…</source>
-        <translation type="vanished">Mới...</translation>
+        <translation type="vanished">Tạo Mới...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
@@ -579,11 +637,11 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
         <source>Open recent</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Mở phần mới nhất</translation>
+        <translation>Mở Phần Mới nhất</translation>
     </message>
     <message>
         <source>Open recent project</source>
-        <translation type="vanished">Mở dự án gần đây</translation>
+        <translation type="vanished">Mở Dự án Gần đây</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
@@ -597,11 +655,11 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
         <source>&amp;Clear recent files</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Xóa các tệp gần đây</translation>
+        <translation>&amp;Xóa Các Tệp Gần đây</translation>
     </message>
     <message>
         <source>Clear recent files</source>
-        <translation type="vanished">Xóa các tệp gần đây</translation>
+        <translation type="vanished">Xóa Các Tệp Gần đây</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
@@ -617,11 +675,11 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="125"/>
         <source>&amp;Export labels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Nhãn xuất khẩu</translation>
+        <translation>&amp;Nhãn Xuất</translation>
     </message>
     <message>
         <source>Export labels</source>
-        <translation type="vanished">Nhãn xuất khẩu</translation>
+        <translation type="vanished">Nhãn Xuất</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
@@ -631,17 +689,17 @@
     </message>
     <message>
         <source>Export MIDI</source>
-        <translation type="vanished">Xuất  MIDI</translation>
+        <translation type="vanished">Xuất MIDI</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
         <source>&amp;Close project</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Đóng dự án</translation>
+        <translation>&amp;Đóng Dự án</translation>
     </message>
     <message>
         <source>Close project</source>
-        <translation type="vanished">Đóng dự án</translation>
+        <translation type="vanished">Đóng Dự án</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
@@ -662,108 +720,108 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
         <source>Trim clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Xén clip</translation>
+        <translation>Xén Clip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="175"/>
         <source>Split into new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tách thành track mới</translation>
+        <translation>Tách Thành Track Mới</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
         <source>Paste new label</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dán nhãn mới</translation>
+        <translation>Dán Nhãn Mới</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
         <source>Manage labels</source>
-        <translation>Quản lý nhãn</translation>
+        <translation>Quản lý Nhãn</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="296"/>
         <source>Metadata editor</source>
-        <translation>Trình chỉnh sửa siêu dữ liệu</translation>
+        <translation>Trình sửa Siêu dữ liệu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="192"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <source>Select all</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chọn tất cả</translation>
+        <translation>Chọn Tất cả</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
         <source>Select all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chọn tất cả tracks</translation>
+        <translation>Chọn Tất cả Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <source>Left of playback position</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Phần nằm bên trái của trình phát lại</translation>
+        <translation>Phần Bên Trái Trình phát lại</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="216"/>
         <source>Right of playback position</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Phần nằm bên phải của trình phát lại</translation>
+        <translation>Phần Bên Phải Trình phát lại</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="224"/>
         <source>Track start to cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Điểm đầu của track đến con trỏ </translation>
+        <translation>Điểm Đầu Track đến Con trỏ </translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="232"/>
         <source>Cursor to track end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Từ con trỏ đến đoạn cuối track</translation>
+        <translation>Từ Con trỏ đến Cuối Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
         <source>Track start to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Điểm đầu đến điểm cuối của track</translation>
+        <translation>Từ Đầu Track đến Cuối Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="248"/>
         <source>Previous clip boundary to cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ranh giới clip trước đến con trỏ</translation>
+        <translation>Ranh giới Clip Trước đến Con trỏ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="256"/>
         <source>Cursor to next clip boundary</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Di chuyển con trỏ đến ranh giới clip tiếp theo</translation>
+        <translation>Di chuyển Con trỏ đến Ranh giới Clip Tiếp theo</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
         <source>Previous clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Clip trước đó</translation>
+        <translation>Clip Trước đó</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
         <source>Next clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Clip tiếp theo</translation>
+        <translation>Clip Tiếp theo</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
         <source>Toggle spectral selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chuyển đổi lựa chọn âm phổ</translation>
+        <translation>Bật/Tắt Lựa chọn Âm phổ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="288"/>
         <source>Move cursor to closest zero crossing</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Di chuyển con trỏ đến điểm cắt 0 gần nhất</translation>
+        <translation>Di chuyển Con trỏ đến Điểm cắt 0 Gần nhất</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="41"/>
@@ -781,67 +839,67 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="59"/>
         <source>Zoom default</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thu phóng mặc định</translation>
+        <translation>Thu Phóng Mặc định</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="67"/>
         <source>Zoom to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thu phóng vùng chọn</translation>
+        <translation>Thu Phóng Vùng chọn</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="85"/>
         <source>Zoom toggle</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chuyển đổi thu phóng</translation>
+        <translation>Chuyển đổi Thu Phóng</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
         <source>Collapse all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Gộp các tracks</translation>
+        <translation>Gộp Các Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="306"/>
         <source>Expand all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Mở rộng các tracks</translation>
+        <translation>Mở rộng Các Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
         <source>Skip to selection start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chuyển đến điểm bắt đầu vùng chọn</translation>
+        <translation>Đi đến Điểm Đầu Vùng chọn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="322"/>
         <source>Skip to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chuyển đến điểm kết thúc vùng chọn</translation>
+        <translation>Đi đến Điểm Cuối Vùng chọn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
         <source>Show metadata editor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị trình chỉnh sửa siêu dữ liệu</translation>
+        <translation>Hiện Trình sửa Siêu dữ hiệu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="347"/>
         <source>Show history</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị lịch sử</translation>
+        <translation>Hiện Lịch sử</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
         <source>Record on current track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ghi âm vào track hiện tại</translation>
+        <translation>Ghi âm vào Track Hiện tại</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
         <source>Record on new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ghi âm vào track mới</translation>
+        <translation>Ghi âm vào Track Mới</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
@@ -853,13 +911,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
         <source>Enable sound activating recording</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kích hoạt ghi âm theo âm thanh</translation>
+        <translation>Bật Ghi âm theo Âm thanh</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="374"/>
         <source>Set sound activation level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cài đặt mức kích hoạt bằng âm thanh</translation>
+        <translation>Đặt Mức Kích hoạt bằng Âm thanh</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
@@ -877,43 +935,43 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
         <source>Align end to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đồng bộ toàn diện</translation>
+        <translation>Đồng bộ Toàn diện</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="416"/>
         <source>Align together</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đồng bộ với nhau</translation>
+        <translation>Đồng bộ Với nhau</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
         <source>Align start to zero</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đồng bộ đoạn âm thanh bắt đầu từ 0</translation>
+        <translation>Đồng bộ Audio từ 0</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Align start to playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Căn chỉnh điểm đầu của track theo vị trí con trỏ phát nhạc</translation>
+        <translation>Căn Điểm Đầu Track theo Con trỏ Audio</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
         <source>Align start to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Căn chỉnh điểm bắt đầu với điểm kết thúc vùng chọn</translation>
+        <translation>Căn Điểm Đầu và Kết của Vùng chọn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
         <source>Align end to playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Căn chỉnh điểm cuối với đầu phát</translation>
+        <translation>Căn Điểm Cuối với Đầu Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="456"/>
         <source>Align end to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Căn chỉnh điểm cuối với điểm cuối của vùng chọn</translation>
+        <translation>Căn Điểm Cuối với Điểm Cuối Vùng chọn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
@@ -925,55 +983,55 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
         <source>Sort by name</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sắp xếp theo tên</translation>
+        <translation>Sắp xếp theo Tên</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Plugin manager</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Quản lý các tính năng bổ trợ Plugin</translation>
+        <translation>Quản lý Các Trình cắm</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
         <source>Fav effect #1</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiệu ứng yêu thích #1</translation>
+        <translation>Hiệu ứng Yêu thích #1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="515"/>
         <source>Fav effect #2</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiệu ứng yêu thích #2</translation>
+        <translation>Hiệu ứng Yêu thích #2</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="523"/>
         <source>Fav effect #3</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiệu ứng yêu thích #3</translation>
+        <translation>Hiệu ứng Yêu thích #3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="93"/>
         <source>Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Import - Nhập...</translation>
+        <translation>Nhập...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="46"/>
         <source>Show in Finder</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị trong Finder</translation>
+        <translation>Hiện trong Finder</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="51"/>
         <source>Show in Explorer</source>
-        <translation>Hiển thị trong Explorer</translation>
+        <translation>Hiện trong Explorer</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
         <source>Show in File Manager</source>
-        <translation>Hiển thị trong Quản lý tệp</translation>
+        <translation>Hiện trong Quản lý Tệp</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="101"/>
@@ -989,35 +1047,35 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Xuất audio...</translation>
+        <translation>&amp;Xuất Audio...</translation>
     </message>
     <message>
         <source>Export audio…</source>
-        <translation type="vanished">Xuất audio...</translation>
+        <translation type="vanished">Xuất Audio...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
         <source>Show effects panel</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị bảng hiệu ứng</translation>
+        <translation>Hiện Bảng Hiệu ứng</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="480"/>
         <source>Keep tracks synchronized</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Duy trì đồng bộ các tracks</translation>
+        <translation>Duy trì Đồng bộ Các Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="499"/>
         <source>Add track effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thêm hiệu ứng của track</translation>
+        <translation>Thêm Hiệu ứng Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
         <source>Contrast analyzer</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Công cụ phân tích độ tương phản</translation>
+        <translation>Trình phân tích Tương phản</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="541"/>
@@ -1029,31 +1087,31 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="551"/>
         <source>Manage macros</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Quản lý macro</translation>
+        <translation>Quản lý Macro</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
         <source>Apply macros palette</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Áp dụng bảng macro</translation>
+        <translation>Áp dụng Bảng Macro</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="567"/>
         <source>Macro fade ends</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiệu ứng mờ dần ở đoạn cuối trong tính năng Macro</translation>
+        <translation>Hiệu ứng Mờ dần Đoạn cuối trong Macro</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="575"/>
         <source>Macro MP3 conversion</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Macro chuyển đổi sang MP3</translation>
+        <translation>Macro Chuyển đổi sang MP3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Trình cài đặt plugin Nyquist</translation>
+        <translation>Trình cài đặt Plugin Nyquist</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
@@ -1065,25 +1123,25 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="599"/>
         <source>Sample data export</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Xuất dữ liệu mẫu</translation>
+        <translation>Xuất Mẫu Dữ liệu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
         <source>Sample data import</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nhập dữ liệu mẫu</translation>
+        <translation>Nhập Mẫu Dữ liệu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="615"/>
         <source>Raw data import</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nhập dữ liệu thô</translation>
+        <translation>Nhập Dữ liệu Thô</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
         <source>Reset configuration</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đặt lại cấu hình</translation>
+        <translation>Đặt lại Cấu hình</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="633"/>
@@ -1107,7 +1165,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="657"/>
         <source>Regular interval labels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tạo nhãn theo khoảng thời gian</translation>
+        <translation>Tạo Nhãn theo Khoảng Thời gian</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="667"/>
@@ -1137,7 +1195,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
         <source>Crash report</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Báo cáo lỗi</translation>
+        <translation>Báo cáo Lỗi</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="707"/>
@@ -1272,13 +1330,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="156"/>
         <source>Show vertical rulers</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị các thước đo dọc</translation>
+        <translation>Hiện Các Thước dọc</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="165"/>
         <source>Show master track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị đường âm thanh tổng của track</translation>
+        <translation>Hiện Track Tổng</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
@@ -1300,7 +1358,7 @@
     </message>
     <message>
         <source>Show clip properties</source>
-        <translation type="vanished">Hiển thị thông số chung của clip</translation>
+        <translation type="vanished">Hiện Thuộc tính Chung của Clip</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
@@ -1372,13 +1430,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
         <source>Show RMS in waveform</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị RMS theo dạng sóng</translation>
+        <translation>Hiện RMS theo Dạng sóng</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="310"/>
         <source>Show clipping in waveform</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị Clipping theo dạng sóng</translation>
+        <translation>Hiện Clipping theo Dạng sóng</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="319"/>
@@ -1390,7 +1448,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="329"/>
         <source>Show label editor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị công cụ chỉnh sửa nhãn</translation>
+        <translation>Hiện Trình sửa Nhãn</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="337"/>
@@ -1418,11 +1476,11 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
         <source>Record</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Record - Ghi âm</translation>
+        <translation>Ghi âm</translation>
     </message>
     <message>
         <source>Stop record</source>
-        <translation type="vanished">Stop - Ngừng ghi âm</translation>
+        <translation type="vanished">Ngừng ghi âm</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
@@ -1438,7 +1496,7 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
         <source>Show mic metering</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiển thị thanh đo âm lượng mic</translation>
+        <translation>Hiện Thanh đo Âm Microphone</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="75"/>
@@ -1520,7 +1578,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="167"/>
         <source>Split</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Split - Tách</translation>
+        <translation>Chia tách</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="176"/>
@@ -1622,7 +1680,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
         <source>Spectrogram</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Âh phổ - Spectrogram</translation>
+        <translation>Âm phổ</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="586"/>
@@ -1640,7 +1698,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="326"/>
         <source>Multi-view</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Multi-view - Chế độ xem đa dạng</translation>
+        <translation>Chế độ Xem Đa dạng</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
@@ -1688,7 +1746,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="396"/>
         <source>Export clip</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Export - Xuất clip</translation>
+        <translation>Xuất Clip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="404"/>
@@ -1742,7 +1800,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="469"/>
         <source>Trim</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Trim - Xén</translation>
+        <translation>Cắt xén</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
@@ -1865,18 +1923,17 @@
         <translation>Chọn nhiều track kế tiếp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="661"/>
         <source>Open item’s context menu</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Mở menu chuột phải của mục</translation>
+        <translation type="vanished">Mở menu chuột phải của mục</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="684"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="675"/>
         <source>Change track format</source>
         <translation>Thay dổi định dạng của track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="697"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="688"/>
         <source>Change track sample rate</source>
         <translation>Thay đổi tỷ lệ track mẫu</translation>
     </message>
@@ -1888,42 +1945,42 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
         <source>Show p&amp;aths…</source>
-        <translation>Hiện &amp;đường dẫn...</translation>
+        <translation>Hiện &amp;Đường dẫn...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
         <source>Show paths</source>
-        <translation>Hiện đường dẫn</translation>
+        <translation>Hiện Đường dẫn</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
         <source>Show pr&amp;ofiler…</source>
-        <translation>Hiện bộ &amp;phân tích hiệu năng...</translation>
+        <translation>Hiện Trình &amp;phân tích hiệu năng...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation>Hiện bộ phân tích hiệu năng</translation>
+        <translation>Hiện Trình phân tích hiệu năng</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
         <source>Show g&amp;raphics info…</source>
-        <translation>Hiển thị &amp;thông tin đồ họa...</translation>
+        <translation>Hiện &amp;Thông tin Đồ họa...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
         <source>Show graphics info</source>
-        <translation>Hiển thị thông tin đồ họa</translation>
+        <translation>Hiện Thông tin Đồ họa</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
         <source>Show &amp;navigation tree…</source>
-        <translation>Hiển thị &amp;cây điều hướng...</translation>
+        <translation>Hiện &amp;Cây Điều hướng...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
         <source>Show navigation tree</source>
-        <translation>Hiển thị cây điều hướng</translation>
+        <translation>Hiện Cây Điều hướng...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
@@ -2179,6 +2236,12 @@
         <translation>Kích hoạt điều khiển đang chọn hoặc chọn mục track tương ứng</translation>
     </message>
     <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="247"/>
+        <source>Open the context menu of the focused item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Mở menu chuột phải của mục đang chọn</translation>
+    </message>
+    <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
         <source>View project on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
@@ -2221,170 +2284,168 @@
         <translation>Phát / Dừng</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Phát/Tạm dừng từ vị trí con trỏ</translation>
+        <translation type="vanished">Phát/Tạm dừng từ vị trí con trỏ</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
         <source>Play the selected time range</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Phát khoảng thời gian đã chọn</translation>
+        <translation type="vanished">Phát khoảng thời gian đã chọn</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="75"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
         <source>Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Tạm dừng</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="84"/>
         <source>Stop playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Dừng trình phát lại</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="93"/>
         <source>Rewind to start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Tua lại về đầu</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="102"/>
         <source>Rewind to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Tua lại về đoạn cuối</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="111"/>
         <source>Toggle ‘Loop playback’</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Chuyển đổi &apos;chế độ phát lặp lại&apos;</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="124"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="121"/>
         <source>Open audio setup context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Mở menu cài đặt âm thanh</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="130"/>
         <source>Open Get effects dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Mở hộp thoại Lấy hiệu ứng</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="142"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="139"/>
         <source>Open audio setup dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Mở hộp thoại Thiết lập audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="150"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <source>Rescan audio devices</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Quét lại thiết bị audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="158"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Toggle metronome playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Chuyển đổi trình phát của bộ gõ nhịp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="165"/>
         <source>Set playback time</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Thiết lập thời gian phát</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="177"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="174"/>
         <source>Set playback tempo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Thiết lập nhịp độ phát</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="186"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="183"/>
         <source>Set playback time signature</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Cài đặt số chỉ nhịp khi phát lại âm thanh</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="192"/>
         <source>Set playback level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Cài đặt mức âm lượng âm thanh khi phát</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="201"/>
         <source>Change audio host</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Thay đổi trình chủ âm thanh</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="213"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
         <source>Change playback device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Thay đổi thiết bị phát lại</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="222"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="219"/>
         <source>Change recording device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Thay đổi thiết bị ghi âm</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="231"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="228"/>
         <source>Change input channels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Thay đổi kênh đầu vào</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="240"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="237"/>
         <source>Toggle loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Chuyển đổi chế độ phát vòng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="249"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="246"/>
         <source>Clear loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Xóa chế độ phát vòng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="257"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="254"/>
         <source>Set loop region to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Cài đặt vùng lặp theo vùng đã chọn</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="265"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="262"/>
         <source>Set selection to loop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Chọn vùng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="273"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="270"/>
         <source>Set loop region in out</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Cài đặt điểm đầu và điểm cuối của vùng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="281"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="278"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Tạo vùng lặp và chọn audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="293"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="332"/>
         <source>Play repeats</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Phát lặp lại</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="303"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="342"/>
         <source>Pan automatically during playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Dịch chuyển âm thanh tự động khi phát lại</translation>
@@ -2430,7 +2491,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
         <source>Import…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Import - Nhập...</translation>
+        <translation>Nhập...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
@@ -3164,13 +3225,13 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
         <source>Record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Record - Thu âm</translation>
+        <translation>Ghi âm</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
         <source>Stop record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Stop - Ngừng ghi âm</translation>
+        <translation>Ngừng ghi âm</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="59"/>
@@ -3278,7 +3339,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
         <source>Split</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Split - Thác</translation>
+        <translation>Chia đôi</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
@@ -3428,7 +3489,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="398"/>
         <source>Export clip</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Export - Xuất clip</translation>
+        <translation>Xuất Clip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="406"/>
@@ -3482,7 +3543,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="471"/>
         <source>Trim</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Trim - Xén</translation>
+        <translation>Cắt xén</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
@@ -3617,18 +3678,17 @@
         <translation>Chọn nhiều track kế tiếp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="663"/>
         <source>Open item’s context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Mở menu chuột phải của mục</translation>
+        <translation type="vanished">Mở menu chuột phải của mục</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="683"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="674"/>
         <source>Change track format</source>
         <translation>Thay dổi định dạng của track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="696"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="687"/>
         <source>Change track sample rate</source>
         <translation>Thay đổi tỷ lệ track mẫu</translation>
     </message>
@@ -3637,17 +3697,17 @@
     <name>appshell</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="64"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="65"/>
         <source>Cloud account</source>
         <translation>Tài khoản đám mây</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="54"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="55"/>
         <source>Home menu</source>
         <translation>Menu trang chủ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="95"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="95"/>
         <source>Project</source>
         <translation>Dự án</translation>
@@ -3660,7 +3720,7 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="97"/>
         <source>Plugins</source>
-        <translation>Plugins- Trình Cắm</translation>
+        <translation>Trình Cắm Bổ trợ</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="110"/>
@@ -3690,37 +3750,42 @@
         <translation>Menu ứng dụng</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="160"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="76"/>
+        <source>Real-time effects panel</source>
+        <translation>Bảng điều khiển hiệu ứng thời gian thực</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="170"/>
         <source>Project toolbar</source>
         <translation>Thanh công cụ dự án</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="183"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="193"/>
         <source>Workspaces toolbar</source>
         <translation>Thanh công cụ Không gian làm việc</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="206"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="216"/>
         <source>Undo/redo toolbar</source>
         <translation>Thanh công cụ Hoàn tác/Làm lại</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="228"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="238"/>
         <source>Play toolbar</source>
         <translation>Thanh công cụ phát âm</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="294"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="304"/>
         <source>Tracks</source>
         <translation>Các track</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="397"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="405"/>
         <source>Playback meter</source>
         <translation>Thanh đo phát lại</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="421"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="429"/>
         <source>History</source>
         <translation>Lịch sử</translation>
     </message>
@@ -3730,12 +3795,12 @@
         <translation>Tạo tín hiệu đầu ra MIDI 2.0 nếu được thiết bị thu hỗ trợ.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="432"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Bạn có chắc chắn muốn khôi phục cài đặt gốc không?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="433"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="448"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -3744,32 +3809,32 @@ This action will not delete any of your projects.</source>
 Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="445"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
         <source>Revert</source>
         <translation>Hoàn tác</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="462"/>
         <source>Revert to factory settings</source>
         <translation>Khôi phục cài đặt gốc</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="459"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="474"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Bạn có muốn khởi động lại Audacity ngay bây giờ không?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="475"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Cần phải khởi động lại Audacity để những thay đổi này có hiệu lực.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="481"/>
         <source>Restart</source>
         <translation>Khởi động lại</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="483"/>
         <source>Restart Audacity</source>
         <translation>Khởi động lại Audacity</translation>
     </message>
@@ -3799,42 +3864,42 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Đang tải dự án…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
         <source>Validate audio plugins</source>
         <translation>Xác thực các audio plugins</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="36"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
         <translation>Audacity đã tìm thấy các plugin cần được xác thực trước khi sử dụng. Bạn có muốn xác thực chúng ngay bây giờ hay bỏ qua?</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Skip this time</source>
         <translation>Bỏ qua lần này</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="38"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="44"/>
         <source>Validate</source>
         <translation>Xác thực</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="48"/>
         <source>Audio plugin validation</source>
         <translation>Audio plugins được xác thực</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="296"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="306"/>
         <source>The previous session quit unexpectedly.</source>
         <translation>Phiên làm việc trước đã kết thúc đột ngột.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="297"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="307"/>
         <source>Do you want to restore the session?</source>
         <translation>Bạn có muốn khôi phục phiên làm việc không?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="300"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="310"/>
         <source>Restore session</source>
         <translation>Khôi phục phiên</translation>
     </message>
@@ -3987,7 +4052,7 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="416"/>
         <source>&amp;Effect</source>
-        <translation>&amp;Effect - Hiệu ứng</translation>
+        <translation>&amp;Hiệu ứng</translation>
     </message>
 </context>
 <context>
@@ -4099,7 +4164,7 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>Mixer</source>
-        <translation>Mixer - Bộ trộn</translation>
+        <translation>Bộ trộn</translation>
     </message>
 </context>
 <context>
@@ -4124,7 +4189,7 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
         <source>&amp;Record</source>
-        <translation>&amp;Record - Ghi âm</translation>
+        <translation>&amp;Ghi âm</translation>
     </message>
 </context>
 <context>
@@ -4155,11 +4220,11 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
     <name>appshell-menu-select</name>
     <message>
         <source>Audio clips</source>
-        <translation type="vanished">Audio clips - đoạn âm thanh</translation>
+        <translation type="vanished">Clip âm thanh</translation>
     </message>
     <message>
         <source>Spectral</source>
-        <translation type="vanished">Spectral - Phổ</translation>
+        <translation type="vanished">Phổ</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="323"/>
@@ -4365,7 +4430,7 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
 <context>
     <name>appshell/dock</name>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="65"/>
         <source>Close</source>
         <translation>Đóng lại</translation>
     </message>
@@ -4491,63 +4556,62 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Kết nối với tài khoản của bạn trên audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
         <source>Continue with Google</source>
         <translation>Tiếp tục với Google</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="31"/>
         <source>Continue with Facebook</source>
-        <translation>Tiếp tục với Facebook</translation>
+        <translation type="vanished">Tiếp tục với Facebook</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="32"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
         <source>Or use email and password</source>
         <translation>Hoặc sử dụng email và mật khẩu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="36"/>
         <source>Email</source>
         <translation>Email</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="39"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="37"/>
         <source>Password</source>
         <translation>Mật khẩu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
         <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;%1&quot;&gt;Quên mật khẩu?&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
         <source>Don’t have an account?</source>
         <translation>Bạn chưa có tài khoản?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="41"/>
         <source>Create new account</source>
         <translation>Tạo tài khoản mới</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="44"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
         <source>Already have an account?</source>
         <translation>Bạn đã có tài khoản?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="45"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="49"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="47"/>
         <source>Sign in</source>
         <translation>Đăng nhập</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="46"/>
         <source>Loading…</source>
         <translation>Đang tải...</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="50"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
         <source>Create account</source>
         <translation>Tạo tài khoản</translation>
     </message>
@@ -4557,33 +4621,33 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Tùy chọn đăng nhập bằng tài khoản mạng xã hội</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="199"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="164"/>
         <source>Email field</source>
         <translation>Ô nhập email</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="259"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="224"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="231"/>
         <source>Forgot password</source>
         <translation>Quên mật khẩu?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="301"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
         <source>Password field</source>
         <translation>Ô nhập mật khẩu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="346"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="311"/>
         <source>Form action</source>
         <translation>Thao tác biểu mẫu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Sign in link</source>
         <translation>Đường link đăng nhập</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="390"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Create account link</source>
         <translation>Tạo đường link cho tài khoản</translation>
     </message>
@@ -4695,17 +4759,17 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Tùy chọn khả dụng</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="121"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="122"/>
         <source>Getting started</source>
         <translation>Bắt đầu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Accept &amp; continue</source>
         <translation>Chấp nhận và tiếp tục</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="145"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="146"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
         <translation>%1 trên %2</translation>
@@ -4881,41 +4945,46 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Xem trước bố cục không gian làm việc đã chọn, hiển thị cách sắp xếp các thành phần giao diện</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="49"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="120"/>
         <source>Authorization failed</source>
         <translation>Xác thực thất bại</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="62"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="34"/>
         <source>No access token</source>
         <translation>Không có mã truy cập</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="112"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="84"/>
         <source>Not authorized</source>
         <translation>Không được phép</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="129"/>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="136"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="141"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="148"/>
         <source>Registration failed. Please try again.</source>
         <translation>Đăng ký không thành công. Vui lòng thử lại.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="150"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="162"/>
         <source>Incorrect email or password. Please try again.</source>
         <translation>Địa chỉ email hoặc mật khẩu không chính xác. Vui lòng thử lại.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="158"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="170"/>
         <source>Authentication failed. Please try again.</source>
         <translation>Xác thực không thành công. Vui lòng thử lại.</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="178"/>
+        <source>Could not start the sign-in process. Please try again.</source>
+        <translation>Không thể bắt đầu quá trình đăng nhập. Vui lòng thử lại.</translation>
     </message>
 </context>
 <context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="712"/>
         <source>Edit metadata</source>
         <translation>Chỉnh sửa siêu dữ liệu metadata</translation>
     </message>
@@ -5397,7 +5466,7 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Mục tiếp theo</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="269"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="276"/>
         <source>Don’t show welcome dialog on startup</source>
         <translation>Không hiển thị hộp thoại chào mừng khi khởi động</translation>
     </message>
@@ -5417,22 +5486,22 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Hoàn thành phần cài đặt cho tài khoản đám mây của Audacity trên Audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="75"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="77"/>
         <source>Help us decide the future of Audacity</source>
         <translation>Hãy giúp chúng tôi quyết định tương lai của Audacity</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="78"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="80"/>
         <source>Take part in survey</source>
         <translation>Tham gia khảo sát Survey</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="84"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="86"/>
         <source>Soap Voice Cleaner: studio-quality voice-over sound</source>
         <translation>Soap Voice Cleaner: âm thanh lồng tiếng chất lượng phòng thu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="87"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="89"/>
         <source>Get it on MuseHub</source>
         <translation>Tìm trên MuseHub</translation>
     </message>
@@ -5442,12 +5511,12 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Tiếp tục</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="66"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="67"/>
         <source>Explore free plugins for sculpting your audio</source>
         <translation>Khám phá các plugin miễn phí để chỉnh sửa âm thanh của bạn</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="70"/>
         <source>View free plugins</source>
         <translation>Xem plugin miễn phí</translation>
     </message>
@@ -5464,11 +5533,16 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <source>Decrease BPM</source>
         <translation>Giảm nhịp tim BPM</translation>
     </message>
+    <message>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
+        <source>Time Signature: %1/%2</source>
+        <translation>Số chỉ nhịp: %1/%2</translation>
+    </message>
 </context>
 <context>
     <name>audacity</name>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="712"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="717"/>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
@@ -5478,17 +5552,17 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
 <context>
     <name>audio</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>Audio plugins scan completed</source>
         <translation>Quá trình quét audio plugins đã hoàn tất</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>All audio plugins are up to date.</source>
         <translation>Tất cả các audio plugins đã dược cập nhật</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="85"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
         <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
         <source>Validating audio plugins</source>
@@ -5790,20 +5864,18 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
         <translation>Audacity Audio</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
         <source>Error opening recording device.
 Error code: %1</source>
-        <translation>Lỗi khi mở thiết bị ghi âm.
+        <translation type="vanished">Lỗi khi mở thiết bị ghi âm.
 Mã lỗi:  %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="895"/>
         <source>Error</source>
-        <translation>Lỗi</translation>
+        <translation type="vanished">Lỗi</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1485"/>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1520"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1481"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1516"/>
         <source>Out of memory!</source>
         <translation>Đã hết dung lượng lưu trữ!</translation>
     </message>
@@ -6670,12 +6742,12 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
         <source>Select</source>
         <translation>Chọn</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
         <source>Deselect</source>
         <translation>Bỏ chọn</translation>
     </message>
@@ -6732,8 +6804,8 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="566"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="700"/>
         <source>Save</source>
         <translation>Lưu</translation>
     </message>
@@ -6744,70 +6816,70 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>Bạn chưa đăng nhập</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="401"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="470"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="487"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="565"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="577"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="582"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="631"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="751"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="402"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="471"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="488"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="566"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="578"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="583"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="633"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="753"/>
         <source>Invalid project</source>
         <extracomment>Error message of a failed cloud operation</extracomment>
         <translation>Dự án không hợp lệ</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="481"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="544"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="625"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="995"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="482"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="545"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="627"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="997"/>
         <source>Service destroyed</source>
         <extracomment>Error message shown when a cloud operation is interrupted by the application closing</extracomment>
         <translation>Dịch vụ đã bị phá hủy</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="500"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="501"/>
         <source>Internal error</source>
         <translation>Lỗi hệ thống</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="587"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="593"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="588"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="594"/>
         <source>Project is not saved to the cloud</source>
         <translation>Dự án chưa được lưu vào trong tài khoản đám mây</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="600"/>
         <source>Project is not synced with the cloud</source>
         <translation>Dự án chưa được đồng bộ hóa trong tài khoản đám mây</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="707"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="709"/>
         <source>Failed to get audio preview upload URLs</source>
         <translation>Không thể lấy URL tải lên bản xem trước âm thanh</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="857"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="859"/>
         <source>Invalid audio ID</source>
         <translation>Audio ID không hợp lệ</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="924"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="926"/>
         <source>Project not found in cloud database</source>
         <translation>Không tìm thấy dự án trong phần dữ liệu của tài khoản đám mây</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1007"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1009"/>
         <source>No valid current project</source>
         <translation>Không có dự án hiện tại hợp lệ.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1070"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1072"/>
         <source>Upload succeeded but payload is missing</source>
         <translation>Tải lên thành công nhưng thiếu dữ liệu tải lên (payload)</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1095"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1097"/>
         <source>Failed to delete cloud project from database</source>
         <translation>Không thể xóa dự án ở tài khoản đám mây khỏi cơ sở dữ liệu</translation>
     </message>
@@ -6822,112 +6894,110 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>Đăng nhập không thành công. Vui lòng quay lại Audacity và thử lại.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1137"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1374"/>
         <source>View on audio.com</source>
         <translation>Xem trên audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1346"/>
         <source>Track title</source>
         <translation>Tiêu đề track</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1347"/>
         <source>Share audio</source>
         <translation>Chia sẻ audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1348"/>
         <source>Share</source>
         <translation>Chia sẻ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1369"/>
         <source>Audio shared to audio.com</source>
         <translation>Audio được chia sẻ trên audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1389"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Đang chia sẻ audio trên audio.com...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1411"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
         <source>Downloading audio from cloud…</source>
         <translation>Đang tải audio từ tài khoản đám mây...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1486"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation>Bạn phải lưu dự án trước khi cập nhật bản xem trước audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1487"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation>Lưu các thay đổi để tiếp tục, hoặc hủy bỏ quá trình cập nhật.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1491"/>
         <source>Unsaved changes</source>
         <translation>Thay đổi chưa được lưu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1506"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1519"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1512"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1548"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1561"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1574"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1581"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1588"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation>Tạo bản xem trước audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
-        <translation>Bản xem trước audio trong tài khoản đám mây đã được cập nhật</translation>
+        <translation type="vanished">Bản xem trước audio trong tài khoản đám mây đã được cập nhật</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
-        <translation>Bản xem trước âm thanh đã được tải lên audio.com.</translation>
+        <translation type="vanished">Bản xem trước âm thanh đã được tải lên audio.com.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1542"/>
         <source>Audio preview is up to date</source>
         <translation>Tính năng xem trước audio đã được cập nhật.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1543"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation>Bản xem trước audio đã khớp với phiên bản được lưu gần nhất của dự án này.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1553"/>
         <source>Updating cloud audio preview…</source>
         <translation>Đang cập nhật bản xem trước của audio trong tài khoản đám mây</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1582"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation>Không thể xác định đường dẫn cục bộ của dự án đã tải xuống</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="736"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="561"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="682"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Save to audio.com</source>
         <translation>Lưu vào audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
         <source>Audio download failed</source>
         <translation>Lỗi tải xuống âm thanh</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="849"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="795"/>
         <source>Open audio from cloud</source>
         <translation>Mở audio từ tài khoản đám mây</translation>
     </message>
@@ -7013,7 +7083,7 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>Lỗi chuyển đổi thông tin phản hồi</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="616"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="617"/>
         <source>Cannot proceed to upload.</source>
         <translation>Không thể tiếp tục xuất dữ liệu</translation>
     </message>
@@ -7039,69 +7109,97 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>Thao tác này sẽ tạo một tập tin .zip chứa thông tin về thiết lập MuseScore Studio của bạn, giúp các nhà phát triển chẩn đoán bất kỳ sự cố nào bạn đang gặp phải. Bạn có thể kiểm tra nội dung của tập tin này trước khi gửi cho bất kỳ ai.</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>Lưu tệp chẩn đoán</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
         <source>Show paths…</source>
-        <translation type="vanished">Hiển thị đường dẫn…</translation>
+        <translation>Hiển thị đường dẫn…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
         <source>Show paths</source>
-        <translation type="vanished">Hiện đường dẫn</translation>
+        <translation>Hiện đường dẫn</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
         <source>Show profiler…</source>
-        <translation type="vanished">Hiển thị hồ sơ…</translation>
+        <translation>Hiển thị hồ sơ…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation type="vanished">Hiện bộ phân tích hiệu năng</translation>
+        <translation>Hiện bộ phân tích hiệu năng</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
         <source>Show graphics info…</source>
-        <translation type="vanished">Hiển thị thông tin đồ họa…</translation>
+        <translation>Hiển thị thông tin đồ họa…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation type="vanished">Hiển thị thông tin đồ họa</translation>
+        <translation>Hiển thị thông tin đồ họa</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
         <source>Show navigation tree…</source>
-        <translation type="vanished">Hiển thị cây điều hướng…</translation>
+        <translation>Hiển thị cây điều hướng…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
         <source>Show navigation tree</source>
-        <translation type="vanished">Hiển thị cây điều hướng</translation>
+        <translation>Hiển thị cây điều hướng</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
         <source>Show accessibility tree…</source>
-        <translation type="vanished">Hiển thị cây hỗ trợ truy cập</translation>
+        <translation>Hiển thị cây hỗ trợ truy cập</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
         <source>Show accessibility tree</source>
-        <translation type="vanished">Hiển thị cây hỗ trợ truy cập</translation>
+        <translation>Hiển thị cây hỗ trợ truy cập</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
         <source>Dump accessibility tree to console</source>
-        <translation type="vanished">Trích xuất và in cấu trúc cây hỗ trợ truy cập ra màn hình console</translation>
+        <translation>Trích xuất và in cấu trúc cây hỗ trợ truy cập ra màn hình console</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Show engraving elements</source>
-        <translation type="vanished">Hiển thị các ký hiệu khắc âm</translation>
+        <translation>Hiển thị các ký hiệu khắc âm</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <source>Show engraving undo stack</source>
-        <translation type="vanished">Hiện ngăn xếp hoàn tác khắc âm</translation>
+        <translation>Hiện ngăn xếp hoàn tác khắc âm</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
         <source>Show engraving style options list</source>
-        <translation type="vanished">Hiển thị danh sách tùy chọn kiểu khắc</translation>
+        <translation>Hiển thị danh sách tùy chọn kiểu khắc</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
         <source>Show actions list</source>
-        <translation type="vanished">Hiển thị danh sách hành động</translation>
+        <translation>Hiển thị danh sách hành động</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
+        <source>Show commands list</source>
+        <translation>Hiển thị danh sách lệnh</translation>
     </message>
     <message>
         <source>Show rcommands list</source>
@@ -7527,7 +7625,7 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>Sai lệch cài đặt sẵn</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="412"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="413"/>
         <source>Applied effect: %1</source>
         <translation>Đã áp dụng hiệu ứng: %1</translation>
     </message>
@@ -7577,19 +7675,19 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>%1: dành cho một Hiệu ứng, Bộ tạo hoặc Bộ phân tích khác.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="669"/>
         <source>Generating %1…</source>
         <translation>Đang tạo %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="669"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
         <translation>Áp dụng %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="899"/>
         <source>Effect preview</source>
         <translation>Nghe thử hiệu ứng</translation>
     </message>
@@ -7606,60 +7704,60 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>Chuyển đổi giữa giao diện người dùng của nhà cung cấp và giao diện người dùng dự phòng</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="239"/>
         <source>Master</source>
         <translation>Master - Chính</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="278"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
         <translation>Đã thêm %1 vào %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="281"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
         <translation>Thêm %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="319"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
         <translation>Đã xóa %1 khỏi %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="322"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
         <translation>Xóa %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="344"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
         <translation>Đã thay thế %1 bằng %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="347"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
         <translation>Thay thế %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="383"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
         <translation>Di chuyển %1 lên %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="387"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
         <translation>Di chuyển %1 xuống %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="391"/>
         <source>Change effect order</source>
         <translation>Thay đổi thứ tự hiệu ứng</translation>
     </message>
@@ -7911,7 +8009,7 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>Loại</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
         <translation>Thiếu - “%1”</translation>
@@ -8023,7 +8121,7 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="355"/>
         <source>Special</source>
-        <translation>Special - Đặc biẹt</translation>
+        <translation>Đặc biệt</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="357"/>
@@ -8159,7 +8257,7 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
 <context>
     <name>effects-effects_base</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="864"/>
         <source>Preparing preview</source>
         <translation>Đang chuẩn bị phát thử</translation>
     </message>
@@ -8403,17 +8501,17 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
         <translation>Built-in - Tích hợp sẵn</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="104"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="106"/>
         <source>Nyquist Effects</source>
         <translation>Hiệu ứng Nyquist</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="109"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="111"/>
         <source>The Audacity Team</source>
         <translation>Nhóm hỗ trợ Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="120"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="122"/>
         <source>Provides Nyquist Effects support to Audacity</source>
         <translation>Cung cấp hỗ trợ hiệu ứng Nyquist cho Audacity</translation>
     </message>
@@ -10926,33 +11024,33 @@ Vui lòng chọn vùng cần sửa chữa có kèm audio ít nhất một bên (
         <translation>Độ dài</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="181"/>
         <source>Tone/silence ratio</source>
         <translation>Tỷ lệ tone/khoảng lặng</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="230"/>
         <source>Duty cycle</source>
         <translation>Chu kỳ làm việc</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="234"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="244"/>
         <source>Tone duration</source>
         <translation>Thời lượng tone</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="271"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="248"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="262"/>
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="258"/>
         <source>Silence duration</source>
         <translation>Thời lượng khoảng lặng</translation>
     </message>
@@ -11015,7 +11113,7 @@ Vui lòng chọn vùng cần sửa chữa có kèm audio ít nhất một bên (
         <translation>Invert - Đảo</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
+        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="205"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
@@ -11606,7 +11704,7 @@ Vui lòng thông báo cho nhóm Audacity: https://forum.audacityteam.org/.</tran
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="388"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="443"/>
         <source>Edit mapping</source>
         <translation>Chỉnh sửa sơ đồ</translation>
     </message>
@@ -11622,8 +11720,8 @@ Vui lòng thông báo cho nhóm Audacity: https://forum.audacityteam.org/.</tran
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="714"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="698"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="864"/>
         <source>Export audio</source>
         <translation>Xuất audio</translation>
     </message>
@@ -11645,82 +11743,107 @@ Vui lòng thông báo cho nhóm Audacity: https://forum.audacityteam.org/.</tran
         <translation>Tập tin</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="144"/>
+        <source>File name preview</source>
+        <translation>Xem trước tên tập tin</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation>Tên tập tin</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
+        <source>File name prefix</source>
+        <translation>Tiền tố tên tập tin</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <source>Number files in label order</source>
+        <translation>Đánh số tập tin theo thứ tự nhãn</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <source>Number files in track order</source>
+        <translation>Đánh số tập tin theo thứ tự track</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="232"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation>Thư mục</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="245"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="300"/>
         <source>Format</source>
         <translation>Định dạng</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="282"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="337"/>
         <source>Audio options</source>
         <translation>Tuỳ chọn audio</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="299"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="354"/>
         <source>Channels</source>
         <translation>Các Kênh</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="324"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="379"/>
         <source>Mono</source>
         <translation>Mono</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="342"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="397"/>
         <source>Stereo</source>
         <translation>Stereo</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="359"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="414"/>
         <source>Custom mapping</source>
         <translation>Tùy chỉnh sơ đồ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="406"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="461"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="220"/>
         <source>Sample rate</source>
         <translation>Tốc độ lấy mẫu</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="451"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="506"/>
         <source>Open custom FFmpeg format options</source>
         <translation>Mở tùy chọn định dạng FFmpeg tùy biến</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="527"/>
         <source>Format:</source>
         <translation>Định dạng:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="551"/>
         <source>Codec:</source>
         <translation>Codec - Bộ giải mã:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="588"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="643"/>
         <source>Effective bit rate may vary</source>
         <translation>Tốc độ bit thực tế có thể thay đổi</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="598"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="653"/>
         <source>Rendering</source>
         <translation>Đang xuất dữ liệu</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="608"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="665"/>
         <source>Trim blank space before first clip</source>
         <translation>Xén khoảng trống phía trước clip đầu tiên</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="682"/>
+        <source>Include audio before first label</source>
+        <translation>Bao gồm âm thanh trước nhãn đầu tiên</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
@@ -11984,82 +12107,152 @@ Một số codec có thể chỉ chấp nhận các giá trị cụ thể (128k,
         <translation>Xác định vị trí cài đặt hiện có</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="266"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="325"/>
         <source>All selected audio is muted</source>
         <translation>Tất cả audio được chọn đều tắt tiếng</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="454"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="530"/>
+        <source>untitled</source>
+        <translation>Chưa đặt tên</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="573"/>
+        <source>No labels to export.</source>
+        <translation>Không có nhãn nào để xuất.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="578"/>
+        <source>There are no tracks to export</source>
+        <translation>Không có track nào để xuất</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="44"/>
         <source>Other…</source>
         <translation>Khác...</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>%1 Hz (custom)</source>
         <translation>%1 Hz (tuỳ chọn)</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
         <source>Export full project audio</source>
-        <translation>Xuất toàn bộ audio trong dự án</translation>
+        <translation type="vanished">Xuất toàn bộ audio trong dự án</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>Export selected audio</source>
-        <translation>Xuất các audio được chọn</translation>
+        <translation type="vanished">Xuất các audio được chọn</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>Export audio in loop region</source>
-        <translation>Xuất audio trong vùng lặp</translation>
+        <translation type="vanished">Xuất audio trong vùng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="198"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="220"/>
         <source>No loop region</source>
         <translation>Không có vùng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="199"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="221"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation>Để xuất audio trong vùng lặp thì cần phải có vòng lặp trong dự án. Vui lòng quay lại, tạo vùng lặp và thử lại lần nữa.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="210"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="232"/>
         <source>No selected audio</source>
         <translation>Không có audio được chọn</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="211"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="233"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation>Để xuất các audio được chọn cần phải có vùng chọn trong phần audio data trong dự án. Vui lòng quay lại dự án, chọn vùng và thử lại lần nữa.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
+        <source>No labels</source>
+        <translation>Không có nhãn</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="240"/>
+        <source>Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</source>
+        <translation>Để xuất các vùng có nhãn thành các tập tin âm thanh riêng biệt, track nhãn đầu tiên cần có ít nhất một nhãn. Vui lòng quay lại dự án, thêm nhãn rồi thử lại.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="334"/>
+        <source>LabelName</source>
+        <extracomment>Placeholder for a label's name in the export file name preview</extracomment>
+        <translation>TênNhãn</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="336"/>
+        <source>TrackName</source>
+        <extracomment>Placeholder for a track's name in the export file name preview</extracomment>
+        <translation>TênTrack</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="558"/>
         <source>Set sample rate</source>
         <translation>Thiết lập tốc độ lấy mẫu</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="699"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
         <translation>Không thể xuất sang “%1”: không thể tạo thư mục đích. Hãy kiểm tra xem đường dẫn có hợp lệ không và bạn có quyền ghi vào đó hay không.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
+        <source>Export failed</source>
+        <translation>Xuất thất bại</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="760"/>
         <source>Do you want to overwrite?</source>
         <translation>Bạn có muốn ghi đè không?</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="639"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="781"/>
+        <source>Some of the files already exist. Do you want to overwrite them?</source>
+        <translation>Một số tập tin đã tồn tại. Bạn có muốn ghi đè chúng không?</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="791"/>
         <source>Overwrite</source>
         <translation>Ghi đè</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="651"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="749"/>
         <source>Export error</source>
         <translation>Lỗi xuất tệp</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="715"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="54"/>
+        <source>Full project audio</source>
+        <translation>Toàn bộ âm thanh trong dự án</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="55"/>
+        <source>Selected audio</source>
+        <translation>Âm thanh đã chọn</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="56"/>
+        <source>Audio in loop region</source>
+        <translation>Âm thanh trong vùng lặp</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="57"/>
+        <source>Tracks as separate audio files</source>
+        <translation>Các track thành các tập tin âm thanh riêng biệt</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="58"/>
+        <source>Labeled regions as separate audio files</source>
+        <translation>Các vùng có nhãn thành các tập tin âm thanh riêng biệt</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="865"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -12082,34 +12275,33 @@ Các hiệu ứng chính sẽ được bật lại sau khi xuất file.</transla
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
-        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
         <source>Disabled</source>
         <translation>Đã vô hiệu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="187"/>
         <source>Version:</source>
         <translation>Phiên bản:</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
         <source>Shortcut:</source>
         <extracomment>Keyboard shortcut</extracomment>
         <translation>Phím tắt:</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="54"/>
         <source>Edit shortcut</source>
         <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
         <translation>Chỉnh sửa phím tắt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="99"/>
         <source>Enable</source>
         <translation>Bật lên</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="99"/>
         <source>Disable</source>
         <translation>Tắt</translation>
     </message>
@@ -12129,9 +12321,8 @@ Các hiệu ứng chính sẽ được bật lại sau khi xuất file.</transla
         <translation>Plugin không đúng định dạng</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
         <source>Manually</source>
-        <translation>Thủ công</translation>
+        <translation type="vanished">Thủ công</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
@@ -12176,58 +12367,61 @@ Các hiệu ứng chính sẽ được bật lại sau khi xuất file.</transla
         <translation>Mã lỗi: %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="74"/>
         <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
         <translation>Plugin “%1” hiện đang bị vô hiệu hóa. Bạn có muốn kích hoạt nó ngay bây giờ không?</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="75"/>
         <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
         <translation>Ngoài ra, bạn cũng có thể kích hoạt tính năng này bất cứ lúc nào từ Home-Trang chủ &gt; Plugins-Trình Cắm.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="101"/>
         <source>Composing/arranging tools</source>
         <translation>Công cụ soạn nhạc</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="102"/>
         <source>Color notes</source>
         <translation>Màu nốt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="103"/>
         <source>Playback</source>
         <translation>Phát lại</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="47"/>
+        <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="104"/>
         <source>Lyrics</source>
         <translation>Lời bản nhạc</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
         <source>Run plugin %1</source>
         <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation>Chạy plugin %1</translation>
+        <translation type="vanished">Chạy plugin %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
         <source>Run plugin %1: %2</source>
         <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation>Chạy plugin %1: %2</translation>
+        <translation type="vanished">Chạy plugin %1: %2</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="118"/>
         <source>Not specified</source>
         <extracomment>No version is specified for this plugin.</extracomment>
         <translation>Không được chỉ định</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="124"/>
         <source>Not defined</source>
-        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
         <translation>Không xác định</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensionscommandsregister.cpp" line="35"/>
+        <source>Show API dump</source>
+        <translation>Hiển thị dữ liệu trích xuất API</translation>
     </message>
 </context>
 <context>
@@ -12334,56 +12528,56 @@ Perhaps %1 is not writable or the disk is full.</source>
         <translation>Lỗi tập tin</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="48"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="53"/>
         <source>All files</source>
         <translation>Tất cả tập tin</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="51"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
         <source>AUP3 project files</source>
         <extracomment>an Audacity project is the state of the program, stored as files that can be reopened to resume the session later</extracomment>
         <translation>Tập tin dự án AUP3</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="54"/>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="58"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="59"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="63"/>
         <source>Dynamically Linked Libraries</source>
         <translation>Các thư viện liên kết động</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
         <source>Dynamic Libraries</source>
         <translation>Các thư viện động</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="66"/>
         <source>Text files</source>
         <translation>Tập tin văn bản</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="62"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="67"/>
         <source>XML files</source>
         <translation>Tập tin XML</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="108"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>, </source>
         <translation>, </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="118"/>
         <source>%1 files</source>
         <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
         <translation>Tập tin %1 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="143"/>
         <source>(%1)</source>
         <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
         <translation>(%1)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="710"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="758"/>
         <source>
 %1 does not have write permissions.</source>
         <extracomment>%1 is the folder path that is not writable</extracomment>
@@ -12391,7 +12585,7 @@ Perhaps %1 is not writable or the disk is full.</source>
 %1 không có quyền ghi.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="712"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="760"/>
         <source>Error</source>
         <translation>Lỗi</translation>
     </message>
@@ -12425,11 +12619,11 @@ For tips on suitable drives, click the help button.</source>
     <name>global</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="146"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="299"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
         <source>OK</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>OK</translation>
@@ -12463,17 +12657,17 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="105"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="155"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="97"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="654"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="728"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="115"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="504"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Hủy bỏ</translation>
@@ -12482,15 +12676,15 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="366"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="108"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="153"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
         <source>Apply</source>
         <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>Áp dụng</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="672"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="746"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <extracomment>Label of the button that starts the export</extracomment>
@@ -12501,7 +12695,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
         <source>Close</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Đóng</translation>
@@ -12587,19 +12781,19 @@ For tips on suitable drives, click the help button.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="149"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Vui lòng kiểm tra kết nối internet của bạn hoặc thử lại sau.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="125"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="127"/>
         <source>Back</source>
         <translation>Trở lại</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="136"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
         <source>Next</source>
         <translation>Tiếp theo</translation>
     </message>
@@ -12614,7 +12808,7 @@ For tips on suitable drives, click the help button.</source>
         <translation>Thành công</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="137"/>
         <source>Skip</source>
         <translation>Bỏ qua</translation>
     </message>
@@ -12635,26 +12829,28 @@ For tips on suitable drives, click the help button.</source>
         <translation>Tất cả tập tin</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="714"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1368"/>
         <source>Success</source>
         <translation>Thành công</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="73"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="61"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1373"/>
         <source>Dismiss</source>
         <translation>Hủy bỏ</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="625"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
         <source>Save</source>
         <translation>Lưu</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="640"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Mở</translation>
@@ -12666,8 +12862,8 @@ For tips on suitable drives, click the help button.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="727"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1119"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="745"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>Stop</source>
         <translation>Dừng</translation>
     </message>
@@ -12847,82 +13043,82 @@ For tips on suitable drives, click the help button.</source>
         <translation><numerusform>%Ln byte(s)</numerusform></translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Save all</source>
         <translation>Lưu tất cả</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
         <source>Don’t save</source>
         <translation>Đừng lưu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
         <source>Yes</source>
         <translation>Có</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
         <source>Yes to all</source>
         <translation>Đồng ý cho tất cả</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
         <source>No</source>
         <translation>Không</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
         <source>No to all</source>
         <translation>Không cho tất cả </translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
         <source>Abort</source>
         <translation>Hủy bỏ</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Retry</source>
         <translation>Thử lại</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Ignore</source>
         <translation>Từ chối</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Discard</source>
         <translation>Loại bỏ</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
         <source>Help</source>
         <translation>Hỗ trợ</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
         <source>Reset</source>
         <translation>Trả về mặc định</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="139"/>
         <source>Continue</source>
         <translation>Tiếp tục</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="374"/>
         <source>Checking for updates…</source>
         <translation>Đang kiểm tra cập nhật...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="527"/>
         <source>Downloading %1…</source>
         <translation>Đang tải về %1...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="542"/>
         <source>Unpacking %1…</source>
         <translation>Đang giải nén %1…</translation>
     </message>
@@ -14179,7 +14375,7 @@ For tips on suitable drives, click the help button.</source>
 <context>
     <name>import-export</name>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="123"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="142"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
         <extracomment>Title of the export progress dialog</extracomment>
@@ -15868,7 +16064,7 @@ Libsndfile báo “%2”</translation>
         <translation>Mở %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="144"/>
         <source>Sorry, we are unable to load these videos right now</source>
         <translation>Xin lỗi, chúng tôi hiện không thể tải các video này ngay lúc này</translation>
     </message>
@@ -15879,19 +16075,19 @@ Libsndfile báo “%2”</translation>
         <translation>Học</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="152"/>
         <source>Learn tab bar</source>
         <translation>Thanh tab Học tập</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="163"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="227"/>
         <source>Get started</source>
         <translation>Bắt đầu</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="182"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="271"/>
         <source>Classes</source>
         <translation>Lớp học</translation>
     </message>
@@ -15901,22 +16097,22 @@ Libsndfile báo “%2”</translation>
         <translation>Danh sách phát nhận được bị trống.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="64"/>
         <source>Marc Sabatella</source>
         <translation>Marc Sabatella</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="65"/>
         <source>Instructor</source>
         <translation>Hướng dẫn</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="68"/>
         <source>Creator, Mastering MuseScore</source>
         <translation>Creator, Mastering MuseScore</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="69"/>
         <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
 
 Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
@@ -15933,7 +16129,7 @@ Ngoài ra, Mastering MuseScore còn có một cộng đồng nhạc sĩ hỗ tr�
 (Lưu ý: Mastering MuseScore chỉ có sẵn bằng tiếng Anh)</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Mastering MuseScore</source>
         <translation>Làm chủ MuseScore</translation>
     </message>
@@ -16222,14 +16418,14 @@ Ngoài ra, Mastering MuseScore còn có một cộng đồng nhạc sĩ hỗ tr�
         <translation>BÌNH LUẬN</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="171"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="136"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="175"/>
         <source>Error loading template</source>
         <translation>Lỗi khi tải mẫu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="133"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="172"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="137"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="176"/>
         <source>Unable to load metadata template from given file.</source>
         <translation>Không thể tải mẫu siêu dữ liệu từ tệp đã cung cấp.</translation>
     </message>
@@ -16267,12 +16463,12 @@ Ngoài ra, Mastering MuseScore còn có một cộng đồng nhạc sĩ hỗ tr�
 <context>
     <name>module-manager</name>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="70"/>
         <source>Module Unsuitable</source>
         <translation>Mô-đun không thích hợp</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="93"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="94"/>
         <source>Unable to load the “%1” module.
 
 Error: %2</source>
@@ -16281,7 +16477,7 @@ Error: %2</source>
 Lỗi: %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="125"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="126"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
@@ -16290,7 +16486,7 @@ It will not be loaded.</source>
 Nó sẽ không được tải.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="137"/>
         <source>The module “%1” is matched with Audacity version “%2”.
 
 It will not be loaded.</source>
@@ -16300,7 +16496,7 @@ It will not be loaded.</source>
 Nó sẽ không được tải.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="159"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="160"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
@@ -16309,12 +16505,12 @@ It will not be loaded.</source>
 Nó sẽ không được tải.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
         <source>Module “%1” found.</source>
         <translation>Đã tìm thấy mô-đun “%1”.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="321"/>
         <source>
 
 Only use modules from trusted sources</source>
@@ -16323,27 +16519,27 @@ Only use modules from trusted sources</source>
 Chỉ dùng các mô-đun đến từ nguồn có tín</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="323"/>
         <source>Yes</source>
         <translation>Có</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="323"/>
         <source>No</source>
         <translation>Không</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="325"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="326"/>
         <source>Audacity Module Loader</source>
         <translation>Tải mô-đun Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="328"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="329"/>
         <source>Try and load this module?</source>
         <translation>Tải thử mô-đun này?</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="353"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="354"/>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
@@ -16352,22 +16548,22 @@ It will not be loaded.</source>
 Nó sẽ không được tải.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="414"/>
         <source>Overwrite the plug-in file %1?</source>
         <translation>Thay thế tập tin plug-in%1?</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="424"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="417"/>
         <source>Plug-in already exists</source>
         <translation>Plugin đã tồn tại</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="447"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="440"/>
         <source>Plug-in file is in use. Failed to overwrite</source>
         <translation>Tập tin plugin đang được sử dụng. Không thể lưu được</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="469"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="462"/>
         <source>Failed to register:
 %1</source>
         <extracomment>%1 is the error message explaining why registration failed</extracomment>
@@ -16382,7 +16578,7 @@ Nó sẽ không được tải.</translation>
 </numerusform></translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="479"/>
         <source>Enable new plug-ins</source>
         <translation>Bật plugin mới </translation>
     </message>
@@ -16439,12 +16635,14 @@ Nó sẽ không được tải.</translation>
 <context>
     <name>multiwindows</name>
     <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation type="vanished">Cho phép mở nhiều cửa sổ</translation>
+        <translation>Cho phép mở nhiều cửa sổ</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation type="vanished">Hiển thị thông tin đa cửa sổ</translation>
+        <translation>Hiển thị thông tin đa cửa sổ</translation>
     </message>
 </context>
 <context>
@@ -17111,7 +17309,7 @@ Nó sẽ không được tải.</translation>
         <translation>Đã di chuyển thanh trượt âm lượng</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="89"/>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="40"/>
         <source>Volume</source>
         <translation>Âm lượng</translation>
@@ -17128,7 +17326,7 @@ Nó sẽ không được tải.</translation>
         <translation>Cân bằng trái/phải</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="79"/>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
         <source>Playback volume</source>
         <translation>Âm lượng phát lại</translation>
@@ -17181,68 +17379,68 @@ Nó sẽ không được tải.</translation>
         <translation>Đã xảy ra lỗi nội bộ trong khi thay đổi cài đặt audio.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="155"/>
         <source>No playback device is available.</source>
         <translation>Không có thiết bị phát lại có sẵn.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="156"/>
         <source>“%1” is now used for playback.</source>
         <translation>“%1” hiện đang được sử dụng để phát lại.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="158"/>
         <source>Playback device changed</source>
         <translation>Thiết bị phát lại đã thay đổi</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="163"/>
         <source>No recording device is available.</source>
         <translation>Không có thiết bị ghi âm nào khả dụng.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="164"/>
         <source>“%1” is now used for recording.</source>
         <translation>“%1” hiện đang được dùng để ghi âm.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="151"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="166"/>
         <source>Recording device changed</source>
         <translation>Đã thay đổi thiết bị ghi âm</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1019"/>
         <source>The previous audio state could not be restored.</source>
         <translation>Không thể khôi phục trạng thái audio trước đó.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="996"/>
         <source>Unable to rescan audio devices</source>
         <translation>Không thể quét lại các thiết bị audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1002"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
         <translation>Không thể khôi phục luồng audio sau khi quét lại các thiết bị âm thanh.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1004"/>
         <source>Audio devices</source>
         <translation>Thiết bị audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1020"/>
         <source>Unable to change audio settings</source>
         <translation>Không thể thay đổi cài đặt audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1029"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
         <translation>Không thể khôi phục luồng âm thanh sau khi thay đổi cài đặt audio.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1031"/>
         <source>Audio settings</source>
         <translation>Thiết lập audio</translation>
     </message>
@@ -17255,7 +17453,7 @@ Nó sẽ không được tải.</translation>
         <translation>Lặp vào</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="110"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="101"/>
         <source>Loop out</source>
         <translation>Lặp ra</translation>
     </message>
@@ -17981,7 +18179,7 @@ Nó sẽ không được tải.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>Hiển thị hộp thoại &apos;Bạn muốn xuất như thế nào?&apos;</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -17996,12 +18194,12 @@ Nó sẽ không được tải.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>Luôn lưu vào đám mây</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>Luôn luôn lưu vào máy tính</translation>
     </message>
 </context>
 <context>
@@ -18315,7 +18513,7 @@ Nó sẽ không được tải.</translation>
         <translation>Màu nhấn</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="529"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="530"/>
         <source>Could not save project locally</source>
         <translation>Không thể lưu dự án cục bộ</translation>
     </message>
@@ -18325,9 +18523,9 @@ Nó sẽ không được tải.</translation>
         <translation>Tải dự án thất bại</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="712"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="825"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
         <source>All supported files</source>
         <translation>Tất cả các tệp được hỗ trợ</translation>
     </message>
@@ -18353,189 +18551,189 @@ Nó sẽ không được tải.</translation>
         <translation>Đã nhập nhiều tệp</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="397"/>
         <source>Error opening file</source>
         <translation>Lỗi khi mở tập tin</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="398"/>
         <source>Could not open file: %1</source>
         <translation>Không mở được tập tin: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="721"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="744"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1136"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Hủy bỏ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="738"/>
         <source>Upload project to audio.com…</source>
         <translation>Tải dự án lên audio.com...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="826"/>
         <source>Audacity project files</source>
         <translation>Tệp dự án Audacity</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="827"/>
         <source>Audacity 3 files</source>
         <translation>Tệp Audacity 3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="828"/>
         <source>Audacity 4 files</source>
         <translation>Tệp Audacity 4</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <source>Cloud sync failed</source>
         <translation>Đồng bộ hóa đám mây thất bại</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
         <source>Project unavailable</source>
         <translation>Dự án không khả dụng</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="586"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="740"/>
         <source>Access denied</source>
         <translation>Truy cập bị từ chối</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="720"/>
         <source>Version conflict</source>
         <translation>Xung đột phiên bản</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="621"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
         <source>Visit audio.com</source>
         <translation>Vào trang web audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="623"/>
         <source>Load latest</source>
         <translation>Tải bản gần nhất</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="630"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
         <source>Project incomplete</source>
         <translation>Dự án chưa hoàn thành</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="757"/>
         <source>Network error</source>
         <translation>Lỗi kết nối mạng</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1094"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="715"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1131"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>Tất cả các thay đổi đã được lưu sẽ được cập nhật vào tài khoản đám mây.
 Bạn có thể quản lý file này trong phần dự án đã được cập nhật trong audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="829"/>
         <source>Importable audio and media files</source>
         <translation>Nhập các tệp audio và media</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="806"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="856"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="893"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Mở</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="875"/>
         <source>Audio files</source>
         <translation>Các tệp audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="876"/>
         <source>Video files</source>
         <translation>Các tệp video</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
         <source>Game media files</source>
         <translation>Các tệp phương tiện trò chơi</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
         <source>Streaming files</source>
         <translation>Các tệp phát trực tiếp</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="879"/>
         <source>Animation and image files</source>
         <translation>Các tệp hình ảnh và hoạt họa</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="880"/>
         <source>Raw files</source>
         <translation>Các tệp thô</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="909"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Bạn có muốn lưu các thay đổi vào dự án trước khi đóng không?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="911"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Bạn có muốn lưu các thay đổi vào dự án “%1” trước khi đóng không?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="915"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Những thay đổi của bạn sẽ bị mất nếu bạn không lưu lại.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="922"/>
         <source>Unsaved changes</source>
         <translation>Thay đổi chưa được lưu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1149"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Đang tiếp tục đồng bộ với audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1556"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1167"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1598"/>
         <source>Syncing project from cloud…</source>
         <translation>Đang đồng bộ dự án từ đám mây…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1291"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1328"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Không thể đọc tệp %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1333"/>
         <source>An error occurred while reading this file.</source>
         <translation>Đã xảy ra lỗi khi đọc tệp này.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="747"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="693"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="733"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Lưu trên máy tính</translation>
@@ -18621,11 +18819,11 @@ Vui lòng gỡ bỏ chế độ chống ghi bằng cách kiểm tra thông số 
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="563"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="564"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="460"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="488"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2290"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2771"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2293"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2774"/>
         <source>Warning</source>
         <translation>Cảnh báo</translation>
     </message>
@@ -18649,40 +18847,40 @@ Vui lòng gỡ bỏ chế độ chống ghi bằng cách kiểm tra thông số 
         <translation>(%1): %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="186"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="187"/>
         <source>Failed to set page size for database %1</source>
         <translation>Không đặt được kích thước trang cho cơ sở dữ liệu %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="195"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="196"/>
         <source>Failed to set safe mode on primary connection to %1</source>
         <translation>Không thể cài đặt chế đồ an toàn cho liên kết hiện hành đến %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="213"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="214"/>
         <source>Failed to set safe mode on checkpoint connection to %1</source>
         <translation>Không thể cài đặt chế đồ an toàn cho liên kết điểm đến %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="243"/>
         <source>Checkpointing project</source>
         <translation>Tạo điểm kiểm tra dự án.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="248"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="249"/>
         <source>Checkpointing %1</source>
         <extracomment>%1 is the name of the project being checkpointed</extracomment>
         <translation>Tạo điểm kiểm tra%1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="254"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="255"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
         <source>This may take several seconds</source>
         <translation>Xin chờ vài giây</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="548"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="549"/>
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
@@ -18690,7 +18888,7 @@ Vui lòng gỡ bỏ chế độ chống ghi bằng cách kiểm tra thông số 
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="551"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="552"/>
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
@@ -18698,7 +18896,7 @@ Vui lòng gỡ bỏ chế độ chống ghi bằng cách kiểm tra thông số 
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="638"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="639"/>
         <source>Failed to create savepoint:
 
 %1</source>
@@ -18708,8 +18906,8 @@ Vui lòng gỡ bỏ chế độ chống ghi bằng cách kiểm tra thông số 
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="662"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="685"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="663"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="686"/>
         <source>Failed to release savepoint:
 
 %1</source>
@@ -19001,35 +19199,35 @@ Bạn đang dùng Audacity bản %2. Bạn có thể nâng cấp lên phien bả
         <translation>Tệp dự án chỉ có thể đọc</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2194"/>
         <source>Unable to parse project information.</source>
         <translation>Không thể phân tích thông tin dự án.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2291"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2294"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
         <translation>Cơ sở dữ liệu của dự án không thể mở lại, có thể do dung lượng lưu trữ trên thiết bị bị hạn chế.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2307"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2310"/>
         <source>Saving project</source>
         <translation>Đang lưu dự án</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2309"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2363"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2383"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2425"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2312"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2366"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2386"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2428"/>
         <source>Error Saving Project</source>
         <translation>Lỗi khi lưu dự án</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
         <source>Syncing</source>
         <translation>Đang đồng bộ</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2365"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2368"/>
         <source>The project failed to open, possibly due to limited space
 on the storage device.
 
@@ -19041,7 +19239,7 @@ trên ổ đĩa của bạn quá ít.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2385"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2388"/>
         <source>Unable to remove autosave information, possibly due to limited space
 on the storage device.
 
@@ -19053,12 +19251,12 @@ trên ổ đĩa của bạn quá ít
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2451"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2454"/>
         <source>Backing up project</source>
         <translation>Đang phục hồi dự án</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2770"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2773"/>
         <source>Automatic database backup failed.</source>
         <translation>Lỗi quá trình phục hồi tự động.</translation>
     </message>
@@ -19160,7 +19358,7 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>Xuất bản trên máy tính</translation>
     </message>
 </context>
 <context>
@@ -19187,57 +19385,57 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="432"/>
         <source>Audacity 3 project</source>
         <translation>Dự án Audacity 3</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="433"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Bạn đã mở một dự án Audacity 3. Dự án này cần được chuyển đổi trước khi bạn có thể sử dụng nó trong Audacity 4.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="438"/>
         <source>Cancel</source>
         <translation>Hủy bỏ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="495"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="441"/>
         <source>Save as new project</source>
         <translation>Lưu dưới dạng dự án mới</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="444"/>
         <source>Legacy project</source>
         <translation>Dự án cũ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="469"/>
         <source>The project was saved as “%1”</source>
         <translation>Dự án đã được lưu dưới dạng “%1”</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="472"/>
         <source>Continue</source>
         <translation>Tiếp tục</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="475"/>
         <source>Project saved</source>
         <translation>Dự án đã được lưu</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1193"/>
         <source>Time Track not supported</source>
         <translation>Tính năng theo dõi thời gian của track không được hỗ trợ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1194"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>Các dự án có bao gồm tính năng hỗ trợ thời gian của track, tính năng này chưa được hỗ trợ trên Audacity 4 và sẽ bị loại bỏ. Điều này không ảnh hưởng gì đến các dự án gốc của bạn trong Audacity 3. </translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1198"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -19316,7 +19514,7 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="505"/>
         <source>Save to computer</source>
         <translation>Lưu trên máy tính</translation>
     </message>
@@ -19344,41 +19542,40 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <translation>vùng chọn</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
-        <translation>Đăng nhập hoặc tạo tài khoản mới trên Audio.com để chia sẻ nhạc của bạn.</translation>
+        <translation type="vanished">Đăng nhập hoặc tạo tài khoản mới trên Audio.com để chia sẻ nhạc của bạn.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="483"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Xuất bản</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>Publish changes online?</source>
         <translation>Đăng tải các thay đổi lên mạng?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="488"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Các thay đổi đã lưu của bạn sẽ hiển thị công khai. Chúng tôi cũng sẽ cần tạo một tệp MP3 mới để phát công khai.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="563"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="499"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="509"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Vui lòng kiểm tra kết nối internet của bạn hoặc thử lại sau.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="508"/>
         <source>Unable to connect to the cloud</source>
         <translation>Không thể kết nối với tài khoản đám mây</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="522"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Không thể kết nối với audio.com</translation>
     </message>
@@ -19438,34 +19635,34 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="858"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="804"/>
         <source>Your audio could not be shared</source>
         <translation>Audio của bạn không chia sẻ được</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>Tài khoản trên audio.com của bạn cần được xác thực trước. Vui lòng xác thực tài khoản của bạn thông qua đường link ở email.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="818"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com có mã lỗi không xác định: %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="821"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com có mã lỗi không xác định</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="823"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="830"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Vui lòng thử lại lần nữa hoặc nhờ sự trợ giúp cho vấn đề này trên audio.com.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="826"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>Không thể kết nối với audio.com. Vui lòng kiểm tra đường truyền internet hoặc thử lại sau.</translation>
     </message>
@@ -19537,8 +19734,8 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml" line="43"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="348"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="355"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="350"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="357"/>
         <source>Customize toolbar</source>
         <extracomment>Tooltip of the toolbar customization button</extracomment>
         <translation>Tùy chỉnh thanh công cụ </translation>
@@ -19554,23 +19751,23 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <translation>Vị trí phát lại</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap</source>
         <extracomment>Noun: label of the snapping control in the playback toolbar</extracomment>
         <translation>Điều chỉnh nhanh</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="313"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="315"/>
         <source>Snapping</source>
         <translation>Đang điều chỉnh nhanh</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="316"/>
         <source>Snap to</source>
         <translation>Bắt dính vào</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="351"/>
         <source>Show/hide toolbar buttons</source>
         <translation>Hiển thị/ẩn các nút trên thanh công cụ</translation>
     </message>
@@ -19586,7 +19783,7 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="15"/>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="434"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="438"/>
         <source>New label track</source>
         <translation>Tạo track nhãn mới</translation>
     </message>
@@ -19690,72 +19887,69 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <translation>Nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="20"/>
         <source>Pan: 100R</source>
-        <translation>Cân bằng: 100R</translation>
+        <translation type="vanished">Cân bằng: 100R</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="33"/>
         <source>Pan:</source>
-        <translation>Cân bằng:</translation>
+        <translation type="vanished">Cân bằng:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all master effects</source>
         <translation>Bật/tắt tất cả hiệu ứng chính</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all effects</source>
         <translation>Bật/tắt tất cả hiệu ứng</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="132"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="136"/>
         <source>Add effect</source>
         <translation>Thêm hiệu ứng</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
         <source>Add master effect</source>
         <translation>Thêm hiệu ứng chính</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="158"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="162"/>
         <source>Realtime effects are non-destructive and can be changed at any time.</source>
         <translation>Hiệu ứng thời gian thực không ảnh hưởng dữ liệu gốc và có thể thay đổi bất cứ lúc nào.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="163"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Xem video&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
         <source>Real-time effects panel</source>
-        <translation>Bảng điều khiển hiệu ứng thời gian thực</translation>
+        <translation type="vanished">Bảng điều khiển hiệu ứng thời gian thực</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
         <source>Realtime effects</source>
         <translation>Hiệu ứng thời gian thực</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="91"/>
         <source>Close real-time effects panel</source>
         <extracomment>Tooltip of the button that closes the panel</extracomment>
         <translation>Đóng bảng điều khiển hiệu ứng thời gian thực</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="121"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="149"/>
         <source>Add track</source>
         <translation>Thêm track</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="139"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="129"/>
         <source>Tracks</source>
         <translation>Các track</translation>
     </message>
@@ -19939,7 +20133,7 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <translation>Tần số cao</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="29"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="30"/>
         <source>Remove effect</source>
         <translation>Loại bỏ hiệu ứng</translation>
     </message>
@@ -19959,12 +20153,12 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <translation>Clip: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="695"/>
         <source>Clip name: %1</source>
         <translation>Tên clip: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="837"/>
         <source>Clip menu</source>
         <translation>Menu Clip</translation>
     </message>
@@ -20008,28 +20202,28 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <translation>Menu track</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="235"/>
         <source>Track %1: %2, audio track, selected</source>
         <translation>Track %1: %2, track audio, đã chọn</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="235"/>
         <source>Track %1: %2, audio track</source>
         <translation>Track %1: %2, track audio</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="236"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Press Enter to select or deselect</source>
         <translation>Nhấn Enter để chọn hoặc bỏ chọn</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
         <source>Track %1: %2, label track, selected</source>
         <translation>Track %1: %2, track nhãn, đã chọn</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
         <source>Track %1: %2, label track</source>
         <translation>Track %1: %2, track nhãn</translation>
     </message>
@@ -20088,6 +20282,17 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <source>Cyan</source>
         <translation>Màu lục lam</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="55"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="66"/>
+        <source>Timeline</source>
+        <translation>Dòng thời gian</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
+        <source>Pan: %1</source>
+        <translation>Cân bằng: %1</translation>
+    </message>
 </context>
 <context>
     <name>projectscene/silence</name>
@@ -20145,13 +20350,13 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <translation>Hiển thị mức đo âm lượng micrô khi không ghi âm</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="970"/>
         <source>Record</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Record - Thu âm</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="971"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="968"/>
         <source>Recorded audio</source>
         <translation>Đã ghi âm audio</translation>
     </message>
@@ -20422,17 +20627,17 @@ Vui lòng kết nối thiết bị đầu vào và quét lại.</translation>
         <translation>Cài đặt lại phím tắt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="38"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="40"/>
         <source>MuseScore Studio shortcuts file</source>
         <translation>Tệp phím tắt MuseScore Studio</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="193"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="197"/>
         <source>Import shortcuts</source>
         <translation>Nhập phím tắt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="205"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
         <source>Export shortcuts</source>
         <translation>Phím tắt xuất</translation>
     </message>
@@ -21111,12 +21316,14 @@ Vui lòng kết nối thiết bị đầu vào và quét lại.</translation>
 <context>
     <name>testflow</name>
     <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
         <source>Show scripts</source>
-        <translation type="vanished">Hiện tập lệnh</translation>
+        <translation>Hiện tập lệnh</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
         <source>Show scripts…</source>
-        <translation type="vanished">Hiển thị kịch bản…</translation>
+        <translation>Hiển thị kịch bản…</translation>
     </message>
 </context>
 <context>
@@ -21134,6 +21341,62 @@ Vui lòng kết nối thiết bị đầu vào và quét lại.</translation>
         <location filename="../../au3/libraries/au3-time-track/TimeTrack.cpp" line="145"/>
         <source>Time Track</source>
         <translation>Track Thời gian</translation>
+    </message>
+</context>
+<context>
+    <name>toast</name>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
+        <source>%n hour(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>Còn lại %n giờ</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
+        <source>%n minute(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>Còn lại %n phút</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
+        <source>%n second(s) remaining</source>
+        <comment>amount of time left until the requested operation is finished</comment>
+        <translation><numerusform>Còn lại %n giây</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="98"/>
+        <source>%1 of %2</source>
+        <translation>%1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="256"/>
+        <source>Dismiss</source>
+        <translation>Bỏ qua</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="43"/>
+        <source>Error</source>
+        <translation>Lỗi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="45"/>
+        <source>Warning</source>
+        <translation>Cảnh báo</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="47"/>
+        <source>Information</source>
+        <translation>Thông tin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="49"/>
+        <source>Success</source>
+        <translation>Thành công</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="106"/>
+        <source>Press F6 to go to the notification.</source>
+        <translation>Nhấn F6 để chuyển đến thông báo.</translation>
     </message>
 </context>
 <context>
@@ -21245,38 +21508,38 @@ Vui lòng kết nối thiết bị đầu vào và quét lại.</translation>
         <translation>Đã kéo điểm đường bao</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="861"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="897"/>
         <source>Set looping region in/out</source>
         <translation>Đặt điểm đầu/cuối vùng lặp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="41"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="42"/>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="48"/>
         <source>Mixing down to mono…</source>
         <translation>Trộn âm xuống mono…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="277"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="278"/>
         <source>Rendering pitch and speed…</source>
         <translation>Đang xuất cao độ và tốc độ…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1413"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1368"/>
         <source>Mix down to mono</source>
         <translation>Trộn âm xuống mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1414"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1369"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
         <translation>Thao tác này yêu cầu chuyển đổi một hoặc nhiều clips sang định dạng mono. Bạn có muốn tiếp tục không?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1573"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1576"/>
         <source>Combine mono tracks to stereo</source>
         <translation>Kết hợp các mono tracks thành stereo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1574"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1577"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -21293,39 +21556,39 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="827"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="850"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="873"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="904"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="833"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="856"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="879"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="910"/>
         <source>No audio selected</source>
         <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Chưa có audio được chọn</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="828"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="851"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="874"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="905"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="834"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="857"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="880"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="911"/>
         <source>Select the audio to delete and try again.</source>
         <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Chọn audio để xóa và thử lại.</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1340"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1354"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1368"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1346"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1360"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1374"/>
         <source>Paste error</source>
         <translation>Lỗi dán</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2091"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2097"/>
         <source>Set rate</source>
         <translation>Đặt tần số</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2250"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2267"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resample track</source>
         <translation>Lấy mẫu lại track</translation>
     </message>
@@ -21394,7 +21657,7 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="656"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="687"/>
         <source>Changed Speed</source>
         <translation>Thay đổi tốc độ</translation>
     </message>
@@ -21443,13 +21706,13 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
         <source>Cut</source>
         <translation>Cắt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
         <source>Remove multiple items</source>
         <translation>Xóa nhiều mục</translation>
     </message>
@@ -21460,15 +21723,15 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Remove</source>
         <translation>Bỏ đi</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1156"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1137"/>
         <source>Delete</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Xóa bỏ</translation>
@@ -21479,369 +21742,374 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
         <translation>Xóa và dóng khoảng trống</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="392"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
         <source>Items moved</source>
         <translation>Đã di chuyển các mục</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="395"/>
         <source>Clip moved</source>
         <translation>Đã di chuyển clip</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="396"/>
         <source>Move clip</source>
         <translation>Di chuyển clip</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="393"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
         <source>Move items</source>
         <translation>Di chuyển các mục</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="398"/>
+        <source>Label moved</source>
+        <translation>Đã di chuyển nhãn</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="399"/>
+        <source>Move label</source>
+        <translation>Di chuyển nhãn</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
         <source>Split</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Split - Thác</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
         <source>Split clips at silence</source>
         <translation>Tách clip tại khoảng lặng</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
         <source>Split at silence</source>
         <translation>Tách tại khoảng lặng</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="473"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="495"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="504"/>
         <source>Split into new track</source>
         <translation>Tách thành track mới</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
         <source>Split-cut to the clipboard</source>
         <translation>Chia rồi cắt vào bộ nhớ sao chép Clipboard</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
         <source>Split cut</source>
         <translation>Cắt tách</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
         <source>Trim items left</source>
         <translation>Cắt bớt các mục ở phía bên trái</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
         <source>Trim clip left</source>
         <translation>Cắt bớt đoạn clip ở phía bên trái</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="596"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="605"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="627"/>
         <source>Trim</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Trim - Xén</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
         <source>Trim items right</source>
         <translation>Cắt bớt các mục ở phía bên phải</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
         <source>Trim clip right</source>
         <translation>Cắt bớt đoạn clip ở phía bên phải</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="688"/>
         <source>Changed speed to: %1%</source>
         <translation>Tốc độ đã được thay đổi thành: %1%</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Stretch Left</source>
         <translation>Giãn sang trái</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
         <source>Stretch items left</source>
         <translation>Giãn các mục sang trái</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
         <source>Stretch clips left</source>
         <translation>Giãn các clip sang trái</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Stretch Right</source>
         <translation>Giãn sang phải</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
         <source>Stretch items right</source>
         <translation>Giãn các mục sang phải</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
         <source>Stretch clips right</source>
         <translation>Giãn các clip sang phải</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
         <source>Created new mono track</source>
         <translation>Đã tạo track mono mới</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
         <source>New mono track</source>
         <translation>Tạo track mono mới</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
         <source>Created new stereo track</source>
         <translation>Đã tạo track stereo mới</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
         <source>New stereo track</source>
         <translation>Tạo stereo track mới</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
         <source>Created label track</source>
         <translation>Đã tạo track nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
         <source>New label track</source>
         <translation>Tạo track nhãn mới</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="712"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="743"/>
         <source>Delete track</source>
         <translation>Xóa track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="721"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
         <source>Duplicate track</source>
         <translation>Nhân đôi track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="761"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="768"/>
         <source>Move track</source>
         <translation>Di chuyển track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="815"/>
         <source>Insert silence</source>
         <translation>Chèn khoảng lặng</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="839"/>
         <source>Clips grouped</source>
         <translation>Đã nhóm các clip</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="845"/>
         <source>Clips ungrouped</source>
         <translation>Đã hủy nhóm các clip</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="856"/>
         <source>Changed track format</source>
         <translation>Đã đổi định dạng track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="865"/>
         <source>Changed track rate</source>
         <translation>Đã đổi tần số track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="874"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="875"/>
         <source>Swapped stereo channels</source>
         <translation>Đã đổi vị trí kênh stereo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="884"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="885"/>
         <source>Split stereo tracks to L/R mono</source>
         <translation>Tách các track stereo thành các track mono Trái/Phải</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="895"/>
         <source>Split stereo tracks to center mono</source>
         <translation>Tách các track stereo thành track center mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
         <source>Make stereo track</source>
         <translation>Tạo stereo track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resampled audio track(s)</source>
         <translation>Đã thay đổi tốc độ lấy mẫu cho (cac) track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Label added</source>
         <translation>Đã thêm nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Add label</source>
         <translation>Thêm nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
         <source>Label title changed</source>
         <translation>Tên nhãn đã thay đổi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
         <source>Changed label title</source>
         <translation>Đã đổi tên nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="950"/>
         <source>Label low frequency changed</source>
         <translation>Tần số thấp của nhãn đã thay đổi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Change label low frequency</source>
         <translation>Thay đổi tần số thấp của nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="960"/>
         <source>Label high frequency changed</source>
         <translation>Tần số cao của nhãn đã thay đổi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
         <source>Change label high frequency</source>
         <translation>Thay đổi tần số cao của nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
         <source>Cut label</source>
         <translation>Cắt nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
         <source>Remove label</source>
         <translation>Xóa nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Remove multiple labels</source>
         <translation>Xóa nhiều nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Move labels</source>
         <translation>Di chuyển các nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
         <source>Move</source>
-        <translation>Di chuyển</translation>
+        <translation type="vanished">Di chuyển</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Labels moved</source>
         <translation>Đã di chuyển các nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
         <source>Label stretched</source>
         <translation>Đã kéo giãn nhãn</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
         <source>Stretch label left</source>
         <translation>Kéo giãn nhãn sang trái</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
         <source>Stretch labels left</source>
         <translation>Kéo giãn các nhãn sang trái</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1111"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1092"/>
         <source>Stretch</source>
         <translation>Kéo giản</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
         <source>Stretch label right</source>
         <translation>Kéo giãn nhãn sang phải</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
         <source>Stretch labels right</source>
         <translation>Kéo giãn các nhãn sang phải</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1112"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation>Tham gia lúc %1 giây vào lúc %2</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1115"/>
         <source>Join</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Ghép nối</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1120"/>
         <source>Duplicated</source>
         <translation>Đã nhân đôi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1122"/>
         <source>Duplicate</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Nhân đôi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Split-deleted clips</source>
         <translation>Đã cắt-xóa các clip</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Split delete</source>
         <translation>Tách và xóa</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1135"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation>Xóa %1 giây tại %2</translation>
@@ -21857,17 +22125,17 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
         <translation>Tracks: trống</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="458"/>
         <source>Tempo changed</source>
         <translation>Nhịp độ đã thay đổi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="463"/>
         <source>Upper time signature changed</source>
         <translation>Số chỉ nhịp trên đã thay đổi</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="468"/>
         <source>Lower time signature changed</source>
         <translation>Số chỉ nhịp dưới đã thay đổi</translation>
     </message>
@@ -22030,7 +22298,7 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
 <context>
     <name>ui</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="219"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="274"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
         <source>Browse</source>
         <translation>Trình duyệt...</translation>
@@ -22080,7 +22348,7 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>checked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
@@ -22089,7 +22357,7 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="525"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="527"/>
         <source>unchecked</source>
         <comment>checkstate</comment>
         <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
@@ -22164,17 +22432,18 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
         <translation>Value - Giá trị</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation type="vanished">Khác</translation>
+        <translation>Khác</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="160"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
         <source>Value list header panel</source>
         <extracomment>Accessibility description of the header of a value list (table)</extracomment>
         <translation>Bảng tiêu đề danh sách giá trị</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="254"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="291"/>
         <source>Value list panel</source>
         <extracomment>Accessibility description of the body of a value list (table)</extracomment>
         <translation>Bảng danh sách giá trị</translation>
@@ -22229,12 +22498,14 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
         <translation>hướng cả hai</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation type="vanished">đã mở rộng</translation>
+        <translation>đã mở rộng</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation type="vanished">đã thu gọn</translation>
+        <translation>đã thu gọn</translation>
     </message>
 </context>
 <context>
@@ -22488,14 +22759,30 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
 <context>
     <name>update</name>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="85"/>
+        <source>A new update is ready to install</source>
+        <translation>Bản cập nhật mới đã sẵn sàng để cài đặt</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="86"/>
         <source>A new version of %1 is available!</source>
         <translation>Phiên bản mới của %1 đã có sẵn!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="97"/>
+        <source>%1 has downloaded an update and is ready to install. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
+        <translation>%1 đã tải xuống bản cập nhật và sẵn sàng cài đặt. %1 sẽ khởi động lại để hoàn tất quá trình cài đặt. Nếu bạn có thay đổi chưa lưu, bạn sẽ được nhắc lưu trước.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="110"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="132"/>
         <source>Release notes</source>
         <translation>Thông tin về phiên bản mới</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="131"/>
+        <source>%1 Release notes</source>
+        <translation>Ghi chú phát hành %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
@@ -22508,9 +22795,13 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
         <translation>Nhắc tôi sau nhé</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="89"/>
+        <source>Update now</source>
+        <translation>Cập nhật ngay</translation>
+    </message>
+    <message>
         <source>Install update</source>
-        <translation>Cài đặt bản cập nhật</translation>
+        <translation type="vanished">Cài đặt bản cập nhật</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22518,37 +22809,55 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
         <translation>Đọc ghi chú phát hành %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="136"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
         <translation>Bạn đã có phiên bản mới nhất của %1. Vui lòng truy cập &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; để biết thông tin về những gì sắp tới.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="143"/>
         <source>You’re up to date!</source>
         <translation>Bạn đã cập nhật rồi!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="175"/>
         <source>Cannot connect to server</source>
         <translation>Không thể kết nối đến máy chủ</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="176"/>
         <source>Sorry - please try again later</source>
         <translation>Xin lỗi - vui lòng thử lại sau</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="178"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="190"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
         <translation>Kiểm tra cập nhật</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="188"/>
+        <source>Not enough disk space</source>
+        <translation>Không đủ dung lượng ổ đĩa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="265"/>
+        <source>%1 has downloaded an update and is ready to install it. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
+        <translation>%1 đã tải xuống bản cập nhật và sẵn sàng cài đặt. %1 sẽ khởi động lại để hoàn tất quá trình cài đặt. Nếu bạn có thay đổi chưa lưu, bạn sẽ được nhắc lưu trước.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="272"/>
+        <source>Restart</source>
+        <translation>Khởi động lại</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="302"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
         <translation>%1 cần phải đóng để hoàn tất quá trình cài đặt. Nếu bạn có bất kỳ thay đổi nào chưa lưu, bạn sẽ được nhắc lưu chúng trước khi %1 đóng lại.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="308"/>
         <source>Close</source>
         <translation>Đóng lại</translation>
     </message>
@@ -22563,24 +22872,67 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
         <translation>Đang tải về %1 %2</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="65"/>
+        <source>Updated successfully</source>
+        <translation>Đã cập nhật thành công</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="53"/>
+        <source>Update available</source>
+        <translation>Có bản cập nhật</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="87"/>
+        <source>See details</source>
+        <translation>Xem chi tiết</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="97"/>
+        <source>Update</source>
+        <translation>Cập nhật</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="375"/>
+        <source>Free up at least %1 MB of disk space and try again.</source>
+        <translation>Hãy giải phóng ít nhất %1 MB dung lượng ổ đĩa rồi thử lại.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="546"/>
+        <source>Installing %1</source>
+        <translation>Đang cài đặt %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="547"/>
+        <source>Installing %1 %2</source>
+        <translation>Đang cài đặt %1 %2</translation>
+    </message>
 </context>
 <context>
     <name>vst</name>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
         <source>Use old view</source>
-        <translation type="vanished">Sử dụng chế độ xem cũ</translation>
+        <translation>Sử dụng chế độ xem cũ</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
         <source>Use new view</source>
-        <translation type="vanished">Sử dụng chế độ xem mới</translation>
+        <translation>Sử dụng chế độ xem mới</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
         <source>Open FX editor</source>
-        <translation type="vanished">Mở trình chỉnh sửa hiệu ứng FX</translation>
+        <translation>Mở trình chỉnh sửa hiệu ứng FX</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
         <source>Open instrument editor</source>
-        <translation type="vanished">Mở trình chỉnh sửa nhạc cụ</translation>
+        <translation>Mở trình chỉnh sửa nhạc cụ</translation>
     </message>
 </context>
 <context>
@@ -22597,48 +22949,48 @@ Bạn vẫn muốn tiếp tục chứ? </translation>
         <translation>Phụ mục: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="115"/>
         <source>Searching VST3 in: %1</source>
         <translation>Tìm kiếm VST3 trong: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="162"/>
         <source>VST3 Effects</source>
         <translation>Các hiệu ứng VST3</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="166"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="167"/>
         <source>The Audacity Team</source>
         <translation>Nhóm hỗ trợ Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="176"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="177"/>
         <source>Adds the ability to use VST3 effects in Audacity.</source>
         <translation>Thêm tính năng sử dụng các hiệu ứng VST3 trong Audacity.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="274"/>
         <source>Looking in: %1</source>
         <translation>Đang tìm trong: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="343"/>
         <source>VST3 module error: %1</source>
         <translation>Lỗi mô đun VST3: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="752"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="758"/>
         <source>Unable to apply VST3 preset file %1</source>
         <translation>Không thể áp dụng tập tin VST3 được thiết lập sẵn%1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="753"/>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="770"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="759"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="776"/>
         <source>Error</source>
         <translation>Lỗi</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="769"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="775"/>
         <source>Failed to save VST3 preset to file</source>
         <translation>Lưu cài đặt VST3 thành tệp thất bại</translation>
     </message>
@@ -22704,7 +23056,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>%1.%2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2823"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2828"/>
         <source>A track has a corrupted sample sequence.</source>
         <translation>Một track có trình tự mẫu bị hỏng.</translation>
     </message>
@@ -22735,41 +23087,49 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Tuyến tính (dB)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="211"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="227"/>
         <source>-36 dB (shallow range for high-amplitude editing)</source>
         <translation>-36 dB (bị giới hạn khi chỉnh sửa âm có biên độ lớn)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="213"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
         <translation>-48 dB (PCM dùng 8 bit lấy mẫu)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="215"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
         <translation>-60 dB (PCM dùng 10 bit lấy mẫu)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="217"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
         <translation>-72 dB (PCM dùng 12 bit lấy mẫu)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="219"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
         <translation>-84 dB (PCM dùng 14 bit lấy mẫu)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="221"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
         <translation>-96 dB (PCM dùng 16 bit lấy mẫu)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="223"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
         <source>-120 dB (approximate limit of human hearing)</source>
         <translation>-120 dB (xấp xỉ giới hạn nghe của con người)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="225"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
         <translation>-145 dB (PCM dùng 24 bit lấy mẫu)</translation>
@@ -22778,7 +23138,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
 <context>
     <name>workspace</name>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="79"/>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
         <source>Remove</source>
         <translation>Bỏ đi</translation>
@@ -22815,6 +23175,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces</source>
         <translation>Chỉnh sửa không gian làm việc</translation>
     </message>
@@ -22878,20 +23239,25 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Âm nhạc</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="35"/>
         <source>Select workspace</source>
-        <translation type="vanished">Chọn không gian làm việc</translation>
+        <translation>Chọn không gian làm việc</translation>
     </message>
     <message>
         <source>Edit workspaces…</source>
         <translation type="vanished">Chỉnh sửa không gian làm việc…</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation type="vanished">Chỉnh sửa không gian làm việc...</translation>
+        <translation>Chỉnh sửa không gian làm việc...</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
         <source>Create new workspace</source>
-        <translation type="vanished">Tạo không gian làm việc mới</translation>
+        <translation>Tạo không gian làm việc mới</translation>
     </message>
 </context>
 <context>

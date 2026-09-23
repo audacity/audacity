@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nn">
 <context>
     <name>Playback</name>
     <message>
@@ -45,7 +45,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="55"/>
         <source>Restart</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>I-restart</translation>
+        <translation>Start på nytt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="61"/>
@@ -61,13 +61,13 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
         <source>Trigger the focused control or make a range selection of track items</source>
-        <translation>I-trigger ang naka-focus na control o gumawa ng range selection ng mga track item</translation>
+        <translation>Utløys kontrollen i fokus eller gjer eit områdeval av sporelement</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
         <source>Open item context menu</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Buksan ang context menu ng item</translation>
+        <translation>Opne kontekstmenyen til elementet</translation>
     </message>
     <message>
         <source>Full screen</source>
@@ -499,7 +499,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
         <source>Play/Stop and set cursor</source>
-        <translation>Play/Stop at itakda ang cursor</translation>
+        <translation>Spel av/stopp og set markør</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
@@ -565,37 +565,37 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="284"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="285"/>
         <source>Mute/unmute focused track</source>
-        <translation>I-mute/i-unmute ang naka-focus na track</translation>
+        <translation>Demp/opphev demping av fokusert spor</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="292"/>
         <source>Solo/unsolo focused track</source>
-        <translation>I-solo/i-unsolo ang naka-focus na track</translation>
+        <translation>Solo/opphev solo for fokusert spor</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="298"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="299"/>
         <source>Mute all tracks</source>
-        <translation>I-mute ang lahat ng track</translation>
+        <translation>Demp alle spor</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="305"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="306"/>
         <source>Unmute all tracks</source>
-        <translation>I-unmute ang lahat ng track</translation>
+        <translation>Opphev demping av alle spor</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="312"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="313"/>
         <source>Mute selected tracks</source>
-        <translation>I-mute ang mga napiling track</translation>
+        <translation>Demp valde spor</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="319"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="320"/>
         <source>Unmute selected tracks</source>
-        <translation>I-unmute ang mga napiling track</translation>
+        <translation>Opphev demping av valde spor</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="330"/>
@@ -2239,7 +2239,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="247"/>
         <source>Open the context menu of the focused item</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Buksan ang context menu ng naka-focus na item</translation>
+        <translation>Opne kontekstmenyen til det fokuserte elementet</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
@@ -3752,7 +3752,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="76"/>
         <source>Real-time effects panel</source>
-        <translation>Panel ng mga real-time na effect</translation>
+        <translation>Sanntidseffektpanel</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="170"/>
@@ -3829,7 +3829,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="481"/>
         <source>Restart</source>
-        <translation>I-restart</translation>
+        <translation>Start på nytt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="483"/>
@@ -4769,7 +4769,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="146"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
-        <translation>%1 ng %2</translation>
+        <translation>%1 av %2</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="164"/>
@@ -4975,7 +4975,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="178"/>
         <source>Could not start the sign-in process. Please try again.</source>
-        <translation>Hindi masimulan ang proseso ng pag-sign in. Pakisubukang muli.</translation>
+        <translation>Kunne ikkje starte innloggingsprosessen. Prøv igjen.</translation>
     </message>
 </context>
 <context>
@@ -5835,7 +5835,7 @@ Error code: %1</source>
     </message>
     <message>
         <source>Error</source>
-        <translation type="vanished">Error</translation>
+        <translation type="vanished">Feil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1481"/>
@@ -6425,7 +6425,7 @@ Error message says:
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="186"/>
         <source>%1 of %2</source>
         <comment>find clipping</comment>
-        <translation>%1 ng %2</translation>
+        <translation>%1 av %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/Generator.cpp" line="51"/>
@@ -6461,7 +6461,7 @@ Error message says:
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="66"/>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="81"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>Feil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="80"/>
@@ -7013,7 +7013,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="178"/>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="189"/>
         <source>Export failed</source>
-        <translation>Nabigo ang pag-export</translation>
+        <translation>Eksport mislukkast</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="196"/>
@@ -7157,7 +7157,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show commands list</source>
-        <translation>Ipakita ang listahan ng mga command</translation>
+        <translation>Vis liste over kommandoar</translation>
     </message>
     <message>
         <source>Show rcommands list</source>
@@ -8608,7 +8608,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
         <source>untitled</source>
-        <translation>walang pamagat</translation>
+        <translation>utan namn</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
@@ -11186,12 +11186,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductionviewmodel.cpp" line="150"/>
         <source>Warning</source>
-        <translation>Babala</translation>
+        <translation>Åtvaring</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductionviewmodel.cpp" line="151"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>Feil</translation>
     </message>
 </context>
 <context>
@@ -11629,7 +11629,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="144"/>
         <source>File name preview</source>
-        <translation>Preview ng pangalan ng file</translation>
+        <translation>Førehandsvising av filnamn</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
@@ -11640,17 +11640,17 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
         <source>File name prefix</source>
-        <translation>Prefix ng pangalan ng file</translation>
+        <translation>Filnamnprefiks</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
         <source>Number files in label order</source>
-        <translation>Bilangan ang mga file ayon sa pagkakasunod ng label</translation>
+        <translation>Nummerer filer i kommentarrekkjefølgje</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
         <source>Number files in track order</source>
-        <translation>Bilangan ang mga file ayon sa pagkakasunod ng track</translation>
+        <translation>Nummerer filer i sporrekkjefølgje</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="232"/>
@@ -11727,7 +11727,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="682"/>
         <source>Include audio before first label</source>
-        <translation>Isama ang audio bago ang unang label</translation>
+        <translation>Ta med lyd før første kommentar</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
@@ -11996,17 +11996,17 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="454"/>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="530"/>
         <source>untitled</source>
-        <translation>walang pamagat</translation>
+        <translation>utan namn</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="573"/>
         <source>No labels to export.</source>
-        <translation>Walang mga label na i-export.</translation>
+        <translation>Ingen kommentarar å eksportere.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="578"/>
         <source>There are no tracks to export</source>
-        <translation>Walang mga track na i-export</translation>
+        <translation>Det er ingen spor å eksportere</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="44"/>
@@ -12053,24 +12053,24 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
         <source>No labels</source>
-        <translation>Walang mga label</translation>
+        <translation>Ingen kommentarar</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="240"/>
         <source>Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</source>
-        <translation>Ang pag-export ng mga rehiyong may label bilang hiwalay na audio file ay nangangailangan ng kahit isang label sa unang label track. Bumalik sa proyekto, magdagdag ng mga label, at subukan muli.</translation>
+        <translation>Å eksportere kommentarområde som separate lydfiler krev minst éin kommentar på det første kommentarsporet. Gå tilbake til prosjektet, legg til kommentarar og prøv igjen.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="334"/>
         <source>LabelName</source>
         <extracomment>Placeholder for a label's name in the export file name preview</extracomment>
-        <translation>PangalanNgLabel</translation>
+        <translation>Kommentarnamn</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="336"/>
         <source>TrackName</source>
         <extracomment>Placeholder for a track's name in the export file name preview</extracomment>
-        <translation>PangalanNgTrack</translation>
+        <translation>Spornamn</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="558"/>
@@ -12085,7 +12085,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
         <source>Export failed</source>
-        <translation>Nabigo ang pag-export</translation>
+        <translation>Eksport mislukkast</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="760"/>
@@ -12095,7 +12095,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="781"/>
         <source>Some of the files already exist. Do you want to overwrite them?</source>
-        <translation>Mayroon nang ilan sa mga file. Gusto mo bang i-overwrite ang mga ito?</translation>
+        <translation>Nokre av filene finst allereie. Vil du overskrive dei?</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="791"/>
@@ -12110,27 +12110,27 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="54"/>
         <source>Full project audio</source>
-        <translation>Buong audio ng proyekto</translation>
+        <translation>Lyd for heile prosjektet</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="55"/>
         <source>Selected audio</source>
-        <translation>Napiling audio</translation>
+        <translation>Vald lyd</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="56"/>
         <source>Audio in loop region</source>
-        <translation>Audio sa loop region</translation>
+        <translation>Lyd i løkkjeområdet</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="57"/>
         <source>Tracks as separate audio files</source>
-        <translation>Mga track bilang hiwalay na audio file</translation>
+        <translation>Spor som separate lydfiler</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="58"/>
         <source>Labeled regions as separate audio files</source>
-        <translation>Mga rehiyong may label bilang hiwalay na audio file</translation>
+        <translation>Kommentarområde som separate lydfiler</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="865"/>
@@ -12465,7 +12465,7 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="760"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>Feil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="59"/>
@@ -12708,14 +12708,14 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1368"/>
         <source>Success</source>
-        <translation>Tagumpay</translation>
+        <translation>Vellukka</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="73"/>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="61"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1373"/>
         <source>Dismiss</source>
-        <translation>I-dismiss</translation>
+        <translation>Lukk</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="625"/>
@@ -12771,17 +12771,17 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="98"/>
         <source>Information</source>
-        <translation>Impormasyon</translation>
+        <translation>Informasjon</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
         <source>Warning</source>
-        <translation>Babala</translation>
+        <translation>Åtvaring</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>Feil</translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
@@ -14273,7 +14273,7 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="135"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.h" line="41"/>
         <source>Warning</source>
-        <translation>Babala</translation>
+        <translation>Åtvaring</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ExportPlugin.cpp" line="43"/>
@@ -15213,7 +15213,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1337"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>Feil</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1367"/>
@@ -17643,7 +17643,7 @@ It will not be loaded.</source>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="129"/>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="137"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>Feil</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="130"/>
@@ -17660,7 +17660,7 @@ It will not be loaded.</source>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="199"/>
         <source>Success</source>
-        <translation>Tagumpay</translation>
+        <translation>Vellukka</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="147"/>
@@ -18375,7 +18375,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
-        <translation>I-dismiss</translation>
+        <translation>Lukk</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="738"/>
@@ -18624,7 +18624,7 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2293"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2774"/>
         <source>Warning</source>
-        <translation>Babala</translation>
+        <translation>Åtvaring</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
@@ -19689,7 +19689,7 @@ You need to run that version of Audacity to recover the project.</source>
     </message>
     <message>
         <source>Real-time effects panel</source>
-        <translation type="vanished">Panel ng mga real-time na effect</translation>
+        <translation type="vanished">Sanntidseffektpanel</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
@@ -20046,12 +20046,12 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="55"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="66"/>
         <source>Timeline</source>
-        <translation>Timeline</translation>
+        <translation>Tidslinje</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
         <source>Pan: %1</source>
-        <translation>Pan: %1</translation>
+        <translation>Panorering: %1</translation>
     </message>
 </context>
 <context>
@@ -21124,37 +21124,37 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="98"/>
         <source>%1 of %2</source>
-        <translation>%1 ng %2</translation>
+        <translation>%1 av %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="256"/>
         <source>Dismiss</source>
-        <translation>I-dismiss</translation>
+        <translation>Lukk</translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="43"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>Feil</translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="45"/>
         <source>Warning</source>
-        <translation>Babala</translation>
+        <translation>Åtvaring</translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="47"/>
         <source>Information</source>
-        <translation>Impormasyon</translation>
+        <translation>Informasjon</translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="49"/>
         <source>Success</source>
-        <translation>Tagumpay</translation>
+        <translation>Vellukka</translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="106"/>
         <source>Press F6 to go to the notification.</source>
-        <translation>Pindutin ang F6 upang pumunta sa notification.</translation>
+        <translation>Trykk F6 for å gå til varselet.</translation>
     </message>
 </context>
 <context>
@@ -21522,12 +21522,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="398"/>
         <source>Label moved</source>
-        <translation>Inilipat ang label</translation>
+        <translation>Kommentar flytta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="399"/>
         <source>Move label</source>
-        <translation>Ilipat ang label</translation>
+        <translation>Flytt kommentar</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
@@ -22048,7 +22048,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="31"/>
         <source>Warning</source>
-        <translation>Babala</translation>
+        <translation>Åtvaring</translation>
     </message>
 </context>
 <context>
@@ -22517,7 +22517,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="85"/>
         <source>A new update is ready to install</source>
-        <translation>May bagong update na handa nang i-install</translation>
+        <translation>Ei ny oppdatering er klar til å installerast</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="86"/>
@@ -22527,7 +22527,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="97"/>
         <source>%1 has downloaded an update and is ready to install. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
-        <translation>Nag-download ang %1 ng update at handa na itong i-install. Magre-restart ang %1 upang makumpleto ang pag-install. Kung mayroon kang mga hindi na-save na pagbabago, hihilingin muna sa iyong i-save ang mga ito.</translation>
+        <translation>%1 har lasta ned ei oppdatering og er klar til å installere henne. %1 vil starte på nytt for å fullføre installasjonen. Om du har ulagra endringar, vert du beden om å lagre dei først.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="110"/>
@@ -22538,7 +22538,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="131"/>
         <source>%1 Release notes</source>
-        <translation>%1 Release notes</translation>
+        <translation>%1 Utgjevingsmerknader</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
@@ -22553,7 +22553,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="89"/>
         <source>Update now</source>
-        <translation>I-update ngayon</translation>
+        <translation>Oppdater no</translation>
     </message>
     <message>
         <source>Install update</source>
@@ -22595,17 +22595,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="188"/>
         <source>Not enough disk space</source>
-        <translation>Hindi sapat ang disk space</translation>
+        <translation>Ikkje nok diskplass</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="265"/>
         <source>%1 has downloaded an update and is ready to install it. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
-        <translation>Nag-download ang %1 ng update at handa na itong i-install. Magre-restart ang %1 upang makumpleto ang pag-install. Kung mayroon kang mga hindi na-save na pagbabago, hihilingin muna sa iyong i-save ang mga ito.</translation>
+        <translation>%1 har lasta ned ei oppdatering og er klar til å installere henne. %1 vil starte på nytt for å fullføre installasjonen. Om du har ulagra endringar, vert du beden om å lagre dei først.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="272"/>
         <source>Restart</source>
-        <translation>I-restart</translation>
+        <translation>Start på nytt</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="302"/>
@@ -22631,37 +22631,37 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="65"/>
         <source>Updated successfully</source>
-        <translation>Matagumpay na na-update</translation>
+        <translation>Oppdatert</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="53"/>
         <source>Update available</source>
-        <translation>May available na update</translation>
+        <translation>Oppdatering tilgjengeleg</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="87"/>
         <source>See details</source>
-        <translation>Tingnan ang mga detalye</translation>
+        <translation>Sjå detaljar</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="97"/>
         <source>Update</source>
-        <translation>I-update</translation>
+        <translation>Oppdater</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="375"/>
         <source>Free up at least %1 MB of disk space and try again.</source>
-        <translation>Magbakante ng kahit %1 MB ng disk space at subukang muli.</translation>
+        <translation>Frigjer minst %1 MB diskplass og prøv igjen.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="546"/>
         <source>Installing %1</source>
-        <translation>Ini-install ang %1</translation>
+        <translation>Installerer %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="547"/>
         <source>Installing %1 %2</source>
-        <translation>Ini-install ang %1 %2</translation>
+        <translation>Installerer %1 %2</translation>
     </message>
 </context>
 <context>
@@ -22743,7 +22743,7 @@ Do you wish to continue?</source>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="759"/>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="776"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>Feil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="775"/>
@@ -22788,7 +22788,7 @@ Truncating to this maximum length.</source>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1900"/>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="341"/>
         <source>Warning</source>
-        <translation>Babala</translation>
+        <translation>Åtvaring</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="368"/>
