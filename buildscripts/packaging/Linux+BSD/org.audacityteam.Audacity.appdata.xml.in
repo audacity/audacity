@@ -31,13 +31,11 @@
   <url type="help">https://support.audacityteam.org/</url>
   <url type="translate">https://support.audacityteam.org/community/contributing/translating</url>
   <releases>
-    <release version="4.0.0 beta" date="2024-09-12">
+    <release version="@MUSE_APP_VERSION@" date="2026-09-23">
      <description>
-        <p>New Audacity 4.0</p>
-        <p>Watch the release video or read the changelog to learn more.</p>
+        <p>Bug fixes and improvements for Audacity @MUSE_APP_VERSION@.</p>
       </description>
-      <url>https://support.audacityteam.org/additional-resources/changelog/audacity-3.6</url>
-      <url>https://www.audacityteam.org/3.6.0-video</url>
+      <url>https://github.com/audacity/audacity/releases/tag/Audacity-@MUSE_APP_VERSION@</url>
     </release>
   </releases>
 </component>
