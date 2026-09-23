@@ -633,11 +633,13 @@ TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool 
 {
     TransportSequences result;
     {
+        const auto tempoScale = ProjectAudioIO::Get(projectRef()).GetPlayTempoScale();
         const auto range = trackList.Any<Au3WaveTrack>()
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+                StretchingSequence::Create(
+                    *pTrack, pTrack->GetClipInterfaces(), tempoScale));
         }
     }
     return result;

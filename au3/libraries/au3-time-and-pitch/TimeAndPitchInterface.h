@@ -43,6 +43,8 @@ public:
     virtual void GetSamples(float* const*, size_t) = 0;
     virtual void OnCentShiftChange(int cents) = 0;
     virtual void OnFormantPreservationChange(bool preserve) = 0;
+    //! Update time-stretch ratio (1 = unchanged duration; <1 = faster).
+    virtual void OnTimeRatioChange(double timeRatio) = 0;
 
     virtual ~TimeAndPitchInterface();
 };

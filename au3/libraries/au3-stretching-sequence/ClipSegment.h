@@ -12,6 +12,7 @@
 
 #include "AudioSegment.h"
 #include "ClipTimeAndPitchSource.h"
+#include "PlaybackTempoScale.h"
 #include "au3-utility/Observer.h"
 #include "PlaybackDirection.h"
 #include <atomic>
@@ -30,7 +31,9 @@ using PitchRatioChangeCbSubscriber
 class STRETCHING_SEQUENCE_API ClipSegment final : public AudioSegment
 {
 public:
-    ClipSegment(const ClipInterface&, double durationToDiscard, PlaybackDirection);
+    ClipSegment(
+        const ClipInterface&, double durationToDiscard, PlaybackDirection,
+        PlaybackTempoScale::Ptr tempoScale = PlaybackTempoScale::Create());
     ~ClipSegment() override;
 
     // AudioSegment
@@ -39,11 +42,14 @@ public:
     size_t NChannels() const override;
 
 private:
-    const sampleCount mTotalNumSamplesToProduce;
+    PlaybackTempoScale::Ptr mTempoScale;
+    sampleCount mTotalNumSamplesToProduce;
     sampleCount mTotalNumSamplesProduced = 0;
     ClipTimeAndPitchSource mSource;
     bool mPreserveFormants;
     int mCentShift;
+    double mBaseStretchRatio = 1.0;
+    double mLastTempoScale = 1.0;
     std::atomic<bool> mUpdateFormantPreservation = false;
     std::atomic<bool> mUpdateCentShift = false;
     // Careful that this guy is constructed after `mSource`, which it refers to

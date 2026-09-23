@@ -22,6 +22,7 @@ static const muse::Settings::Key DITHERING("au3wrap", "Quality/DitherAlgorithmCh
 static const muse::Settings::Key SEEK_SHORT_PERIOD(moduleName, "playback/seekShortPeriod");
 static const muse::Settings::Key SEEK_LONG_PERIOD(moduleName, "playback/seekLongPeriod");
 static const muse::Settings::Key SELECTION_FOLLOWS_LOOP_REGION(moduleName, "playback/selectionFollowsLoopRegion");
+static const muse::Settings::Key PRESERVE_PITCH(moduleName, "playback/preservePitch");
 
 // quality/dithering settings are stored as string in audacity.cfg
 // we need to convert these when reading/writing
@@ -168,6 +169,11 @@ void PlaybackConfiguration::init()
     muse::settings()->valueChanged(SELECTION_FOLLOWS_LOOP_REGION).onReceive(nullptr, [this](const muse::Val&) {
         m_selectionFollowsLoopRegionChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(PRESERVE_PITCH, muse::Val(false));
+    muse::settings()->valueChanged(PRESERVE_PITCH).onReceive(nullptr, [this](const muse::Val&) {
+        m_preservePitchChanged.notify();
+    });
 }
 
 std::vector<au::playback::PlaybackQualityPrefs::PlaybackQuality> PlaybackConfiguration::playbackQualityList() const
@@ -269,4 +275,22 @@ void PlaybackConfiguration::setSelectionFollowsLoopRegion(bool follows)
 async::Notification PlaybackConfiguration::selectionFollowsLoopRegionChanged() const
 {
     return m_selectionFollowsLoopRegionChanged;
+}
+
+bool PlaybackConfiguration::preservePitch() const
+{
+    return muse::settings()->value(PRESERVE_PITCH).toBool();
+}
+
+void PlaybackConfiguration::setPreservePitch(bool preserve)
+{
+    if (preservePitch() == preserve) {
+        return;
+    }
+    muse::settings()->setSharedValue(PRESERVE_PITCH, muse::Val(preserve));
+}
+
+async::Notification PlaybackConfiguration::preservePitchChanged() const
+{
+    return m_preservePitchChanged;
 }

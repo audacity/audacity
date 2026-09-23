@@ -131,7 +131,8 @@ void PlayAtSpeedModel::onProjectChanged()
         projectAudioIO.SetPlaySpeed(DEFAULT_SPEED);
     }
 
-    m_speedSubscription = projectAudioIO.Subscribe([this](const SpeedChangeMessage&) {
+    m_speedSubscription = static_cast<Observer::Publisher<SpeedChangeMessage>&>(projectAudioIO)
+                          .Subscribe([this](const SpeedChangeMessage&) {
         updateSpeedFromProject();
     });
 

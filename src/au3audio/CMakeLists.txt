@@ -64,6 +64,7 @@ endif()
 
 set(MODULE_LINK
         au3-audio-io
+        au3-stretching-sequence
         au3wrap
         au3-audio-devices
         au3-math

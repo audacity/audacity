@@ -355,7 +355,8 @@ MenuItem* AppMenuModel::makeViewMenu()
               << makeMenuItem("open-metadata-editor")
               << makeMenuItem("toggle-history")
               << makeSeparator()
-              << makeMenuItem("toggle-play-at-speed")
+              << makeMenu(TranslatableString("appshell-menu-view", "Play-at-Speed"),
+                          makePlayAtSpeedItems(), "menu-play-at-speed")
 #ifdef MUSE_MODULE_WORKSPACE
         << makeSeparator()
         << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"),
@@ -373,6 +374,14 @@ MenuItem* AppMenuModel::makeViewMenu()
         << makeMenuItem("dock-restore-default-layout");
 
     return makeMenu(TranslatableString("appshell-menu-view", "&View"), viewItems, "menu-view");
+}
+
+MenuItemList AppMenuModel::makePlayAtSpeedItems()
+{
+    return {
+        makeMenuItem("toggle-play-at-speed"),
+        makeMenuItem("toggle-preserve-pitch"),
+    };
 }
 
 MenuItem* AppMenuModel::makeRecordMenu()

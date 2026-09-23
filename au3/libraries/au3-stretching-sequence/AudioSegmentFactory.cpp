@@ -13,6 +13,7 @@
 #include "ClipInterface.h"
 #include "ClipSegment.h"
 #include "SilenceSegment.h"
+#include "PlaybackTempoScale.h"
 #include "au3-time-and-pitch/TimeAndPitchInterface.h"
 
 #include <algorithm>
@@ -20,10 +21,12 @@
 using ClipConstHolder = std::shared_ptr<const ClipInterface>;
 
 AudioSegmentFactory::AudioSegmentFactory(
-    int sampleRate, int numChannels, ClipConstHolders clips)
+    int sampleRate, int numChannels, ClipConstHolders clips,
+    PlaybackTempoScale::Ptr tempoScale)
     : mClips{std::move(clips)}
     , mSampleRate{sampleRate}
     , mNumChannels{numChannels}
+    , mTempoScale{tempoScale ? std::move(tempoScale) : PlaybackTempoScale::Create()}
 {
 }
 
@@ -49,16 +52,18 @@ AudioSegmentFactory::CreateAudioSegmentSequenceForward(double t0)
     std::vector<std::shared_ptr<AudioSegment> > segments;
     for (const auto& clip : sortedClips) {
         if (clip->GetPlayStartTime() > t0) {
+            // Unity-timeline gap length; SilenceSegment applies tempo scale.
             const auto numSamples
                 =sampleCount { (clip->GetPlayStartTime() - t0) * mSampleRate + .5 };
             segments.push_back(
-                std::make_shared<SilenceSegment>(mNumChannels, numSamples));
+                std::make_shared<SilenceSegment>(mNumChannels, numSamples, mTempoScale));
             t0 = clip->GetPlayStartTime();
         } else if (clip->GetPlayEndTime() <= t0) {
             continue;
         }
         segments.push_back(std::make_shared<ClipSegment>(
-                               *clip, t0 - clip->GetPlayStartTime(), PlaybackDirection::forward));
+                               *clip, t0 - clip->GetPlayStartTime(), PlaybackDirection::forward,
+                               mTempoScale));
         t0 = clip->GetPlayEndTime();
     }
     return segments;
@@ -81,13 +86,14 @@ AudioSegmentFactory::CreateAudioSegmentSequenceBackward(double t0)
             const auto numSamples
                 =sampleCount { (t0 - clip->GetPlayEndTime()) * mSampleRate + .5 };
             segments.push_back(
-                std::make_shared<SilenceSegment>(mNumChannels, numSamples));
+                std::make_shared<SilenceSegment>(mNumChannels, numSamples, mTempoScale));
             t0 = clip->GetPlayEndTime();
         } else if (clip->GetPlayStartTime() >= t0) {
             continue;
         }
         segments.push_back(std::make_shared<ClipSegment>(
-                               *clip, clip->GetPlayEndTime() - t0, PlaybackDirection::backward));
+                               *clip, clip->GetPlayEndTime() - t0, PlaybackDirection::backward,
+                               mTempoScale));
         t0 = clip->GetPlayStartTime();
     }
     return segments;

@@ -243,6 +243,7 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
 set(MODULE_LINK
         au3wrap
+        au3-audio-io
         au3-channel
         au3-mixer
         au3-preferences
@@ -253,6 +254,7 @@ set(MODULE_LINK
         au3-xml
         trackedit
         spectrogram
+        playback
         uicomponents
         au3-registries
         au3-track

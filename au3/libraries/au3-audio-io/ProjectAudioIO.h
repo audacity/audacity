@@ -24,10 +24,13 @@ struct AudioIOStartStreamOptions;
 class Meter;
 
 struct SpeedChangeMessage {};
+struct PreservePitchChangeMessage {};
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters
-class AUDIO_IO_API ProjectAudioIO final : public ClientData::Base, public Observer::Publisher<SpeedChangeMessage>
+class AUDIO_IO_API ProjectAudioIO final : public ClientData::Base,
+    public Observer::Publisher<SpeedChangeMessage>,
+    public Observer::Publisher<PreservePitchChangeMessage>
 {
 public:
     //! Default factory function ignores the second argument
@@ -74,6 +77,21 @@ public:
 
     void SetPlaySpeed(double value);
 
+    //! When true, Play-at-Speed time-stretches (preserves pitch) instead of resampling.
+    bool GetPreservePitch() const
+    {
+        return mPreservePitch.load(std::memory_order_relaxed);
+    }
+
+    void SetPreservePitch(bool preserve);
+
+    //! Shared with StretchingSequence / ClipSegment for preserve-pitch playback.
+    //! Offline Create() paths must not use this; they get an isolated 1.0 scale.
+    std::shared_ptr<std::atomic<double> > GetPlayTempoScale() const
+    {
+        return mPlayTempoScale;
+    }
+
 private:
     AudacityProject& mProject;
 
@@ -85,6 +103,10 @@ private:
     // the main. Default to 1.0 (normal speed) so variable-speed playback works
     // before any UI sets a value.
     std::atomic<double> mPlaySpeed{ 1.0 };
+    std::atomic<bool> mPreservePitch{ false };
+    //! Operation-scoped tempo scale for this project's live playback.
+    std::shared_ptr<std::atomic<double> > mPlayTempoScale
+    { std::make_shared<std::atomic<double> >(1.0) };
 
     int mAudioIOToken{ -1 };
 };

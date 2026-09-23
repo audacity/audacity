@@ -162,9 +162,20 @@ static UiActionList STATIC_ACTIONS = {
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Play-at-Speed"),
+             TranslatableString("action", "Show Play-at-Speed"),
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Show or hide Play-at-Speed in the playback toolbar"),
+             Checkable::Yes
+             ),
+    UiAction("toggle-preserve-pitch",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
+             //: Common name for time-stretching playback that keeps the original pitch
+             TranslatableString("action", "Preserve pitch"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description",
+                                "Play at a different speed without changing pitch"),
              Checkable::Yes
              ),
     UiAction("show-master-track",

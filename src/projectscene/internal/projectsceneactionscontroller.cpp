@@ -4,6 +4,9 @@
 
 #include "project/iaudacityproject.h"
 
+#include "au3-audio-io/ProjectAudioIO.h"
+#include "au3wrap/au3types.h"
+
 #include "projectsceneactionscontroller.h"
 #include "projectsceneuiactions.h"
 
@@ -11,6 +14,7 @@ using namespace muse;
 using namespace au::projectscene;
 using namespace muse::async;
 using namespace muse::actions;
+using namespace au::au3;
 
 static const ActionCode VERTICAL_RULERS_CODE("toggle-vertical-rulers");
 static const ActionCode RMS_IN_WAVEFORM_CODE("toggle-rms-in-waveform");
@@ -25,6 +29,7 @@ static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-vie
 static const ActionCode LABEL_OPEN_EDITOR_CODE("open-label-editor");
 static const ActionCode CLIP_GAIN_CODE("clip-gain");
 static const ActionCode TOGGLE_PLAY_AT_SPEED_CODE("toggle-play-at-speed");
+static const ActionCode TOGGLE_PRESERVE_PITCH_CODE("toggle-preserve-pitch");
 static const ActionCode PLAY_AT_SPEED_ACTION_CODE("play-at-speed");
 static const QString PLAYBACK_TOOLBAR_NAME("playbackToolBar");
 
@@ -48,6 +53,7 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
     dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
     dispatcher()->reg(this, TOGGLE_PLAY_AT_SPEED_CODE, this, &ProjectSceneActionsController::togglePlayAtSpeed);
+    dispatcher()->reg(this, TOGGLE_PRESERVE_PITCH_CODE, this, &ProjectSceneActionsController::togglePreservePitch);
 
     projectSceneUiState()->timelineRulerModeChanged().onNotify(this, [this]() {
         notifyActionCheckedChanged(MINUTES_SECONDS_RULER);
@@ -57,6 +63,18 @@ void ProjectSceneActionsController::init()
     uiState()->toolConfigChanged(PLAYBACK_TOOLBAR_NAME).onNotify(this, [this]() {
         notifyActionCheckedChanged(TOGGLE_PLAY_AT_SPEED_CODE);
     });
+
+    playbackConfiguration()->preservePitchChanged().onNotify(this, [this]() {
+        syncPreservePitchToProject();
+        notifyActionCheckedChanged(TOGGLE_PRESERVE_PITCH_CODE);
+    });
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        syncPreservePitchToProject();
+        notifyActionCheckedChanged(TOGGLE_PRESERVE_PITCH_CODE);
+    });
+
+    syncPreservePitchToProject();
 }
 
 void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -134,6 +152,31 @@ void ProjectSceneActionsController::togglePlayAtSpeed()
 
     uiState()->setToolConfig(PLAYBACK_TOOLBAR_NAME, toolConfig);
     notifyActionCheckedChanged(TOGGLE_PLAY_AT_SPEED_CODE);
+}
+
+void ProjectSceneActionsController::syncPreservePitchToProject()
+{
+    auto project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+    auto* au3Project = reinterpret_cast<Au3Project*>(project->au3ProjectPtr());
+    if (!au3Project) {
+        return;
+    }
+    ProjectAudioIO::Get(*au3Project).SetPreservePitch(playbackConfiguration()->preservePitch());
+}
+
+bool ProjectSceneActionsController::isPreservePitchEnabled() const
+{
+    return playbackConfiguration()->preservePitch();
+}
+
+void ProjectSceneActionsController::togglePreservePitch()
+{
+    playbackConfiguration()->setPreservePitch(!playbackConfiguration()->preservePitch());
+    syncPreservePitchToProject();
+    notifyActionCheckedChanged(TOGGLE_PRESERVE_PITCH_CODE);
 }
 
 void ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying()
@@ -231,7 +274,8 @@ bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) 
         { TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, configuration()->playbackOnRulerClickEnabled() },
         { TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, configuration()->updateDisplayWhilePlayingEnabled() },
         { TOGGLE_PINNED_PLAY_HEAD_CODE, configuration()->pinnedPlayHeadEnabled() },
-        { TOGGLE_PLAY_AT_SPEED_CODE, isPlayAtSpeedVisible() }
+        { TOGGLE_PLAY_AT_SPEED_CODE, isPlayAtSpeedVisible() },
+        { TOGGLE_PRESERVE_PITCH_CODE, isPreservePitchEnabled() }
     };
 
     return isChecked[actionCode];
