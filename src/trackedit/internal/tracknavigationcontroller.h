@@ -66,6 +66,8 @@ private:
     TrackItemKey focusedItemKey() const;
     bool isFocusedItemValid() const;
     bool isFocusedItemLabel() const;
+    ItemKeys focusedItemGroup() const;
+    bool isSelected(const ItemKeys& items) const;
 
     TrackItemKeyList sortedItemsKeys(const TrackId& trackId) const;
 

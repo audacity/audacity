@@ -67,6 +67,7 @@ public:
     virtual void setSelectedLabels(const LabelKeyList& labelKeys, bool complete = true) = 0;
     virtual void addSelectedLabel(const LabelKey& labelKey) = 0;
     virtual void removeLabelSelection(const LabelKey& labelKey) = 0;
+
     virtual muse::async::Channel<LabelKeyList> labelsSelected() const = 0;
 
     virtual std::optional<secs_t> selectedLabelStartTime() const = 0;
