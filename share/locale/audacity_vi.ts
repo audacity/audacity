@@ -77,7 +77,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
         <source>About &amp;Qt…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Giới thiệu về &amp;Qt</translation>
+        <translation>Giới thiệu về &amp;Qt...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
@@ -159,7 +159,7 @@
     </message>
     <message>
         <source>Preferences…</source>
-        <translation type="vanished">Tùy chọn</translation>
+        <translation type="vanished">Tùy chọn...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
@@ -893,13 +893,13 @@
         <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
         <source>Record on current track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ghi âm vào track hiện tại</translation>
+        <translation>Ghi âm vào Track Hiện tại</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
         <source>Record on new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ghi âm vào track mới</translation>
+        <translation>Ghi âm vào Track Mới</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
@@ -911,13 +911,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
         <source>Enable sound activating recording</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kích hoạt ghi âm theo âm thanh</translation>
+        <translation>Bật Ghi âm theo Âm thanh</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="374"/>
         <source>Set sound activation level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cài đặt mức kích hoạt bằng âm thanh</translation>
+        <translation>Đặt Mức Kích hoạt bằng Âm thanh</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
@@ -935,43 +935,43 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
         <source>Align end to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đồng bộ toàn diện</translation>
+        <translation>Đồng bộ Toàn diện</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="416"/>
         <source>Align together</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đồng bộ với nhau</translation>
+        <translation>Đồng bộ Với nhau</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
         <source>Align start to zero</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đồng bộ đoạn âm thanh bắt đầu từ 0</translation>
+        <translation>Đồng bộ Audio từ 0</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Align start to playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Căn chỉnh điểm đầu của track theo vị trí con trỏ phát nhạc</translation>
+        <translation>Căn Điểm Đầu Track theo Con trỏ Audio</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
         <source>Align start to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Căn chỉnh điểm bắt đầu với điểm kết thúc vùng chọn</translation>
+        <translation>Căn Điểm Đầu và Kết của Vùng chọn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
         <source>Align end to playhead</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Căn chỉnh điểm cuối với đầu phát</translation>
+        <translation>Căn Điểm Cuối với Đầu Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="456"/>
         <source>Align end to selection end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Căn chỉnh điểm cuối với điểm cuối của vùng chọn</translation>
+        <translation>Căn Điểm Cuối với Điểm Cuối Vùng chọn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
@@ -983,31 +983,31 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
         <source>Sort by name</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sắp xếp theo tên</translation>
+        <translation>Sắp xếp theo Tên</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Plugin manager</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Quản lý các tính năng bổ trợ Plugin</translation>
+        <translation>Quản lý Các Trình cắm</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
         <source>Fav effect #1</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiệu ứng yêu thích #1</translation>
+        <translation>Hiệu ứng Yêu thích #1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="515"/>
         <source>Fav effect #2</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiệu ứng yêu thích #2</translation>
+        <translation>Hiệu ứng Yêu thích #2</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="523"/>
         <source>Fav effect #3</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiệu ứng yêu thích #3</translation>
+        <translation>Hiệu ứng Yêu thích #3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="93"/>
@@ -1047,11 +1047,11 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Xuất audio...</translation>
+        <translation>&amp;Xuất Audio...</translation>
     </message>
     <message>
         <source>Export audio…</source>
-        <translation type="vanished">Xuất audio...</translation>
+        <translation type="vanished">Xuất Audio...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
@@ -1063,19 +1063,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="480"/>
         <source>Keep tracks synchronized</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Duy trì đồng bộ các tracks</translation>
+        <translation>Duy trì Đồng bộ Các Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="499"/>
         <source>Add track effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thêm hiệu ứng của track</translation>
+        <translation>Thêm Hiệu ứng Track</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
         <source>Contrast analyzer</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Công cụ phân tích độ tương phản</translation>
+        <translation>Trình phân tích Tương phản</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="541"/>
@@ -1087,31 +1087,31 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="551"/>
         <source>Manage macros</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Quản lý macro</translation>
+        <translation>Quản lý Macro</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
         <source>Apply macros palette</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Áp dụng bảng macro</translation>
+        <translation>Áp dụng Bảng Macro</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="567"/>
         <source>Macro fade ends</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiệu ứng mờ dần ở đoạn cuối trong tính năng Macro</translation>
+        <translation>Hiệu ứng Mờ dần Đoạn cuối trong Macro</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="575"/>
         <source>Macro MP3 conversion</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Macro chuyển đổi sang MP3</translation>
+        <translation>Macro Chuyển đổi sang MP3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Nyquist plugin installer</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Trình cài đặt plugin Nyquist</translation>
+        <translation>Trình cài đặt Plugin Nyquist</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
@@ -1123,25 +1123,25 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="599"/>
         <source>Sample data export</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Xuất dữ liệu mẫu</translation>
+        <translation>Xuất Mẫu Dữ liệu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
         <source>Sample data import</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nhập dữ liệu mẫu</translation>
+        <translation>Nhập Mẫu Dữ liệu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="615"/>
         <source>Raw data import</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nhập dữ liệu thô</translation>
+        <translation>Nhập Dữ liệu Thô</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
         <source>Reset configuration</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đặt lại cấu hình</translation>
+        <translation>Đặt lại Cấu hình</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="633"/>
@@ -1165,7 +1165,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="657"/>
         <source>Regular interval labels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tạo nhãn theo khoảng thời gian</translation>
+        <translation>Tạo Nhãn theo Khoảng Thời gian</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="667"/>
@@ -1195,7 +1195,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
         <source>Crash report</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Báo cáo lỗi</translation>
+        <translation>Báo cáo Lỗi</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="707"/>
