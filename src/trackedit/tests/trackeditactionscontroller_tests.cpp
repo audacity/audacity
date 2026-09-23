@@ -121,34 +121,7 @@ TEST_F(TrackeditActionsControllerTests, UngroupIsAvailableForASingleGroupedItem)
     EXPECT_FALSE(m_controller->canReceiveAction("group-items"));
 }
 
-TEST_F(TrackeditActionsControllerTests, MultiClipCopyCopiesLabelsOnSelectedTracks)
-{
-    //! [GIVEN] A clip and a label are selected on their tracks
-    const ClipKey clipKey { 1, 10 };
-    const LabelKey labelKey { 2, 20 };
-    Track waveTrack;
-    waveTrack.id = 1;
-    waveTrack.type = TrackType::Mono;
-    Track labelTrack;
-    labelTrack.id = 2;
-    labelTrack.type = TrackType::Label;
-    ON_CALL(*m_trackeditProject, trackList()).WillByDefault(Return(std::vector<Track> { waveTrack, labelTrack }));
-    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { 1, 2 }));
-    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList { clipKey }));
-    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList { labelKey }));
-    ON_CALL(*m_selectionController, leftMostSelectedItemStartTime()).WillByDefault(Return(std::optional<secs_t>(secs_t(3.0))));
-
-    //! [EXPECT] Each track's own items go to the clipboard, offset by the leftmost item
-    EXPECT_CALL(*m_trackeditInteraction, copyNonContinuousTrackDataIntoClipboard(TrackId(1), TrackItemKeyList { clipKey }, secs_t(-3.0)))
-    .Times(1);
-    EXPECT_CALL(*m_trackeditInteraction, copyNonContinuousTrackDataIntoClipboard(TrackId(2), TrackItemKeyList { labelKey }, secs_t(-3.0)))
-    .Times(1);
-
-    //! [WHEN] The multi-item copy runs
-    copyMultiItems();
-}
-
-TEST_F(TrackeditActionsControllerTests, MultiClipCutLeavesLabelsSelectedForTheMixedRemoval)
+TEST_F(TrackeditActionsControllerTests, MultiClipCopyHandsClipsAndLabelsToOneCopy)
 {
     //! [GIVEN] A clip and a label are selected
     const ClipKey clipKey { 1, 10 };
@@ -156,10 +129,24 @@ TEST_F(TrackeditActionsControllerTests, MultiClipCutLeavesLabelsSelectedForTheMi
     ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList { clipKey }));
     ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList { labelKey }));
 
-    //! [EXPECT] The clip removal runs with the labels still selected, which removes them in the
-    //! same history state, so no separate label removal and no label deselection happen
-    EXPECT_CALL(*m_selectionController, resetSelectedLabels()).Times(0);
-    EXPECT_CALL(*m_trackeditInteraction, removeClips(ClipKeyList { clipKey }, false)).Times(1);
+    //! [EXPECT] Both go to the copy operation together
+    EXPECT_CALL(*m_trackeditInteraction, copyItems(ClipKeyList { clipKey }, LabelKeyList { labelKey })).Times(1);
+
+    //! [WHEN] The multi-item copy runs
+    copyMultiItems();
+}
+
+TEST_F(TrackeditActionsControllerTests, MultiClipCutHandsClipsAndLabelsToOneCut)
+{
+    //! [GIVEN] A clip and a label are selected
+    const ClipKey clipKey { 1, 10 };
+    const LabelKey labelKey { 2, 20 };
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList { clipKey }));
+    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList { labelKey }));
+
+    //! [EXPECT] Both go to the cut operation together, which owns the copy and the removal
+    EXPECT_CALL(*m_trackeditInteraction, cutItems(ClipKeyList { clipKey }, LabelKeyList { labelKey }, false)).Times(1);
+    EXPECT_CALL(*m_trackeditInteraction, removeClips(::testing::_, ::testing::_)).Times(0);
     EXPECT_CALL(*m_trackeditInteraction, removeLabels(::testing::_, ::testing::_)).Times(0);
 
     //! [WHEN] The multi-item cut runs

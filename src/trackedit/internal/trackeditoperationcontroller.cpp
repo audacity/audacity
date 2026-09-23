@@ -280,6 +280,73 @@ bool TrackeditOperationController::copyNonContinuousTrackDataIntoClipboard(const
     return true;
 }
 
+bool TrackeditOperationController::copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys)
+{
+    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return false;
+    }
+
+    clipboard()->clearTrackData();
+
+    const std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
+    const secs_t offset = leftmostItemStartTime.has_value() ? -leftmostItemStartTime.value() : secs_t(0.0);
+
+    bool ok = true;
+    for (const Track& track : project->trackList()) {
+        TrackItemKeyList trackItems;
+        for (const ClipKey& key : clipKeys) {
+            if (key.trackId == track.id) {
+                trackItems.push_back(key);
+            }
+        }
+        for (const LabelKey& key : labelKeys) {
+            if (key.trackId == track.id) {
+                trackItems.push_back(key);
+            }
+        }
+        if (trackItems.empty()) {
+            continue;
+        }
+
+        ok = copyNonContinuousTrackDataIntoClipboard(track.id, trackItems, offset) && ok;
+    }
+
+    return ok;
+}
+
+bool TrackeditOperationController::cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips)
+{
+    if (clipKeys.empty() && labelKeys.empty()) {
+        return false;
+    }
+
+    if (!copyItems(clipKeys, labelKeys)) {
+        return false;
+    }
+
+    selectionController()->resetSelectedClips();
+    selectionController()->resetSelectedLabels();
+
+    if (!clipKeys.empty() && !clipsInteraction()->removeClips(clipKeys, moveClips)) {
+        return false;
+    }
+    if (!labelKeys.empty() && !labelsInteraction()->removeLabels(labelKeys, moveClips)) {
+        return false;
+    }
+
+    std::string action;
+    if (!clipKeys.empty() && !labelKeys.empty()) {
+        action = muse::trc("trackedit", "Cut multiple items");
+    } else if (!clipKeys.empty()) {
+        action = muse::trc("trackedit", "Cut multiple clips");
+    } else {
+        action = muse::trc("trackedit", "Cut multiple labels");
+    }
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Cut to the clipboard"), action);
+    return true;
+}
+
 bool TrackeditOperationController::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
     clipboard()->clearSystemClipboard();

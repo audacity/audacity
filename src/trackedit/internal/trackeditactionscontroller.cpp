@@ -1244,16 +1244,13 @@ void TrackeditActionsController::multiClipCut(const ActionData& args)
         moveClips = args.arg<bool>(0);
     }
 
-    auto selectedClips = clipsForInteraction();
-    if (selectedClips.empty()) {
+    const ClipKeyList clips = clipsForInteraction();
+    const LabelKeyList labels = labelsForInteraction();
+    if (clips.empty() && labels.empty()) {
         return;
     }
 
-    trackeditInteraction()->clearClipboard();
-    multiClipCopy();
-    selectionController()->resetSelectedClips();
-
-    trackeditInteraction()->removeClips(selectedClips, moveClips);
+    trackeditInteraction()->cutItems(clips, labels, moveClips);
 }
 
 void TrackeditActionsController::rangeSelectionCut(const ActionData& args)
@@ -1278,39 +1275,7 @@ void TrackeditActionsController::rangeSelectionCut(const ActionData& args)
 
 void TrackeditActionsController::multiClipCopy()
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->selectedTracks();
-    auto selectedClips = clipsForInteraction();
-    auto selectedLabels = labelsForInteraction();
-    auto tracks = project->trackeditProject()->trackList();
-
-    trackeditInteraction()->clearClipboard();
-
-    secs_t offset = 0.0;
-    std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
-    if (leftmostItemStartTime.has_value()) {
-        offset = -leftmostItemStartTime.value();
-    }
-
-    for (const auto& track : tracks) {
-        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
-            continue;
-        }
-
-        TrackItemKeyList selectedTrackItems;
-        for (const auto& clip : selectedClips) {
-            if (clip.trackId == track.id) {
-                selectedTrackItems.push_back(clip);
-            }
-        }
-        for (const auto& label : selectedLabels) {
-            if (label.trackId == track.id) {
-                selectedTrackItems.push_back(label);
-            }
-        }
-
-        trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackItems, offset);
-    }
+    trackeditInteraction()->copyItems(clipsForInteraction(), labelsForInteraction());
 }
 
 void TrackeditActionsController::rangeSelectionCopy()
