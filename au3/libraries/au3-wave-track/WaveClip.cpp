@@ -253,6 +253,7 @@ WaveClip::WaveClip(
     , mClipStretchRatio{orig.mClipStretchRatio}
     , mRawAudioTempo{orig.mRawAudioTempo}
     , mClipTempo{orig.mClipTempo}
+    , mProjectTempo{orig.mProjectTempo}
     , mVersion{orig.mVersion + 1}
 {
     // essentially a copy constructor - but you must pass in the
@@ -307,6 +308,7 @@ WaveClip::WaveClip(
     , mClipStretchRatio{orig.mClipStretchRatio}
     , mRawAudioTempo{orig.mRawAudioTempo}
     , mClipTempo{orig.mClipTempo}
+    , mProjectTempo{orig.mProjectTempo}
     , mVersion{orig.mVersion + 1}
 {
     assert(orig.CountSamples(t0, t1) > 0);
@@ -667,6 +669,7 @@ size_t WaveClip::GreatestAppendBufferLen() const
 void WaveClip::OnProjectTempoChange(
     const std::optional<double>& oldTempo, double newTempo)
 {
+    mProjectTempo = newTempo;
     if (!mRawAudioTempo.has_value()) {
         // When we have tempo detection ready (either by header-file
         // read-up or signal analysis) we can use something smarter than that. In
@@ -755,10 +758,8 @@ void WaveClip::StretchCutLines(double ratioChange)
 
 double WaveClip::GetStretchRatio() const
 {
-    const auto dstSrcRatio
-        =mClipTempo.has_value() && mRawAudioTempo.has_value()
-          ? *mRawAudioTempo / *mClipTempo
-          : 1.0;
+    const auto tempo = mClipTempo ? mClipTempo : (mStretchToMatchProjectTempo ? mProjectTempo : std::nullopt);
+    const auto dstSrcRatio = tempo.has_value() && mRawAudioTempo.has_value() ? *mRawAudioTempo / *tempo : 1.0;
     return mClipStretchRatio * dstSrcRatio;
 }
 
@@ -809,6 +810,9 @@ void WaveClip::SetStretchToMatchProjectTempo(bool enabled)
 {
     if (mStretchToMatchProjectTempo == enabled) {
         return;
+    }
+    if (!mClipTempo) {
+        mClipTempo = enabled ? mRawAudioTempo : mProjectTempo;
     }
     mStretchToMatchProjectTempo = enabled;
 }
@@ -1316,6 +1320,10 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
         mClipStretchRatio = other.mClipStretchRatio;
         mRawAudioTempo = other.mRawAudioTempo;
         mClipTempo = other.mClipTempo;
+        mProjectTempo = other.mProjectTempo;
+        if (!mClipTempo && mStretchToMatchProjectTempo != other.mStretchToMatchProjectTempo) {
+            mClipTempo = other.mStretchToMatchProjectTempo ? other.mProjectTempo : other.mRawAudioTempo;
+        }
     } else if (!HasEqualPitchAndSpeed(other)) {
         // post is satisfied
         return false;

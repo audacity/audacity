@@ -286,9 +286,11 @@ public:
     }
 
     static std::shared_ptr<WaveClip> NewShared(size_t width, const SampleBlockFactoryPtr& factory,
-                                               sampleFormat format, int rate)
+                                               sampleFormat format, int rate, std::optional<double> projectTempo = std::nullopt)
     {
-        return std::shared_ptr<WaveClip>(New(width, factory, format, rate));
+        auto clip = std::shared_ptr<WaveClip>(New(width, factory, format, rate));
+        clip->mProjectTempo = projectTempo;
+        return clip;
     }
 
     //! Create a new clip as copy origin
@@ -1042,6 +1044,7 @@ private:
     double mClipStretchRatio = 1.;
     std::optional<double> mRawAudioTempo;
     std::optional<double> mClipTempo;
+    std::optional<double> mProjectTempo;
     bool mStretchToMatchProjectTempo = true;
 
     //! Sample rate of the raw audio, i.e., before stretching.

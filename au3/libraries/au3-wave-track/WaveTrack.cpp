@@ -2732,7 +2732,7 @@ XMLTagHandler* WaveTrack::HandleXMLChild(const std::string_view& tag)
         // though the consistency check of channels with each other remains to do.
         // Not all `WaveTrackData` fields are properly initialized by now,
         // use deserialization helpers.
-        auto clip = WaveClip::NewShared(1, mpFactory, mLegacyFormat, mLegacyRate);
+        auto clip = WaveClip::NewShared(1, mpFactory, mLegacyFormat, mLegacyRate, GetProjectTempo(*this));
         const auto xmlHandler = clip.get();
         auto& clips = NarrowClips();
         clips.push_back(std::move(clip));

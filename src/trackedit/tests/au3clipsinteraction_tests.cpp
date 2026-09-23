@@ -8,6 +8,8 @@
 
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
+#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-xml/XMLFileReader.h"
 
 #include "au3interactiontestbase.h"
 #include "mocks/selectioncontrollermock.h"
@@ -66,6 +68,36 @@ public:
     std::shared_ptr<muse::IInteractive> m_interactive;
     std::shared_ptr<automation::ClipGainInteractionMock> m_clipGainInteraction;
 };
+
+TEST_F(Au3ClipsInteractionTests, EnablingTempoMatchingWithoutClipTempoPreservesDuration)
+{
+    auto* track = Au3WaveTrack::New(projectRef());
+    DoProjectTempoChange(*track, 120.0);
+    XMLFileReader reader;
+    ASSERT_TRUE(reader.ParseString(track,
+                                   "<wavetrack rate=\"48000\" sampleformat=\"262159\">"
+                                   "<waveclip offset=\"0\" rawAudioTempo=\"240\" clipStretchRatio=\"1\" clipStretchToMatchTempo=\"0\">"
+                                   "<sequence maxsamples=\"262144\" sampleformat=\"262159\" numsamples=\"48000\">"
+                                   "<waveblock start=\"0\" blockid=\"-48000\"/>"
+                                   "</sequence><envelope numpoints=\"0\"/></waveclip></wavetrack>"));
+    track->LinkConsistencyFix(true);
+    const auto clip = track->SortedIntervalArray().front();
+    ASSERT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    ASSERT_DOUBLE_EQ(clip->End(), 1.0);
+    TimeSignature timeSignature;
+    timeSignature.tempo = 120.0;
+    ON_CALL(*m_trackEditProject, timeSignature()).WillByDefault(Return(timeSignature));
+
+    ASSERT_TRUE(m_clipsInteraction->toggleStretchToMatchProjectTempo({ track->GetId(), clip->GetId() }));
+    EXPECT_TRUE(clip->GetStretchToMatchProjectTempo());
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    EXPECT_DOUBLE_EQ(clip->End(), 1.0);
+
+    DoProjectTempoChange(*track, 60.0);
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 2.0);
+    EXPECT_DOUBLE_EQ(clip->End(), 2.0);
+    removeTrack(track->GetId());
+}
 
 TEST_F(Au3ClipsInteractionTests, ChangeClipColor)
 {
