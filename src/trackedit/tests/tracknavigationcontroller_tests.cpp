@@ -1,6 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <algorithm>
+
 #include <gtest/gtest.h>
 
 #include "../internal/tracknavigationcontroller.h"
@@ -104,6 +106,7 @@ public:
         Clip clip;
         clip.key = { trackId, itemId };
         clip.startTime = startTime;
+        clip.endTime = startTime + 1.0;
         return clip;
     }
 
@@ -115,14 +118,22 @@ public:
 
         ON_CALL(*m_trackeditProject, track(trackId))
         .WillByDefault(Return(track));
-        ON_CALL(*m_trackeditProject, clipList(trackId))
+        ON_CALL(*m_trackeditProject, itemTimeSpansSorted(trackId))
         .WillByDefault([clips](const TrackId&) {
-            muse::async::NotifyList<Clip> list;
-            for (const Clip& clip : clips) {
-                list.push_back(clip);
+            Clips sorted = clips;
+            std::sort(sorted.begin(), sorted.end(), [](const Clip& a, const Clip& b) {
+                return a.startTime < b.startTime;
+            });
+            ItemTimeSpanList items;
+            for (const Clip& clip : sorted) {
+                items.push_back({ clip.key, TimeSpan(clip.startTime, clip.endTime) });
             }
-            return list;
+            return items;
         });
+        for (const Clip& clip : clips) {
+            ON_CALL(*m_trackeditProject, itemTimeSpan(clip.key))
+            .WillByDefault(Return(std::optional<TimeSpan>(TimeSpan(clip.startTime, clip.endTime))));
+        }
     }
 
     struct TrackSpec
@@ -133,12 +144,11 @@ public:
     };
 
     //! NOTE Set up a project with several tracks (mono unless told otherwise), each with its own clips.
-    //! Wires trackList(), per-track track()/clipList() and a clip(key) lookup so
-    //! the start-time based navigation (above/below item) can be exercised.
+    //! Wires trackList() and per-track track()/itemTimeSpansSorted() so the start-time
+    //! based navigation (above/below item) can be exercised.
     void setupTracks(const std::vector<TrackSpec>& specs)
     {
         std::vector<Track> trackList;
-        std::vector<Clip> allClips;
 
         for (const TrackSpec& spec : specs) {
             setupTrackWithClips(spec.id, spec.clips, spec.type);
@@ -147,24 +157,10 @@ public:
             track.id = spec.id;
             track.type = spec.type;
             trackList.push_back(track);
-
-            for (const Clip& clip : spec.clips) {
-                allClips.push_back(clip);
-            }
         }
 
         ON_CALL(*m_trackeditProject, trackList())
         .WillByDefault(Return(trackList));
-
-        ON_CALL(*m_trackeditProject, clip(_))
-        .WillByDefault([allClips](const ClipKey& key) {
-            for (const Clip& clip : allClips) {
-                if (clip.key.trackId == key.trackId && clip.key.itemId == key.itemId) {
-                    return clip;
-                }
-            }
-            return Clip {};
-        });
     }
 
     //! NOTE Matcher for a framework panel-navigation command dispatch

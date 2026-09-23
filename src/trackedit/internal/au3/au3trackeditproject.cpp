@@ -1,5 +1,7 @@
 #include "au3trackeditproject.h"
 
+#include <algorithm>
+
 #include "au3-label-track/LabelTrack.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -310,6 +312,53 @@ muse::async::NotifyList<au::trackedit::Label> Au3TrackeditProject::labelList(con
     labelNotifyList.setNotify(notifier.notify());
 
     return labelNotifyList;
+}
+
+au::trackedit::ItemTimeSpanList Au3TrackeditProject::itemTimeSpansSorted(const au::trackedit::TrackId& trackId) const
+{
+    const std::optional<Track> track = this->track(trackId);
+    if (!track.has_value()) {
+        return {};
+    }
+
+    ItemTimeSpanList items;
+    if (track->type == TrackType::Label) {
+        Labels labels = getLabels(trackId);
+        std::sort(labels.begin(), labels.end(), [](const Label& a, const Label& b) { return a.startTime < b.startTime; });
+        for (const Label& label : labels) {
+            items.push_back({ label.key, TimeSpan(label.startTime, label.endTime) });
+        }
+    } else {
+        Clips clips = getClips(trackId);
+        std::sort(clips.begin(), clips.end(), [](const Clip& a, const Clip& b) { return a.startTime < b.startTime; });
+        for (const Clip& clip : clips) {
+            items.push_back({ clip.key, TimeSpan(clip.startTime, clip.endTime) });
+        }
+    }
+
+    return items;
+}
+
+std::optional<au::trackedit::TimeSpan> Au3TrackeditProject::itemTimeSpan(const au::trackedit::TrackItemKey& key) const
+{
+    const std::optional<Track> track = this->track(key.trackId);
+    if (!track.has_value()) {
+        return std::nullopt;
+    }
+
+    if (track->type == TrackType::Label) {
+        const Label label = this->label(key);
+        if (!label.isValid()) {
+            return std::nullopt;
+        }
+        return TimeSpan(label.startTime, label.endTime);
+    }
+
+    const Clip clip = this->clip(key);
+    if (!clip.isValid()) {
+        return std::nullopt;
+    }
+    return TimeSpan(clip.startTime, clip.endTime);
 }
 
 std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId) const
