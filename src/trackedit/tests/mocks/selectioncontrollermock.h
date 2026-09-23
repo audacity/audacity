@@ -39,6 +39,7 @@ public:
     MOCK_METHOD(LabelKeyList, selectedLabels, (), (const, override));
     MOCK_METHOD(LabelKeyList, selectedLabelsInTrackOrder, (), (const, override));
     MOCK_METHOD(void, setSelectedLabels, (const LabelKeyList&, bool), (override));
+    MOCK_METHOD(void, setSelectedItems, (const ItemKeys&, bool), (override));
     MOCK_METHOD(void, addSelectedLabel, (const LabelKey& LabelKey), (override));
     MOCK_METHOD(void, removeLabelSelection, (const LabelKey& labelKey), (override));
     MOCK_METHOD(muse::async::Channel<LabelKeyList>, labelsSelected, (), (const, override));

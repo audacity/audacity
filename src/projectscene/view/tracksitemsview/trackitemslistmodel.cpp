@@ -390,21 +390,7 @@ bool TrackItemsListModel::selectItemGroup(const trackedit::TrackItemKey& key, tr
         return true;
     }
 
-    trackedit::TrackIdList groupTracks;
-    for (const trackedit::TrackItemKey& itemKey : group.clips) {
-        if (!muse::contains(groupTracks, itemKey.trackId)) {
-            groupTracks.push_back(itemKey.trackId);
-        }
-    }
-    for (const trackedit::TrackItemKey& itemKey : group.labels) {
-        if (!muse::contains(groupTracks, itemKey.trackId)) {
-            groupTracks.push_back(itemKey.trackId);
-        }
-    }
-
-    selectionController()->setSelectedClips(group.clips, complete);
-    selectionController()->setSelectedLabels(group.labels, complete);
-    selectionController()->setSelectedTracks(groupTracks, complete);
+    selectionController()->setSelectedItems(group, complete);
 
     return true;
 }

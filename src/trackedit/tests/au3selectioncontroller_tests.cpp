@@ -111,4 +111,72 @@ TEST_F(Au3SelectionControllerTests, HistoryResyncPublishesClipsAndLabelsConsiste
     removeTrack(waveTrackId);
     removeTrack(labelTrackId);
 }
+
+TEST_F(Au3SelectionControllerTests, SetSelectedItemsSelectsBothKindsAndTheirTracksAtOnce)
+{
+    //! [GIVEN] A clip on a wave track and a label on a label track
+    const TrackId waveTrackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", { { 0.0, 1.0, "Label" } });
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrackId));
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(waveTrack, nullptr);
+    ASSERT_NE(labelTrack, nullptr);
+    const ItemKeys items { { { waveTrackId, waveTrack->GetClip(0)->GetId() } }, { { labelTrackId, labelTrack->GetLabel(0)->GetId() } } };
+    const TrackIdList tracks { waveTrackId, labelTrackId };
+
+    //! [GIVEN] Every publication already sees all three selections in place
+    int publications = 0;
+    const auto expectAllSet = [&]() {
+        ++publications;
+        EXPECT_EQ(m_selectionController->selectedClips(), items.clips);
+        EXPECT_EQ(m_selectionController->selectedLabels(), items.labels);
+        EXPECT_EQ(m_selectionController->selectedTracks(), tracks);
+    };
+    m_selectionController->clipsSelected().onReceive(m_selectionController.get(), [&](const ClipKeyList&) { expectAllSet(); });
+    m_selectionController->labelsSelected().onReceive(m_selectionController.get(), [&](const LabelKeyList&) { expectAllSet(); });
+    m_selectionController->tracksSelected().onReceive(m_selectionController.get(), [&](const TrackIdList&) { expectAllSet(); });
+
+    //! [WHEN] Both are selected at once
+    m_selectionController->setSelectedItems(items, true);
+
+    //! [THEN] Each selection was published once and the project flags match
+    EXPECT_EQ(publications, 3);
+    EXPECT_EQ(DomAccessor::findSelectedClips(projectRef()), items.clips);
+    EXPECT_EQ(DomAccessor::findSelectedLabels(projectRef()), items.labels);
+    EXPECT_EQ(DomAccessor::findSelectedTracks(projectRef()), tracks);
+
+    // Cleanup
+    removeTrack(waveTrackId);
+    removeTrack(labelTrackId);
+}
+
+TEST_F(Au3SelectionControllerTests, DeselectingAllItemsDropsTheRangeAnchor)
+{
+    //! [GIVEN] A selected clip that anchors a range selection
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(track, nullptr);
+    const ClipKey first { trackId, track->GetClip(0)->GetId() };
+    const ClipKey second { trackId, track->GetClip(1)->GetId() };
+    const auto spanOf = [track](const TrackItemKey& key) -> std::optional<TimeSpan> {
+        const auto clip = DomAccessor::findWaveClip(track, key.itemId);
+        return clip ? std::optional<TimeSpan>(TimeSpan(clip->GetPlayStartTime(), clip->GetPlayEndTime())) : std::nullopt;
+    };
+    ON_CALL(*m_trackEditProject, itemTimeSpan(::testing::_)).WillByDefault(spanOf);
+    ON_CALL(*m_trackEditProject, itemTimeSpansSorted(trackId)).WillByDefault([&](const TrackId&) {
+        return ItemTimeSpanList { { first, *spanOf(first) }, { second, *spanOf(second) } };
+    });
+    m_selectionController->setSelectedItems({ { first }, {} }, true);
+    m_selectionController->setItemSelectionAnchor(0.0, first);
+    ASSERT_FALSE(m_selectionController->itemKeysInRange(second).empty());
+
+    //! [WHEN] Everything is deselected through the items setter
+    m_selectionController->setSelectedItems({}, true);
+
+    //! [THEN] A following range selection starts afresh instead of growing from the old anchor
+    EXPECT_TRUE(m_selectionController->itemKeysInRange(second).empty());
+
+    removeTrack(trackId);
+}
 }

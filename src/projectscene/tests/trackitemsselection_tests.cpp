@@ -103,6 +103,7 @@ TEST_F(TrackClipsSelectionTests, SelectClip_SetsFocusedItem_GroupedClip)
     ON_CALL(*m_trackeditInteraction, itemsInGroup(groupId))
     .WillByDefault(Return(trackedit::ItemKeys { { key.key, other.key }, {} }));
 
+    EXPECT_CALL(*m_selectionController, setSelectedItems(trackedit::ItemKeys { { key.key, other.key }, {} }, true)).Times(1);
     EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::track(key.key.trackId), _)).Times(1);
     EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::item(key.key), _)).Times(1);
     m_model->selectClip(key);
