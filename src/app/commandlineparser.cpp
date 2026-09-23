@@ -79,6 +79,10 @@ void CommandLineParser::init()
     m_parser.addOption(QCommandLineOption("plugin-registration-self-test",
                                           "Run plugin registration app self-test (verify initialization)"));
 
+    // Diagnostics
+    m_parser.addOption(internalCommandLineOption("crash-dumps-dir", "Directory the crash dumps of this process are written to", "path"));
+    m_parser.addOption(internalCommandLineOption("crash-server-url", "URL the crash dumps of this process are sent to", "url"));
+
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
     m_parser.addOption(QCommandLineOption("test-case", "Run test case by name or file", "nameOrFile"));
@@ -161,6 +165,17 @@ void CommandLineParser::parse(int argc, char** argv)
 
     if (m_parser.isSet("memory-leak-report")) {
         m_options->app.memoryLeakReport = true;
+    }
+
+    {
+        const muse::io::path_t crashDumpDir = fromUserInputPath(m_parser.value("crash-dumps-dir"));
+        const muse::String crashServerUrl = muse::String::fromQString(m_parser.value("crash-server-url"));
+
+        if (!crashDumpDir.empty()) {
+            m_options->diagnostics.crashDumpConfig.emplace(crashDumpDir, crashServerUrl);
+        } else if (!crashServerUrl.empty()) {
+            LOGE() << "--crash-server-url without --crash-dumps-dir, crash reporting is left unconfigured";
+        }
     }
 
     // Audio plugin registration
