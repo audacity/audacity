@@ -22,8 +22,8 @@ $env:AWS_ACCESS_KEY_ID = $env:SIGN_KEY
 $env:AWS_SECRET_ACCESS_KEY = $env:SIGN_SECRET
 
 $s3Bucket = "muse-sign"
-$s3UnsignedDir = "unsigned"
-$s3SignedDir = "signed"
+$s3UnsignedDir = "test-unsigned"
+$s3SignedDir = "test-signed"
 
 # Global dictionary to store the mapping of original filename to its S3-friendly unique name
 $global:FileMap = @{}
