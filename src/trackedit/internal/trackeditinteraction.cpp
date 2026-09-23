@@ -132,6 +132,16 @@ bool TrackeditInteraction::copyNonContinuousTrackDataIntoClipboard(const TrackId
     return m_interaction->copyNonContinuousTrackDataIntoClipboard(trackId, clipKeys, offset);
 }
 
+bool TrackeditInteraction::copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys)
+{
+    return m_interaction->copyItems(clipKeys, labelKeys);
+}
+
+bool TrackeditInteraction::cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips)
+{
+    return withPlaybackStop(&ITrackeditInteraction::cutItems, clipKeys, labelKeys, moveClips);
+}
+
 bool TrackeditInteraction::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
     return m_interaction->copyContinuousTrackDataIntoClipboard(trackId, begin, end);

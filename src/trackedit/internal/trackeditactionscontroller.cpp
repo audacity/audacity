@@ -1424,16 +1424,13 @@ muse::Ret TrackeditActionsController::labelCopyMulti()
 
 muse::Ret TrackeditActionsController::multiClipCut(bool moveClips)
 {
-    auto selectedClips = clipsForInteraction();
-    if (selectedClips.empty()) {
+    const ClipKeyList clips = clipsForInteraction();
+    const LabelKeyList labels = labelsForInteraction();
+    if (clips.empty() && labels.empty()) {
         return make_ret(Ret::Code::NotSupported);
     }
 
-    trackeditInteraction()->clearClipboard();
-    multiClipCopy();
-    selectionController()->resetSelectedClips();
-
-    return Ret(trackeditInteraction()->removeClips(selectedClips, moveClips));
+    return Ret(trackeditInteraction()->cutItems(clips, labels, moveClips));
 }
 
 muse::Ret TrackeditActionsController::rangeSelectionCut(bool moveClips)
@@ -1456,42 +1453,7 @@ muse::Ret TrackeditActionsController::rangeSelectionCut(bool moveClips)
 
 muse::Ret TrackeditActionsController::multiClipCopy()
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->selectedTracks();
-    auto selectedClips = clipsForInteraction();
-    auto selectedLabels = labelsForInteraction();
-    auto tracks = project->trackeditProject()->trackList();
-
-    trackeditInteraction()->clearClipboard();
-
-    bool copied = true;
-    secs_t offset = 0.0;
-    std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
-    if (leftmostItemStartTime.has_value()) {
-        offset = -leftmostItemStartTime.value();
-    }
-
-    for (const auto& track : tracks) {
-        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
-            continue;
-        }
-
-        TrackItemKeyList selectedTrackItems;
-        for (const auto& clip : selectedClips) {
-            if (clip.trackId == track.id) {
-                selectedTrackItems.push_back(clip);
-            }
-        }
-        for (const auto& label : selectedLabels) {
-            if (label.trackId == track.id) {
-                selectedTrackItems.push_back(label);
-            }
-        }
-
-        copied = trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackItems, offset) && copied;
-    }
-
-    return Ret(copied);
+    return Ret(trackeditInteraction()->copyItems(clipsForInteraction(), labelsForInteraction()));
 }
 
 muse::Ret TrackeditActionsController::rangeSelectionCopy()

@@ -6,11 +6,14 @@
 #include "../internal/trackeditoperationcontroller.h"
 #include "../internal/au3/au3clipsinteraction.h"
 #include "../internal/au3/au3labelsinteraction.h"
+#include "../internal/au3/au3tracksinteraction.h"
+#include "../internal/au3/au3trackdata.h"
 #include "../internal/au3/au3projecthistory.h"
 #include "../internal/au3/au3selectioncontroller.h"
 #include "au3interactiontestbase.h"
 #include "mocks/projecthistorymock.h"
 #include "mocks/clipsinteractionmock.h"
+#include "mocks/clipboardmock.h"
 #include "mocks/tracknavigationcontrollermock.h"
 #include "mocks/trackeditconfigurationmock.h"
 #include "interactive/tests/mocks/interactivemock.h"
@@ -51,6 +54,9 @@ public:
         ioc->registerExport<ISelectionController>("utests", m_selection);
         ioc->registerExport<IClipsInteraction>("utests", m_clips);
         ioc->registerExport<ILabelsInteraction>("utests", m_labels);
+        ioc->registerExport<ITracksInteraction>("utests", std::make_shared<Au3TracksInteraction>(ctx));
+        m_clipboard = std::make_shared<NiceMock<ClipboardMock> >();
+        ioc->registerExport<ITrackeditClipboard>("utests", m_clipboard);
         ioc->registerExport<IProjectHistory>("utests", m_history);
         m_navigation = std::make_shared<NiceMock<TrackNavigationControllerMock> >();
         ioc->registerExport<ITrackNavigationController>("utests", m_navigation);
@@ -131,6 +137,7 @@ public:
     std::shared_ptr<ProjectHistoryMock> m_history;
     std::shared_ptr<TrackNavigationControllerMock> m_navigation;
     std::shared_ptr<TrackeditConfigurationMock> m_configuration;
+    std::shared_ptr<ClipboardMock> m_clipboard;
     std::shared_ptr<muse::InteractiveMock> m_interactive;
     std::unique_ptr<Au3ProjectHistory> m_realHistory;
     std::unique_ptr<TrackeditOperationController> m_operation;
@@ -352,6 +359,58 @@ TEST_P(TrackeditOperationMoveTests, MoveIgnoresDragCancelArrivingWhileAskingAbou
         EXPECT_EQ(key.trackId, upperId);
     }
     checkSelection();
+}
+
+TEST_P(TrackeditOperationMoveTests, CopyItemsCopiesEachTrackOfTheItemsShiftedToTheLeftmostItem)
+{
+    //! [GIVEN] Only the clip's track is selected: the label is focused, not selected, as the keyboard leaves it
+    m_selection->setSelectedTracks({ m_sourceClip.trackId }, true);
+
+    //! [EXPECT] The clipboard is cleared and gets one copy per track that holds an item, without touching the history
+    std::vector<ITrackDataPtr> copies;
+    EXPECT_CALL(*m_clipboard, clearTrackData()).Times(1);
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).WillRepeatedly([&copies](ITrackDataPtr data) { copies.push_back(data); });
+    EXPECT_CALL(*m_history, pushHistoryState(_, _)).Times(0);
+
+    //! [WHEN] The selected clip and label are copied
+    ASSERT_TRUE(m_operation->copyItems({ m_sourceClip }, { m_sourceLabel }));
+
+    //! [THEN] The clip at 1.0 and the label at 2.0 are shifted so the clip starts the clipboard at 0.0
+    ASSERT_EQ(copies.size(), 2u);
+    std::vector<double> startTimes;
+    for (const ITrackDataPtr& data : copies) {
+        startTimes.push_back(std::static_pointer_cast<Au3TrackData>(data)->track()->GetStartTime());
+    }
+    std::sort(startTimes.begin(), startTimes.end());
+    EXPECT_DOUBLE_EQ(startTimes.at(0), 0.0);
+    EXPECT_DOUBLE_EQ(startTimes.at(1), 1.0);
+    checkSelection();
+}
+
+TEST_P(TrackeditOperationMoveTests, CutItemsCopiesRemovesAndPushesOneCutState)
+{
+    //! [GIVEN] Only the clip's track is selected, so the label must still reach the clipboard before it is removed
+    m_selection->setSelectedTracks({ m_sourceClip.trackId }, true);
+
+    //! [EXPECT] One copy per track that holds an item and a single history state naming the cut
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(2);
+    EXPECT_CALL(*m_history, pushHistoryState(_, _)).WillOnce([](const std::string& description, const std::string& action) {
+        EXPECT_EQ(description, "Cut to the clipboard");
+        EXPECT_EQ(action, "Cut multiple items");
+    });
+
+    //! [WHEN] The selected clip and label are cut
+    ASSERT_TRUE(m_operation->cutItems({ m_sourceClip }, { m_sourceLabel }, false));
+
+    //! [THEN] Both items are gone from the project and nothing stays selected
+    auto* clipTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_sourceClip.trackId));
+    auto* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(m_sourceLabel.trackId));
+    ASSERT_NE(clipTrack, nullptr);
+    ASSERT_NE(labelTrack, nullptr);
+    EXPECT_EQ(DomAccessor::findWaveClip(clipTrack, m_sourceClip.itemId), nullptr);
+    EXPECT_EQ(DomAccessor::findLabel(labelTrack, m_sourceLabel.itemId), nullptr);
+    EXPECT_TRUE(m_selection->selectedClips().empty());
+    EXPECT_TRUE(m_selection->selectedLabels().empty());
 }
 
 TEST_P(TrackeditOperationMoveTests, MixedHorizontalMoveClampsBothTypesTogether)
