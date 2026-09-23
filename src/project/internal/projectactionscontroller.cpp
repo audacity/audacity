@@ -718,11 +718,11 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
                              dismissable,
         {
             //: Label of the button that dismisses a notification
-            { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
+            { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
             { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
         }
-                             ).onResolve(this, [this, url = result.val.toQString()](muse::toast::ToastActionCode actionCode) {
-            if (actionCode == muse::toast::ToastActionCode::Custom) {
+                             ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
+            if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
                 platformInteractive()->openUrl(url);
             }
         });
@@ -741,12 +741,12 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         muse::ui::IconCode::Code::CLOUD,
         dismissible,
     {
-        { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
+        { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
         { trc("global", "Stop"), muse::toast::ToastActionCode::Custom }
     },
         showProgressInfo
-        ).onResolve(this, [this, progress = progress](const muse::toast::ToastActionCode& actionCode) {
-        if (actionCode == muse::toast::ToastActionCode::Custom) {
+        ).onResolve(this, [this, progress = progress](const muse::toast::ToastResult& toastResult) {
+        if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
             audioComService()->stopProjectSync();
             progress->cancel();
         }
@@ -1133,11 +1133,11 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
                                  muse::ui::IconCode::Code::TICK,
                                  dismissable,
             {
-                { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
+                { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
                 { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
             }
-                                 ).onResolve(this, [this, url = result.val.toQString()](muse::toast::ToastActionCode actionCode) {
-                if (actionCode == muse::toast::ToastActionCode::Custom) {
+                                 ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
+                if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
                     platformInteractive()->openUrl(url);
                 }
             });
@@ -1152,12 +1152,12 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             muse::ui::IconCode::Code::CLOUD,
             dismissible,
         {
-            { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
+            { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
             { trc("global", "Stop"), muse::toast::ToastActionCode::Custom }
         },
             showProgressInfo
-            ).onResolve(this, [this, progress = syncProgress](const muse::toast::ToastActionCode& actionCode) {
-            if (actionCode == muse::toast::ToastActionCode::Custom) {
+            ).onResolve(this, [this, progress = syncProgress](const muse::toast::ToastResult& toastResult) {
+            if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
                 audioComService()->stopProjectSync();
                 progress->cancel();
             }
@@ -1370,11 +1370,11 @@ void ProjectActionsController::shareAudio()
                                  muse::ui::IconCode::Code::TICK,
                                  dismissable,
             {
-                { trc("global", "Dismiss"), muse::toast::ToastActionCode::None },
+                { trc("global", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
                 { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
             }
-                                 ).onResolve(this, [this, url = result.val.toQString()](muse::toast::ToastActionCode actionCode) {
-                if (actionCode == muse::toast::ToastActionCode::Custom) {
+                                 ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
+                if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
                     platformInteractive()->openUrl(url);
                 }
             });
