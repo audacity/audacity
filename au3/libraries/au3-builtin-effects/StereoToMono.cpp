@@ -15,6 +15,7 @@
 #include "au3-project/Project.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
 const ComponentInterfaceSymbol StereoToMono::Symbol { XO("Stereo To Mono") };
 
@@ -123,7 +124,7 @@ bool StereoToMono::ProcessOne(
         track.GetRate(), floatSample);
 
     // Always make mono output; don't use EmptyCopy
-    auto outTrack = track.EmptyCopy(1);
+    auto outTrack = WaveTrackUtilities::EmptyCopy(track, 1, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
     auto tempList = TrackList::Temporary(nullptr, outTrack);
     outTrack->ConvertToSampleFormat(floatSample);
 
