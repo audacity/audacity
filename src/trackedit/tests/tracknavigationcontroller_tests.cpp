@@ -619,4 +619,63 @@ TEST_F(TrackNavigationControllerTests, FocusingAVanishedItemFocusesItsTrackInste
     //! [THEN] The focus lands on it
     EXPECT_EQ(m_controller->focus(), TrackFocus::item(clip.key));
 }
+
+/**
+ * Enter on a focused item selects it the way a click does: the whole group when it
+ * is grouped, the item alone otherwise, and a second Enter on a selected group
+ * deselects it. Ctrl+Enter toggles the whole group in the same way.
+ */
+TEST_F(TrackNavigationControllerTests, EnterOnGroupedItemSelectsItsWholeGroup)
+{
+    setupTracks({ { 1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
+    const ItemKeys group { { { 1, 100 }, { 1, 200 } }, { { 2, 10 } } };
+    ON_CALL(*m_trackeditInteraction, itemGroupId(TrackItemKey { 1, 100 })).WillByDefault(Return(int64_t(7)));
+    ON_CALL(*m_trackeditInteraction, itemsInGroup(int64_t(7))).WillByDefault(Return(group));
+
+    EXPECT_CALL(*m_selectionController, setSelectedItems(group, true)).Times(1);
+    invokeAction("track-view-replace-selection");
+}
+
+TEST_F(TrackNavigationControllerTests, EnterOnUngroupedItemSelectsItAlone)
+{
+    setupTracks({ { 1, { makeClip(1, 100, 0.0) } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
+    ON_CALL(*m_trackeditInteraction, itemGroupId(_)).WillByDefault(Return(int64_t(-1)));
+
+    EXPECT_CALL(*m_selectionController, setSelectedItems(ItemKeys { { { 1, 100 } }, {} }, true)).Times(1);
+    invokeAction("track-view-replace-selection");
+}
+
+TEST_F(TrackNavigationControllerTests, EnterOnSelectedGroupDeselectsIt)
+{
+    setupTracks({ { 1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
+    const ItemKeys group { { { 1, 100 }, { 1, 200 } }, { { 2, 10 } } };
+    ON_CALL(*m_trackeditInteraction, itemGroupId(TrackItemKey { 1, 100 })).WillByDefault(Return(int64_t(7)));
+    ON_CALL(*m_trackeditInteraction, itemsInGroup(int64_t(7))).WillByDefault(Return(group));
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(group.clips));
+    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(group.labels));
+
+    EXPECT_CALL(*m_selectionController, setSelectedItems(ItemKeys {}, true)).Times(1);
+    invokeAction("track-view-replace-selection");
+}
+
+TEST_F(TrackNavigationControllerTests, ToggleOnGroupedItemAddsItsWholeGroup)
+{
+    setupTracks({ { 1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
+    const ItemKeys group { { { 1, 100 }, { 1, 200 } }, { { 2, 10 } } };
+    ON_CALL(*m_trackeditInteraction, itemGroupId(TrackItemKey { 1, 100 })).WillByDefault(Return(int64_t(7)));
+    ON_CALL(*m_trackeditInteraction, itemsInGroup(int64_t(7))).WillByDefault(Return(group));
+
+    EXPECT_CALL(*m_selectionController, addSelectedClip(TrackItemKey { 1, 100 })).Times(1);
+    EXPECT_CALL(*m_selectionController, addSelectedClip(TrackItemKey { 1, 200 })).Times(1);
+    EXPECT_CALL(*m_selectionController, addSelectedLabel(TrackItemKey { 2, 10 })).Times(1);
+    invokeAction("track-view-toggle-selection");
+}
 }

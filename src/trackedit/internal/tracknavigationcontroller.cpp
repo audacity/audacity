@@ -208,6 +208,28 @@ bool TrackNavigationController::isFocusedItemLabel() const
     return track.has_value() && track->type == TrackType::Label;
 }
 
+ItemKeys TrackNavigationController::focusedItemGroup() const
+{
+    const TrackItemKey key = focusedItemKey();
+    const int64_t groupId = trackeditInteraction()->itemGroupId(key);
+    if (groupId != -1) {
+        return trackeditInteraction()->itemsInGroup(groupId);
+    }
+
+    return isFocusedItemLabel() ? ItemKeys { {}, { key } } : ItemKeys { { key }, {} };
+}
+
+bool TrackNavigationController::isSelected(const ItemKeys& items) const
+{
+    const ClipKeyList selectedClips = selectionController()->selectedClips();
+    const LabelKeyList selectedLabels = selectionController()->selectedLabels();
+    return std::all_of(items.clips.begin(), items.clips.end(), [&selectedClips](const ClipKey& key) {
+        return muse::contains(selectedClips, key);
+    }) && std::all_of(items.labels.begin(), items.labels.end(), [&selectedLabels](const LabelKey& key) {
+        return muse::contains(selectedLabels, key);
+    });
+}
+
 TrackItemKeyList TrackNavigationController::sortedItemsKeys(const TrackId& trackId) const
 {
     TrackItemKeyList result;
@@ -597,21 +619,9 @@ void TrackNavigationController::replaceSelection()
     bool isSelect = false;
 
     if (!isTrackPanel) {
-        if (isFocusedItemLabel()) {
-            LabelKeyList selectedLabels = selectionController()->selectedLabels();
-            isSelect = !muse::contains(selectedLabels, focusedKey);
-            selectionController()->setSelectedLabels(isSelect ? LabelKeyList { focusedKey } : LabelKeyList {});
-
-            //! reset clips
-            selectionController()->setSelectedClips({ });
-        } else {
-            ClipKeyList selectedClips = selectionController()->selectedClips();
-            isSelect = !muse::contains(selectedClips, focusedKey);
-            selectionController()->setSelectedClips(isSelect ? ClipKeyList { focusedKey } : ClipKeyList {});
-
-            //! reset labels
-            selectionController()->setSelectedLabels({});
-        }
+        const ItemKeys items = focusedItemGroup();
+        isSelect = !isSelected(items);
+        selectionController()->setSelectedItems(isSelect ? items : ItemKeys {});
     } else {
         TrackIdList selectedTracks = selectionController()->selectedTracks();
         isSelect = !muse::contains(selectedTracks, focusedKey.trackId);
@@ -630,22 +640,22 @@ void TrackNavigationController::toggleSelection()
     const bool isTrackPanel = !m_focus.isItem();
 
     if (!isTrackPanel) {
-        if (isFocusedItemLabel()) {
-            LabelKeyList selectedLabels = selectionController()->selectedLabels();
-            if (muse::contains(selectedLabels, focusedKey)) {
-                selectionController()->removeLabelSelection(focusedKey);
-            } else {
-                selectionController()->addSelectedLabel(focusedKey);
-                selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
+        const ItemKeys items = focusedItemGroup();
+        if (isSelected(items)) {
+            for (const ClipKey& key : items.clips) {
+                selectionController()->removeClipSelection(key);
+            }
+            for (const LabelKey& key : items.labels) {
+                selectionController()->removeLabelSelection(key);
             }
         } else {
-            ClipKeyList selectedClips = selectionController()->selectedClips();
-            if (muse::contains(selectedClips, focusedKey)) {
-                selectionController()->removeClipSelection(focusedKey);
-            } else {
-                selectionController()->addSelectedClip(focusedKey);
-                selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
+            for (const ClipKey& key : items.clips) {
+                selectionController()->addSelectedClip(key);
             }
+            for (const LabelKey& key : items.labels) {
+                selectionController()->addSelectedLabel(key);
+            }
+            selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
         }
     } else {
         TrackIdList selectedTracks = selectionController()->selectedTracks();

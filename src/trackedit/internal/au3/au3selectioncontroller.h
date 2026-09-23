@@ -64,6 +64,7 @@ public:
     void setSelectedLabels(const LabelKeyList& labelKeys, bool complete) override;
     void addSelectedLabel(const LabelKey& labelKey) override;
     void removeLabelSelection(const LabelKey& labelKey) override;
+    void setSelectedItems(const ItemKeys& items, bool complete) override;
     muse::async::Channel<LabelKeyList> labelsSelected() const override;
     std::optional<secs_t> selectedLabelStartTime() const override;
     std::optional<secs_t> selectedLabelEndTime() const override;

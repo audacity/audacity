@@ -685,6 +685,45 @@ void Au3SelectionController::removeLabelSelection(const LabelKey& labelKey)
     setSelectedTracks(selectedTracks, true);
 }
 
+void Au3SelectionController::setSelectedItems(const ItemKeys& items, bool complete)
+{
+    au3::DomAccessor::clearAllClipSelection(projectRef());
+    for (const ClipKey& key : items.clips) {
+        au3::DomAccessor::setClipSelected(projectRef(), key, true);
+    }
+    au3::DomAccessor::clearAllLabelSelection(projectRef());
+    for (const LabelKey& key : items.labels) {
+        au3::DomAccessor::setLabelSelected(projectRef(), key, true);
+    }
+
+    TrackIdList tracks;
+    for (const TrackItemKeyList& keys : { items.clips, items.labels }) {
+        for (const TrackItemKey& key : keys) {
+            if (!muse::contains(tracks, key.trackId)) {
+                tracks.push_back(key.trackId);
+            }
+        }
+    }
+    for (Au3Track* au3Track : Au3TrackList::Get(projectRef())) {
+        au3Track->SetSelected(muse::contains(tracks, TrackId(au3Track->GetId())));
+    }
+
+    //! NOTE Receivers read the other selections too, so all three are assigned before any is published
+    const bool clipsChanged = m_selectedClips.assign(items.clips);
+    const bool labelsChanged = m_selectedLabels.assign(items.labels);
+    const bool tracksChanged = m_selectedTracks.assign(tracks);
+    resetItemSelectionAnchorIfNoSelection();
+    if (clipsChanged) {
+        m_selectedClips.notify(complete);
+    }
+    if (labelsChanged) {
+        m_selectedLabels.notify(complete);
+    }
+    if (tracksChanged) {
+        m_selectedTracks.notify(complete);
+    }
+}
+
 muse::async::Channel<LabelKeyList> Au3SelectionController::labelsSelected() const
 {
     return m_selectedLabels.selected;
