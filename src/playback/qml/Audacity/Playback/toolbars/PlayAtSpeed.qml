@@ -15,7 +15,7 @@ Item {
 
     // itemData is assigned by StyledToolBarView's Loader.onLoaded.
     property var itemData: null
-    property alias navigationPanel: playButton.navigation.panel
+    property var navigationPanel: null
     property int navigationOrder: 0
 
     implicitWidth: contentRow.implicitWidth
@@ -41,33 +41,6 @@ Item {
 
         anchors.verticalCenter: parent.verticalCenter
         spacing: 6
-
-        FlatButton {
-            id: playButton
-
-            Layout.preferredWidth: 28
-            Layout.preferredHeight: 28
-
-            icon: model.isPlaying ? IconCode.PAUSE_FILL : IconCode.PLAY_FILL
-            iconFont: ui.theme.iconsFont
-            iconColor: "#00C851"
-            backgroundRadius: 2
-            transparent: true
-
-            enabled: root.enabled && model.isEnabled
-            accentButton: model.isPlaying
-
-            toolTipTitle: qsTrc("playback", "Play at speed")
-            toolTipDescription: qsTrc("playback", "Play at the selected playback speed")
-
-            navigation.name: "PlayAtSpeed"
-            navigation.panel: root.navigationPanel
-            navigation.order: root.navigationOrder
-
-            onClicked: {
-                model.play()
-            }
-        }
 
         StyledTextLabel {
             Layout.preferredWidth: 42
@@ -150,7 +123,7 @@ Item {
 
             navigation.name: "DecreasePlaySpeed"
             navigation.panel: root.navigationPanel
-            navigation.order: root.navigationOrder + 1
+            navigation.order: root.navigationOrder
 
             onClicked: {
                 model.decreaseSpeed()
@@ -169,7 +142,7 @@ Item {
 
             navigation.name: "IncreasePlaySpeed"
             navigation.panel: root.navigationPanel
-            navigation.order: root.navigationOrder + 2
+            navigation.order: root.navigationOrder + 1
 
             onClicked: {
                 model.increaseSpeed()

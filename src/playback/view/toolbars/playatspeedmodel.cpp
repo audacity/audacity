@@ -24,10 +24,6 @@ void PlayAtSpeedModel::init()
         onProjectChanged();
     });
 
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
-        emit isPlayingChanged();
-    });
-
     playbackController()->isPlayAllowedChanged().onNotify(this, [this]() {
         emit isEnabledChanged();
     });
@@ -64,27 +60,10 @@ void PlayAtSpeedModel::setSpeed(double speed)
     ProjectAudioIO::Get(*au3Project).SetPlaySpeed(m_speed);
 }
 
-bool PlayAtSpeedModel::isPlaying() const
-{
-    return playbackController()->isPlaying();
-}
-
 bool PlayAtSpeedModel::isEnabled() const
 {
     return globalContext()->currentProject() != nullptr
            && playbackController()->isPlayAllowed();
-}
-
-void PlayAtSpeedModel::play()
-{
-    if (!isEnabled()) {
-        return;
-    }
-
-    // Ensure the engine has the current speed, then use normal play
-    // (variable-speed playback is enabled in the audio engine defaults).
-    setSpeed(m_speed);
-    dispatcher()->dispatch("action://playback/toggle-play-pause");
 }
 
 void PlayAtSpeedModel::increaseSpeed()

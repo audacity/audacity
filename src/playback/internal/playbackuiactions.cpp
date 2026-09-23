@@ -189,8 +189,8 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Play-at-Speed"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Play at a configurable playback speed"),
-             IconCode::Code::PLAY_FILL
+             TranslatableString("action_description", "Control playback speed"),
+             IconCode::Code::NONE
              ),
     UiAction(PLAYBACK_LEVEL_QUERY.toString(),
              au::context::UiCtxProjectOpened,
