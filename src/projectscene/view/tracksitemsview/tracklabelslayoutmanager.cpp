@@ -349,6 +349,9 @@ void TrackLabelsLayoutManager::relink()
     // Label is linked if its right edge matches another label's left edge (or vice versa)
     for (int i = 0; i < labels.size(); ++i) {
         const LabelInfo& current = labels[i];
+        if (current.isPoint) {
+            continue;
+        }
 
         double currentRightEdge = current.startTime + current.width;
         double currentLeftEdge = current.startTime;
@@ -359,6 +362,9 @@ void TrackLabelsLayoutManager::relink()
             }
 
             const LabelInfo& other = labels[j];
+            if (other.isPoint) {
+                continue;
+            }
 
             double otherRightEdge = other.startTime + other.width;
             double otherLeftEdge = other.startTime;
