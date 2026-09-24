@@ -3,12 +3,18 @@
  */
 #pragma once
 
+#include <optional>
+
 #include "trackedit/dom/clip.h"
 #include "trackedit/dom/track.h"
 #include "trackedit/itrackeditproject.h"
 
 namespace au::trackedit::utils {
 bool hasStereoTrack(const TrackList& tracks);
+
+TrackIdList itemTrackIds(const ItemKeys& items);
+
+std::optional<TrackItemKey> firstItemOnTrack(const ItemKeys& items, const TrackId& trackId);
 std::vector<const Clip*> clipSetDifference(const Clips& set1, const Clips& set2);
 
 template<typename Fn>

@@ -3,6 +3,8 @@
  */
 #include "trackeditutils.h"
 
+#include <algorithm>
+
 std::vector<const au::trackedit::Clip*> au::trackedit::utils::clipSetDifference(const Clips& set1, const Clips& set2)
 {
     std::vector<const Clip*> result;
@@ -19,4 +21,34 @@ bool au::trackedit::utils::hasStereoTrack(const au::trackedit::TrackList& tracks
     return std::any_of(tracks.begin(), tracks.end(), [](const au::trackedit::Track& track) {
         return track.type == au::trackedit::TrackType::Stereo;
     });
+}
+
+au::trackedit::TrackIdList au::trackedit::utils::itemTrackIds(const ItemKeys& items)
+{
+    TrackIdList result;
+    for (const auto& keys : { items.clips, items.labels }) {
+        for (const TrackItemKey& key : keys) {
+            if (std::find(result.begin(), result.end(), key.trackId) == result.end()) {
+                result.push_back(key.trackId);
+            }
+        }
+    }
+    return result;
+}
+
+std::optional<au::trackedit::TrackItemKey> au::trackedit::utils::firstItemOnTrack(const ItemKeys& items, const TrackId& trackId)
+{
+    const auto onTrack = [&trackId](const TrackItemKey& key) { return key.trackId == trackId; };
+
+    auto it = std::find_if(items.clips.begin(), items.clips.end(), onTrack);
+    if (it != items.clips.end()) {
+        return *it;
+    }
+
+    it = std::find_if(items.labels.begin(), items.labels.end(), onTrack);
+    if (it != items.labels.end()) {
+        return *it;
+    }
+
+    return std::nullopt;
 }
