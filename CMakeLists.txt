@@ -98,17 +98,31 @@ if( APPLE )
       set( TARGET_MACOS_VERSION 10.13 )
       set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
    elseif( MACOS_ARCHITECTURE STREQUAL "arm64" )
-      set( MIN_MACOS_VERSION 10.13 )
+      set( MIN_MACOS_VERSION 11.0 )
       set( TARGET_MACOS_VERSION 10.13 )
       set( CMAKE_OSX_ARCHITECTURES arm64 CACHE INTERNAL "" )
    else()
       message( FATAL_ERROR "MACOS_ARCHITECTURE must be x86_64 or arm64")
    endif()
+
+   # Use the same deployment target for CMake and the explicit linker flags.
+   if( CMAKE_OSX_DEPLOYMENT_TARGET )
+      set( MIN_MACOS_VERSION "${CMAKE_OSX_DEPLOYMENT_TARGET}" )
+   elseif( NOT "$ENV{MACOSX_DEPLOYMENT_TARGET}" STREQUAL "" )
+      set( MIN_MACOS_VERSION "$ENV{MACOSX_DEPLOYMENT_TARGET}" )
+   endif()
+
+   # Apple Silicon is only supported on macOS 11 and newer.
+   if( MACOS_ARCHITECTURE STREQUAL "arm64" AND MIN_MACOS_VERSION VERSION_LESS 11.0 )
+      set( MIN_MACOS_VERSION 11.0 )
+   endif()
+
    # Generate schema files
    set( CMAKE_XCODE_GENERATE_SCHEME ON )
 
    # Define the OSX compatibility parameters
-   set( CMAKE_OSX_DEPLOYMENT_TARGET ${MIN_MACOS_VERSION} CACHE INTERNAL "" )
+   set( CMAKE_OSX_DEPLOYMENT_TARGET "${MIN_MACOS_VERSION}" CACHE INTERNAL "" FORCE )
+   set( CMAKE_OSX_DEPLOYMENT_TARGET "${MIN_MACOS_VERSION}" )
    set( CMAKE_OSX_SYSROOT macosx CACHE INTERNAL "" )
 
    # This prevents a link error when building with the 10.9 or older SDKs
