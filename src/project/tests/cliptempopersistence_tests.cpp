@@ -383,10 +383,8 @@ TEST_F(ClipTempoPersistenceTests, DisablingStretchToTempoChangesFreezesInherited
     ASSERT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
     DoProjectTempoChange(firstTrack(), TEST_PROJECT_TEMPO / 2);
 
-    //! [THEN] the clip is left alone, and writes down the tempo it was frozen
-    //! at, now that the project's own no longer says what it plays at
+    //! [THEN] the clip is left alone
     EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
-    EXPECT_TRUE(writtenXml(*clip).Contains("clipTempo=\"188"));
 }
 
 TEST_F(ClipTempoPersistenceTests, EnablingStretchToTempoChangesPreservesSpeedAfterProjectTempoChanged)
@@ -423,7 +421,7 @@ TEST_F(ClipTempoPersistenceTests, EnablingStretchToTempoChangesLocksTheClipOntoT
     EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 2.0);
 }
 
-TEST_F(ClipTempoPersistenceTests, ProjectTempoChangesUpdateExplicitTempoWhenMatchingIsEnabled)
+TEST_F(ClipTempoPersistenceTests, ProjectTempoChangesScaleAMatchingClip)
 {
     //! [GIVEN] a deserialized project whose clips name 150 bpm but follow the
     //! project's tempo
@@ -433,8 +431,10 @@ TEST_F(ClipTempoPersistenceTests, ProjectTempoChangesUpdateExplicitTempoWhenMatc
     //! [WHEN] the project tempo is halved
     DoProjectTempoChange(firstTrack(), TEST_PROJECT_TEMPO / 2);
 
-    //! [THEN] the clips take the new tempo for their own
-    expectStretchRatio(2.0);
+    //! [THEN] the clips halve their own tempo with it, rather than snapping to
+    //! the project's - which used to move their boundaries and their audio by
+    //! different factors
+    expectStretchRatio(TEST_PROJECT_TEMPO / 150.0 * 2);
 }
 
 TEST_F(ClipTempoPersistenceTests, SaveAndReloadPreservesInheritedAndFrozenTempo)

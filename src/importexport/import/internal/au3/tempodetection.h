@@ -63,7 +63,7 @@ private:
     void showSubsequentImportDialog(double bpm, const std::vector<WaveTrack*>& waveTracks,
                                     const std::vector<trackedit::TrackId>& dstTrackIds);
 
-    static void setRawAudioTempoOnClips(const std::vector<WaveTrack*>& waveTracks, double bpm);
+    void matchProjectTempoToLoops(const std::vector<WaveTrack*>& waveTracks, double bpm);
     void stretchClipsToProjectTempo(const std::vector<WaveTrack*>& waveTracks, const std::vector<trackedit::TrackId>& dstTrackIds,
                                     double detectedBpm);
 
