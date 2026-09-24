@@ -383,18 +383,23 @@ ItemKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, const Tr
     const int firstTrackIndex = std::min(anchorTrackIndex, targetTrackIndex);
     const int lastTrackIndex = std::max(anchorTrackIndex, targetTrackIndex);
 
-    //! NOTE Every item that at least touches the box joins the selection
-    ItemKeys selection;
+    TrackIdList boxTracks;
     for (int trackIndex = firstTrackIndex; trackIndex <= lastTrackIndex; ++trackIndex) {
-        const Track& track = tracks.at(trackIndex);
-        if (track.type == TrackType::Label) {
-            muse::join(selection.labels, labelKeysIntersecting(track.id, boxStartTime, boxEndTime));
-        } else {
-            muse::join(selection.clips, clipKeysIntersecting(track.id, boxStartTime, boxEndTime));
-        }
+        boxTracks.push_back(tracks.at(trackIndex).id);
     }
 
-    return selection;
+    return itemsTouchingRange(boxTracks, boxStartTime, boxEndTime);
+}
+
+ItemKeys Au3SelectionController::itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const
+{
+    ItemKeys items;
+    for (const TrackId& trackId : trackIds) {
+        muse::join(items.clips, clipKeysIntersecting(trackId, startTime, endTime));
+        muse::join(items.labels, labelKeysIntersecting(trackId, startTime, endTime));
+    }
+
+    return items;
 }
 
 void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)

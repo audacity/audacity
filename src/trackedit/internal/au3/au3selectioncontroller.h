@@ -52,6 +52,7 @@ public:
     ItemKeys itemKeysInRange(const TrackItemKey& target) const override;
     void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) override;
     ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const override;
+    ItemKeys itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const override;
 
     std::optional<secs_t> leftMostSelectedClipStartTime() const override;
     std::optional<secs_t> rightMostSelectedClipEndTime() const override;
@@ -131,6 +132,8 @@ private:
     LabelKeyList labelKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const;
 
     au3::Au3Project& projectRef() const;
+
+    friend class Au3SelectionControllerTests;
     Observer::Subscription m_tracksSubc;
 
     template<typename T>
