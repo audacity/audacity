@@ -5,6 +5,7 @@
 
 #include "projectscene/view/tracksitemsview/trackclipslistmodel.h"
 #include "projectscene/view/tracksitemsview/tracklabelslistmodel.h"
+#include "projectscene/view/timeline/timelinecontext.h"
 
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/tracknavigationcontrollermock.h"
@@ -143,6 +144,21 @@ protected:
     std::shared_ptr<NiceMock<trackedit::TrackNavigationControllerMock> > m_trackNavController;
     std::shared_ptr<NiceMock<trackedit::TrackeditInteractionMock> > m_trackeditInteraction;
 };
+
+TEST_F(TrackLabelsSelectionTests, SelectLabel_SetsRangeAnchor_GroupedLabel)
+{
+    //! CASE Clicking a grouped label anchors later range selections at it, as a grouped clip click does
+    TimelineContext context;
+    m_model->setTimelineContext(&context);
+    auto key = makeKey(1, 42);
+    auto other = makeKey(1, 43);
+    ON_CALL(*m_trackeditInteraction, itemGroupId(_)).WillByDefault(Return(int64_t(7)));
+    ON_CALL(*m_trackeditInteraction, itemsInGroup(int64_t(7))).WillByDefault(Return(trackedit::ItemKeys { {}, { key.key, other.key } }));
+
+    EXPECT_CALL(*m_selectionController, setItemSelectionAnchor(_, key.key)).Times(1);
+    m_model->selectLabel(key);
+    m_model->setTimelineContext(nullptr);
+}
 
 TEST_F(TrackLabelsSelectionTests, SelectLabel_SelectsLabel_WhenNothingSelected)
 {

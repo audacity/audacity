@@ -357,11 +357,11 @@ muse::RetVal<ItemKeys> TrackeditOperationController::moveItems(
     const auto selection = selectionController();
 
     // Move notifications must not expose selection or focus keys whose items have already changed tracks.
-    selection->setSelectedItems({}, false);
     const std::optional<TrackItemKey> focused = trackNavigationController()->focus().itemKey();
     if (focused && (muse::contains(clips, *focused) || muse::contains(labels, *focused))) {
         trackNavigationController()->setFocus(TrackFocus::track(focused->trackId));
     }
+    selection->setSelectedItems({}, false);
 
     const auto rollback = [&](const muse::Ret& error) {
         projectHistory()->rollbackState();
