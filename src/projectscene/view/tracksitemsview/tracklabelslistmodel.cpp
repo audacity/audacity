@@ -316,6 +316,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         selectItemGroup(key.key, mode, true);
         m_needToSelectTracksData = false;
         setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         return;
     }
 
