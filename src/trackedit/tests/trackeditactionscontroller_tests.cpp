@@ -11,6 +11,7 @@
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/projecthistorymock.h"
 #include "mocks/trackeditprojectmock.h"
+#include "actions/tests/mocks/actionsdispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 
@@ -37,6 +38,8 @@ public:
         m_controller->projectHistory.set(m_projectHistory);
         m_requests = std::make_shared<TracksViewRequestsService>(m_testCtx);
         m_controller->tracksViewRequestsService.set(m_requests);
+        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
+        m_controller->dispatcher.set(m_dispatcher);
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_project = std::make_shared<NiceMock<project::AudacityProjectMock> >();
@@ -96,11 +99,31 @@ public:
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
+    std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
     std::shared_ptr<TracksViewRequestsService> m_requests;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<project::AudacityProjectMock> m_project;
     std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
 };
+
+TEST_F(TrackeditActionsControllerTests, HistoryEventsRefreshTheGroupActions)
+{
+    //! [GIVEN] A controller listening to the history, whose events can restore group ids without touching the selection
+    muse::async::Channel<HistoryEvent> historyChanged;
+    ON_CALL(*m_projectHistory, historyChanged()).WillByDefault(Return(historyChanged));
+    m_controller->init();
+    std::vector<muse::actions::ActionCode> refreshed;
+    m_controller->actionEnabledChanged().onReceive(m_controller.get(), [&refreshed](const muse::actions::ActionCode& code) {
+        refreshed.push_back(code);
+    });
+
+    //! [WHEN] The history reports a restored state
+    historyChanged.send(HistoryEvent::RestoredState);
+
+    //! [THEN] Both group actions are re-evaluated
+    EXPECT_TRUE(muse::contains(refreshed, muse::actions::ActionCode("group-items")));
+    EXPECT_TRUE(muse::contains(refreshed, muse::actions::ActionCode("ungroup-items")));
+}
 
 TEST_F(TrackeditActionsControllerTests, UngroupIsAvailableForASingleGroupedItem)
 {

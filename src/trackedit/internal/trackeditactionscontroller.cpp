@@ -335,6 +335,8 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+        notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+        notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
