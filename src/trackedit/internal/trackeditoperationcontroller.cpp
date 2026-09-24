@@ -280,73 +280,6 @@ bool TrackeditOperationController::copyNonContinuousTrackDataIntoClipboard(const
     return true;
 }
 
-bool TrackeditOperationController::copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys)
-{
-    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
-    if (!project) {
-        return false;
-    }
-
-    clipboard()->clearTrackData();
-
-    const std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
-    const secs_t offset = leftmostItemStartTime.has_value() ? -leftmostItemStartTime.value() : secs_t(0.0);
-
-    bool ok = true;
-    for (const Track& track : project->trackList()) {
-        TrackItemKeyList trackItems;
-        for (const ClipKey& key : clipKeys) {
-            if (key.trackId == track.id) {
-                trackItems.push_back(key);
-            }
-        }
-        for (const LabelKey& key : labelKeys) {
-            if (key.trackId == track.id) {
-                trackItems.push_back(key);
-            }
-        }
-        if (trackItems.empty()) {
-            continue;
-        }
-
-        ok = copyNonContinuousTrackDataIntoClipboard(track.id, trackItems, offset) && ok;
-    }
-
-    return ok;
-}
-
-bool TrackeditOperationController::cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips)
-{
-    if (clipKeys.empty() && labelKeys.empty()) {
-        return false;
-    }
-
-    if (!copyItems(clipKeys, labelKeys)) {
-        return false;
-    }
-
-    selectionController()->resetSelectedClips();
-    selectionController()->resetSelectedLabels();
-
-    if (!clipKeys.empty() && !clipsInteraction()->removeClips(clipKeys, moveClips)) {
-        return false;
-    }
-    if (!labelKeys.empty() && !labelsInteraction()->removeLabels(labelKeys, moveClips)) {
-        return false;
-    }
-
-    std::string action;
-    if (!clipKeys.empty() && !labelKeys.empty()) {
-        action = muse::trc("trackedit", "Cut multiple items");
-    } else if (!clipKeys.empty()) {
-        action = muse::trc("trackedit", "Cut multiple clips");
-    } else {
-        action = muse::trc("trackedit", "Cut multiple labels");
-    }
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Cut to the clipboard"), action);
-    return true;
-}
-
 bool TrackeditOperationController::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
     clipboard()->clearSystemClipboard();
@@ -901,63 +834,6 @@ bool TrackeditOperationController::toggleStretchToMatchProjectTempo(const ClipKe
     return clipsInteraction()->toggleStretchToMatchProjectTempo(clipKey);
 }
 
-bool TrackeditOperationController::isLabelItem(const TrackItemKey& key) const
-{
-    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    const std::optional<Track> track = prj ? prj->track(key.trackId) : std::nullopt;
-    return track.has_value() && track->type == TrackType::Label;
-}
-
-int64_t TrackeditOperationController::itemGroupId(const TrackItemKey& key) const
-{
-    return isLabelItem(key) ? labelsInteraction()->labelGroupId(key) : clipsInteraction()->clipGroupId(key);
-}
-
-void TrackeditOperationController::setItemGroupId(const TrackItemKey& key, int64_t id)
-{
-    if (isLabelItem(key)) {
-        labelsInteraction()->setLabelGroupId(key, id);
-    } else {
-        clipsInteraction()->setClipGroupId(key, id);
-    }
-}
-
-void TrackeditOperationController::groupItems(const TrackItemKeyList& keys)
-{
-    //! NOTE Items already grouped pull the others into their group; with several
-    //! groups involved the first one found wins
-    int64_t id = -1;
-    for (const TrackItemKey& key : keys) {
-        id = itemGroupId(key);
-        if (id != -1) {
-            break;
-        }
-    }
-    if (id == -1) {
-        id = globalContext()->currentTrackeditProject()->createNewGroupID();
-    }
-
-    for (const TrackItemKey& key : keys) {
-        setItemGroupId(key, id);
-    }
-
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Items grouped"), muse::trc("trackedit", "Items grouped"));
-}
-
-void TrackeditOperationController::ungroupItems(const TrackItemKeyList& keys)
-{
-    for (const TrackItemKey& key : keys) {
-        setItemGroupId(key, -1);
-    }
-
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Items ungrouped"), muse::trc("trackedit", "Items ungrouped"));
-}
-
-ItemKeys TrackeditOperationController::itemsInGroup(int64_t id) const
-{
-    return { clipsInteraction()->clipsInGroup(id), labelsInteraction()->labelsInGroup(id) };
-}
-
 bool TrackeditOperationController::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
 {
     if (tracksInteraction()->changeTracksFormat(tracksIds, format)) {
@@ -1205,6 +1081,130 @@ bool TrackeditOperationController::stretchLabelsRight(const LabelKeyList& labelK
 void TrackeditOperationController::resetLabelStretchState()
 {
     labelsInteraction()->resetLabelStretchState();
+}
+
+bool TrackeditOperationController::copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys)
+{
+    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return false;
+    }
+
+    clipboard()->clearTrackData();
+
+    const std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
+    const secs_t offset = leftmostItemStartTime.has_value() ? -leftmostItemStartTime.value() : secs_t(0.0);
+
+    bool ok = true;
+    for (const Track& track : project->trackList()) {
+        TrackItemKeyList trackItems;
+        for (const ClipKey& key : clipKeys) {
+            if (key.trackId == track.id) {
+                trackItems.push_back(key);
+            }
+        }
+        for (const LabelKey& key : labelKeys) {
+            if (key.trackId == track.id) {
+                trackItems.push_back(key);
+            }
+        }
+        if (trackItems.empty()) {
+            continue;
+        }
+
+        ok = copyNonContinuousTrackDataIntoClipboard(track.id, trackItems, offset) && ok;
+    }
+
+    return ok;
+}
+
+bool TrackeditOperationController::cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips)
+{
+    if (clipKeys.empty() && labelKeys.empty()) {
+        return false;
+    }
+
+    if (!copyItems(clipKeys, labelKeys)) {
+        return false;
+    }
+
+    selectionController()->resetSelectedClips();
+    selectionController()->resetSelectedLabels();
+
+    if (!clipKeys.empty() && !clipsInteraction()->removeClips(clipKeys, moveClips)) {
+        return false;
+    }
+    if (!labelKeys.empty() && !labelsInteraction()->removeLabels(labelKeys, moveClips)) {
+        return false;
+    }
+
+    std::string action;
+    if (!clipKeys.empty() && !labelKeys.empty()) {
+        action = muse::trc("trackedit", "Cut multiple items");
+    } else if (!clipKeys.empty()) {
+        action = muse::trc("trackedit", "Cut multiple clips");
+    } else {
+        action = muse::trc("trackedit", "Cut multiple labels");
+    }
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Cut to the clipboard"), action);
+    return true;
+}
+
+bool TrackeditOperationController::isLabelItem(const TrackItemKey& key) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    const std::optional<Track> track = prj ? prj->track(key.trackId) : std::nullopt;
+    return track.has_value() && track->type == TrackType::Label;
+}
+
+int64_t TrackeditOperationController::itemGroupId(const TrackItemKey& key) const
+{
+    return isLabelItem(key) ? labelsInteraction()->labelGroupId(key) : clipsInteraction()->clipGroupId(key);
+}
+
+void TrackeditOperationController::setItemGroupId(const TrackItemKey& key, int64_t id)
+{
+    if (isLabelItem(key)) {
+        labelsInteraction()->setLabelGroupId(key, id);
+    } else {
+        clipsInteraction()->setClipGroupId(key, id);
+    }
+}
+
+void TrackeditOperationController::groupItems(const TrackItemKeyList& keys)
+{
+    //! NOTE Items already grouped pull the others into their group; with several
+    //! groups involved the first one found wins
+    int64_t id = -1;
+    for (const TrackItemKey& key : keys) {
+        id = itemGroupId(key);
+        if (id != -1) {
+            break;
+        }
+    }
+    if (id == -1) {
+        id = globalContext()->currentTrackeditProject()->createNewGroupID();
+    }
+
+    for (const TrackItemKey& key : keys) {
+        setItemGroupId(key, id);
+    }
+
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Items grouped"), muse::trc("trackedit", "Items grouped"));
+}
+
+void TrackeditOperationController::ungroupItems(const TrackItemKeyList& keys)
+{
+    for (const TrackItemKey& key : keys) {
+        setItemGroupId(key, -1);
+    }
+
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Items ungrouped"), muse::trc("trackedit", "Items ungrouped"));
+}
+
+ItemKeys TrackeditOperationController::itemsInGroup(int64_t id) const
+{
+    return { clipsInteraction()->clipsInGroup(id), labelsInteraction()->labelsInGroup(id) };
 }
 
 muse::Progress TrackeditOperationController::progress() const

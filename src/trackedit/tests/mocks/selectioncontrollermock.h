@@ -17,6 +17,8 @@ public:
     MOCK_METHOD(muse::async::Channel<TrackIdList>, selectedTracksChanged, (), (const, override));
     MOCK_METHOD(void, removeClipSelection, (const trackedit::ClipKey&), (override));
     MOCK_METHOD(muse::async::Channel<TrackIdList>, tracksSelected, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, selectedTracksStartTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, selectedTracksEndTime, (), (const, override));
 
     MOCK_METHOD(void, resetSelectedClips, (), (override));
     MOCK_METHOD(bool, hasSelectedClips, (), (const, override));
@@ -24,9 +26,6 @@ public:
     MOCK_METHOD(ClipKeyList, selectedClipsInTrackOrder, (), (const, override));
     MOCK_METHOD(void, setSelectedClips, (const ClipKeyList&, bool), (override));
 
-    MOCK_METHOD(ItemKeys, itemKeysInRange, (const TrackItemKey&), (const, override));
-    MOCK_METHOD(void, setItemSelectionAnchor, (secs_t, const TrackItemKey&), (override));
-    MOCK_METHOD(ItemKeys, itemsTouchingSelectionBox, (secs_t, const TrackId&), (const, override));
     MOCK_METHOD(void, addSelectedClip, (const ClipKey& clipKey), (override));
     MOCK_METHOD(muse::async::Channel<ClipKeyList>, clipsSelected, (), (const, override));
     MOCK_METHOD(std::optional<secs_t>, selectedClipStartTime, (), (const, override));
@@ -39,7 +38,6 @@ public:
     MOCK_METHOD(LabelKeyList, selectedLabels, (), (const, override));
     MOCK_METHOD(LabelKeyList, selectedLabelsInTrackOrder, (), (const, override));
     MOCK_METHOD(void, setSelectedLabels, (const LabelKeyList&, bool), (override));
-    MOCK_METHOD(void, setSelectedItems, (const ItemKeys&, bool), (override));
     MOCK_METHOD(void, addSelectedLabel, (const LabelKey& LabelKey), (override));
     MOCK_METHOD(void, removeLabelSelection, (const LabelKey& labelKey), (override));
     MOCK_METHOD(muse::async::Channel<LabelKeyList>, labelsSelected, (), (const, override));
@@ -50,11 +48,12 @@ public:
     MOCK_METHOD(std::optional<secs_t>, leftMostSelectedLabelStartTime, (), (const, override));
     MOCK_METHOD(std::optional<secs_t>, rightMostSelectedLabelEndTime, (), (const, override));
 
+    MOCK_METHOD(void, setSelectedItems, (const ItemKeys&, bool), (override));
+    MOCK_METHOD(ItemKeys, itemKeysInRange, (const TrackItemKey&), (const, override));
+    MOCK_METHOD(void, setItemSelectionAnchor, (secs_t, const TrackItemKey&), (override));
+    MOCK_METHOD(ItemKeys, itemsTouchingSelectionBox, (secs_t, const TrackId&), (const, override));
     MOCK_METHOD(std::optional<secs_t>, leftMostSelectedItemStartTime, (), (const, override));
     MOCK_METHOD(std::optional<secs_t>, rightMostSelectedItemEndTime, (), (const, override));
-
-    MOCK_METHOD(std::optional<secs_t>, selectedTracksStartTime, (), (const, override));
-    MOCK_METHOD(std::optional<secs_t>, selectedTracksEndTime, (), (const, override));
 
     MOCK_METHOD(void, setSelectedTrackAudioData, (TrackId), (override));
     MOCK_METHOD(void, resetDataSelection, (), (override));
