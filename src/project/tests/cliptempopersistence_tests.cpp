@@ -406,6 +406,23 @@ TEST_F(ClipTempoPersistenceTests, EnablingStretchToTempoChangesPreservesSpeedAft
     EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
 }
 
+TEST_F(ClipTempoPersistenceTests, EnablingStretchToTempoChangesLocksTheClipOntoTheProjectTempo)
+{
+    //! [GIVEN] a deserialized project whose clips don't follow its tempo, and
+    //! which have since been made to
+    const wxString xml = projectXml(ClipXml {}.withClipStretchToMatchTempo(false).withClipStretchRatio(1.0));
+    ASSERT_TRUE(readProject(xml));
+    const auto clip = clips().front();
+    clip->SetStretchToMatchProjectTempo(true);
+    ASSERT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+
+    //! [WHEN] the project tempo is halved
+    DoProjectTempoChange(firstTrack(), TEST_PROJECT_TEMPO / 2);
+
+    //! [THEN] the clip stretches by two
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 2.0);
+}
+
 TEST_F(ClipTempoPersistenceTests, ProjectTempoChangesUpdateExplicitTempoWhenMatchingIsEnabled)
 {
     //! [GIVEN] a deserialized project whose clips name 150 bpm but follow the

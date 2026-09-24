@@ -108,6 +108,41 @@ TEST_F(Au3ClipsInteractionTests, EnablingTempoMatchingWithoutClipTempoPreservesD
     removeTrack(track->GetId());
 }
 
+TEST_F(Au3ClipsInteractionTests, EnablingTempoMatchingOnATrimmedClipPreservesItsSpeed)
+{
+    auto* track = Au3WaveTrack::New(projectRef());
+    DoProjectTempoChange(*track, 120.0);
+    XMLFileReader reader;
+    ASSERT_TRUE(reader.ParseString(track,
+                                   "<wavetrack rate=\"48000\" sampleformat=\"262159\">"
+                                   "<waveclip offset=\"0\" trimLeft=\"0.2\" trimRight=\"0.3\" "
+                                   "rawAudioTempo=\"240\" clipStretchRatio=\"1\" clipStretchToMatchTempo=\"0\">"
+                                   "<sequence maxsamples=\"262144\" sampleformat=\"262159\" numsamples=\"48000\">"
+                                   "<waveblock start=\"0\" blockid=\"-48000\"/>"
+                                   "</sequence><envelope numpoints=\"0\"/></waveclip></wavetrack>"));
+    track->LinkConsistencyFix(true);
+    const auto clip = track->SortedIntervalArray().front();
+    ASSERT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    ASSERT_DOUBLE_EQ(clip->End() - clip->Start(), 0.5);
+    TimeSignature timeSignature;
+    timeSignature.tempo = 120.0;
+    ON_CALL(*m_trackEditProject, timeSignature()).WillByDefault(Return(timeSignature));
+
+    ASSERT_TRUE(m_clipsInteraction->toggleStretchToMatchProjectTempo({ track->GetId(), clip->GetId() }));
+    // Enabling tempo matching must not change how fast the audio plays, ...
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    // ... nor how much audio is hidden at either end.
+    EXPECT_DOUBLE_EQ(clip->GetTrimLeft(), 0.2);
+    EXPECT_DOUBLE_EQ(clip->GetTrimRight(), 0.3);
+    EXPECT_DOUBLE_EQ(clip->End() - clip->Start(), 0.5);
+
+    // Halving the project tempo now stretches the clip by two.
+    DoProjectTempoChange(*track, 60.0);
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 2.0);
+    EXPECT_DOUBLE_EQ(clip->End() - clip->Start(), 1.0);
+    removeTrack(track->GetId());
+}
+
 TEST_F(Au3ClipsInteractionTests, ChangeClipColor)
 {
     //! [GIVEN] There is a project with a track and a clip
