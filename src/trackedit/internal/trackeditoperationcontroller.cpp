@@ -5,6 +5,7 @@
 #include "trackeditoperationcontroller.h"
 
 #include "trackediterrors.h"
+#include "trackeditutils.h"
 
 namespace au::trackedit {
 TrackeditOperationController::TrackeditOperationController(const muse::modularity::ContextPtr& ctx,
@@ -376,15 +377,7 @@ muse::RetVal<TrackeditOperationController::MovedItems> TrackeditOperationControl
 
     selection->setSelectedClips(moved.clips, true);
     selection->setSelectedLabels(moved.labels, true);
-    TrackIdList tracks;
-    for (const auto& keys : { moved.clips, moved.labels }) {
-        for (const auto& key : keys) {
-            if (!muse::contains(tracks, key.trackId)) {
-                tracks.push_back(key.trackId);
-            }
-        }
-    }
-    selection->setSelectedTracks(tracks, true);
+    selection->setSelectedTracks(utils::itemTrackIds(ItemKeys { moved.clips, moved.labels }), true);
 
     std::string description;
     std::string action;
