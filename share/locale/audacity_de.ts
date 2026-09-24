@@ -483,7 +483,7 @@
     </message>
     <message>
         <source>Set playback time signature</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Taktart für die Wiedergabe festlegen</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="190"/>
@@ -2370,7 +2370,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="183"/>
         <source>Set playback time signature</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Taktart für die Wiedergabe festlegen</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="192"/>
@@ -5533,7 +5533,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>Taktart: %1/%2</translation>
     </message>
 </context>
 <context>
@@ -21244,19 +21244,19 @@ Bitte schließen Sie ein Eingabegerät an und suchen Sie erneut danach.</transla
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n Stunde(n) verbleibend</numerusform><numerusform>%n Stunde(n) verbleibend</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n Minute(n) verbleibend</numerusform><numerusform>%n Minute(n) verbleibend</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n Sekunde(n) verbleibend</numerusform><numerusform>%n Sekunde(n) verbleibend</numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="98"/>
@@ -22025,12 +22025,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="463"/>
         <source>Upper time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Die obere Taktart wurde geändert</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="468"/>
         <source>Lower time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Die untere Taktart wurde geändert</translation>
     </message>
 </context>
 <context>
