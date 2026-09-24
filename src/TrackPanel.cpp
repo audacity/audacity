@@ -405,12 +405,8 @@ void TrackPanel::OnIdle(wxIdleEvent& event)
       GetProjectFrame( *GetProject() ).Unbind(wxEVT_IDLE,
          &TrackPanel::OnIdle, this);
    }
-   else
-   {
-      // Get another idle event, wx only guarantees we get one
-      // event after "some other normal events occur"
-      event.RequestMore();
-   }
+   // When hidden, wait for the next regular idle event. RequestMore() creates
+   // a tight loop until the window is shown.
 }
 
 /// AS: This gets called on our wx timer events.
