@@ -697,9 +697,9 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
 
     if (mode == SelectionMode::Range) {
         const ItemKeys box = m_context
-                                     ? selectionController()->itemsTouchingSelectionBox(
+                             ? selectionController()->itemsTouchingSelectionBox(
             m_context->mousePositionTime(), m_trackId)
-                                     : ItemKeys();
+                             : ItemKeys();
         if (!box.empty()) {
             selectionController()->setSelectedClips(box.clips, complete);
             selectionController()->setSelectedLabels(box.labels, complete);

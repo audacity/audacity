@@ -287,9 +287,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
 
     if (mode == SelectionMode::Range) {
         const ItemKeys box = m_context
-                                     ? selectionController()->itemsTouchingSelectionBox(
+                             ? selectionController()->itemsTouchingSelectionBox(
             m_context->mousePositionTime(), m_trackId)
-                                     : ItemKeys();
+                             : ItemKeys();
         if (!box.empty()) {
             selectionController()->resetDataSelection();
             selectionController()->setSelectedClips(box.clips, true);
@@ -416,6 +416,20 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
         resetSelectedTracksData();
         selectionController()->setSelectedTracks({ key.key.trackId }, true);
     }
+}
+
+double TrackLabelsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+{
+    const ViewTrackItem* item = itemByKey(key.key);
+    if (item && !muse::RealIsEqual(item->time().startTime, item->time().endTime)) {
+        if (direction == DirectionType::Direction::Right && muse::RealIsEqual(item->time().endTime, m_editedLabelStartTime)) {
+            direction = DirectionType::Direction::Left;
+        } else if (direction == DirectionType::Direction::Left && muse::RealIsEqual(item->time().startTime, m_editedLabelEndTime)) {
+            direction = DirectionType::Direction::Right;
+        }
+    }
+
+    return TrackItemsListModel::findGuideline(key, direction);
 }
 
 bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed)
