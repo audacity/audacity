@@ -36,6 +36,8 @@ public:
     void setSelectedTracks(const trackedit::TrackIdList& trackIds, bool complete) override;
     muse::async::Channel<TrackIdList> selectedTracksChanged() const override;
     muse::async::Channel<trackedit::TrackIdList> tracksSelected() const override;
+    std::optional<secs_t> selectedTracksStartTime() const override;
+    std::optional<secs_t> selectedTracksEndTime() const override;
 
     // clip selection
     void resetSelectedClips() override;
@@ -49,10 +51,6 @@ public:
     std::optional<secs_t> selectedClipStartTime() const override;
     std::optional<secs_t> selectedClipEndTime() const override;
 
-    ItemKeys itemKeysInRange(const TrackItemKey& target) const override;
-    void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) override;
-    ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const override;
-
     std::optional<secs_t> leftMostSelectedClipStartTime() const override;
     std::optional<secs_t> rightMostSelectedClipEndTime() const override;
 
@@ -64,18 +62,19 @@ public:
     void setSelectedLabels(const LabelKeyList& labelKeys, bool complete) override;
     void addSelectedLabel(const LabelKey& labelKey) override;
     void removeLabelSelection(const LabelKey& labelKey) override;
-    void setSelectedItems(const ItemKeys& items, bool complete) override;
     muse::async::Channel<LabelKeyList> labelsSelected() const override;
     std::optional<secs_t> selectedLabelStartTime() const override;
     std::optional<secs_t> selectedLabelEndTime() const override;
     std::optional<secs_t> leftMostSelectedLabelStartTime() const override;
     std::optional<secs_t> rightMostSelectedLabelEndTime() const override;
 
+    // item selection
+    void setSelectedItems(const ItemKeys& items, bool complete) override;
+    ItemKeys itemKeysInRange(const TrackItemKey& target) const override;
+    void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) override;
+    ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const override;
     std::optional<secs_t> leftMostSelectedItemStartTime() const override;
     std::optional<secs_t> rightMostSelectedItemEndTime() const override;
-
-    std::optional<secs_t> selectedTracksStartTime() const override;
-    std::optional<secs_t> selectedTracksEndTime() const override;
 
     // data selection
     void setSelectedTrackAudioData(trackedit::TrackId trackId) override;

@@ -39,8 +39,6 @@ public:
     MOCK_METHOD(bool, cutItemDataIntoClipboard, (const TrackIdList&, secs_t, secs_t, bool, bool), (override));
     MOCK_METHOD(bool, copyClipIntoClipboard, (const ClipKey&), (override));
     MOCK_METHOD(bool, copyNonContinuousTrackDataIntoClipboard, (const TrackId, const TrackItemKeyList&, secs_t), (override));
-    MOCK_METHOD(bool, copyItems, (const ClipKeyList&, const LabelKeyList&), (override));
-    MOCK_METHOD(bool, cutItems, (const ClipKeyList&, const LabelKeyList&, bool), (override));
     MOCK_METHOD(bool, copyContinuousTrackDataIntoClipboard, (const TrackId, secs_t, secs_t), (override));
     MOCK_METHOD(bool, removeClip, (const ClipKey&), (override));
     MOCK_METHOD(bool, removeClips, (const ClipKeyList&, bool), (override));
@@ -94,11 +92,6 @@ public:
 
     MOCK_METHOD(bool, toggleStretchToMatchProjectTempo, (const ClipKey&), (override));
 
-    MOCK_METHOD(int64_t, itemGroupId, (const TrackItemKey&), (const, override));
-    MOCK_METHOD(void, groupItems, (const TrackItemKeyList&), (override));
-    MOCK_METHOD(void, ungroupItems, (const TrackItemKeyList&), (override));
-    MOCK_METHOD(ItemKeys, itemsInGroup, (int64_t), (const, override));
-
     MOCK_METHOD(bool, changeTracksFormat, (const TrackIdList&, trackedit::TrackFormat), (override));
     MOCK_METHOD(bool, changeTracksRate, (const TrackIdList&, int), (override));
 
@@ -131,6 +124,13 @@ public:
     MOCK_METHOD(bool, stretchLabelsRight, (const LabelKeyList&, secs_t, bool), (override));
 
     MOCK_METHOD(void, resetLabelStretchState, (), (override));
+
+    MOCK_METHOD(bool, copyItems, (const ClipKeyList&, const LabelKeyList&), (override));
+    MOCK_METHOD(bool, cutItems, (const ClipKeyList&, const LabelKeyList&, bool), (override));
+    MOCK_METHOD(int64_t, itemGroupId, (const TrackItemKey&), (const, override));
+    MOCK_METHOD(void, groupItems, (const TrackItemKeyList&), (override));
+    MOCK_METHOD(void, ungroupItems, (const TrackItemKeyList&), (override));
+    MOCK_METHOD(ItemKeys, itemsInGroup, (int64_t), (const, override));
 
     MOCK_METHOD(muse::Progress, progress, (), (const, override));
 };

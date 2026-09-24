@@ -66,8 +66,6 @@ public:
     bool cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips, bool isRangeSelection) override;
     bool copyClipIntoClipboard(const ClipKey& clipKey) override;
     bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const TrackItemKeyList& itemKeys, secs_t offset) override;
-    bool copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys) override;
-    bool cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips) override;
     bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const ClipKey& clipKey) override;
     bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) override;
@@ -124,11 +122,6 @@ public:
 
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
-    int64_t itemGroupId(const TrackItemKey& key) const override;
-    void groupItems(const TrackItemKeyList& keys) override;
-    void ungroupItems(const TrackItemKeyList& keys) override;
-    ItemKeys itemsInGroup(int64_t id) const override;
-
     bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
     bool changeTracksRate(const TrackIdList& tracksIds, int rate) override;
 
@@ -161,6 +154,13 @@ public:
     bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) override;
 
     void resetLabelStretchState() override;
+
+    bool copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys) override;
+    bool cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips) override;
+    int64_t itemGroupId(const TrackItemKey& key) const override;
+    void groupItems(const TrackItemKeyList& keys) override;
+    void ungroupItems(const TrackItemKeyList& keys) override;
+    ItemKeys itemsInGroup(int64_t id) const override;
 
     muse::Progress progress() const override;
 
