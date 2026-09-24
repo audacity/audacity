@@ -252,6 +252,77 @@ TEST_F(MarqueeSelectionTests, CancellingWithoutAMarqueeLeavesTheGestureAlone)
     EXPECT_TRUE(m_controller->selectionInProgress());
 }
 
+TEST_F(MarqueeSelectionTests, RightDragStartsAMarqueeWithoutASelectionGesture)
+{
+    //! [GIVEN] A right press on empty track area with no modifier held
+    ON_CALL(*m_application, keyboardModifiers())
+    .WillByDefault(Return(Qt::NoModifier));
+    ON_CALL(*m_viewState, tracksInRange(10.0, 40.0))
+    .WillByDefault(Return(trackedit::TrackIdList { 1, 2 }));
+    ON_CALL(*m_selectionController,
+            itemsTouchingRange(trackedit::TrackIdList { 1, 2 }, trackedit::secs_t(1.0), trackedit::secs_t(20.0)))
+    .WillByDefault(Return(m_touched));
+    m_controller->startMarquee(1.0, 10.0);
+    EXPECT_FALSE(m_controller->selectionInProgress());
+
+    //! [EXPECT] The touched items get selected, the time selection is dropped and never written
+    EXPECT_CALL(*m_selectionController, resetDataSelection()).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedClips(m_touched.clips, true)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(m_touched.labels, true)).Times(1);
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setItemSelectionAnchor(trackedit::secs_t(1.0), trackedit::TrackItemKey { 1, 11 })).Times(1);
+
+    //! [WHEN] The pointer is dragged past the threshold and released
+    m_controller->onPositionChanged(20.0, 40.0);
+    EXPECT_TRUE(m_controller->marqueeActive());
+    m_controller->onReleased(20.0, 40.0);
+
+    //! [THEN] The marquee is over and no selection gesture was ever in progress
+    EXPECT_FALSE(m_controller->marqueeActive());
+    EXPECT_FALSE(m_controller->selectionInProgress());
+}
+
+TEST_F(MarqueeSelectionTests, RightClickWithoutADragLeavesTheSelectionAlone)
+{
+    //! [EXPECT] Nothing is queried, selected or reset
+    EXPECT_CALL(*m_selectionController, itemsTouchingRange(_, _, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setSelectedClips(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, resetDataSelection()).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(_, _)).Times(0);
+
+    //! [WHEN] A right press moves less than the drag threshold and is released
+    m_controller->startMarquee(1.0, 10.0);
+    m_controller->onPositionChanged(3.0, 12.0);
+    m_controller->onReleased(3.0, 12.0);
+
+    //! [THEN] No marquee was started
+    EXPECT_FALSE(m_controller->marqueeActive());
+}
+
+TEST_F(MarqueeSelectionTests, ARightPressDuringASelectionGestureIsIgnored)
+{
+    //! [GIVEN] A plain selection gesture in progress
+    ON_CALL(*m_application, keyboardModifiers())
+    .WillByDefault(Return(Qt::NoModifier));
+    m_controller->onPressed(1.0, 10.0);
+    ASSERT_TRUE(m_controller->selectionInProgress());
+
+    //! [EXPECT] The drag keeps extending the time selection instead of drawing a box
+    EXPECT_CALL(*m_selectionController, itemsTouchingRange(_, _, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(_, false)).Times(1);
+
+    //! [WHEN] A right press arrives and the pointer is dragged
+    m_controller->startMarquee(2.0, 11.0);
+    m_controller->onPositionChanged(20.0, 40.0);
+
+    //! [THEN] No marquee was started
+    EXPECT_FALSE(m_controller->marqueeActive());
+    EXPECT_TRUE(m_controller->selectionInProgress());
+}
+
 TEST_F(MarqueeSelectionTests, AnEmptyBoxLeavesFocusAndAnchorAlone)
 {
     //! [GIVEN] A marquee over track area without items

@@ -65,6 +65,7 @@ public:
     Q_INVOKABLE void onPressed(double time, double y, spectrogram::SpectrogramHit spectrogramHit = {});
     Q_INVOKABLE void onPositionChanged(double time, double y);
     Q_INVOKABLE void onReleased(double time, double y);
+    Q_INVOKABLE void startMarquee(double time, double y);
 
     Q_INVOKABLE void onSelectionHorizontalResize(double anchorTime, double draggedTime, bool completed);
     Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit, bool isTop);

@@ -159,7 +159,7 @@ bool SelectionViewController::doOnPositionChanged(double time, double y)
         return false;
     }
 
-    if (!m_selectionStarted) {
+    if (!m_selectionStarted && !m_marquee.armed) {
         return false;
     }
 
@@ -221,6 +221,11 @@ void SelectionViewController::onReleased(double time, double y)
     }
 
     if (!m_selectionStarted) {
+        if (m_marquee.armed) {
+            m_context->stopAutoScroll();
+            disconnect(m_autoScrollConnection);
+            endMarquee();
+        }
         return;
     }
 
@@ -365,16 +370,34 @@ void SelectionViewController::cancelSpectrogramEdit()
 
 void SelectionViewController::cancelSelectionGesture()
 {
-    resetMarquee();
-
-    if (!m_selectionStarted) {
+    if (!m_selectionStarted && !m_marquee.armed) {
         return;
     }
 
-    m_selectionStarted = false;
+    resetMarquee();
     m_context->stopAutoScroll();
     disconnect(m_autoScrollConnection);
-    emit selectionInProgressChanged();
+
+    if (m_selectionStarted) {
+        m_selectionStarted = false;
+        emit selectionInProgressChanged();
+    }
+}
+
+void SelectionViewController::startMarquee(double time, double y)
+{
+    if (!isProjectOpened() || m_selectionStarted) {
+        return;
+    }
+
+    cancelSelectionGesture();
+    armMarquee(time, y);
+
+    m_autoScrollLastX = m_context->timeToPosition(time);
+    m_autoScrollLastY = y;
+    m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
+        doOnPositionChanged(m_context->positionToTime(m_autoScrollLastX), m_autoScrollLastY);
+    });
 }
 
 void SelectionViewController::cancelMarquee()

@@ -615,11 +615,7 @@ Rectangle {
 
                     pressStartPosition = Qt.point(e.x, e.y)
                 } else if (e.button === Qt.RightButton) {
-                    if (tracksHovered)
-                    //! TODO AU4: handle context menu over empty track area
-                    {} else {
-                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
-                    }
+                    selectionViewController.startMarquee(timeline.context.positionToTime(e.x), e.y)
                 }
             }
 
@@ -651,6 +647,22 @@ Rectangle {
             }
 
             onReleased: function (e) {
+                if (e.button === Qt.RightButton) {
+                    const marqueeEnded = selectionViewController.marqueeActive
+                    selectionViewController.onReleased(timeline.context.positionToTime(e.x), e.y)
+                    if (marqueeEnded) {
+                        return
+                    }
+
+                    if (root.itemHovered && root.hoveredItemKey) {
+                        tracksItemsView.itemContextMenuRequested(root.hoveredItemKey, e.x, e.y, e.modifiers)
+                    } else if (!tracksHovered) {
+                        //! TODO AU4: handle context menu over empty track area
+                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
+                    }
+                    return
+                }
+
                 if (e.button !== Qt.LeftButton || itemsMoveController.keyboardActive) {
                     return
                 }
@@ -837,6 +849,7 @@ Rectangle {
                 }
 
                 signal itemReleaseRequested(var itemKey)
+                signal itemContextMenuRequested(var itemKey, real x, real y, int modifiers)
                 signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
                 signal stopAutoScroll
