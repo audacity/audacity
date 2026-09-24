@@ -56,6 +56,7 @@ public:
     virtual ItemKeys itemKeysInRange(const TrackItemKey& target) const = 0;
     virtual void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) = 0;
     virtual ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const = 0;
+    virtual ItemKeys itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const = 0;
 
     // label selection
     virtual void resetSelectedLabels() = 0;
