@@ -3,6 +3,7 @@
  */
 #include <gtest/gtest.h>
 
+#include <cmath>
 #include <set>
 
 #include "../view/timeline/snaptimeformatter.h"
@@ -84,6 +85,36 @@ TEST_F(SnapTimeFormatterTests, Snap_Beats)
     snap = { SnapType::HundredTwentyEighth, true, false };
     EXPECT_EQ(m_formatter->snapTime(1.016, snap, m_timeSignature), 1.015625);
     EXPECT_EQ(m_formatter->snapTime(1.014, snap, m_timeSignature), 1.015625);
+}
+
+TEST_F(SnapTimeFormatterTests, Snap_Frames)
+{
+    // Film frames: 24 fps, frame duration = 1/24 s.
+    Snap snap = { SnapType::FilmFrames, true, false };
+    EXPECT_NEAR(m_formatter->snapTime(1.0, snap, m_timeSignature), 1.0, 1e-9);
+    EXPECT_NEAR(m_formatter->snapTime(0.03, snap, m_timeSignature), 1.0 / 24.0, 1e-9);
+
+    // NTSC frames run at 30 / 1.001 = 29.97 fps, NOT 29. Regression test for a
+    // frame-rate table typed `std::map<SnapType, int>`, which truncated 29.97
+    // to 29 and snapped edits to a nonexistent 29 fps grid.
+    const double ntsc = 30.0 / 1.001;
+    snap = { SnapType::NTSCFrames, true, false };
+    EXPECT_NEAR(m_formatter->snapTime(1.0, snap, m_timeSignature), std::round(1.0 * ntsc) / ntsc, 1e-9);
+    // The correct 29.97 grid must differ measurably from the buggy 29 fps grid.
+    EXPECT_GT(std::abs(m_formatter->snapTime(1.0, snap, m_timeSignature) - std::round(1.0 * 29.0) / 29.0), 1e-4);
+
+    snap = { SnapType::NTSCFramesDrop, true, false };
+    EXPECT_NEAR(m_formatter->snapTime(1.0, snap, m_timeSignature), std::round(1.0 * ntsc) / ntsc, 1e-9);
+
+    // PAL frames: 25 fps, frame duration = 1/25 s.
+    snap = { SnapType::PALFrames, true, false };
+    EXPECT_NEAR(m_formatter->snapTime(1.0, snap, m_timeSignature), 1.0, 1e-9);
+    EXPECT_NEAR(m_formatter->snapTime(0.02, snap, m_timeSignature), 1.0 / 25.0, 1e-9);
+
+    // CDDA frames: 75 fps.
+    snap = { SnapType::CDDAFrames, true, false };
+    EXPECT_NEAR(m_formatter->snapTime(1.0, snap, m_timeSignature), 1.0, 1e-9);
+    EXPECT_NEAR(m_formatter->snapTime(0.01, snap, m_timeSignature), 1.0 / 75.0, 1e-9);
 }
 
 TEST_F(SnapTimeFormatterTests, SingleStep_Time)
