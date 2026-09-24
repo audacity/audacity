@@ -178,9 +178,14 @@ void XMLWriter::WriteAttr(const wxString &name, long long value)
 void XMLWriter::WriteAttr(const wxString &name, size_t value)
 // may throw from Write()
 {
-   Write(wxString::Format(wxT(" %s=\"%lld\""),
+   // Format as unsigned: size_t is unsigned, and the previous
+   // long-long-with-%lld cast produced negative decimals for any
+   // value with bit 63 set on 64-bit platforms (e.g. a uint64_t
+   // bitmap with bit 63 set, written via this overload, was saved
+   // as something like "-9223372036854775808" and lost on reload).
+   Write(wxString::Format(wxT(" %s=\"%llu\""),
       name,
-      (long long) value));
+      static_cast<unsigned long long>(value)));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, float value, int digits)
@@ -510,8 +515,22 @@ void XMLUtf8BufferWriter::WriteAttr(
 
 void XMLUtf8BufferWriter::WriteAttr(const std::string_view& name, size_t value)
 {
-   // Well, that maintains the original behavior
-   WriteAttr(name, static_cast<long long>(value));
+   // Mirror of the XMLWriter::WriteAttr(size_t) fix: format as
+   // unsigned so values with bit 63 set don't render as negative
+   // decimals.  Cannot delegate to the long-long overload below
+   // (as the previous implementation did) because that overload's
+   // signed-format would round-trip the high-bit value back through
+   // the same bug.  Spell out the unsigned-formatting path here.
+   constexpr size_t bufferSize =
+      std::numeric_limits<unsigned long long>::digits10 + 1 +
+      1; // extra byte for safety (ToChars does not write a NUL)
+   char buffer[bufferSize];
+   const auto result = ToChars(
+      buffer, buffer + bufferSize,
+      static_cast<unsigned long long>(value));
+   if (result.ec != std::errc())
+      THROW_INCONSISTENCY_EXCEPTION;
+   WriteAttr(name, std::string_view(buffer, result.ptr - buffer));
 }
 
 void XMLUtf8BufferWriter::WriteAttr(
