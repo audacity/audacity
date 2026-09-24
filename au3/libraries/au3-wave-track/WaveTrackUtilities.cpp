@@ -16,56 +16,6 @@
 #include "au3-realtime-effects/RealtimeEffectList.h"
 #include <algorithm>
 
-WaveTrackUtilities::AllClipsIterator::AllClipsIterator(WaveTrack& track)
-    : mpTrack(&track)
-{
-    if (mpTrack) {
-        auto&& clips = mpTrack->Intervals();
-        Push({ clips.begin(), clips.end() });
-    }
-}
-
-auto WaveTrackUtilities::AllClipsIterator::operator *() const -> value_type
-{
-    if (mStack.empty()) {
-        return nullptr;
-    } else {
-        auto&[intervals, ii] = mStack.back();
-        return intervals[ii];
-    }
-}
-
-auto WaveTrackUtilities::AllClipsIterator::operator ++() -> AllClipsIterator
-&
-{
-    // The unspecified sequence is a post-order, but there is no
-    // promise whether sister nodes are ordered in time.
-    if (mpTrack && !mStack.empty()) {
-        auto&[intervals, ii] = mStack.back();
-        if (++ii == intervals.size()) {
-            mStack.pop_back();
-        } else {
-            Push(intervals[ii]->GetCutLines());
-        }
-    }
-
-    return *this;
-}
-
-void WaveTrackUtilities::AllClipsIterator::Push(IntervalHolders clips)
-{
-    if (!mpTrack) {
-        return;
-    }
-
-    // Go depth first while there are cutlines
-    while (!clips.empty()) {
-        auto nextClips = clips[0]->GetCutLines();
-        mStack.push_back({ move(clips), 0 });
-        clips = move(nextClips);
-    }
-}
-
 namespace {
 bool ReverseOneClip(WaveTrack& track,
                     sampleCount start, sampleCount len,
@@ -300,74 +250,6 @@ void WaveTrackUtilities::CloseLock(WaveTrack& track) noexcept
     }
 }
 
-bool WaveTrackUtilities::RemoveCutLine(WaveTrack& track, double cutLinePosition)
-{
-    bool removed = false;
-    for (const auto& pClip : track.Intervals()) {
-        if (pClip->RemoveCutLine(cutLinePosition)) {
-            removed = true;
-            break;
-        }
-    }
-    return removed;
-}
-
-// Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
-// Can't yet promise strong exception safety for a pair of channels together
-void WaveTrackUtilities::ExpandCutLine(WaveTrack& track,
-                                       double cutLinePosition, double* cutlineStart,
-                                       double* cutlineEnd, bool moveClips)
-{
-    // Find clip which contains this cut line
-    double start = 0, end = 0;
-    const auto& clips = track.Intervals();
-    const auto pEnd = clips.end();
-    const auto pClip = std::find_if(clips.begin(), pEnd,
-                                    [&](const auto& clip) {
-        return clip->FindCutLine(cutLinePosition, &start, &end);
-    });
-    if (pClip != pEnd) {
-        auto&& clip = *pClip;
-
-        if (!moveClips) {
-            // We are not allowed to move the other clips, so see if there
-            // is enough room to expand the cut line
-            for (const auto& clip2: clips) {
-                if (clip2->GetPlayStartTime() > clip->GetPlayStartTime()
-                    && clip->GetPlayEndTime() + end - start > clip2->GetPlayStartTime()) {
-                    // Strong-guarantee in case of this path
-                    throw SimpleMessageBoxException{
-                              ExceptionType::BadUserAction,
-                              TranslatableString("wave-track", "There is not enough room available to expand the cut line"),
-                              TranslatableString("wave-track", "Warning"),
-                              "Error:_Insufficient_space_in_track"
-                    };
-                }
-            }
-        }
-
-        clip->ExpandCutLine(cutLinePosition);
-
-        // Strong-guarantee provided that the following gives No-fail-guarantee
-
-        if (cutlineStart) {
-            *cutlineStart = start;
-        }
-        if (cutlineEnd) {
-            *cutlineEnd = end;
-        }
-
-        // Move clips which are to the right of the cut line
-        if (moveClips) {
-            for (const auto& clip2 : clips) {
-                if (clip2->GetPlayStartTime() > clip->GetPlayStartTime()) {
-                    clip2->ShiftBy(end - start);
-                }
-            }
-        }
-    }
-}
-
 bool WaveTrackUtilities::HasHiddenData(const WaveTrack& track)
 {
     const auto& clips = track.Intervals();
@@ -397,7 +279,7 @@ void WaveTrackUtilities::VisitBlocks(TrackList& tracks, BlockVisitor visitor,
 {
     for (auto wt : tracks.Any<WaveTrack>()) {
         // Scan all clips within current track
-        for (const auto& pClip : GetAllClips(*wt)) {
+        for (const auto& pClip : wt->Intervals()) {
             // Scan all sample blocks within current clip
             for (const auto& pChannel : pClip->Channels()) {
                 auto blocks = pChannel->GetSequenceBlockArray();

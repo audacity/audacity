@@ -34,8 +34,6 @@ public:
         float value, size_t numValues, size_t numChannels, Operations operations = [] (WaveClip&) {}) const;
 
 private:
-    static constexpr bool copyCutLines = false;
-
     const int mSampleRate;
     const SampleBlockFactoryPtr mFactory;
 };

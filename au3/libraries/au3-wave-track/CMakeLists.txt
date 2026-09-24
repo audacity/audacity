@@ -2,8 +2,7 @@
 Defines a type of track that stores sample data.
 
 The samples are organized into clips that may cover time intervals with gaps
-between them and may have hidden sample data at each end, and also embedded
-cut-lines which are nested clips.
+between them and may have hidden sample data at each end.
 
 Each clip stores an unbroken Sequence of samples at some rate.
 
