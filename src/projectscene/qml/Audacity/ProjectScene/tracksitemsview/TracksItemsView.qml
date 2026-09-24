@@ -437,12 +437,12 @@ Rectangle {
 
                     onPositionChanged: function (e) {
                         var ix = Math.max(mapToItem(timeline, e.x, e.y).x, timeline.context.timeToPosition(0.0))
+                        timeline.updateCursorPosition(ix, 0)
                         if (pressed) {
                             head.dragPositionX = ix
-                            timeline.displayedPlayCursorX = ix
+                            timeline.displayedPlayCursorX = lineCursor.x
                             playCursorController.seekToTime(timeline.context.positionToTime(ix))
                         }
-                        timeline.updateCursorPosition(ix, 0)
                     }
 
                     onReleased: function (e) {
