@@ -33,6 +33,8 @@ public:
     virtual void setSelectedTracks(const TrackIdList& trackIds, bool complete = true) = 0;
     virtual muse::async::Channel<TrackIdList> selectedTracksChanged() const = 0;
     virtual muse::async::Channel<TrackIdList> tracksSelected() const = 0;
+    virtual std::optional<secs_t> selectedTracksStartTime() const = 0;
+    virtual std::optional<secs_t> selectedTracksEndTime() const = 0;
 
     // clip selection
     virtual void resetSelectedClips() = 0;
@@ -51,14 +53,6 @@ public:
     virtual std::optional<secs_t> leftMostSelectedClipStartTime() const = 0;
     virtual std::optional<secs_t> rightMostSelectedClipEndTime() const = 0;
 
-    // item selection
-    // used for range/marquee-like selection
-    virtual ItemKeys itemsWithinBoxFromAnchorTo(const TrackItemKey& target) const = 0;
-    virtual void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) = 0;
-    virtual ItemKeys itemsTouchingBoxFromAnchor(secs_t time, const TrackId& trackId) const = 0;
-    virtual ItemKeys itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const = 0;
-    virtual void setSelectedItems(const ItemKeys& items, bool complete = true) = 0;
-
     // label selection
     virtual void resetSelectedLabels() = 0;
     virtual bool hasSelectedLabels() const = 0;
@@ -76,11 +70,15 @@ public:
     virtual std::optional<secs_t> leftMostSelectedLabelStartTime() const = 0;
     virtual std::optional<secs_t> rightMostSelectedLabelEndTime() const = 0;
 
+    // item selection
+    virtual void setSelectedItems(const ItemKeys& items, bool complete = true) = 0;
+    // used for range/marquee-like selection
+    virtual ItemKeys itemsWithinBoxFromAnchorTo(const TrackItemKey& target) const = 0;
+    virtual void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) = 0;
+    virtual ItemKeys itemsTouchingBoxFromAnchor(secs_t time, const TrackId& trackId) const = 0;
+    virtual ItemKeys itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const = 0;
     virtual std::optional<secs_t> leftMostSelectedItemStartTime() const = 0;
     virtual std::optional<secs_t> rightMostSelectedItemEndTime() const = 0;
-
-    virtual std::optional<secs_t> selectedTracksStartTime() const = 0;
-    virtual std::optional<secs_t> selectedTracksEndTime() const = 0;
 
     // data selection
     virtual void setSelectedTrackAudioData(trackedit::TrackId trackId) = 0;

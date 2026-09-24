@@ -132,16 +132,6 @@ bool TrackeditInteraction::copyNonContinuousTrackDataIntoClipboard(const TrackId
     return m_interaction->copyNonContinuousTrackDataIntoClipboard(trackId, clipKeys, offset);
 }
 
-bool TrackeditInteraction::copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys)
-{
-    return m_interaction->copyItems(clipKeys, labelKeys);
-}
-
-bool TrackeditInteraction::cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips)
-{
-    return withPlaybackStop(&ITrackeditInteraction::cutItems, clipKeys, labelKeys, moveClips);
-}
-
 bool TrackeditInteraction::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
     return m_interaction->copyContinuousTrackDataIntoClipboard(trackId, begin, end);
@@ -381,26 +371,6 @@ bool TrackeditInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipK
     return withPlaybackStop(&ITrackeditInteraction::toggleStretchToMatchProjectTempo, clipKey);
 }
 
-int64_t TrackeditInteraction::itemGroupId(const TrackItemKey& key) const
-{
-    return m_interaction->itemGroupId(key);
-}
-
-void TrackeditInteraction::groupItems(const TrackItemKeyList& keys)
-{
-    m_interaction->groupItems(keys);
-}
-
-void TrackeditInteraction::ungroupItems(const TrackItemKeyList& keys)
-{
-    m_interaction->ungroupItems(keys);
-}
-
-ItemKeys TrackeditInteraction::itemsInGroup(int64_t id) const
-{
-    return m_interaction->itemsInGroup(id);
-}
-
 bool TrackeditInteraction::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
 {
     return withProgress([&, this]() {
@@ -519,6 +489,36 @@ bool TrackeditInteraction::stretchLabelsRight(const LabelKeyList& labelKeyList, 
 void TrackeditInteraction::resetLabelStretchState()
 {
     m_interaction->resetLabelStretchState();
+}
+
+bool TrackeditInteraction::copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys)
+{
+    return m_interaction->copyItems(clipKeys, labelKeys);
+}
+
+bool TrackeditInteraction::cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips)
+{
+    return withPlaybackStop(&ITrackeditInteraction::cutItems, clipKeys, labelKeys, moveClips);
+}
+
+int64_t TrackeditInteraction::itemGroupId(const TrackItemKey& key) const
+{
+    return m_interaction->itemGroupId(key);
+}
+
+void TrackeditInteraction::groupItems(const TrackItemKeyList& keys)
+{
+    m_interaction->groupItems(keys);
+}
+
+void TrackeditInteraction::ungroupItems(const TrackItemKeyList& keys)
+{
+    m_interaction->ungroupItems(keys);
+}
+
+ItemKeys TrackeditInteraction::itemsInGroup(int64_t id) const
+{
+    return m_interaction->itemsInGroup(id);
 }
 
 muse::Progress TrackeditInteraction::progress() const
