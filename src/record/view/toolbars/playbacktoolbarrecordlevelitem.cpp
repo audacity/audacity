@@ -25,7 +25,7 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
     });
 
     audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta& delta) {
-        if (delta.contains(audio::AudioConfigurationField::InputChannels)) {
+        if (delta.contains(audio::AudioConfigurationField::InputChannelSelection)) {
             recordingChannelsCountChanged();
         }
     });
@@ -162,7 +162,8 @@ void PlaybackToolBarRecordLevelItem::setRightMaxPeak(const float newRightMaxPeak
 
 int PlaybackToolBarRecordLevelItem::recordingChannelsCount() const
 {
-    return audioDriverController()->configuration().inputChannels;
+    return static_cast<int>(audio::inputChannelCount(
+                                audioDriverController()->configuration().inputChannelSelection));
 }
 
 bool PlaybackToolBarRecordLevelItem::isInputMonitoringOn() const

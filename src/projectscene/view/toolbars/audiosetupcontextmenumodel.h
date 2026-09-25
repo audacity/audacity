@@ -12,6 +12,8 @@ class AudioSetupContextMenuModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
+    friend class AudioSetupContextMenuModelTests;
+
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
@@ -29,6 +31,6 @@ private:
     muse::uicomponents::MenuItemList makeHostItems();
     muse::uicomponents::MenuItemList makePlaybackDevicesItems();
     muse::uicomponents::MenuItemList makeRecordingDevicesItems();
-    muse::uicomponents::MenuItemList makeInputChannelsItems();
+    muse::uicomponents::MenuItem* makeInputChannelsMenu();
 };
 }

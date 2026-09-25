@@ -210,7 +210,7 @@ public:
     void UpdateTimePosition(
         unsigned long framesPerBuffer);
     void DoPlaythrough(
-        constSamplePtr inputBuffer, float* outputBuffer, unsigned long framesPerBuffer, float* outputMeterFloats);
+        const float* inputSamples, float* outputBuffer, unsigned long framesPerBuffer, float* outputMeterFloats);
     void SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer, const TimePoint& dacTime);
     void SendVuOutputMeterData(const float* outputMeterFloats, unsigned long framesPerBuffer, const TimePoint& dacTime);
     void PushMasterOutputMeterValues(const IMeterSenderPtr& sender, const float* values, uint8_t channels, unsigned long frames,
@@ -245,6 +245,8 @@ public:
     std::vector<TrackChannelInfo> mCaptureChannelLayout;
     std::vector<std::vector<size_t> > mTrackChannelSourceMap;
     bool mCaptureNeedsMixdown{ false };
+    std::vector<std::vector<unsigned int> > mInputChannelSelection;
+    std::vector<unsigned int> mInputChannelIndices;
     //!Buffers that hold outcome of transformations applied to each individual sample source.
     //!Number of buffers equals to the sum of number all source channels.
     std::vector<std::vector<float> > mProcessingBuffers;
@@ -292,8 +294,11 @@ public:
     /*! Read by a worker thread but unchanging during playback */
     bool mPauseRec;
     float mSilenceLevel;
-    /*! Read by a worker thread but unchanging during playback */
+    /*! Flattened selected logical input count. Read by a worker thread but
+        unchanging during playback. */
     size_t mNumCaptureChannels;
+    /*! Raw interleaved PortAudio input width; may exceed the selected count. */
+    size_t mNumInputStreamChannels{};
     /*! Read by a worker thread but unchanging during playback */
     size_t mNumPlaybackChannels;
     sampleFormat mCaptureFormat;
@@ -359,6 +364,7 @@ protected:
     static double mCachedBestRateOut;
     static bool mCachedBestRatePlaying;
     static bool mCachedBestRateCapturing;
+    static size_t mCachedBestRateInputStreamChannels;
 
     // Serialize main thread and PortAudio thread's attempts to pause and change
     // the state used by the third, Audio thread.
@@ -563,7 +569,7 @@ public:
     * audio to be handled, i.e. the currently Project Rate).
     * capturing is true if the stream is capturing one or more audio channels,
     * and playing is true if one or more channels are being played. */
-    double GetBestRate(bool capturing, bool playing, double sampleRate);
+    double GetBestRate(bool capturing, bool playing, double sampleRate, size_t inputStreamChannels);
 
     /** \brief During playback, the sequence time most recently played
      *
