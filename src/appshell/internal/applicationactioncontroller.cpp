@@ -34,15 +34,31 @@
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/translation.h"
+#include "framework/rcommand/actiontocommand.h"
 
 #include "project/types/projecttypes.h"
 
+#include "../appshellcommands.h"
+
 using namespace au::appshell;
+using namespace muse;
 using namespace muse::actions;
+using namespace muse::rcommand;
 
 static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
 static const QString TIMELINE_SECTION_NAME("TimelineSection");
 static const QString VERTICAL_RULER_CONTROL_NAME("VerticalRuler");
+
+static const std::string INSTALLER_PATH_PARAM("installer_path");
+
+static CommandQuery quitConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.count() > 1) {
+        query.addParam(INSTALLER_PATH_PARAM, Val(args.arg<std::string>(1)));
+    }
+    return query;
+}
 
 void ApplicationActionController::preInit()
 {
@@ -65,42 +81,63 @@ void ApplicationActionController::preInit()
 
 void ApplicationActionController::init()
 {
-    dispatcher()->reg(this, "quit", [this](const muse::actions::ActionData& args) {
-        muse::io::path_t installerPath = args.count() > 1 ? args.arg<muse::io::path_t>(1) : "";
-        quit(installerPath);
+    auto cd = commandDispatcher();
+    cd->onRequest(this, GLOBAL_QUIT_COMMAND, [this](const Params& params) {
+        const muse::io::path_t installerPath = params.at(INSTALLER_PATH_PARAM).toString();
+        return quit(installerPath) ? make_ok() : make_ret(Ret::Code::Cancel);
     });
+    cd->onRequest(this, GLOBAL_RESTART_COMMAND, [this]() { return restart(); });
+    cd->onRequest(this, APP_TOGGLE_FULLSCREEN_COMMAND, [this]() { return toggleFullScreen(); });
+    cd->onRequest(this, APP_ABOUT_COMMAND, [this]() { return openAboutDialog(); });
+    cd->onRequest(this, APP_ABOUT_QT_COMMAND, [this]() { return openAboutQtDialog(); });
+    cd->onRequest(this, APP_ONLINE_HANDBOOK_COMMAND, [this]() { return openOnlineHandbookPage(); });
+    cd->onRequest(this, APP_ASK_HELP_COMMAND, [this]() { return openAskForHelpPage(); });
+    cd->onRequest(this, APP_PREFERENCES_COMMAND, [this]() { return openPreferencesDialog(); });
+    cd->onRequest(this, APP_REVERT_FACTORY_COMMAND, [this]() { return revertToFactorySettings(); });
+    cd->onRequest(this, APP_AUDIO_SETTINGS_COMMAND, [this]() { return openAudioSettingsDialog(); });
+    cd->onRequest(this, APP_SHORTCUTS_PREFERENCES_COMMAND, [this]() { return openShortcutsPreferencesDialog(); });
+    cd->onRequest(this, APP_EDITING_PREFERENCES_COMMAND, [this]() { return openEditingPreferencesDialog(); });
+    cd->onRequest(this, APP_SPECTROGRAM_PREFERENCES_COMMAND, [this]() { return openSpectrogramPreferencesDialog(); });
 
-    dispatcher()->reg(this, "restart", [this]() {
-        restart();
-    });
+    cd->onRequest(this, GLOBAL_COPY_COMMAND, [this]() { return doGlobalCopy(); });
+    cd->onRequest(this, GLOBAL_CUT_COMMAND, [this]() { return doGlobalCut(); });
+    cd->onRequest(this, GLOBAL_PASTE_COMMAND, [this]() { return doGlobalPaste(); });
+    cd->onRequest(this, GLOBAL_UNDO_COMMAND, [this]() { return doGlobalUndo(); });
+    cd->onRequest(this, GLOBAL_REDO_COMMAND, [this]() { return doGlobalRedo(); });
+    cd->onRequest(this, GLOBAL_DELETE_COMMAND, [this]() { return doGlobalDelete(); });
+    cd->onRequest(this, GLOBAL_CANCEL_COMMAND, [this]() { return doGlobalCancel(); });
+    cd->onRequest(this, GLOBAL_TRIGGER_COMMAND, [this]() { return doGlobalTrigger(); });
+    cd->onRequest(this, GLOBAL_ENTER_COMMAND, [this]() { return doGlobalEnter(); });
+    cd->onRequest(this, GLOBAL_SHIFT_ENTER_COMMAND, [this]() { return doGlobalShiftEnter(); });
+    cd->onRequest(this, GLOBAL_CONTEXT_MENU_COMMAND, [this]() { return doGlobalContextMenu(); });
 
-    dispatcher()->reg(this, "fullscreen", this, &ApplicationActionController::toggleFullScreen);
-
-    dispatcher()->reg(this, "about-audacity", this, &ApplicationActionController::openAboutDialog);
-    dispatcher()->reg(this, "about-qt", this, &ApplicationActionController::openAboutQtDialog);
-    dispatcher()->reg(this, "online-handbook", this, &ApplicationActionController::openOnlineHandbookPage);
-    dispatcher()->reg(this, "ask-help", this, &ApplicationActionController::openAskForHelpPage);
-    dispatcher()->reg(this, "preference-dialog", this, &ApplicationActionController::openPreferencesDialog);
-
-    dispatcher()->reg(this, "revert-factory", this, &ApplicationActionController::revertToFactorySettings);
-
-    dispatcher()->reg(this, "audio-settings", this, &ApplicationActionController::openAudioSettingsDialog);
-    dispatcher()->reg(this, "shortcuts-preferences", this, &ApplicationActionController::openShortcutsPreferencesDialog);
-    dispatcher()->reg(this, "editing-preferences", this, &ApplicationActionController::openEditingPreferencesDialog);
-    dispatcher()->reg(this, "spectrogram-preferences", this, &ApplicationActionController::openSpectrogramPreferencesDialog);
-
-    // Global actions
-    dispatcher()->reg(this, "action://copy", this, &ApplicationActionController::doGlobalCopy);
-    dispatcher()->reg(this, "action://cut", this, &ApplicationActionController::doGlobalCut);
-    dispatcher()->reg(this, "action://paste", this, &ApplicationActionController::doGlobalPaste);
-    dispatcher()->reg(this, "action://undo", this, &ApplicationActionController::doGlobalUndo);
-    dispatcher()->reg(this, "action://redo", this, &ApplicationActionController::doGlobalRedo);
-    dispatcher()->reg(this, "action://delete", this, &ApplicationActionController::doGlobalDelete);
-    dispatcher()->reg(this, "action://cancel", this, &ApplicationActionController::doGlobalCancel);
-    dispatcher()->reg(this, "action://trigger", this, &ApplicationActionController::doGlobalTrigger);
-    dispatcher()->reg(this, "action://enter", this, &ApplicationActionController::doGlobalEnter);
-    dispatcher()->reg(this, "action://shift-enter", this, &ApplicationActionController::doGlobalShiftEnter);
-    dispatcher()->reg(this, "action://context-menu", this, &ApplicationActionController::doGlobalContextMenu);
+    static const std::vector<ActionToCommand> actionToCommand = {
+        { "quit", GLOBAL_QUIT_COMMAND, quitConv },
+        { "restart", GLOBAL_RESTART_COMMAND, {} },
+        { "fullscreen", APP_TOGGLE_FULLSCREEN_COMMAND, {} },
+        { "about-audacity", APP_ABOUT_COMMAND, {} },
+        { "about-qt", APP_ABOUT_QT_COMMAND, {} },
+        { "online-handbook", APP_ONLINE_HANDBOOK_COMMAND, {} },
+        { "ask-help", APP_ASK_HELP_COMMAND, {} },
+        { "preference-dialog", APP_PREFERENCES_COMMAND, {} },
+        { "revert-factory", APP_REVERT_FACTORY_COMMAND, {} },
+        { "audio-settings", APP_AUDIO_SETTINGS_COMMAND, {} },
+        { "shortcuts-preferences", APP_SHORTCUTS_PREFERENCES_COMMAND, {} },
+        { "editing-preferences", APP_EDITING_PREFERENCES_COMMAND, {} },
+        { "spectrogram-preferences", APP_SPECTROGRAM_PREFERENCES_COMMAND, {} },
+        { "action://copy", GLOBAL_COPY_COMMAND, {} },
+        { "action://cut", GLOBAL_CUT_COMMAND, {} },
+        { "action://paste", GLOBAL_PASTE_COMMAND, {} },
+        { "action://undo", GLOBAL_UNDO_COMMAND, {} },
+        { "action://redo", GLOBAL_REDO_COMMAND, {} },
+        { "action://delete", GLOBAL_DELETE_COMMAND, {} },
+        { "action://cancel", GLOBAL_CANCEL_COMMAND, {} },
+        { "action://trigger", GLOBAL_TRIGGER_COMMAND, {} },
+        { "action://enter", GLOBAL_ENTER_COMMAND, {} },
+        { "action://shift-enter", GLOBAL_SHIFT_ENTER_COMMAND, {} },
+        { "action://context-menu", GLOBAL_CONTEXT_MENU_COMMAND, {} },
+    };
+    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -360,47 +397,56 @@ bool ApplicationActionController::quit(const muse::io::path_t& installerPath)
     return true;
 }
 
-void ApplicationActionController::restart()
+muse::Ret ApplicationActionController::restart()
 {
-    if (projectFilesController()->closeOpenedProject(false)) {
-        if (multiwindowsProvider()->windowCount() == 1) {
-            application()->restart();
-        } else {
-            multiwindowsProvider()->quitAllAndRestartLast();
-
-            QCoreApplication::exit();
-        }
+    if (!projectFilesController()->closeOpenedProject(false)) {
+        return make_ret(Ret::Code::Cancel);
     }
+
+    if (multiwindowsProvider()->windowCount() == 1) {
+        application()->restart();
+    } else {
+        multiwindowsProvider()->quitAllAndRestartLast();
+
+        QCoreApplication::exit();
+    }
+
+    return make_ok();
 }
 
-void ApplicationActionController::toggleFullScreen()
+muse::Ret ApplicationActionController::toggleFullScreen()
 {
     mainWindow()->toggleFullScreen();
+    return make_ok();
 }
 
-void ApplicationActionController::openAboutDialog()
+muse::Ret ApplicationActionController::openAboutDialog()
 {
     interactive()->open("audacity://about/audacity");
+    return make_ok();
 }
 
-void ApplicationActionController::openAboutQtDialog()
+muse::Ret ApplicationActionController::openAboutQtDialog()
 {
     QApplication::aboutQt();
+    return make_ok();
 }
 
-void ApplicationActionController::openOnlineHandbookPage()
+muse::Ret ApplicationActionController::openOnlineHandbookPage()
 {
     std::string handbookUrl = configuration()->handbookUrl();
     platformInteractive()->openUrl(handbookUrl);
+    return make_ok();
 }
 
-void ApplicationActionController::openAskForHelpPage()
+muse::Ret ApplicationActionController::openAskForHelpPage()
 {
     std::string askForHelpUrl = configuration()->askForHelpUrl();
     platformInteractive()->openUrl(askForHelpUrl);
+    return make_ok();
 }
 
-void ApplicationActionController::openPreferencesDialog()
+muse::Ret ApplicationActionController::openPreferencesDialog()
 {
     //! TODO AU4
     // if (multiwindowsProvider()->isPreferencesAlreadyOpened()) {
@@ -409,41 +455,46 @@ void ApplicationActionController::openPreferencesDialog()
     // }
 
     interactive()->open("audacity://preferences");
+    return make_ok();
 }
 
-void ApplicationActionController::openAudioSettingsDialog()
+muse::Ret ApplicationActionController::openAudioSettingsDialog()
 {
     muse::UriQuery preferencesUri("audacity://preferences");
     preferencesUri.addParam("currentPageId", muse::Val("audio-settings"));
 
     interactive()->open(preferencesUri);
+    return make_ok();
 }
 
-void ApplicationActionController::openShortcutsPreferencesDialog()
+muse::Ret ApplicationActionController::openShortcutsPreferencesDialog()
 {
     muse::UriQuery preferencesUri("audacity://preferences");
     preferencesUri.addParam("currentPageId", muse::Val("shortcuts"));
 
     interactive()->open(preferencesUri);
+    return make_ok();
 }
 
-void ApplicationActionController::openEditingPreferencesDialog()
+muse::Ret ApplicationActionController::openEditingPreferencesDialog()
 {
     muse::UriQuery preferencesUri("audacity://preferences");
     preferencesUri.addParam("currentPageId", muse::Val("editing"));
 
     interactive()->open(preferencesUri);
+    return make_ok();
 }
 
-void ApplicationActionController::openSpectrogramPreferencesDialog()
+muse::Ret ApplicationActionController::openSpectrogramPreferencesDialog()
 {
     muse::UriQuery preferencesUri("audacity://preferences");
     preferencesUri.addParam("currentPageId", muse::Val("spectrogram"));
 
     interactive()->open(preferencesUri);
+    return make_ok();
 }
 
-void ApplicationActionController::revertToFactorySettings()
+muse::Ret ApplicationActionController::revertToFactorySettings()
 {
     std::string title = muse::trc("appshell", "Are you sure you want to revert to factory settings?");
     std::string question = muse::trc("appshell",
@@ -489,6 +540,8 @@ void ApplicationActionController::revertToFactorySettings()
             }
         });
     });
+
+    return make_ok();
 }
 
 bool ApplicationActionController::isProjectOpened() const
@@ -505,128 +558,140 @@ bool ApplicationActionController::isProjectOpenedAndFocused() const
     return isOpened && isFocused;
 }
 
-void ApplicationActionController::doGlobalCopy()
+muse::Ret ApplicationActionController::doGlobalCopy()
 {
-    if (isProjectOpenedAndFocused()) {
-        dispatcher()->dispatch("action://trackedit/copy");
-    } else {
-        // resolve other actions
+    if (!isProjectOpenedAndFocused()) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    dispatcher()->dispatch("action://trackedit/copy");
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalCut()
+muse::Ret ApplicationActionController::doGlobalCut()
 {
-    if (isProjectOpenedAndFocused()) {
-        dispatcher()->dispatch("action://trackedit/cut");
-    } else {
-        // resolve other actions
+    if (!isProjectOpenedAndFocused()) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    dispatcher()->dispatch("action://trackedit/cut");
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalPaste()
+muse::Ret ApplicationActionController::doGlobalPaste()
 {
-    if (isProjectOpened()) {
-        dispatcher()->dispatch("action://trackedit/paste-default");
-    } else {
-        // resolve other actions
+    if (!isProjectOpened()) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    dispatcher()->dispatch("action://trackedit/paste-default");
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalUndo()
+muse::Ret ApplicationActionController::doGlobalUndo()
 {
-    if (isProjectOpened()) {
-        dispatcher()->dispatch("action://trackedit/undo");
-    } else {
-        // resolve other actions
+    if (!isProjectOpened()) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    dispatcher()->dispatch("action://trackedit/undo");
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalRedo()
+muse::Ret ApplicationActionController::doGlobalRedo()
 {
-    if (isProjectOpened()) {
-        dispatcher()->dispatch("action://trackedit/redo");
-    } else {
-        // resolve other actions
+    if (!isProjectOpened()) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    dispatcher()->dispatch("action://trackedit/redo");
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalDelete()
+muse::Ret ApplicationActionController::doGlobalDelete()
 {
-    if (isProjectOpenedAndFocused()) {
-        dispatcher()->dispatch("action://trackedit/delete");
-    } else {
-        // resolve other actions
+    if (!isProjectOpenedAndFocused()) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    dispatcher()->dispatch("action://trackedit/delete");
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalCancel()
+muse::Ret ApplicationActionController::doGlobalCancel()
 {
     if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("action://trackedit/cancel");
-        return;
+        return make_ok();
     }
 
     commandDispatcher()->dispatch(muse::ui::ESCAPE_COMMAND);
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalTrigger()
+muse::Ret ApplicationActionController::doGlobalTrigger()
 {
     if (isProjectOpened()) {
         dispatcher()->dispatch("action://playback/toggle-play-stop");
-        return;
+        return make_ok();
     }
 
     commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalEnter()
+muse::Ret ApplicationActionController::doGlobalEnter()
 {
     const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
     if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
         commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-        return;
+        return make_ok();
     }
 
     if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("track-view-replace-selection");
-        return;
+        return make_ok();
     }
 
     commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalShiftEnter()
+muse::Ret ApplicationActionController::doGlobalShiftEnter()
 {
     const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
     if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
         commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-        return;
+        return make_ok();
     }
 
     if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("track-view-range-selection");
-        return;
+        return make_ok();
     }
 
     commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
+    return make_ok();
 }
 
-void ApplicationActionController::doGlobalContextMenu()
+muse::Ret ApplicationActionController::doGlobalContextMenu()
 {
     const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
     if (!activeSection) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     if (activeSection->name() == TRACK_VIEW_SECTION_NAME) {
         const muse::ui::INavigationControl* activeControl = navigationController()->activeControl();
         if (activeControl && activeControl->name() == VERTICAL_RULER_CONTROL_NAME) {
             dispatcher()->dispatch("track-view-ruler-context-menu");
-            return;
+            return make_ok();
         }
 
         dispatcher()->dispatch("track-view-item-context-menu");
     } else if (activeSection->name() == TIMELINE_SECTION_NAME) {
         dispatcher()->dispatch("timeline-context-menu");
     }
+
+    return make_ok();
 }
