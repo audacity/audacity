@@ -230,6 +230,30 @@ void drawClippedSamples(const au::projectscene::SampleData& samples,
     }
 }
 
+size_t displayedChannelCount(const au::au3::Au3WaveTrack& track)
+{
+    // Query the track's own real channel count rather than the (track-wide, and thus
+    // potentially stale mid-drag for clips not involved in the drag) view-state channel
+    // height ratio.
+    return track.NChannels();
+}
+
+size_t paintChannelIndex(const au::au3::Au3WaveClip& clip, size_t displayIndex)
+{
+    // While a mono clip is being dragged onto a stereo track, the track's lanes already show two
+    // channels but the clip itself hasn't been widened to stereo yet (that happens on drop). Until
+    // then, mirror the single channel's data into the extra lane instead of leaving it blank.
+    return std::min(displayIndex, clip.NChannels() - 1);
+}
+
+std::vector<double> channelHeights(double totalHeight, double channelHeightRatio, size_t displayedChannels)
+{
+    if (displayedChannels < 2) {
+        return { totalHeight };
+    }
+    return { totalHeight* channelHeightRatio, totalHeight* (1 - channelHeightRatio) };
+}
+
 SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics,
                          bool dB, float dBRange, float zoomMax, float zoomMin)
 {
