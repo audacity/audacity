@@ -28,10 +28,14 @@
 #include "framework/global/modularity/ioc.h"
 
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 #include "framework/ui/iuiactionsregister.h"
 
 #include "internal/applicationuiactions.h"
 #include "internal/applicationactioncontroller.h"
+#include "internal/appshellcommandsregister.h"
+#include "internal/appshellcommandsstate.h"
 #include "internal/appshellconfiguration.h"
 #include "internal/startupscenario.h"
 #include "internal/sessionsmanager.h"
@@ -82,6 +86,11 @@ void AppShellModule::resolveImports()
         ir->registerQmlUri(muse::Uri("audacity://signin/audiocom"), "Audacity.AppShell", "SigninAudiocomDialog");
         ir->registerQmlUri(muse::Uri("audacity://welcomedialog"), "Audacity.AppShell", "WelcomeDialog");
     }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<AppShellCommandsRegister>());
+    }
 }
 
 void AppShellModule::onPreInit(const muse::IApplication::RunMode& mode)
@@ -123,6 +132,14 @@ void AppShellContext::registerExports()
     ioc()->registerExport<IApplicationActionController>(mname, m_applicationActionController);
     ioc()->registerExport<IStartupScenario>(mname, new StartupScenario(iocContext()));
     ioc()->registerExport<ISessionsManager>(mname, m_sessionsManager);
+}
+
+void AppShellContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<AppShellCommandsState>(iocContext()));
+    }
 }
 
 void AppShellContext::onPreInit(const muse::IApplication::RunMode& mode)
