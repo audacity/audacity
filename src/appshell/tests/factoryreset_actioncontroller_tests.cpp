@@ -7,6 +7,7 @@
 #include "actions/tests/mocks/actionsdispatchermock.h"
 #include "global/tests/mocks/applicationmock.h"
 #include "interactive/tests/mocks/interactivemock.h"
+#include "rcommand/tests/mocks/commanddispatchermock.h"
 
 #include "mocks/appshellconfigurationmock.h"
 #include "project/tests/mocks/projectfilescontrollermock.h"
@@ -27,6 +28,7 @@ class FactoryResetActionTests : public ::testing::Test
 {
 public:
     using ActionCB = muse::actions::IActionsDispatcher::ActionCallBackWithNameAndData;
+    using CommandCB = muse::rcommand::ICommandDispatcher::CallBack;
     using WarningPromise = muse::async::Promise<IInteractive::Result>;
     using QuestionPromise = muse::async::Promise<IInteractive::Result>;
 
@@ -41,6 +43,27 @@ public:
         .WillByDefault([this](muse::actions::Actionable*, const muse::actions::ActionCode& code,
                               const ActionCB& cb) {
             m_registeredActions[code] = cb;
+        });
+
+        m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
+        m_controller->commandDispatcher.set(m_commandDispatcher);
+
+        ON_CALL(*m_commandDispatcher, onRequest(_, _, _))
+        .WillByDefault([this](muse::rcommand::Commandable*, const muse::rcommand::Command& command,
+                              const CommandCB& cb) {
+            m_registeredCommands[command] = cb;
+        });
+
+        ON_CALL(*m_commandDispatcher, dispatch(_))
+        .WillByDefault([this](const muse::rcommand::Request& request) {
+            auto it = m_registeredCommands.find(request.command);
+            const muse::rcommand::Response response = it != m_registeredCommands.end()
+                                                      ? it->second(request)
+                                                      : muse::rcommand::make_response(request,
+                                                                                      make_ret(Ret::Code::UnknownError));
+            return muse::async::make_promise<muse::rcommand::Response>([response](auto resolve) {
+                return resolve(response);
+            });
         });
 
         m_interactive = std::make_shared<NiceMock<InteractiveMock> >();
@@ -144,6 +167,7 @@ protected:
     ApplicationActionController* m_controller = nullptr;
 
     std::shared_ptr<NiceMock<muse::actions::ActionsDispatcherMock> > m_dispatcher;
+    std::shared_ptr<NiceMock<muse::rcommand::CommandDispatcherMock> > m_commandDispatcher;
     std::shared_ptr<NiceMock<InteractiveMock> > m_interactive;
     std::shared_ptr<NiceMock<ApplicationMock> > m_application;
     std::shared_ptr<NiceMock<AppShellConfigurationMock> > m_configuration;
@@ -151,6 +175,7 @@ protected:
     std::shared_ptr<NiceMock<muse::mi::MultiWindowsProviderMock> > m_multiWindowsProvider;
 
     std::map<std::string, ActionCB> m_registeredActions;
+    std::map<muse::rcommand::Command, CommandCB> m_registeredCommands;
     WarningPromise::Resolve m_warningResolve;
     QuestionPromise::Resolve m_questionResolve;
 };
