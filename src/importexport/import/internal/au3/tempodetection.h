@@ -63,7 +63,7 @@ private:
     void showSubsequentImportDialog(double bpm, const std::vector<WaveTrack*>& waveTracks,
                                     const std::vector<trackedit::TrackId>& dstTrackIds);
 
-    void matchProjectTempoToLoops(const std::vector<WaveTrack*>& waveTracks, double bpm);
+    void matchProjectTempoToLoops(double bpm);
     void stretchClipsToProjectTempo(const std::vector<WaveTrack*>& waveTracks, const std::vector<trackedit::TrackId>& dstTrackIds,
                                     double detectedBpm);
 
@@ -72,7 +72,6 @@ private:
     static void applyTempoToClips(const std::vector<WaveTrack*>& waveTracks, double detectedBpm, double projectTempo);
     void makeRoomAndCloseGaps(const std::vector<ImportedClipInfo>& clips);
 
-    void setProjectTempo(double bpm);
     void reloadProject();
 };
 }

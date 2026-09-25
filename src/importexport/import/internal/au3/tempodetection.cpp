@@ -147,7 +147,7 @@ void TempoDetection::showEmptyMusicWorkspaceDialog(double bpm, const std::vector
         BTN_MATCH_PROJECT);
 
     if (result.button() == BTN_MATCH_PROJECT) {
-        matchProjectTempoToLoops(waveTracks, bpm);
+        matchProjectTempoToLoops(bpm);
     } else if (result.button() == BTN_MATCH_LOOP) {
         stretchClipsToProjectTempo(waveTracks, dstTrackIds, bpm);
     }
@@ -191,24 +191,16 @@ void TempoDetection::showSubsequentImportDialog(double bpm, const std::vector<Wa
     }
 }
 
-void TempoDetection::matchProjectTempoToLoops(const std::vector<WaveTrack*>& waveTracks, double bpm)
+void TempoDetection::matchProjectTempoToLoops(double bpm)
 {
-    std::vector<std::shared_ptr<WaveClip> > reEnable;
-
-    for (auto* track : waveTracks) {
-        for (const auto& clip : track->Intervals()) {
-            if (clip->GetStretchToMatchProjectTempo()) {
-                clip->SetStretchToMatchProjectTempo(false);
-                reEnable.push_back(clip);
-            }
-        }
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
     }
 
-    setProjectTempo(bpm);
-
-    for (const auto& clip : reEnable) {
-        clip->SetStretchToMatchProjectTempo(true);
-    }
+    trackedit::TimeSignature ts = project->timeSignature();
+    ts.tempo = bpm;
+    project->setTimeSignature(ts, /*noStretch=*/ true);
 }
 
 void TempoDetection::stretchClipsToProjectTempo(const std::vector<WaveTrack*>& waveTracks,
@@ -292,16 +284,4 @@ void TempoDetection::makeRoomAndCloseGaps(const std::vector<ImportedClipInfo>& i
                 { neighbourKey }, -untrimAmount, 0.0, true, trackedit::UndoPushType::NONE);
         }
     }
-}
-
-void TempoDetection::setProjectTempo(double bpm)
-{
-    auto project = globalContext()->currentTrackeditProject();
-    if (!project) {
-        return;
-    }
-
-    trackedit::TimeSignature ts = project->timeSignature();
-    ts.tempo = bpm;
-    project->setTimeSignature(ts);
 }
