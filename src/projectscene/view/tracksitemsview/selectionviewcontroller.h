@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QObject>
+#include <QRectF>
 
 #include "framework/global/async/async.h"
 #include "framework/global/iapplication.h"
@@ -34,6 +35,8 @@ class SelectionViewController : public QObject, public muse::async::Asyncable, p
     Q_PROPERTY(bool selectionInProgress READ selectionInProgress NOTIFY selectionInProgressChanged FINAL)
     Q_PROPERTY(bool spectralSelectionEnabled READ spectralSelectionEnabled NOTIFY spectralSelectionEnabledChanged FINAL)
     Q_PROPERTY(QVariantMap pressedSpectrogram READ pressedSpectrogram NOTIFY pressedSpectrogramChanged FINAL)
+    Q_PROPERTY(bool marqueeActive READ marqueeActive NOTIFY marqueeActiveChanged FINAL)
+    Q_PROPERTY(QRectF marqueeRect READ marqueeRect NOTIFY marqueeRectChanged FINAL)
 
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
     muse::GlobalInject<muse::IApplication> application;
@@ -62,6 +65,7 @@ public:
     Q_INVOKABLE void onPressed(double time, double y, spectrogram::SpectrogramHit spectrogramHit = {});
     Q_INVOKABLE void onPositionChanged(double time, double y);
     Q_INVOKABLE void onReleased(double time, double y);
+    Q_INVOKABLE void startMarquee(double time, double y);
 
     Q_INVOKABLE void onSelectionHorizontalResize(double anchorTime, double draggedTime, bool completed);
     Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit, bool isTop);
@@ -69,6 +73,7 @@ public:
     Q_INVOKABLE void cancelSpectrogramEdit();
 
     Q_INVOKABLE void cancelSelectionGesture();
+    Q_INVOKABLE void cancelMarquee();
     Q_INVOKABLE void selectTrackAudioData(double y);
     Q_INVOKABLE void selectItemData(const TrackItemKey& key);
 
@@ -84,6 +89,8 @@ public:
     bool spectralSelectionEnabled() const;
     void setSelectionActive(bool newSelectionActive);
     QVariantMap pressedSpectrogram() const;
+    bool marqueeActive() const;
+    QRectF marqueeRect() const;
 
 signals:
     void timelineContextChanged();
@@ -94,6 +101,8 @@ signals:
     void selectionInProgressChanged();
     void spectralSelectionEnabledChanged();
     void pressedSpectrogramChanged();
+    void marqueeActiveChanged();
+    void marqueeRectChanged();
 
     void selectionStarted();
 
@@ -132,5 +141,25 @@ private:
 
     std::optional<const spectrogram::SpectrogramHit> m_spectrogramHit;
     uintptr_t m_frequencyEdgeHandle = 0;
+
+    struct Marquee {
+        bool armed = false;
+        bool active = false;
+        double anchorTime = 0.0;
+        double anchorY = 0.0;
+        double time = 0.0;
+        double y = 0.0;
+        trackedit::TrackIdList tracks;
+        trackedit::ItemKeys items;
+    };
+
+    void armMarquee(double time, double y);
+    void updateMarquee(const IProjectViewStatePtr& vs, double time, double y);
+    void endMarquee();
+    void resetMarquee();
+
+    Marquee m_marquee;
+
+    friend struct SnapTestAccess;
 };
 }

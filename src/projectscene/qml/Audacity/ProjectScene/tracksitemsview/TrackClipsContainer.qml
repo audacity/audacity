@@ -606,6 +606,16 @@ TrackItemsContainer {
                                         }
                                     }
                                 }
+
+                                Connections {
+                                    target: root.container
+                                    function onItemContextMenuRequested(itemKey, x, y, modifiers) {
+                                        if (itemKey === item.itemData.key) {
+                                            const pos = item.mapFromItem(root.canvas, x, y)
+                                            item.openContextMenuAt(pos.x, pos.y, modifiers)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

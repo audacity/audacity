@@ -568,6 +568,7 @@ Rectangle {
 
             property var lastItemClickKey: null
             property bool itemWasMoved: false
+            property bool marqueeReleased: false
             property point pressStartPosition: Qt.point(0, 0)
             readonly property int moveThreshold: 5
 
@@ -614,11 +615,7 @@ Rectangle {
 
                     pressStartPosition = Qt.point(e.x, e.y)
                 } else if (e.button === Qt.RightButton) {
-                    if (tracksHovered)
-                    //! TODO AU4: handle context menu over empty track area
-                    {} else {
-                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
-                    }
+                    selectionViewController.startMarquee(timeline.context.positionToTime(e.x), e.y)
                 }
             }
 
@@ -650,9 +647,27 @@ Rectangle {
             }
 
             onReleased: function (e) {
+                if (e.button === Qt.RightButton) {
+                    const marqueeEnded = selectionViewController.marqueeActive
+                    selectionViewController.onReleased(timeline.context.positionToTime(e.x), e.y)
+                    if (marqueeEnded) {
+                        return
+                    }
+
+                    if (root.itemHovered && root.hoveredItemKey) {
+                        tracksItemsView.itemContextMenuRequested(root.hoveredItemKey, e.x, e.y, e.modifiers)
+                    } else if (!tracksHovered) {
+                        //! TODO AU4: handle context menu over empty track area
+                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
+                    }
+                    return
+                }
+
                 if (e.button !== Qt.LeftButton || itemsMoveController.keyboardActive) {
                     return
                 }
+
+                marqueeReleased = false
 
                 if (!itemWasMoved) {
                     tracksItemsView.itemReleaseRequested(hoveredItemKey)
@@ -666,6 +681,7 @@ Rectangle {
                     splitToolController.mouseUp(e.x)
 
                     if (selectionViewController.selectionInProgress) {
+                        marqueeReleased = selectionViewController.marqueeActive
                         let releaseTime = timeline.context.positionToTime(e.x)
                         selectionViewController.onReleased(releaseTime, e.y);
 
@@ -686,6 +702,7 @@ Rectangle {
 
             onCanceled: e => {
                 playCursorController.cancelSeekGesture()
+                selectionViewController.cancelMarquee()
                 prv.cancelItemDragEdit()
             }
 
@@ -694,7 +711,7 @@ Rectangle {
                     return
                 }
 
-                if (!root.itemHovered && !itemWasMoved) {
+                if (!root.itemHovered && !itemWasMoved && !marqueeReleased) {
                     selectionViewController.resetSelectedItems()
                 }
             }
@@ -832,6 +849,7 @@ Rectangle {
                 }
 
                 signal itemReleaseRequested(var itemKey)
+                signal itemContextMenuRequested(var itemKey, real x, real y, int modifiers)
                 signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
                 signal stopAutoScroll
@@ -1222,6 +1240,21 @@ Rectangle {
 
             x: Math.max(timeline.context.selectionStartPosition, 0.0)
             width: timeline.context.selectionEndPosition - x
+        }
+
+        Rectangle {
+            id: marqueeSelection
+
+            visible: selectionViewController.marqueeActive
+
+            x: selectionViewController.marqueeRect.x
+            y: selectionViewController.marqueeRect.y
+            width: selectionViewController.marqueeRect.width
+            height: selectionViewController.marqueeRect.height
+
+            color: ui.colorWithAlphaF(ui.theme.extra["marquee_selection_color"], 0.12)
+            border.color: ui.theme.extra["marquee_selection_color"]
+            border.width: 1
         }
 
         PlaybackSeekLine {
