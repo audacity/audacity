@@ -944,6 +944,15 @@ bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, co
     return false;
 }
 
+bool TrackeditOperationController::changeLabelColor(const LabelKey& labelKey, ClipColorIndex colorIndex)
+{
+    if (labelsInteraction()->changeLabelColor(labelKey, colorIndex)) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed label color"), muse::trc("trackedit", "Changed label color"));
+        return true;
+    }
+    return false;
+}
+
 bool TrackeditOperationController::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
 {
     if (labelsInteraction()->changeLabelLowFrequency(labelKey, frequency)) {

@@ -109,6 +109,34 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneE
     ASSERT_DOUBLE_EQ(label->getT1(), selectionEnd) << "Label end time should match selection end";
 }
 
+TEST_F(Au3LabelsInteractionsTests, LabelColorSurvivesATrackCopy)
+{
+    const double selectionStart = 1.0;
+    const double selectionEnd = 3.0;
+    ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(selectionStart));
+    ON_CALL(*m_selectionController, dataSelectedEndTime()).WillByDefault(Return(selectionEnd));
+    ON_CALL(*m_trackNavigationController, focusedTrack()).WillByDefault(Return(INVALID_TRACK));
+
+    ASSERT_TRUE(m_labelsInteraction->addLabelToSelection().ret);
+
+    Au3LabelTrack* labelTrack = const_cast<Au3LabelTrack*>(DomAccessor::findLabelTrackByIndex(projectRef(), 0));
+    ASSERT_NE(labelTrack, nullptr);
+    ASSERT_EQ(labelTrack->GetNumLabels(), 1);
+
+    constexpr int colorIndex = 5;
+    const LabelKey key(labelTrack->GetId(), labelTrack->GetLabel(0)->GetId());
+    ASSERT_TRUE(m_labelsInteraction->changeLabelColor(key, colorIndex));
+    ASSERT_EQ(labelTrack->GetLabel(0)->GetColorIndex(), colorIndex);
+
+    //! [THEN] Duplicating the track keeps the colour. Undo restores state by
+    //! duplicating the track list, so losing it here loses it on every undo.
+    const auto duplicate = labelTrack->Duplicate();
+    const auto* duplicated = dynamic_cast<const Au3LabelTrack*>(duplicate.get());
+    ASSERT_NE(duplicated, nullptr);
+    ASSERT_EQ(duplicated->GetNumLabels(), 1);
+    EXPECT_EQ(duplicated->GetLabel(0)->GetColorIndex(), colorIndex);
+}
+
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesExistingLabelTrack)
 {
     //! [GIVEN] There is a project with an existing label track

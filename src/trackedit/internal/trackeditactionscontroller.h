@@ -188,6 +188,7 @@ private:
     void moveCursorToClosestZeroCrossing();
 
     void setClipColor(const muse::actions::ActionQuery& q);
+    void setLabelColor(const muse::actions::ActionQuery& q);
     void setTrackColor(const muse::actions::ActionQuery& q);
     void setTrackFormat(const muse::actions::ActionQuery& q);
     void setTrackRate(const muse::actions::ActionQuery& q);
