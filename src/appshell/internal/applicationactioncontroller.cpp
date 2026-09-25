@@ -23,8 +23,6 @@
 
 #include "framework/ui/navigationcommands.h"
 
-#include <algorithm>
-
 #include <QApplication>
 #include <QCloseEvent>
 #include <QFileOpenEvent>
@@ -32,13 +30,18 @@
 #include <QMimeData>
 
 #include "framework/global/async/async.h"
-#include "framework/global/defer.h"
 #include "framework/global/translation.h"
 
 #include "project/types/projecttypes.h"
 
+#include "log.h"
+
 using namespace au::appshell;
 using namespace muse::actions;
+
+//! NOTE The command is dispatched to us by the multiwindows provider
+//! when it quits the other windows one by one
+static const muse::rcommand::Command APP_QUIT_COMMAND("command://app/quit");
 
 static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
 static const QString TIMELINE_SECTION_NAME("TimelineSection");
@@ -65,9 +68,16 @@ void ApplicationActionController::preInit()
 
 void ApplicationActionController::init()
 {
+    commandDispatcher()->onRequest(this, APP_QUIT_COMMAND, [this](const muse::rcommand::Params& params) {
+        bool isAllInstances = params.at("all_instances", muse::Val(true)).toBool();
+        muse::io::path_t installerPath = params.at("installer_path").toString();
+        return quit(isAllInstances, installerPath) ? muse::make_ok() : muse::make_ret(muse::Ret::Code::Cancel);
+    });
+
     dispatcher()->reg(this, "quit", [this](const muse::actions::ActionData& args) {
+        bool isAllInstances = args.count() > 0 ? args.arg<bool>(0) : true;
         muse::io::path_t installerPath = args.count() > 1 ? args.arg<muse::io::path_t>(1) : "";
-        quit(installerPath);
+        quit(isAllInstances, installerPath);
     });
 
     dispatcher()->reg(this, "restart", [this]() {
@@ -218,19 +228,9 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 {
     if (event->type() == QEvent::Close && watched == mainWindow()->qWindow()) {
         if (multiwindowsProvider()->windowCount() > 1) {
-            if (!projectFilesController()->closeOpenedProject()) {
-                event->ignore();
-                return true;
-            }
-            auto provider = multiwindowsProvider();
-            auto ctx = iocContext();
-            QMetaObject::invokeMethod(qApp, [provider, ctx]() {
-                // during the call the window and the context will be destroyed
-                // do not capture or use anything that is context-dependent here
-                // i.e. dont use Async::call(this instead of invokeMethod
-                provider->quitWindow(ctx);
-            }, Qt::QueuedConnection);
-            event->accept();
+            //! NOTE Only this window is quitting, the others remain open
+            const bool accepted = quit(false /*isAllInstances*/);
+            event->setAccepted(accepted);
             return true;
         }
 #ifdef Q_OS_MAC
@@ -244,14 +244,14 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
         event->accept();
         return true;
 #else
-        const bool accepted = quit();
+        const bool accepted = quit(false /*isAllInstances*/);
         event->setAccepted(accepted);
         return true;
 #endif
     }
 
     if (event->type() == QEvent::Quit) {
-        const bool accepted = quit();
+        const bool accepted = quit(true /*isAllInstances*/);
         event->setAccepted(accepted);
         return true;
     }
@@ -311,32 +311,28 @@ void ApplicationActionController::handleFileOpenEvent(const QFileOpenEvent* even
     }
 }
 
-bool ApplicationActionController::quit(const muse::io::path_t& installerPath)
+bool ApplicationActionController::quit(bool isAllInstances, const muse::io::path_t& installerPath)
 {
     if (m_quiting) {
         return false;
     }
 
     m_quiting = true;
-    DEFER {
+
+    if (!projectFilesController()->closeOpenedProject()) {
+        LOGD() << "quit cancelled";
         m_quiting = false;
-    };
-
-    auto allContexts = application()->contexts();
-
-    // Close the current window first, then others
-    auto thisCtx = iocContext();
-    std::stable_partition(allContexts.begin(), allContexts.end(),
-                          [&thisCtx](const auto& ctx) { return ctx == thisCtx; });
-
-    for (const auto& ctx : allContexts) {
-        auto pfc = muse::modularity::ioc(ctx)->resolve<project::IProjectFilesController>("appshell");
-        if (pfc && !pfc->closeOpenedProject()) {
-            return false;
-        }
+        return false;
     }
 
-    if (!installerPath.empty()) {
+    doQuit(isAllInstances, installerPath);
+
+    return true;
+}
+
+void ApplicationActionController::doQuit(bool isAllInstances, const muse::io::path_t& installerPath)
+{
+    if (multiwindowsProvider()->isFirstWindow() && !installerPath.empty()) {
         //! NOTE: All windows are quitting to complete the update, apply it
         //! in-place, falling back to handing the package to the user.
         bool applied = false;
@@ -356,8 +352,19 @@ bool ApplicationActionController::quit(const muse::io::path_t& installerPath)
         }
     }
 
-    QCoreApplication::exit();
-    return true;
+    if (!multiwindowsProvider()->isFirstWindow()) {
+        multiwindowsProvider()->notifyAboutWindowWasQuited();
+    }
+
+    auto provider = multiwindowsProvider();
+    auto ctx = iocContext();
+    QMetaObject::invokeMethod(qApp, [provider, isAllInstances, ctx]() {
+        if (isAllInstances) {
+            provider->quitForAll(ctx);
+        } else {
+            provider->quitWindow(ctx);
+        }
+    }, Qt::QueuedConnection);
 }
 
 void ApplicationActionController::restart()
