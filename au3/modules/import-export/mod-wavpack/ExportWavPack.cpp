@@ -443,7 +443,7 @@ int WavPackExportProcessor::WriteBlock(void* id, void* data, int32_t length)
 
     if (!outId->file) {
         // This does not match the wavpack.c but in our case if file is nullptr -
-        // the stream error has occured
+        // the stream error has occurred
         return false;
     }
 
