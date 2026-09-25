@@ -1264,7 +1264,7 @@ int FFmpegExporter::EncodeAudio(AVPacketWrapper& pkt, int16_t* audio_samples, in
     if (ret < 0 && ret != AUDACITY_AVERROR_EOF) {
         char buf[64];
         mFFmpeg->av_strerror(ret, buf, sizeof(buf));
-        wxLogDebug(buf);
+        wxLogDebug("%s", buf);
 
         throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - encoding frame failed").c_str()));
     }
