@@ -4,7 +4,6 @@
 #include "recentprojectcontextmenumodel.h"
 
 #include "framework/actions/actiontypes.h"
-#include "framework/global/io/path.h"
 #include "framework/global/types/translatablestring.h"
 
 #include <QUrl>
@@ -13,8 +12,8 @@ using namespace au::project;
 
 namespace {
 constexpr const char* OPEN_PROJECT_ACTION = "file-open";
-constexpr const char* OPEN_PROJECT_PAGE_ACTION = "audacity://cloud/open-project-page";
-constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "audacity://cloud/update-audio-preview-for-project";
+constexpr const char* OPEN_PROJECT_PAGE_ACTION = "action://cloud/open-project-page";
+constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "action://cloud/update-audio-preview-for-project";
 constexpr const char* SHOW_IN_FOLDER_ACTION = "project-show-in-folder";
 }
 
@@ -63,12 +62,12 @@ void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
     }
 
     if (itemId == OPEN_PROJECT_PAGE_ACTION) {
-        if (m_path.isEmpty()) {
+        if (m_cloudProjectId.isEmpty()) {
             return;
         }
 
         muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
-        query.addParam("path", muse::Val(muse::io::path_t(m_path.toStdString())));
+        query.addParam("id", muse::Val(m_cloudProjectId));
         dispatchAction(query);
         return;
     }

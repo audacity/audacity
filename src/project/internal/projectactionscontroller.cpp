@@ -41,9 +41,9 @@ static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
 static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
-static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
-static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_ACTION("audacity://cloud/update-audio-preview");
-static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION("audacity://cloud/update-audio-preview-for-project");
+static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("action://cloud/open-audio-file");
+static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_ACTION("action://cloud/update-audio-preview");
+static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION("action://cloud/update-audio-preview-for-project");
 
 namespace {
 QString cloudProjectOpenUrl(const muse::String& projectId, const muse::String& snapshotId)
@@ -83,8 +83,8 @@ const muse::actions::ActionCodeList& prohibitedWhileRecording()
         "export-labels",
         "export-midi",
         "file-share-audio",
-        "audacity://cloud/update-audio-preview",
-        "audacity://cloud/update-audio-preview-for-project",
+        "action://cloud/update-audio-preview",
+        "action://cloud/update-audio-preview-for-project",
     };
 
     return codes;
@@ -100,8 +100,8 @@ const std::unordered_set<muse::actions::ActionCode>& dontRequireOpenProject()
         "cloud-file-open",
         "continue-last-session",
         "clear-recent",
-        "audacity://cloud/open-audio-file",
-        "audacity://cloud/update-audio-preview-for-project",
+        "action://cloud/open-audio-file",
+        "action://cloud/update-audio-preview-for-project",
         "plugin-manager",
         "project-show-in-folder",
     };
@@ -112,7 +112,7 @@ const std::unordered_set<muse::actions::ActionCode>& dontRequireOpenProject()
 const std::unordered_set<muse::actions::ActionCode>& prohibitedOnNonCloudProject()
 {
     static const std::unordered_set<muse::actions::ActionCode> codes {
-        "audacity://cloud/update-audio-preview",
+        "action://cloud/update-audio-preview",
     };
 
     return codes;
@@ -122,7 +122,7 @@ const muse::actions::ActionCodeList& prohibitedWithoutAudio()
 {
     static const muse::actions::ActionCodeList codes {
         "file-share-audio",
-        "audacity://cloud/update-audio-preview",
+        "action://cloud/update-audio-preview",
         "export-audio",
     };
 
@@ -1710,16 +1710,7 @@ void ProjectActionsController::openCustomMapping()
 
 muse::Ret ProjectActionsController::ensureAuthorization()
 {
-    if (authorization()->isAuthorized()) {
-        return make_ret(Ret::Code::Ok);
-    }
-
-    muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-    query.addParam("sync", muse::Val(true));
-
-    dispatcher()->dispatch(query);
-
-    return authorization()->isAuthorized() ? make_ret(Ret::Code::Ok) : make_ret(Ret::Code::Cancel);
+    return authorization()->ensureAuthorized(iocContext());
 }
 
 void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, const io::path_t& localPath,

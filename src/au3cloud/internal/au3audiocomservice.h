@@ -74,7 +74,6 @@ public:
     muse::RetVal<muse::ProgressPtr> downloadAudioFile(const std::string& audioId) override;
 
     std::string getCloudProjectPage(const std::string& projectId) const override;
-    std::string getCloudProjectPage(const muse::io::path_t& projectPath) const override;
     std::string getCloudAudioPage(const std::string& slug) const override;
     std::string getCloudProfilePage() const override;
     std::string getTourPage() const override;
