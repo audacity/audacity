@@ -35,6 +35,7 @@ static const muse::Settings::Key UPDATE_DISPLAY_WHILE_PLAYING_ENABLED(moduleName
 static const muse::Settings::Key PINNED_PLAY_HEAD_ENABLED(moduleName, "projectscene/pinnedPlayHeadEnabled");
 static const muse::Settings::Key ZOOM_PRESET_1(moduleName, "projectscene/zoomPreset1");
 static const muse::Settings::Key ZOOM_PRESET_2(moduleName, "projectscene/zoomPreset2");
+static const muse::Settings::Key DEFAULT_TRACK_RULER_TYPE(moduleName, "projectscene/defaultTrackRulerType");
 
 static constexpr bool DEFAULT_VERTICAL_RULERS_VISIBILITY = false;
 static constexpr bool DEFAULT_RMS_IN_WAVEFORM_VISIBILITY = false;
@@ -113,6 +114,8 @@ void ProjectSceneConfiguration::init()
 
     muse::settings()->setDefaultValue(ZOOM_PRESET_1, muse::Val(static_cast<int>(ZoomPresets::ZoomDefault)));
     muse::settings()->setDefaultValue(ZOOM_PRESET_2, muse::Val(static_cast<int>(ZoomPresets::Zoom4To1)));
+
+    muse::settings()->setDefaultValue(DEFAULT_TRACK_RULER_TYPE, muse::Val(static_cast<int>(trackedit::TrackRulerType::Linear)));
 }
 
 bool ProjectSceneConfiguration::isVerticalRulersVisible() const
@@ -434,4 +437,14 @@ ZoomPresets::Preset ProjectSceneConfiguration::zoomPreset2() const
 void ProjectSceneConfiguration::setZoomPreset2(ZoomPresets::Preset preset)
 {
     muse::settings()->setSharedValue(ZOOM_PRESET_2, muse::Val(static_cast<int>(preset)));
+}
+
+au::trackedit::TrackRulerType ProjectSceneConfiguration::defaultTrackRulerType() const
+{
+    return static_cast<trackedit::TrackRulerType>(muse::settings()->value(DEFAULT_TRACK_RULER_TYPE).toInt());
+}
+
+void ProjectSceneConfiguration::setDefaultTrackRulerType(trackedit::TrackRulerType type)
+{
+    muse::settings()->setSharedValue(DEFAULT_TRACK_RULER_TYPE, muse::Val(static_cast<int>(type)));
 }
