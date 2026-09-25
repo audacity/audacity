@@ -362,7 +362,7 @@ void Report::ReportImpl::Send(CompletionHandler completionHandler) const
         [response, handler = std::move(completionHandler)](network_manager::IResponse*) {
         const std::string responseData = response->readAll<std::string>();
 
-        wxLogDebug(responseData.c_str());
+        wxLogDebug("%s", responseData.c_str());
 
         if (handler) {
             handler(response->getHTTPCode(), responseData);

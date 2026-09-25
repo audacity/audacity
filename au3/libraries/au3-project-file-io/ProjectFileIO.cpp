@@ -944,8 +944,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
     // Mark the project recovered if we deleted any rows
     int changes = sqlite3_changes(db);
     if (changes > 0) {
-        //: %1 is the number of deleted orphan blocks
-        wxLogInfo(TranslatableString("project-file-io", "Total orphan blocks deleted %1").Translation(), changes);
+        wxLogInfo("Total orphan blocks deleted %d", changes);
         mRecovered = true;
     }
 
