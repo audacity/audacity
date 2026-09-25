@@ -16,6 +16,8 @@ set(BUILD_NUMBER "" CACHE STRING "Build number")
 set(BUILD_MODE "" CACHE STRING "Build mode")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
 set(BUILD_ENABLE_CODE_COVERAGE "" CACHE STRING "Build with code coverage")
+set(BUILD_USE_PCH "" CACHE STRING "Build use precompiled headers (empty = app default)")
+set(BUILD_KEEP_GOING "" CACHE STRING "Keep building after errors (ninja -k 0)")
 
 if (NOT BUILD_NUMBER)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_number.env" BUILD_NUMBER)
@@ -62,6 +64,8 @@ set(CONFIG
     -DBUILD_REVISION=${BUILD_REVISION}
     -DBUILD_ENABLE_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}
     -DBUILD_USE_UNITY=${BUILD_USE_UNITY}
+    -DBUILD_USE_PCH=${BUILD_USE_PCH}
+    -DBUILD_KEEP_GOING=${BUILD_KEEP_GOING}
 )
 
 execute_process(

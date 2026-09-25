@@ -1,0 +1,155 @@
+name: '[AU4] Check: Strict build (no PCH, no unity)'
+
+# Builds with precompiled headers and unity batching both disabled, so every
+# translation unit must declare its own includes and every module its own Qt
+# links. Slower than the regular builds, so it runs on a schedule rather than
+# on every PR, and reports through a tracking issue instead of a red check.
+
+on:
+  schedule:
+    - cron: '30 5 * * 1-5' # weekdays 05:30 UTC, results before 09:00 CET/CEST
+  workflow_dispatch:
+  pull_request: # only when the strict build's own plumbing changes
+    paths:
+      - '.github/workflows/au4_check_strict_build.yml'
+      - 'ci_build.cmake'
+      - 'buildscripts/ci/linux/ci_build_utests.cmake'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  CI_DIR: buildscripts/ci
+  ISSUE_LABEL: 'Build / CI'
+  # The open tracking issue is found by this exact title (the label is shared)
+  ISSUE_TITLE: 'Strict build (no PCH, no unity) is failing'
+  # Same list as the reviewers of the automated translation PRs
+  ISSUE_NOTIFY: 'kryksyh saintmatthieu embarc-gabriel grliszas14 luapmartin'
+
+jobs:
+  strict_build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v7
+      with:
+        submodules: recursive
+
+    - name: "Configure workflow"
+      run: |
+        cmake -DEVENT=${{ github.event_name }} \
+              -DBUILD_MODE="devel_build" \
+              -DARTIFACT_INFO="build.artifacts/" \
+              -P ${CI_DIR}/common/ci_configure.cmake
+
+    - name: Restore ccache files
+      id: restore-ccache
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ github.workspace }}/.ccache
+        # fixed prefix: the workflow name contains a comma, which cache keys reject
+        key: au4-strict-build-${{runner.arch}}-ccache-
+        restore-keys: au4-strict-build-${{runner.arch}}-ccache-
+    - name: Setup ccache
+      run: |
+        sudo apt-get update && sudo apt-get install -y ccache
+        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+
+    - name: Free up disk space
+      run: |
+        sudo docker system prune -a -f
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc /usr/local/.ghcup
+        sudo rm -rf /usr/share/swift
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.10.1'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'linux_gcc_64'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        cache: true
+
+    - name: Setup environment
+      run: |
+        bash ./buildscripts/ci/linux/setup.sh
+
+    - name: Build (PCH off, unity off)
+      run: |
+        set -o pipefail
+        source $HOME/build_tools/environment.sh
+        # keep going after errors (ninja -k 0) so one run reports every failure
+        cmake -DBUILD_USE_PCH=OFF -DBUILD_KEEP_GOING=ON -P ${CI_DIR}/linux/ci_build_utests.cmake 2>&1 | tee strict_build.log
+
+    - name: Show ccache stats
+      if: always()
+      run: |
+        command -v ccache >/dev/null && ccache -sv || true
+
+    - name: Save ccache files
+      if: always() && steps.restore-ccache.outcome == 'success'
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: au4-strict-build-${{runner.arch}}-ccache-${{ github.run_id }}
+
+    - name: Report failure in tracking issue
+      if: failure() && github.event_name != 'pull_request' && github.repository == 'audacity/audacity'
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        sha=$(git rev-parse --short HEAD)
+        # Distinct compiler errors, paths relative to the repo, capped to keep the issue readable
+        errors=$(grep -E 'error:' strict_build.log 2>/dev/null | sed -E "s|$GITHUB_WORKSPACE/||g" | sort -u | head -30)
+        [ -n "$errors" ] || errors="(no compiler error lines found, see the run log)"
+        summary() { printf '%s\n' '<details><summary>Errors (first 30 distinct)</summary>' '' '```' "$errors" '```' '' '</details>'; }
+
+        existing=$(gh issue list --label "$ISSUE_LABEL" --state open --limit 200 --json number,title \
+          --jq 'map(select(.title == env.ISSUE_TITLE)) | .[0].number // empty')
+        if [ -n "$existing" ]; then
+          { echo "Still failing on $sha: $run_url"; echo; summary; } > issue_body.md
+          gh issue comment "$existing" --body-file issue_body.md
+        else
+          cc=$(for u in $ISSUE_NOTIFY; do printf '@%s ' "$u"; done)
+          {
+            echo "The scheduled strict build (\`MUSE_COMPILE_USE_PCH=OFF\`, \`MUSE_COMPILE_USE_UNITY=OFF\`, Linux/gcc) failed on $sha."
+            echo
+            echo "Run: $run_url"
+            echo
+            summary
+            echo
+            echo "Typical causes: a header relying on the PCH for a Qt/std include, or a module using Qt Quick/Qml types without linking the Qt module. See #12178 and #12189 for examples of both."
+            echo
+            echo "This issue is closed automatically when the build passes again."
+            echo
+            echo "cc $cc"
+          } > issue_body.md
+          issue_url=$(gh issue create --title "$ISSUE_TITLE" --label "$ISSUE_LABEL" --body-file issue_body.md)
+          # Best effort: a login without triage access must not fail the report
+          for u in $ISSUE_NOTIFY; do
+            gh issue edit "$issue_url" --add-assignee "$u" || true
+          done
+        fi
+
+    - name: Close tracking issue on success
+      if: success() && github.event_name != 'pull_request' && github.repository == 'audacity/audacity'
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        for n in $(gh issue list --label "$ISSUE_LABEL" --state open --limit 200 --json number,title \
+          --jq 'map(select(.title == env.ISSUE_TITLE)) | .[].number'); do
+          gh issue close "$n" --comment "Passing again on $(git rev-parse --short HEAD): $run_url"
+        done

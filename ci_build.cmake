@@ -20,6 +20,8 @@ set(INSTALL_SUFFIX "" CACHE STRING "Install suffix")
 set(BUILD_NUMBER "12345678" CACHE STRING "Build number")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
 set(BUILD_USE_UNITY "" CACHE STRING "Build use unity")
+set(BUILD_USE_PCH "" CACHE STRING "Build use precompiled headers")
+set(BUILD_KEEP_GOING "" CACHE STRING "Keep building after errors (ninja -k 0)")
 set(BUILD_ENABLE_UNIT_TESTS "ON" CACHE STRING "Build unit tests")
 set(BUILD_ENABLE_CODE_COVERAGE "" CACHE STRING "Build with code coverage")
 set(CRASH_REPORT_URL "" CACHE STRING "Crash report url")
@@ -55,6 +57,7 @@ message(STATUS "INSTALL_SUFFIX=${INSTALL_SUFFIX}")
 message(STATUS "BUILD_NUMBER=${BUILD_NUMBER}")
 message(STATUS "BUILD_REVISION=${BUILD_REVISION}")
 message(STATUS "BUILD_USE_UNITY=${BUILD_USE_UNITY}")
+message(STATUS "BUILD_USE_PCH=${BUILD_USE_PCH}")
 message(STATUS "BUILD_ENABLE_UNIT_TESTS=${BUILD_ENABLE_UNIT_TESTS}")
 message(STATUS "BUILD_ENABLE_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}")
 message(STATUS "ENABLE_CRASHPAD_CLIENT=${ENABLE_CRASHPAD_CLIENT}")
@@ -70,7 +73,6 @@ macro(do_build build_type build_dir)
         -DMUSE_APP_INSTALL_SUFFIX=${INSTALL_SUFFIX}
         -DCMAKE_BUILD_NUMBER=${BUILD_NUMBER}
         -DAU4_REVISION=${BUILD_REVISION}
-        -DMUE_COMPILE_USE_UNITY=${BUILD_USE_UNITY}
         -DCMAKE_SKIP_RPATH=${SKIP_RPATH}
         -DMUSE_ENABLE_UNIT_TESTS=${BUILD_ENABLE_UNIT_TESTS}
         -DMUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}
@@ -78,6 +80,15 @@ macro(do_build build_type build_dir)
         -DMUSE_MODULE_DIAGNOSTICS_CRASHREPORT_URL=${CRASH_REPORT_URL}
         -DMUSE_MODULE_AUDIOPLUGINS_CRASHREPORT_URL=${AUDIOPLUGINS_CRASHREPORT_URL}
     )
+
+    # Only pass the flags when set: an empty -D value would leave the app's option() at
+    # an empty (false) value instead of its default.
+    if (NOT "${BUILD_USE_UNITY}" STREQUAL "")
+        list(APPEND CONFIGURE_ARGS -DMUSE_COMPILE_USE_UNITY=${BUILD_USE_UNITY})
+    endif()
+    if (NOT "${BUILD_USE_PCH}" STREQUAL "")
+        list(APPEND CONFIGURE_ARGS -DMUSE_COMPILE_USE_PCH=${BUILD_USE_PCH})
+    endif()
 
     # Allow macos architecture override with env OSX_ARCHITECTURES
     if (DEFINED ENV{OSX_ARCHITECTURES} AND NOT "$ENV{OSX_ARCHITECTURES}" STREQUAL "")
@@ -99,9 +110,14 @@ macro(do_build build_type build_dir)
         message(STATUS "========= Success configure =========")
     endif()
 
+    set(NINJA_ARGS -j ${CPUS})
+    if (BUILD_KEEP_GOING)
+        list(APPEND NINJA_ARGS -k 0)
+    endif()
+
     message(STATUS "========= Begin build =========")
     execute_process(
-        COMMAND ninja -j ${CPUS}
+        COMMAND ninja ${NINJA_ARGS}
         WORKING_DIRECTORY ${build_dir}
         RESULT_VARIABLE NINJA_RESULT
     )
