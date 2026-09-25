@@ -10,6 +10,8 @@
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/rcommand/commandable.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
@@ -24,12 +26,14 @@
 #include "record/irecordcontroller.h"
 
 namespace au::record {
-class RecordController : public IRecordController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
+class RecordController : public IRecordController, public muse::actions::Actionable, public muse::rcommand::Commandable,
+    public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<record::IRecordConfiguration> configuration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<IRecord> record{ this };
@@ -79,17 +83,17 @@ private:
 
     void onProjectChanged();
 
-    void toggleRecord();
-    void recordOnNewTrack();
-    void start();
-    void startWithNewTrack();
-    void pause();
-    void resume();
-    void stop();
-    void leadInRecording();
+    muse::Ret toggleRecord();
+    muse::Ret recordOnNewTrack();
+    muse::Ret start();
+    muse::Ret startWithNewTrack();
+    muse::Ret pause();
+    muse::Ret resume();
+    muse::Ret stop();
+    muse::Ret leadInRecording();
     void stopPlaybackIfPaused();
-    void toggleMicMetering();
-    void toggleInputMonitoring();
+    muse::Ret toggleMicMetering();
+    muse::Ret toggleInputMonitoring();
 
     void setCurrentRecordStatus(RecordStatus status);
 

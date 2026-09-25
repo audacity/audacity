@@ -4,24 +4,40 @@
 #include "spectrogramactionscontroller.h"
 #include "spectrogramtypes.h"
 
+#include "trackedit/dom/track.h"
+
+#include "../spectrogramcommands.h"
+
 namespace au::spectrogram {
 void SpectrogramActionsController::init()
 {
-    dispatcher()->reg(this, TRACK_SPECTROGRAM_SETTINGS_ACTION, this, &SpectrogramActionsController::openTrackSpectrogramSettings);
+    commandDispatcher()->onRequest(this, TRACK_SPECTROGRAM_SETTINGS_COMMAND, [this](const muse::rcommand::Params& params) {
+        return openTrackSpectrogramSettings(params);
+    });
 }
 
-void SpectrogramActionsController::openTrackSpectrogramSettings(const muse::actions::ActionData& args)
+muse::Ret SpectrogramActionsController::openTrackSpectrogramSettings(const muse::rcommand::Params& params)
 {
-    IF_ASSERT_FAILED(args.count() == 2) {
-        return;
+    if (!params.contains("trackId")) {
+        return muse::make_ret(muse::Ret::Code::BadArgs);
     }
 
-    const auto trackId = args.arg<int>(0);
-    const auto trackTitle = args.arg<muse::String>(1);
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
 
-    muse::UriQuery uriQuery{ TRACK_SPECTROGRAM_SETTINGS_ACTION };
+    const int trackId = params.at("trackId").toInt();
+    const auto track = project->trackeditProject()->track(trackId);
+    if (!track) {
+        return muse::make_ret(muse::Ret::Code::BadArgs);
+    }
+
+    muse::UriQuery uriQuery{ TRACK_SPECTROGRAM_SETTINGS_URI };
     uriQuery.addParam("trackId", muse::Val(trackId));
-    uriQuery.addParam("trackTitle", muse::Val(trackTitle.toStdString()));
+    uriQuery.addParam("trackTitle", muse::Val(track->title.toStdString()));
     interactive()->open(uriQuery);
+
+    return muse::make_ok();
 }
 }

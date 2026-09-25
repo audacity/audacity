@@ -6,6 +6,7 @@
 #include "actions/actiontypes.h"
 #include "framework/global/translation.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
+#include "spectrogramcommands.h"
 #include "spectrogramtypes.h"
 #include "types/translatablestring.h"
 
@@ -84,22 +85,15 @@ void TrackSpectrogramContextMenuModel::load()
         items.push_back(makeSeparator());
     }
 
-    uicomponents::MenuItem* const settingsItem = makeMenuItem(TRACK_SPECTROGRAM_SETTINGS_ACTION);
+    uicomponents::MenuItem* const settingsItem = makeMenuItem(muse::rcommand::make_query(TRACK_SPECTROGRAM_SETTINGS_COMMAND, {
+            { "trackId", muse::Val(m_trackId) }
+        }));
     IF_ASSERT_FAILED(settingsItem) {
         return;
     }
     items.push_back(settingsItem);
 
     setItems(std::move(items));
-}
-
-void TrackSpectrogramContextMenuModel::handleMenuItem(const QString& itemId)
-{
-    if (itemId == TRACK_SPECTROGRAM_SETTINGS_ACTION) {
-        dispatcher()->dispatch(TRACK_SPECTROGRAM_SETTINGS_ACTION, muse::actions::ActionData::make_arg2(m_trackId, m_trackTitle));
-    } else {
-        AbstractMenuModel::handleMenuItem(itemId);
-    }
 }
 
 void TrackSpectrogramContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)

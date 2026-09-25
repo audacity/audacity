@@ -1,7 +1,8 @@
 #include "spectrogrammodule.h"
 
 #include "internal/spectraleffectsregister.h"
-#include "internal/spectrogramuiactions.h"
+#include "internal/spectrogramcommandsregister.h"
+#include "internal/spectrogramcommandsstate.h"
 #include "internal/spectrogramactionscontroller.h"
 #include "internal/globalspectrogramconfiguration.h"
 #include "internal/spectrogramservice.h"
@@ -25,6 +26,8 @@
 #include "view/channelspectralselectionmodel.h"
 
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
 static void spectrogram_init_qrc()
 {
@@ -56,7 +59,12 @@ void SpectrogramModule::resolveImports()
 {
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
     if (ir) {
-        ir->registerQmlUri(muse::Uri(TRACK_SPECTROGRAM_SETTINGS_ACTION), "Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml");
+        ir->registerQmlUri(TRACK_SPECTROGRAM_SETTINGS_URI, "Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml");
+    }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<SpectrogramCommandsRegister>());
     }
 }
 
@@ -113,9 +121,9 @@ void SpectrogramContext::registerExports()
 
 void SpectrogramContext::resolveImports()
 {
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(std::make_shared<SpectrogramUiActions>(iocContext()));
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<SpectrogramCommandsState>(iocContext()));
     }
 }
 
