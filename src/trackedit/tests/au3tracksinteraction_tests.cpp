@@ -1,6 +1,8 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+#include <algorithm>
+
 #include <gtest/gtest.h>
 
 #include "../internal/au3/au3tracksinteraction.h"
@@ -22,10 +24,28 @@
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "project/tests/mocks/dummyeffectinstancefactory.h"
 
+#include "au3-track/TimeWarper.h"
+
 using ::testing::Truly;
 using ::testing::_;
 
 namespace au::trackedit {
+namespace {
+constexpr float PROCESSED_SAMPLE_VALUE = 0.25f;
+
+using SampleRanges = std::vector<std::pair<long long, long long> >;
+
+long long sampleAt(double time)
+{
+    return static_cast<long long>(time * DEFAULT_SAMPLE_RATE);
+}
+
+std::vector<float> createProcessedSamples(double duration, double sampleRate)
+{
+    return std::vector<float>(static_cast<size_t>(duration * sampleRate), PROCESSED_SAMPLE_VALUE);
+}
+}
+
 class Au3TracksInteractionTests : public Au3InteractionTestBase
 {
 public:
@@ -74,6 +94,36 @@ public:
     int TrackPosition(const TrackId trackId)
     {
         return m_tracksInteraction->trackPosition(trackId);
+    }
+
+    Au3WaveTrack* createTrackWithClips(const std::vector<std::pair<double, double> >& clipRanges)
+    {
+        std::vector<ClipTemplate> clips;
+        for (const auto& [start, end] : clipRanges) {
+            clips.push_back({ start, { { end - start, TrackTemplateFactory::createNoise } } });
+        }
+        TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+        const TrackId trackId = factory.addTrackFromTemplate("clips", clips);
+        return DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    }
+
+    void replaceRangeLikeProcessEffect(Au3WaveTrack& track, double t0, double t1)
+    {
+        TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+        const auto processed = factory.createTrackFromTemplate("processed", { { 0.0, { { t1 - t0, createProcessedSamples } } } });
+        PasteTimeWarper warper { t1, t0 + processed->GetEndTime() };
+        constexpr auto preserve = true;
+        constexpr auto merge = true;
+        track.ClearAndPaste(t0, t1, *processed, preserve, merge, &warper);
+    }
+
+    static SampleRanges clipSampleRanges(const Au3WaveTrack& track)
+    {
+        SampleRanges ranges;
+        for (const auto& clip : track.SortedIntervalArray()) {
+            ranges.emplace_back(clip->GetPlayStartSample().as_long_long(), clip->GetPlayEndSample().as_long_long());
+        }
+        return ranges;
     }
 
     std::shared_ptr<Au3TracksInteraction> m_tracksInteraction;
@@ -1798,5 +1848,91 @@ TEST_F(Au3TracksInteractionTests, PasteClipAtStartOfItselfIntoExistingClipDoesNo
 
     // Cleanup
     removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, ReplacingSecondOfTwoTouchingClipsKeepsThemSeparate)
+{
+    Au3WaveTrack* track = createTrackWithClips({ { 0.0, 1.0 }, { 1.0, 2.0 } });
+    ASSERT_TRUE(track);
+    ASSERT_EQ(track->NIntervals(), 2);
+
+    replaceRangeLikeProcessEffect(*track, 1.0, 2.0);
+
+    EXPECT_EQ(clipSampleRanges(*track), (SampleRanges { { 0, sampleAt(1.0) }, { sampleAt(1.0), sampleAt(2.0) } }));
+
+    std::vector<float> samples(sampleAt(1.0));
+    ASSERT_TRUE((*track->Channels().begin())->GetFloats(samples.data(), sampleCount { sampleAt(1.0) }, samples.size()));
+    EXPECT_TRUE(std::all_of(samples.begin(), samples.end(), [](float s) { return s == PROCESSED_SAMPLE_VALUE; }));
+
+    removeTrack(TrackId(track->GetId()));
+}
+
+TEST_F(Au3TracksInteractionTests, ReplacingFirstOfTwoTouchingClipsKeepsThemSeparate)
+{
+    Au3WaveTrack* track = createTrackWithClips({ { 0.0, 1.0 }, { 1.0, 2.0 } });
+    ASSERT_TRUE(track);
+    ASSERT_EQ(track->NIntervals(), 2);
+
+    replaceRangeLikeProcessEffect(*track, 0.0, 1.0);
+
+    EXPECT_EQ(clipSampleRanges(*track), (SampleRanges { { 0, sampleAt(1.0) }, { sampleAt(1.0), sampleAt(2.0) } }));
+
+    std::vector<float> samples(sampleAt(1.0));
+    ASSERT_TRUE((*track->Channels().begin())->GetFloats(samples.data(), sampleCount { 0 }, samples.size()));
+    EXPECT_TRUE(std::all_of(samples.begin(), samples.end(), [](float s) { return s == PROCESSED_SAMPLE_VALUE; }));
+
+    removeTrack(TrackId(track->GetId()));
+}
+
+TEST_F(Au3TracksInteractionTests, ReplacingFromTouchingClipBoundaryIntoSecondClipKeepsClipsSeparate)
+{
+    Au3WaveTrack* track = createTrackWithClips({ { 0.0, 1.0 }, { 1.0, 2.0 } });
+    ASSERT_TRUE(track);
+    ASSERT_EQ(track->NIntervals(), 2);
+
+    replaceRangeLikeProcessEffect(*track, 1.0, 1.5);
+
+    EXPECT_EQ(clipSampleRanges(*track), (SampleRanges { { 0, sampleAt(1.0) }, { sampleAt(1.0), sampleAt(2.0) } }));
+
+    removeTrack(TrackId(track->GetId()));
+}
+
+TEST_F(Au3TracksInteractionTests, ReplacingRangeInsideClipKeepsSingleClip)
+{
+    Au3WaveTrack* track = createTrackWithClips({ { 0.0, 3.0 } });
+    ASSERT_TRUE(track);
+    ASSERT_EQ(track->NIntervals(), 1);
+
+    replaceRangeLikeProcessEffect(*track, 1.0, 2.0);
+
+    EXPECT_EQ(clipSampleRanges(*track), (SampleRanges { { 0, sampleAt(3.0) } }));
+
+    removeTrack(TrackId(track->GetId()));
+}
+
+TEST_F(Au3TracksInteractionTests, ReplacingRangeAcrossTouchingClipBoundaryKeepsClipsSeparate)
+{
+    Au3WaveTrack* track = createTrackWithClips({ { 0.0, 1.0 }, { 1.0, 2.0 } });
+    ASSERT_TRUE(track);
+    ASSERT_EQ(track->NIntervals(), 2);
+
+    replaceRangeLikeProcessEffect(*track, 0.5, 1.5);
+
+    EXPECT_EQ(clipSampleRanges(*track), (SampleRanges { { 0, sampleAt(1.0) }, { sampleAt(1.0), sampleAt(2.0) } }));
+
+    removeTrack(TrackId(track->GetId()));
+}
+
+TEST_F(Au3TracksInteractionTests, ReplacingClipSeparatedByGapKeepsClipsSeparate)
+{
+    Au3WaveTrack* track = createTrackWithClips({ { 0.0, 1.0 }, { 1.5, 2.5 } });
+    ASSERT_TRUE(track);
+    ASSERT_EQ(track->NIntervals(), 2);
+
+    replaceRangeLikeProcessEffect(*track, 1.5, 2.5);
+
+    EXPECT_EQ(clipSampleRanges(*track), (SampleRanges { { 0, sampleAt(1.0) }, { sampleAt(1.5), sampleAt(2.5) } }));
+
+    removeTrack(TrackId(track->GetId()));
 }
 }
