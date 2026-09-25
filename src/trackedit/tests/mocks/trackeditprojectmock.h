@@ -46,7 +46,7 @@ public:
     MOCK_METHOD(void, notifyAboutLabelRemoved, (const Label& label), (override));
 
     MOCK_METHOD(TimeSignature, timeSignature, (), (const, override));
-    MOCK_METHOD(void, setTimeSignature, (const TimeSignature& timeSignature), (override));
+    MOCK_METHOD(void, setTimeSignature, (const TimeSignature& timeSignature, bool noStretch), (override));
     MOCK_METHOD(muse::async::Channel<TimeSignature>, timeSignatureChanged, (), (const, override));
 
     MOCK_METHOD(muse::async::Channel<std::vector<au::trackedit::Track> >, tracksChanged, (), (const, override));

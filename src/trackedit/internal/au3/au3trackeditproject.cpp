@@ -498,7 +498,7 @@ au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
     return result;
 }
 
-void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeSignature)
+void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeSignature, bool noStretch)
 {
     ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(*m_impl->prj);
 
@@ -506,7 +506,27 @@ void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeS
     if (!muse::is_equal(timeSig.GetTempo(), timeSignature.tempo)) {
         historyStateMessage = muse::trc("trackedit", "Tempo changed");
     }
+
+    //! NOTE: `SetTempo` notifies synchronously, and the clips that follow the
+    //! project tempo stretch from within that call. To leave them alone, they
+    //! have to stop following for the duration of it.
+    std::vector<Au3WaveClip* > reEnable;
+    if (noStretch) {
+        for (Au3WaveTrack* track : m_impl->trackList->Any<Au3WaveTrack>()) {
+            for (const auto& clip : track->Intervals()) {
+                if (clip->GetStretchToMatchProjectTempo()) {
+                    clip->SetStretchToMatchProjectTempo(false);
+                    reEnable.push_back(clip.get());
+                }
+            }
+        }
+    }
+
     timeSig.SetTempo(timeSignature.tempo);
+
+    for (const auto& clip : reEnable) {
+        clip->SetStretchToMatchProjectTempo(true);
+    }
 
     if (!muse::is_equal(timeSig.GetUpperTimeSignature(), timeSignature.upper)) {
         historyStateMessage = muse::trc("trackedit", "Upper time signature changed");
