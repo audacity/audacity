@@ -431,11 +431,6 @@ public:
     std::pair<IntervalHolder, IntervalHolder> SplitAt(double t);
 
     /*!
-     May assume precondition: t0 <= t1
-     */
-    void ClearAndAddCutLine(double t0, double t1) /* not override */;
-
-    /*!
      @post result: `result->NChannels() == NChannels()`
      */
     Holder SplitCut(double t0, double t1) /* not override */;
@@ -589,15 +584,15 @@ public:
      @param offset desired sequence (not play) start time
      */
     IntervalHolder
-    CreateClip(double offset = .0, const wxString& name = wxEmptyString, const Interval* pToCopy = nullptr, bool copyCutlines = true);
+    CreateClip(double offset = .0, const wxString& name = wxEmptyString, const Interval* pToCopy = nullptr, bool copyGroupId = true);
 
     //! Create new clip and add it to this track.
     /*!
      Returns a pointer to the newly created clip, using this track's block
      factory but copying all else from the given clip, except possibly the
-     cutlines.
+     group ID.
      */
-    IntervalHolder CopyClip(const Interval& toCopy, bool copyCutlines);
+    IntervalHolder CopyClip(const Interval& toCopy, bool copyGroupId);
 
     /*!
     @pre t0 <= t1
@@ -766,7 +761,7 @@ public:
 
 private:
     // May assume precondition: t0 <= t1
-    void HandleClear(double t0, double t1, bool addCutLines, bool split, const bool moveClips, bool clearByTrimming = false);
+    void HandleClear(double t0, double t1, bool split, const bool moveClips, bool clearByTrimming = false);
 
     /*
      * @brief Copy/Paste operations must preserve beat durations, but time
@@ -782,7 +777,6 @@ private:
     //! @pre All clips intersecting [t0, t1) have unit stretch ratio
     static void JoinOne(WaveTrack& track, double t0, double t1);
     static void WriteOneXML(const WaveChannel& channel, XMLWriter& xmlFile, size_t iChannel, size_t nChannels);
-    void ExpandOneCutLine(double cutLinePosition, double* cutlineStart, double* cutlineEnd);
     void ApplyPitchAndSpeedOnIntervals(
         const std::vector<IntervalHolder>& intervals, const ProgressReporter& reportProgress);
     /*!
