@@ -131,6 +131,10 @@ protected:
 
     trackedit::SelectionMode selectionMode() const;
 
+    bool selectItemGroup(const trackedit::TrackItemKey& key, trackedit::SelectionMode mode, bool complete);
+    void handleItemRelease(const trackedit::TrackItemKey& key);
+    trackedit::ItemKeys m_pendingToggleDeselect;
+
     Qt::KeyboardModifiers keyboardModifiers() const;
 
     friend class TrackClipsSelectionTests;

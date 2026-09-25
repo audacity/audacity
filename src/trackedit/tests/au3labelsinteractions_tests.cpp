@@ -67,6 +67,59 @@ public:
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
 };
 
+TEST_F(Au3LabelsInteractionsTests, LabelsAreUngroupedByDefault)
+{
+    //! [GIVEN] A label track with one label
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("label")) };
+
+    //! [THEN] It belongs to no group
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(key), -1);
+    EXPECT_TRUE(m_labelsInteraction->labelsInGroup(-1).empty());
+}
+
+TEST_F(Au3LabelsInteractionsTests, SetLabelGroupIdNotifiesAndListsTheLabelInItsGroup)
+{
+    //! [GIVEN] Two labels on a track
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey first { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("first")) };
+    region.setTimes(3.0, 4.0);
+    const LabelKey second { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("second")) };
+
+    //! [EXPECT] The grouped label reports a change
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(1);
+
+    //! [WHEN] One label joins group 7
+    m_labelsInteraction->setLabelGroupId(first, 7);
+
+    //! [THEN] Only that label is listed in the group
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(first), 7);
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(second), -1);
+    EXPECT_EQ(m_labelsInteraction->labelsInGroup(7), LabelKeyList { first });
+}
+
+TEST_F(Au3LabelsInteractionsTests, LabelGroupIdSurvivesTrackCopy)
+{
+    //! [GIVEN] A grouped label
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("label")) };
+    m_labelsInteraction->setLabelGroupId(key, 5);
+
+    //! [WHEN] The track is copied
+    const auto copy = labelTrack->Copy(0.0, 10.0, false);
+    const auto labelCopy = static_cast<const Au3LabelTrack*>(copy.get());
+
+    //! [THEN] The copied label keeps the group id
+    ASSERT_EQ(labelCopy->GetLabels().size(), 1u);
+    EXPECT_EQ(labelCopy->GetLabels().front().GetGroupId(), 5);
+}
+
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneExists)
 {
     //! [GIVEN] There is a project without any label tracks
@@ -1059,6 +1112,65 @@ TEST_F(Au3LabelsInteractionsTests, CutLabelWithInvalidKey)
     //! [THEN] The original label is still in the track and unchanged
     ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Original label should still be present";
     ASSERT_EQ(labelTrack->GetLabel(0)->GetId(), labelId) << "Original label should still have correct ID";
+}
+
+TEST_F(Au3LabelsInteractionsTests, MoveLabelsToAnotherTrackKeepsGroupAndSelection)
+{
+    //! [GIVEN] Two label tracks, the first holding a grouped and selected label
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* fromTrack = ::LabelTrack::Create(tracks);
+    Au3LabelTrack* toTrack = ::LabelTrack::Create(tracks);
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { fromTrack->GetId(), fromTrack->AddLabel(region, wxString("Grouped")) };
+    Au3Label* label = fromTrack->GetLabelById(key.itemId);
+    label->SetGroupId(7);
+    label->SetSelected(true);
+
+    //! [WHEN] The label is moved one track down and later in time
+    const muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabels({ key }, 1.0, 1);
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val.size(), 1u);
+
+    //! [THEN] The moved label lives on the second track and keeps its group, selection, title and length
+    EXPECT_EQ(result.val.front().trackId, toTrack->GetId());
+    EXPECT_EQ(fromTrack->GetNumLabels(), 0);
+    ASSERT_EQ(toTrack->GetNumLabels(), 1);
+    const Au3Label* moved = toTrack->GetLabelById(result.val.front().itemId);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_EQ(moved->GetGroupId(), 7);
+    EXPECT_TRUE(moved->GetSelected());
+    EXPECT_EQ(moved->title, wxString("Grouped"));
+    EXPECT_DOUBLE_EQ(moved->getT0(), 2.0);
+    EXPECT_DOUBLE_EQ(moved->getT1(), 3.0);
+}
+
+TEST_F(Au3LabelsInteractionsTests, MoveLabelsToTrackKeepsGroupAndSelection)
+{
+    //! [GIVEN] Two label tracks, the first holding a grouped and selected label
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* fromTrack = ::LabelTrack::Create(tracks);
+    Au3LabelTrack* toTrack = ::LabelTrack::Create(tracks);
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { fromTrack->GetId(), fromTrack->AddLabel(region, wxString("Grouped")) };
+    Au3Label* label = fromTrack->GetLabelById(key.itemId);
+    label->SetGroupId(7);
+    label->SetSelected(true);
+
+    //! [WHEN] The label is sent to the second track
+    const muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabelsToTrack({ key }, toTrack->GetId());
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val.size(), 1u);
+
+    //! [THEN] The moved label keeps its group and selection
+    EXPECT_EQ(result.val.front().trackId, toTrack->GetId());
+    ASSERT_EQ(toTrack->GetNumLabels(), 1);
+    const Au3Label* moved = toTrack->GetLabelById(result.val.front().itemId);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_EQ(moved->GetGroupId(), 7);
+    EXPECT_TRUE(moved->GetSelected());
+    EXPECT_DOUBLE_EQ(moved->getT0(), 1.0);
 }
 
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsRight)

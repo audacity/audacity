@@ -350,6 +350,103 @@ TEST_F(Au3TracksInteractionTests, CopyNonContinuousTrackData)
     removeTrack(trackId);
 }
 
+TEST_F(Au3TracksInteractionTests, CopyNonContinuousLabelDataKeepsGroupId)
+{
+    //! [GIVEN] A label track with a grouped label
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
+            { 1.0, 2.0, "Label" }
+        });
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(labelTrack, nullptr);
+    Au3Label label = labelTrack->GetLabels().front();
+    label.SetGroupId(4);
+    labelTrack->SetLabel(0, label);
+
+    //! [WHEN] The label is copied as clipboard data
+    const ITrackDataPtr data = m_tracksInteraction->copyNonContinuousTrackData(labelTrackId, { { labelTrackId, label.GetId() } }, -1.0);
+    ASSERT_NE(data, nullptr);
+
+    //! [THEN] The copy keeps the group id and the offset time
+    const auto copiedTrack = std::static_pointer_cast<Au3LabelTrack>(std::static_pointer_cast<Au3TrackData>(data)->track());
+    ASSERT_EQ(copiedTrack->GetNumLabels(), 1);
+    EXPECT_EQ(copiedTrack->GetLabel(0)->GetGroupId(), 4);
+    EXPECT_DOUBLE_EQ(copiedTrack->GetLabel(0)->getT0(), 0.0);
+
+    // Cleanup
+    removeTrack(labelTrackId);
+}
+
+TEST_F(Au3TracksInteractionTests, CopiedLabelsKeepTheirSelection)
+{
+    //! [GIVEN] A label track with a selected label
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
+            { 1.0, 2.0, "Label" }
+        });
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(labelTrack, nullptr);
+    Au3Label label = labelTrack->GetLabels().front();
+    label.SetSelected(true);
+    labelTrack->SetLabel(0, label);
+
+    //! [WHEN] The label is copied both as a selected item and as part of a time range
+    const ITrackDataPtr itemData = m_tracksInteraction->copyNonContinuousTrackData(labelTrackId, { { labelTrackId, label.GetId() } }, 0.0);
+    const ITrackDataPtr rangeData = m_tracksInteraction->copyContinuousTrackData(labelTrackId, 0.0, 3.0);
+    ASSERT_NE(itemData, nullptr);
+    ASSERT_NE(rangeData, nullptr);
+
+    //! [THEN] Both copies are selected, just like copied clips are
+    for (const ITrackDataPtr& data : { itemData, rangeData }) {
+        const auto copiedTrack = std::static_pointer_cast<Au3LabelTrack>(std::static_pointer_cast<Au3TrackData>(data)->track());
+        ASSERT_EQ(copiedTrack->GetNumLabels(), 1);
+        EXPECT_TRUE(copiedTrack->GetLabel(0)->GetSelected());
+    }
+
+    // Cleanup
+    removeTrack(labelTrackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PastedLabelsAreSelectedLikePastedClips)
+{
+    //! [GIVEN] A selected clip and a selected label
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const TrackId waveTrackId = factory.addTrackFromTemplate("Wave Track", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
+            { 0.0, 1.0, "Label" }
+        });
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrackId));
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(waveTrack, nullptr);
+    ASSERT_NE(labelTrack, nullptr);
+    const WaveTrack::IntervalHolder clip = waveTrack->GetClip(0);
+    clip->SetSelected(true);
+    Au3Label label = labelTrack->GetLabels().front();
+    label.SetSelected(true);
+    labelTrack->SetLabel(0, label);
+
+    //! [GIVEN] Both are copied as selected items and their tracks are selected
+    const ITrackDataPtr clipData = m_tracksInteraction->copyNonContinuousTrackData(waveTrackId, { { waveTrackId, clip->GetId() } }, 0.0);
+    const ITrackDataPtr labelData = m_tracksInteraction->copyNonContinuousTrackData(labelTrackId, { { labelTrackId, label.GetId() } }, 0.0);
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { waveTrackId, labelTrackId }));
+
+    //! [WHEN] They are pasted further along the same tracks
+    auto projectWasModified = false;
+    const muse::Ret ret = m_tracksInteraction->paste({ clipData, labelData }, 5.0, false, false, true, projectWasModified);
+    ASSERT_EQ(ret, muse::make_ok()) << "The return value is not Ok";
+
+    //! [THEN] The pasted label is selected in the project just like the pasted clip
+    EXPECT_EQ(DomAccessor::findSelectedClips(projectRef()).size(), 2u);
+    EXPECT_EQ(DomAccessor::findSelectedLabels(projectRef()).size(), 2u);
+
+    // Cleanup
+    removeTrack(waveTrackId);
+    removeTrack(labelTrackId);
+}
+
 TEST_F(Au3TracksInteractionTests, CutTrackDataWithoutMovingClips)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
@@ -1579,6 +1676,54 @@ TEST_F(Au3TracksInteractionTests, PasteLabelTrackWhenWaveTrackSelected)
     removeTrack(sourceLabelTrackId);
     removeTrack(waveTrack2Id);
     removeTrack(dstLabelTrackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PasteClipsAndLabelsTogetherUsesOneTrackPerCopiedTrack)
+{
+    //! [GIVEN] A project with a label track and two wave tracks, the second wave track after everything selected
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
+            { 1.0, 2.0, "Label" }
+        });
+    const TrackId waveTrack1Id = factory.addTrackFromTemplate("Wave Track 1", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+    const TrackId waveTrack2Id = factory.addTrackFromTemplate("Wave Track 2", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+
+    //! [GIVEN] The clipboard holds a clip from the first wave track and the label
+    Au3WaveTrack* waveTrack1 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrack1Id));
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(waveTrack1, nullptr);
+    ASSERT_NE(labelTrack, nullptr);
+    const ITrackDataPtr clipData = std::make_shared<Au3TrackData>(waveTrack1->Copy(0.0, 1.0));
+    const ITrackDataPtr labelData = std::make_shared<Au3TrackData>(labelTrack->Copy(0.0, 10.0));
+
+    //! [GIVEN] The tracks of the copied items are selected
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { labelTrackId, waveTrack1Id }));
+
+    //! [WHEN] Both are pasted at once
+    auto projectWasModified = false;
+    const muse::Ret ret = m_tracksInteraction->paste({ clipData, labelData }, 5.0, false, false, true, projectWasModified);
+    ASSERT_EQ(ret, muse::make_ok()) << "The return value is not Ok";
+
+    //! [THEN] The clip lands on the first wave track only, the second one is untouched
+    EXPECT_EQ(waveTrack1->NIntervals(), 2u);
+    Au3WaveTrack* waveTrack2 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrack2Id));
+    ASSERT_NE(waveTrack2, nullptr);
+    EXPECT_EQ(waveTrack2->NIntervals(), 1u);
+
+    //! [THEN] The label is pasted at the paste position
+    ASSERT_EQ(labelTrack->GetNumLabels(), 2);
+    EXPECT_DOUBLE_EQ(labelTrack->GetLabel(1)->getT0(), 6.0);
+
+    // Cleanup
+    removeTrack(waveTrack1Id);
+    removeTrack(waveTrack2Id);
+    removeTrack(labelTrackId);
 }
 
 TEST_F(Au3TracksInteractionTests, PasteLabelTrackCreatesNewTrack)

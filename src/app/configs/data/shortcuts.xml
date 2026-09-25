@@ -758,11 +758,11 @@
         <key>sync-lock</key>
     </SC>
     <SC>
-        <key>group-clips</key>
+        <key>group-items</key>
         <seq>Ctrl+G</seq>
     </SC>
     <SC>
-        <key>ungroup-clips</key>
+        <key>ungroup-items</key>
         <seq>Ctrl+Shift+G</seq>
     </SC>
     <SC>

@@ -98,6 +98,9 @@ struct ItemKeys
     LabelKeyList labels;
 
     inline bool empty() const { return clips.empty() && labels.empty(); }
+    inline size_t size() const { return clips.size() + labels.size(); }
+
+    bool operator==(const ItemKeys&) const = default;
 };
 
 struct ItemTimeSpan

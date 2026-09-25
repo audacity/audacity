@@ -620,12 +620,12 @@ bool Au3ClipsInteraction::duplicateClips(const ClipKeyList& clipKeyList)
         newTracks.push_back(newTrack);
     }
 
-    std::vector<Au3WaveTrack*> copies;
+    std::vector<Au3Track*> copies;
     copies.reserve(newTracks.size());
     for (const auto& newTrack : newTracks) {
         copies.push_back(newTrack.get());
     }
-    utils::remapCopiedClipGroups(*prj, projectTracks, copies);
+    utils::remapCopiedItemGroups(*prj, projectTracks, copies);
 
     for (const auto& newTrack : newTracks) {
         projectTracks.Add(newTrack);
@@ -881,56 +881,27 @@ void Au3ClipsInteraction::setClipGroupId(const ClipKey& clipKey, int64_t id)
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 }
 
-void Au3ClipsInteraction::groupClips(const ClipKeyList& clipKeyList)
-{
-    const auto newGroupId = determineNewGroupId(clipKeyList);
-
-    for (const auto& clipKey : clipKeyList) {
-        setClipGroupId(clipKey, newGroupId);
-    }
-}
-
-void Au3ClipsInteraction::ungroupClips(const ClipKeyList& clipKeyList)
-{
-    for (const auto& clipKey : clipKeyList) {
-        setClipGroupId(clipKey, -1);
-    }
-}
-
 ClipKeyList Au3ClipsInteraction::clipsInGroup(int64_t id) const
 {
+    ClipKeyList clips;
     if (id == -1) {
-        return ClipKeyList();
+        return clips;
     }
 
-    ClipKeyList groupedClips;
+    for (const Au3Track* track : Au3TrackList::Get(projectRef())) {
+        const auto waveTrack = dynamic_cast<const Au3WaveTrack*>(track);
+        if (!waveTrack) {
+            continue;
+        }
 
-    auto prj = globalContext()->currentTrackeditProject();
-    for (const auto& trackId : prj->trackIdList()) {
-        for (const auto& clipKey : prj->clipList(trackId)) {
-            if (clipGroupId(clipKey.key) == id) {
-                groupedClips.push_back(clipKey.key);
+        for (const auto& clip : waveTrack->Intervals()) {
+            if (clip->GetGroupId() == id) {
+                clips.push_back(ClipKey { waveTrack->GetId(), clip->GetId() });
             }
         }
     }
 
-    return groupedClips;
-}
-
-int64_t Au3ClipsInteraction::determineNewGroupId(const ClipKeyList& clipKeyList) const
-{
-    if (!clipKeyList.empty()) {
-        //! NOTE: Check if any clip already belongs to a group.
-        //        If there are multiple groups, the first group is used.
-
-        for (const auto& selectedClip : clipKeyList) {
-            if (clipGroupId(selectedClip) != -1) {
-                return clipGroupId(selectedClip);
-            }
-        }
-    }
-
-    return globalContext()->currentTrackeditProject()->createNewGroupID();
+    return clips;
 }
 
 NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset)

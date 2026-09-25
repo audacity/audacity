@@ -85,6 +85,9 @@ public:
     bool GetSelected() const;
     void SetSelected(bool selected);
 
+    int64_t GetGroupId() const;
+    void SetGroupId(int64_t id);
+
 public:
     SelectedRegion selectedRegion;
     wxString title; /// Text of the label.
@@ -101,6 +104,7 @@ public:
 private:
     int64_t mId{ 0 };
     bool mSelected{ false };
+    int64_t mGroupId{ -1 };
 };
 
 using LabelArray = std::vector<LabelStruct>;
@@ -177,6 +181,8 @@ public:
     void OnLabelAdded(const wxString& title, int pos);
     //This returns the id of the label we just added.
     int64_t AddLabel(const SelectedRegion& region, const wxString& title);
+    //Adds a copy of the label under a new id, keeping its title, selection and group.
+    int64_t AddLabel(const LabelStruct& label);
 
     void DeleteLabel(int index);
     void DeleteLabelById(int64_t id);
@@ -230,6 +236,7 @@ public:
     size_t NIntervals() const override;
 
 private:
+    int64_t InsertLabel(const LabelStruct& label);
     std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
     override;
 

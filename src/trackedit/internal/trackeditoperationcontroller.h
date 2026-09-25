@@ -18,6 +18,7 @@
 
 #include "itrackeditinteraction.h"
 #include "iundomanager.h"
+#include "itracknavigationcontroller.h"
 
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Contextable, public muse::async::Asyncable
@@ -31,6 +32,7 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::ContextInject<importexport::IImporter> importer { this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<ITrackNavigationController> trackNavigationController{ this };
 
 public:
     TrackeditOperationController(const muse::modularity::ContextPtr& ctx, std::unique_ptr<IUndoManager> undoManager);
@@ -120,12 +122,6 @@ public:
 
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
-    int64_t clipGroupId(const trackedit::ClipKey& clipKey) const override;
-    void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) override;
-    void groupClips(const trackedit::ClipKeyList& clipKeyList) override;
-    void ungroupClips(const trackedit::ClipKeyList& clipKeyList) override;
-    ClipKeyList clipsInGroup(int64_t id) const override;
-
     bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
     bool changeTracksRate(const TrackIdList& tracksIds, int rate) override;
 
@@ -159,15 +155,20 @@ public:
 
     void resetLabelStretchState() override;
 
+    bool copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys) override;
+    bool cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips) override;
+    int64_t itemGroupId(const TrackItemKey& key) const override;
+    void groupItems(const TrackItemKeyList& keys) override;
+    void ungroupItems(const TrackItemKeyList& keys) override;
+    ItemKeys itemsInGroup(int64_t id) const override;
+
     muse::Progress progress() const override;
 
 private:
-    struct MovedItems {
-        ClipKeyList clips;
-        LabelKeyList labels;
-    };
+    bool isLabelItem(const TrackItemKey& key) const;
+    void setItemGroupId(const TrackItemKey& key, int64_t id);
 
-    muse::RetVal<MovedItems> moveItems(const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset);
+    muse::RetVal<ItemKeys> moveItems(const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset);
 
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
     void pushProjectHistoryDuplicateState();
@@ -185,6 +186,7 @@ private:
     std::pair<std::string, std::string> stretchHistoryDescriptions(const ClipKeyList& clipKeyList, bool hasLabels, bool isLeft) const;
 
     const std::unique_ptr<IUndoManager> m_undoManager;
+    bool m_movingItems = false;
     muse::async::Notification m_cancelDragEditRequested;
 };
 }

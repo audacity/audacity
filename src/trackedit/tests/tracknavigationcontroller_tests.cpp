@@ -13,6 +13,7 @@
 #include "mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "mocks/selectioncontrollermock.h"
+#include "mocks/projecthistorymock.h"
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/trackeditprojectmock.h"
 
@@ -44,6 +45,7 @@ public:
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
         m_trackeditInteraction = std::make_shared<NiceMock<TrackeditInteractionMock> >();
         m_trackeditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
+        m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
 
         m_testCtx = std::make_shared<muse::modularity::Context>(999);
         m_controller = std::make_shared<TrackNavigationController>(m_testCtx);
@@ -62,6 +64,10 @@ public:
         m_controller->globalContext.set(m_globalContext);
         m_controller->selectionController.set(m_selectionController);
         m_controller->trackeditInteraction.set(m_trackeditInteraction);
+        m_controller->projectHistory.set(m_projectHistory);
+
+        ON_CALL(*m_projectHistory, historyChanged())
+        .WillByDefault(Return(m_historyChanged));
 
         ON_CALL(*m_globalContext, currentTrackeditProject())
         .WillByDefault(Return(m_trackeditProject));
@@ -180,6 +186,8 @@ public:
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
     std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
+    std::shared_ptr<ProjectHistoryMock> m_projectHistory;
+    muse::async::Channel<HistoryEvent> m_historyChanged;
 
     std::map<muse::actions::ActionCode, IActionsDispatcher::ActionCallBackWithNameAndData> m_actionCallbacks;
 };
@@ -545,5 +553,129 @@ TEST_F(TrackNavigationControllerTests, DownFromRulerWithNoRulerBelowKeepsFocus)
 
     //! [THEN] The focus is unchanged
     EXPECT_EQ(m_controller->focus(), TrackFocus::ruler(1));
+}
+
+/**
+ * A history event, such as undo, can remove the focused item or recreate it under
+ * a new id. The focus then falls back to the item's track, and stays put while
+ * the item still exists.
+ */
+TEST_F(TrackNavigationControllerTests, FocusFallsBackToTrackWhenItemVanishesInHistory)
+{
+    const TrackId trackId = 1;
+    const Clip clip = makeClip(trackId, 10, 0.0);
+    setupTracks({ { trackId, { clip } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item(clip.key));
+
+    std::optional<TrackFocus> published;
+    m_controller->focusChanged().onReceive(m_controller.get(), [&published](const TrackFocus& focus, bool) {
+        published = focus;
+    });
+
+    //! [WHEN] History changes while the item still exists
+    m_historyChanged.send(HistoryEvent::NewState);
+
+    //! [THEN] The focus stays on the item
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item(clip.key));
+    EXPECT_FALSE(published.has_value());
+
+    //! [WHEN] Undo removes the item from the project
+    setupTracks({ { trackId, {} } });
+    m_historyChanged.send(HistoryEvent::RestoredState);
+
+    //! [THEN] The focus falls back to the item's track
+    EXPECT_EQ(m_controller->focus(), TrackFocus::track(trackId));
+    EXPECT_EQ(published, TrackFocus::track(trackId));
+}
+
+/**
+ * The navigation controls lag behind the project: after a clip moved to another
+ * track, re-activating its old control asks to focus a key that no longer names
+ * an item. Such a request focuses the item's track instead.
+ */
+TEST_F(TrackNavigationControllerTests, FocusingAVanishedItemFocusesItsTrackInstead)
+{
+    const TrackId trackId = 1;
+    const Clip clip = makeClip(trackId, 10, 0.0);
+    setupTracks({ { trackId, { clip } } });
+    initController();
+
+    std::optional<TrackFocus> published;
+    m_controller->focusChanged().onReceive(m_controller.get(), [&published](const TrackFocus& focus, bool) {
+        published = focus;
+    });
+
+    //! [WHEN] A key of a clip that is not on the track any more is focused
+    m_controller->setFocus(TrackFocus::item({ trackId, 99 }));
+
+    //! [THEN] The focus lands on the track, not on the vanished clip
+    EXPECT_EQ(m_controller->focus(), TrackFocus::track(trackId));
+    EXPECT_EQ(published, TrackFocus::track(trackId));
+
+    //! [WHEN] An existing clip is focused
+    m_controller->setFocus(TrackFocus::item(clip.key));
+
+    //! [THEN] The focus lands on it
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item(clip.key));
+}
+
+/**
+ * Enter on a focused item selects it the way a click does: the whole group when it
+ * is grouped, the item alone otherwise, and a second Enter on a selected group
+ * deselects it. Ctrl+Enter toggles the whole group in the same way.
+ */
+TEST_F(TrackNavigationControllerTests, EnterOnGroupedItemSelectsItsWholeGroup)
+{
+    setupTracks({ { 1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
+    const ItemKeys group { { { 1, 100 }, { 1, 200 } }, { { 2, 10 } } };
+    ON_CALL(*m_trackeditInteraction, itemGroupId(TrackItemKey { 1, 100 })).WillByDefault(Return(int64_t(7)));
+    ON_CALL(*m_trackeditInteraction, itemsInGroup(int64_t(7))).WillByDefault(Return(group));
+
+    EXPECT_CALL(*m_selectionController, setSelectedItems(group, true)).Times(1);
+    invokeAction("track-view-replace-selection");
+}
+
+TEST_F(TrackNavigationControllerTests, EnterOnUngroupedItemSelectsItAlone)
+{
+    setupTracks({ { 1, { makeClip(1, 100, 0.0) } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
+    ON_CALL(*m_trackeditInteraction, itemGroupId(_)).WillByDefault(Return(int64_t(-1)));
+
+    EXPECT_CALL(*m_selectionController, setSelectedItems(ItemKeys { { { 1, 100 } }, {} }, true)).Times(1);
+    invokeAction("track-view-replace-selection");
+}
+
+TEST_F(TrackNavigationControllerTests, EnterOnSelectedGroupDeselectsIt)
+{
+    setupTracks({ { 1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
+    const ItemKeys group { { { 1, 100 }, { 1, 200 } }, { { 2, 10 } } };
+    ON_CALL(*m_trackeditInteraction, itemGroupId(TrackItemKey { 1, 100 })).WillByDefault(Return(int64_t(7)));
+    ON_CALL(*m_trackeditInteraction, itemsInGroup(int64_t(7))).WillByDefault(Return(group));
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(group.clips));
+    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(group.labels));
+
+    EXPECT_CALL(*m_selectionController, setSelectedItems(ItemKeys {}, true)).Times(1);
+    invokeAction("track-view-replace-selection");
+}
+
+TEST_F(TrackNavigationControllerTests, ToggleOnGroupedItemAddsItsWholeGroup)
+{
+    setupTracks({ { 1, { makeClip(1, 100, 0.0), makeClip(1, 200, 2.0) } } });
+    initController();
+    m_controller->setFocus(TrackFocus::item({ 1, 100 }));
+    const ItemKeys group { { { 1, 100 }, { 1, 200 } }, { { 2, 10 } } };
+    ON_CALL(*m_trackeditInteraction, itemGroupId(TrackItemKey { 1, 100 })).WillByDefault(Return(int64_t(7)));
+    ON_CALL(*m_trackeditInteraction, itemsInGroup(int64_t(7))).WillByDefault(Return(group));
+
+    EXPECT_CALL(*m_selectionController, addSelectedClip(TrackItemKey { 1, 100 })).Times(1);
+    EXPECT_CALL(*m_selectionController, addSelectedClip(TrackItemKey { 1, 200 })).Times(1);
+    EXPECT_CALL(*m_selectionController, addSelectedLabel(TrackItemKey { 2, 10 })).Times(1);
+    invokeAction("track-view-toggle-selection");
 }
 }

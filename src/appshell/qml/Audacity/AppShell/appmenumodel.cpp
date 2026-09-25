@@ -628,8 +628,8 @@ MenuItemList AppMenuModel::makeClipItems()
         makeMenuItem("disjoin"),
         makeMenuItem("join"),
         makeSeparator(),
-        makeMenuItem("group-clips"),
-        makeMenuItem("ungroup-clips")
+        makeMenuItem("group-items"),
+        makeMenuItem("ungroup-items")
     };
 
     return items;

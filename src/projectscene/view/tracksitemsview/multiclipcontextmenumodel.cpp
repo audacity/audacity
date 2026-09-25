@@ -51,8 +51,8 @@ MenuItemList MultiClipContextMenuModel::makeItems()
                      //: Verb: context menu command that joins the selected clips
                      muse::TranslatableString("multiclip", "Join")),
         makeSeparator(),
-        makeMenuItem("group-clips"),
-        makeMenuItem("ungroup-clips"),
+        makeMenuItem("group-items"),
+        makeMenuItem("ungroup-items"),
     };
 
     return items;

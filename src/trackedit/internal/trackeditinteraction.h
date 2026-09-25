@@ -99,12 +99,6 @@ private:
 
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
-    int64_t clipGroupId(const trackedit::ClipKey& clipKey) const override;
-    void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) override;
-    void groupClips(const trackedit::ClipKeyList& clipKeyList) override;
-    void ungroupClips(const trackedit::ClipKeyList& clipKeyList) override;
-    ClipKeyList clipsInGroup(int64_t id) const override;
-
     bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
     bool changeTracksRate(const TrackIdList& tracksIds, int rate) override;
 
@@ -137,6 +131,13 @@ private:
     bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) override;
 
     void resetLabelStretchState() override;
+
+    bool copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys) override;
+    bool cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips) override;
+    int64_t itemGroupId(const TrackItemKey& key) const override;
+    void groupItems(const TrackItemKeyList& keys) override;
+    void ungroupItems(const TrackItemKeyList& keys) override;
+    ItemKeys itemsInGroup(int64_t id) const override;
 
     muse::Progress progress() const override;
 

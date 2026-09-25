@@ -4,6 +4,8 @@
 #include <gtest/gtest.h>
 #include "global/defer.h"
 
+#include <cmath>
+
 #include "../internal/au3/au3clipsinteraction.h"
 #include "../internal/au3/au3trackdata.h"
 
@@ -716,6 +718,40 @@ TEST_F(Au3ClipsInteractionTests, MoveAcrossTracksPreservesIntermediateAndEmptyTr
     EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
 }
 
+TEST_F(Au3ClipsInteractionTests, MoveStereoClipsUpIntoOccupiedMonoTrackReturnsExistingClips)
+{
+    //! [GIVEN] A mono track holding a clip above a stereo track holding two clips
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto upper = factory.createTrackFromTemplate("upper", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto lower = factory.createTrackFromTemplate("lower", {
+            { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } },
+            { 1.0, { { 0.1, TrackTemplateFactory::createNoise } } }
+        });
+    lower = lower->MonoToStereo();
+    const TrackId upperId = factory.addTrackToProject(upper);
+    const TrackId lowerId = factory.addTrackToProject(lower);
+    const ClipKeyList keys {
+        { lowerId, lower->GetSortedClipByIndex(0)->GetId() },
+        { lowerId, lower->GetSortedClipByIndex(1)->GetId() }
+    };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { lowerId }));
+
+    //! [WHEN] Both stereo clips are moved up, which mixes them down to mono
+    const auto result = m_clipsInteraction->moveClips(keys, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val.size(), 2u);
+
+    //! [THEN] Every returned key names a clip that exists on the upper track
+    const Au3WaveTrack* upperTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(upperId));
+    ASSERT_NE(upperTrack, nullptr);
+    EXPECT_EQ(upperTrack->NChannels(), 1u);
+    EXPECT_EQ(upperTrack->NIntervals(), 3u);
+    for (const ClipKey& key : result.val) {
+        EXPECT_EQ(key.trackId, upperId);
+        EXPECT_NE(DomAccessor::findWaveClip(const_cast<Au3WaveTrack*>(upperTrack), key.itemId), nullptr) << "clip " << key.itemId;
+    }
+}
+
 class Au3ClipsDropTests : public Au3ClipsInteractionTests, public testing::WithParamInterface<std::tuple<bool, bool> >
 {
 };
@@ -1277,6 +1313,110 @@ constexpr double midpointOf(double start, double end)
 {
     return start + (end - start) / 2.0;
 }
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipOfAnotherRateOntoNeighbourStartTrimsPastItsEnd)
+{
+    //! [GIVEN] A 44.1 kHz track with a clip, and below it a 48 kHz track with a clip whose end
+    //! falls just above a 44.1 kHz sample, so a trim by the exact overlap would round back into it
+    TrackTemplateFactory factory44(projectRef(), DEFAULT_SAMPLE_RATE);
+    TrackTemplateFactory factory48(projectRef(), 48000.0);
+    const auto destination = factory44.createTrackFromTemplate("destination", { { 0.9, { { 1.1, TrackTemplateFactory::createNoise } } } });
+    const auto source = factory48.createTrackFromTemplate("source", { { 0.5, { { 24007.5 / 48000.0,
+                                                                  TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory44.addTrackToProject(destination);
+    const TrackId sourceId = factory48.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double movedEnd = source->GetSortedClipByIndex(0)->GetPlayEndTime();
+    ASSERT_LT(std::fmod(movedEnd * DEFAULT_SAMPLE_RATE, 1.0), 0.5) << "the layout must round the neighbour's edge down";
+
+    //! [WHEN] The 48 kHz clip is moved up onto the neighbour's start
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour was trimmed past the moved clip's end and nothing overlaps
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_GE(neighbour->GetPlayStartTime(), moved->GetPlayEndTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipOntoNeighbourAtExactSampleBoundaryLeavesNoGap)
+{
+    //! [GIVEN] Two same-rate clips whose overlap, 12 samples, computes to a hair above 12 in floating point
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto destination = factory.createTrackFromTemplate("destination", { { 1.0 / DEFAULT_SAMPLE_RATE, { { 0.1,
+                                                                     TrackTemplateFactory::createNoise } } } });
+    const auto source = factory.createTrackFromTemplate("source", { { 0.0, { { 13.5 / DEFAULT_SAMPLE_RATE,
+                                                                TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory.addTrackToProject(destination);
+    const TrackId sourceId = factory.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double overlap = (source->GetSortedClipByIndex(0)->GetPlayEndTime() - destination->GetSortedClipByIndex(0)->GetPlayStartTime())
+                           * DEFAULT_SAMPLE_RATE;
+    ASSERT_GT(overlap, 12.0) << "the layout must compute the overlap just above a whole sample count";
+    ASSERT_LT(overlap, 12.0001);
+
+    //! [WHEN] The clip is moved up onto the neighbour's start
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour starts exactly where the moved clip ends, with neither an overlap nor a gap
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_DOUBLE_EQ(neighbour->GetPlayStartTime(), moved->GetPlayEndTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipOfAnotherRateOntoNeighbourEndTrimsBeforeItsStart)
+{
+    //! [GIVEN] A 44.1 kHz track with a clip, and below it a 48 kHz clip whose start falls just
+    //! below a 44.1 kHz sample and which reaches past the neighbour's end, so a trim by the
+    //! exact overlap would round forward into it
+    TrackTemplateFactory factory44(projectRef(), DEFAULT_SAMPLE_RATE);
+    TrackTemplateFactory factory48(projectRef(), 48000.0);
+    const auto destination = factory44.createTrackFromTemplate("destination", { { 0.2, { { 0.8, TrackTemplateFactory::createNoise } } } });
+    const auto source = factory48.createTrackFromTemplate("source", { { 24013.0 / 48000.0, { { 1.0,
+                                                                  TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory44.addTrackToProject(destination);
+    const TrackId sourceId = factory48.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double movedStart = source->GetSortedClipByIndex(0)->GetPlayStartTime();
+    ASSERT_GT(std::fmod(movedStart * DEFAULT_SAMPLE_RATE, 1.0), 0.5) << "the layout must round the neighbour's edge up";
+
+    //! [WHEN] The 48 kHz clip is moved up onto the neighbour's end
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour was trimmed before the moved clip's start and nothing overlaps
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_LE(neighbour->GetPlayEndTime(), moved->GetPlayStartTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
 }
 
 TEST_F(Au3ClipsInteractionTests, ChangeClipStartTimeOntoNeighbourResolvesOverlap)

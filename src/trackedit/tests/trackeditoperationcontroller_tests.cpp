@@ -6,11 +6,17 @@
 #include "../internal/trackeditoperationcontroller.h"
 #include "../internal/au3/au3clipsinteraction.h"
 #include "../internal/au3/au3labelsinteraction.h"
+#include "../internal/au3/au3tracksinteraction.h"
+#include "../internal/au3/au3trackdata.h"
 #include "../internal/au3/au3projecthistory.h"
 #include "../internal/au3/au3selectioncontroller.h"
 #include "au3interactiontestbase.h"
 #include "mocks/projecthistorymock.h"
 #include "mocks/clipsinteractionmock.h"
+#include "mocks/clipboardmock.h"
+#include "mocks/tracknavigationcontrollermock.h"
+#include "mocks/trackeditconfigurationmock.h"
+#include "interactive/tests/mocks/interactivemock.h"
 #include "trackediterrors.h"
 #include "spectrogram/internal/frequencyselectioncontroller.h"
 #include "spectrogram/internal/au3/au3frequencyselectionrestorer.h"
@@ -48,7 +54,16 @@ public:
         ioc->registerExport<ISelectionController>("utests", m_selection);
         ioc->registerExport<IClipsInteraction>("utests", m_clips);
         ioc->registerExport<ILabelsInteraction>("utests", m_labels);
+        ioc->registerExport<ITracksInteraction>("utests", std::make_shared<Au3TracksInteraction>(ctx));
+        m_clipboard = std::make_shared<NiceMock<ClipboardMock> >();
+        ioc->registerExport<ITrackeditClipboard>("utests", m_clipboard);
         ioc->registerExport<IProjectHistory>("utests", m_history);
+        m_navigation = std::make_shared<NiceMock<TrackNavigationControllerMock> >();
+        ioc->registerExport<ITrackNavigationController>("utests", m_navigation);
+        m_configuration = std::make_shared<NiceMock<TrackeditConfigurationMock> >();
+        muse::modularity::globalIoc()->registerExport<ITrackeditConfiguration>("utests", m_configuration);
+        m_interactive = std::make_shared<NiceMock<muse::InteractiveMock> >();
+        ioc->registerExport<muse::IInteractive>("utests", m_interactive);
         auto frequencyRestorer = std::make_unique<spectrogram::FrequencySelectionRestorer>(ctx);
         auto frequencySelection = std::make_shared<spectrogram::FrequencySelectionController>(ctx, std::move(frequencyRestorer));
         ioc->registerExport<spectrogram::IFrequencySelectionController>("utests", frequencySelection);
@@ -91,6 +106,7 @@ public:
     {
         Au3InteractionTestBase::TearDown();
         m_operation.reset();
+        muse::modularity::globalIoc()->unregister<ITrackeditConfiguration>("utests");
         muse::modularity::removeIoC(m_testCtx);
     }
 
@@ -119,6 +135,10 @@ public:
     std::shared_ptr<Au3ClipsInteraction> m_clips;
     std::shared_ptr<Au3LabelsInteraction> m_labels;
     std::shared_ptr<ProjectHistoryMock> m_history;
+    std::shared_ptr<TrackNavigationControllerMock> m_navigation;
+    std::shared_ptr<TrackeditConfigurationMock> m_configuration;
+    std::shared_ptr<ClipboardMock> m_clipboard;
+    std::shared_ptr<muse::InteractiveMock> m_interactive;
     std::unique_ptr<Au3ProjectHistory> m_realHistory;
     std::unique_ptr<TrackeditOperationController> m_operation;
     ClipKey m_sourceClip;
@@ -126,6 +146,34 @@ public:
     TrackId m_destinationClipTrack;
     TrackId m_destinationLabelTrack;
 };
+
+TEST_P(TrackeditOperationMoveTests, GroupItemsJoinsClipAndLabelUnderOneId)
+{
+    //! [GIVEN] The project resolves track types and hands out group id 7
+    ON_CALL(*m_trackEditProject, track(_)).WillByDefault([this](TrackId id) -> std::optional<Track> {
+        const auto* track = DomAccessor::findTrack(projectRef(), Au3TrackId(id));
+        return track ? std::optional<Track>(DomConverter::track(track)) : std::nullopt;
+    });
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault(Return(int64_t(7)));
+
+    //! [WHEN] The clip and the label are grouped
+    m_operation->groupItems({ m_sourceClip, m_sourceLabel });
+
+    //! [THEN] Both share the id and the group lists each of them
+    EXPECT_EQ(m_operation->itemGroupId(m_sourceClip), 7);
+    EXPECT_EQ(m_operation->itemGroupId(m_sourceLabel), 7);
+    const ItemKeys group = m_operation->itemsInGroup(7);
+    EXPECT_EQ(group.clips, ClipKeyList { m_sourceClip });
+    EXPECT_EQ(group.labels, LabelKeyList { m_sourceLabel });
+
+    //! [WHEN] The label is ungrouped on its own
+    m_operation->ungroupItems({ m_sourceLabel });
+
+    //! [THEN] It leaves the group and the clip stays
+    EXPECT_EQ(m_operation->itemGroupId(m_sourceLabel), -1);
+    EXPECT_EQ(m_operation->itemGroupId(m_sourceClip), 7);
+    EXPECT_TRUE(m_operation->itemsInGroup(7).labels.empty());
+}
 
 TEST_P(TrackeditOperationMoveTests, MixedMoveUpdatesBothSelectionsBeforeHistory)
 {
@@ -167,6 +215,202 @@ TEST_P(TrackeditOperationMoveTests, MixedMoveUpdatesBothSelectionsBeforeHistory)
     EXPECT_EQ(m_selection->selectedLabels().front().trackId, m_destinationLabelTrack);
     EXPECT_EQ(m_selection->leftMostSelectedLabelStartTime(), 2.5);
     EXPECT_EQ(DomAccessor::findSelectedLabels(projectRef()), m_selection->selectedLabels());
+}
+
+TEST_P(TrackeditOperationMoveTests, MixedMoveDropsFocusFromMovedItemBeforeAnythingIsPublished)
+{
+    //! [GIVEN] The focus sits on the item that is about to change tracks
+    ON_CALL(*m_navigation, focus()).WillByDefault(Return(TrackFocus::item(GetParam() ? m_sourceLabel : m_sourceClip)));
+    bool focusDropped = false;
+    EXPECT_CALL(*m_navigation, setFocus(_, _)).WillOnce([&focusDropped](const TrackFocus& focus, bool) {
+        EXPECT_TRUE(focus.isTrack());
+        focusDropped = true;
+    });
+
+    //! [GIVEN] Nothing observes the move while the focus still names the source key
+    const auto expectFocusDropped = [&focusDropped]() {
+        EXPECT_TRUE(focusDropped);
+    };
+    ON_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).WillByDefault([&](const Track&) { expectFocusDropped(); });
+    ON_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).WillByDefault([&](const Clip&) { expectFocusDropped(); });
+    m_selection->clipsSelected().onReceive(m_operation.get(), [&](const ClipKeyList&) { expectFocusDropped(); });
+    m_selection->labelsSelected().onReceive(m_operation.get(), [&](const LabelKeyList&) { expectFocusDropped(); });
+
+    //! [WHEN] The mixed selection is moved one track down
+    const auto result = move(0.5, 1);
+    ASSERT_TRUE(result.ret);
+    EXPECT_TRUE(focusDropped);
+}
+
+TEST_P(TrackeditOperationMoveTests, MixedMoveLeavesFocusOnUnmovedItem)
+{
+    //! [GIVEN] The focus sits on the track panel, not on a moved item
+    ON_CALL(*m_navigation, focus()).WillByDefault(Return(TrackFocus::track(m_sourceClip.trackId)));
+    EXPECT_CALL(*m_navigation, setFocus(_, _)).Times(0);
+
+    //! [WHEN] The mixed selection is moved one track down
+    const auto result = move(0.5, 1);
+    ASSERT_TRUE(result.ret);
+}
+
+TEST_P(TrackeditOperationMoveTests, MixedMoveUpWithMonoMixdownPublishesExistingClips)
+{
+    //! [GIVEN] A mono track holding a clip above a stereo track holding two grouped clips, and two grouped labels
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto upper = factory.createTrackFromTemplate("upper", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto lower = factory.createTrackFromTemplate("lower", {
+            { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } },
+            { 1.0, { { 0.1, TrackTemplateFactory::createNoise } } }
+        });
+    lower = lower->MonoToStereo();
+    const TrackId upperId = factory.addTrackToProject(upper);
+    const TrackId lowerId = factory.addTrackToProject(lower);
+    const ClipKeyList clips {
+        { lowerId, lower->GetSortedClipByIndex(0)->GetId() },
+        { lowerId, lower->GetSortedClipByIndex(1)->GetId() }
+    };
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(m_sourceLabel.trackId));
+    const LabelKey secondLabel { m_sourceLabel.trackId, labelTrack->AddLabel(SelectedRegion(4.0, 5.0), wxString()) };
+    ON_CALL(*m_trackEditProject, track(_)).WillByDefault([this](TrackId id) -> std::optional<Track> {
+        const auto* track = DomAccessor::findTrack(projectRef(), Au3TrackId(id));
+        return track ? std::optional<Track>(DomConverter::track(track)) : std::nullopt;
+    });
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault(Return(int64_t(7)));
+    m_operation->groupItems({ clips.at(0), clips.at(1), m_sourceLabel, secondLabel });
+    m_selection->setSelectedClips(clips, true);
+    m_selection->setSelectedLabels({ m_sourceLabel, secondLabel }, true);
+    ON_CALL(*m_navigation, focus()).WillByDefault(Return(TrackFocus::item(clips.front())));
+
+    //! [GIVEN] Every published clip key must name an existing clip
+    int publications = 0;
+    m_selection->clipsSelected().onReceive(m_operation.get(), [&](const ClipKeyList& keys) {
+        ++publications;
+        for (const ClipKey& key : keys) {
+            auto* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(key.trackId));
+            ASSERT_NE(track, nullptr) << "track " << key.trackId;
+            EXPECT_NE(DomAccessor::findWaveClip(track, key.itemId), nullptr) << "clip " << key.itemId << " on track " << key.trackId;
+        }
+    });
+
+    //! [WHEN] The group is moved up by one track, which mixes the clips down to mono
+    const auto result = m_operation->moveClips(clips, 0.2, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The clips landed on the upper track and stayed grouped with the labels
+    ASSERT_EQ(result.val.size(), 2u);
+    for (const ClipKey& key : result.val) {
+        EXPECT_EQ(key.trackId, upperId);
+        EXPECT_EQ(m_operation->itemGroupId(key), m_operation->itemGroupId(m_sourceLabel));
+    }
+    EXPECT_GE(publications, 1);
+    checkSelection();
+}
+
+TEST_P(TrackeditOperationMoveTests, MoveIgnoresDragCancelArrivingWhileAskingAboutMixdown)
+{
+    //! [GIVEN] A mono track holding a clip above a stereo track holding two clips, saved as the drag's starting state
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto upper = factory.createTrackFromTemplate("upper", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto lower = factory.createTrackFromTemplate("lower", {
+            { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } },
+            { 1.0, { { 0.1, TrackTemplateFactory::createNoise } } }
+        });
+    lower = lower->MonoToStereo();
+    const TrackId upperId = factory.addTrackToProject(upper);
+    const TrackId lowerId = factory.addTrackToProject(lower);
+    const ClipKeyList clips {
+        { lowerId, lower->GetSortedClipByIndex(0)->GetId() },
+        { lowerId, lower->GetSortedClipByIndex(1)->GetId() }
+    };
+    m_realHistory->modifyState(false);
+    ON_CALL(*m_history, interactionOngoing()).WillByDefault(Return(true));
+    ON_CALL(*m_history, rollbackState()).WillByDefault([this]() { m_realHistory->rollbackState(); });
+    m_selection->setSelectedClips(clips, true);
+    m_selection->setSelectedLabels({}, true);
+
+    //! [GIVEN] Opening the mixdown question cancels the drag's mouse grab, which the view answers with a drag-edit cancel
+    ON_CALL(*m_configuration, askBeforeConvertingToMonoOrStereo()).WillByDefault(Return(true));
+    ON_CALL(*m_interactive, buttonData(_)).WillByDefault([](muse::IInteractive::Button button) {
+        return muse::IInteractive::ButtonData(static_cast<int>(button), "");
+    });
+    ON_CALL(*m_interactive, warningSync(_, _, _, _, _, _)).WillByDefault([this](auto&&...) {
+        m_operation->cancelItemDragEdit();
+        return muse::IInteractive::Result(static_cast<int>(muse::IInteractive::Button::Yes), true);
+    });
+
+    //! [GIVEN] Every published clip key must name an existing clip
+    m_selection->clipsSelected().onReceive(m_operation.get(), [&](const ClipKeyList& keys) {
+        for (const ClipKey& key : keys) {
+            auto* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(key.trackId));
+            ASSERT_NE(track, nullptr) << "track " << key.trackId;
+            EXPECT_NE(DomAccessor::findWaveClip(track, key.itemId), nullptr) << "clip " << key.itemId;
+        }
+    });
+
+    //! [WHEN] The clips are moved up, which asks about the mixdown while the move is under way
+    const auto result = m_operation->moveClips(clips, 0.2, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The stray cancel changed nothing and the clips landed on the upper track
+    const Au3WaveTrack* upperTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(upperId));
+    ASSERT_NE(upperTrack, nullptr);
+    EXPECT_EQ(upperTrack->NIntervals(), 3u);
+    for (const ClipKey& key : result.val) {
+        EXPECT_EQ(key.trackId, upperId);
+    }
+    checkSelection();
+}
+
+TEST_P(TrackeditOperationMoveTests, CopyItemsCopiesEachTrackOfTheItemsShiftedToTheLeftmostItem)
+{
+    //! [GIVEN] Only the clip's track is selected: the label is focused, not selected, as the keyboard leaves it
+    m_selection->setSelectedTracks({ m_sourceClip.trackId }, true);
+
+    //! [EXPECT] The clipboard is cleared and gets one copy per track that holds an item, without touching the history
+    std::vector<ITrackDataPtr> copies;
+    EXPECT_CALL(*m_clipboard, clearTrackData()).Times(1);
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).WillRepeatedly([&copies](ITrackDataPtr data) { copies.push_back(data); });
+    EXPECT_CALL(*m_history, pushHistoryState(_, _)).Times(0);
+
+    //! [WHEN] The selected clip and label are copied
+    ASSERT_TRUE(m_operation->copyItems({ m_sourceClip }, { m_sourceLabel }));
+
+    //! [THEN] The clip at 1.0 and the label at 2.0 are shifted so the clip starts the clipboard at 0.0
+    ASSERT_EQ(copies.size(), 2u);
+    std::vector<double> startTimes;
+    for (const ITrackDataPtr& data : copies) {
+        startTimes.push_back(std::static_pointer_cast<Au3TrackData>(data)->track()->GetStartTime());
+    }
+    std::sort(startTimes.begin(), startTimes.end());
+    EXPECT_DOUBLE_EQ(startTimes.at(0), 0.0);
+    EXPECT_DOUBLE_EQ(startTimes.at(1), 1.0);
+    checkSelection();
+}
+
+TEST_P(TrackeditOperationMoveTests, CutItemsCopiesRemovesAndPushesOneCutState)
+{
+    //! [GIVEN] Only the clip's track is selected, so the label must still reach the clipboard before it is removed
+    m_selection->setSelectedTracks({ m_sourceClip.trackId }, true);
+
+    //! [EXPECT] One copy per track that holds an item and a single history state naming the cut
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(2);
+    EXPECT_CALL(*m_history, pushHistoryState(_, _)).WillOnce([](const std::string& description, const std::string& action) {
+        EXPECT_EQ(description, "Cut to the clipboard");
+        EXPECT_EQ(action, "Cut multiple items");
+    });
+
+    //! [WHEN] The selected clip and label are cut
+    ASSERT_TRUE(m_operation->cutItems({ m_sourceClip }, { m_sourceLabel }, false));
+
+    //! [THEN] Both items are gone from the project and nothing stays selected
+    auto* clipTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_sourceClip.trackId));
+    auto* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(m_sourceLabel.trackId));
+    ASSERT_NE(clipTrack, nullptr);
+    ASSERT_NE(labelTrack, nullptr);
+    EXPECT_EQ(DomAccessor::findWaveClip(clipTrack, m_sourceClip.itemId), nullptr);
+    EXPECT_EQ(DomAccessor::findLabel(labelTrack, m_sourceLabel.itemId), nullptr);
+    EXPECT_TRUE(m_selection->selectedClips().empty());
+    EXPECT_TRUE(m_selection->selectedLabels().empty());
 }
 
 TEST_P(TrackeditOperationMoveTests, MixedHorizontalMoveClampsBothTypesTogether)
