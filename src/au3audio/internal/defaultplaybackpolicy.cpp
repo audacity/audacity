@@ -7,7 +7,10 @@
 
 #include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-math/SampleCount.h"
+#include "au3-stretching-sequence/PlaybackTempoScale.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
+
+#include <algorithm>
 
 namespace au::au3audio {
 DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject& project,
@@ -21,11 +24,19 @@ DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject& project,
     , mVariableSpeed{variableSpeed}
 {}
 
+DefaultPlaybackPolicy::~DefaultPlaybackPolicy()
+{
+    // Leave the project's live-playback scale at unity when the stream ends.
+    PlaybackTempoScale::Set(
+        ProjectAudioIO::Get(mProject).GetPlayTempoScale(), 1.0);
+}
+
 void DefaultPlaybackPolicy::Initialize(
     PlaybackSchedule& schedule, double rate)
 {
     PlaybackPolicy::Initialize(schedule, rate);
     mLastPlaySpeed = GetPlaySpeed();
+    UpdatePlaybackTempoScale();
     // mMessageChannel.Initialize()
     mMessageChannel.Write({ mLastPlaySpeed,
                             schedule.mT0, mLoopEndTime, mLoopEnabled });
@@ -34,7 +45,24 @@ void DefaultPlaybackPolicy::Initialize(
     mRegionSubscription
         =ViewInfo::Get(mProject).playRegion.Subscribe(callback);
     if (mVariableSpeed) {
-        mSpeedSubscription = ProjectAudioIO::Get(mProject).Subscribe(callback);
+        mSpeedSubscription
+            =static_cast<Observer::Publisher<SpeedChangeMessage>&>(
+            ProjectAudioIO::Get(mProject)).Subscribe(callback);
+        mPreservePitchSubscription
+            =static_cast<Observer::Publisher<PreservePitchChangeMessage>&>(
+            ProjectAudioIO::Get(mProject)).Subscribe(callback);
+    }
+}
+
+void DefaultPlaybackPolicy::UpdatePlaybackTempoScale()
+{
+    // Preserve pitch: stretch clips by 1/speed (StaffPad) and leave mixer rate alone.
+    // Classic mode: mixer resamples (changes pitch); stretch scale stays 1.
+    const auto tempoScale = ProjectAudioIO::Get(mProject).GetPlayTempoScale();
+    if (mVariableSpeed && ProjectAudioIO::Get(mProject).GetPreservePitch()) {
+        PlaybackTempoScale::Set(tempoScale, std::max(0.01, mLastPlaySpeed));
+    } else {
+        PlaybackTempoScale::Set(tempoScale, 1.0);
     }
 }
 
@@ -42,8 +70,12 @@ Mixer::WarpOptions DefaultPlaybackPolicy::MixerWarpOptions(
     PlaybackSchedule& schedule)
 {
     if (mVariableSpeed) {
-        // Enable variable rate mixing
-        return Mixer::WarpOptions(0.01, 32.0, GetPlaySpeed());
+        // Always enable variable-rate mixing so Preserve pitch can be toggled
+        // mid-playback: MixSameRate() would ignore later SetTimesAndSpeed calls.
+        // When preserving pitch, StaffPad stretches and mixer speed stays 1.0.
+        const double initialSpeed
+            =ProjectAudioIO::Get(mProject).GetPreservePitch() ? 1.0 : GetPlaySpeed();
+        return Mixer::WarpOptions(0.01, 32.0, initialSpeed);
     } else {
         return PlaybackPolicy::MixerWarpOptions(schedule);
     }
@@ -184,10 +216,20 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
     auto data = mMessageChannel.Read();
 
     bool speedChange = false;
+    bool preservePitchChange = false;
     if (mVariableSpeed) {
         speedChange = (mLastPlaySpeed != data.mPlaySpeed);
         mLastPlaySpeed = data.mPlaySpeed;
+        const bool preservePitch = GetPreservePitch();
+        preservePitchChange = (mLastPreservePitch != preservePitch);
+        mLastPreservePitch = preservePitch;
+        UpdatePlaybackTempoScale();
     }
+
+    const bool preservePitch = mLastPreservePitch;
+    // When preserving pitch, StaffPad time-stretches (via PlaybackTempoScale);
+    // the mixer must not also resample, or pitch would change twice.
+    const double mixerSpeed = (mVariableSpeed && preservePitch) ? 1.0 : mLastPlaySpeed;
 
     bool empty = (data.mT0 >= data.mT1);
     bool kicked = false;
@@ -240,7 +282,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
         schedule.RealTimeInit(newTime);
         const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
         mRemaining = realTimeRemaining * mRate / mLastPlaySpeed;
-    } else if (speedChange) {
+    } else if (speedChange || preservePitchChange) {
         // Don't return early
         kicked = true;
     } else {
@@ -258,7 +300,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
         // Looping jumps left
         for (auto& pMixer : playbackMixers) {
             pMixer->SetTimesAndSpeed(
-                schedule.mT0, schedule.mT1, mLastPlaySpeed, true);
+                schedule.mT0, schedule.mT1, mixerSpeed, true);
         }
         schedule.RealTimeRestart();
     } else if (kicked) {
@@ -266,7 +308,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
         const auto time = schedule.mTimeQueue.GetLastTime();
         for (auto& pMixer : playbackMixers) {
             // So that the mixer will fetch the next samples from the right place:
-            pMixer->SetTimesAndSpeed(time, schedule.mT1, mLastPlaySpeed);
+            pMixer->SetTimesAndSpeed(time, schedule.mT1, mixerSpeed);
             pMixer->Reposition(time, true);
         }
     }
@@ -291,5 +333,10 @@ double DefaultPlaybackPolicy::GetPlaySpeed()
     return mVariableSpeed
            ? ProjectAudioIO::Get(mProject).GetPlaySpeed()
            : 1.0;
+}
+
+bool DefaultPlaybackPolicy::GetPreservePitch() const
+{
+    return mVariableSpeed && ProjectAudioIO::Get(mProject).GetPreservePitch();
 }
 }

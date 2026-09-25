@@ -28,6 +28,7 @@ set( SOURCES
    StretchingSequence.h
    ClipTimeAndPitchSource.cpp
    ClipTimeAndPitchSource.h
+   PlaybackTempoScale.h
    TempoChange.cpp
    TempoChange.h
 )

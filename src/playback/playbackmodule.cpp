@@ -20,6 +20,7 @@
 #include "view/common/metermodel.h"
 #include "view/common/horizontalvolumepressuremeteritem.h"
 #include "view/panels/playbackmeterpanelmodel.h"
+#include "view/toolbars/playatspeedmodel.h"
 
 #include "playbackmodule.h"
 
@@ -62,6 +63,7 @@ void PlaybackModule::registerUiTypes()
     qmlRegisterType<PlaybackMeterModel>("Audacity.Playback", 1, 0, "PlaybackMeterModel");
     qmlRegisterType<MeterModel>("Audacity.Playback", 1, 0, "MeterModel");
     qmlRegisterType<HorizontalVolumePressureMeterItem>("Audacity.Playback", 1, 0, "HorizontalVolumePressureMeterItem");
+    qmlRegisterType<PlayAtSpeedModel>("Audacity.Playback", 1, 0, "PlayAtSpeedModel");
     qmlRegisterUncreatableType<PlaybackQualityPrefs>("Audacity.Playback", 1, 0, "PlaybackQuality", "Not creatable from QML");
     qmlRegisterUncreatableType<DitherTypePrefs>("Audacity.Playback", 1, 0, "DitherType", "Not creatable from QML");
     qmlRegisterUncreatableType<PlaybackMeterType>("Audacity.Playback", 1, 0, "PlaybackMeterType", "Not creatable from QML");

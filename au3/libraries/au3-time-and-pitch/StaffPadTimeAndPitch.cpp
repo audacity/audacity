@@ -170,6 +170,26 @@ void StaffPadTimeAndPitch::OnCentShiftChange(int cents)
     }
 }
 
+void StaffPadTimeAndPitch::OnTimeRatioChange(double timeRatio)
+{
+    if (!(timeRatio > 0.0)) {
+        timeRatio = 1.0;
+    }
+    if (mParameters.timeRatio == timeRatio) {
+        return;
+    }
+    mParameters.timeRatio = timeRatio;
+    if (!mTimeAndPitch) {
+        if (!TimeAndPitchInterface::IsPassThroughMode(mParameters.timeRatio)
+            || mParameters.pitchRatio != 1.) {
+            InitializeStretcher();
+        }
+    } else {
+        mTimeAndPitch->setTimeStretchAndPitchFactor(
+            mParameters.timeRatio, mParameters.pitchRatio);
+    }
+}
+
 void StaffPadTimeAndPitch::OnFormantPreservationChange(bool preserve)
 {
     mParameters.preserveFormants = preserve;

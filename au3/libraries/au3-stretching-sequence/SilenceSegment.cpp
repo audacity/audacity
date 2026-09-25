@@ -13,15 +13,31 @@
 #include <algorithm>
 #include <cassert>
 
-SilenceSegment::SilenceSegment(size_t numChannels, sampleCount numSamples)
+SilenceSegment::SilenceSegment(
+    size_t numChannels, sampleCount unitySamples,
+    PlaybackTempoScale::Ptr tempoScale)
     : mNumChannels{numChannels}
-    , mNumRemainingSamples{numSamples}
+    , mTempoScale{tempoScale ? std::move(tempoScale) : PlaybackTempoScale::Create()}
+    , mLastTempoScale{std::max(0.01, PlaybackTempoScale::Get(mTempoScale))}
+    , mNumRemainingSamples{sampleCount {
+                                std::max(0.0, unitySamples.as_double() / mLastTempoScale) + .5 }}
 {
 }
 
 size_t
 SilenceSegment::GetFloats(float* const* buffers, size_t numSamples)
 {
+    // Preserve-pitch Play-at-Speed: rescale remaining silence when tempo changes
+    // while the playhead is in a gap between clips.
+    const double tempoScale = std::max(0.01, PlaybackTempoScale::Get(mTempoScale));
+    if (tempoScale != mLastTempoScale) {
+        mNumRemainingSamples = sampleCount {
+            std::max(0.0, mNumRemainingSamples.as_double() * mLastTempoScale / tempoScale)
+            + .5
+        };
+        mLastTempoScale = tempoScale;
+    }
+
     const size_t numSamplesToProduce
         =std::min<long long>(mNumRemainingSamples.as_long_long(), numSamples);
     for (auto i = 0u; i < mNumChannels; ++i) {

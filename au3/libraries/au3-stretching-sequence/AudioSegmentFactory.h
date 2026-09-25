@@ -13,6 +13,7 @@
 
 #include "AudioSegmentFactoryInterface.h"
 #include "ClipInterface.h"
+#include "PlaybackTempoScale.h"
 #include "au3-time-and-pitch/TimeAndPitchInterface.h"
 
 #include <memory>
@@ -23,7 +24,9 @@ using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface> >;
 class STRETCHING_SEQUENCE_API AudioSegmentFactory final : public AudioSegmentFactoryInterface
 {
 public:
-    AudioSegmentFactory(int sampleRate, int numChannels, ClipConstHolders clips);
+    AudioSegmentFactory(
+        int sampleRate, int numChannels, ClipConstHolders clips,
+        PlaybackTempoScale::Ptr tempoScale = PlaybackTempoScale::Create());
 
     std::vector<std::shared_ptr<AudioSegment> > CreateAudioSegmentSequence(
         double playbackStartTime, PlaybackDirection) override;
@@ -39,4 +42,5 @@ private:
     const ClipConstHolders mClips;
     const int mSampleRate;
     const int mNumChannels;
+    PlaybackTempoScale::Ptr mTempoScale;
 };

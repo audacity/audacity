@@ -8,6 +8,7 @@ singleton MeterStyle 1.0 components/MeterStyle.qml
 
 PlaybackMeterCustomisePopup 1.0 toolbars/PlaybackMeterCustomisePopup.qml
 PlaybackLevel 1.0 toolbars/PlaybackLevel.qml
+PlayAtSpeed 1.0 toolbars/PlayAtSpeed.qml
 
 PlaybackMeterPanel 1.0 panels/PlaybackMeterPanel.qml
 

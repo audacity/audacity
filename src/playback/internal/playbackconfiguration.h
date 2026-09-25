@@ -53,6 +53,10 @@ public:
     void setSelectionFollowsLoopRegion(bool follows) override;
     muse::async::Notification selectionFollowsLoopRegionChanged() const override;
 
+    bool preservePitch() const override;
+    void setPreservePitch(bool preserve) override;
+    muse::async::Notification preservePitchChanged() const override;
+
 private:
     muse::async::Notification m_playbackTimeItemFormatChanged;
     muse::async::Notification m_playbackMeterStyleChanged;
@@ -64,5 +68,6 @@ private:
     muse::async::Notification m_shortSkipChanged;
     muse::async::Notification m_longSkipChanged;
     muse::async::Notification m_selectionFollowsLoopRegionChanged;
+    muse::async::Notification m_preservePitchChanged;
 };
 }
