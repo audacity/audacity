@@ -20,8 +20,6 @@ set( SOURCES
    ExportTypes.h
    ExportUtils.cpp
    ExportUtils.h
-   GetAcidizerTags.cpp
-   GetAcidizerTags.h
    Import.cpp
    Import.h
    ImportExport.cpp
@@ -33,14 +31,11 @@ set( SOURCES
    ImportProgressListener.h
    ImportUtils.cpp
    ImportUtils.h
-   LibsndfileTagger.cpp
-   LibsndfileTagger.h
    PlainExportOptionsEditor.cpp
    PlainExportOptionsEditor.h
 )
 set( LIBRARIES
 PUBLIC
-   SndFile::sndfile # LibsndfileTagger.h exposes SNDFILE
    au3-basic-ui
    au3-file-formats
    au3-files
