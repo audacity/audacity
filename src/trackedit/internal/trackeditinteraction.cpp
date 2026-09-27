@@ -271,6 +271,22 @@ bool TrackeditInteraction::stretchClipsRight(const ClipKeyList& clipKeyList,
                             type);
 }
 
+bool TrackeditInteraction::repeatClipsLeft(const ClipKeyList& clipKeyList,
+                                           secs_t newStartTime,
+                                           bool completed,
+                                           UndoPushType type)
+{
+    return withPlaybackStop(&ITrackeditInteraction::repeatClipsLeft, clipKeyList, newStartTime, completed, type);
+}
+
+bool TrackeditInteraction::repeatClipsRight(const ClipKeyList& clipKeyList,
+                                            secs_t newEndTime,
+                                            bool completed,
+                                            UndoPushType type)
+{
+    return withPlaybackStop(&ITrackeditInteraction::repeatClipsRight, clipKeyList, newEndTime, completed, type);
+}
+
 muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
     return m_interaction->clipDuration(clipKey);

@@ -1355,6 +1355,448 @@ TEST_F(Au3ClipsInteractionTests, StretchClipLeftOntoNeighbourResolvesOverlap)
     removeTrack(trackId);
 }
 
+TEST_F(Au3ClipsInteractionTests, StretchTwoClipsRightSimultaneouslyResolvesOverlap)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [WHEN] Both clips are stretched right in one gesture, the first clip growing
+    //! halfway into the second clip's original play region
+    //! (stretchClipsRight grows the clip when the delta is negative.)
+    const secs_t delta = -15 * SAMPLE_INTERVAL;
+    m_clipsInteraction->stretchClipsRight({ { trackId, firstClipId }, { trackId, secondClipId } }, delta, minClipDuration, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchTwoClipsRightSimultaneouslyReverseOrderResolvesOverlap)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [WHEN] Both clips are stretched right in one gesture (rightmost clip processed
+    //! first), the first clip growing halfway into the second clip's original play region
+    const secs_t delta = -15 * SAMPLE_INTERVAL;
+    m_clipsInteraction->stretchClipsRight({ { trackId, secondClipId }, { trackId, firstClipId } }, delta, minClipDuration, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchTwoClipsLeftSimultaneouslyResolvesOverlap)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [WHEN] Both clips are stretched left in one gesture, the second clip growing
+    //! halfway into the first clip's original play region
+    const secs_t delta = -15 * SAMPLE_INTERVAL;
+    m_clipsInteraction->stretchClipsLeft({ { trackId, firstClipId }, { trackId, secondClipId } }, delta, minClipDuration, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchThreeAdjacentClipsRightSimultaneouslyResolvesOverlap)
+{
+    //! [GIVEN] A track with three clips ([0,10], [20,30] and [30,40] samples),
+    //! the last two being adjacent
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const auto thirdClipId = track->GetSortedClipByIndex(2)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [WHEN] All clips are stretched right in one gesture, growing into their neighbours
+    const secs_t delta = -15 * SAMPLE_INTERVAL;
+    m_clipsInteraction->stretchClipsRight({ { trackId, firstClipId }, { trackId, secondClipId }, { trackId, thirdClipId } },
+                                          delta, minClipDuration, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchThreeAdjacentClipsLeftSimultaneouslyResolvesOverlap)
+{
+    //! [GIVEN] A track with three clips ([0,10], [20,30] and [30,40] samples),
+    //! the last two being adjacent
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const auto thirdClipId = track->GetSortedClipByIndex(2)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [WHEN] All clips are stretched left in one gesture, growing into their neighbours
+    const secs_t delta = -15 * SAMPLE_INTERVAL;
+    m_clipsInteraction->stretchClipsLeft({ { trackId, thirdClipId }, { trackId, secondClipId }, { trackId, firstClipId } },
+                                         delta, minClipDuration, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchMultipleClipsOverlapFuzz)
+{
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [GIVEN] Two clips with a gap, stretched together by growing deltas of every
+    //! whole-sample size up to the second clip being fully covered, in both processing
+    //! orders - none of the combinations may leave play regions overlapping
+    for (int deltaSamples = 1; deltaSamples <= 45; ++deltaSamples) {
+        for (bool reverse : { false, true }) {
+            const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+            ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+            Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+            const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+            const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+
+            const secs_t delta = -deltaSamples * SAMPLE_INTERVAL;
+            const ClipKeyList keys = reverse
+                ? ClipKeyList { { trackId, secondClipId }, { trackId, firstClipId } }
+                : ClipKeyList { { trackId, firstClipId }, { trackId, secondClipId } };
+            m_clipsInteraction->stretchClipsRight(keys, delta, minClipDuration, true);
+
+            EXPECT_TRUE(track->NoPlayRegionsOverlap()) << "deltaSamples: " << deltaSamples << ", reverse: " << reverse;
+
+            removeTrack(trackId);
+        }
+    }
+
+    //! [GIVEN] Clips with different durations and a gap, stretched left together
+    for (int deltaSamples = 1; deltaSamples <= 45; ++deltaSamples) {
+        for (bool reverse : { false, true }) {
+            TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+            const TrackId trackId = factory.addTrackFromTemplate("stretchFuzzLeft", {
+                    { 0.0, { { 30 * SAMPLE_INTERVAL, TrackTemplateFactory::createNoise } } },
+                    { 40 * SAMPLE_INTERVAL, { { 10 * SAMPLE_INTERVAL, TrackTemplateFactory::createNoise } } }
+                });
+            ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+            Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+            const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+            const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+
+            const secs_t delta = -deltaSamples * SAMPLE_INTERVAL;
+            const ClipKeyList keys = reverse
+                ? ClipKeyList { { trackId, secondClipId }, { trackId, firstClipId } }
+                : ClipKeyList { { trackId, firstClipId }, { trackId, secondClipId } };
+            m_clipsInteraction->stretchClipsLeft(keys, delta, minClipDuration, true);
+
+            EXPECT_TRUE(track->NoPlayRegionsOverlap()) << "deltaSamples: " << deltaSamples << ", reverse: " << reverse;
+
+            removeTrack(trackId);
+        }
+    }
+
+    //! [GIVEN] The same geometries stretched by fractional-sample deltas (stretching
+    //! produces play times that are not aligned to whole samples, so overlap
+    //! resolution must not leave sub-sample overlaps behind)
+    for (double frac = 0.1; frac < 1.0; frac += 0.1) {
+        for (bool reverse : { false, true }) {
+            for (bool left : { false, true }) {
+                const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+                ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+                Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+                const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+                const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+
+                const secs_t delta = -(15 + frac) * SAMPLE_INTERVAL;
+                const ClipKeyList keys = reverse
+                    ? ClipKeyList { { trackId, secondClipId }, { trackId, firstClipId } }
+                    : ClipKeyList { { trackId, firstClipId }, { trackId, secondClipId } };
+                if (left) {
+                    m_clipsInteraction->stretchClipsLeft(keys, delta, minClipDuration, true);
+                } else {
+                    m_clipsInteraction->stretchClipsRight(keys, delta, minClipDuration, true);
+                }
+
+                EXPECT_TRUE(track->NoPlayRegionsOverlap()) << "frac: " << frac << ", reverse: " << reverse << ", left: " << left;
+
+                removeTrack(trackId);
+            }
+        }
+    }
+}
+
+TEST_F(Au3ClipsInteractionTests, RepeatSingleClipRightIntoGap)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+
+    //! [WHEN] The first clip is repeated right up to the second clip
+    m_clipsInteraction->repeatClipsRight({ { trackId, firstClipId } }, TRACK_TWO_CLIPS_CLIP2_START, true);
+
+    //! [THEN] One tile was added, and nothing overlaps
+    EXPECT_EQ(track->NIntervals(), 3u);
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RepeatSingleClipRightOntoNeighbourKeepsInvariant)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+
+    //! [WHEN] The first clip is repeated right past (and over) the second clip
+    m_clipsInteraction->repeatClipsRight({ { trackId, firstClipId } }, 45 * SAMPLE_INTERVAL, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RepeatTwoClipsRightSimultaneouslyKeepsInvariant)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+
+    //! [WHEN] Both clips are repeated right in one gesture, the first clip's tiles
+    //! running over the second clip and its tiles
+    m_clipsInteraction->repeatClipsRight({ { trackId, firstClipId }, { trackId, secondClipId } }, 60 * SAMPLE_INTERVAL, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RemoveClipsSkipsStaleKeyLeftByRepeat)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+
+    //! [WHEN] Both clips are repeated right in one gesture, the first clip's
+    //! tiles overwriting the second clip entirely
+    m_clipsInteraction->repeatClipsRight({ { trackId, firstClipId }, { trackId, secondClipId } }, 45 * SAMPLE_INTERVAL, true);
+
+    //! [THEN] The second clip was deleted by the overwrite, but its key is still
+    //! in the selection passed to removeClips — the stale key must be dropped
+    //! from the selection and skipped without asserting
+    EXPECT_CALL(*m_selectionController, removeClipSelection(ClipKey { trackId, secondClipId })).Times(1);
+    EXPECT_TRUE(m_clipsInteraction->removeClips({ { trackId, firstClipId }, { trackId, secondClipId } }, false));
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RepeatTwoClipsLeftSimultaneouslyKeepsInvariant)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+
+    //! [WHEN] Both clips are repeated left in one gesture, the second clip's tiles
+    //! running over the first clip and its tiles
+    m_clipsInteraction->repeatClipsLeft({ { trackId, secondClipId }, { trackId, firstClipId } }, 0.0, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RepeatClipRightFractionalBoundaryKeepsInvariant)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+
+    //! [WHEN] The first clip is repeated right up to a non-sample-aligned time
+    //! (mouse drags land on arbitrary times, not whole samples)
+    m_clipsInteraction->repeatClipsRight({ { trackId, firstClipId } }, 37.4 * SAMPLE_INTERVAL, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RepeatDoesNothingMidDrag)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+
+    //! [WHEN] A repeat drag is in progress (completed=false)
+    const bool ok = m_clipsInteraction->repeatClipsRight({ { trackId, firstClipId } }, 45 * SAMPLE_INTERVAL, false);
+
+    //! [THEN] Nothing is pasted until the drag is completed
+    EXPECT_TRUE(ok);
+    EXPECT_EQ(track->NIntervals(), 2u);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchMultipleClipsIncrementalDragFuzz)
+{
+    //! Mimics the UI: during a drag, many incremental stretches are issued with
+    //! completed=false, with fractional-sample deltas, followed by a final
+    //! completed=true call. The no-overlap invariant must hold after every step.
+    const std::vector<double> stepSizes = { 0.1, 0.3, 0.7, 1.0, 1.3 };
+    const std::vector<int> directions = { 1, -1 };
+
+    for (const double stepSamples : stepSizes) {
+        for (const int direction : directions) {
+            const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+            ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+            Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+            const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+            const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+            const ClipKeyList keys = { { trackId, firstClipId }, { trackId, secondClipId } };
+
+            const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+            const secs_t delta = direction * stepSamples * SAMPLE_INTERVAL;
+
+            //! [WHEN] Dragging right (or left) in small incremental steps
+            //! (transient overlaps are admitted mid-drag by design)
+            for (int i = 0; i < 12; ++i) {
+                m_clipsInteraction->stretchClipsRight(keys, delta, minClipDuration, false);
+            }
+
+            //! [WHEN] The drag is completed
+            m_clipsInteraction->stretchClipsRight(keys, 0.0, minClipDuration, true);
+
+            //! [THEN] No play regions overlap
+            EXPECT_TRUE(track->NoPlayRegionsOverlap())
+                << "Overlap after completion: step " << stepSamples << " samples, direction " << direction;
+
+            removeTrack(trackId);
+        }
+    }
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchAfterRepeatOntoNeighbourKeepsInvariant)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+
+    //! [GIVEN] The first clip was repeated right over the second clip
+    //! (regression: this used to leave overlapping play regions behind, crashing
+    //! the noPlayRegionsOverlap assertion of the next completed edit)
+    m_clipsInteraction->repeatClipsRight({ { trackId, firstClipId } }, 45 * SAMPLE_INTERVAL, true);
+    ASSERT_TRUE(track->NoPlayRegionsOverlap());
+
+    //! [WHEN] All clips of the track are then stretched right in one gesture
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    const ClipKeyList keys = m_clipsInteraction->clipsOnTrack(trackId);
+    m_clipsInteraction->stretchClipsRight(keys, -5 * SAMPLE_INTERVAL, minClipDuration, true);
+
+    //! [THEN] No play regions overlap
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchAfterDoubleMultiRepeatKeepsInvariant)
+{
+    //! Reproduces the reported flow: multi-clip repeat, repeat again with the
+    //! same selection, then multi-clip stretch - used to crash in
+    //! makeRoomForClip's no-overlap assertion.
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const ClipKeyList originals = { { trackId, firstClipId }, { trackId, secondClipId } };
+
+    //! [GIVEN] The two clips are repeated right, twice
+    m_clipsInteraction->repeatClipsRight(originals, 45 * SAMPLE_INTERVAL, true);
+    ASSERT_TRUE(track->NoPlayRegionsOverlap()) << "Overlap after first repeat";
+
+    m_clipsInteraction->repeatClipsRight(originals, 65 * SAMPLE_INTERVAL, true);
+    ASSERT_TRUE(track->NoPlayRegionsOverlap()) << "Overlap after second repeat";
+
+    //! [WHEN] All clips of the track are stretched right, drag-style
+    //! (incremental, then completed), in both directions
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    const ClipKeyList keys = m_clipsInteraction->clipsOnTrack(trackId);
+    for (int i = 0; i < 8; ++i) {
+        m_clipsInteraction->stretchClipsRight(keys, -SAMPLE_INTERVAL, minClipDuration, false);
+    }
+    m_clipsInteraction->stretchClipsRight(keys, 0.0, minClipDuration, true);
+    EXPECT_TRUE(track->NoPlayRegionsOverlap()) << "Overlap after stretch right";
+
+    for (int i = 0; i < 8; ++i) {
+        m_clipsInteraction->stretchClipsLeft(keys, -SAMPLE_INTERVAL, minClipDuration, false);
+    }
+    m_clipsInteraction->stretchClipsLeft(keys, 0.0, minClipDuration, true);
+    EXPECT_TRUE(track->NoPlayRegionsOverlap()) << "Overlap after stretch left";
+
+    removeTrack(trackId);
+}
+
 TEST_F(Au3ClipsInteractionTests, ChangeClipSpeedOntoNeighbourResolvesOverlap)
 {
     //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)

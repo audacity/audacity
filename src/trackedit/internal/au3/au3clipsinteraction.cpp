@@ -387,13 +387,17 @@ bool Au3ClipsInteraction::removeClips(const ClipKeyList& clipKeyList, bool moveC
 
     for (const auto& clipKey : clipKeyList) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return false;
+        if (!waveTrack) {
+            continue;
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return false;
+        if (!clip) {
+            //! NOTE: the clip may have been removed by an earlier operation that overwrote
+            //! it (e.g. multi-clip repeat tiles winning over other selected clips).
+            //! Drop the stale key from the selection instead of crashing.
+            selectionController()->removeClipSelection(clipKey);
+            continue;
         }
 
         waveTrack->Clear(clip->Start(), clip->End(), moveClips);
@@ -1242,6 +1246,7 @@ bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool comple
 {
     bool ok = false;
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    TrackIdList affectedTrackIds;
     for (const auto& selectedClip : clipKeys) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1261,11 +1266,25 @@ bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool comple
 
         //! NOTE: make room AFTER the edit: overlapping clips are admitted as a transient
         //! state, but must be "de-overlapped" once the edit is complete.
+        //! NOTE: in a multi-clip edit, overlaps with sibling clips of the same batch are
+        //! also transient (each sibling makes room for itself in turn), so the track-wide
+        //! no-overlap invariant is only verified once, after the whole batch.
         if (completed) {
-            makeRoomForClip(selectedClip);
+            doMakeRoomForClip(selectedClip);
+            if (!muse::contains(affectedTrackIds, selectedClip.trackId)) {
+                affectedTrackIds.push_back(selectedClip.trackId);
+            }
         }
 
         clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
+    }
+
+    if (completed) {
+        for (const TrackId& trackId : affectedTrackIds) {
+            IF_ASSERT_FAILED(noPlayRegionsOverlap(trackId)) {
+                return false;
+            }
+        }
     }
 
     return ok;
@@ -1301,6 +1320,158 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
         clip.StretchRightTo(clip.GetPlayEndTime() - adjustedDelta);
         return true;
     });
+}
+
+bool Au3ClipsInteraction::repeatClipsLeft(const ClipKeyList& clipKeyList, secs_t newStartTime, bool completed)
+{
+    if (!completed) {
+        //! Don't paste anything mid-drag: mouse moves only drive the guideline.
+        //! Pasting per move is quadratic (clear + re-paste all tiles for every selected
+        //! clip on every event) and froze the UI on longer drags. The actual tiling
+        //! happens once, when the drag is completed.
+        return true;
+    }
+
+    bool ok = false;
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    for (const auto& clipKey : clipKeyList) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
+        if (!clip) {
+            continue;
+        }
+
+        ok = repeatClipLeft(*waveTrack, *clip, newStartTime) || ok;
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    return ok;
+}
+
+bool Au3ClipsInteraction::repeatClipsRight(const ClipKeyList& clipKeyList, secs_t newEndTime, bool completed)
+{
+    if (!completed) {
+        //! See repeatClipsLeft
+        return true;
+    }
+
+    bool ok = false;
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    for (const auto& clipKey : clipKeyList) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
+        if (!clip) {
+            continue;
+        }
+
+        ok = repeatClipRight(*waveTrack, *clip, newEndTime) || ok;
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    return ok;
+}
+
+bool Au3ClipsInteraction::repeatClipLeft(Au3WaveTrack& waveTrack, Au3WaveClip& clip, secs_t newStartTime)
+{
+    const double start = clip.GetPlayStartTime();
+    const double end = clip.GetPlayEndTime();
+    const double duration = end - start;
+    if (duration <= 0.0) {
+        return false;
+    }
+
+    newStartTime = std::max(secs_t(0.0), newStartTime);
+    const int copies = newStartTime < start ? static_cast<int>((start - newStartTime) / duration) : 0;
+    if (copies < 1) {
+        return false;
+    }
+
+    const double tilesStart = start - copies * duration;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    std::set<int64_t> tileIds;
+    for (int i = copies; i >= 1; --i) {
+        //! NOTE: no group id on the tiles - they are independent copies
+        auto tile = waveTrack.CopyClip(clip, false);
+        tile->SetPlayStartTime(start - i * duration);
+        tileIds.insert(tile->GetId());
+        Au3WaveClip* tilePtr = tile.get();
+        waveTrack.InsertInterval(std::move(tile), false);
+        //! NOTE: notify only after the insert - listeners resolve the clip
+        //! against the track's current clip list
+        prj->notifyAboutClipAdded(DomConverter::clip(&waveTrack, tilePtr));
+    }
+
+    //! Make room for the tiles: they win over whatever was in the way.
+    //! (InsertInterval admits overlapping clips as a transient state.)
+    const std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(&waveTrack);
+    for (const auto& otherClip : clips) {
+        if (otherClip.get() == &clip || muse::contains(tileIds, otherClip->GetId())) {
+            continue;
+        }
+        if (otherClip->GetPlayStartTime() < start && otherClip->GetPlayEndTime() > tilesStart) {
+            utils::trimOrDeleteOverlapping(prj, &waveTrack, tilesStart, start, otherClip);
+        }
+    }
+
+    return true;
+}
+
+bool Au3ClipsInteraction::repeatClipRight(Au3WaveTrack& waveTrack, Au3WaveClip& clip, secs_t newEndTime)
+{
+    const double start = clip.GetPlayStartTime();
+    const double end = clip.GetPlayEndTime();
+    const double duration = end - start;
+    if (duration <= 0.0) {
+        return false;
+    }
+
+    const int copies = newEndTime > end ? static_cast<int>((newEndTime - end) / duration) : 0;
+    if (copies < 1) {
+        return false;
+    }
+
+    const double tilesEnd = end + copies * duration;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    std::set<int64_t> tileIds;
+    for (int i = 0; i < copies; ++i) {
+        //! NOTE: no group id on the tiles - they are independent copies
+        auto tile = waveTrack.CopyClip(clip, false);
+        tile->SetPlayStartTime(end + i * duration);
+        tileIds.insert(tile->GetId());
+        Au3WaveClip* tilePtr = tile.get();
+        waveTrack.InsertInterval(std::move(tile), false);
+        //! NOTE: notify only after the insert - listeners resolve the clip
+        //! against the track's current clip list
+        prj->notifyAboutClipAdded(DomConverter::clip(&waveTrack, tilePtr));
+    }
+
+    //! Make room for the tiles: they win over whatever was in the way.
+    //! (InsertInterval admits overlapping clips as a transient state.)
+    const std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(&waveTrack);
+    for (const auto& otherClip : clips) {
+        if (otherClip.get() == &clip || muse::contains(tileIds, otherClip->GetId())) {
+            continue;
+        }
+        if (otherClip->GetPlayStartTime() < tilesEnd && otherClip->GetPlayEndTime() > end) {
+            utils::trimOrDeleteOverlapping(prj, &waveTrack, end, tilesEnd, otherClip);
+        }
+    }
+
+    return true;
 }
 
 bool Au3ClipsInteraction::doChangeClipSpeed(const ClipKey& clipKey, double speed)

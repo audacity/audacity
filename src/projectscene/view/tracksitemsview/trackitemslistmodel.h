@@ -149,5 +149,8 @@ private:
 
     QList<ViewTrackItem*> m_dragGhostItems;
     QPointer<TrackItemsMoveController> m_moveController;
+
+    bool m_itemEditInProgress = false;
+    bool m_reloadPending = false;
 };
 }

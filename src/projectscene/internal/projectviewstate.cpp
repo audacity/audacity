@@ -29,8 +29,12 @@ using namespace au::projectscene;
 
 constexpr int TRACK_DEFAULT_HEIGHT = 116;
 constexpr int TRACK_LABEL_DEFAULT_HEIGHT = 86;
-constexpr int TRACK_MIN_HEIGHT = 44;
-constexpr int TRACK_COLLAPSE_HEIGHT = 72;
+//! Clip handles are 3 rows of at least 22px (see ClipHandles.qml),
+//! so a clip must be able to fit 3 * 22 = 66px of body.
+constexpr int TRACK_MIN_HEIGHT = 66;
+//! Below this height the clip is collapsed (no header), so the body is the
+//! full height and still fits the 3 handle rows (66 + header 20 = 86).
+constexpr int TRACK_COLLAPSE_HEIGHT = 86;
 
 namespace {
 constexpr int numDecimals(float value)
