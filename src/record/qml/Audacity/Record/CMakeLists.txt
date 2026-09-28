@@ -8,6 +8,8 @@ qt_add_qml_module(record_qml
         recordmetermodel.h
         leadinrecordingindicatormodel.cpp
         leadinrecordingindicatormodel.h
+        playbacktoolbarrecordlevelitem.cpp
+        playbacktoolbarrecordlevelitem.h
     QML_FILES
         RecordLevel.qml
         internal/RecordLevelPopup.qml

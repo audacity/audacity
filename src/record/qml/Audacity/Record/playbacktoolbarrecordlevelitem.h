@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QString>
+#include <QtQml/qqmlregistration.h>
 
 #include "framework/global/modularity/ioc.h"
 
@@ -20,6 +21,8 @@ namespace au::record {
 class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 {
     Q_OBJECT
+    QML_ELEMENT;
+    QML_UNCREATABLE("Must be created in C++ only");
 
     Q_PROPERTY(float level READ level WRITE setLevel NOTIFY levelChanged FINAL)
 

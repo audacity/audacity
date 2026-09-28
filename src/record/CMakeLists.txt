@@ -30,10 +30,7 @@ target_sources(record PRIVATE
     internal/au3/au3audioinput.h
     internal/au3/au3record.cpp
     internal/au3/au3record.h
-
-    view/toolbars/playbacktoolbarrecordlevelitem.cpp
-    view/toolbars/playbacktoolbarrecordlevelitem.h
-    )
+)
 
 target_link_libraries(record PRIVATE
         au3wrap
