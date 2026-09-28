@@ -31,9 +31,6 @@ using namespace au;
 using namespace au::playback;
 using namespace au::context;
 
-static const actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
-static const actions::ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
-
 namespace au::playback {
 class PlaybackControllerTests : public ::testing::Test
 {
@@ -160,18 +157,18 @@ public:
 
     void changePlaybackRegion(const secs_t start, const secs_t end)
     {
-        muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_QUERY);
-        q.addParam("start", muse::Val(start));
-        q.addParam("end", muse::Val(end));
-        m_controller->onChangePlaybackRegionAction(q);
+        m_controller->onChangePlaybackRegionAction({
+                { "start", muse::Val(start) },
+                { "end", muse::Val(end) },
+            });
     }
 
     void seek(const secs_t seekTime, const bool triggerPlay = false)
     {
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(seekTime));
-        q.addParam("triggerPlay", muse::Val(triggerPlay));
-        m_controller->onSeekAction(q);
+        m_controller->onSeekAction({
+                { "seekTime", muse::Val(seekTime) },
+                { "triggerPlay", muse::Val(triggerPlay) },
+            });
     }
 
     void setTimeSelection(const secs_t start, const secs_t end)
@@ -220,16 +217,12 @@ public:
 
     void changeAudioApi(int index)
     {
-        muse::actions::ActionQuery q("action://playback/change-api");
-        q.addParam("api_index", muse::Val(index));
-        m_controller->setAudioApi(q);
+        m_controller->setAudioApi({ { "api_index", muse::Val(index) } });
     }
 
     void changeInputDevice(int index)
     {
-        muse::actions::ActionQuery q("action://playback/change-recording-device");
-        q.addParam("device_index", muse::Val(index));
-        m_controller->setAudioInputDevice(q);
+        m_controller->setAudioInputDevice({ { "device_index", muse::Val(index) } });
     }
 
     void playFromCurrentState()
