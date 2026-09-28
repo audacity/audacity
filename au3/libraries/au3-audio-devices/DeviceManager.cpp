@@ -334,9 +334,9 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap>* 
     }
 
     if (error) {
-        wxLogDebug(wxT("PortAudio stream error creating device list: ")
-                   + map.hostString + wxT(":") + map.deviceString + wxT(": ")
-                   + wxString(wxSafeConvertMB2WX(Pa_GetErrorText((PaError)error))));
+        wxLogDebug(wxT("PortAudio stream error creating device list: %s:%s: %s"),
+                   map.hostString, map.deviceString,
+                   wxString(wxSafeConvertMB2WX(Pa_GetErrorText((PaError)error))));
     }
 }
 
