@@ -252,6 +252,7 @@ set(MODULE_LINK
         au3-wave-track
         au3-xml
         trackedit
+        record_qml # PlaybackToolBarRecordLevelItem is created in C++ by PlaybackToolBarModel
         spectrogram
         uicomponents
         au3-registries
