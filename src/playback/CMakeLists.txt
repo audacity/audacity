@@ -12,6 +12,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/playbackmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playbackmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/playbacktypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/playbackcommands.h
     ${CMAKE_CURRENT_LIST_DIR}/iplayback.h
     ${CMAKE_CURRENT_LIST_DIR}/iplayer.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiooutput.h
@@ -25,6 +26,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackuistate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuistate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuistate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsstate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.cpp
