@@ -12,7 +12,7 @@ namespace au::record {
 class RecordMeterModel : public playback::MeterModel
 {
     Q_OBJECT
-    QML_ELEMENT
+    QML_ELEMENT;
 
     muse::ContextInject<IRecord> record{ this };
 
