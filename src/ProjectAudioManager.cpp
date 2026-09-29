@@ -399,8 +399,18 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
       if (backwards)
          std::swap(t0, t1);
 
-      t0 = std::max(0.0, std::min(t0, latestEnd));
-      t1 = std::max(0.0, std::min(t1, latestEnd));
+      //Fixed bug here, we need to set t1 to the looping end time not the track end time (see latestEnd for reference).
+      if (projectAudioManager.Looping())
+      {
+         t0 = std::max(0.0, t0);
+         t1 = std::max(0.0, t1);
+      }
+      else
+      {
+         t0 = std::max(0.0, std::min(t0, latestEnd));
+         t1 = std::max(0.0, std::min(t1, latestEnd));
+      }
+      
 
       if (backwards)
          std::swap(t0, t1);
@@ -432,7 +442,8 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
       else {
          double mixerLimit = t1;
          if (newDefault) {
-            mixerLimit = latestEnd;
+            //Fixed bug here, mixerLimit was set to the track ending time instead of the loop ending time
+            mixerLimit = std::max(latestEnd, t1);
             if (pStartTime && *pStartTime >= t1)
                t1 = latestEnd;
          }
