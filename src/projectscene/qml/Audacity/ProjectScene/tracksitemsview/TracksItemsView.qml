@@ -188,11 +188,6 @@ Rectangle {
         context: timeline.context
     }
 
-    PlayPositionActionController {
-        id: playPositionActionController
-        context: timeline.context
-    }
-
     PlayRegionController {
         id: playRegionController
         context: timeline.context
@@ -237,7 +232,6 @@ Rectangle {
         timeline.init()
         playRegionController.init()
         playCursorController.init()
-        playPositionActionController.init()
         tracksViewState.init()
         itemsMoveController.init()
         project.init();

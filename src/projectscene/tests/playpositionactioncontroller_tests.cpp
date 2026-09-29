@@ -60,9 +60,8 @@ protected:
         m_context = new TimelineContext();
         SnapTestAccess::wireContext(m_context, m_globalContext, m_playback);
 
-        m_controller = new PlayPositionActionController();
+        m_controller = new PlayPositionActionController(m_context, muse::modularity::globalCtx());
         SnapTestAccess::wirePlayPosition(m_controller, m_globalContext, m_dispatcher, m_selectionController);
-        m_controller->setTimelineContext(m_context);
     }
 
     void TearDown() override

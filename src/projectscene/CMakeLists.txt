@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstate.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstatecreator.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaypositionviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/itimelineviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/projectscenecommands.h
 
