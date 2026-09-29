@@ -35,6 +35,14 @@ static const ActionCode ZOOM_TO_FIT_PROJECT_CODE("zoom-to-fit-project");
 static const ActionCode ZOOM_TOGGLE_CODE("zoom-toggle");
 static const ActionCode CENTER_VIEW_ON_PLAYHEAD_CODE("center-view-on-playhead");
 static const ActionCode TIMELINE_CONTEXT_MENU_CODE("timeline-context-menu");
+static const ActionCode PLAY_POSITION_DECREASE_CODE("play-position-decrease");
+static const ActionCode PLAY_POSITION_INCREASE_CODE("play-position-increase");
+static const ActionCode SEL_EXT_LEFT_CODE("sel-ext-left");
+static const ActionCode SEL_EXT_RIGHT_CODE("sel-ext-right");
+static const ActionCode SEL_CNTR_LEFT_CODE("sel-cntr-left");
+static const ActionCode SEL_CNTR_RIGHT_CODE("sel-cntr-right");
+static const ActionCode CURS_SEL_START_CODE("curs-sel-start");
+static const ActionCode CURS_SEL_END_CODE("curs-sel-end");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -81,16 +89,40 @@ CommandQuery centerViewOnPlayheadConv(const Command& command, const ActionData& 
 void ProjectSceneActionsController::init()
 {
     auto cd = commandDispatcher();
-    registerTimelineCommand(PROJECTSCENE_ZOOM_IN_COMMAND, &ITimelineViewController::zoomIn);
-    registerTimelineCommand(PROJECTSCENE_ZOOM_OUT_COMMAND, &ITimelineViewController::zoomOut);
-    registerTimelineCommand(PROJECTSCENE_ZOOM_DEFAULT_COMMAND, &ITimelineViewController::zoomDefault);
-    registerTimelineCommand(PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND, &ITimelineViewController::fitSelectionToWidth);
-    registerTimelineCommand(PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND, &ITimelineViewController::fitProjectToWidth);
-    registerTimelineCommand(PROJECTSCENE_ZOOM_TOGGLE_COMMAND, &ITimelineViewController::zoomToggle);
-    registerTimelineCommand(PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, &ITimelineViewController::requestContextMenu);
+    registerViewCommand(PROJECTSCENE_ZOOM_IN_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::zoomIn);
+    registerViewCommand(PROJECTSCENE_ZOOM_OUT_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::zoomOut);
+    registerViewCommand(PROJECTSCENE_ZOOM_DEFAULT_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::zoomDefault);
+    registerViewCommand(PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::fitSelectionToWidth);
+    registerViewCommand(PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::fitProjectToWidth);
+    registerViewCommand(PROJECTSCENE_ZOOM_TOGGLE_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::zoomToggle);
+    registerViewCommand(PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::requestContextMenu);
     cd->onRequest(this, PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND, [this](const Params& params) {
         return centerViewOnPlayhead(params);
     });
+
+    registerViewCommand(PROJECTSCENE_PLAY_POSITION_DECREASE_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::playPositionDecrease);
+    registerViewCommand(PROJECTSCENE_PLAY_POSITION_INCREASE_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::playPositionIncrease);
+    registerViewCommand(PROJECTSCENE_SELECTION_EXTEND_LEFT_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::selectionExtendLeft);
+    registerViewCommand(PROJECTSCENE_SELECTION_EXTEND_RIGHT_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::selectionExtendRight);
+    registerViewCommand(PROJECTSCENE_SELECTION_CONTRACT_LEFT_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::selectionContractLeft);
+    registerViewCommand(PROJECTSCENE_SELECTION_CONTRACT_RIGHT_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::selectionContractRight);
+    registerViewCommand(PROJECTSCENE_CURSOR_TO_SELECTION_START_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::cursorToSelectionStart);
+    registerViewCommand(PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::cursorToSelectionEnd);
 
     cd->onRequest(this, PROJECTSCENE_MINUTES_SECONDS_RULER_COMMAND, [this]() { return toggleMinutesSecondsRuler(); });
     cd->onRequest(this, PROJECTSCENE_BEATS_MEASURES_RULER_COMMAND, [this]() { return toggleBeatsMeasuresRuler(); });
@@ -128,6 +160,14 @@ void ProjectSceneActionsController::init()
         { ZOOM_TOGGLE_CODE, PROJECTSCENE_ZOOM_TOGGLE_COMMAND, {} },
         { CENTER_VIEW_ON_PLAYHEAD_CODE, PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND, centerViewOnPlayheadConv },
         { TIMELINE_CONTEXT_MENU_CODE, PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, {} },
+        { PLAY_POSITION_DECREASE_CODE, PROJECTSCENE_PLAY_POSITION_DECREASE_COMMAND, {} },
+        { PLAY_POSITION_INCREASE_CODE, PROJECTSCENE_PLAY_POSITION_INCREASE_COMMAND, {} },
+        { SEL_EXT_LEFT_CODE, PROJECTSCENE_SELECTION_EXTEND_LEFT_COMMAND, {} },
+        { SEL_EXT_RIGHT_CODE, PROJECTSCENE_SELECTION_EXTEND_RIGHT_COMMAND, {} },
+        { SEL_CNTR_LEFT_CODE, PROJECTSCENE_SELECTION_CONTRACT_LEFT_COMMAND, {} },
+        { SEL_CNTR_RIGHT_CODE, PROJECTSCENE_SELECTION_CONTRACT_RIGHT_COMMAND, {} },
+        { CURS_SEL_START_CODE, PROJECTSCENE_CURSOR_TO_SELECTION_START_COMMAND, {} },
+        { CURS_SEL_END_CODE, PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
@@ -152,14 +192,27 @@ ITimelineViewController* ProjectSceneActionsController::timelineViewController()
     return m_timelineViewController;
 }
 
-void ProjectSceneActionsController::registerTimelineCommand(const Command& command, void (ITimelineViewController::* handler)())
+void ProjectSceneActionsController::setPlayPositionViewController(IPlayPositionViewController* controller)
 {
-    commandDispatcher()->onRequest(this, command, [this, handler]() {
-        if (!m_timelineViewController) {
+    m_playPositionViewController = controller;
+}
+
+IPlayPositionViewController* ProjectSceneActionsController::playPositionViewController() const
+{
+    return m_playPositionViewController;
+}
+
+template<typename ViewController>
+void ProjectSceneActionsController::registerViewCommand(const Command& command, ViewController* ProjectSceneActionsController::* view,
+                                                        void (ViewController::* handler)())
+{
+    commandDispatcher()->onRequest(this, command, [this, view, handler]() {
+        ViewController* controller = this->*view;
+        if (!controller) {
             return make_ret(Ret::Code::NotSupported);
         }
 
-        (m_timelineViewController->*handler)();
+        (controller->*handler)();
         return make_ok();
     });
 }

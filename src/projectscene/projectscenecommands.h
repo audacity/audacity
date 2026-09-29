@@ -31,4 +31,14 @@ inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COM
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TOGGLE_COMMAND("command://projectscene/zoom-toggle");
 inline static const muse::rcommand::Command PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND("command://projectscene/center-view-on-playhead");
 inline static const muse::rcommand::Command PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND("command://projectscene/timeline-context-menu");
+
+inline static const muse::rcommand::Command PROJECTSCENE_PLAY_POSITION_DECREASE_COMMAND("command://projectscene/play-position-decrease");
+inline static const muse::rcommand::Command PROJECTSCENE_PLAY_POSITION_INCREASE_COMMAND("command://projectscene/play-position-increase");
+inline static const muse::rcommand::Command PROJECTSCENE_SELECTION_EXTEND_LEFT_COMMAND("command://projectscene/selection-extend-left");
+inline static const muse::rcommand::Command PROJECTSCENE_SELECTION_EXTEND_RIGHT_COMMAND("command://projectscene/selection-extend-right");
+inline static const muse::rcommand::Command PROJECTSCENE_SELECTION_CONTRACT_LEFT_COMMAND("command://projectscene/selection-contract-left");
+inline static const muse::rcommand::Command PROJECTSCENE_SELECTION_CONTRACT_RIGHT_COMMAND("command://projectscene/selection-contract-right");
+inline static const muse::rcommand::Command PROJECTSCENE_CURSOR_TO_SELECTION_START_COMMAND(
+    "command://projectscene/cursor-to-selection-start");
+inline static const muse::rcommand::Command PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND("command://projectscene/cursor-to-selection-end");
 }
