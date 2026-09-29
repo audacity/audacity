@@ -22,4 +22,13 @@ inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMA
     "command://projectscene/toggle-clip-gain-automation");
 inline static const muse::rcommand::Command PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND("command://projectscene/clip-pitch-and-speed");
 inline static const muse::rcommand::Command PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND("command://projectscene/open-label-editor");
+
+inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_IN_COMMAND("command://projectscene/zoom-in");
+inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_OUT_COMMAND("command://projectscene/zoom-out");
+inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_DEFAULT_COMMAND("command://projectscene/zoom-default");
+inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND("command://projectscene/zoom-to-selection");
+inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND("command://projectscene/zoom-to-fit-project");
+inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TOGGLE_COMMAND("command://projectscene/zoom-toggle");
+inline static const muse::rcommand::Command PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND("command://projectscene/center-view-on-playhead");
+inline static const muse::rcommand::Command PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND("command://projectscene/timeline-context-menu");
 }

@@ -15,6 +15,7 @@
 
 #include "context/iglobalcontext.h"
 #include "../iprojectsceneactionscontroller.h"
+#include "../itimelineviewcontroller.h"
 #include "../iprojectsceneconfiguration.h"
 #include "../iprojectsceneuistate.h"
 
@@ -36,6 +37,9 @@ public:
 
     void init();
 
+    void setTimelineViewController(ITimelineViewController* controller) override;
+    ITimelineViewController* timelineViewController() const override;
+
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
     muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
@@ -43,6 +47,9 @@ public:
 
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
+
+    void registerTimelineCommand(const muse::rcommand::Command& command, void (ITimelineViewController::* handler)());
+    muse::Ret centerViewOnPlayhead(const muse::rcommand::Params& params);
 
     muse::Ret toggleMinutesSecondsRuler();
     muse::Ret toggleBeatsMeasuresRuler();
@@ -63,5 +70,7 @@ private:
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
+
+    ITimelineViewController* m_timelineViewController = nullptr;
 };
 }
