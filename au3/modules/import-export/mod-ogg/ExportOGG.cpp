@@ -17,10 +17,12 @@
 #include <wx/stream.h>
 
 namespace {
-/*: kbit/s abbreviates "thousands of bits per second" */
-TranslatableString n_kbps(int n)
+/*: %1 is the Ogg Vorbis quality setting (0-10); %2 is the nominal bitrate
+ (in kbit/s, "thousands of bits per second") derived from that quality, which
+ may vary from the effective bitrate depending on sample rate */
+TranslatableString n_kbps(int n, int quality)
 {
-    return TranslatableString("import-export", "%1 kbit/s").arg(n);
+    return TranslatableString("import-export", "Quality %1 (~%2 kbit/s)").arg(quality).arg(n);
 }
 
 enum : int {
@@ -48,17 +50,17 @@ const PlainExportOptionsEditor::OptionDesc OGGOptionBitrate {
             10,
         },
         {
-            n_kbps(64),
-            n_kbps(80),
-            n_kbps(96),
-            n_kbps(112),
-            n_kbps(128),
-            n_kbps(160),
-            n_kbps(192),
-            n_kbps(224),
-            n_kbps(256),
-            n_kbps(320),
-            n_kbps(500),
+            n_kbps(64, 0),
+            n_kbps(80, 1),
+            n_kbps(96, 2),
+            n_kbps(112, 3),
+            n_kbps(128, 4),
+            n_kbps(160, 5),
+            n_kbps(192, 6),
+            n_kbps(224, 7),
+            n_kbps(256, 8),
+            n_kbps(320, 9),
+            n_kbps(500, 10),
         }
     }, wxT("/FileFormats/OGG/Bitrate")
 };
