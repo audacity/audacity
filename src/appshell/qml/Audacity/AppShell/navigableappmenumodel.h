@@ -50,6 +50,7 @@ public:
     Q_INVOKABLE void load() override;
     Q_INVOKABLE void handleMenuItem(const QString& itemId) override;
     Q_INVOKABLE void openMenu(const QString& menuId, bool byHover);
+    Q_INVOKABLE bool menuItemMatchesSymbol(muse::uicomponents::MenuItem* item, const QString& symbol) const;
 
     bool isNavigationStarted() const;
     bool isMenuOpened() const;
@@ -69,6 +70,7 @@ public slots:
 signals:
     void openMenuRequested(const QString& menuId, bool byHover);
     void closeOpenedMenuRequested();
+    void navigateWithSymbolRequested(const QString& symbol);
     void highlightedMenuIdChanged(QString highlightedMenuId);
     void openedMenuIdChanged(QString openedMenuId);
     void appMenuAreaRectChanged(QRect appMenuAreaRect);
@@ -81,10 +83,8 @@ private:
 
     bool isNavigateKey(int key) const;
     void navigate(const QSet<int>& activatePossibleKeys);
-    void navigateToSubItem(const QString& menuId, const QSet<int>& activatePossibleKeys);
 
     bool hasItem(const QSet<int>& activatePossibleKeys);
-    bool hasSubItem(const QString& menuId, const QSet<int>& activatePossibleKeys);
     void navigate(int scanCode);
 
     void resetNavigation();

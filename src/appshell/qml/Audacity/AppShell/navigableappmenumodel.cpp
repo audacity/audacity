@@ -70,8 +70,6 @@ QSet<int> possibleKeys(const QChar& keySymbol)
 NavigableAppMenuModel::NavigableAppMenuModel(QObject* parent)
     : AppMenuModel(parent)
 {
-    //! NOTE: We do not move focus to the app menu when the Alt key is released so we can use it easily on other components
-    m_moveFocusToAppMenuOnAltRelease = false;
 }
 
 void NavigableAppMenuModel::load()
@@ -230,27 +228,26 @@ bool NavigableAppMenuModel::eventFilter(QObject* watched, QEvent* event)
 
 bool NavigableAppMenuModel::processEventForOpenedMenu(QEvent* event)
 {
-    if (event->type() != QEvent::ShortcutOverride) {
+    if (event->type() != QEvent::ShortcutOverride && event->type() != QEvent::KeyPress) {
         return false;
     }
 
     QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event);
 
-    bool isNavigationWithSymbol = !keyEvent->modifiers()
-                                  && keyEvent->text().length() == 1;
+    bool isNavigationWithSymbol = (keyEvent->modifiers() == Qt::NoModifier || keyEvent->modifiers() == Qt::AltModifier)
+                                  && keyEvent->text().length() == 1 && keyEvent->text().at(0).isLetterOrNumber();
 
     if (!isNavigationWithSymbol) {
         return false;
     }
 
-    QSet<int> activatePossibleKeys = possibleKeys(keyEvent);
-    if (hasSubItem(m_openedMenuId, activatePossibleKeys)) {
-        navigateToSubItem(m_openedMenuId, activatePossibleKeys);
-        event->accept();
-        return true;
+    // The visible menu knows which nested submenu owns keyboard focus.
+    // Reserve the key first, then activate it once on KeyPress.
+    if (event->type() == QEvent::KeyPress) {
+        emit navigateWithSymbolRequested(keyEvent->text());
     }
-
-    return false;
+    event->accept();
+    return true;
 }
 
 bool NavigableAppMenuModel::processEventForAppMenu(QEvent* event)
@@ -268,13 +265,10 @@ bool NavigableAppMenuModel::processEventForAppMenu(QEvent* event)
     bool isNavigationWithSymbol = !modifiers
                                   && isSingleSymbol
                                   && isNavigationStarted;
-    bool isNavigationWithAlt = (modifiers & Qt::AltModifier)
-                               && !(modifiers & Qt::ShiftModifier)
-                               && isSingleSymbol;
+    bool isNavigationWithAlt = modifiers == Qt::AltModifier && isSingleSymbol;
 
     bool isAltKey = key == Qt::Key_Alt
-                    && key != Qt::Key_Shift
-                    && !(modifiers & Qt::ShiftModifier);
+                    && (modifiers == Qt::NoModifier || modifiers == Qt::AltModifier);
 
     switch (event->type()) {
     case QEvent::ShortcutOverride: {
@@ -410,14 +404,27 @@ bool NavigableAppMenuModel::hasItem(const QSet<int>& activatePossibleKeys)
     return !menuItemId(items(), activatePossibleKeys).isEmpty();
 }
 
-bool NavigableAppMenuModel::hasSubItem(const QString& menuId, const QSet<int>& activatePossibleKeys)
+bool NavigableAppMenuModel::menuItemMatchesSymbol(MenuItem* item, const QString& symbol) const
 {
-    MenuItem& menuItem = findMenu(menuId);
-    if (menuItem.subitems().empty()) {
+    if (!item || !item->state().enabled || symbol.size() != 1) {
         return false;
     }
 
-    return !menuItemId(menuItem.subitems(), activatePossibleKeys).isEmpty();
+    const QString title = item->action().title.qTranslatedWithMnemonicAmpersand();
+    for (int i = 0; i + 1 < title.size(); ++i) {
+        if (title.at(i) != '&') {
+            continue;
+        }
+        if (title.at(i + 1) == '&') {
+            ++i;
+            continue;
+        }
+        return title.mid(i + 1, 1).compare(symbol, Qt::CaseInsensitive) == 0;
+    }
+
+    // Dynamic effect names and categories have no explicit mnemonic.
+    // Match their first visible letter, as native menus do.
+    return item->translatedTitle().trimmed().left(1).compare(symbol, Qt::CaseInsensitive) == 0;
 }
 
 void NavigableAppMenuModel::navigate(const QSet<int>& activatePossibleKeys)
@@ -426,38 +433,6 @@ void NavigableAppMenuModel::navigate(const QSet<int>& activatePossibleKeys)
 
     setHighlightedMenuId(menuItemId(items(), activatePossibleKeys));
     activateHighlightedMenu();
-}
-
-void NavigableAppMenuModel::navigateToSubItem(const QString& menuId, const QSet<int>& activatePossibleKeys)
-{
-    MenuItem& menuItem = findMenu(menuId);
-    MenuItem& subItem = findItem(this->menuItemId(menuItem.subitems(), activatePossibleKeys));
-    if (!subItem.isValid()) {
-        return;
-    }
-
-    INavigationSection* section = navigationController()->activeSection();
-    INavigationPanel* panel = navigationController()->activePanel();
-
-    if (!section || !panel) {
-        return;
-    }
-
-    navigationController()->requestActivateByName(section->name().toStdString(),
-                                                  panel->name().toStdString(),
-                                                  subItem.id().toStdString());
-
-    INavigationControl* control = navigationController()->activeControl();
-    if (!control) {
-        return;
-    }
-
-    control->trigger();
-
-    bool isMenu = !subItem.subitems().isEmpty();
-    if (!isMenu) {
-        resetNavigation();
-    }
 }
 
 void NavigableAppMenuModel::resetNavigation()
