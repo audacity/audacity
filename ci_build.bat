@@ -7,7 +7,10 @@ FOR /f "usebackq tokens=*" %%i in (`%VSWHERE% -latest -products * -requires Micr
 )
 ECHO "VS_INSTALL_DIR: %VS_INSTALL_DIR%"
 IF "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
-  CALL "%VS_INSTALL_DIR%\VC\Auxiliary\Build\vcvarsarm64.bat"
+  REM Pin the VS 2022 toolset: the windows-11-arm runner image now ships VS 2026,
+  REM whose MSVC rejects <experimental/coroutine> as included by C++/WinRT in C++17.
+  CALL "%VS_INSTALL_DIR%\VC\Auxiliary\Build\vcvarsarm64.bat" -vcvars_ver=14.44
+  IF ERRORLEVEL 1 EXIT /B 1
 ) ELSE (
   CALL "%VS_INSTALL_DIR%\VC\Auxiliary\Build\vcvars64.bat"
 )
