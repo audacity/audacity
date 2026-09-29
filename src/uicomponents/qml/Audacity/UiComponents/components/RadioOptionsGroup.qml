@@ -19,7 +19,7 @@ Column {
 
     property int borderWidth: 1
 
-    property NavigationPanel navPanel: meterStyleGroup.navigation
+    property alias navPanel: meterStyleGroup.navigation
 
     property int value
 
