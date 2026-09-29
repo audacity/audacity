@@ -4,12 +4,16 @@
 
 #include "project/iaudacityproject.h"
 
+#include "framework/rcommand/actiontocommand.h"
+
 #include "projectsceneactionscontroller.h"
+#include "../projectscenecommands.h"
 
 using namespace muse;
 using namespace au::projectscene;
 using namespace muse::async;
 using namespace muse::actions;
+using namespace muse::rcommand;
 
 static const ActionCode VERTICAL_RULERS_CODE("toggle-vertical-rulers");
 static const ActionCode RMS_IN_WAVEFORM_CODE("toggle-rms-in-waveform");
@@ -26,23 +30,66 @@ static const ActionCode CLIP_GAIN_CODE("clip-gain");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
+namespace {
+CommandQuery queryParamsConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.empty()) {
+        return query;
+    }
+
+    const ActionQuery legacy(args.arg<std::string>(0));
+    query.setParams(legacy.params());
+    return query;
+}
+
+CommandQuery clipKeyConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.empty()) {
+        return query;
+    }
+
+    const au::trackedit::ClipKey clipKey = args.arg<au::trackedit::ClipKey>(0);
+    query.addParam("trackId", Val(static_cast<int64_t>(clipKey.trackId)));
+    query.addParam("clipId", Val(static_cast<int64_t>(clipKey.itemId)));
+    return query;
+}
+}
+
 void ProjectSceneActionsController::init()
 {
-    dispatcher()->reg(this, MINUTES_SECONDS_RULER, this, &ProjectSceneActionsController::toggleMinutesSecondsRuler);
-    dispatcher()->reg(this, BEATS_MEASURES_RULER, this, &ProjectSceneActionsController::toggleBeatsMeasuresRuler);
+    auto cd = commandDispatcher();
+    cd->onRequest(this, PROJECTSCENE_MINUTES_SECONDS_RULER_COMMAND, [this]() { return toggleMinutesSecondsRuler(); });
+    cd->onRequest(this, PROJECTSCENE_BEATS_MEASURES_RULER_COMMAND, [this]() { return toggleBeatsMeasuresRuler(); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND, [this]() { return toggleVerticalRulers(); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_RMS_IN_WAVEFORM_COMMAND, [this]() { return toggleRMSInWaveform(); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_CLIPPING_IN_WAVEFORM_COMMAND, [this]() { return toggleClippingInWaveform(); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_COMMAND, [this]() { return toggleUpdateDisplayWhilePlaying(); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_PINNED_PLAY_HEAD_COMMAND, [this]() { return togglePinnedPlayHead(); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_PLAYBACK_ON_RULER_CLICK_COMMAND, [this]() { return togglePlaybackOnRulerClickEnabled(); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND, [this](const Params& params) { return toggleTrackHalfWave(params); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND, [this]() { return toggleAutomation(); });
+    cd->onRequest(this, PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND, [this](const Params& params) {
+        return openClipPitchAndSpeedEdit(params);
+    });
+    cd->onRequest(this, PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND, [this]() { return openLabelEditor(); });
 
-    dispatcher()->reg(this, VERTICAL_RULERS_CODE, this, &ProjectSceneActionsController::toggleVerticalRulers);
-    dispatcher()->reg(this, RMS_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleRMSInWaveform);
-    dispatcher()->reg(this, CLIPPING_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleClippingInWaveform);
-    dispatcher()->reg(this, TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, this,
-                      &ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying);
-    dispatcher()->reg(this, TOGGLE_PINNED_PLAY_HEAD_CODE, this, &ProjectSceneActionsController::togglePinnedPlayHead);
-    dispatcher()->reg(this, CLIP_PITCH_AND_SPEED_CODE, this, &ProjectSceneActionsController::openClipPitchAndSpeedEdit);
-    dispatcher()->reg(this, TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, this,
-                      &ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled);
-    dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
-    dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
-    dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
+    static const std::vector<ActionToCommand> actionToCommand = {
+        { MINUTES_SECONDS_RULER, PROJECTSCENE_MINUTES_SECONDS_RULER_COMMAND, {} },
+        { BEATS_MEASURES_RULER, PROJECTSCENE_BEATS_MEASURES_RULER_COMMAND, {} },
+        { VERTICAL_RULERS_CODE, PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND, {} },
+        { RMS_IN_WAVEFORM_CODE, PROJECTSCENE_TOGGLE_RMS_IN_WAVEFORM_COMMAND, {} },
+        { CLIPPING_IN_WAVEFORM_CODE, PROJECTSCENE_TOGGLE_CLIPPING_IN_WAVEFORM_COMMAND, {} },
+        { TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, PROJECTSCENE_TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_COMMAND, {} },
+        { TOGGLE_PINNED_PLAY_HEAD_CODE, PROJECTSCENE_TOGGLE_PINNED_PLAY_HEAD_COMMAND, {} },
+        { TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, PROJECTSCENE_TOGGLE_PLAYBACK_ON_RULER_CLICK_COMMAND, {} },
+        { TOGGLE_TRACK_HALF_WAVE.toString(), PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND, queryParamsConv },
+        { CLIP_GAIN_CODE, PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND, {} },
+        { CLIP_PITCH_AND_SPEED_CODE, PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND, clipKeyConv },
+        { LABEL_OPEN_EDITOR_CODE, PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND, {} },
+    };
+    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     projectSceneUiState()->timelineRulerModeChanged().onNotify(this, [this]() {
         notifyActionCheckedChanged(MINUTES_SECONDS_RULER);
@@ -55,64 +102,71 @@ void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode&
     m_actionCheckedChanged.send(actionCode);
 }
 
-void ProjectSceneActionsController::toggleMinutesSecondsRuler()
+muse::Ret ProjectSceneActionsController::toggleMinutesSecondsRuler()
 {
     projectSceneUiState()->setTimelineRulerMode(TimelineRulerMode::MINUTES_AND_SECONDS);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::toggleBeatsMeasuresRuler()
+muse::Ret ProjectSceneActionsController::toggleBeatsMeasuresRuler()
 {
     projectSceneUiState()->setTimelineRulerMode(TimelineRulerMode::BEATS_AND_MEASURES);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::toggleVerticalRulers()
+muse::Ret ProjectSceneActionsController::toggleVerticalRulers()
 {
     bool verticalRulersVisible = configuration()->isVerticalRulersVisible();
     configuration()->setVerticalRulersVisible(!verticalRulersVisible);
     notifyActionCheckedChanged(VERTICAL_RULERS_CODE);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::toggleRMSInWaveform()
+muse::Ret ProjectSceneActionsController::toggleRMSInWaveform()
 {
     bool rmsVisible = configuration()->isRMSInWaveformVisible();
     configuration()->setRMSInWaveformVisible(!rmsVisible);
     notifyActionCheckedChanged(RMS_IN_WAVEFORM_CODE);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::toggleClippingInWaveform()
+muse::Ret ProjectSceneActionsController::toggleClippingInWaveform()
 {
     bool clippingVisible = configuration()->isClippingInWaveformVisible();
     configuration()->setClippingInWaveformVisible(!clippingVisible);
     notifyActionCheckedChanged(CLIPPING_IN_WAVEFORM_CODE);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying()
+muse::Ret ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying()
 {
     bool enabled = configuration()->updateDisplayWhilePlayingEnabled();
     configuration()->setUpdateDisplayWhilePlayingEnabled(!enabled);
     notifyActionCheckedChanged(TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::togglePinnedPlayHead()
+muse::Ret ProjectSceneActionsController::togglePinnedPlayHead()
 {
     bool enabled = configuration()->pinnedPlayHeadEnabled();
     configuration()->setPinnedPlayHeadEnabled(!enabled);
     notifyActionCheckedChanged(TOGGLE_PINNED_PLAY_HEAD_CODE);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& args)
+muse::Ret ProjectSceneActionsController::openClipPitchAndSpeedEdit(const Params& params)
 {
     if (interactive()->isOpened(EDIT_PITCH_AND_SPEED_URI).val) {
-        return;
+        return make_ret(Ret::Code::Busy);
     }
 
-    IF_ASSERT_FAILED(args.count() == 1) {
-        return;
+    IF_ASSERT_FAILED(params.contains("trackId") && params.contains("clipId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    trackedit::ClipKey clipKey = args.arg<trackedit::ClipKey>(0);
+    const trackedit::ClipKey clipKey(params.at("trackId").toInt64(), params.at("clipId").toInt64());
     if (!clipKey.isValid()) {
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
 
     muse::UriQuery query(EDIT_PITCH_AND_SPEED_URI);
@@ -121,27 +175,33 @@ void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& 
     query.addParam("focusItemName", muse::Val("pitch"));
 
     interactive()->open(query);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::openLabelEditor()
+muse::Ret ProjectSceneActionsController::openLabelEditor()
 {
     interactive()->open("audacity://projectscene/openlabeleditor");
+    return make_ok();
 }
 
-void ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled()
+muse::Ret ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled()
 {
     bool isEnabled = configuration()->playbackOnRulerClickEnabled();
     configuration()->setPlaybackOnRulerClickEnabled(!isEnabled);
     notifyActionCheckedChanged(TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::toggleAutomation()
+muse::Ret ProjectSceneActionsController::toggleAutomation()
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    const auto viewState = prj->viewState();
+    if (!prj) {
+        return make_ret(Ret::Code::NotSupported);
+    }
 
+    const auto viewState = prj->viewState();
     if (viewState == nullptr) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const bool automationState = viewState->clipGainAutomationEnabled().val;
@@ -151,23 +211,29 @@ void ProjectSceneActionsController::toggleAutomation()
     }
 
     viewState->setClipGainAutomationEnabled(enablingAutomation);
+    return make_ok();
 }
 
-void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::ActionQuery& q)
+muse::Ret ProjectSceneActionsController::toggleTrackHalfWave(const Params& params)
 {
-    IF_ASSERT_FAILED(q.params().size() >= 1) {
-        return;
+    IF_ASSERT_FAILED(params.contains("trackId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
-    const int trackId = q.param("trackId").toInt();
+    const int trackId = params.at("trackId").toInt();
 
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    const auto viewState = prj->viewState();
-
-    if (viewState == nullptr) {
-        return;
+    if (!prj) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    const auto viewState = prj->viewState();
+    if (viewState == nullptr) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
     viewState->toggleHalfWave(trackId);
     notifyActionCheckedChanged(TOGGLE_TRACK_HALF_WAVE.toString());
+    return make_ok();
 }
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const
