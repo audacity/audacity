@@ -7,7 +7,9 @@
 #include <QObject>
 #include <QCursor>
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/actions/actionable.h"
+
 #include "context/iuicontextresolver.h"
 #include "../timeline/timelinecontext.h"
 
