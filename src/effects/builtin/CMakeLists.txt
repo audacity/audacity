@@ -1,45 +1,33 @@
 #
 # Audacity: A Digital Audio Editor
 #
-declare_module(effects_builtin)
+muse_create_module(effects_builtin NO_UNITY)
 
-set(MODULE_QRC effects_builtin.qrc)
-
-set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
-
-set(MODULE_SRC
+target_sources(effects_builtin PRIVATE
     # public
-    ${CMAKE_CURRENT_LIST_DIR}/builtineffectsmodule.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/builtineffectsmodule.h
-    ${CMAKE_CURRENT_LIST_DIR}/ibuiltineffectsviewregister.h
+    builtineffectsmodule.cpp
+    builtineffectsmodule.h
+    ibuiltineffectsviewregister.h
 
     # internal
-    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsloader.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsmetareader.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsmetareader.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsscanner.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/builtintypes.h
+    internal/builtineffectsloader.h
+    internal/builtineffectsmetareader.cpp
+    internal/builtineffectsmetareader.h
+    internal/builtineffectsscanner.h
+    internal/builtintypes.h
 
     # view
-    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectinstanceaccess.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectinstanceaccess.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectviewloader.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectviewloader.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectsviewregister.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectsviewregister.h
+    view/builtineffectsviewregister.cpp
+    view/builtineffectsviewregister.h
     )
 
-set(MODULE_LINK
+target_link_libraries(effects_builtin PRIVATE
         au3wrap
 )
 
-set(MODULE_LINK_PUBLIC
+target_link_libraries(effects_builtin PUBLIC
         au3-effects
         au3-components # exposed by this module's public headers
 )
 
-set(MODULE_USE_UNITY OFF)
-
-setup_module()
+add_subdirectory(qml/Audacity/BuiltinEffects)
