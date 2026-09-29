@@ -3,12 +3,15 @@
 */
 #pragma once
 
-#include "internal/numeric/numericviewmodel.h"
+#include <QtQml/qqmlregistration.h>
+
+#include "numericviewmodel.h"
 
 namespace au::uicomponents {
 class BPMModel : public NumericViewModel
 {
     Q_OBJECT
+    QML_ELEMENT
 
 public:
     explicit BPMModel(QObject* parent = nullptr);

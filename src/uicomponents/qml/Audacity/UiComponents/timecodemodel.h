@@ -3,13 +3,16 @@
 */
 #pragma once
 
+#include <QtQml/qqmlregistration.h>
+
 #include "timecodemodeselector.h"
-#include "internal/numeric/numericviewmodel.h"
+#include "numericviewmodel.h"
 
 namespace au::uicomponents {
 class TimecodeModel : public NumericViewModel
 {
     Q_OBJECT
+    QML_ELEMENT
 
     Q_PROPERTY(TimecodeMode mode READ mode WRITE setMode FINAL)
 
