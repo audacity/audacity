@@ -8,7 +8,6 @@
 #include "global/iapplication.h"
 #include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
-#include "actions/actionable.h"
 #include "actions/iactionsdispatcher.h"
 
 #include "projectscene/iprojectsceneconfiguration.h"
@@ -29,7 +28,8 @@ namespace au::projectscene {
 using Direction = DirectionType::Direction;
 
 class SnapTimeFormatter;
-class TimelineContext : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Contextable
+class TimelineViewController;
+class TimelineContext : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
@@ -82,6 +82,7 @@ public:
     static constexpr double INVALID_GUIDELINE_TIME = -1.0;
 
     TimelineContext(QObject* parent = nullptr);
+    ~TimelineContext() override;
 
     double invalidGuidelineTime() const { return INVALID_GUIDELINE_TIME; }
 
@@ -126,7 +127,15 @@ public:
     Q_INVOKABLE void scrollHorizontal(qreal newPos);
     Q_INVOKABLE void scrollVertical(qreal newPos);
 
-    void centerViewOnPlayhead(const muse::actions::ActionData& args);
+    void zoomIn();
+    void zoomOut();
+    void zoomDefault();
+    void fitSelectionToWidth();
+    void fitProjectToWidth();
+    void zoomToggle();
+    void centerViewOnPlayhead(bool onlyIfPlayheadNotVisible);
+    void requestContextMenu();
+
     void centerOnTime(double secs);
     Q_INVOKABLE void insureVisible(double posSec);
     Q_INVOKABLE void animatedInsureVisible(double posSec);
@@ -212,17 +221,10 @@ private:
 
     void onProjectChanged();
 
-    void zoomIn();
-    void zoomOut();
-    void zoomDefault();
-
     qreal frameCenterPosition() const;
     qreal selectionCenterPosition() const;
     qreal findZoomFocusPosition() const;
 
-    void fitSelectionToWidth();
-    void fitProjectToWidth();
-    void zoomToggle();
     double getZoomOfPreset(ZoomPresets::Preset preset) const;
     double clampedZoom(double zoom) const;
     std::pair<double, double> selectionRange() const;
@@ -281,6 +283,7 @@ private:
     bool m_singleItemSelected = false;
 
     std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
+    std::unique_ptr<TimelineViewController> m_viewController;
 
     qreal m_previousVerticalScrollPosition = 0.0;
     qreal m_previousHorizontalScrollPosition = 0.0;

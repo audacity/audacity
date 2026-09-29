@@ -7,6 +7,7 @@
 
 #include "playback/iaudiooutput.h"
 #include "snaptimeformatter.h"
+#include "timelineviewcontroller.h"
 
 #include "log.h"
 
@@ -47,6 +48,13 @@ double calculateScrollSpeed(double value, double inMin, double inMax, double out
 TimelineContext::TimelineContext(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
+}
+
+TimelineContext::~TimelineContext()
+{
+    if (m_viewController) {
+        m_viewController->deinit();
+    }
 }
 
 void TimelineContext::init(double frameWidth)
@@ -117,14 +125,8 @@ void TimelineContext::init(double frameWidth)
         }
     });
 
-    dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
-    dispatcher()->reg(this, "zoom-out", this, &TimelineContext::zoomOut);
-    dispatcher()->reg(this, "zoom-default", this, &TimelineContext::zoomDefault);
-    dispatcher()->reg(this, "zoom-to-selection", this, &TimelineContext::fitSelectionToWidth);
-    dispatcher()->reg(this, "zoom-to-fit-project", this, &TimelineContext::fitProjectToWidth);
-    dispatcher()->reg(this, "center-view-on-playhead", this, &TimelineContext::centerViewOnPlayhead);
-    dispatcher()->reg(this, "zoom-toggle", this, &TimelineContext::zoomToggle);
-    dispatcher()->reg(this, "timeline-context-menu", [this]() { emit contextMenuRequested(); });
+    m_viewController = std::make_unique<TimelineViewController>(this, iocContext());
+    m_viewController->init();
 
     configuration()->playbackOnRulerClickEnabledChanged().onNotify(this, [this]() {
         emit playbackOnRulerClickEnabledChanged();
@@ -278,14 +280,13 @@ void TimelineContext::scrollVertical(qreal newPos)
     emit viewContentYChangeRequested(scrollStep * correction);
 }
 
-void TimelineContext::centerViewOnPlayhead(const muse::actions::ActionData& args)
+void TimelineContext::requestContextMenu()
 {
-    if (args.count() != 1) {
-        return;
-    }
+    emit contextMenuRequested();
+}
 
-    const int onlyIfPlayheadNotVisible = args.arg<bool>(0);
-
+void TimelineContext::centerViewOnPlayhead(bool onlyIfPlayheadNotVisible)
+{
     const trackedit::secs_t playheadSec = playbackState()->playbackPosition();
 
     if (muse::RealIsEqualOrMore(playheadSec, m_frameStartTime)

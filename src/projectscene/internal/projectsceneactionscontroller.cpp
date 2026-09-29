@@ -27,8 +27,18 @@ static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-play
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("open-label-editor");
 static const ActionCode CLIP_GAIN_CODE("clip-gain");
+static const ActionCode ZOOM_IN_CODE("zoom-in");
+static const ActionCode ZOOM_OUT_CODE("zoom-out");
+static const ActionCode ZOOM_DEFAULT_CODE("zoom-default");
+static const ActionCode ZOOM_TO_SELECTION_CODE("zoom-to-selection");
+static const ActionCode ZOOM_TO_FIT_PROJECT_CODE("zoom-to-fit-project");
+static const ActionCode ZOOM_TOGGLE_CODE("zoom-toggle");
+static const ActionCode CENTER_VIEW_ON_PLAYHEAD_CODE("center-view-on-playhead");
+static const ActionCode TIMELINE_CONTEXT_MENU_CODE("timeline-context-menu");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
+
+static const std::string ONLY_IF_PLAYHEAD_NOT_VISIBLE_PARAM("only_if_playhead_not_visible");
 
 namespace {
 CommandQuery queryParamsConv(const Command& command, const ActionData& args)
@@ -55,11 +65,33 @@ CommandQuery clipKeyConv(const Command& command, const ActionData& args)
     query.addParam("clipId", Val(static_cast<int64_t>(clipKey.itemId)));
     return query;
 }
+
+CommandQuery centerViewOnPlayheadConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.empty()) {
+        return query;
+    }
+
+    query.addParam(ONLY_IF_PLAYHEAD_NOT_VISIBLE_PARAM, Val(args.arg<bool>(0)));
+    return query;
+}
 }
 
 void ProjectSceneActionsController::init()
 {
     auto cd = commandDispatcher();
+    registerTimelineCommand(PROJECTSCENE_ZOOM_IN_COMMAND, &ITimelineViewController::zoomIn);
+    registerTimelineCommand(PROJECTSCENE_ZOOM_OUT_COMMAND, &ITimelineViewController::zoomOut);
+    registerTimelineCommand(PROJECTSCENE_ZOOM_DEFAULT_COMMAND, &ITimelineViewController::zoomDefault);
+    registerTimelineCommand(PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND, &ITimelineViewController::fitSelectionToWidth);
+    registerTimelineCommand(PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND, &ITimelineViewController::fitProjectToWidth);
+    registerTimelineCommand(PROJECTSCENE_ZOOM_TOGGLE_COMMAND, &ITimelineViewController::zoomToggle);
+    registerTimelineCommand(PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, &ITimelineViewController::requestContextMenu);
+    cd->onRequest(this, PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND, [this](const Params& params) {
+        return centerViewOnPlayhead(params);
+    });
+
     cd->onRequest(this, PROJECTSCENE_MINUTES_SECONDS_RULER_COMMAND, [this]() { return toggleMinutesSecondsRuler(); });
     cd->onRequest(this, PROJECTSCENE_BEATS_MEASURES_RULER_COMMAND, [this]() { return toggleBeatsMeasuresRuler(); });
     cd->onRequest(this, PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND, [this]() { return toggleVerticalRulers(); });
@@ -88,6 +120,14 @@ void ProjectSceneActionsController::init()
         { CLIP_GAIN_CODE, PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND, {} },
         { CLIP_PITCH_AND_SPEED_CODE, PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND, clipKeyConv },
         { LABEL_OPEN_EDITOR_CODE, PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND, {} },
+        { ZOOM_IN_CODE, PROJECTSCENE_ZOOM_IN_COMMAND, {} },
+        { ZOOM_OUT_CODE, PROJECTSCENE_ZOOM_OUT_COMMAND, {} },
+        { ZOOM_DEFAULT_CODE, PROJECTSCENE_ZOOM_DEFAULT_COMMAND, {} },
+        { ZOOM_TO_SELECTION_CODE, PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND, {} },
+        { ZOOM_TO_FIT_PROJECT_CODE, PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND, {} },
+        { ZOOM_TOGGLE_CODE, PROJECTSCENE_ZOOM_TOGGLE_COMMAND, {} },
+        { CENTER_VIEW_ON_PLAYHEAD_CODE, PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND, centerViewOnPlayheadConv },
+        { TIMELINE_CONTEXT_MENU_CODE, PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
@@ -100,6 +140,42 @@ void ProjectSceneActionsController::init()
 void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
 {
     m_actionCheckedChanged.send(actionCode);
+}
+
+void ProjectSceneActionsController::setTimelineViewController(ITimelineViewController* controller)
+{
+    m_timelineViewController = controller;
+}
+
+ITimelineViewController* ProjectSceneActionsController::timelineViewController() const
+{
+    return m_timelineViewController;
+}
+
+void ProjectSceneActionsController::registerTimelineCommand(const Command& command, void (ITimelineViewController::* handler)())
+{
+    commandDispatcher()->onRequest(this, command, [this, handler]() {
+        if (!m_timelineViewController) {
+            return make_ret(Ret::Code::NotSupported);
+        }
+
+        (m_timelineViewController->*handler)();
+        return make_ok();
+    });
+}
+
+muse::Ret ProjectSceneActionsController::centerViewOnPlayhead(const Params& params)
+{
+    if (!params.contains(ONLY_IF_PLAYHEAD_NOT_VISIBLE_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
+    }
+
+    if (!m_timelineViewController) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    m_timelineViewController->centerViewOnPlayhead(params.at(ONLY_IF_PLAYHEAD_NOT_VISIBLE_PARAM).toBool());
+    return make_ok();
 }
 
 muse::Ret ProjectSceneActionsController::toggleMinutesSecondsRuler()

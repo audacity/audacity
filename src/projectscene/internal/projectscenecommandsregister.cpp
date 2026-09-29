@@ -128,6 +128,80 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration()
     },
+    CommandInfo{
+        PROJECTSCENE_ZOOM_IN_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Zoom in"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Zoom in"),
+        InputSchema(),
+        Decoration(IconCode::Code::ZOOM_IN)
+    },
+    CommandInfo{
+        PROJECTSCENE_ZOOM_OUT_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Zoom out"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Zoom out"),
+        InputSchema(),
+        Decoration(IconCode::Code::ZOOM_OUT)
+    },
+    CommandInfo{
+        PROJECTSCENE_ZOOM_DEFAULT_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Zoom default"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Zoom default"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Zoom to selection"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Zoom to selection"),
+        InputSchema(),
+        Decoration(IconCode::Code::FIT_SELECTION)
+    },
+    CommandInfo{
+        PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Zoom to fit project"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Zoom to fit project"),
+        InputSchema(),
+        Decoration(IconCode::Code::FIT_PROJECT)
+    },
+    CommandInfo{
+        PROJECTSCENE_ZOOM_TOGGLE_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Zoom toggle"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Zoom toggle"),
+        InputSchema(),
+        Decoration(IconCode::Code::ZOOM_TOGGLE)
+    },
+    CommandInfo{
+        PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Center view on playhead"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Center view on playhead"),
+        InputSchema({
+                { "only_if_playhead_not_visible", Arg(DataType::Boolean, u"Skip when the playhead is already visible") },
+            }),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Timeline context menu"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Open the timeline context menu"),
+        InputSchema(),
+        Decoration()
+    },
 };
 }
 
