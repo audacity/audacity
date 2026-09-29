@@ -67,7 +67,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
         <source>Open item context menu</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Chuột Phải - Menu Ngữ cảnh </translation>
+        <translation>Chuột Phải - Menu Ngữ cảnh</translation>
     </message>
     <message>
         <source>Full screen</source>
@@ -277,7 +277,7 @@
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Xem dự án trên audio.com</translation>
+        <translation>Xem Dự án trên audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
@@ -19358,7 +19358,7 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation>Xuất bản trên máy tính</translation>
+        <translation>Xuất đến Máy tính</translation>
     </message>
 </context>
 <context>
