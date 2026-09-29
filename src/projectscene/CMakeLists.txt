@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstate.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstatecreator.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/projectscenecommands.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
 
@@ -34,6 +35,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsstate.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.h

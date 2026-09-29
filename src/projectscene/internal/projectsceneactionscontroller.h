@@ -9,6 +9,8 @@
 
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/actions/actionable.h"
+#include "framework/rcommand/commandable.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iinteractive.h"
 
 #include "context/iglobalcontext.h"
@@ -18,12 +20,13 @@
 
 namespace au::projectscene {
 class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable,
-    public muse::async::Asyncable, public muse::Contextable
+    public muse::rcommand::Commandable, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
     muse::ContextInject<IProjectSceneUiState> projectSceneUiState { this };
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
 
@@ -41,22 +44,22 @@ public:
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
-    void toggleMinutesSecondsRuler();
-    void toggleBeatsMeasuresRuler();
-    void toggleVerticalRulers();
-    void toggleRMSInWaveform();
-    void toggleClippingInWaveform();
-    void toggleUpdateDisplayWhilePlaying();
-    void togglePinnedPlayHead();
-    void togglePlaybackOnRulerClickEnabled();
-    void toggleAutomation();
-    void toggleTrackHalfWave(const muse::actions::ActionQuery& q);
+    muse::Ret toggleMinutesSecondsRuler();
+    muse::Ret toggleBeatsMeasuresRuler();
+    muse::Ret toggleVerticalRulers();
+    muse::Ret toggleRMSInWaveform();
+    muse::Ret toggleClippingInWaveform();
+    muse::Ret toggleUpdateDisplayWhilePlaying();
+    muse::Ret togglePinnedPlayHead();
+    muse::Ret togglePlaybackOnRulerClickEnabled();
+    muse::Ret toggleAutomation();
+    muse::Ret toggleTrackHalfWave(const muse::rcommand::Params& params);
 
     void changeFontForLabels();
 
-    void openClipPitchAndSpeedEdit(const muse::actions::ActionData& args);
+    muse::Ret openClipPitchAndSpeedEdit(const muse::rcommand::Params& params);
 
-    void openLabelEditor();
+    muse::Ret openLabelEditor();
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
