@@ -20,13 +20,13 @@ namespace au::effects {
 class BuiltinEffectModel : public AbstractEffectViewModel, public BuiltinEffectInstanceAccess
 {
     Q_OBJECT
-    QML_ELEMENT
+    QML_ELEMENT;
+    QML_UNCREATABLE("Not creatable abstract type");
 
-public:
-    QML_UNCREATABLE("Not creatable abstract type")
     Q_PROPERTY(QString effectId READ effectId NOTIFY effectIdChanged FINAL)
     Q_PROPERTY(bool usesPresets READ usesPresets CONSTANT FINAL)
 
+public:
     muse::ContextInject<IEffectExecutionScenario> executionScenario{ this };
     muse::ContextInject<IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
