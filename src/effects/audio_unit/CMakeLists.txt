@@ -1,47 +1,44 @@
 #
 # Audacity: A Digital Audio Editor
 #
-declare_module(effects_audio_unit)
+muse_create_module(effects_audio_unit)
 
-set(MODULE_QRC audiounit.qrc)
+target_sources(effects_audio_unit PRIVATE
+    audiouniteffectsmodule.cpp
+    audiouniteffectsmodule.h
 
-set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
+    internal/audiouniteffectloader.h
 
-set(MODULE_SRC
-    ${CMAKE_CURRENT_LIST_DIR}/audiouniteffectsmodule.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/audiouniteffectsmodule.h
+    internal/audiounitpluginsscanner.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiouniteffectloader.h
+    internal/audiounitpluginsmetareader.cpp
+    internal/audiounitpluginsmetareader.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsscanner.h
+    internal/audiounitviewlauncher.cpp
+    internal/audiounitviewlauncher.h
+    internal/audiounittypes.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsmetareader.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsmetareader.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitviewlauncher.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitviewlauncher.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounittypes.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/view/audiounitview.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/audiounitview.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/audiounitviewmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/audiounitviewmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/audiounitcontrol.mm
-    ${CMAKE_CURRENT_LIST_DIR}/view/audiounitcontrol.h
+    view/audiounitview.cpp
+    view/audiounitview.h
+    view/audiounitviewmodel.cpp
+    view/audiounitviewmodel.h
+    view/audiounitcontrol.mm
+    view/audiounitcontrol.h
 )
 
-set_source_files_properties(
-    ${CMAKE_CURRENT_LIST_DIR}/view/audiounitcontrol.mm
-    PROPERTIES
+set_source_files_properties(view/audiounitcontrol.mm PROPERTIES
     SKIP_UNITY_BUILD_INCLUSION ON
     SKIP_PRECOMPILE_HEADERS ON
 )
 
-set(MODULE_LINK
-        au3wrap
-        au3-effects
-        au3-realtime-effects
-        au3-audio-unit
-)
+qt_add_resources(effects_audio_unit_RCC_SOURCES audiounit.qrc)
+target_sources(effects_audio_unit PRIVATE ${effects_audio_unit_RCC_SOURCES})
 
-setup_module()
+add_qml_import_path(${CMAKE_CURRENT_LIST_DIR}/qml)
+
+target_link_libraries(effects_audio_unit PRIVATE
+    au3wrap
+    au3-effects
+    au3-realtime-effects
+    au3-audio-unit
+)
