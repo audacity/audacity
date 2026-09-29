@@ -1,5 +1,109 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+# Audacity 4.0.1 release notes
+
+## Community contributions
+
+We're happy to have seen a significant increase in contributions from the community. Thank you all !
+
+### Contributions from Jonatã Bolzan Loss (@jonata)
+
+- #12081 Dragging a duplicated portion of a clip onto the original clip causes it to disappear
+- #11973 Unable to open project with Cyrillic name on first try
+- #11976 Cannot open .aup4/.aup3 files when filenames contain Japanese characters
+- #12004 Cannot open files with Spanish characters such as "á"
+- #12057 Won't open files with foreign/non-English characters in the name/folder
+- #12070 Fix -9996 Invalid device error
+- #11972 Selecting a track by its header should not move the playhead cursor
+- #11940 Meter dB range shown as untranslated
+
+### Contributions from Ken Friis Larsen (@kfl)
+- #12093 AppImage fails to start when libOpenGL.so.0 is missing (Ubuntu 26.04 minimal desktop)
+- #10135 Installing the AppImage of Audacity 4 Alpha 2 fails
+
+### Other contributions
+- #11682 Label is created at a wrong position — Riccardo Campo (@RiccardoCampo)
+- #11247 Make the carousel dots clickable in the Welcome screen — @danielmolinas
+- Add Liquid Glass icons (macOS) — Joshua Brest (@JoshBashed)
+
+## Performance
+
+- #12097 Fix clip and label movement
+- #12187 Effect states shared on copy
+
+## New features
+
+- #11136 Implement export multiple
+- #11932 Release a portable version for Audacity 4
+- #12062 Add back missing AU3 shortcuts
+- #11801 Add 'Open in file manager' context menu option on Cloud projects tab
+
+## Accessibility
+
+- #11368 Add track vertical ruler into main keyboard navigation hierarchy
+- #11367 Add timeline ruler into main keyboard navigation hierarchy
+- #11416 Keyboard focus should shift to "Add effect" button when opening Effect panel
+- #10876 Fix inconsistencies in timecode component usages
+
+## Bug fixes
+
+### Projects and files
+
+- #12296 Fix project corruption on save error
+- #12209 Conversion from aup3 to aup4 results in messed up clips
+- #11468 Cannot start "New project"
+- #11966 Truncated file name when exporting audio files of a certain length
+- #11961 Drag and drop to app icon doesn't open file in Audacity 4
+- #283 (muse_framework repo) Case-insensitive file open filters
+- #10387 WxWidgets Debug Alert when canceling Label Import (Windows)
+
+### Installation and platform
+
+- #12167 Audacity fails to launch with Windows Smart App Control enabled — error 0xC0E90002
+- #11915 Audacity 4 AppImage doesn't run on non-systemd linux distros anymore
+
+### Effects and plug-ins
+
+- #11427 Audacity Plugin Process crashes when scanning for new plugins on launch
+- #11892 VST3 setting changes get reverted on playback start and other actions
+- #11643 Cannot enter values in some effects
+- #11668 Cannot type values above 9,999 in effect number fields
+- #8267 Saving presets with Unicode symbols
+
+### Playback, recording and editing
+
+- #12107 Audacity always uses system default input on Windows
+- #11925 Playhead loses accuracy to Bar-Beat gradually when setting past 120 BPM
+- #11145 Clips get hidden and revealed repeatedly when selecting and deselecting after applying an effect
+- #11148 Pausing will make the view jump to cursor/play head position if it isn't visible
+- #12013 Don't shift frame on double-click
+- #10083 One cannot immediately edit the name of the first label created in a project
+- #11397 Playhead can be dragged before 0 mark
+
+### Interface and localization
+
+- #12025 Selecting Effect menu crashes the app when set to German
+- #314 (muse_framework repo) Toast crash fix
+- #11903 Shortcuts are not saved in Audacity Beta 4
+- #11945 Corsican language not available in Audacity 4.0
+- #11841 dB info disappears when dragging graphic EQ sliders
+- #10410 Tooltips for Gain and Volume are unresponsive
+- #12108 Move 'About Audacity' menu entry
+
+### Cloud (audio.com)
+
+- #11609 Can't resume cloud upload once the internet connection is restored
+- #12155 Mono cloud audio is imported as stereo
+- #11374 Failed cloud project open leaves a half-initialized project window
+- #11460 'Error saving project' when trying to overwrite an existing local cloud project copy (MacOS)
+- #11568 Project audio preview is broken
+- #11373 Redundant "Syncing with audio.com" dialog when saving changes to a Cloud project
+
+## For packagers and developers
+
+- #11959 Allow building with system libraries as AU3 did
+
+
 # Audacity 4.0 release notes
 
 Audacity 4 rebuilds the application interface on Qt and introduces a new clip-editing model. Most Audacity 3 workflows remain available, but some controls have moved or changed.
