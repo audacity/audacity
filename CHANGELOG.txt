@@ -2,107 +2,54 @@ List of significant changes and bug fixes going back to version 1.1.0
 
 # Audacity 4.0.1 release notes
 
-## Community contributions
-
-We're happy to have seen a significant increase in contributions from the community. Thank you all !
-
-### Contributions from Jonatã Bolzan Loss (@jonata)
-
-- #12081 Dragging a duplicated portion of a clip onto the original clip causes it to disappear
-- #11973 Unable to open project with Cyrillic name on first try
-- #11976 Cannot open .aup4/.aup3 files when filenames contain Japanese characters
-- #12004 Cannot open files with Spanish characters such as "á"
-- #12057 Won't open files with foreign/non-English characters in the name/folder
-- #12070 Fix -9996 Invalid device error
-- #11972 Selecting a track by its header should not move the playhead cursor
-- #11940 Meter dB range shown as untranslated
-
-### Contributions from Ken Friis Larsen (@kfl)
-- #12093 AppImage fails to start when libOpenGL.so.0 is missing (Ubuntu 26.04 minimal desktop)
-- #10135 Installing the AppImage of Audacity 4 Alpha 2 fails
-
-### Other contributions
-- #11682 Label is created at a wrong position — Riccardo Campo (@RiccardoCampo)
-- #11247 Make the carousel dots clickable in the Welcome screen — @danielmolinas
-- Add Liquid Glass icons (macOS) — Joshua Brest (@JoshBashed)
-
-## Performance
-
-- #12097 Fix clip and label movement
-- #12187 Effect states shared on copy
+Many of these fixes come from community contributors. Thank you all!
 
 ## New features
 
-- #11136 Implement export multiple
-- #11932 Release a portable version for Audacity 4
-- #12062 Add back missing AU3 shortcuts
-- #11801 Add 'Open in file manager' context menu option on Cloud projects tab
+- Export multiple: export each track, or each labelled region, to its own file (#11136)
+- Portable Windows version that runs without installation (#11932)
+- Restored missing Audacity 3 keyboard shortcuts (#12062)
+- "Open in file manager" on the Cloud projects tab (#11801)
+- Clickable carousel dots on the Welcome screen (#11247, by @danielmolinas)
+- Liquid Glass app icon on macOS (#11923, by @JoshBashed)
 
 ## Accessibility
 
-- #11368 Add track vertical ruler into main keyboard navigation hierarchy
-- #11367 Add timeline ruler into main keyboard navigation hierarchy
-- #11416 Keyboard focus should shift to "Add effect" button when opening Effect panel
-- #10876 Fix inconsistencies in timecode component usages
+- The timeline and the track vertical rulers are now part of keyboard navigation (#11367, #11368)
+- Opening the Effects panel focuses the "Add effect" button (#11416)
+- Toast notifications are announced by screen readers and reachable by keyboard (#11645)
 
 ## Bug fixes
 
-### Projects and files
+- Fixed project corruption after a failed save (#12296)
+- Fixed clips being messed up when converting .aup3 projects (#12209)
+- Fixed opening projects and files with non-ASCII characters in their name or folder (#11973, #11976, #12004, #12057, by @jonata)
+- Fixed other non-ASCII text issues: presets with Unicode names, starting a new project, and the input device always being the system default on Windows (#8267, #11468, #12107)
+- Fixed Audacity failing to launch with Windows Smart App Control enabled (#12167)
+- Fixed the AppImage failing to install or start on some Linux distributions (#10135, #12093, by @kfl; #11915)
+- Fixed crash when opening the Effect menu in German (#12025)
+- Fixed "Audacity quit unexpectedly" dialogs popping up during plugin validation (#11427)
+- Fixed VST3 setting changes being reverted on playback start (#11892)
+- Fixed typing values into effect controls (#11643, #11668)
+- Dragging clips and labels across tracks is faster and no longer crashes, and dragging a duplicated clip onto its original no longer makes it disappear (#12097, #12081 by @jonata)
+- Realtime effect windows stay open on edits and undo/redo, and undo/redo is faster with many effects (#12187)
+- Fixed clips flickering when selecting after applying an effect (#11145)
+- Fixed the playhead drifting from bars and beats above 120 BPM (#11925)
+- The view no longer jumps on pause or double-click, and selecting a track by its header no longer moves the playhead (#11148, #12013, #11972 by @jonata)
+- Fixed new labels being placed at the wrong position, and the first label's name not being editable right away (#11682 by @RiccardoCampo, #10083)
+- No more "-9996 Invalid device" error dialog when input monitoring can't open the device (#12070, by @jonata)
+- Fixed exported file names being truncated (#11966)
+- Fixed opening files dropped on the macOS Dock icon (#11961)
+- Fixed upper-case extensions such as .WAV not being recognized on Linux (#12007)
+- Fixed shortcuts not being saved (#11903)
+- Fixed tooltips on the gain, volume and graphic EQ sliders (#10410, #11841)
+- Fixed the meter dB range not being translated (#11940 by @jonata)
+- Cloud: fixed resuming uploads after a lost connection, mono audio imported as stereo, and broken project audio previews (#11609, #12155, #11568)
+- Cloud: no more redundant sync dialog on save, error when overwriting a local copy, or half-initialized window after a failed open (#11373, #11460, #11374)
 
-- #12296 Fix project corruption on save error
-- #12209 Conversion from aup3 to aup4 results in messed up clips
-- #11468 Cannot start "New project"
-- #11966 Truncated file name when exporting audio files of a certain length
-- #11961 Drag and drop to app icon doesn't open file in Audacity 4
-- #283 (muse_framework repo) Case-insensitive file open filters
-- #10387 WxWidgets Debug Alert when canceling Label Import (Windows)
+## For packagers
 
-### Installation and platform
-
-- #12167 Audacity fails to launch with Windows Smart App Control enabled — error 0xC0E90002
-- #11915 Audacity 4 AppImage doesn't run on non-systemd linux distros anymore
-
-### Effects and plug-ins
-
-- #11427 Audacity Plugin Process crashes when scanning for new plugins on launch
-- #11892 VST3 setting changes get reverted on playback start and other actions
-- #11643 Cannot enter values in some effects
-- #11668 Cannot type values above 9,999 in effect number fields
-- #8267 Saving presets with Unicode symbols
-
-### Playback, recording and editing
-
-- #12107 Audacity always uses system default input on Windows
-- #11925 Playhead loses accuracy to Bar-Beat gradually when setting past 120 BPM
-- #11145 Clips get hidden and revealed repeatedly when selecting and deselecting after applying an effect
-- #11148 Pausing will make the view jump to cursor/play head position if it isn't visible
-- #12013 Don't shift frame on double-click
-- #10083 One cannot immediately edit the name of the first label created in a project
-- #11397 Playhead can be dragged before 0 mark
-
-### Interface and localization
-
-- #12025 Selecting Effect menu crashes the app when set to German
-- #314 (muse_framework repo) Toast crash fix
-- #11903 Shortcuts are not saved in Audacity Beta 4
-- #11945 Corsican language not available in Audacity 4.0
-- #11841 dB info disappears when dragging graphic EQ sliders
-- #10410 Tooltips for Gain and Volume are unresponsive
-- #12108 Move 'About Audacity' menu entry
-
-### Cloud (audio.com)
-
-- #11609 Can't resume cloud upload once the internet connection is restored
-- #12155 Mono cloud audio is imported as stereo
-- #11374 Failed cloud project open leaves a half-initialized project window
-- #11460 'Error saving project' when trying to overwrite an existing local cloud project copy (MacOS)
-- #11568 Project audio preview is broken
-- #11373 Redundant "Syncing with audio.com" dialog when saving changes to a Cloud project
-
-## For packagers and developers
-
-- #11959 Allow building with system libraries as AU3 did
-
+- Audacity can be built against system copies of sqlite, twolame, soxr, soundtouch, sbsms and lv2sdk (#11959)
 
 # Audacity 4.0 release notes
 
