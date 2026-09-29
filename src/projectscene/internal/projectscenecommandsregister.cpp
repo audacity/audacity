@@ -202,6 +202,78 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration()
     },
+    CommandInfo{
+        PROJECTSCENE_PLAY_POSITION_DECREASE_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Move playhead left"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Move playhead left"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_PLAY_POSITION_INCREASE_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Move playhead right"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Move playhead right"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_SELECTION_EXTEND_LEFT_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Extend selection left"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Extend selection left"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_SELECTION_EXTEND_RIGHT_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Extend selection right"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Extend selection right"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_SELECTION_CONTRACT_LEFT_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Contract selection from left"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Contract selection from left"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_SELECTION_CONTRACT_RIGHT_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Contract selection from right"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Contract selection from right"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_CURSOR_TO_SELECTION_START_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Move playhead to selection start"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Move playhead to selection start"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Move playhead to selection end"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Move playhead to selection end"),
+        InputSchema(),
+        Decoration()
+    },
 };
 }
 

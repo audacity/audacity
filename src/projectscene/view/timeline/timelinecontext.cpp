@@ -8,6 +8,7 @@
 #include "playback/iaudiooutput.h"
 #include "snaptimeformatter.h"
 #include "timelineviewcontroller.h"
+#include "../playcursor/playpositionactioncontroller.h"
 
 #include "log.h"
 
@@ -52,6 +53,10 @@ TimelineContext::TimelineContext(QObject* parent)
 
 TimelineContext::~TimelineContext()
 {
+    if (m_playPositionController) {
+        m_playPositionController->deinit();
+    }
+
     if (m_viewController) {
         m_viewController->deinit();
     }
@@ -127,6 +132,9 @@ void TimelineContext::init(double frameWidth)
 
     m_viewController = std::make_unique<TimelineViewController>(this, iocContext());
     m_viewController->init();
+
+    m_playPositionController = std::make_unique<PlayPositionActionController>(this, iocContext());
+    m_playPositionController->init();
 
     configuration()->playbackOnRulerClickEnabledChanged().onNotify(this, [this]() {
         emit playbackOnRulerClickEnabledChanged();

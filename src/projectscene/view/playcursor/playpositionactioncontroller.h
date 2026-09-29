@@ -21,49 +21,39 @@
  */
 #pragma once
 
-#include <QObject>
-
-#include "actions/actionable.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
 #include "trackedit/iselectioncontroller.h"
 
+#include "projectscene/iplaypositionviewcontroller.h"
+#include "projectscene/iprojectsceneactionscontroller.h"
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-class PlayPositionActionController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Contextable
+class PlayPositionActionController : public IPlayPositionViewController, public muse::async::Asyncable, public muse::Contextable
 {
-    Q_OBJECT
-
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
-
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
 
 public:
-    PlayPositionActionController(QObject* parent = nullptr);
+    PlayPositionActionController(TimelineContext* context, const muse::modularity::ContextPtr& ctx);
 
-    Q_INVOKABLE void init();
+    void init();
+    void deinit();
 
-    TimelineContext* timelineContext() const;
-    void setTimelineContext(TimelineContext* newContext);
+    void playPositionDecrease() override;
+    void playPositionIncrease() override;
 
-    void playPositionDecrease();
-    void playPositionIncrease();
+    void selectionExtendLeft() override;
+    void selectionExtendRight() override;
+    void selectionContractLeft() override;
+    void selectionContractRight() override;
 
-    void selectionExtendLeft();
-    void selectionExtendRight();
-    void selectionContractLeft();
-    void selectionContractRight();
-
-    void cursorToSelectionStart();
-    void cursorToSelectionEnd();
-
-signals:
-    void timelineContextChanged();
+    void cursorToSelectionStart() override;
+    void cursorToSelectionEnd() override;
 
 private:
     void onProjectChanged();

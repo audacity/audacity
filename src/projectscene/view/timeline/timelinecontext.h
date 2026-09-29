@@ -29,6 +29,7 @@ using Direction = DirectionType::Direction;
 
 class SnapTimeFormatter;
 class TimelineViewController;
+class PlayPositionActionController;
 class TimelineContext : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
@@ -284,6 +285,7 @@ private:
 
     std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
     std::unique_ptr<TimelineViewController> m_viewController;
+    std::unique_ptr<PlayPositionActionController> m_playPositionController;
 
     qreal m_previousVerticalScrollPosition = 0.0;
     qreal m_previousHorizontalScrollPosition = 0.0;
