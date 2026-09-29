@@ -61,7 +61,7 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
         <source>Trigger the focused control or make a range selection of track items</source>
-        <translation>対象のコントロールを操作するか、トラック項目を範囲選択</translation>
+        <translation>選択中のコントロールを実行するか、トラック項目のレンジを選択</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
@@ -565,7 +565,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="284"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="285"/>
         <source>Mute/unmute focused track</source>
-        <translation>対象トラックのミュート/ミュート解除</translation>
+        <translation>対象トラックをミュート/ミュート解除</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
@@ -583,7 +583,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="305"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="306"/>
         <source>Unmute all tracks</source>
-        <translation>すべてのトラックのミュートを解除</translation>
+        <translation>すべてのトラックをミュート解除</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="312"/>
@@ -595,7 +595,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="319"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="320"/>
         <source>Unmute selected tracks</source>
-        <translation>選択したトラックのミュートを解除</translation>
+        <translation>選択トラックをミュート解除</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="330"/>
@@ -2136,7 +2136,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="84"/>
         <source>Open online handbook</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>オンラインハンドブックを開きます</translation>
+        <translation>オンラインハンドブックを開く</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="98"/>
@@ -4968,22 +4968,22 @@ SakiPapa 2022-2026</translation>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="141"/>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="148"/>
         <source>Registration failed. Please try again.</source>
-        <translation>登録できませんでした｡あとでやり直してください。</translation>
+        <translation>登録できませんでした｡やり直してください。</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="162"/>
         <source>Incorrect email or password. Please try again.</source>
-        <translation>メールアドレスまたはパスワードが違います。あとでやり直してください。</translation>
+        <translation>メールアドレスまたはパスワードが違います。やり直してください。</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="170"/>
         <source>Authentication failed. Please try again.</source>
-        <translation>認証できませんでした。あとでやり直してください。</translation>
+        <translation>認証できませんでした。やり直してください。</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="178"/>
         <source>Could not start the sign-in process. Please try again.</source>
-        <translation>サインイン処理を開始できませんでした。もう一度お試しください。</translation>
+        <translation>サインイン処理を開始できませんでした。やり直してください。</translation>
     </message>
 </context>
 <context>
@@ -5842,7 +5842,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="269"/>
         <source>Could not find any audio devices.
 </source>
-        <translation>オーディオデバイスが見つかりません。
+        <translation>オーディオデバイスが見つかりませんでした。
 </translation>
     </message>
     <message>
@@ -5970,12 +5970,12 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="223"/>
         <source>Could not find component</source>
-        <translation>コンポーネントが見つかりません</translation>
+        <translation>コンポーネントが見つかりませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="231"/>
         <source>Could not initialize component</source>
-        <translation>コンポーネントを初期化できません</translation>
+        <translation>コンポーネントを初期化できませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="352"/>
@@ -6646,7 +6646,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="123"/>
         <source>Automatically reduces the length of passages where the volume is below a specified level</source>
-        <translation>音量が指定したレベルを下回る個所の長さを自動的に減らします</translation>
+        <translation>音量が指定されたレベルを下回る区間の長さを自動的に短縮します</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="32"/>
@@ -8036,7 +8036,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 
 %2</source>
         <extracomment>%1 is the effect name, %2 is the preset name</extracomment>
-        <translation>%1: 次の設定を読み込めません。デフォルト設定を適用します。
+        <translation>%1: 次の設定を読み込めませんでした。デフォルト設定を適用します。
 
 %2</translation>
     </message>
@@ -8410,7 +8410,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="447"/>
         <source>Selected noise profile is too short.</source>
-        <translation>選択されたノイズプロファイルは短すぎます。</translation>
+        <translation>選択したノイズプロファイルは短すぎます。</translation>
     </message>
 </context>
 <context>
@@ -8658,7 +8658,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
         <source>Could not open file</source>
-        <translation>ファイルを開けません</translation>
+        <translation>ファイルを開けませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2388"/>
@@ -11766,12 +11766,12 @@ Audacityチーム（https://forum.audacityteam.org/）に報告してくださ�
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
         <source>Number files in label order</source>
-        <translation>ラベル順にファイルに番号を付ける</translation>
+        <translation>ラベル順にファイルを番号付け</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
         <source>Number files in track order</source>
-        <translation>トラック順にファイルに番号を付ける</translation>
+        <translation>トラック順にファイルを番号付け</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="232"/>
@@ -12177,12 +12177,12 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
         <source>No labels</source>
-        <translation>ラベルがありません</translation>
+        <translation>ラベルなし</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="240"/>
         <source>Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</source>
-        <translation>ラベル領域を個別のオーディオファイルとして書き出すには、最初のラベルトラックに少なくとも 1 つのラベルが必要です。プロジェクトに戻ってラベルを追加し、もう一度お試しください。</translation>
+        <translation>ラベル領域を個別のオーディオファイルとして書き出すには、最初のラベルトラックに少なくとも1つのラベルが必要です。プロジェクトに戻ってラベルを追加し、やり直してください。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="334"/>
@@ -12204,7 +12204,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="699"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
-        <translation>”%1”に書き出すことができません: 書き出し先のフォルダを作成することができませんでした。パスが正しいかや書き込み権限があるかを確認してください。</translation>
+        <translation>”%1”に書き出すことができませんでした: 書き出し先のフォルダを作成することができませんでした。パスが正しいかや書き込み権限があるかを確認してください。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
@@ -12526,7 +12526,7 @@ Master effects will be turned back on after export.</source>
 Perhaps %1 is not writable or the disk is full.</source>
         <extracomment>%1 is a path where the project is about to be saved</extracomment>
         <translation>ファイルへ書き込みできませんでした。
-%1が書き込み可能でないか、ストレージに空きがありません。</translation>
+%1が書き込み可能でないか、空きストレージ領域がありません。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.h" line="31"/>
@@ -15387,7 +15387,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1334"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1373"/>
         <source>Could not open MP3 encoding library!</source>
-        <translation>MP3エンコーディングライブラリを開けません!</translation>
+        <translation>MP3エンコーディングライブラリを開けませんでした!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1337"/>
@@ -15397,7 +15397,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1367"/>
         <source>Could not initialize MP3 encoding library!</source>
-        <translation>MP3エンコーディングライブラリを初期化できません!</translation>
+        <translation>MP3エンコーディングライブラリを初期化できませんでした!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1379"/>
@@ -15815,7 +15815,7 @@ Audacityでは処理できないので、書き出しを中断しました。</t
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
         <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
-        <translation>%1ファイルを書き込み中にエラーが起きました（空きがない?）。
+        <translation>%1ファイルを書き込み中にエラーが起きました（空き領域なし?）。
 Libsndfileは“%2”を返しています</translation>
     </message>
     <message>
@@ -16022,7 +16022,7 @@ Libsndfileは“%2”を返しています</translation>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="782"/>
         <source>One or more saved labels could not be read.</source>
-        <translation>保存したラベルを読み込めません。</translation>
+        <translation>保存したラベルを読み込めませんでした。</translation>
     </message>
 </context>
 <context>
@@ -18474,7 +18474,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="447"/>
         <source>Open other…</source>
-        <translation>その他を開く…</translation>
+        <translation>ほかを開く…</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="116"/>
@@ -18524,7 +18524,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="530"/>
         <source>Could not save project locally</source>
-        <translation>プロジェクトをローカルに保存できません</translation>
+        <translation>プロジェクトをローカルに保存できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/au3wrap/internal/au3project.cpp" line="153"/>
@@ -18567,7 +18567,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="398"/>
         <source>Could not open file: %1</source>
-        <translation>このファイルを開けません: %1</translation>
+        <translation>ファイルを開けませんでした: %1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="721"/>
@@ -18901,7 +18901,7 @@ Please remove the write protection by checking the file’s properties, ensuring
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
-        <translation>ストレージに空きがありません。
+        <translation>空きストレージ領域がありません。
 %1</translation>
     </message>
     <message>
@@ -18931,7 +18931,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 Please select a bigger temporary directory location in
 Directories Preferences.</source>
         <extracomment>%1 is the drive or volume name</extracomment>
-        <translation>%1ドライブのストレージに空きがほとんどありません。
+        <translation>%1のストレージに空き領域がほとんどありません。
 もっと余裕のある一時ディレクトリの場所を
 設定で選択してください。</translation>
     </message>
@@ -19132,7 +19132,7 @@ The following command failed:
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
         <source>Destination project could not be detached</source>
-        <translation>コピー先プロジェクトを切り離すことができません</translation>
+        <translation>コピー先プロジェクトを切り離すことができませんでした</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
@@ -19151,7 +19151,7 @@ Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</source>
         <extracomment>%1 is the file path</extracomment>
         <translation>ファイル%1に書き込めませんでした。
-ストレージに空きがないか、書き込み可能でないと思われます。
+空きストレージ領域がないか、書き込み可能でないと思われます。
 空き容量を増やすヒントについては、ヘルプボタンをクリックしてください。</translation>
     </message>
     <message>
@@ -19646,7 +19646,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="804"/>
         <source>Your audio could not be shared</source>
-        <translation>オーディオを共有できません</translation>
+        <translation>オーディオを共有できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
@@ -19673,7 +19673,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="826"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
-        <translation>audio.comに接続できません。インターネット接続を確認するか、あとでやり直してください。</translation>
+        <translation>audio.comに接続できませんでした。インターネット接続を確認するか、あとでやり直してください。</translation>
     </message>
 </context>
 <context>
@@ -21376,7 +21376,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="98"/>
         <source>%1 of %2</source>
-        <translation>%1 / %2</translation>
+        <translation>%1/%2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="256"/>
@@ -21778,7 +21778,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="398"/>
         <source>Label moved</source>
-        <translation>ラベルを移動</translation>
+        <translation>移動ラベル</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="399"/>
@@ -22783,7 +22783,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="97"/>
         <source>%1 has downloaded an update and is ready to install. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
-        <translation>%1 はアップデートをダウンロードし、インストールする準備ができました。インストールを完了するため %1 は再起動します。保存していない変更がある場合は、先に保存するよう求められます。</translation>
+        <translation>%1はアップデートをダウンロードし、インストールする準備ができました。インストールを完了するため%1は再起動します。保存していない変更がある場合は、先に保存するよう求められます。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="110"/>
@@ -22794,7 +22794,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="131"/>
         <source>%1 Release notes</source>
-        <translation>%1 リリースノート</translation>
+        <translation>%1リリースノート</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
@@ -22851,12 +22851,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="188"/>
         <source>Not enough disk space</source>
-        <translation>ディスクの空き容量が不足しています</translation>
+        <translation>空きストレージ領域が不足しています</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="265"/>
         <source>%1 has downloaded an update and is ready to install it. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
-        <translation>%1 はアップデートをダウンロードし、インストールする準備ができました。インストールを完了するため %1 は再起動します。保存していない変更がある場合は、先に保存するよう求められます。</translation>
+        <translation>%1はアップデートをダウンロードし、インストールする準備ができました。インストールを完了するため%1は再起動します。保存していない変更がある場合は、先に保存するよう求められます。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="272"/>
@@ -22897,7 +22897,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="87"/>
         <source>See details</source>
-        <translation>詳細を見る</translation>
+        <translation>詳細を表示</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="97"/>
@@ -22907,17 +22907,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="375"/>
         <source>Free up at least %1 MB of disk space and try again.</source>
-        <translation>ディスクの空き容量を %1 MB 以上確保して、もう一度お試しください。</translation>
+        <translation>空きストレージ領域を%1MB以上確保して、やり直してください。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="546"/>
         <source>Installing %1</source>
-        <translation>%1 をインストール中</translation>
+        <translation>%1をインストール中</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="547"/>
         <source>Installing %1 %2</source>
-        <translation>%1 %2 をインストール中</translation>
+        <translation>%1 %2をインストール中</translation>
     </message>
 </context>
 <context>
@@ -23277,26 +23277,26 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
         <source>Could not open file: “%1”</source>
-        <translation>ファイルを開けません: “%1”</translation>
+        <translation>ファイルを開けませんでした: “%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="266"/>
         <source>Error: %1 at line %2</source>
         <extracomment>%1 is the parser error message, %2 is the line number in the file</extracomment>
-        <translation>エラー: %1（%2 行目）</translation>
+        <translation>エラー: %1（%2行目）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
         <source>Could not load file: “%1”</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>ファイルを読み込めません: “%1”</translation>
+        <translation>ファイルを読み込めませんでした: “%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="150"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
-        <translation>XMLを解釈できません</translation>
+        <translation>XMLを解釈できませんでした</translation>
     </message>
 </context>
 </TS>
