@@ -17,24 +17,7 @@ target_sources(effects_audio_unit PRIVATE
     internal/audiounitviewlauncher.cpp
     internal/audiounitviewlauncher.h
     internal/audiounittypes.h
-
-    view/audiounitview.cpp
-    view/audiounitview.h
-    view/audiounitviewmodel.cpp
-    view/audiounitviewmodel.h
-    view/audiounitcontrol.mm
-    view/audiounitcontrol.h
 )
-
-set_source_files_properties(view/audiounitcontrol.mm PROPERTIES
-    SKIP_UNITY_BUILD_INCLUSION ON
-    SKIP_PRECOMPILE_HEADERS ON
-)
-
-qt_add_resources(effects_audio_unit_RCC_SOURCES audiounit.qrc)
-target_sources(effects_audio_unit PRIVATE ${effects_audio_unit_RCC_SOURCES})
-
-add_qml_import_path(${CMAKE_CURRENT_LIST_DIR}/qml)
 
 target_link_libraries(effects_audio_unit PRIVATE
     au3wrap
@@ -42,3 +25,5 @@ target_link_libraries(effects_audio_unit PRIVATE
     au3-realtime-effects
     au3-audio-unit
 )
+
+add_subdirectory(qml/Audacity/AudioUnit)

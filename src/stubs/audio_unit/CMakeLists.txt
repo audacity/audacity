@@ -5,7 +5,4 @@ target_sources(effects_audio_unit PRIVATE
     audiouniteffectsstubmodule.h
 )
 
-qt_add_resources(effects_audio_unit_RCC_SOURCES audiounit.qrc)
-target_sources(effects_audio_unit PRIVATE ${effects_audio_unit_RCC_SOURCES})
-
-add_qml_import_path(${CMAKE_CURRENT_LIST_DIR}/qml)
+add_subdirectory(qml/Audacity/AudioUnit)
