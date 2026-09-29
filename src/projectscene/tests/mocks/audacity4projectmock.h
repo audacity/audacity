@@ -8,6 +8,7 @@ namespace au::projectscene {
 class Audacity4ProjectMock : public project::IAudacityProject
 {
 public:
+    MOCK_METHOD(int64_t, sampleBlocksUsage, (bool), (const, override));
     MOCK_METHOD(uintptr_t, au3ProjectPtr, (), (const, override));
     MOCK_METHOD(muse::Ret, load, (const muse::io::path_t&, bool, const std::string&), (override));
     MOCK_METHOD(void, close, (), (override));

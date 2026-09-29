@@ -44,6 +44,7 @@ private:
     void toggleMinutesSecondsRuler();
     void toggleBeatsMeasuresRuler();
     void toggleVerticalRulers();
+    void toggleSampleBlocks();
     void toggleRMSInWaveform();
     void toggleClippingInWaveform();
     void toggleUpdateDisplayWhilePlaying();

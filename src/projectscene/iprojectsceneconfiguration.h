@@ -26,6 +26,11 @@ public:
     virtual void setVerticalRulersVisible(bool visible) = 0;
     virtual muse::async::Channel<bool> isVerticalRulersVisibleChanged() const = 0;
 
+    //! Debug: draw the sample blocks of each clip
+    virtual bool isSampleBlocksVisible() const = 0;
+    virtual void setSampleBlocksVisible(bool visible) = 0;
+    virtual muse::async::Channel<bool> isSampleBlocksVisibleChanged() const = 0;
+
     virtual bool isRMSInWaveformVisible() const = 0;
     virtual void setRMSInWaveformVisible(bool visible) = 0;
     virtual muse::async::Channel<bool> isRMSInWaveformVisibleChanged() const = 0;

@@ -100,6 +100,7 @@ public:
 
     projectscene::IProjectViewStatePtr viewState() const override;
 
+    int64_t sampleBlocksUsage(bool includeUndoHistory) const override;
     uintptr_t au3ProjectPtr() const override;
 
 private:

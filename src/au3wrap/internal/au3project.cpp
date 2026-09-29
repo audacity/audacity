@@ -319,6 +319,16 @@ std::string Au3ProjectAccessor::title() const
     return wxToStdString(m_data->project->GetProjectName());
 }
 
+int64_t Au3ProjectAccessor::sampleBlocksUsage(bool includeUndoHistory) const
+{
+    auto& project = m_data->projectRef();
+    auto& projectFileIO = ProjectFileIO::Get(project);
+    if (includeUndoHistory) {
+        return projectFileIO.GetTotalUsage();
+    }
+    return projectFileIO.GetCurrentUsage({ &TrackList::Get(project) });
+}
+
 uintptr_t Au3ProjectAccessor::au3ProjectPtr() const
 {
     return reinterpret_cast<uintptr_t>(m_data->project.get());

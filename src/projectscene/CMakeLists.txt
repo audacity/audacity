@@ -158,6 +158,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/sampleblocksoverlay.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/sampleblocksoverlay.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/iwavepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectionviewcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectionviewcontroller.h

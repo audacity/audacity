@@ -15,6 +15,9 @@ public:
     MOCK_METHOD(bool, isVerticalRulersVisible, (), (const, override));
     MOCK_METHOD(void, setVerticalRulersVisible, (bool visible), (override));
     MOCK_METHOD(muse::async::Channel<bool>, isVerticalRulersVisibleChanged, (), (const, override));
+    MOCK_METHOD(bool, isSampleBlocksVisible, (), (const, override));
+    MOCK_METHOD(void, setSampleBlocksVisible, (bool), (override));
+    MOCK_METHOD(muse::async::Channel<bool>, isSampleBlocksVisibleChanged, (), (const, override));
 
     MOCK_METHOD(bool, isRMSInWaveformVisible, (), (const, override));
     MOCK_METHOD(void, setRMSInWaveformVisible, (bool visible), (override));

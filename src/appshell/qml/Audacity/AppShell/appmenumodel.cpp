@@ -536,6 +536,10 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
             makeMenuItem("diagnostic-show-actions")
         };
 
+        MenuItemList projectItems {
+            makeMenuItem("toggle-sample-blocks")
+        };
+
         MenuItemList accessibilityItems {
             makeMenuItem("diagnostic-show-navigation-tree"),
             makeMenuItem("diagnostic-show-accessible-tree"),
@@ -551,6 +555,7 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
         };
 
         items << makeMenu(TranslatableString("appshell-menu-diagnostics", "A&ctions"), actionsItems, "menu-actions")
+              << makeMenu(TranslatableString("appshell-menu-diagnostics", "&Project"), projectItems, "menu-diagnostic-project")
               << makeMenu(TranslatableString("appshell-menu-diagnostics", "&Accessibility"), accessibilityItems, "menu-accessibility")
               << makeMenu(TranslatableString("appshell-menu-diagnostics", "E&xtensions"), extensionsItems, "menu-extensions")
               << makeMenu(TranslatableString("appshell-menu-diagnostics", "Test&flow"), testflowItems, "menu-testflow");
