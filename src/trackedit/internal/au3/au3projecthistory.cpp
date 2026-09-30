@@ -7,14 +7,43 @@
 #include "au3-project-history/ProjectHistory.h"
 #include "au3-project-history/UndoManager.h"
 #include "au3-project/Project.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/SampleBlock.h"
+
+#include "framework/global/translation.h"
+
+#include <unordered_set>
 
 using namespace au::trackedit;
 using namespace au::au3;
+
+namespace {
+std::vector<std::shared_ptr<SampleBlock> > lockedBlocksInTracks(Au3Project& project)
+{
+    std::vector<std::shared_ptr<SampleBlock> > result;
+    for (const WaveTrack* track : ::TrackList::Get(project).Any<const WaveTrack>()) {
+        for (const auto& clip : track->Intervals()) {
+            for (size_t ch = 0; ch < clip->NChannels(); ++ch) {
+                for (const auto& block : clip->GetSequence(ch)->GetBlockArray()) {
+                    if (block.sb->IsEditLocked()) {
+                        result.push_back(block.sb);
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+}
 
 void au::trackedit::Au3ProjectHistory::init()
 {
     auto& project = projectRef();
     ::ProjectHistory::Get(project).InitialState();
+    updateLockedBlocks();
 
     m_historyChanged.send(HistoryEvent::RestoredState);
 }
@@ -32,6 +61,11 @@ bool au::trackedit::Au3ProjectHistory::undoAvailable() const
 void au::trackedit::Au3ProjectHistory::undo()
 {
     doUndo();
+    // Undoing past a lock removes locked blocks too
+    if (!confirmLockedBlocksChange()) {
+        doRedo();
+    }
+    updateLockedBlocks();
 
     m_interactionOngoing = false;
     m_historyChanged.send(HistoryEvent::RestoredState);
@@ -50,6 +84,7 @@ bool au::trackedit::Au3ProjectHistory::redoAvailable() const
 void au::trackedit::Au3ProjectHistory::redo()
 {
     doRedo();
+    updateLockedBlocks();
 
     m_interactionOngoing = false;
     m_historyChanged.send(HistoryEvent::RestoredState);
@@ -64,10 +99,15 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
 {
     LOGI() << "pushHistoryState(\"" << shortDescription << "\", " << flags << ")";
     auto& project = projectRef();
+    if (!confirmLockedBlocksChange()) {
+        rollbackRefusedEdit();
+        return;
+    }
     UndoPush undoFlags = static_cast<UndoPush>(flags);
     ::ProjectHistory::Get(project).PushState(::TranslatableString::untranslatable(QString::fromStdString(longDescription)),
                                              ::TranslatableString::untranslatable(QString::fromStdString(shortDescription)),
                                              undoFlags);
+    updateLockedBlocks();
 
     m_interactionOngoing = false;
     m_historyChanged.send(HistoryEvent::NewState);
@@ -77,6 +117,7 @@ void au::trackedit::Au3ProjectHistory::rollbackState()
 {
     auto& project = projectRef();
     ::ProjectHistory::Get(project).RollbackState();
+    updateLockedBlocks();
     m_interactionOngoing = false;
     m_historyChanged.send(HistoryEvent::RestoredState);
 }
@@ -112,8 +153,13 @@ void Au3ProjectHistory::modifyState(bool autoSave)
         LOGW() << "Attempt to modify state during undoable action";
         return;
     }
+    if (!confirmLockedBlocksChange()) {
+        rollbackRefusedEdit();
+        return;
+    }
     auto& project = projectRef();
     ::ProjectHistory::Get(project).ModifyState(autoSave);
+    updateLockedBlocks();
 }
 
 void Au3ProjectHistory::modifyState(const std::type_index& restorerType)
@@ -138,12 +184,21 @@ void Au3ProjectHistory::undoRedoToIndex(size_t index)
         return;
     }
 
-    while (currentStateIndex() > index && undoAvailable()) {
-        doUndo();
+    const auto goTo = [this](size_t target) {
+        while (currentStateIndex() > target && undoAvailable()) {
+            doUndo();
+        }
+        while (currentStateIndex() < target && redoAvailable()) {
+            doRedo();
+        }
+    };
+
+    const size_t startIndex = currentStateIndex();
+    goTo(index);
+    if (!confirmLockedBlocksChange()) {
+        goTo(startIndex);
     }
-    while (currentStateIndex() < index && redoAvailable()) {
-        doRedo();
-    }
+    updateLockedBlocks();
 
     m_historyChanged.send(HistoryEvent::RestoredState);
 }
@@ -215,6 +270,54 @@ muse::async::Channel<HistoryEvent> Au3ProjectHistory::historyChanged() const
 Au3Project& au::trackedit::Au3ProjectHistory::projectRef() const
 {
     return *reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+}
+
+bool Au3ProjectHistory::confirmLockedBlocksChange() const
+{
+    if (m_lockedBlocks.empty()) {
+        return true;
+    }
+
+    std::unordered_set<const SampleBlock*> current;
+    for (const auto& block : lockedBlocksInTracks(projectRef())) {
+        current.insert(block.get());
+    }
+
+    // Blocks unlocked in the meantime (e.g. "Unlock all blocks") don't count
+    const bool lockedBlockRemoved = std::any_of(m_lockedBlocks.begin(), m_lockedBlocks.end(), [&](const auto& block) {
+        return block->IsEditLocked() && !current.count(block.get());
+    });
+    if (!lockedBlockRemoved) {
+        return true;
+    }
+
+    const muse::IInteractive::Result result = interactive()->warningSync(
+        muse::trc("trackedit", "This audio is locked"),
+        muse::trc("trackedit", "This edit changes audio that is locked, for example by an effect being processed.\n\n"
+                               "Proceeding would abort that processing."),
+        { muse::IInteractive::Button::Cancel, muse::IInteractive::Button::Ok },
+        muse::IInteractive::Button::Cancel);
+
+    return result.standardButton() == muse::IInteractive::Button::Ok;
+}
+
+void Au3ProjectHistory::rollbackRefusedEdit()
+{
+    rollbackState();
+    // The edit may already have been reported to the UI (e.g. a clip split),
+    // and rollbackState doesn't notify: resync everything
+    if (const auto prj = globalContext()->currentTrackeditProject()) {
+        prj->reload();
+    }
+}
+
+void Au3ProjectHistory::updateLockedBlocks()
+{
+    if (!globalContext()->currentProject()) {
+        m_lockedBlocks.clear();
+        return;
+    }
+    m_lockedBlocks = lockedBlocksInTracks(projectRef());
 }
 
 void Au3ProjectHistory::doUndo()

@@ -6,15 +6,22 @@
 
 #include "iprojecthistory.h"
 
+#include <memory>
+#include <vector>
+
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 
 #include "au3wrap/au3types.h"
+
+class SampleBlock;
 
 namespace au::trackedit {
 class Au3ProjectHistory : public IProjectHistory, public muse::Contextable
 {
     muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     Au3ProjectHistory(const muse::modularity::ContextPtr& ctx)
@@ -54,6 +61,15 @@ private:
 
     void doUndo();
     void doRedo();
+
+    //! Central guard for edit-locked sample blocks: returns whether the pending
+    //! edit may be committed, asking the user if it removes locked blocks.
+    bool confirmLockedBlocksChange() const;
+    void rollbackRefusedEdit();
+    void updateLockedBlocks();
+
+    //! Locked blocks present in the last committed state
+    std::vector<std::shared_ptr<SampleBlock> > m_lockedBlocks;
 
     muse::async::Channel<HistoryEvent> m_historyChanged;
 
