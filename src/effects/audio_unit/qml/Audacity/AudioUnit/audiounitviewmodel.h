@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QtQml/qqmlregistration.h>
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
@@ -88,5 +89,8 @@ private:
 
 class AudioUnitViewModelFactory : public EffectViewModelFactory<AudioUnitViewModel>
 {
+    Q_OBJECT
+    QML_ELEMENT;
+    QML_SINGLETON;
 };
 }

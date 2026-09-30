@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QQuickItem>
+#include <QtQml/qqmlregistration.h>
 
 #include "global/modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
@@ -15,6 +16,7 @@ namespace au::effects {
 class AudioUnitView : public QQuickItem, public muse::Contextable
 {
     Q_OBJECT
+    QML_ELEMENT;
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(int sidePadding READ sidePadding WRITE setSidePadding NOTIFY sidePaddingChanged FINAL)
     Q_PROPERTY(int topPadding READ topPadding WRITE setTopPadding NOTIFY topPaddingChanged FINAL)
