@@ -27,7 +27,6 @@ public:
     Q_INVOKABLE void init();
 
     void load() override;
-    Q_INVOKABLE void handleMenuItem(const QString& itemId) override;
 
     int trackId() const { return m_trackId; }
     void setTrackId(int trackId);

@@ -14,8 +14,13 @@ target_sources(record PRIVATE
     irecordmetercontroller.h
     irecord.h
     iaudioinput.h
+    recordcommands.h
 
     #internal
+    internal/recordcommandsregister.cpp
+    internal/recordcommandsregister.h
+    internal/recordcommandsstate.cpp
+    internal/recordcommandsstate.h
     internal/recordconfiguration.cpp
     internal/recordconfiguration.h
     internal/recordcontroller.cpp

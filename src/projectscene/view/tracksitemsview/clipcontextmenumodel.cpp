@@ -3,11 +3,12 @@
 */
 #include "clipcontextmenumodel.h"
 
-#include "spectrogram/spectrogramtypes.h"
-#include "trackedit/dom/track.h"
 #include "framework/global/translation.h"
-#include "global/realfn.h"
-#include "ui/view/iconcodes.h"
+#include "framework/global/realfn.h"
+#include "framework/ui/view/iconcodes.h"
+
+#include "spectrogram/spectrogramcommands.h"
+#include "trackedit/dom/track.h"
 
 using namespace au::projectscene;
 using namespace muse::uicomponents;
@@ -98,7 +99,9 @@ void ClipContextMenuModel::load()
 
         if (valCh.val == trackedit::TrackViewType::Spectrogram || valCh.val == trackedit::TrackViewType::WaveformAndSpectrogram) {
             items.push_back(makeSeparator());
-            items.push_back(makeMenuItem(spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION));
+            items.push_back(makeMenuItem(muse::rcommand::make_query(spectrogram::TRACK_SPECTROGRAM_SETTINGS_COMMAND, {
+                { "trackId", muse::Val(static_cast<int>(m_clipKey.trackId())) }
+            })));
         }
 
         valCh.ch.onReceive(this, [this](auto) { load(); }, Mode::SetReplace);
@@ -123,26 +126,6 @@ void ClipContextMenuModel::load()
 
     updateColorCheckedState();
     updateColorMenu();
-}
-
-void ClipContextMenuModel::handleMenuItem(const QString& itemId)
-{
-    if (itemId == spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION) {
-        const auto project = globalContext()->currentProject();
-        IF_ASSERT_FAILED(project) {
-            return;
-        }
-        const auto trackId = m_clipKey.trackId();
-        const auto track = project->trackeditProject()->track(trackId);
-        IF_ASSERT_FAILED(track) {
-            return;
-        }
-        const muse::String trackTitle = track->title;
-        auto args = muse::actions::ActionData::make_arg2(trackId, trackTitle);
-        dispatcher()->dispatch(spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION, std::move(args));
-    } else {
-        AbstractMenuModel::handleMenuItem(itemId);
-    }
 }
 
 ClipKey ClipContextMenuModel::clipKey() const

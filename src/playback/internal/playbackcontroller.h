@@ -8,6 +8,7 @@
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/toast/itoastservice.h"
 
@@ -40,6 +41,7 @@ public:
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<IPlayback> playback { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<record::IRecordController> recordController{ this };
     muse::ContextInject<record::IRecord> record{ this };

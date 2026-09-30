@@ -4,33 +4,51 @@
 #include "recordcontroller.h"
 
 #include "framework/global/translation.h"
+#include "framework/rcommand/actiontocommand.h"
+
+#include "../recordcommands.h"
 
 using namespace muse;
 using namespace au::record;
 using namespace muse::async;
 using namespace muse::actions;
+using namespace muse::rcommand;
 
-static const ActionQuery RECORD_START_QUERY("action://record/start");
-static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
-static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
-static const ActionQuery RECORD_LEVEL_QUERY("action://record/level"); // doesn't have callback here
-static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
-static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
-static const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
+namespace {
+const ActionQuery RECORD_START_QUERY("action://record/start");
+const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
+const ActionQuery RECORD_STOP_QUERY("action://record/stop");
+const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
+const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
+const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
 
-static const ActionCode RECORD_ON_CURRENT_TRACK_CODE("record-on-current-track");
-static const ActionCode RECORD_ON_NEW_TRACK_CODE("record-on-new-track");
+const ActionCode RECORD_ON_CURRENT_TRACK_CODE("record-on-current-track");
+const ActionCode RECORD_ON_NEW_TRACK_CODE("record-on-new-track");
+}
 
 void RecordController::init()
 {
-    dispatcher()->reg(this, RECORD_START_QUERY, this, &RecordController::toggleRecord);
-    dispatcher()->reg(this, RECORD_ON_CURRENT_TRACK_CODE, this, &RecordController::toggleRecord);
-    dispatcher()->reg(this, RECORD_ON_NEW_TRACK_CODE, this, &RecordController::recordOnNewTrack);
-    dispatcher()->reg(this, RECORD_PAUSE_QUERY, this, &RecordController::pause);
-    dispatcher()->reg(this, RECORD_STOP_QUERY, this, &RecordController::stop);
-    dispatcher()->reg(this, RECORD_TOGGLE_MIC_METERING, this, &RecordController::toggleMicMetering);
-    dispatcher()->reg(this, RECORD_TOGGLE_INPUT_MONITORING, this, &RecordController::toggleInputMonitoring);
-    dispatcher()->reg(this, RECORD_LEAD_IN_RECORDING_QUERY, this, &RecordController::leadInRecording);
+    auto cd = commandDispatcher();
+    cd->onRequest(this, RECORD_START_COMMAND, [this]() { return toggleRecord(); });
+    cd->onRequest(this, RECORD_ON_CURRENT_TRACK_COMMAND, [this]() { return toggleRecord(); });
+    cd->onRequest(this, RECORD_ON_NEW_TRACK_COMMAND, [this]() { return recordOnNewTrack(); });
+    cd->onRequest(this, RECORD_PAUSE_COMMAND, [this]() { return pause(); });
+    cd->onRequest(this, RECORD_STOP_COMMAND, [this]() { return stop(); });
+    cd->onRequest(this, RECORD_TOGGLE_MIC_METERING_COMMAND, [this]() { return toggleMicMetering(); });
+    cd->onRequest(this, RECORD_TOGGLE_INPUT_MONITORING_COMMAND, [this]() { return toggleInputMonitoring(); });
+    cd->onRequest(this, RECORD_LEAD_IN_RECORDING_COMMAND, [this]() { return leadInRecording(); });
+
+    static const std::vector<ActionToCommand> actionToCommand = {
+        { RECORD_START_QUERY.toString(), RECORD_START_COMMAND, {} },
+        { RECORD_ON_CURRENT_TRACK_CODE, RECORD_ON_CURRENT_TRACK_COMMAND, {} },
+        { RECORD_ON_NEW_TRACK_CODE, RECORD_ON_NEW_TRACK_COMMAND, {} },
+        { RECORD_PAUSE_QUERY.toString(), RECORD_PAUSE_COMMAND, {} },
+        { RECORD_STOP_QUERY.toString(), RECORD_STOP_COMMAND, {} },
+        { RECORD_TOGGLE_MIC_METERING.toString(), RECORD_TOGGLE_MIC_METERING_COMMAND, {} },
+        { RECORD_TOGGLE_INPUT_MONITORING.toString(), RECORD_TOGGLE_INPUT_MONITORING_COMMAND, {} },
+        { RECORD_LEAD_IN_RECORDING_QUERY.toString(), RECORD_LEAD_IN_RECORDING_COMMAND, {} },
+    };
+    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
@@ -84,30 +102,32 @@ Notification RecordController::isRecordingChanged() const
     return m_isRecordingChanged;
 }
 
-void RecordController::toggleRecord()
+Ret RecordController::toggleRecord()
 {
     if (m_currentRecordStatus == RecordStatus::Paused) {
-        resume();
-    } else if (isRecording()) {
-        stop();
-    } else {
-        start();
+        return resume();
     }
+
+    if (isRecording()) {
+        return stop();
+    }
+
+    return start();
 }
 
-void RecordController::recordOnNewTrack()
+Ret RecordController::recordOnNewTrack()
 {
     if (isRecording()) {
-        stop();
-    } else {
-        startWithNewTrack();
+        return stop();
     }
+
+    return startWithNewTrack();
 }
 
-void RecordController::start()
+Ret RecordController::start()
 {
     IF_ASSERT_FAILED(record()) {
-        return;
+        return make_ret(Ret::Code::InternalError);
     }
 
     stopPlaybackIfPaused();
@@ -116,16 +136,17 @@ void RecordController::start()
     if (!ret) {
         //: Title of an error dialog
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
-        return;
+        return ret;
     }
 
     setCurrentRecordStatus(RecordStatus::Running);
+    return make_ok();
 }
 
-void RecordController::startWithNewTrack()
+Ret RecordController::startWithNewTrack()
 {
     IF_ASSERT_FAILED(record()) {
-        return;
+        return make_ret(Ret::Code::InternalError);
     }
 
     stopPlaybackIfPaused();
@@ -148,66 +169,69 @@ void RecordController::startWithNewTrack()
     if (!ret) {
         trackeditInteraction()->deleteTracks(newTracks);
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
-        return;
+        return ret;
     }
 
     setCurrentRecordStatus(RecordStatus::Running);
+    return make_ok();
 }
 
-void RecordController::pause()
+Ret RecordController::pause()
 {
     IF_ASSERT_FAILED(record()) {
-        return;
+        return make_ret(Ret::Code::InternalError);
     }
 
     if (m_currentRecordStatus == RecordStatus::Paused) {
-        resume();
-        return;
+        return resume();
     }
 
     Ret ret = record()->pause();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
-        return;
+        return ret;
     }
 
     setCurrentRecordStatus(RecordStatus::Paused);
+    return make_ok();
 }
 
-void RecordController::resume()
+Ret RecordController::resume()
 {
     IF_ASSERT_FAILED(record()) {
-        return;
+        return make_ret(Ret::Code::InternalError);
     }
 
     Ret ret = record()->resume();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
-        return;
+        return ret;
     }
 
     setCurrentRecordStatus(RecordStatus::Running);
+    return make_ok();
 }
 
-void RecordController::stop()
+Ret RecordController::stop()
 {
     IF_ASSERT_FAILED(record()) {
-        return;
+        return make_ret(Ret::Code::InternalError);
     }
 
     Ret ret = record()->stop();
     if (!ret) {
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
-        return;
+        return ret;
     }
 
     setCurrentRecordStatus(RecordStatus::Stopped);
+    return make_ok();
 }
 
-void RecordController::leadInRecording()
+Ret RecordController::leadInRecording()
 {
     IF_ASSERT_FAILED(record()) {
-        return;
+        return make_ret(Ret::Code::InternalError);
     }
 
     stopPlaybackIfPaused();
@@ -221,10 +245,11 @@ void RecordController::leadInRecording()
     if (!ret) {
         m_leadInRecordingTrackIds.clear();
         interactive()->error(muse::trc("record", "Lead-in Recording error"), ret.text());
-        return;
+        return ret;
     }
 
     setCurrentRecordStatus(RecordStatus::LeadIn);
+    return make_ok();
 }
 
 void RecordController::stopPlaybackIfPaused()
@@ -237,9 +262,10 @@ void RecordController::stopPlaybackIfPaused()
     }
 }
 
-void RecordController::toggleMicMetering()
+Ret RecordController::toggleMicMetering()
 {
     configuration()->setIsMicMeteringOn(!configuration()->isMicMeteringOn());
+    return make_ok();
 }
 
 muse::async::Notification RecordController::isMicMeteringOnChanged() const
@@ -252,9 +278,10 @@ bool RecordController::isMicMeteringOn() const
     return configuration()->isMicMeteringOn();
 }
 
-void RecordController::toggleInputMonitoring()
+Ret RecordController::toggleInputMonitoring()
 {
     configuration()->setIsInputMonitoringOn(!configuration()->isInputMonitoringOn());
+    return make_ok();
 }
 
 muse::async::Notification RecordController::isInputMonitoringOnChanged() const
