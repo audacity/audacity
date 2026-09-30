@@ -8,14 +8,11 @@
 
 #include "effects/effects_base/ieffectloadersregister.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
-#include "effects/effects_base/view/effectsviewutils.h"
 
 #include "internal/audiouniteffectloader.h"
 #include "internal/audiounitpluginsscanner.h"
 #include "internal/audiounitpluginsmetareader.h"
 #include "internal/audiounitviewlauncher.h"
-
-#include "qml/Audacity/AudioUnit/audiounitviewmodel.h"
 
 static const std::string mname("effects_audiounit");
 
@@ -50,11 +47,6 @@ void au::effects::AudioUnitEffectsModule::resolveImports()
     if (loadersRegister) {
         loadersRegister->registerLoader(m_effectLoader);
     }
-}
-
-void au::effects::AudioUnitEffectsModule::registerUiTypes()
-{
-    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(AudioUnitViewModelFactory);
 }
 
 void au::effects::AudioUnitEffectsModule::onInit(const muse::IApplication::RunMode& mode)
