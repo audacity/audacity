@@ -181,6 +181,12 @@ public:
      @return whether any block was newly locked
      */
     bool LockBlocks(sampleCount s0, sampleCount s1);
+
+    //! Replaces each edit-locked block by an unlocked copy of its samples, so
+    //! that a user-level copy doesn't share (and inherit the lock of) the
+    //! original. Not for undo backups, which must share the same blocks.
+    //! @return whether any block was replaced
+    bool DeepCopyEditLockedBlocks();
     /*! @excsafety{Strong} */
     void InsertSilence(sampleCount s0, sampleCount len);
 

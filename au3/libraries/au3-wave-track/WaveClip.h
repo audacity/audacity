@@ -840,6 +840,9 @@ public:
      */
     bool LockBlocks(double t0, double t1);
 
+    //! See Sequence::DeepCopyEditLockedBlocks
+    bool DeepCopyEditLockedBlocks();
+
     //! Get one channel of the append buffer
     /*!
      @param ii identifies the channel

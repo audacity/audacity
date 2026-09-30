@@ -1942,4 +1942,99 @@ TEST_F(Au3TracksInteractionTests, LockTracksDataReplacesSilentBlocksWithLockedZe
     m_tracksInteraction->unlockAllBlocks();
     removeTrack(trackId);
 }
+
+namespace {
+std::vector<std::shared_ptr<SampleBlock> > blocksOf(const WaveTrack& track)
+{
+    std::vector<std::shared_ptr<SampleBlock> > blocks;
+    for (const auto& clip : track.Intervals()) {
+        for (size_t ch = 0; ch < clip->NChannels(); ++ch) {
+            for (const auto& block : clip->GetSequence(ch)->GetBlockArray()) {
+                blocks.push_back(block.sb);
+            }
+        }
+    }
+    return blocks;
+}
+
+void expectUnlockedAndNotShared(const WaveTrack& copy, const WaveTrack& original)
+{
+    const auto originalBlocks = blocksOf(original);
+    for (const auto& block : blocksOf(copy)) {
+        EXPECT_FALSE(block->IsEditLocked());
+        if (block->GetBlockID() > 0) {
+            for (const auto& originalBlock : originalBlocks) {
+                if (originalBlock->IsEditLocked()) {
+                    EXPECT_NE(block, originalBlock) << "copy shares a locked block";
+                }
+            }
+        }
+    }
+}
+
+size_t lockedCount(const WaveTrack& track)
+{
+    const auto blocks = blocksOf(track);
+    return std::count_if(blocks.begin(), blocks.end(), [](const auto& b) { return b->IsEditLocked(); });
+}
+}
+
+TEST_F(Au3TracksInteractionTests, CopyOfLockedRangeIsUnlockedDeepCopy)
+{
+    //! [GIVEN] A track with a locked range
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const double t0 = TRACK_MIN_SILENCE_CLIP_START + 100 * SAMPLE_INTERVAL;
+    const double t1 = TRACK_MIN_SILENCE_CLIP_START + 200 * SAMPLE_INTERVAL;
+    ASSERT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, t0, t1));
+    const size_t lockedBefore = lockedCount(*track);
+    ASSERT_GT(lockedBefore, 0u);
+
+    //! [WHEN] Copying the whole track's data to the clipboard
+    const auto data = std::static_pointer_cast<Au3TrackData>(
+        m_tracksInteraction->copyContinuousTrackData(trackId, track->GetStartTime(), track->GetEndTime()));
+    ASSERT_NE(data, nullptr);
+    const auto* copy = dynamic_cast<const WaveTrack*>(data->track().get());
+    ASSERT_NE(copy, nullptr);
+
+    //! [THEN] The copy is unlocked and shares no locked block; the original keeps its locks
+    expectUnlockedAndNotShared(*copy, *track);
+    EXPECT_EQ(lockedCount(*track), lockedBefore);
+
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, DuplicateOfTrackWithLockedBlocksIsUnlockedDeepCopy)
+{
+    //! [GIVEN] A track with a locked range
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, TRACK_MIN_SILENCE_CLIP_START + 100 * SAMPLE_INTERVAL,
+                                                    TRACK_MIN_SILENCE_CLIP_START + 200 * SAMPLE_INTERVAL));
+    const size_t lockedBefore = lockedCount(*track);
+    const size_t trackCountBefore = Au3TrackList::Get(projectRef()).Size();
+
+    //! [WHEN] Duplicating the track
+    ASSERT_TRUE(m_tracksInteraction->duplicateTracks({ trackId }));
+
+    //! [THEN] The duplicate is unlocked and shares no locked block; the original keeps its locks
+    auto& tracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(tracks.Size(), trackCountBefore + 1);
+    const WaveTrack* duplicate = nullptr;
+    for (const WaveTrack* t : tracks.Any<const WaveTrack>()) {
+        if (t != track) {
+            duplicate = t;
+        }
+    }
+    ASSERT_NE(duplicate, nullptr);
+    expectUnlockedAndNotShared(*duplicate, *track);
+    EXPECT_EQ(lockedCount(*track), lockedBefore);
+
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(duplicate->GetId());
+    removeTrack(trackId);
+}
 }

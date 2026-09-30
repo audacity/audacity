@@ -771,6 +771,28 @@ bool Sequence::LockBlocks(sampleCount s0, sampleCount s1)
     return changed;
 }
 
+bool Sequence::DeepCopyEditLockedBlocks()
+{
+    bool changed = false;
+    BlockArray newBlock{ mBlock };
+    const auto format = mSampleFormats.Stored();
+    for (auto& block : newBlock) {
+        if (!block.sb->IsEditLocked()) {
+            continue;
+        }
+        const auto len = block.sb->GetSampleCount();
+        SampleBuffer buffer(len, format);
+        Read(buffer.ptr(), format, block, 0, len, true);
+        block.sb = mpFactory->Create(buffer.ptr(), len, format);
+        changed = true;
+    }
+
+    if (changed) {
+        CommitChangesIfConsistent(newBlock, mNumSamples, wxT("DeepCopyEditLockedBlocks"));
+    }
+    return changed;
+}
+
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 {
     auto& factory = *mpFactory;

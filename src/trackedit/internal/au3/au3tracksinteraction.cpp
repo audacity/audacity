@@ -748,6 +748,7 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
 
         if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
             dest = waveTrack->Copy(begin, end, false);
+            utils::deepCopyEditLockedBlocks(*dest);
             RealtimeEffectList::Get(*dest).CloneStates();
             dest->MoveTo(std::max(static_cast<double>(begin), waveTrack->GetStartTime()));
         } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
@@ -915,6 +916,7 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
         }
 
         auto au3Clone = au3Track->Duplicate();
+        utils::deepCopyEditLockedBlocks(*au3Clone);
         RealtimeEffectList::Get(*au3Clone).CloneStates();
         Au3TrackList::AssignUniqueId(au3Clone);
         clones.push_back(au3Clone);

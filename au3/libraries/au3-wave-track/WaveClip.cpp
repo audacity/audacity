@@ -1712,6 +1712,15 @@ bool WaveClip::LockBlocks(double t0, double t1)
     return changed;
 }
 
+bool WaveClip::DeepCopyEditLockedBlocks()
+{
+    bool changed = false;
+    for (auto& pSequence : mSequences) {
+        changed |= pSequence->DeepCopyEditLockedBlocks();
+    }
+    return changed;
+}
+
 sampleCount WaveClip::GetSequenceSamplesCount() const
 {
     return GetNumSamples() * NChannels();
