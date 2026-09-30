@@ -274,6 +274,42 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration()
     },
+    CommandInfo{
+        PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Show effects panel"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Show effects panel"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes)
+    },
+    CommandInfo{
+        PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Add track effects"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Add track effects"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_AUDIO_SETUP_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Audio setup"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Open audio setup context menu"),
+        InputSchema(),
+        Decoration(IconCode::Code::CONFIGURE)
+    },
+    CommandInfo{
+        PROJECTSCENE_GET_EFFECTS_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Get effects"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Open Get effects dialog"),
+        InputSchema(),
+        Decoration(IconCode::Code::PLUGIN)
+    },
 };
 }
 
