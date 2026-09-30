@@ -831,11 +831,12 @@ public:
     void SetSilence(sampleCount offset, sampleCount length);
 
     //! Splits the sample blocks that straddle `t0` or `t1`, so that the audio
-    //! between them is held by blocks of its own. The audio is unchanged.
+    //! between them is held by blocks of its own, and edit-locks those blocks.
+    //! The audio is unchanged. Silent blocks are shared, so they aren't locked.
     /*!
      @pre `StrongInvariant()`
      @post `StrongInvariant()`
-     @return whether any block was split
+     @return whether any block was split or newly locked
      */
     bool LockBlocks(double t0, double t1);
 

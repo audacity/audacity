@@ -70,6 +70,12 @@ bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit
     return false;
 }
 
+bool TrackeditOperationController::unlockAllBlocks()
+{
+    // Locks aren't part of the undo state, so no history entry
+    return tracksInteraction()->unlockAllBlocks();
+}
+
 bool TrackeditOperationController::lockClips(const ClipKeyList& clipKeyList)
 {
     bool anyLocked = false;

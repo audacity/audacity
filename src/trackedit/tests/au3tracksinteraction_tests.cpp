@@ -1846,8 +1846,22 @@ TEST_F(Au3TracksInteractionTests, LockTracksDataSplitsBlocksAtSelectionEdges)
     ASSERT_TRUE(sequence.Get(reinterpret_cast<samplePtr>(samplesAfter.data()), floatSample, 0, numSamples, true));
     EXPECT_EQ(before, samplesAfter);
 
+    //! [THEN] Exactly the blocks inside the selection are locked
+    for (const auto& block : sequence.GetBlockArray()) {
+        const bool inside = block.start >= s0 && block.start < s1;
+        EXPECT_EQ(block.sb->IsEditLocked(), inside) << "block starting at " << block.start.as_long_long();
+    }
+
     //! [THEN] Locking again changes nothing
     EXPECT_FALSE(m_tracksInteraction->lockTracksData({ trackId }, t0, t1));
+
+    //! [WHEN] Unlocking all blocks
+    EXPECT_TRUE(m_tracksInteraction->unlockAllBlocks());
+
+    //! [THEN] No block is locked
+    for (const auto& block : sequence.GetBlockArray()) {
+        EXPECT_FALSE(block.sb->IsEditLocked());
+    }
 
     // Cleanup
     removeTrack(trackId);

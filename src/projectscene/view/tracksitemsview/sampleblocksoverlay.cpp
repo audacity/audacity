@@ -157,6 +157,13 @@ void SampleBlocksOverlay::paint(QPainter* painter)
                     rect.adjust(inset, VISIBLE_PEN_WIDTH / 2, -inset, -VISIBLE_PEN_WIDTH / 2);
                 }
 
+                // Locked blocks are hatched
+                if (block.sb->IsEditLocked()) {
+                    QColor hatchColor = color;
+                    hatchColor.setAlpha(120);
+                    painter->fillRect(rect, QBrush(hatchColor, Qt::BDiagPattern));
+                }
+
                 // Part of the block inside the clip's play region: fat solid stroke
                 painter->save();
                 painter->setClipRect(visibleSpan);

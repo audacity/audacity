@@ -26,6 +26,7 @@
 #include "au3-exceptions/InconsistencyException.h"
 #include "au3-math/Resample.h"
 #include "Sequence.h"
+#include "SampleBlock.h"
 #include "au3-time-and-pitch/TimeAndPitchInterface.h"
 #include "au3-exceptions/UserException.h"
 
@@ -1702,6 +1703,15 @@ bool WaveClip::LockBlocks(double t0, double t1)
     for (auto& pSequence : mSequences) {
         changed |= pSequence->SplitBlockAt(s0);
         changed |= pSequence->SplitBlockAt(s1);
+        for (const auto& block : pSequence->GetBlockArray()) {
+            // Silent blocks are shared by all silences of the same length
+            const bool silent = block.sb->GetBlockID() <= 0;
+            if (silent || block.start < s0 || block.start >= s1 || block.sb->IsEditLocked()) {
+                continue;
+            }
+            block.sb->SetEditLocked(true);
+            changed = true;
+        }
     }
     transaction.Commit();
     if (changed) {

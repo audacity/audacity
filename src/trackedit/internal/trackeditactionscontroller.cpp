@@ -98,6 +98,7 @@ static const ActionCode TRACK_RESAMPLE("track-resample");
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
 static const ActionCode LOCK_SELECTION("lock-selection");
+static const ActionCode UNLOCK_ALL_BLOCKS("unlock-all-blocks");
 
 static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
@@ -286,6 +287,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::doGlobalSilence);
     dispatcher()->reg(this, LOCK_SELECTION, this, &TrackeditActionsController::lockSelection);
+    dispatcher()->reg(this, UNLOCK_ALL_BLOCKS, this, &TrackeditActionsController::unlockAllBlocks);
 
     dispatcher()->reg(this, STRETCH_ENABLED_CODE, this, &TrackeditActionsController::toggleStretchClipToMatchTempo);
 
@@ -1804,6 +1806,11 @@ void TrackeditActionsController::silenceAudioSelection()
     }
 
     trackeditInteraction()->silenceTracksData(tracksIdsToSilence, selectedStartTime, selectedEndTime);
+}
+
+void TrackeditActionsController::unlockAllBlocks()
+{
+    trackeditInteraction()->unlockAllBlocks();
 }
 
 void TrackeditActionsController::lockSelection()

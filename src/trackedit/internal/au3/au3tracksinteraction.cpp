@@ -13,6 +13,8 @@
 #include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/SampleBlock.h"
 #include "au3-label-track/LabelTrack.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
@@ -124,6 +126,30 @@ bool Au3TracksInteraction::lockTracksData(const std::vector<trackedit::TrackId>&
         }
     }
 
+    return changed;
+}
+
+bool Au3TracksInteraction::unlockAllBlocks()
+{
+    bool changed = false;
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    for (Au3WaveTrack* waveTrack : Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>()) {
+        bool trackChanged = false;
+        for (const auto& clip : waveTrack->Intervals()) {
+            for (size_t ch = 0; ch < clip->NChannels(); ++ch) {
+                for (const auto& block : clip->GetSequence(ch)->GetBlockArray()) {
+                    if (block.sb->IsEditLocked()) {
+                        block.sb->SetEditLocked(false);
+                        trackChanged = true;
+                    }
+                }
+            }
+        }
+        if (trackChanged) {
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+            changed = true;
+        }
+    }
     return changed;
 }
 

@@ -486,7 +486,15 @@ UiActionList STATIC_ACTIONS = {
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Lock selection"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Give the selected audio sample blocks of its own, without changing the audio")
+             TranslatableString("action_description", "Give the selected audio sample blocks of its own and lock them, without changing the audio")
+             ),
+    UiAction("unlock-all-blocks",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Unlock all blocks"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Remove the edit lock from all sample blocks")
              ),
     UiAction("group-clips",
              au::context::UiCtxAny,
