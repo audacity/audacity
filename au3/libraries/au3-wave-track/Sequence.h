@@ -172,6 +172,15 @@ public:
     //! blocks that meet at `s`. The samples are unchanged.
     //! @return whether a block was split
     bool SplitBlockAt(sampleCount s);
+
+    //! Edit-locks the blocks that start in [s0, s1). Silent blocks are first
+    //! replaced by ordinary blocks of zeros, because silent blocks are shared
+    //! by all silences of the same length and have no id of their own.
+    /*!
+     @pre no block straddles `s0` or `s1` (see SplitBlockAt)
+     @return whether any block was newly locked
+     */
+    bool LockBlocks(sampleCount s0, sampleCount s1);
     /*! @excsafety{Strong} */
     void InsertSilence(sampleCount s0, sampleCount len);
 

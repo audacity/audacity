@@ -1898,4 +1898,48 @@ TEST_F(Au3TracksInteractionTests, LockTracksDataOverTrimmedClipSplitsAtTrimEdges
     // Cleanup
     removeTrack(trackId);
 }
+
+TEST_F(Au3TracksInteractionTests, LockTracksDataReplacesSilentBlocksWithLockedZeroBlocks)
+{
+    //! [GIVEN] A clip made of inserted silence, which is held by shared silent blocks
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    const secs_t silenceBegin = TRACK_TWO_CLIPS_CLIP2_END + 10 * SAMPLE_INTERVAL;
+    const secs_t silenceEnd = silenceBegin + 1.0;
+    m_tracksInteraction->insertSilence({ trackId }, silenceBegin, silenceEnd, silenceEnd - silenceBegin);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder silenceClip = track->GetSortedClipByIndex(2);
+    ASSERT_NE(silenceClip, nullptr);
+    const Sequence* pSequence = silenceClip->GetSequence(0);
+    ASSERT_NE(pSequence, nullptr);
+    const auto& blockArray = pSequence->GetBlockArray();
+    const auto silent = std::find_if(blockArray.begin(), blockArray.end(), [](const SeqBlock& b) { return b.sb->GetBlockID() <= 0; });
+    ASSERT_NE(silent, blockArray.end()) << "Precondition failed: no silent block";
+
+    //! [WHEN] Locking a range inside a silent block
+    const sampleCount s0 = silent->start + 200;
+    const sampleCount s1 = silent->start + 400;
+    const double clipStart = silenceClip->GetSequenceStartTime();
+    EXPECT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, clipStart + s0.as_double() * SAMPLE_INTERVAL,
+                                                    clipStart + s1.as_double() * SAMPLE_INTERVAL));
+
+    //! [THEN] The locked range is held by a locked ordinary block (own id) of zeros
+    const auto locked = std::find_if(blockArray.begin(), blockArray.end(), [&](const SeqBlock& b) { return b.start == s0; });
+    ASSERT_NE(locked, blockArray.end());
+    EXPECT_GT(locked->sb->GetBlockID(), 0) << "Expected an ordinary block";
+    EXPECT_TRUE(locked->sb->IsEditLocked());
+    const size_t len = locked->sb->GetSampleCount();
+    std::vector<float> samples(len, 1.f);
+    locked->sb->GetSamples(reinterpret_cast<samplePtr>(samples.data()), floatSample, 0, len);
+    EXPECT_TRUE(std::all_of(samples.begin(), samples.end(), [](float x) { return x == 0.f; }));
+
+    //! [THEN] Other silences of the same length are not locked
+    const auto sameLength = track->GetSampleBlockFactory()->CreateSilent(len, floatSample);
+    EXPECT_FALSE(sameLength->IsEditLocked());
+
+    // Cleanup
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
 }

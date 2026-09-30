@@ -832,7 +832,7 @@ public:
 
     //! Splits the sample blocks that straddle `t0` or `t1`, so that the audio
     //! between them is held by blocks of its own, and edit-locks those blocks.
-    //! The audio is unchanged. Silent blocks are shared, so they aren't locked.
+    //! The audio is unchanged.
     /*!
      @pre `StrongInvariant()`
      @post `StrongInvariant()`

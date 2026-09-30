@@ -744,6 +744,33 @@ bool Sequence::SplitBlockAt(sampleCount s)
     return true;
 }
 
+bool Sequence::LockBlocks(sampleCount s0, sampleCount s1)
+{
+    bool changed = false;
+    BlockArray newBlock{ mBlock };
+    for (auto& block : newBlock) {
+        if (block.start < s0 || block.start >= s1 || block.sb->IsEditLocked()) {
+            continue;
+        }
+        // Silent blocks have a non-positive id and are shared by all silences
+        // of the same length: replace this one by an ordinary block of zeros
+        if (block.sb->GetBlockID() <= 0) {
+            const auto format = mSampleFormats.Stored();
+            const auto len = block.sb->GetSampleCount();
+            SampleBuffer zeros(len, format);
+            ClearSamples(zeros.ptr(), format, 0, len);
+            block.sb = mpFactory->Create(zeros.ptr(), len, format);
+        }
+        block.sb->SetEditLocked(true);
+        changed = true;
+    }
+
+    if (changed) {
+        CommitChangesIfConsistent(newBlock, mNumSamples, wxT("LockBlocks"));
+    }
+    return changed;
+}
+
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 {
     auto& factory = *mpFactory;
