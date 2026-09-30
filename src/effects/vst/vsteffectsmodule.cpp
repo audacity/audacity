@@ -9,7 +9,6 @@
 #include "effects/effects_base/ieffectloadersregister.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
 #include "effects/effects_base/iparameterextractorregistry.h"
-#include "effects/effects_base/view/effectsviewutils.h"
 
 #include "internal/vst3effectloader.h"
 #include "internal/vst3pluginsscanner.h"
@@ -18,8 +17,6 @@
 #include "internal/vstparameterextractorservice.h"
 
 #include "internal/musevstpluginsregister.h"
-
-#include "qml/Audacity/Vst/vstviewmodel.h"
 
 using namespace muse;
 using namespace au::effects;
@@ -64,11 +61,6 @@ void VstEffectsModule::resolveImports()
     if (loadersRegister) {
         loadersRegister->registerLoader(m_effectLoader);
     }
-}
-
-void VstEffectsModule::registerUiTypes()
-{
-    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(VstViewModelFactory);
 }
 
 void VstEffectsModule::onInit(const muse::IApplication::RunMode& mode)

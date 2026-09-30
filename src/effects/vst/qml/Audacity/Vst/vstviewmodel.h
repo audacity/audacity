@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QtQml/qqmlregistration.h>
 
 #include "modularity/ioc.h"
 #include "trackedit/iprojecthistory.h"
@@ -50,5 +51,8 @@ private:
 
 class VstViewModelFactory : public EffectViewModelFactory<VstViewModel>
 {
+    Q_OBJECT
+    QML_ELEMENT;
+    QML_SINGLETON;
 };
 }
