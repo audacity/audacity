@@ -49,6 +49,9 @@ public:
     muse::async::Notification effectsPanelFocusRequested() const override;
     muse::async::Notification audioSetupContextMenuRequested() const override;
     muse::async::Notification timelineContextMenuRequested() const override;
+    muse::async::Notification splitToolToggleRequested() const override;
+    muse::async::Notification realtimeEffectMoveUpRequested() const override;
+    muse::async::Notification realtimeEffectMoveDownRequested() const override;
 
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
     muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
@@ -89,6 +92,9 @@ private:
     muse::async::Notification m_effectsPanelFocusRequested;
     muse::async::Notification m_audioSetupContextMenuRequested;
     muse::async::Notification m_timelineContextMenuRequested;
+    muse::async::Notification m_splitToolToggleRequested;
+    muse::async::Notification m_realtimeEffectMoveUpRequested;
+    muse::async::Notification m_realtimeEffectMoveDownRequested;
 
     ITimelineViewController* m_timelineViewController = nullptr;
     IPlayPositionViewController* m_playPositionViewController = nullptr;

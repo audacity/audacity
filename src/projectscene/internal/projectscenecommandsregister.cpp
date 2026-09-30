@@ -310,6 +310,33 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration(IconCode::Code::PLUGIN)
     },
+    CommandInfo{
+        PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Split tool"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Split tool"),
+        InputSchema(),
+        Decoration(IconCode::Code::SPLIT_TOOL)
+    },
+    CommandInfo{
+        PROJECTSCENE_REALTIME_EFFECT_MOVE_UP_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Move realtime effect up"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Move realtime effect up"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_REALTIME_EFFECT_MOVE_DOWN_COMMAND,
+        //: Action title: shown as a menu item or a button label; keep it short
+        TranslatableString("action", "Move realtime effect down"),
+        //: Action description: shown as a tooltip; can be a full sentence
+        TranslatableString("action_description", "Move realtime effect down"),
+        InputSchema(),
+        Decoration()
+    },
 };
 }
 

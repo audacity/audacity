@@ -47,6 +47,9 @@ static const ActionCode TOGGLE_EFFECTS_CODE("toggle-effects");
 static const ActionCode ADD_REALTIME_EFFECTS_CODE("add-realtime-effects");
 static const ActionCode AUDIO_SETUP_CODE("audio-setup");
 static const ActionCode GET_EFFECTS_CODE("get-effects");
+static const ActionCode SPLIT_TOOL_CODE("split-tool");
+static const ActionCode REALTIME_EFFECT_MOVE_UP_CODE("realtime-effect-move-up");
+static const ActionCode REALTIME_EFFECT_MOVE_DOWN_CODE("realtime-effect-move-down");
 
 static const muse::Uri GET_EFFECTS_URI("audacity://projectscene/geteffects");
 
@@ -136,6 +139,18 @@ void ProjectSceneActionsController::init()
     cd->onRequest(this, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, [this]() { return toggleEffectsPanel(); });
     cd->onRequest(this, PROJECTSCENE_AUDIO_SETUP_COMMAND, [this]() { return requestAudioSetupContextMenu(); });
     cd->onRequest(this, PROJECTSCENE_GET_EFFECTS_COMMAND, [this]() { return openGetEffectsDialog(); });
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, [this]() {
+        m_splitToolToggleRequested.notify();
+        return make_ok();
+    });
+    cd->onRequest(this, PROJECTSCENE_REALTIME_EFFECT_MOVE_UP_COMMAND, [this]() {
+        m_realtimeEffectMoveUpRequested.notify();
+        return make_ok();
+    });
+    cd->onRequest(this, PROJECTSCENE_REALTIME_EFFECT_MOVE_DOWN_COMMAND, [this]() {
+        m_realtimeEffectMoveDownRequested.notify();
+        return make_ok();
+    });
 
     cd->onRequest(this, PROJECTSCENE_MINUTES_SECONDS_RULER_COMMAND, [this]() { return toggleMinutesSecondsRuler(); });
     cd->onRequest(this, PROJECTSCENE_BEATS_MEASURES_RULER_COMMAND, [this]() { return toggleBeatsMeasuresRuler(); });
@@ -185,6 +200,9 @@ void ProjectSceneActionsController::init()
         { ADD_REALTIME_EFFECTS_CODE, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, {} },
         { AUDIO_SETUP_CODE, PROJECTSCENE_AUDIO_SETUP_COMMAND, {} },
         { GET_EFFECTS_CODE, PROJECTSCENE_GET_EFFECTS_COMMAND, {} },
+        { SPLIT_TOOL_CODE, PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, {} },
+        { REALTIME_EFFECT_MOVE_UP_CODE, PROJECTSCENE_REALTIME_EFFECT_MOVE_UP_COMMAND, {} },
+        { REALTIME_EFFECT_MOVE_DOWN_CODE, PROJECTSCENE_REALTIME_EFFECT_MOVE_DOWN_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
@@ -232,6 +250,21 @@ muse::async::Notification ProjectSceneActionsController::audioSetupContextMenuRe
 muse::async::Notification ProjectSceneActionsController::timelineContextMenuRequested() const
 {
     return m_timelineContextMenuRequested;
+}
+
+muse::async::Notification ProjectSceneActionsController::splitToolToggleRequested() const
+{
+    return m_splitToolToggleRequested;
+}
+
+muse::async::Notification ProjectSceneActionsController::realtimeEffectMoveUpRequested() const
+{
+    return m_realtimeEffectMoveUpRequested;
+}
+
+muse::async::Notification ProjectSceneActionsController::realtimeEffectMoveDownRequested() const
+{
+    return m_realtimeEffectMoveDownRequested;
 }
 
 muse::Ret ProjectSceneActionsController::toggleEffectsPanel()
