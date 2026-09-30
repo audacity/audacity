@@ -18,7 +18,5 @@ public:
     virtual void fitProjectToWidth() = 0;
 
     virtual void centerViewOnPlayhead(bool onlyIfPlayheadNotVisible) = 0;
-
-    virtual void requestContextMenu() = 0;
 };
 }

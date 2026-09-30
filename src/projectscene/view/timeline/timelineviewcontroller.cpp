@@ -58,8 +58,3 @@ void TimelineViewController::centerViewOnPlayhead(bool onlyIfPlayheadNotVisible)
 {
     m_context->centerViewOnPlayhead(onlyIfPlayheadNotVisible);
 }
-
-void TimelineViewController::requestContextMenu()
-{
-    m_context->requestContextMenu();
-}

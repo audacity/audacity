@@ -26,12 +26,8 @@ void RealtimeEffectSectionModel::load()
         emit showEffectsSectionChanged();
     });
 
-    dispatcher()->reg(this, "toggle-effects", [this] {
-        toggleEffectsPanel();
-    });
-
-    dispatcher()->reg(this, "add-realtime-effects", [this] {
-        toggleEffectsPanel();
+    projectSceneActionsController()->effectsPanelFocusRequested().onNotify(this, [this]() {
+        emit focusEffectsPanelRequested();
     });
 
     emit showEffectsSectionChanged();
@@ -60,20 +56,6 @@ void RealtimeEffectSectionModel::prop_setNavigationFocusInsideEffectsPanel(bool 
 
     m_navigationFocusInsideEffectsPanel = inside;
     emit navigationFocusInsideEffectsPanelChanged();
-}
-
-void RealtimeEffectSectionModel::toggleEffectsPanel()
-{
-    const muse::ui::INavigationSection* section = navigationController()->activeSection();
-    if (section && section->type() == muse::ui::INavigationSection::Type::Exclusive) {
-        return;
-    }
-
-    const bool shouldShow = !configuration()->isEffectsPanelVisible();
-    configuration()->setIsEffectsPanelVisible(shouldShow);
-    if (shouldShow) {
-        emit focusEffectsPanelRequested();
-    }
 }
 
 void RealtimeEffectSectionModel::savePreviouslyFocusedControl()

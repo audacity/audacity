@@ -43,8 +43,9 @@ void ProjectToolBarModel::load()
         load();
     });
 
-    dispatcher()->reg(this, "audio-setup", [this]() { emit openAudioSetupContextMenu(); });
-    dispatcher()->reg(this, "get-effects", [this]() { emit openGetEffectsDialog(); });
+    projectSceneActionsController()->audioSetupContextMenuRequested().onNotify(this, [this]() {
+        emit openAudioSetupContextMenu();
+    });
 
     m_loaded = true;
 }
