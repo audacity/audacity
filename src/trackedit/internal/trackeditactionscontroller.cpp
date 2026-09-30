@@ -349,6 +349,7 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
         notifyActionEnabledChanged(JOIN_CODE);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+        notifyActionEnabledChanged(LOCK_SELECTION);
         notifyActionEnabledChanged(RENAME_ITEM_CODE);
     });
 
@@ -1808,6 +1809,10 @@ void TrackeditActionsController::silenceAudioSelection()
 void TrackeditActionsController::lockSelection()
 {
     if (selectionController()->timeSelectionIsEmpty()) {
+        const ClipKeyList selectedClips = selectionController()->selectedClips();
+        if (!selectedClips.empty()) {
+            trackeditInteraction()->lockClips(selectedClips);
+        }
         return;
     }
 
@@ -2335,7 +2340,10 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
     } else if (actionCode == SILENCE_AUDIO_SELECTION) {
         return canSilenceAudio();
     } else if (actionCode == LOCK_SELECTION) {
-        return !selectionController()->timeSelectionIsEmpty() && !selectionController()->selectedTracks().empty();
+        if (!selectionController()->timeSelectionIsEmpty()) {
+            return !selectionController()->selectedTracks().empty();
+        }
+        return !selectionController()->selectedClips().empty();
     } else if (actionCode == RENAME_ITEM_CODE) {
         return clipsForInteraction().size() + labelsForInteraction().size() == 1;
     }

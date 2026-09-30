@@ -1852,4 +1852,36 @@ TEST_F(Au3TracksInteractionTests, LockTracksDataSplitsBlocksAtSelectionEdges)
     // Cleanup
     removeTrack(trackId);
 }
+
+TEST_F(Au3TracksInteractionTests, LockTracksDataOverTrimmedClipSplitsAtTrimEdges)
+{
+    //! [GIVEN] A clip trimmed on both sides
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const std::shared_ptr<WaveClip> clip = *track->Intervals().begin();
+    ASSERT_NE(clip, nullptr);
+    const sampleCount trimLeft = 50;
+    const sampleCount trimRight = 60;
+    clip->SetTrimLeft(trimLeft.as_double() * SAMPLE_INTERVAL);
+    clip->SetTrimRight(trimRight.as_double() * SAMPLE_INTERVAL);
+
+    const Sequence* pSequence = clip->GetSequence(0);
+    ASSERT_NE(pSequence, nullptr);
+    const sampleCount numSamples = pSequence->GetNumSamples();
+
+    //! [WHEN] Locking the clip's visible range, as clip selection does
+    EXPECT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, clip->GetPlayStartTime(), clip->GetPlayEndTime()));
+
+    //! [THEN] Blocks start exactly at both trim edges
+    std::vector<sampleCount> starts;
+    for (const auto& block : pSequence->GetBlockArray()) {
+        starts.push_back(block.start);
+    }
+    EXPECT_EQ(std::count(starts.begin(), starts.end(), trimLeft), 1);
+    EXPECT_EQ(std::count(starts.begin(), starts.end(), numSamples - trimRight), 1);
+
+    // Cleanup
+    removeTrack(trackId);
+}
 }

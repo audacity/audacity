@@ -41,6 +41,11 @@ bool TrackeditInteraction::silenceTracksData(const std::vector<trackedit::TrackI
     return withPlaybackStop(&ITrackeditInteraction::silenceTracksData, tracksIds, begin, end);
 }
 
+bool TrackeditInteraction::lockClips(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::lockClips, clipKeyList);
+}
+
 bool TrackeditInteraction::silenceClips(const ClipKeyList& clipKeyList)
 {
     return withPlaybackStop(&ITrackeditInteraction::silenceClips, clipKeyList);

@@ -70,6 +70,23 @@ bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit
     return false;
 }
 
+bool TrackeditOperationController::lockClips(const ClipKeyList& clipKeyList)
+{
+    bool anyLocked = false;
+    for (const auto& clipKey : clipKeyList) {
+        const secs_t begin = clipsInteraction()->clipStartTime(clipKey);
+        const secs_t end = clipsInteraction()->clipEndTime(clipKey);
+        if (tracksInteraction()->lockTracksData({ clipKey.trackId }, begin, end)) {
+            anyLocked = true;
+        }
+    }
+
+    if (anyLocked) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Locked selected clips"), muse::trc("trackedit", "Lock selection"));
+    }
+    return anyLocked;
+}
+
 bool TrackeditOperationController::silenceClips(const ClipKeyList& clipKeyList)
 {
     bool anySilenced = false;
