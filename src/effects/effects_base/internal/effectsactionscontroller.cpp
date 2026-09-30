@@ -2,9 +2,12 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectsactionscontroller.h"
+#include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/internal/effectsutils.h"
 #include "effectsuiactions.h"
+
+#include "framework/rcommand/actiontocommand.h"
 
 #include "spectrogram/spectrogramtypes.h"
 #include "wx/string.h"
@@ -14,8 +17,64 @@
 
 #include "log.h"
 
+using namespace muse;
 using namespace muse::actions;
+using namespace muse::rcommand;
 using namespace au::effects;
+
+static const ActionCode REPEAT_LAST_EFFECT_CODE("repeat-last-effect");
+static const ActionCode PLUGIN_MANAGER_CODE("plugin-manager");
+static const ActionQuery EFFECT_OPEN_QUERY("action://effects/open");
+static const ActionQuery EFFECT_APPLY_QUERY("action://effects/apply");
+static const ActionQuery TOGGLE_VENDOR_UI_QUERY("action://effects/toggle_vendor_ui");
+static const ActionQuery PRESET_APPLY_QUERY("action://effects/presets/apply");
+static const ActionQuery PRESET_SAVE_QUERY("action://effects/presets/save");
+static const ActionQuery PRESET_SAVE_AS_QUERY("action://effects/presets/save_as");
+static const ActionQuery PRESET_DELETE_QUERY("action://effects/presets/delete");
+static const ActionQuery PRESET_IMPORT_QUERY("action://effects/presets/import");
+static const ActionQuery PRESET_EXPORT_QUERY("action://effects/presets/export");
+
+static const muse::Uri PLUGIN_MANAGER_URI("audacity://effects/plugin_manager");
+
+namespace {
+CommandQuery queryParamsConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.empty()) {
+        return query;
+    }
+
+    const ActionQuery legacy(args.arg<std::string>(0));
+    query.setParams(legacy.params());
+    return query;
+}
+
+CommandQuery effectOpenConv(const Command& command, const ActionData& args)
+{
+    IF_ASSERT_FAILED(!args.empty()) {
+        return CommandQuery(command);
+    }
+
+    const ActionQuery legacy(args.arg<std::string>(0));
+    return CommandQuery(makeEffectOpenCommand(effectIdFromAction(legacy)));
+}
+
+CommandQuery effectApplyConv(const Command& command, const ActionData& args)
+{
+    IF_ASSERT_FAILED(!args.empty()) {
+        return CommandQuery(command);
+    }
+
+    const ActionQuery legacy(args.arg<std::string>(0));
+    CommandQuery query(makeEffectApplyCommand(effectIdFromAction(legacy)));
+    for (const auto& [key, val] : legacy.params()) {
+        if (key != "effectId") {
+            query.addParam(key, val);
+        }
+    }
+    return query;
+}
+}
 
 void EffectsActionsController::init()
 {
@@ -28,7 +87,7 @@ void EffectsActionsController::init()
     registerActions();
 
     effectExecutionScenario()->lastProcessorIsNowAvailable().onNotify(this, [this] {
-        m_canReceiveActionsChanged.send({ "repeat-last-effect" });
+        m_canReceiveActionsChanged.send({ REPEAT_LAST_EFFECT_CODE });
     });
 
     frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](bool complete) {
@@ -51,27 +110,43 @@ void EffectsActionsController::notifyAboutSpectralEffectsAvailability()
 void EffectsActionsController::registerActions()
 {
     dispatcher()->unReg(this);
+    commandDispatcher()->unreg(this);
 
-    EffectMetaList effects = effectsProvider()->effectMetaList();
+    auto cd = commandDispatcher();
+
+    const EffectMetaList effects = effectsProvider()->effectMetaList();
     for (const EffectMeta& e : effects) {
-        dispatcher()->reg(this, ActionQuery(makeEffectAction(EFFECT_OPEN_ACTION, e.id)), [this](const ActionQuery& q) {
-            onEffectTriggered(q);
+        const EffectId effectId = e.id;
+        cd->onRequest(this, makeEffectOpenCommand(effectId), [this, effectId]() { return openEffect(effectId); });
+        cd->onRequest(this, makeEffectApplyCommand(effectId), [this, effectId](const Params& params) {
+            return applyEffect(effectId, params);
         });
     }
 
-    dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
-    dispatcher()->reg(this, "plugin-manager", this, &EffectsActionsController::openPluginManager);
+    cd->onRequest(this, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, [this]() { return repeatLastEffect(); });
+    cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_COMMAND, [this]() { return openPluginManager(); });
+    cd->onRequest(this, EFFECTS_TOGGLE_VENDOR_UI_COMMAND, [this](const Params& params) { return toggleVendorUI(params); });
+    cd->onRequest(this, EFFECTS_PRESET_APPLY_COMMAND, [this](const Params& params) { return applyPreset(params); });
+    cd->onRequest(this, EFFECTS_PRESET_SAVE_COMMAND, [this](const Params& params) { return savePreset(params); });
+    cd->onRequest(this, EFFECTS_PRESET_SAVE_AS_COMMAND, [this](const Params& params) { return savePresetAs(params); });
+    cd->onRequest(this, EFFECTS_PRESET_DELETE_COMMAND, [this](const Params& params) { return deletePreset(params); });
+    cd->onRequest(this, EFFECTS_PRESET_IMPORT_COMMAND, [this](const Params& params) { return importPreset(params); });
+    cd->onRequest(this, EFFECTS_PRESET_EXPORT_COMMAND, [this](const Params& params) { return exportPreset(params); });
 
-    // presets
-    dispatcher()->reg(this, ActionQuery("action://effects/presets/apply"), this, &EffectsActionsController::applyPreset);
-    dispatcher()->reg(this, ActionQuery("action://effects/presets/save"), this, &EffectsActionsController::savePreset);
-    dispatcher()->reg(this, ActionQuery("action://effects/presets/save_as"), this, &EffectsActionsController::savePresetAs);
-    dispatcher()->reg(this, ActionQuery("action://effects/presets/delete"), this, &EffectsActionsController::deletePreset);
-    dispatcher()->reg(this, ActionQuery("action://effects/presets/import"), this, &EffectsActionsController::importPreset);
-    dispatcher()->reg(this, ActionQuery("action://effects/presets/export"), this, &EffectsActionsController::exportPreset);
-
-    dispatcher()->reg(this, ActionQuery("action://effects/apply"), this, &EffectsActionsController::applyEffect);
-    dispatcher()->reg(this, ActionQuery("action://effects/toggle_vendor_ui"), this, &EffectsActionsController::toggleVendorUI);
+    static const std::vector<ActionToCommand> actionToCommand = {
+        { EFFECT_OPEN_QUERY.toString(), Command(), effectOpenConv },
+        { REPEAT_LAST_EFFECT_CODE, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, {} },
+        { PLUGIN_MANAGER_CODE, EFFECTS_PLUGIN_MANAGER_COMMAND, {} },
+        { EFFECT_APPLY_QUERY.toString(), Command(), effectApplyConv },
+        { TOGGLE_VENDOR_UI_QUERY.toString(), EFFECTS_TOGGLE_VENDOR_UI_COMMAND, queryParamsConv },
+        { PRESET_APPLY_QUERY.toString(), EFFECTS_PRESET_APPLY_COMMAND, queryParamsConv },
+        { PRESET_SAVE_QUERY.toString(), EFFECTS_PRESET_SAVE_COMMAND, queryParamsConv },
+        { PRESET_SAVE_AS_QUERY.toString(), EFFECTS_PRESET_SAVE_AS_COMMAND, queryParamsConv },
+        { PRESET_DELETE_QUERY.toString(), EFFECTS_PRESET_DELETE_COMMAND, queryParamsConv },
+        { PRESET_IMPORT_QUERY.toString(), EFFECTS_PRESET_IMPORT_COMMAND, queryParamsConv },
+        { PRESET_EXPORT_QUERY.toString(), EFFECTS_PRESET_EXPORT_COMMAND, queryParamsConv },
+    };
+    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     m_uiActions->reload();
     uiActionsRegister()->unreg(m_uiActions);
@@ -79,128 +154,131 @@ void EffectsActionsController::registerActions()
     shortcutsRegister()->reload();
 }
 
-void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuery& q)
+muse::Ret EffectsActionsController::openEffect(const EffectId& effectId)
 {
-    muse::String effectId = muse::String::fromStdString(q.param("effectId").toString());
     IF_ASSERT_FAILED(!effectId.empty()) {
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
     playbackController()->stop();
 
-    effectExecutionScenario()->performEffect(effectId);
+    return effectExecutionScenario()->performEffect(effectId);
 }
 
-void EffectsActionsController::applyEffect(const muse::actions::ActionQuery& q)
+muse::Ret EffectsActionsController::applyEffect(const EffectId& effectId, const Params& params)
 {
-    const EffectId effectId = effectIdFromAction(q);
     IF_ASSERT_FAILED(!effectId.empty()) {
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
 
     CommandParameters eap;
-    for (const auto& [key, val] : q.params()) {
-        if (key == "effectId") {
-            continue;
-        }
+    for (const auto& [key, val] : params) {
         eap.Write(wxString::FromUTF8(key), wxString::FromUTF8(val.toString()));
     }
-    wxString params;
-    eap.GetParameters(params);
+    wxString effectParams;
+    eap.GetParameters(effectParams);
 
-    LOGI() << "applyEffect: effectId=" << effectId << ", params=" << params.ToStdString(wxConvUTF8);
+    LOGI() << "applyEffect: effectId=" << effectId << ", params=" << effectParams.ToStdString(wxConvUTF8);
 
     playbackController()->stop();
-    const muse::Ret ret = effectExecutionScenario()->performEffect(effectId, params.ToStdString(wxConvUTF8));
+    const muse::Ret ret = effectExecutionScenario()->performEffect(effectId, effectParams.ToStdString(wxConvUTF8));
     if (!ret) {
         LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
     }
+    return ret;
 }
 
-void EffectsActionsController::repeatLastEffect()
+muse::Ret EffectsActionsController::repeatLastEffect()
 {
     playbackController()->stop();
 
-    effectExecutionScenario()->repeatLastProcessor();
+    return effectExecutionScenario()->repeatLastProcessor();
 }
 
-void EffectsActionsController::applyPreset(const muse::actions::ActionQuery& q)
+muse::Ret EffectsActionsController::applyPreset(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("instanceId") && q.contains("presetId")) {
-        return;
+    IF_ASSERT_FAILED(params.contains("instanceId") && params.contains("presetId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
-    PresetId presetId = au::au3::wxFromStdString(q.param("presetId").toString());
+    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
+    PresetId presetId = au::au3::wxFromStdString(params.at("presetId").toString());
     presetsScenario()->loadPreset(effectInstanceId, presetId);
+    return make_ok();
 }
 
-void EffectsActionsController::savePresetAs(const ActionQuery& q)
+muse::Ret EffectsActionsController::savePresetAs(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("instanceId")) {
-        return;
+    IF_ASSERT_FAILED(params.contains("instanceId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
+    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
     presetsScenario()->savePresetAs(effectInstanceId);
+    return make_ok();
 }
 
-void EffectsActionsController::savePreset(const ActionQuery& q)
+muse::Ret EffectsActionsController::savePreset(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("instanceId") && q.contains("presetId")) {
-        return;
+    IF_ASSERT_FAILED(params.contains("instanceId") && params.contains("presetId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
-    const PresetId presetId = au::au3::wxFromStdString(q.param("presetId").toString());
+    const EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
+    const PresetId presetId = au::au3::wxFromStdString(params.at("presetId").toString());
     presetsScenario()->savePreset(effectInstanceId, presetId);
+    return make_ok();
 }
 
-void EffectsActionsController::deletePreset(const ActionQuery& q)
+muse::Ret EffectsActionsController::deletePreset(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("effectId") && q.contains("presetId")) {
-        return;
+    IF_ASSERT_FAILED(params.contains("effectId") && params.contains("presetId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectId effectId = EffectId::fromStdString(q.param("effectId").toString());
-    PresetId presetId = au::au3::wxFromStdString(q.param("presetId").toString());
+    EffectId effectId = EffectId::fromStdString(params.at("effectId").toString());
+    PresetId presetId = au::au3::wxFromStdString(params.at("presetId").toString());
     presetsScenario()->deletePreset(effectId, presetId);
+    return make_ok();
 }
 
-void EffectsActionsController::importPreset(const ActionQuery& q)
+muse::Ret EffectsActionsController::importPreset(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("instanceId")) {
-        return;
+    IF_ASSERT_FAILED(params.contains("instanceId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
+    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
     presetsScenario()->importPreset(effectInstanceId);
+    return make_ok();
 }
 
-void EffectsActionsController::exportPreset(const ActionQuery& q)
+muse::Ret EffectsActionsController::exportPreset(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("instanceId")) {
-        return;
+    IF_ASSERT_FAILED(params.contains("instanceId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
+    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
     presetsScenario()->exportPreset(effectInstanceId);
+    return make_ok();
 }
 
-void EffectsActionsController::toggleVendorUI(const ActionQuery& q)
+muse::Ret EffectsActionsController::toggleVendorUI(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("effectId")) {
-        return;
+    IF_ASSERT_FAILED(params.contains("effectId")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const EffectId effectId = EffectId::fromStdString(q.param("effectId").toString());
+    const EffectId effectId = EffectId::fromStdString(params.at("effectId").toString());
     const EffectUIMode currentMode = configuration()->effectUIMode(effectId);
     const EffectUIMode newMode = (currentMode == EffectUIMode::VendorUI) ? EffectUIMode::FallbackUI : EffectUIMode::VendorUI;
     configuration()->setEffectUIMode(effectId, newMode);
+    return make_ok();
 }
 
 bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
 {
-    if (code == "repeat-last-effect") {
+    if (code == REPEAT_LAST_EFFECT_CODE) {
         return effectExecutionScenario()->lastProcessorIsAvailable();
     } else {
         const auto spectralEffects = spectralEffectsRegister()->spectralEffects();
@@ -221,7 +299,8 @@ muse::async::Channel<muse::actions::ActionCodeList> EffectsActionsController::ca
     return m_canReceiveActionsChanged;
 }
 
-void EffectsActionsController::openPluginManager()
+muse::Ret EffectsActionsController::openPluginManager()
 {
-    interactive()->open("audacity://effects/plugin_manager");
+    interactive()->open(PLUGIN_MANAGER_URI);
+    return make_ok();
 }
