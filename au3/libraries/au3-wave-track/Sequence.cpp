@@ -562,6 +562,29 @@ void Sequence::Paste(sampleCount s, const Sequence* src)
 
     const int b = (s == mNumSamples) ? numBlocks - 1 : FindBlock(s);
     wxASSERT((b >= 0) && (b < (int)numBlocks));
+
+    // Inserting at the boundary of an edit-locked block: the cases below would
+    // rewrite that block together with the new samples. Insert the source
+    // blocks as they are instead, leaving the locked block untouched.
+    {
+        const bool atEndOfLockedLast = s == mNumSamples && mBlock[b].sb->IsEditLocked();
+        const bool atStartOfLocked = s < mNumSamples && mBlock[b].start == s && mBlock[b].sb->IsEditLocked();
+        if (atEndOfLockedLast || atStartOfLocked) {
+            const size_t insertAt = atEndOfLockedLast ? numBlocks : b;
+            BlockArray newBlock;
+            newBlock.insert(newBlock.end(), mBlock.begin(), mBlock.begin() + insertAt);
+            sampleCount samples = s;
+            for (unsigned int i = 0; i < srcNumBlocks; i++) {
+                AppendBlock(pUseFactory, format, newBlock, samples, srcBlock[i]);
+            }
+            for (size_t i = insertAt; i < numBlocks; i++) {
+                newBlock.push_back(mBlock[i].Plus(addedLen));
+            }
+            CommitChangesIfConsistent(newBlock, mNumSamples + addedLen, wxT("Paste next to locked block"));
+            mSampleFormats.UpdateEffective(src->mSampleFormats.Effective());
+            return;
+        }
+    }
     SeqBlock* const pBlock = &mBlock[b];
     const auto length = pBlock->sb->GetSampleCount();
     const auto largerBlockLen = addedLen + length;
@@ -1746,7 +1769,8 @@ void Sequence::Delete(sampleCount start, sampleCount len)
     // start is within preBlock
     auto preBufferLen = (start - preBlock.start).as_size_t();
     if (preBufferLen) {
-        if (preBufferLen >= mMinSamples || b0 == 0) {
+        // Never merge into an edit-locked block: keep the small piece as is
+        if (preBufferLen >= mMinSamples || b0 == 0 || mBlock[b0 - 1].sb->IsEditLocked()) {
             if (!scratch.ptr()) {
                 scratch.Allocate(scratchSize, format);
             }
@@ -1791,7 +1815,8 @@ void Sequence::Delete(sampleCount start, sampleCount len)
         (postBlock.start + postBlock.sb->GetSampleCount()) - (start + len)
         ).as_size_t();
     if (postBufferLen) {
-        if (postBufferLen >= mMinSamples || b1 == numBlocks - 1) {
+        // Never merge into an edit-locked block: keep the small piece as is
+        if (postBufferLen >= mMinSamples || b1 == numBlocks - 1 || mBlock[b1 + 1].sb->IsEditLocked()) {
             if (!scratch.ptr()) {
                 // Last use of scratch, can ask for smaller
                 scratch.Allocate(postBufferLen, format);

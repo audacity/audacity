@@ -2037,4 +2037,59 @@ TEST_F(Au3TracksInteractionTests, DuplicateOfTrackWithLockedBlocksIsUnlockedDeep
     removeTrack(duplicate->GetId());
     removeTrack(trackId);
 }
+
+TEST_F(Au3TracksInteractionTests, DeletingNextToLockedRangeDoesNotRewriteLockedBlocks)
+{
+    //! [GIVEN] A track with a locked range [100, 200)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const double start = TRACK_MIN_SILENCE_CLIP_START;
+    ASSERT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, start + 100 * SAMPLE_INTERVAL, start + 200 * SAMPLE_INTERVAL));
+    const auto lockedBefore = blocksOf(*track);
+
+    //! [WHEN] Deleting a sliver right after it, whose leftover would normally be merged into the locked block
+    m_tracksInteraction->removeTracksData({ trackId }, start + 210 * SAMPLE_INTERVAL, start + 220 * SAMPLE_INTERVAL, true);
+
+    //! [THEN] Every locked block is still in the track
+    const auto after = blocksOf(*track);
+    for (const auto& block : lockedBefore) {
+        if (block->IsEditLocked()) {
+            EXPECT_NE(std::find(after.begin(), after.end(), block), after.end()) << "locked block was rewritten";
+        }
+    }
+
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PastingAtStartOfLockedRangeDoesNotRewriteLockedBlocks)
+{
+    //! [GIVEN] A track with a locked range [100, 200)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const double start = TRACK_MIN_SILENCE_CLIP_START;
+    ASSERT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, start + 100 * SAMPLE_INTERVAL, start + 200 * SAMPLE_INTERVAL));
+    const auto lockedBefore = blocksOf(*track);
+    const auto numSamplesBefore = (*track->Intervals().begin())->GetSequence(0)->GetNumSamples();
+
+    //! [WHEN] Pasting 10 samples into the clip exactly at the start of the locked range
+    const auto copy = track->Copy(start + 300 * SAMPLE_INTERVAL, start + 310 * SAMPLE_INTERVAL);
+    const auto& copyTrack = static_cast<const WaveTrack&>(*copy);
+    const std::shared_ptr<WaveClip> clip = *track->Intervals().begin();
+    ASSERT_TRUE(clip->Paste(start + 100 * SAMPLE_INTERVAL, **copyTrack.Intervals().begin()));
+
+    //! [THEN] Every locked block is still in the track, and the samples were inserted
+    const auto after = blocksOf(*track);
+    for (const auto& block : lockedBefore) {
+        if (block->IsEditLocked()) {
+            EXPECT_NE(std::find(after.begin(), after.end(), block), after.end()) << "locked block was rewritten";
+        }
+    }
+    EXPECT_EQ((*track->Intervals().begin())->GetSequence(0)->GetNumSamples(), numSamplesBefore + 10);
+
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
 }
