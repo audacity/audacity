@@ -41,4 +41,9 @@ inline static const muse::rcommand::Command PROJECTSCENE_SELECTION_CONTRACT_RIGH
 inline static const muse::rcommand::Command PROJECTSCENE_CURSOR_TO_SELECTION_START_COMMAND(
     "command://projectscene/cursor-to-selection-start");
 inline static const muse::rcommand::Command PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND("command://projectscene/cursor-to-selection-end");
+
+inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND("command://projectscene/toggle-effects-panel");
+inline static const muse::rcommand::Command PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND("command://projectscene/add-realtime-effects");
+inline static const muse::rcommand::Command PROJECTSCENE_AUDIO_SETUP_COMMAND("command://projectscene/audio-setup");
+inline static const muse::rcommand::Command PROJECTSCENE_GET_EFFECTS_COMMAND("command://projectscene/get-effects");
 }

@@ -136,6 +136,10 @@ void TimelineContext::init(double frameWidth)
     m_playPositionController = std::make_unique<PlayPositionActionController>(this, iocContext());
     m_playPositionController->init();
 
+    projectSceneActionsController()->timelineContextMenuRequested().onNotify(this, [this]() {
+        emit contextMenuRequested();
+    });
+
     configuration()->playbackOnRulerClickEnabledChanged().onNotify(this, [this]() {
         emit playbackOnRulerClickEnabledChanged();
     });
@@ -286,11 +290,6 @@ void TimelineContext::scrollVertical(qreal newPos)
 
     static constexpr qreal correction = 100.0;
     emit viewContentYChangeRequested(scrollStep * correction);
-}
-
-void TimelineContext::requestContextMenu()
-{
-    emit contextMenuRequested();
 }
 
 void TimelineContext::centerViewOnPlayhead(bool onlyIfPlayheadNotVisible)

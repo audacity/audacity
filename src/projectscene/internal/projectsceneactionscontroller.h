@@ -12,6 +12,7 @@
 #include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/ui/inavigationcontroller.h"
 
 #include "context/iglobalcontext.h"
 #include "../iprojectsceneactionscontroller.h"
@@ -31,6 +32,7 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::ui::INavigationController> navigationController { this };
 
 public:
     ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx)
@@ -43,6 +45,10 @@ public:
 
     void setPlayPositionViewController(IPlayPositionViewController* controller) override;
     IPlayPositionViewController* playPositionViewController() const override;
+
+    muse::async::Notification effectsPanelFocusRequested() const override;
+    muse::async::Notification audioSetupContextMenuRequested() const override;
+    muse::async::Notification timelineContextMenuRequested() const override;
 
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
     muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
@@ -74,8 +80,15 @@ private:
 
     muse::Ret openLabelEditor();
 
+    muse::Ret toggleEffectsPanel();
+    muse::Ret requestAudioSetupContextMenu();
+    muse::Ret openGetEffectsDialog();
+
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
+    muse::async::Notification m_effectsPanelFocusRequested;
+    muse::async::Notification m_audioSetupContextMenuRequested;
+    muse::async::Notification m_timelineContextMenuRequested;
 
     ITimelineViewController* m_timelineViewController = nullptr;
     IPlayPositionViewController* m_playPositionViewController = nullptr;

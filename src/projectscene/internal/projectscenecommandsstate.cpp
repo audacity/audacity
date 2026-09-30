@@ -55,6 +55,10 @@ void ProjectSceneCommandsState::init()
         updateCommandStates({ PROJECTSCENE_TOGGLE_PLAYBACK_ON_RULER_CLICK_COMMAND });
     });
 
+    configuration()->isEffectsPanelVisibleChanged().onNotify(this, [this]() {
+        updateCommandStates({ PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND });
+    });
+
     updateCommandStates();
 }
 
@@ -68,6 +72,7 @@ void ProjectSceneCommandsState::deinit()
     configuration()->updateDisplayWhilePlayingEnabledChanged().disconnect(this);
     configuration()->pinnedPlayHeadEnabledChanged().disconnect(this);
     configuration()->playbackOnRulerClickEnabledChanged().disconnect(this);
+    configuration()->isEffectsPanelVisibleChanged().disconnect(this);
 }
 
 void ProjectSceneCommandsState::updateCommandStates(const std::vector<Command>& commands)
@@ -123,6 +128,10 @@ CommandState ProjectSceneCommandsState::commandState(const Command& command) con
 
     if (command == PROJECTSCENE_TOGGLE_PLAYBACK_ON_RULER_CLICK_COMMAND) {
         return CommandState(true, configuration()->playbackOnRulerClickEnabled());
+    }
+
+    if (command == PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND) {
+        return CommandState(true, configuration()->isEffectsPanelVisible());
     }
 
     return CommandState(true, false);

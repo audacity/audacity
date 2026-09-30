@@ -30,8 +30,6 @@ public:
 
     void centerViewOnPlayhead(bool onlyIfPlayheadNotVisible) override;
 
-    void requestContextMenu() override;
-
 private:
     TimelineContext* m_context = nullptr;
 };

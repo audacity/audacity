@@ -10,6 +10,7 @@
 #include "global/async/asyncable.h"
 #include "actions/iactionsdispatcher.h"
 
+#include "projectscene/iprojectsceneactionscontroller.h"
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "playback/iplayback.h"
 #include "playback/iplaybackcontroller.h"
@@ -71,6 +72,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
@@ -135,7 +137,6 @@ public:
     void fitProjectToWidth();
     void zoomToggle();
     void centerViewOnPlayhead(bool onlyIfPlayheadNotVisible);
-    void requestContextMenu();
 
     void centerOnTime(double secs);
     Q_INVOKABLE void insureVisible(double posSec);

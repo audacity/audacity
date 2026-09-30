@@ -43,6 +43,12 @@ static const ActionCode SEL_CNTR_LEFT_CODE("sel-cntr-left");
 static const ActionCode SEL_CNTR_RIGHT_CODE("sel-cntr-right");
 static const ActionCode CURS_SEL_START_CODE("curs-sel-start");
 static const ActionCode CURS_SEL_END_CODE("curs-sel-end");
+static const ActionCode TOGGLE_EFFECTS_CODE("toggle-effects");
+static const ActionCode ADD_REALTIME_EFFECTS_CODE("add-realtime-effects");
+static const ActionCode AUDIO_SETUP_CODE("audio-setup");
+static const ActionCode GET_EFFECTS_CODE("get-effects");
+
+static const muse::Uri GET_EFFECTS_URI("audacity://projectscene/geteffects");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -101,8 +107,10 @@ void ProjectSceneActionsController::init()
                         &ITimelineViewController::fitProjectToWidth);
     registerViewCommand(PROJECTSCENE_ZOOM_TOGGLE_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
                         &ITimelineViewController::zoomToggle);
-    registerViewCommand(PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
-                        &ITimelineViewController::requestContextMenu);
+    cd->onRequest(this, PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, [this]() {
+        m_timelineContextMenuRequested.notify();
+        return make_ok();
+    });
     cd->onRequest(this, PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND, [this](const Params& params) {
         return centerViewOnPlayhead(params);
     });
@@ -123,6 +131,11 @@ void ProjectSceneActionsController::init()
                         &IPlayPositionViewController::cursorToSelectionStart);
     registerViewCommand(PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
                         &IPlayPositionViewController::cursorToSelectionEnd);
+
+    cd->onRequest(this, PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND, [this]() { return toggleEffectsPanel(); });
+    cd->onRequest(this, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, [this]() { return toggleEffectsPanel(); });
+    cd->onRequest(this, PROJECTSCENE_AUDIO_SETUP_COMMAND, [this]() { return requestAudioSetupContextMenu(); });
+    cd->onRequest(this, PROJECTSCENE_GET_EFFECTS_COMMAND, [this]() { return openGetEffectsDialog(); });
 
     cd->onRequest(this, PROJECTSCENE_MINUTES_SECONDS_RULER_COMMAND, [this]() { return toggleMinutesSecondsRuler(); });
     cd->onRequest(this, PROJECTSCENE_BEATS_MEASURES_RULER_COMMAND, [this]() { return toggleBeatsMeasuresRuler(); });
@@ -168,6 +181,10 @@ void ProjectSceneActionsController::init()
         { SEL_CNTR_RIGHT_CODE, PROJECTSCENE_SELECTION_CONTRACT_RIGHT_COMMAND, {} },
         { CURS_SEL_START_CODE, PROJECTSCENE_CURSOR_TO_SELECTION_START_COMMAND, {} },
         { CURS_SEL_END_CODE, PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND, {} },
+        { TOGGLE_EFFECTS_CODE, PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND, {} },
+        { ADD_REALTIME_EFFECTS_CODE, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, {} },
+        { AUDIO_SETUP_CODE, PROJECTSCENE_AUDIO_SETUP_COMMAND, {} },
+        { GET_EFFECTS_CODE, PROJECTSCENE_GET_EFFECTS_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
@@ -200,6 +217,49 @@ void ProjectSceneActionsController::setPlayPositionViewController(IPlayPositionV
 IPlayPositionViewController* ProjectSceneActionsController::playPositionViewController() const
 {
     return m_playPositionViewController;
+}
+
+muse::async::Notification ProjectSceneActionsController::effectsPanelFocusRequested() const
+{
+    return m_effectsPanelFocusRequested;
+}
+
+muse::async::Notification ProjectSceneActionsController::audioSetupContextMenuRequested() const
+{
+    return m_audioSetupContextMenuRequested;
+}
+
+muse::async::Notification ProjectSceneActionsController::timelineContextMenuRequested() const
+{
+    return m_timelineContextMenuRequested;
+}
+
+muse::Ret ProjectSceneActionsController::toggleEffectsPanel()
+{
+    const muse::ui::INavigationSection* section = navigationController()->activeSection();
+    if (section && section->type() == muse::ui::INavigationSection::Type::Exclusive) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    const bool shouldShow = !configuration()->isEffectsPanelVisible();
+    configuration()->setIsEffectsPanelVisible(shouldShow);
+    if (shouldShow) {
+        m_effectsPanelFocusRequested.notify();
+    }
+
+    return make_ok();
+}
+
+muse::Ret ProjectSceneActionsController::requestAudioSetupContextMenu()
+{
+    m_audioSetupContextMenuRequested.notify();
+    return make_ok();
+}
+
+muse::Ret ProjectSceneActionsController::openGetEffectsDialog()
+{
+    interactive()->open(GET_EFFECTS_URI);
+    return make_ok();
 }
 
 template<typename ViewController>
