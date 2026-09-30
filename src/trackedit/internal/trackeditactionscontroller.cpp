@@ -97,6 +97,7 @@ static const ActionCode TRACK_RESAMPLE("track-resample");
 
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
+static const ActionCode LOCK_SELECTION("lock-selection");
 
 static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
@@ -192,6 +193,7 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     NEW_LABEL_TRACK,
     TRIM_AUDIO_OUTSIDE_SELECTION,
     SILENCE_AUDIO_SELECTION,
+    LOCK_SELECTION,
     TRACKEDIT_UNDO,
     TRACKEDIT_REDO,
     STRETCH_ENABLED_CODE,
@@ -283,6 +285,7 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::doGlobalSilence);
+    dispatcher()->reg(this, LOCK_SELECTION, this, &TrackeditActionsController::lockSelection);
 
     dispatcher()->reg(this, STRETCH_ENABLED_CODE, this, &TrackeditActionsController::toggleStretchClipToMatchTempo);
 
@@ -359,14 +362,17 @@ void TrackeditActionsController::init()
 
     selectionController()->selectedTracksChanged().onReceive(this, [this](const trackedit::TrackIdList&) {
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+        notifyActionEnabledChanged(LOCK_SELECTION);
     });
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t) {
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+        notifyActionEnabledChanged(LOCK_SELECTION);
     });
 
     selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t) {
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+        notifyActionEnabledChanged(LOCK_SELECTION);
     });
 }
 
@@ -1799,6 +1805,22 @@ void TrackeditActionsController::silenceAudioSelection()
     trackeditInteraction()->silenceTracksData(tracksIdsToSilence, selectedStartTime, selectedEndTime);
 }
 
+void TrackeditActionsController::lockSelection()
+{
+    if (selectionController()->timeSelectionIsEmpty()) {
+        return;
+    }
+
+    const auto selectedTracks = selectionController()->selectedTracks();
+    if (selectedTracks.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->lockTracksData(selectedTracks,
+                                             selectionController()->dataSelectedStartTime(),
+                                             selectionController()->dataSelectedEndTime());
+}
+
 void TrackeditActionsController::silenceClips(const ClipKeyList& clipKeys)
 {
     trackeditInteraction()->silenceClips(clipKeys);
@@ -2312,6 +2334,8 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return contiguousSelectedClipsSpan().has_value();
     } else if (actionCode == SILENCE_AUDIO_SELECTION) {
         return canSilenceAudio();
+    } else if (actionCode == LOCK_SELECTION) {
+        return !selectionController()->timeSelectionIsEmpty() && !selectionController()->selectedTracks().empty();
     } else if (actionCode == RENAME_ITEM_CODE) {
         return clipsForInteraction().size() + labelsForInteraction().size() == 1;
     }

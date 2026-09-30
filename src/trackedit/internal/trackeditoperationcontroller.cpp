@@ -44,6 +44,19 @@ bool TrackeditOperationController::trimTracksData(const std::vector<trackedit::T
     return false;
 }
 
+bool TrackeditOperationController::lockTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
+{
+    if (tracksInteraction()->lockTracksData(tracksIds, begin, end)) {
+        projectHistory()->pushHistoryState(
+            //: History entry. %1 and %2 are positions in seconds
+            muse::qtrc("trackedit", "Locked selected tracks from %1 seconds to %2 seconds")
+            .arg(begin.to_double()).arg(end.to_double()).toStdString(),
+            muse::trc("trackedit", "Lock selection"));
+        return true;
+    }
+    return false;
+}
+
 bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     if (tracksInteraction()->silenceTracksData(tracksIds, begin, end)) {

@@ -98,6 +98,35 @@ bool Au3TracksInteraction::silenceTracksData(const std::vector<trackedit::TrackI
     return true;
 }
 
+bool Au3TracksInteraction::lockTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
+{
+    bool changed = false;
+    for (TrackId trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        bool trackChanged = false;
+        for (const auto& clip : waveTrack->Intervals()) {
+            const double t0 = std::max(begin.to_double(), clip->GetPlayStartTime());
+            const double t1 = std::min(end.to_double(), clip->GetPlayEndTime());
+            if (t0 >= t1) {
+                continue;
+            }
+            trackChanged |= clip->LockBlocks(t0, t1);
+        }
+
+        if (trackChanged) {
+            trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+            changed = true;
+        }
+    }
+
+    return changed;
+}
+
 bool Au3TracksInteraction::tracksDataIsSilent(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) const
 {
     for (TrackId trackId : tracksIds) {

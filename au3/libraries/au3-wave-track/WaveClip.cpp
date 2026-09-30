@@ -1692,6 +1692,24 @@ void WaveClip::SetSilence(sampleCount offset, sampleCount length)
     MarkChanged();
 }
 
+bool WaveClip::LockBlocks(double t0, double t1)
+{
+    StrongInvariantScope scope{ *this };
+    const auto s0 = TimeToSequenceSamples(t0);
+    const auto s1 = TimeToSequenceSamples(t1);
+    bool changed = false;
+    Transaction transaction{ *this };
+    for (auto& pSequence : mSequences) {
+        changed |= pSequence->SplitBlockAt(s0);
+        changed |= pSequence->SplitBlockAt(s1);
+    }
+    transaction.Commit();
+    if (changed) {
+        MarkChanged();
+    }
+    return changed;
+}
+
 sampleCount WaveClip::GetSequenceSamplesCount() const
 {
     return GetNumSamples() * NChannels();

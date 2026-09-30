@@ -20,6 +20,8 @@
 #include "au3wrap/internal/trackcolor.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/SampleBlock.h"
 #include "project/tests/mocks/dummyeffectinstancefactory.h"
 
 using ::testing::Truly;
@@ -1795,6 +1797,57 @@ TEST_F(Au3TracksInteractionTests, PasteClipAtStartOfItselfIntoExistingClipDoesNo
     EXPECT_EQ(track->NIntervals(), 1);
     EXPECT_DOUBLE_EQ(track->GetStartTime(), 0.0);
     EXPECT_DOUBLE_EQ(track->GetEndTime(), 2 * clipDuration);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, LockTracksDataSplitsBlocksAtSelectionEdges)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto clip = track->GetSortedClipByIndex(0);
+    ASSERT_NE(clip, nullptr);
+
+    const Sequence* pSequence = clip->GetSequence(0);
+    ASSERT_NE(pSequence, nullptr);
+    const Sequence& sequence = *pSequence;
+    const size_t numSamples = sequence.GetNumSamples().as_size_t();
+    std::vector<float> before(numSamples);
+    ASSERT_TRUE(sequence.Get(reinterpret_cast<samplePtr>(before.data()), floatSample, 0, numSamples, true));
+
+    auto boundaries = [&] {
+        std::vector<sampleCount> starts;
+        for (const auto& block : sequence.GetBlockArray()) {
+            starts.push_back(block.start);
+        }
+        return starts;
+    };
+    const sampleCount s0 = 100;
+    const sampleCount s1 = 200;
+    const auto initial = boundaries();
+    ASSERT_EQ(std::count(initial.begin(), initial.end(), s0), 0) << "Precondition failed: already a block boundary";
+    ASSERT_EQ(std::count(initial.begin(), initial.end(), s1), 0) << "Precondition failed: already a block boundary";
+
+    //! [WHEN] Locking a selection whose edges fall inside blocks
+    const double t0 = TRACK_MIN_SILENCE_CLIP_START + s0.as_double() * SAMPLE_INTERVAL;
+    const double t1 = TRACK_MIN_SILENCE_CLIP_START + s1.as_double() * SAMPLE_INTERVAL;
+    EXPECT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, t0, t1));
+
+    //! [THEN] Blocks now start exactly at both edges
+    const auto after = boundaries();
+    EXPECT_EQ(std::count(after.begin(), after.end(), s0), 1);
+    EXPECT_EQ(std::count(after.begin(), after.end(), s1), 1);
+
+    //! [THEN] The audio is unchanged
+    std::vector<float> samplesAfter(numSamples);
+    ASSERT_TRUE(sequence.Get(reinterpret_cast<samplePtr>(samplesAfter.data()), floatSample, 0, numSamples, true));
+    EXPECT_EQ(before, samplesAfter);
+
+    //! [THEN] Locking again changes nothing
+    EXPECT_FALSE(m_tracksInteraction->lockTracksData({ trackId }, t0, t1));
 
     // Cleanup
     removeTrack(trackId);

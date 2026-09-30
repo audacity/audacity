@@ -167,6 +167,11 @@ public:
 
     /*! @excsafety{Strong} */
     void SetSilence(sampleCount s0, sampleCount len);
+
+    //! If `s` falls strictly inside a block, replaces that block with two new
+    //! blocks that meet at `s`. The samples are unchanged.
+    //! @return whether a block was split
+    bool SplitBlockAt(sampleCount s);
     /*! @excsafety{Strong} */
     void InsertSilence(sampleCount s0, sampleCount len);
 

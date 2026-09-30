@@ -704,6 +704,46 @@ void Sequence::SetSilence(sampleCount s0, sampleCount len)
 }
 
 /*! @excsafety{Strong} */
+bool Sequence::SplitBlockAt(sampleCount s)
+{
+    if (s <= 0 || s >= mNumSamples) {
+        return false;
+    }
+
+    const int b = FindBlock(s);
+    const SeqBlock& block = mBlock[b];
+    if (block.start == s) {
+        return false;
+    }
+
+    auto& factory = *mpFactory;
+    const auto format = mSampleFormats.Stored();
+    const auto blockLen = block.sb->GetSampleCount();
+    const auto leftLen = (s - block.start).as_size_t();
+    const auto rightLen = blockLen - leftLen;
+
+    SeqBlock::SampleBlockPtr left, right;
+    // Silent blocks have no database row and a non-positive id
+    if (block.sb->GetBlockID() <= 0) {
+        left = factory.CreateSilent(leftLen, format);
+        right = factory.CreateSilent(rightLen, format);
+    } else {
+        SampleBuffer buffer(blockLen, format);
+        Read(buffer.ptr(), format, block, 0, blockLen, true);
+        left = factory.Create(buffer.ptr(), leftLen, format);
+        right = factory.Create(buffer.ptr() + leftLen * SAMPLE_SIZE(format), rightLen, format);
+    }
+
+    BlockArray newBlock;
+    std::copy(mBlock.begin(), mBlock.begin() + b, std::back_inserter(newBlock));
+    newBlock.push_back(SeqBlock(left, block.start));
+    newBlock.push_back(SeqBlock(right, s));
+    std::copy(mBlock.begin() + b + 1, mBlock.end(), std::back_inserter(newBlock));
+
+    CommitChangesIfConsistent(newBlock, mNumSamples, wxT("SplitBlockAt"));
+    return true;
+}
+
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 {
     auto& factory = *mpFactory;

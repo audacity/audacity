@@ -537,7 +537,8 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
         };
 
         MenuItemList projectItems {
-            makeMenuItem("toggle-sample-blocks")
+            makeMenuItem("toggle-sample-blocks"),
+            makeMenuItem("lock-selection")
         };
 
         MenuItemList accessibilityItems {

@@ -830,6 +830,15 @@ public:
      */
     void SetSilence(sampleCount offset, sampleCount length);
 
+    //! Splits the sample blocks that straddle `t0` or `t1`, so that the audio
+    //! between them is held by blocks of its own. The audio is unchanged.
+    /*!
+     @pre `StrongInvariant()`
+     @post `StrongInvariant()`
+     @return whether any block was split
+     */
+    bool LockBlocks(double t0, double t1);
+
     //! Get one channel of the append buffer
     /*!
      @param ii identifies the channel

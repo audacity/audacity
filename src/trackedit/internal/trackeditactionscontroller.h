@@ -157,6 +157,7 @@ private:
 
     void trimAudioOutsideSelection();
     void doGlobalSilence();
+    void lockSelection();
     void silenceAudioSelection();
     void silenceClips(const trackedit::ClipKeyList& clipKeys);
 
