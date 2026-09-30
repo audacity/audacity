@@ -128,6 +128,7 @@ set(MODULE_LINK
         au3-wave-track
         extension_native
         muse::draw
+        Qt::Quick
 )
 
 set(MODULE_USE_UNITY OFF)

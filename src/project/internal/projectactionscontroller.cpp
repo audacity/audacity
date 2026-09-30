@@ -1,6 +1,7 @@
 #include "projectactionscontroller.h"
 
 #include <QFileDialog>
+#include <QWindow>
 
 #include <variant>
 
