@@ -36,6 +36,11 @@ public:
     virtual void setPasteBehavior(PasteBehavior value) = 0;
     virtual muse::async::Notification pasteBehaviorChanged() const = 0;
 
+    //! Debug: write the project XML of each committed history step to a folder
+    virtual bool historyXmlDumpEnabled() const = 0;
+    virtual void setHistoryXmlDumpEnabled(bool value) = 0;
+    virtual muse::async::Notification historyXmlDumpEnabledChanged() const = 0;
+
     virtual PasteInsertBehavior pasteInsertBehavior() const = 0;
     virtual void setPasteInsertBehavior(PasteInsertBehavior value) = 0;
     virtual muse::async::Notification pasteInsertBehaviorChanged() const = 0;

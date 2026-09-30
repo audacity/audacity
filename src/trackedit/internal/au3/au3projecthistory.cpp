@@ -6,6 +6,7 @@
 
 #include "au3-project-history/ProjectHistory.h"
 #include "au3-project-history/UndoManager.h"
+#include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-project/Project.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -16,6 +17,10 @@
 #include "framework/global/translation.h"
 
 #include <unordered_set>
+
+#include <QDateTime>
+#include <QDir>
+#include <QFile>
 
 using namespace au::trackedit;
 using namespace au::au3;
@@ -44,6 +49,16 @@ void au::trackedit::Au3ProjectHistory::init()
     auto& project = projectRef();
     ::ProjectHistory::Get(project).InitialState();
     updateLockedBlocks();
+
+    // Each (re)enabling starts a new dump folder, beginning with the current state
+    m_xmlDumpFolder.clear();
+    if (configuration()) {
+        configuration()->historyXmlDumpEnabledChanged().onNotify(this, [this]() {
+            m_xmlDumpFolder.clear();
+            dumpXmlIfEnabled();
+        }, muse::async::Asyncable::Mode::SetReplace);
+    }
+    dumpXmlIfEnabled();
 
     m_historyChanged.send(HistoryEvent::RestoredState);
 }
@@ -108,6 +123,7 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
                                              ::TranslatableString::untranslatable(QString::fromStdString(shortDescription)),
                                              undoFlags);
     updateLockedBlocks();
+    dumpXmlIfEnabled();
 
     m_interactionOngoing = false;
     m_historyChanged.send(HistoryEvent::NewState);
@@ -160,6 +176,7 @@ void Au3ProjectHistory::modifyState(bool autoSave)
     auto& project = projectRef();
     ::ProjectHistory::Get(project).ModifyState(autoSave);
     updateLockedBlocks();
+    dumpXmlIfEnabled();
 }
 
 void Au3ProjectHistory::modifyState(const std::type_index& restorerType)
@@ -308,6 +325,40 @@ void Au3ProjectHistory::rollbackRefusedEdit()
     // and rollbackState doesn't notify: resync everything
     if (const auto prj = globalContext()->currentTrackeditProject()) {
         prj->reload();
+    }
+}
+
+void Au3ProjectHistory::dumpXmlIfEnabled()
+{
+    if (!configuration() || !configuration()->historyXmlDumpEnabled() || !globalContext()->currentProject()) {
+        return;
+    }
+
+    auto& project = projectRef();
+    if (m_xmlDumpFolder.empty()) {
+        const QString projectName = QString::fromStdString(project.GetProjectName().ToStdString());
+        const QString folder = globalConfiguration()->userAppDataPath().toQString() + "/history-xml/"
+                               + (projectName.isEmpty() ? QString("untitled") : projectName) + " "
+                               + QDateTime::currentDateTime().toString("yyyy-MM-dd hh-mm-ss");
+        QDir().mkpath(folder);
+        m_xmlDumpFolder = folder.toStdString();
+        LOGI() << "Dumping project XML per history step to: " << m_xmlDumpFolder;
+    }
+
+    // One file per step; a commit that modifies the current step (e.g. end of a
+    // drag) overwrites it. After an undo, the next step gets a new name.
+    auto& undoManager = UndoManager::Get(project);
+    const int index = undoManager.GetCurrentState();
+    ::TranslatableString name;
+    undoManager.GetShortDescription(index, &name);
+    QString fileName = QString("%1 %2.xml").arg(index, 3, 10, QChar('0')).arg(name.Translation().ToStdString().c_str());
+    fileName.replace('/', '-');
+
+    QFile file(QString::fromStdString(m_xmlDumpFolder) + "/" + fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        file.write(ProjectFileIO::Get(project).GenerateDoc().ToUTF8().data());
+    } else {
+        LOGE() << "Could not write " << file.fileName();
     }
 }
 

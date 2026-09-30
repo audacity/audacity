@@ -7,6 +7,12 @@
 #include "au3interactiontestbase.h"
 
 #include "interactive/tests/mocks/interactivemock.h"
+#include "global/tests/mocks/globalconfigurationmock.h"
+#include "mocks/trackeditconfigurationmock.h"
+
+#include <QDir>
+#include <QFile>
+#include <QTemporaryDir>
 
 #include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/SampleBlock.h"
@@ -194,5 +200,40 @@ TEST_F(Au3ProjectHistoryTests, UndoToIndexPastLockIsCancelledOnCancel)
     //! [THEN] The jump is cancelled
     EXPECT_EQ(m_history->currentStateIndex(), stateBefore);
     EXPECT_GT(lockedBlockCount(), 0u);
+}
+
+TEST_F(Au3ProjectHistoryTests, XmlDumpWritesOneFilePerStepWithBlockLists)
+{
+    //! [GIVEN] XML dumping is enabled, into a temporary app data folder
+    QTemporaryDir appData;
+    ASSERT_TRUE(appData.isValid());
+    auto globalConfiguration = std::make_shared<NiceMock<muse::GlobalConfigurationMock> >();
+    ON_CALL(*globalConfiguration, userAppDataPath()).WillByDefault(Return(muse::io::path_t(appData.path())));
+    auto configuration = std::make_shared<NiceMock<TrackeditConfigurationMock> >();
+    ON_CALL(*configuration, historyXmlDumpEnabled()).WillByDefault(Return(true));
+    auto* ioc = muse::modularity::globalIoc();
+    ioc->unregister<muse::IGlobalConfiguration>("utests");
+    ioc->unregister<ITrackeditConfiguration>("utests");
+    ioc->registerExport<muse::IGlobalConfiguration>("utests", globalConfiguration);
+    ioc->registerExport<ITrackeditConfiguration>("utests", configuration);
+
+    //! [WHEN] Committing an edit
+    lockAndCommit();
+
+    //! [THEN] The step's file contains the block lists
+    QDir root(appData.path() + "/history-xml");
+    const auto sessions = root.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    ASSERT_EQ(sessions.size(), 1);
+    QDir session(root.filePath(sessions.first()));
+    const auto files = session.entryList(QDir::Files, QDir::Name);
+    ASSERT_GE(files.size(), 1) << files.join(", ").toStdString();
+    QFile last(session.filePath(files.last()));
+    ASSERT_TRUE(last.open(QIODevice::ReadOnly));
+    const QByteArray xml = last.readAll();
+    EXPECT_TRUE(xml.contains("<waveblock"));
+    EXPECT_TRUE(files.last().endsWith("Lock.xml")) << files.last().toStdString();
+
+    ioc->unregister<muse::IGlobalConfiguration>("utests");
+    ioc->unregister<ITrackeditConfiguration>("utests");
 }
 }

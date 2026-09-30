@@ -117,6 +117,7 @@ set(MODULE_LINK
         au3-mixer
         au3-numeric-formats
         au3-project
+        au3-project-file-io
         au3-project-history
         au3-project-rate
         au3-realtime-effects

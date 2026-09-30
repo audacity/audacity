@@ -33,6 +33,10 @@ public:
     void setPasteBehavior(PasteBehavior value) override;
     muse::async::Notification pasteBehaviorChanged() const override;
 
+    bool historyXmlDumpEnabled() const override;
+    void setHistoryXmlDumpEnabled(bool value) override;
+    muse::async::Notification historyXmlDumpEnabledChanged() const override;
+
     PasteInsertBehavior pasteInsertBehavior() const override;
     void setPasteInsertBehavior(PasteInsertBehavior value) override;
     muse::async::Notification pasteInsertBehaviorChanged() const override;
@@ -44,5 +48,6 @@ private:
     muse::async::Notification m_pasteBehaviorChanged;
     muse::async::Notification m_pasteInsertBehaviorChanged;
     muse::async::Notification m_closeGapBehaviorChanged;
+    muse::async::Notification m_historyXmlDumpEnabledChanged;
 };
 }

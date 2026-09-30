@@ -12,16 +12,21 @@
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/global/iglobalconfiguration.h"
+#include "framework/global/async/asyncable.h"
+#include "trackedit/itrackeditconfiguration.h"
 
 #include "au3wrap/au3types.h"
 
 class SampleBlock;
 
 namespace au::trackedit {
-class Au3ProjectHistory : public IProjectHistory, public muse::Contextable
+class Au3ProjectHistory : public IProjectHistory, public muse::Contextable, public muse::async::Asyncable
 {
     muse::ContextInject<context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::GlobalInject<ITrackeditConfiguration> configuration;
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
 public:
     Au3ProjectHistory(const muse::modularity::ContextPtr& ctx)
@@ -67,6 +72,10 @@ private:
     bool confirmLockedBlocksChange() const;
     void rollbackRefusedEdit();
     void updateLockedBlocks();
+
+    //! Debug: see ITrackeditConfiguration::historyXmlDumpEnabled
+    void dumpXmlIfEnabled();
+    std::string m_xmlDumpFolder;
 
     //! Locked blocks present in the last committed state
     std::vector<std::shared_ptr<SampleBlock> > m_lockedBlocks;
