@@ -49,6 +49,7 @@ Track::Track(const Track& orig, ProtectedCreationArg&&)
 void Track::Init(const Track& orig)
 {
     mId = orig.mId;
+    mPersistentId = orig.mPersistentId;
     ChannelGroupAttachments& base = *this;
     // Intentional slice assignment deep-copies the attachment array:
     base = orig;
@@ -124,6 +125,10 @@ auto Track::Duplicate(DuplicateOptions options) const -> Holder
     // invoke "virtual constructor" to copy track object proper:
     auto result = Clone(options.backup);
     CopyAttachments(*result, *this, !options.shallowCopyAttachments);
+    // A backup is the same track; any other duplicate is a new one
+    if (!options.backup) {
+        result->SetPersistentId(NewPersistentId());
+    }
     return result;
 }
 
@@ -578,6 +583,23 @@ Track* TrackList::FindById(TrackId id) const
     return it->get();
 }
 
+void TrackList::EnsureUniquePersistentId(Track& track) const
+{
+    // A copy added next to its original (e.g. made with Init or EmptyCopy)
+    // is a new track; loading and undo/redo don't produce duplicates
+    const auto clash = [&] {
+        for (const auto other : *this) {
+            if (other != &track && other->GetPersistentId() == track.GetPersistentId()) {
+                return true;
+            }
+        }
+        return false;
+    };
+    while (clash()) {
+        track.SetPersistentId(NewPersistentId());
+    }
+}
+
 Track* TrackList::DoAddToHead(const std::shared_ptr<Track>& t)
 {
     Track* pTrack = t.get();
@@ -585,6 +607,7 @@ Track* TrackList::DoAddToHead(const std::shared_ptr<Track>& t)
     auto n = getBegin();
     pTrack->SetOwner(shared_from_this(), n);
     pTrack->SetId(TrackId { ++sCounter });
+    EnsureUniquePersistentId(*pTrack);
     RecalcPositions(n);
     AdditionEvent(n, EventPublicationSynchrony::Asynchronous);
     return front().get();
@@ -609,6 +632,7 @@ Track* TrackList::DoAdd(
     if (mAssignsIds && assignId == DoAssignId::Yes) {
         t->SetId(TrackId { ++sCounter });
     }
+    EnsureUniquePersistentId(*t);
     RecalcPositions(n);
     AdditionEvent(n, synchrony);
     return back().get();
@@ -632,6 +656,8 @@ Track::Holder TrackList::ReplaceOne(Track& t, TrackList&& with)
     with.erase(iter);
     pTrack->SetOwner(shared_from_this(), node);
     pTrack->SetId(save->GetId());
+    // The replacement stands for the same track
+    pTrack->SetPersistentId(save->GetPersistentId());
     RecalcPositions(node);
     DeletionEvent(save, true);
     AdditionEvent(node, EventPublicationSynchrony::Asynchronous);
@@ -896,6 +922,7 @@ void Track::WriteCommonXMLAttributes(
         xmlFile.WriteAttr(wxT("name"), GetName());
         xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
         xmlFile.WriteAttr(wxT("isFocused"), this->GetFocused());
+        xmlFile.WriteAttr(wxT("uid"), static_cast<long long>(mPersistentId));
     }
     AttachedTrackObjects::ForEach([&](auto& attachment){
         attachment.WriteXMLAttributes(xmlFile);
@@ -925,6 +952,9 @@ bool Track::HandleCommonXMLAttribute(
         return true;
     } else if (attr == "isFocused" && valueView.TryGet(nValue)) {
         this->SetFocused(nValue != 0);
+        return true;
+    } else if (long long uid = 0; attr == "uid" && valueView.TryGet(uid) && uid > 0) {
+        mPersistentId = uid;
         return true;
     }
     return false;

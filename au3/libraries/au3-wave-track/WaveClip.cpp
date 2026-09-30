@@ -259,6 +259,7 @@ WaveClip::WaveClip(
     // from one project to another
 
     mId = orig.mId;
+    mPersistentId = orig.mPersistentId;
     mSequenceOffset = orig.mSequenceOffset;
     mTrimLeft = orig.mTrimLeft;
     mTrimRight = orig.mTrimRight;
@@ -304,6 +305,7 @@ WaveClip::WaveClip(
     assert(orig.CountSamples(t0, t1) > 0);
 
     mId = orig.mId;
+    mPersistentId = orig.mPersistentId;
     mSequenceOffset = orig.mSequenceOffset;
 
     //Adjust trim values to sample-boundary
@@ -524,6 +526,8 @@ std::shared_ptr<WaveClip> WaveClip::SplitChannels()
     // Assign new IDs from newly created clips
     SetId(NewID());
     result->SetId(NewID());
+    SetPersistentId(NewPersistentId());
+    result->SetPersistentId(NewPersistentId());
 
     // Assert postconditions
     assert(NChannels() == 1);
@@ -1035,6 +1039,7 @@ static constexpr auto Name_attr = "name";
 static constexpr auto GroupId_attr = "groupId";
 static constexpr auto ColorIndex_attr = "colorindex";
 static constexpr auto Selected_attr = "isSelected";
+static constexpr auto PersistentId_attr = "uid";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
@@ -1113,6 +1118,8 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
                 }
             } else if (attr == Selected_attr && value.TryGet(boolValue)) {
                 SetSelected(boolValue);
+            } else if (long long uid = 0; attr == PersistentId_attr && value.TryGet(uid) && uid > 0) {
+                mPersistentId = uid;
             } else if (Attachments::FindIf(
                            [&](WaveClipListener& listener){
                 return listener.HandleXMLAttribute(attr, value);
@@ -1201,6 +1208,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
     xmlFile.WriteAttr(GroupId_attr, static_cast<long>(mGroupId));
     xmlFile.WriteAttr(ColorIndex_attr, mColorIndex);
     xmlFile.WriteAttr(Selected_attr, mSelected);
+    xmlFile.WriteAttr(PersistentId_attr, static_cast<long long>(mPersistentId));
 
     Attachments::ForEach([&](const WaveClipListener& listener){
         listener.WriteXMLAttributes(xmlFile);

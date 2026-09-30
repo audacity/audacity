@@ -22,6 +22,7 @@
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/SampleBlock.h"
+#include "au3-project-file-io/ProjectFileIO.h"
 #include "project/tests/mocks/dummyeffectinstancefactory.h"
 
 using ::testing::Truly;
@@ -2090,6 +2091,62 @@ TEST_F(Au3TracksInteractionTests, PastingAtStartOfLockedRangeDoesNotRewriteLocke
     EXPECT_EQ((*track->Intervals().begin())->GetSequence(0)->GetNumSamples(), numSamplesBefore + 10);
 
     m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PersistentIdsAreSavedAndLoaded)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const std::shared_ptr<WaveClip> clip = *track->Intervals().begin();
+
+    //! [THEN] Both ids are in the project XML
+    const std::string xml = ProjectFileIO::Get(projectRef()).GenerateDoc().ToStdString();
+    EXPECT_NE(xml.find("uid=\"" + std::to_string(track->GetPersistentId()) + "\""), std::string::npos);
+    EXPECT_NE(xml.find("uid=\"" + std::to_string(clip->GetPersistentId()) + "\""), std::string::npos);
+
+    //! [THEN] Reading the attribute back sets the id
+    const long long saved = 123456789012345;
+    EXPECT_TRUE(track->HandleCommonXMLAttribute("uid", XMLAttributeValueView(saved)));
+    EXPECT_EQ(track->GetPersistentId(), saved);
+    EXPECT_TRUE(clip->HandleXMLTag("waveclip", { { "uid", XMLAttributeValueView(saved) } }));
+    EXPECT_EQ(clip->GetPersistentId(), saved);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PersistentIdsFollowCopyRules)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const PersistentId trackUid = track->GetPersistentId();
+    const PersistentId clipUid = (*track->Intervals().begin())->GetPersistentId();
+
+    //! [THEN] An undo backup keeps both ids
+    const auto backup = std::static_pointer_cast<WaveTrack>(track->Duplicate(::Track::DuplicateOptions {}.Backup()));
+    EXPECT_EQ(backup->GetPersistentId(), trackUid);
+    EXPECT_EQ((*backup->Intervals().begin())->GetPersistentId(), clipUid);
+
+    //! [THEN] A backup added next to its original gets a new track id
+    auto& tracks = Au3TrackList::Get(projectRef());
+    tracks.Add(backup);
+    EXPECT_NE(backup->GetPersistentId(), trackUid);
+    EXPECT_EQ(track->GetPersistentId(), trackUid);
+    removeTrack(backup->GetId());
+
+    //! [THEN] A user-level duplicate gets new ids
+    const auto duplicate = std::static_pointer_cast<WaveTrack>(track->Duplicate());
+    EXPECT_NE(duplicate->GetPersistentId(), trackUid);
+    EXPECT_NE((*duplicate->Intervals().begin())->GetPersistentId(), clipUid);
+
+    //! [WHEN] Splitting the clip
+    m_tracksInteraction->splitTracksAt({ trackId }, { TRACK_MIN_SILENCE_CLIP_START + 100 * SAMPLE_INTERVAL });
+
+    //! [THEN] The left part keeps the id, the right part gets a new one
+    ASSERT_EQ(track->NIntervals(), 2u);
+    EXPECT_EQ(track->GetSortedClipByIndex(0)->GetPersistentId(), clipUid);
+    EXPECT_NE(track->GetSortedClipByIndex(1)->GetPersistentId(), clipUid);
+
     removeTrack(trackId);
 }
 }

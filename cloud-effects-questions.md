@@ -79,3 +79,18 @@
 ### Apply path and history
 
 - Open: `Process` is expected to produce audio. What undo/history entry, if any, does a submitted job create?
+
+## Reconciliation
+
+### Persistent track and clip IDs
+
+- **Why:** merging concurrent edits (cloud jobs now, collaborative editing later) needs to recognise "the same track/clip" across processes, machines and saves. Boundaries can't serve as identity: moving and trimming change them, and those are the edits to merge. Track ids also let a job be granted a whole track.
+- **Implemented on `cloud-effect-poc`** as a new field next to the in-session ids (`Track::mId`, `WaveClip::mId`), which stay small counters because they travel through QML:
+    - `PersistentId` (`au3-track/PersistentId.h`): random, in [1, 2^53), so it survives JavaScript/QML doubles.
+    - Saved as an optional `uid` attribute on `wavetrack`/`labeltrack` and `waveclip`. Read back on load; files without it get fresh ids, stable once saved.
+    - Copy rules: undo backups keep ids. Non-backup `Duplicate`, `WaveClip::NewFrom[Range]` (split, paste, duplicate) and `SplitChannels` get new ones. `TrackList::ReplaceOne` keeps the replaced track's id.
+    - Safety net: adding a track to a list, or a clip to a track, where its id already exists gives it a new id.
+- **Compatibility:**
+    - Older versions ignore unknown attributes (`WaveClip::HandleXMLTag`, `Track::HandleCommonXMLAttribute`), so they still open the file.
+    - An older version that saves the project drops the ids, so merges then see its tracks and clips as new. Collaborative projects could require a minimum client version.
+- **Open:** rethink with fresh eyes; a real save/reopen round trip in the app hasn't been tested (unit tests cover writing and parsing).
