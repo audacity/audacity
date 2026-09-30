@@ -27,6 +27,9 @@ public:
     virtual muse::async::Notification effectsPanelFocusRequested() const = 0;
     virtual muse::async::Notification audioSetupContextMenuRequested() const = 0;
     virtual muse::async::Notification timelineContextMenuRequested() const = 0;
+    virtual muse::async::Notification splitToolToggleRequested() const = 0;
+    virtual muse::async::Notification realtimeEffectMoveUpRequested() const = 0;
+    virtual muse::async::Notification realtimeEffectMoveDownRequested() const = 0;
 
     virtual bool actionChecked(const muse::actions::ActionCode& actionCode) const = 0;
     virtual muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const = 0;

@@ -8,7 +8,6 @@
 #include <QCursor>
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/actions/actionable.h"
 
 #include "context/iuicontextresolver.h"
 #include "../timeline/timelinecontext.h"
@@ -16,7 +15,7 @@
 namespace au::projectscene {
 class TapHoldShortcut;
 
-class SplitToolController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
+class SplitToolController : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
@@ -30,6 +29,7 @@ class SplitToolController : public QObject, public muse::actions::Actionable, pu
     Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
 
