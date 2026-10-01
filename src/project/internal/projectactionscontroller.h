@@ -1,6 +1,10 @@
 #ifndef AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 #define AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 
+#include <memory>
+
+#include <QTimer>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
@@ -91,6 +95,12 @@ private:
     void editInOtherCheckout();
     void launchOtherCheckout();
     void rebaseOntoHead();
+    void startWatchingCloudHead();
+    void stopWatchingCloudHead();
+    void checkCloudHead();
+    void askAboutNewCloudHead();
+    void syncCloudHead();
+    void discardCloudHead();
     void importFiles(const muse::actions::ActionData& args);
 
     void importStartupMedia(const muse::actions::ActionData& args);
@@ -157,6 +167,11 @@ private:
     bool m_isProjectSaving = false;
     bool m_isProjectClosing = false;
     bool m_isProjectProcessing = false;
+
+    //! While a checkout is out, the server is polled for changes made elsewhere
+    std::unique_ptr<QTimer> m_cloudHeadTimer;
+    std::string m_lastNotifiedCloudHead;
+    bool m_cloudHeadQuestionOpen = false;
 
     ProjectBeingDownloaded m_projectBeingDownloaded;
     muse::async::Notification m_projectBeingDownloadedChanged;

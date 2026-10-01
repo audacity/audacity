@@ -87,6 +87,11 @@ void Au3AudioComServiceStub::lockOutsideCheckoutRegion(au::project::IAudacityPro
 {
 }
 
+void Au3AudioComServiceStub::fetchProjectHead(const std::string&, std::function<void(std::optional<CloudProjectHead>)> onDone)
+{
+    onDone(std::nullopt);
+}
+
 void Au3AudioComServiceStub::integrateCloudHead(au::project::IAudacityProjectPtr, std::function<void()>,
                                                 std::function<void(muse::Ret)> onDone)
 {

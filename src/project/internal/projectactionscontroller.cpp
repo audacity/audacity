@@ -7,6 +7,7 @@
 #include <QProcess>
 #include <QWindow>
 #include <QStandardPaths>
+#include <QTimer>
 
 #include <variant>
 
@@ -524,6 +525,124 @@ void ProjectActionsController::launchOtherCheckout()
         return;
     }
     LOGI() << "Other checkout started, pid " << pid << ", sync database " << syncDatabase;
+
+    startWatchingCloudHead();
+}
+
+void ProjectActionsController::startWatchingCloudHead()
+{
+    // The server doesn't notify: poll it while a checkout is out
+    if (!m_cloudHeadTimer) {
+        m_cloudHeadTimer = std::make_unique<QTimer>();
+        m_cloudHeadTimer->setInterval(3000);
+        QObject::connect(m_cloudHeadTimer.get(), &QTimer::timeout, [this]() { checkCloudHead(); });
+    }
+    m_cloudHeadTimer->start();
+}
+
+void ProjectActionsController::stopWatchingCloudHead()
+{
+    if (m_cloudHeadTimer) {
+        m_cloudHeadTimer->stop();
+    }
+    m_lastNotifiedCloudHead.clear();
+}
+
+void ProjectActionsController::checkCloudHead()
+{
+    if (m_cloudHeadQuestionOpen) {
+        return;
+    }
+
+    IAudacityProjectPtr project = currentProject();
+    const auto record = project ? project->cloudRecord() : std::nullopt;
+    if (!record) {
+        stopWatchingCloudHead();
+        return;
+    }
+
+    audioComService()->fetchProjectHead(record->projectId, [this, projectId = record->projectId](std::optional<au3cloud::CloudProjectHead> head) {
+        IAudacityProjectPtr project = currentProject();
+        const auto record = project ? project->cloudRecord() : std::nullopt;
+        if (!head || !record || record->projectId != projectId || m_cloudHeadQuestionOpen) {
+            return;
+        }
+        // Our own snapshots are recorded as our base as soon as they're created
+        if (!head->synced || head->snapshotId == record->snapshotId || head->snapshotId == m_lastNotifiedCloudHead) {
+            return;
+        }
+        m_lastNotifiedCloudHead = head->snapshotId;
+        askAboutNewCloudHead();
+    });
+}
+
+void ProjectActionsController::askAboutNewCloudHead()
+{
+    const int syncBtn = static_cast<int>(IInteractive::Button::CustomButton);
+    const int discardBtn = syncBtn + 1;
+    const int doNothingBtn = syncBtn + 2;
+    const IInteractive::ButtonDatas buttons {
+        IInteractive::ButtonData(doNothingBtn, trc("project", "Do nothing")),
+        IInteractive::ButtonData(discardBtn, trc("project", "Discard")),
+        IInteractive::ButtonData(syncBtn, trc("project", "Sync"), /*accent=*/ true),
+    };
+
+    m_cloudHeadQuestionOpen = true;
+    interactive()->question(trc("project", "There is something new on the server"),
+                            trc("project", "The project was changed elsewhere, for example by the other checkout. "
+                                           "Sync to bring these changes in, or discard them."),
+                            buttons, syncBtn)
+    .onResolve(this, [this, syncBtn, discardBtn](const IInteractive::Result& result) {
+        m_cloudHeadQuestionOpen = false;
+        if (result.isButton(syncBtn)) {
+            syncCloudHead();
+        } else if (result.isButton(discardBtn)) {
+            discardCloudHead();
+        }
+        // "Do nothing": asked again only if the project changes again
+    });
+}
+
+void ProjectActionsController::syncCloudHead()
+{
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return;
+    }
+
+    // Applied to the open project, so that whatever is unsaved there is kept
+    audioComService()->integrateCloudHead(project, [this]() {
+        // Called once it's verified that only locked audio is replaced: the
+        // locks have served their purpose, and replacing locked blocks would
+        // count as violating them
+        dispatcher()->dispatch("unlock-all-blocks");
+    }, [this](muse::Ret ret) {
+        if (!ret) {
+            LOGE() << "changes on the server can't be integrated: " << ret.toString();
+            interactive()->error(trc("project", "Can't sync"), ret.text());
+            return;
+        }
+        stopWatchingCloudHead();
+        if (const auto trackeditProject = globalContext()->currentTrackeditProject()) {
+            trackeditProject->reload();
+        }
+        projectHistory()->pushHistoryState(trc("project", "Synced changes from the cloud"), trc("project", "Sync"));
+    });
+}
+
+void ProjectActionsController::discardCloudHead()
+{
+    stopWatchingCloudHead();
+    dispatcher()->dispatch("unlock-all-blocks");
+
+    // Overwrite what was pushed with this instance's state
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return;
+    }
+    CloudProjectInfo info;
+    info.name = project->displayName();
+    saveProjectToCloud(info, CloudSaveMode::ForceOverwrite);
 }
 
 void ProjectActionsController::rebaseOntoHead()

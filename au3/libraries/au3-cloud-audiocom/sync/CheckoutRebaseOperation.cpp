@@ -327,6 +327,22 @@ void RebaseOntoHead(AudacityProject& project, std::function<void(std::string err
     }).detach();
 }
 
+void FetchProjectHead(const std::string& projectId, std::function<void(std::optional<ProjectHead>)> onDone)
+{
+    Request request(GetServiceConfig().GetProjectInfoUrl(projectId));
+    SetCommonHeaders(request);
+    const auto response = NetworkManager::GetInstance().doGet(request);
+    response->setRequestFinishedCallback([response, onDone = std::move(onDone)](auto) {
+        std::optional<ProjectHead> head;
+        if (response->getError() == NetworkError::NoError && response->getHTTPCode() == 200) {
+            if (const auto info = DeserializeProjectInfo(response->readAll<std::string>())) {
+                head = ProjectHead { info->HeadSnapshot.Id, info->HeadSnapshot.Synced > 0 };
+            }
+        }
+        BasicUI::CallAfter([onDone, head] { onDone(head); });
+    });
+}
+
 struct HeadChanges final
 {
     std::string headSnapshotId;

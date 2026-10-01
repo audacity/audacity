@@ -85,6 +85,10 @@ public:
     //! so all other blocks are locked.
     virtual void lockOutsideCheckoutRegion(au::project::IAudacityProjectPtr project) = 0;
 
+    //! The project's latest snapshot on the server, or nothing if it can't be fetched.
+    //! `onDone` runs on the main thread.
+    virtual void fetchProjectHead(const std::string& projectId, std::function<void(std::optional<CloudProjectHead>)> onDone) = 0;
+
     //! Brings the server's latest version into the open project, keeping what's
     //! unsaved there (see sync::FetchHeadChanges and sync::ApplyHeadChanges).
     //! `beforeApply` runs once the changes are fetched and checked, just before

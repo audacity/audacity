@@ -1153,6 +1153,14 @@ void Au3AudioComService::lockOutsideCheckoutRegion(au::project::IAudacityProject
     LOGI() << "checkout region: " << region.size() << " blocks, " << lockedCount << " locked around it";
 }
 
+void Au3AudioComService::fetchProjectHead(const std::string& projectId,
+                                          std::function<void(std::optional<CloudProjectHead>)> onDone)
+{
+    sync::FetchProjectHead(projectId, [onDone = std::move(onDone)](std::optional<sync::ProjectHead> head) {
+        onDone(head ? std::optional<CloudProjectHead>(CloudProjectHead { head->snapshotId, head->synced }) : std::nullopt);
+    });
+}
+
 void Au3AudioComService::integrateCloudHead(au::project::IAudacityProjectPtr project, std::function<void()> beforeApply,
                                             std::function<void(muse::Ret)> onDone)
 {

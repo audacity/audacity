@@ -10,6 +10,7 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 
 class AudacityProject;
@@ -53,4 +54,15 @@ CLOUD_AUDIOCOM_API void FetchHeadChanges(AudacityProject& project,
 //! its next save builds on it. Must be called on the main thread.
 //! @return empty on success, else the reason of the failure
 CLOUD_AUDIOCOM_API std::string ApplyHeadChanges(AudacityProject& project, const HeadChanges& changes);
+
+struct ProjectHead final
+{
+    std::string snapshotId;
+    //! Whether the snapshot is complete on the server
+    bool synced {};
+};
+
+//! The project's latest snapshot on the server, or nothing if it can't be
+//! fetched. `onDone` is called on the main thread.
+CLOUD_AUDIOCOM_API void FetchProjectHead(const std::string& projectId, std::function<void(std::optional<ProjectHead>)> onDone);
 } // namespace audacity::cloud::audiocom::sync
