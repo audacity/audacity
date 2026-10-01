@@ -2,7 +2,8 @@
 Unit tests for au3-stretching-sequence
 ]]
 
-add_compile_definitions(CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+# The tests build "tests/samples/..." paths from this; point it at the AU3 root (au3/), not the AU4 one
+add_compile_definitions(CMAKE_SOURCE_DIR="${AUDACITY_ROOT}")
 
 add_unit_test(
    NAME
@@ -33,4 +34,6 @@ add_unit_test(
    LIBRARIES
       au3-stretching-sequence
       au3-wave-track
+      au3-project
+      au3-xml
 )
