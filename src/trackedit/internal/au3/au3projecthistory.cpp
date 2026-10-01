@@ -16,6 +16,7 @@
 
 #include "framework/global/translation.h"
 
+#include <unordered_map>
 #include <unordered_set>
 
 #include <QDateTime>
@@ -42,6 +43,61 @@ std::vector<std::shared_ptr<SampleBlock> > lockedBlocksInTracks(Au3Project& proj
     }
     return result;
 }
+
+std::unordered_set<const SampleBlock*> blocksInTracks(Au3Project& project)
+{
+    std::unordered_set<const SampleBlock*> result;
+    for (const WaveTrack* track : ::TrackList::Get(project).Any<const WaveTrack>()) {
+        for (const auto& clip : track->Intervals()) {
+            for (size_t ch = 0; ch < clip->NChannels(); ++ch) {
+                for (const auto& block : clip->GetSequence(ch)->GetBlockArray()) {
+                    result.insert(block.sb.get());
+                }
+            }
+        }
+    }
+    return result;
+}
+
+//! Blocks whose lock was last set by an EditLockRestorer, per project
+std::vector<std::weak_ptr<SampleBlock> >& currentlyLocked(const Au3Project& project)
+{
+    static std::unordered_map<const Au3Project*, std::vector<std::weak_ptr<SampleBlock> > > map;
+    return map[&project];
+}
+
+struct EditLockRestorer final : UndoStateExtension
+{
+    explicit EditLockRestorer(Au3Project& project)
+        : mLocked{ lockedBlocksInTracks(project) }
+    {
+        currentlyLocked(project).assign(mLocked.begin(), mLocked.end());
+    }
+
+    void RestoreUndoRedoState(Au3Project& project) override
+    {
+        // Blocks may be shared between states, so first clear the locks of the
+        // state we're leaving
+        for (const auto& weak : currentlyLocked(project)) {
+            if (const auto block = weak.lock()) {
+                block->SetEditLocked(false);
+            }
+        }
+        for (const auto& block : mLocked) {
+            block->SetEditLocked(true);
+        }
+        currentlyLocked(project).assign(mLocked.begin(), mLocked.end());
+    }
+
+    const std::vector<std::shared_ptr<SampleBlock> > mLocked;
+};
+}
+
+void au::trackedit::registerEditLockRestorer()
+{
+    static UndoRedoExtensionRegistry::Entry<EditLockRestorer> sEntry { [](Au3Project& project) -> std::shared_ptr<UndoStateExtension> {
+            return std::make_shared<EditLockRestorer>(project);
+        } };
 }
 
 void au::trackedit::Au3ProjectHistory::init()
@@ -295,14 +351,11 @@ bool Au3ProjectHistory::confirmLockedBlocksChange() const
         return true;
     }
 
-    std::unordered_set<const SampleBlock*> current;
-    for (const auto& block : lockedBlocksInTracks(projectRef())) {
-        current.insert(block.get());
-    }
-
-    // Blocks unlocked in the meantime (e.g. "Unlock all blocks") don't count
+    // Only removing a locked block counts: unlocking ("Unlock all blocks", or
+    // undo restoring the locks of an earlier state) leaves it in place
+    const auto current = blocksInTracks(projectRef());
     const bool lockedBlockRemoved = std::any_of(m_lockedBlocks.begin(), m_lockedBlocks.end(), [&](const auto& block) {
-        return block->IsEditLocked() && !current.count(block.get());
+        return !current.count(block.get());
     });
     if (!lockedBlockRemoved) {
         return true;

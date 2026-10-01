@@ -72,8 +72,13 @@ bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit
 
 bool TrackeditOperationController::unlockAllBlocks()
 {
-    // Locks aren't part of the undo state, so no history entry
-    return tracksInteraction()->unlockAllBlocks();
+    if (!tracksInteraction()->unlockAllBlocks()) {
+        return false;
+    }
+    // Locks are part of the undo state: record the unlock in the current state,
+    // without a history entry of its own
+    projectHistory()->modifyState();
+    return true;
 }
 
 bool TrackeditOperationController::lockClips(const ClipKeyList& clipKeyList)

@@ -5,6 +5,7 @@
 #include "testing/environment.h"
 
 #include "au3wrap/au3wrapmodule.h"
+#include "../internal/au3/au3projecthistory.h"
 
 #include "projectscene/tests/mocks/projectsceneconfigurationmock.h"
 #include "project/tests/mocks/projectconfigurationmock.h"
@@ -17,6 +18,8 @@ static muse::testing::SuiteEnvironment trackedit_se
     = muse::testing::SuiteEnvironment()
       .setDependencyModules({ new au::au3::Au3WrapModule(), })
       .setPostInit([]() {
+    au::trackedit::registerEditLockRestorer();
+
     std::shared_ptr<NiceMock<ProjectSceneConfigurationMock> > projectSceneConfigurator(new NiceMock<ProjectSceneConfigurationMock>(),
                                                                                        [](ProjectSceneConfigurationMock*) {}); // no delete
 

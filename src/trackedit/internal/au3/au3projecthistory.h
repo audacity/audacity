@@ -84,4 +84,8 @@ private:
 
     bool m_interactionOngoing = false;
 };
+
+//! Makes the edit locks of sample blocks part of each undo state, so that
+//! undo/redo restore them along with the audio
+void registerEditLockRestorer();
 }

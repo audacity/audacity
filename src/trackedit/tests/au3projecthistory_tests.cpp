@@ -144,6 +144,7 @@ TEST_F(Au3ProjectHistoryTests, UnlockedBlocksDoNotWarn)
     for (const auto& block : (*track().Intervals().begin())->GetSequence(0)->GetBlockArray()) {
         block.sb->SetEditLocked(false);
     }
+    m_history->modifyState(false);
 
     //! [THEN] No warning
     EXPECT_CALL(*m_interactive, warningSync(_, _, _, _, _, _)).Times(0);
@@ -235,5 +236,35 @@ TEST_F(Au3ProjectHistoryTests, XmlDumpWritesOneFilePerStepWithBlockLists)
 
     ioc->unregister<muse::IGlobalConfiguration>("utests");
     ioc->unregister<ITrackeditConfiguration>("utests");
+}
+
+TEST_F(Au3ProjectHistoryTests, UndoingLockUnlocksBlocksSharedWithEarlierState)
+{
+    //! [GIVEN] A lock whose range covers a whole block that already existed before it
+    const auto clip = *track().Intervals().begin();
+    const double start = clip->GetPlayStartTime();
+    clip->LockBlocks(start + 100 * SAMPLE_INTERVAL, start + 200 * SAMPLE_INTERVAL);
+    for (const auto& block : clip->GetSequence(0)->GetBlockArray()) {
+        block.sb->SetEditLocked(false);
+    }
+    m_history->pushHistoryState("Split", "Split");
+    ASSERT_EQ(lockedBlockCount(), 0u);
+
+    clip->LockBlocks(start + 50 * SAMPLE_INTERVAL, start + 300 * SAMPLE_INTERVAL);
+    m_history->pushHistoryState("Lock", "Lock");
+    ASSERT_EQ(lockedBlockCount(), 3u) << "[50, 100), the pre-existing [100, 200), and [200, 300)";
+
+    //! [WHEN] Undoing the lock, confirming the warning
+    answerWarning(muse::IInteractive::Button::Ok);
+    m_history->undo();
+
+    //! [THEN] No block is locked, including the pre-existing one
+    EXPECT_EQ(lockedBlockCount(), 0u);
+
+    //! [WHEN] Redoing
+    m_history->redo();
+
+    //! [THEN] The locks are back
+    EXPECT_EQ(lockedBlockCount(), 3u);
 }
 }
