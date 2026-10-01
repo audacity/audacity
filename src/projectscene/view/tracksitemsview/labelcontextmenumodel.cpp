@@ -49,6 +49,14 @@ void LabelContextMenuModel::load()
                      muse::TranslatableString("label", "Delete and close gap on all tracks")),
     };
 
+    MenuItemList colorItems;
+    colorItems << makeMenuItem("action://trackedit/label/change-color-auto",
+                               muse::TranslatableString("label", "Same as track color"));
+    colorItems << makeSeparator();
+    for (const auto& info : projectSceneConfiguration()->clipColorInfos()) {
+        colorItems << makeMenuItem(makeLabelColorChangeAction(info.index).toString(), info.title);
+    }
+
     MenuItemList items {
         makeItemWithArg("rename-item", muse::TranslatableString("label", "Rename label")),
         makeSeparator(),
@@ -59,6 +67,8 @@ void LabelContextMenuModel::load()
         makeMenu(muse::TranslatableString("label", "Cut and…"), cutAndItems, "menu-cut-and"),
         makeMenu(muse::TranslatableString("label", "Paste and…"), pasteAndItems, "menu-paste-and"),
         makeMenu(muse::TranslatableString("label", "Delete and…"), deleteAndItems, "menu-delete-and"),
+        makeSeparator(),
+        makeMenu(muse::TranslatableString("label", "Label color"), colorItems, "menu-label-color"),
     };
 
     setItems(items);
