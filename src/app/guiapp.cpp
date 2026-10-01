@@ -134,6 +134,10 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
     if (options->cloud.syncDatabasePath) {
         au3cloudConfiguration()->setSyncDatabasePath(*options->cloud.syncDatabasePath);
     }
+
+    if (options->cloud.accessTokenFilePath) {
+        au3cloudConfiguration()->setAccessTokenFile(*options->cloud.accessTokenFilePath);
+    }
 }
 
 void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)

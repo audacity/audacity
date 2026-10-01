@@ -86,6 +86,8 @@ void CommandLineParser::init()
     // Cloud
     m_parser.addOption(internalCommandLineOption("cloud-sync-database",
                                                  "Database file holding the cloud sync state of this process", "path"));
+    m_parser.addOption(internalCommandLineOption("cloud-auth-file",
+                                                 "File holding the audio.com access token of the process that started this one", "path"));
 
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
@@ -185,6 +187,10 @@ void CommandLineParser::parse(int argc, char** argv)
 
     if (m_parser.isSet("cloud-sync-database")) {
         m_options->cloud.syncDatabasePath = fromUserInputPath(m_parser.value("cloud-sync-database"));
+    }
+
+    if (m_parser.isSet("cloud-auth-file")) {
+        m_options->cloud.accessTokenFilePath = fromUserInputPath(m_parser.value("cloud-auth-file"));
     }
 
     // Audio plugin registration

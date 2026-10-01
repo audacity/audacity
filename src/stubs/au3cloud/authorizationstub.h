@@ -21,5 +21,6 @@ public:
     muse::ValCh<AuthState> authState() const override;
     bool isAuthorized() const override;
     muse::Ret ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode) override;
+    void writeAccessTokenFile(const muse::io::path_t& path, std::function<void(muse::Ret)> onDone) override;
 };
 }

@@ -41,3 +41,12 @@ bool Au3CloudConfigurationStub::isOtherCheckout() const
 {
     return false;
 }
+
+void Au3CloudConfigurationStub::setAccessTokenFile(const muse::io::path_t& /*path*/)
+{
+}
+
+muse::io::path_t Au3CloudConfigurationStub::accessTokenFile() const
+{
+    return {};
+}

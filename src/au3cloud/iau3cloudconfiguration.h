@@ -31,5 +31,11 @@ public:
     //! Whether this process is a checkout started by "Edit in other checkout",
     //! which is what gives it a sync database of its own
     virtual bool isOtherCheckout() const = 0;
+
+    //! A file with an access token to sign in with, written by the process
+    //! that started this one (see IAuthorization::writeAccessTokenFile).
+    //! Must be set before modules are initialized.
+    virtual void setAccessTokenFile(const muse::io::path_t& path) = 0;
+    virtual muse::io::path_t accessTokenFile() const = 0;
 };
 }

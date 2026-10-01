@@ -510,23 +510,35 @@ void ProjectActionsController::launchOtherCheckout()
     const QString syncDatabase = QString("%1/%2-%3.db").arg(checkoutsDir, QString::fromStdString(record->projectId))
                                  .arg(QDateTime::currentMSecsSinceEpoch());
 
-    QProcess process;
-    process.setProgram(QCoreApplication::applicationFilePath());
-    process.setArguments({ "--cloud-sync-database", syncDatabase,
-                           cloudProjectOpenUrl(muse::String::fromStdString(record->projectId),
-                                               muse::String::fromStdString(record->snapshotId)) });
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert("AU_ALLOW_MULTIPLE_PROCESSES", "1");
-    process.setProcessEnvironment(env);
+    // The checkout signs in with this instance's token, refreshed first so that it
+    // lasts as long as possible: refreshing the shared sign-in from the checkout
+    // would invalidate this instance's tokens
+    const QString accessTokenFile = syncDatabase + ".auth";
+    const QString openUrl = cloudProjectOpenUrl(muse::String::fromStdString(record->projectId),
+                                                muse::String::fromStdString(record->snapshotId));
+    authorization()->writeAccessTokenFile(accessTokenFile, [this, syncDatabase, accessTokenFile, openUrl](Ret ret) {
+        if (!ret) {
+            LOGE() << "can't pass the sign-in to the other checkout: " << ret.toString();
+            interactive()->error(trc("project", "Can't open the other checkout"), ret.text());
+            return;
+        }
 
-    qint64 pid = 0;
-    if (!process.startDetached(&pid)) {
-        LOGE() << "Failed to start other checkout: " << process.errorString();
-        return;
-    }
-    LOGI() << "Other checkout started, pid " << pid << ", sync database " << syncDatabase;
+        QProcess process;
+        process.setProgram(QCoreApplication::applicationFilePath());
+        process.setArguments({ "--cloud-sync-database", syncDatabase, "--cloud-auth-file", accessTokenFile, openUrl });
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert("AU_ALLOW_MULTIPLE_PROCESSES", "1");
+        process.setProcessEnvironment(env);
 
-    startWatchingCloudHead();
+        qint64 pid = 0;
+        if (!process.startDetached(&pid)) {
+            LOGE() << "Failed to start other checkout: " << process.errorString();
+            return;
+        }
+        LOGI() << "Other checkout started, pid " << pid << ", sync database " << syncDatabase;
+
+        startWatchingCloudHead();
+    });
 }
 
 void ProjectActionsController::startWatchingCloudHead()

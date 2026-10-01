@@ -23,7 +23,11 @@ public:
     void setSyncDatabasePath(const muse::io::path_t& path) override;
     bool isOtherCheckout() const override;
 
+    void setAccessTokenFile(const muse::io::path_t& path) override;
+    muse::io::path_t accessTokenFile() const override;
+
 private:
     bool m_isOtherCheckout = false;
+    muse::io::path_t m_accessTokenFile;
 };
 }
