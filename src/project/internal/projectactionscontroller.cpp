@@ -5,9 +5,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QProcess>
-#include <QTimer>
 #include <QWindow>
-#include <cstdlib>
 #include <QStandardPaths>
 
 #include <variant>
@@ -166,11 +164,6 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
     dispatcher()->reg(this, "file-save-to-cloud", [this]() { saveProject(SaveMode::Save, SaveLocationType::Cloud); });
     dispatcher()->reg(this, "edit-in-other-checkout", this, &ProjectActionsController::editInOtherCheckout);
-    // TEMP HARNESS
-    if (std::getenv("AU_MI_TRIGGER")) {
-        QTimer::singleShot(20000, [this]() { dispatcher()->dispatch("edit-in-other-checkout"); });
-        QTimer::singleShot(40000, []() { std::_Exit(0); });
-    }
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
@@ -478,6 +471,10 @@ void ProjectActionsController::editInOtherCheckout()
     if (!project) {
         return;
     }
+
+    // This instance holds the lock: the other checkout's result may only replace
+    // the locked audio, which is checked when integrating it
+    dispatcher()->dispatch("lock-selection");
 
     // The other checkout opens what is on the server, so save there first.
     // The selection is part of the project, so it goes along.
