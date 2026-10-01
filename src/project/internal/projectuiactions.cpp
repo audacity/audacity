@@ -757,6 +757,14 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action_description", "Save to cloud…"),
              IconCode::Code::CLOUD_FILE
              ),
+    UiAction("edit-in-other-checkout",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Edit in other checkout"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Save to the cloud and open the project in another Audacity process")
+             ),
     UiAction("file-share-audio",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,

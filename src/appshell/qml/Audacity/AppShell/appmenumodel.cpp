@@ -252,6 +252,7 @@ MenuItem* AppMenuModel::makeFileMenu()
 
         makeMenuItem("file-save"),
         makeMenuItem("file-save-to-cloud"),
+        makeMenuItem("edit-in-other-checkout"),
         makeMenuItem("file-save-as"),
         makeMenuItem("action://cloud/update-audio-preview"),
 

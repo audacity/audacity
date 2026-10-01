@@ -86,6 +86,8 @@ private:
     void newProject();
     void open(const muse::actions::ActionData& args);
     void openCloudProject(const muse::actions::ActionData& args);
+    void editInOtherCheckout();
+    void launchOtherCheckout();
     void importFiles(const muse::actions::ActionData& args);
 
     void importStartupMedia(const muse::actions::ActionData& args);

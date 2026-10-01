@@ -1,7 +1,14 @@
 #include "projectactionscontroller.h"
 
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDir>
 #include <QFileDialog>
+#include <QProcess>
+#include <QTimer>
 #include <QWindow>
+#include <cstdlib>
+#include <QStandardPaths>
 
 #include <variant>
 
@@ -79,6 +86,7 @@ const muse::actions::ActionCodeList& prohibitedWhileRecording()
         "project-import",
         "file-save",
         "file-save-to-cloud",
+        "edit-in-other-checkout",
         "file-save-as",
         "export-audio",
         "export-labels",
@@ -157,6 +165,12 @@ void ProjectActionsController::init()
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
     dispatcher()->reg(this, "file-save-to-cloud", [this]() { saveProject(SaveMode::Save, SaveLocationType::Cloud); });
+    dispatcher()->reg(this, "edit-in-other-checkout", this, &ProjectActionsController::editInOtherCheckout);
+    // TEMP HARNESS
+    if (std::getenv("AU_MI_TRIGGER")) {
+        QTimer::singleShot(20000, [this]() { dispatcher()->dispatch("edit-in-other-checkout"); });
+        QTimer::singleShot(40000, []() { std::_Exit(0); });
+    }
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
@@ -456,6 +470,63 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
     if (!ret) {
         openPageIfNeed(HOME_PAGE_URI);
     }
+}
+
+void ProjectActionsController::editInOtherCheckout()
+{
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return;
+    }
+
+    // The other checkout opens what is on the server, so save there first.
+    // The selection is part of the project, so it goes along.
+    CloudProjectInfo info;
+    // A new project's display name is its temporary file's name
+    info.name = project->displayName();
+    for (const QString& suffix : { QString(".aup4unsaved"), QString(".aup4"), QString(".aup3") }) {
+        if (info.name.endsWith(suffix)) {
+            info.name.chop(suffix.size());
+            break;
+        }
+    }
+    const CloudSaveMode mode = project->isCloudProject() ? CloudSaveMode::NormalUpdate : CloudSaveMode::CreateNew;
+    saveProjectToCloud(info, mode, [this]() {
+        launchOtherCheckout();
+    });
+}
+
+void ProjectActionsController::launchOtherCheckout()
+{
+    IAudacityProjectPtr project = currentProject();
+    const auto record = project ? project->cloudRecord() : std::nullopt;
+    if (!record || record->projectId.empty()) {
+        LOGE() << "The project isn't on the cloud, can't open it in another checkout";
+        return;
+    }
+
+    // A separate process: windows of this process share one cloud sync database,
+    // but each checkout must keep its own sync state (in particular its base snapshot)
+    const QString checkoutsDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/checkouts";
+    QDir().mkpath(checkoutsDir);
+    const QString syncDatabase = QString("%1/%2-%3.db").arg(checkoutsDir, QString::fromStdString(record->projectId))
+                                 .arg(QDateTime::currentMSecsSinceEpoch());
+
+    QProcess process;
+    process.setProgram(QCoreApplication::applicationFilePath());
+    process.setArguments({ "--cloud-sync-database", syncDatabase,
+                           cloudProjectOpenUrl(muse::String::fromStdString(record->projectId),
+                                               muse::String::fromStdString(record->snapshotId)) });
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("AU_ALLOW_MULTIPLE_PROCESSES", "1");
+    process.setProcessEnvironment(env);
+
+    qint64 pid = 0;
+    if (!process.startDetached(&pid)) {
+        LOGE() << "Failed to start other checkout: " << process.errorString();
+        return;
+    }
+    LOGI() << "Other checkout started, pid " << pid << ", sync database " << syncDatabase;
 }
 
 void ProjectActionsController::importFiles(const muse::actions::ActionData& args)
