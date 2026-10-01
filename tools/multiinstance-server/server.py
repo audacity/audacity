@@ -420,6 +420,7 @@ audiocom\\refreshToken=local
 [application]
 hasCompletedFirstLaunchSetup=true
 welcomeDialogShowOnStartup=false
+welcomeDialogLastShownVersion=99
 """)
     print(f"Seeded profile {profile_dir}")
 
