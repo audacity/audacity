@@ -54,3 +54,7 @@ endif()
 if (AU_USE_SBSMS)
     require_dep(sbsms)
 endif()
+
+if (MUSE_ENABLE_UNIT_TESTS)
+    require_source_dep(catch2) # AU3 libraries' unit tests
+endif()
