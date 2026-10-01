@@ -152,3 +152,7 @@ else() # MSVC
     )
 endif()
 
+# px_mac_coreaudio.c uses the CoreAudio C API; consumers must not have to know (audacity#11806)
+if(APPLE)
+   target_link_libraries(${TARGET} PUBLIC "-framework CoreAudio")
+endif()
