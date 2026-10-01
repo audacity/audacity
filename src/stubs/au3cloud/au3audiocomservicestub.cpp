@@ -103,11 +103,6 @@ std::string Au3AudioComServiceStub::getCloudProjectPage(const std::string& /*unu
     return {};
 }
 
-std::string Au3AudioComServiceStub::getCloudProjectPage(const muse::io::path_t& /*unused*/) const
-{
-    return {};
-}
-
 void Au3AudioComServiceStub::deinit()
 {
 }

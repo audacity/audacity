@@ -10,8 +10,8 @@ using namespace au::project;
 
 namespace {
 constexpr const char* OPEN_PROJECT_ACTION = "cloud-file-open";
-constexpr const char* OPEN_PROJECT_PAGE_ACTION = "audacity://cloud/open-project-page";
-constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "audacity://cloud/update-audio-preview-for-project";
+constexpr const char* OPEN_PROJECT_PAGE_ACTION = "action://cloud/open-project-page";
+constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "action://cloud/update-audio-preview-for-project";
 constexpr const char* SHOW_IN_FOLDER_ACTION = "project-show-in-folder";
 }
 

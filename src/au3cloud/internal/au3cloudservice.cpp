@@ -7,7 +7,10 @@
 
 #include <string>
 
+#include "framework/global/log.h"
 #include "framework/global/translation.h"
+#include "framework/global/types/uri.h"
+#include "framework/interactive/iinteractive.h"
 
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/UserService.h"
@@ -19,6 +22,11 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace au::au3cloud;
+
+namespace {
+const muse::Uri SIGNIN_AUDIOCOM_URI("audacity://signin/audiocom");
+const std::string CREATE_ACCOUNT_MODE_PARAM("isCreateAccountMode");
+}
 
 void Au3CloudService::init()
 {
@@ -192,6 +200,30 @@ void Au3CloudService::signOut()
 muse::ValCh<AuthState> Au3CloudService::authState() const
 {
     return m_authState;
+}
+
+muse::Ret Au3CloudService::ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode)
+{
+    if (isAuthorized()) {
+        return muse::make_ok();
+    }
+
+    auto interactive = muse::modularity::ioc(ctx)->resolve<muse::IInteractive>("au3cloud");
+    IF_ASSERT_FAILED(interactive) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
+    muse::UriQuery uri(SIGNIN_AUDIOCOM_URI);
+    if (createAccountMode) {
+        uri.addParam(CREATE_ACCOUNT_MODE_PARAM, muse::Val(true));
+    }
+
+    const muse::RetVal<muse::Val> rv = interactive->openSync(uri);
+    if (!rv.ret) {
+        return rv.ret;
+    }
+
+    return isAuthorized() ? muse::make_ok() : muse::make_ret(muse::Ret::Code::Cancel);
 }
 
 bool Au3CloudService::isAuthorized() const

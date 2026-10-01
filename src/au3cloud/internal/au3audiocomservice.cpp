@@ -816,16 +816,6 @@ std::string Au3AudioComService::getCloudProjectPage(const std::string& projectId
     return oauthService.MakeAudioComAuthorizeURL(userId, projectPage);
 }
 
-std::string Au3AudioComService::getCloudProjectPage(const muse::io::path_t& projectPath) const
-{
-    auto dbProjectData = getProjectDataFromDatabase(projectPath);
-    if (!dbProjectData || dbProjectData->ProjectId.empty()) {
-        return {};
-    }
-
-    return getCloudProjectPage(dbProjectData->ProjectId);
-}
-
 std::string Au3AudioComService::getCloudAudioPage(const std::string& slug) const
 {
     auto& oauthService = GetOAuthService();

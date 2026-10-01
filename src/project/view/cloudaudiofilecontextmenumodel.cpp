@@ -8,8 +8,8 @@
 using namespace au::project;
 
 namespace {
-constexpr const char* OPEN_AUDIO_FILE_ACTION = "audacity://cloud/open-audio-file";
-constexpr const char* OPEN_AUDIO_PAGE_ACTION = "audacity://cloud/open-audio-page";
+constexpr const char* OPEN_AUDIO_FILE_ACTION = "action://cloud/open-audio-file";
+constexpr const char* OPEN_AUDIO_PAGE_ACTION = "action://cloud/open-audio-page";
 }
 
 CloudAudioFileContextMenuModel::CloudAudioFileContextMenuModel(QString audioId, QString slug, QObject* parent)
