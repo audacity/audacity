@@ -13,4 +13,8 @@ add_unit_test(
    LIBRARIES
       au3-snapping
       wxBase
+      au3-project # Project.h is included by this library's headers
+      au3-xml
+      au3-numeric-formats
+      au3-project-rate
 )
