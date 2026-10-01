@@ -62,6 +62,8 @@ set(AU4_BUILD_MODE "dev" CACHE STRING "Build mode")
 
 set(AU4_REVISION "" CACHE STRING "Build revision")
 
+set(AU4_MACDEPLOYQT_EXTRA_OPTIONS "" CACHE STRING "Semicolon-separated extra arguments for macdeployqt")
+
 # Modules (alphabetical order please)
 option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
 option(AU_BUILD_APPSHELL_TESTS "Build appshell tests" ${MUSE_ENABLE_UNIT_TESTS})
