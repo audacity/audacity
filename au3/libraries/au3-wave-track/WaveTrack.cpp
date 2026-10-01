@@ -1931,10 +1931,6 @@ bool WaveTrack::InsertClip(WaveClipHolders& clips, WaveClipHolder clip,
         return false;
     }
 
-    const auto& tempo = GetProjectTempo(*this);
-    if (tempo.has_value()) {
-        clip->OnProjectTempoChange(std::nullopt, *tempo);
-    }
     clips.push_back(std::move(clip));
     Publish({ clips.back(),
               newClip ? WaveTrackMessage::New : WaveTrackMessage::Inserted });
@@ -2655,6 +2651,7 @@ XMLTagHandler* WaveTrack::HandleXMLChild(const std::string_view& tag)
         // Not all `WaveTrackData` fields are properly initialized by now,
         // use deserialization helpers.
         auto clip = WaveClip::NewShared(1, mpFactory, mLegacyFormat, mLegacyRate);
+        clip->SetProjectTempoForDeserialization(*GetProjectTempo(*this));
         const auto xmlHandler = clip.get();
         auto& clips = NarrowClips();
         clips.push_back(std::move(clip));
@@ -3209,10 +3206,6 @@ auto WaveTrack::DoCreateClip(double offset, const wxString& name) const
     clip->SetName(name);
     clip->SetSequenceStartTime(offset);
 
-    const auto& tempo = GetProjectTempo(*this);
-    if (tempo.has_value()) {
-        clip->OnProjectTempoChange(std::nullopt, *tempo);
-    }
     assert(clip->NChannels() == NChannels());
     return clip;
 }

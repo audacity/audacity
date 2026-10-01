@@ -67,7 +67,7 @@ public:
     virtual void notifyAboutLabelRemoved(const Label& label) = 0;
 
     virtual TimeSignature timeSignature() const = 0;
-    virtual void setTimeSignature(const TimeSignature& timeSignature) = 0;
+    virtual void setTimeSignature(const TimeSignature& timeSignature, bool noStretch = false) = 0;
     virtual muse::async::Channel<TimeSignature> timeSignatureChanged() const = 0;
 
     virtual muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const = 0;

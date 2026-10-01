@@ -251,8 +251,6 @@ WaveClip::WaveClip(
     : mCentShift{orig.mCentShift}
     , mPitchAndSpeedPreset{orig.mPitchAndSpeedPreset}
     , mClipStretchRatio{orig.mClipStretchRatio}
-    , mRawAudioTempo{orig.mRawAudioTempo}
-    , mClipTempo{orig.mClipTempo}
     , mVersion{orig.mVersion + 1}
 {
     // essentially a copy constructor - but you must pass in the
@@ -300,8 +298,6 @@ WaveClip::WaveClip(
     bool copyGroupId, double t0, double t1)
     : mCentShift{orig.mCentShift}
     , mClipStretchRatio{orig.mClipStretchRatio}
-    , mRawAudioTempo{orig.mRawAudioTempo}
-    , mClipTempo{orig.mClipTempo}
     , mVersion{orig.mVersion + 1}
 {
     assert(orig.CountSamples(t0, t1) > 0);
@@ -623,29 +619,21 @@ size_t WaveClip::GreatestAppendBufferLen() const
 void WaveClip::OnProjectTempoChange(
     const std::optional<double>& oldTempo, double newTempo)
 {
-    if (!mRawAudioTempo.has_value()) {
-        // When we have tempo detection ready (either by header-file
-        // read-up or signal analysis) we can use something smarter than that. In
-        // the meantime, use the tempo of the project when the clip is created as
-        // source tempo.
-        mRawAudioTempo = oldTempo.value_or(newTempo);
+    if (!oldTempo.has_value()) {
+        return;
     }
 
-    if (oldTempo.has_value()) {
-        const auto ratioChange = oldTempo.value() / newTempo;
-        mSequenceOffset *= ratioChange;
-        if (!mStretchToMatchProjectTempo) {
-            mSequenceOffset += ((mTrimLeft * ratioChange) - mTrimLeft);
-            return;
-        }
-        mTrimLeft *= ratioChange;
-        mTrimRight *= ratioChange;
-        mEnvelope->RescaleTimesBy(ratioChange);
+    const auto ratioChange = oldTempo.value() / newTempo;
+    mSequenceOffset *= ratioChange;
+    if (!mStretchToMatchProjectTempo) {
+        // Keep the clip where it is musically, but leave its speed alone.
+        mSequenceOffset += ((mTrimLeft * ratioChange) - mTrimLeft);
+        return;
     }
-
-    if (mStretchToMatchProjectTempo) {
-        mClipTempo = newTempo;
-    }
+    mTrimLeft *= ratioChange;
+    mTrimRight *= ratioChange;
+    mEnvelope->RescaleTimesBy(ratioChange);
+    mClipStretchRatio *= ratioChange;
 
     Observer::Publisher<StretchRatioChange>::Publish(
         StretchRatioChange { GetStretchRatio() });
@@ -697,11 +685,7 @@ void WaveClip::StretchBy(double ratio)
 
 double WaveClip::GetStretchRatio() const
 {
-    const auto dstSrcRatio
-        =mClipTempo.has_value() && mRawAudioTempo.has_value()
-          ? *mRawAudioTempo / *mClipTempo
-          : 1.0;
-    return mClipStretchRatio * dstSrcRatio;
+    return mClipStretchRatio;
 }
 
 int WaveClip::GetCentShift() const
@@ -753,6 +737,11 @@ void WaveClip::SetStretchToMatchProjectTempo(bool enabled)
         return;
     }
     mStretchToMatchProjectTempo = enabled;
+}
+
+void WaveClip::SetProjectTempoForDeserialization(double tempo)
+{
+    mProjectTempoForDeserialization = tempo;
 }
 
 bool WaveClip::StretchRatioEquals(double value) const
@@ -1049,6 +1038,10 @@ static constexpr auto Selected_attr = "isSelected";
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
     if (tag == WaveClip_tag) {
+        // Tempi of clips saved before the stretch ratio became absolute; see
+        // the end of this function.
+        std::optional<double> legacyRawAudioTempo;
+        std::optional<double> legacyClipTempo;
         double dblValue;
         long longValue;
         bool boolValue;
@@ -1085,10 +1078,8 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
                 if (!value.TryGet(dblValue)) {
                     return false;
                 }
-                if (dblValue == 0) {
-                    mRawAudioTempo.reset();
-                } else {
-                    mRawAudioTempo = dblValue;
+                if (dblValue != 0) {
+                    legacyRawAudioTempo = dblValue;
                 }
             } else if (attr == ClipStretchRatio_attr) {
                 if (!value.TryGet(dblValue)) {
@@ -1104,7 +1095,7 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
                 if (!value.TryGet(dblValue)) {
                     return false;
                 }
-                mClipTempo = dblValue;
+                legacyClipTempo = dblValue;
             } else if (attr == Name_attr) {
                 if (value.IsStringView()) {
                     SetName(value.ToWString());
@@ -1128,6 +1119,21 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
                            )) {
             }
         }
+        // In AU3 (until 3.7.9 at least), `clipStretchRatio` used to hold only the stretch the user had applied.
+        // Since there wasn't the "Stretch to tempo changes" option yet (everything got stretched on project
+        // tempo change), the final stretch only needed `mRawAudioTempo` and `mProjectTempo`.
+        // In 4.0.0, `mClipTempo` was introduced as a snapshot of `mProjectTempo` when the user decided to uncheck
+        // "Stretch to tempo changes".
+        // From 4.0.1, we simplify and factor everything in `mClipStretchRatio`.
+        if (legacyRawAudioTempo) {
+            const auto& tempo = legacyClipTempo ? legacyClipTempo
+                                : (mStretchToMatchProjectTempo ? mProjectTempoForDeserialization : std::nullopt);
+            if (tempo && std::isfinite(*tempo) && *tempo > 0.
+                && legacyRawAudioTempo && std::isfinite(*legacyRawAudioTempo) && *legacyRawAudioTempo > 0.) {
+                mClipStretchRatio *= *legacyRawAudioTempo / *tempo;
+            }
+        }
+        mProjectTempoForDeserialization.reset();
         return true;
     }
 
@@ -1195,13 +1201,6 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
     xmlFile.WriteAttr(ColorIndex_attr, mColorIndex);
     xmlFile.WriteAttr(Selected_attr, mSelected);
 
-    if (mClipTempo) {
-        xmlFile.WriteAttr(ClipTempo_attr, *mClipTempo, 8);
-    }
-    if (mRawAudioTempo) {
-        xmlFile.WriteAttr(RawAudioTempo_attr, *mRawAudioTempo, 8);
-    }
-
     Attachments::ForEach([&](const WaveClipListener& listener){
         listener.WriteXMLAttributes(xmlFile);
     });
@@ -1242,8 +1241,6 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
         mPitchAndSpeedPreset = other.mPitchAndSpeedPreset;
         mCentShift = other.mCentShift;
         mClipStretchRatio = other.mClipStretchRatio;
-        mRawAudioTempo = other.mRawAudioTempo;
-        mClipTempo = other.mClipTempo;
     } else if (!HasEqualPitchAndSpeed(other)) {
         // post is satisfied
         return false;
@@ -1499,14 +1496,11 @@ void WaveClip::SetRate(int rate)
     SetSequenceStartTime(GetSequenceStartTime() * ratio);
 }
 
-void WaveClip::SetRawAudioTempo(double tempo)
+void WaveClip::StretchToProjectTempo(double rawAudioTempo, double projectTempo)
 {
-    mRawAudioTempo = tempo;
-}
-
-void WaveClip::SetClipTempo(double tempo)
-{
-    mClipTempo = tempo;
+    mClipStretchRatio = rawAudioTempo / projectTempo;
+    Observer::Publisher<StretchRatioChange>::Publish(
+        StretchRatioChange { GetStretchRatio() });
 }
 
 bool WaveClip::SetCentShift(int cents)
@@ -1801,26 +1795,6 @@ bool WaveClip::TrimLeft(double deltaTime)
 bool WaveClip::TrimRight(double deltaTime)
 {
     return SetTrimRight(mTrimRight + deltaTime);
-}
-
-void WaveClip::TrimQuarternotesFromRight(double quarters)
-{
-    assert(mRawAudioTempo.has_value());
-    if (!mRawAudioTempo.has_value()) {
-        return;
-    }
-    const auto secondsPerQuarter = 60 * GetStretchRatio() / *mRawAudioTempo;
-    // MH https://github.com/audacity/audacity/issues/5878: Clip boundaries are
-    // quantized to the sample period. Music durations aren't, though.
-    // `quarters` was probably chosen such that the clip ends exactly at some
-    // musical grid snapping point. However, if we right-trim by `quarters`,
-    // the clip's play end time might be rounded up to the next sample period,
-    // overlapping the next snapping point on the musical grid. We don't want
-    // this, or it would disturb music producers who want to horizontally
-    // duplicate loops.
-    const auto quantizedTrim
-        =std::ceil(quarters * secondsPerQuarter * GetRate()) / GetRate();
-    TrimRight(quantizedTrim);
 }
 
 void WaveClip::TrimLeftTo(double to)

@@ -147,8 +147,7 @@ void TempoDetection::showEmptyMusicWorkspaceDialog(double bpm, const std::vector
         BTN_MATCH_PROJECT);
 
     if (result.button() == BTN_MATCH_PROJECT) {
-        setRawAudioTempoOnClips(waveTracks, bpm);
-        setProjectTempo(bpm);
+        matchProjectTempoToLoops(bpm);
     } else if (result.button() == BTN_MATCH_LOOP) {
         stretchClipsToProjectTempo(waveTracks, dstTrackIds, bpm);
     }
@@ -192,17 +191,16 @@ void TempoDetection::showSubsequentImportDialog(double bpm, const std::vector<Wa
     }
 }
 
-void TempoDetection::setRawAudioTempoOnClips(const std::vector<WaveTrack*>& waveTracks, double bpm)
+void TempoDetection::matchProjectTempoToLoops(double bpm)
 {
-    // Setting rawAudioTempo on clips before changing the project tempo
-    // ensures the stretch ratio stays 1:1 (no stretching).
-    // Without this, AU3's ProjectTempoListener would stretch all clips
-    // by the ratio oldTempo/newTempo when the project tempo changes.
-    for (auto* track : waveTracks) {
-        for (const auto& interval : track->SortedIntervalArray()) {
-            interval->SetRawAudioTempo(bpm);
-        }
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
     }
+
+    trackedit::TimeSignature ts = project->timeSignature();
+    ts.tempo = bpm;
+    project->setTimeSignature(ts, /*noStretch=*/ true);
 }
 
 void TempoDetection::stretchClipsToProjectTempo(const std::vector<WaveTrack*>& waveTracks,
@@ -235,12 +233,9 @@ std::vector<ImportedClipInfo> TempoDetection::collectImportedClipInfos(
 void TempoDetection::applyTempoToClips(const std::vector<WaveTrack*>& waveTracks,
                                        double detectedBpm, double projectTempo)
 {
-    // Passing std::nullopt as oldTempo tells OnProjectTempoChange this is an
-    // initial tempo assignment — it will set mClipTempo and rescale boundaries.
     for (auto* track : waveTracks) {
         for (const auto& interval : track->SortedIntervalArray()) {
-            interval->SetRawAudioTempo(detectedBpm);
-            interval->OnProjectTempoChange(std::nullopt, projectTempo);
+            interval->StretchToProjectTempo(detectedBpm, projectTempo);
         }
     }
 }
@@ -289,16 +284,4 @@ void TempoDetection::makeRoomAndCloseGaps(const std::vector<ImportedClipInfo>& i
                 { neighbourKey }, -untrimAmount, 0.0, true, trackedit::UndoPushType::NONE);
         }
     }
-}
-
-void TempoDetection::setProjectTempo(double bpm)
-{
-    auto project = globalContext()->currentTrackeditProject();
-    if (!project) {
-        return;
-    }
-
-    trackedit::TimeSignature ts = project->timeSignature();
-    ts.tempo = bpm;
-    project->setTimeSignature(ts);
 }

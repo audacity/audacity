@@ -829,21 +829,8 @@ bool Au3ClipsInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipKe
         return false;
     }
 
-    bool newValue = !clip->GetStretchToMatchProjectTempo();
-    clip->SetStretchToMatchProjectTempo(newValue);
-
-    if (newValue) {
-        double expectedEndTime = clip->End();
-        auto prj = globalContext()->currentTrackeditProject();
-        double projectTempo = prj->timeSignature().tempo;
-        clip->SetClipTempo(projectTempo);
-        clip->StretchRightTo(expectedEndTime);
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-
-        //! NOTE: matching the project tempo can grow the clip into its neighbour;
-        //! resolve any resulting overlap (this path previously made no room at all).
-        makeRoomForClip(clipKey);
-    }
+    clip->SetStretchToMatchProjectTempo(!clip->GetStretchToMatchProjectTempo());
+    globalContext()->currentTrackeditProject()->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
     return true;
 }

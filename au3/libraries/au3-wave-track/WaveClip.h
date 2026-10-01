@@ -399,8 +399,11 @@ public:
 
     // Set rate without resampling. This will change the length of the clip
     void SetRate(int rate);
-    void SetRawAudioTempo(double tempo);
-    void SetClipTempo(double tempo);
+
+    //! The audio was recorded at `rawAudioTempo`; stretch it so that it plays
+    //! at `projectTempo`. Replaces whatever stretch the clip had. Boundaries
+    //! follow from the new ratio; trims and the envelope are left alone.
+    void StretchToProjectTempo(double rawAudioTempo, double projectTempo);
 
     PitchAndSpeedPreset GetPitchAndSpeedPreset() const override;
 
@@ -421,6 +424,11 @@ public:
     //! Enabling stretch to match tempo
     bool GetStretchToMatchProjectTempo() const;
     void SetStretchToMatchProjectTempo(bool enabled);
+
+    //! In AU3 (until 3.7.9 at least) the final stretch ratio of a clip depended on
+    //! its detected tempo, the project's tempo and the stretch applied by the user manually.
+    //! When importing an AU3 project,
+    void SetProjectTempoForDeserialization(double);
 
     /*
      * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
@@ -492,8 +500,6 @@ public:
     bool TrimLeft(double deltaTime);
     //! Moves play end position by deltaTime
     bool TrimRight(double deltaTime);
-    //! Same as `TrimRight`, but expressed as quarter notes
-    void TrimQuarternotesFromRight(double quarters);
 
     //! Sets the left trimming to the absolute time (if that is in bounds)
     void TrimLeftTo(double to);
@@ -992,12 +998,10 @@ private:
     PitchAndSpeedPreset mPitchAndSpeedPreset { PitchAndSpeedPreset::Default };
     int mCentShift { 0 };
 
-    // Used in GetStretchRatio which computes the factor, by which the sample
-    // interval is multiplied, to get a realtime duration.
     double mClipStretchRatio = 1.;
-    std::optional<double> mRawAudioTempo;
-    std::optional<double> mClipTempo;
     bool mStretchToMatchProjectTempo = true;
+
+    std::optional<double> mProjectTempoForDeserialization;
 
     //! Sample rate of the raw audio, i.e., before stretching.
     int mRate;

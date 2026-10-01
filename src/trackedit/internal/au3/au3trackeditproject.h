@@ -57,7 +57,7 @@ public:
     void notifyAboutLabelRemoved(const Label& label) override;
 
     TimeSignature timeSignature() const override;
-    void setTimeSignature(const TimeSignature& timeSignature) override;
+    void setTimeSignature(const TimeSignature& timeSignature, bool noStretch) override;
     muse::async::Channel<TimeSignature> timeSignatureChanged() const override;
 
     muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const override;
