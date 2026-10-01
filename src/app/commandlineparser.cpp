@@ -92,6 +92,8 @@ void CommandLineParser::init()
                                                  "Edit only the selection of the opened cloud project, for the instance that shared it"));
     m_parser.addOption(internalCommandLineOption("checkout-action",
                                                  "Action the checkout dispatches once open, before saving to the cloud", "action"));
+    m_parser.addOption(internalCommandLineOption("checkout-skips-save",
+                                                 "The checkout doesn't save to the cloud after its action (for testing)"));
 
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
@@ -199,6 +201,7 @@ void CommandLineParser::parse(int argc, char** argv)
 
     m_options->cloud.isOtherCheckout = m_parser.isSet("checkout");
     m_options->cloud.checkoutAction = m_parser.value("checkout-action").toStdString();
+    m_options->cloud.checkoutSkipsSave = m_parser.isSet("checkout-skips-save");
 
     // Audio plugin registration
     if (m_parser.isSet("register-audio-plugin")) {

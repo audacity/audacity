@@ -50,6 +50,7 @@ struct AudacityCmdOptions : public muse::CmdOptions {
         std::optional<muse::io::path_t> accessTokenFilePath;
         bool isOtherCheckout = false;
         std::string checkoutAction;
+        bool checkoutSkipsSave = false;
     } cloud;
 
     struct AudioPluginRegistration {

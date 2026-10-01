@@ -7,6 +7,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/async/channel.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/actions/iactionsdispatcher.h"
 
 #include "context/iglobalcontext.h"
 #include "../ieffectinstancesregister.h"
@@ -50,6 +51,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Co
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
     muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
     EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)

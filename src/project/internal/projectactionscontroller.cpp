@@ -474,8 +474,9 @@ void ProjectActionsController::editInOtherCheckout(const muse::actions::ActionDa
 {
     const std::string checkoutAction = args.count() > 0 ? args.arg<std::string>(0) : std::string();
     m_checkoutEffectName = args.count() > 1 ? args.arg<std::string>(1) : std::string();
-    prepareCheckout([this, checkoutAction]() {
-        launchOtherCheckout(checkoutAction);
+    const bool checkoutSkipsSave = args.count() > 2 ? args.arg<bool>(2) : false;
+    prepareCheckout([this, checkoutAction, checkoutSkipsSave]() {
+        launchOtherCheckout(checkoutAction, checkoutSkipsSave);
     });
 }
 
@@ -529,7 +530,7 @@ void ProjectActionsController::prepareCheckout(std::function<void()> onSaved)
     saveProjectToCloud(info, mode, std::move(onSaved));
 }
 
-void ProjectActionsController::launchOtherCheckout(const std::string& checkoutAction)
+void ProjectActionsController::launchOtherCheckout(const std::string& checkoutAction, bool checkoutSkipsSave)
 {
     IAudacityProjectPtr project = currentProject();
     const auto record = project ? project->cloudRecord() : std::nullopt;
@@ -554,6 +555,9 @@ void ProjectActionsController::launchOtherCheckout(const std::string& checkoutAc
     QStringList arguments { "--checkout", "--cloud-sync-database", syncDatabase, "--cloud-auth-file", accessTokenFile };
     if (!checkoutAction.empty()) {
         arguments << "--checkout-action" << QString::fromStdString(checkoutAction);
+        if (checkoutSkipsSave) {
+            arguments << "--checkout-skips-save";
+        }
     }
     arguments << openUrl;
     authorization()->writeAccessTokenFile(accessTokenFile, [this, syncDatabase, arguments](Ret ret) {
@@ -587,19 +591,22 @@ void ProjectActionsController::performCheckoutAction()
     if (action.empty()) {
         return;
     }
+    const bool skipsSave = cloudConfiguration()->checkoutSkipsSave();
     // Once: it was meant for the project this checkout was started with
-    cloudConfiguration()->setCheckoutAction({});
-    // Its work is done once saved
+    cloudConfiguration()->setCheckoutAction({}, false);
+    // Its work done once saved, whether automatically or not
     m_quitAfterCheckoutSave = true;
 
     // After the project is opened
-    muse::async::Async::call(this, [this, action]() {
+    muse::async::Async::call(this, [this, action, skipsSave]() {
         LOGI() << "Checkout action: " << action;
         dispatcher()->dispatch(muse::actions::ActionQuery(action));
 
         // Saving conflicts if the main instance saved since; the checkout then
         // rebases its changes onto what is on the server (handleCloudSaveError)
-        dispatcher()->dispatch("file-save");
+        if (!skipsSave) {
+            dispatcher()->dispatch("file-save");
+        }
     });
 }
 

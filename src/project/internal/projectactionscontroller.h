@@ -93,13 +93,14 @@ private:
     void open(const muse::actions::ActionData& args);
     void openCloudProject(const muse::actions::ActionData& args);
     //! Optionally with an action for the checkout to dispatch once it's open,
-    //! and the name of the effect that action applies, which names the history
-    //! item when the result is synced
+    //! the name of the effect that action applies, which names the history item
+    //! when the result is synced, and whether the checkout skips saving to the
+    //! cloud after the action (for testing)
     void editInOtherCheckout(const muse::actions::ActionData& args);
     void shareCheckoutLink();
     //! Locks the selection and saves to the cloud, for a checkout to open
     void prepareCheckout(std::function<void()> onSaved);
-    void launchOtherCheckout(const std::string& checkoutAction);
+    void launchOtherCheckout(const std::string& checkoutAction, bool checkoutSkipsSave);
     void performCheckoutAction();
     void quitIfCheckoutDone();
     void rebaseOntoHead();

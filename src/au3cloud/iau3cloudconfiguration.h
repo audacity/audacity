@@ -36,9 +36,11 @@ public:
     virtual bool isOtherCheckout() const = 0;
 
     //! What the other checkout does once open, e.g. apply an effect
-    //! ("action://effects/apply?…"), before saving to the cloud and quitting
-    virtual void setCheckoutAction(const std::string& action) = 0;
+    //! ("action://effects/apply?…"), before saving to the cloud and quitting,
+    //! unless it skips saving (for testing)
+    virtual void setCheckoutAction(const std::string& action, bool skipsSave) = 0;
     virtual std::string checkoutAction() const = 0;
+    virtual bool checkoutSkipsSave() const = 0;
 
     //! A file with an access token to sign in with, written by the process
     //! that started this one (see IAuthorization::writeAccessTokenFile).

@@ -44,11 +44,18 @@ public:
     void setVst3CustomPaths(const muse::io::paths_t& paths) override;
     muse::async::Notification vst3CustomPathsChanged() const override;
 
+    bool applyInOtherCheckout() const override;
+    void setApplyInOtherCheckout(bool value) override;
+    bool otherCheckoutSkipsSave() const override;
+    void setOtherCheckoutSkipsSave(bool value) override;
+
 private:
     muse::async::Notification m_applyEffectToAllAudioChanged;
     muse::async::Notification m_effectMenuOrganizationChanged;
     muse::async::Notification m_effectUIModeChanged;
     muse::async::Notification m_lv2CustomPathsChanged;
     muse::async::Notification m_vst3CustomPathsChanged;
+    bool m_applyInOtherCheckout = false;
+    bool m_otherCheckoutSkipsSave = false;
 };
 }

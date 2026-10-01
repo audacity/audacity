@@ -68,14 +68,20 @@ bool Au3CloudConfiguration::isOtherCheckout() const
     return m_isOtherCheckout;
 }
 
-void Au3CloudConfiguration::setCheckoutAction(const std::string& action)
+void Au3CloudConfiguration::setCheckoutAction(const std::string& action, bool skipsSave)
 {
     m_checkoutAction = action;
+    m_checkoutSkipsSave = skipsSave;
 }
 
 std::string Au3CloudConfiguration::checkoutAction() const
 {
     return m_checkoutAction;
+}
+
+bool Au3CloudConfiguration::checkoutSkipsSave() const
+{
+    return m_checkoutSkipsSave;
 }
 
 void Au3CloudConfiguration::setAccessTokenFile(const muse::io::path_t& path)

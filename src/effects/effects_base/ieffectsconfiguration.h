@@ -41,5 +41,15 @@ public:
     virtual muse::io::paths_t vst3CustomPaths() const = 0;
     virtual void setVst3CustomPaths(const muse::io::paths_t& paths) = 0;
     virtual muse::async::Notification vst3CustomPathsChanged() const = 0;
+
+    //! "Apply in other checkout": a destructive effect is applied to the
+    //! selection by a checkout of the project in another process.
+    //! Not persisted.
+    virtual bool applyInOtherCheckout() const = 0;
+    virtual void setApplyInOtherCheckout(bool value) = 0;
+    //! For testing: the other checkout doesn't save its result, which leaves
+    //! time to work on in this instance
+    virtual bool otherCheckoutSkipsSave() const = 0;
+    virtual void setOtherCheckoutSkipsSave(bool value) = 0;
 };
 }

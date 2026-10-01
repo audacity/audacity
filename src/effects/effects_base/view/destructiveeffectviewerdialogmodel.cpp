@@ -47,6 +47,34 @@ void DestructiveEffectViewerDialogModel::setInstanceId(int newInstanceId)
     emit viewerComponentTypeChanged();
 }
 
+bool DestructiveEffectViewerDialogModel::applyInOtherCheckout() const
+{
+    return configuration()->applyInOtherCheckout();
+}
+
+void DestructiveEffectViewerDialogModel::setApplyInOtherCheckout(bool value)
+{
+    if (applyInOtherCheckout() == value) {
+        return;
+    }
+    configuration()->setApplyInOtherCheckout(value);
+    emit applyInOtherCheckoutChanged();
+}
+
+bool DestructiveEffectViewerDialogModel::otherCheckoutSkipsSave() const
+{
+    return configuration()->otherCheckoutSkipsSave();
+}
+
+void DestructiveEffectViewerDialogModel::setOtherCheckoutSkipsSave(bool value)
+{
+    if (otherCheckoutSkipsSave() == value) {
+        return;
+    }
+    configuration()->setOtherCheckoutSkipsSave(value);
+    emit otherCheckoutSkipsSaveChanged();
+}
+
 void DestructiveEffectViewerDialogModel::rollbackSettings()
 {
     if (!m_initialSettings) {
