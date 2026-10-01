@@ -525,7 +525,7 @@ void ProjectActionsController::launchOtherCheckout()
 
         QProcess process;
         process.setProgram(QCoreApplication::applicationFilePath());
-        process.setArguments({ "--cloud-sync-database", syncDatabase, "--cloud-auth-file", accessTokenFile, openUrl });
+        process.setArguments({ "--checkout", "--cloud-sync-database", syncDatabase, "--cloud-auth-file", accessTokenFile, openUrl });
         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
         env.insert("AU_ALLOW_MULTIPLE_PROCESSES", "1");
         process.setProcessEnvironment(env);

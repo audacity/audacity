@@ -88,6 +88,8 @@ void CommandLineParser::init()
                                                  "Database file holding the cloud sync state of this process", "path"));
     m_parser.addOption(internalCommandLineOption("cloud-auth-file",
                                                  "File holding the audio.com access token of the process that started this one", "path"));
+    m_parser.addOption(internalCommandLineOption("checkout",
+                                                 "Edit only the selection of the opened cloud project, for the instance that shared it"));
 
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
@@ -192,6 +194,8 @@ void CommandLineParser::parse(int argc, char** argv)
     if (m_parser.isSet("cloud-auth-file")) {
         m_options->cloud.accessTokenFilePath = fromUserInputPath(m_parser.value("cloud-auth-file"));
     }
+
+    m_options->cloud.isOtherCheckout = m_parser.isSet("checkout");
 
     // Audio plugin registration
     if (m_parser.isSet("register-audio-plugin")) {

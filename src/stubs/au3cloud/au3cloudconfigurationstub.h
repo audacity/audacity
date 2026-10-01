@@ -18,6 +18,7 @@ public:
     bool shouldWarnOnSyncError() const override;
     void setWarnOnSyncError(bool warn) override;
     void setSyncDatabasePath(const muse::io::path_t& path) override;
+    void setIsOtherCheckout(bool isOtherCheckout) override;
     bool isOtherCheckout() const override;
     void setAccessTokenFile(const muse::io::path_t& path) override;
     muse::io::path_t accessTokenFile() const override;

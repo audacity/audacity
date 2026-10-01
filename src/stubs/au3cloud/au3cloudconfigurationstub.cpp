@@ -37,6 +37,10 @@ void Au3CloudConfigurationStub::setSyncDatabasePath(const muse::io::path_t& /*pa
 {
 }
 
+void Au3CloudConfigurationStub::setIsOtherCheckout(bool /*isOtherCheckout*/)
+{
+}
+
 bool Au3CloudConfigurationStub::isOtherCheckout() const
 {
     return false;

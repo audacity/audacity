@@ -138,6 +138,8 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
     if (options->cloud.accessTokenFilePath) {
         au3cloudConfiguration()->setAccessTokenFile(*options->cloud.accessTokenFilePath);
     }
+
+    au3cloudConfiguration()->setIsOtherCheckout(options->cloud.isOtherCheckout);
 }
 
 void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)

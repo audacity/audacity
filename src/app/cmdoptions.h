@@ -48,6 +48,7 @@ struct AudacityCmdOptions : public muse::CmdOptions {
     struct Cloud {
         std::optional<muse::io::path_t> syncDatabasePath;
         std::optional<muse::io::path_t> accessTokenFilePath;
+        bool isOtherCheckout = false;
     } cloud;
 
     struct AudioPluginRegistration {
