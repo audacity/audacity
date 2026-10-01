@@ -140,6 +140,7 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
     }
 
     au3cloudConfiguration()->setIsOtherCheckout(options->cloud.isOtherCheckout);
+    au3cloudConfiguration()->setCheckoutAction(options->cloud.checkoutAction);
 }
 
 void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)

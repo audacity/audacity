@@ -46,6 +46,15 @@ bool Au3CloudConfigurationStub::isOtherCheckout() const
     return false;
 }
 
+void Au3CloudConfigurationStub::setCheckoutAction(const std::string& /*action*/)
+{
+}
+
+std::string Au3CloudConfigurationStub::checkoutAction() const
+{
+    return {};
+}
+
 void Au3CloudConfigurationStub::setAccessTokenFile(const muse::io::path_t& /*path*/)
 {
 }

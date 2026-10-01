@@ -470,10 +470,12 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
     }
 }
 
-void ProjectActionsController::editInOtherCheckout()
+void ProjectActionsController::editInOtherCheckout(const muse::actions::ActionData& args)
 {
-    prepareCheckout([this]() {
-        launchOtherCheckout();
+    const std::string checkoutAction = args.count() > 0 ? args.arg<std::string>(0) : std::string();
+    m_checkoutEffectName = args.count() > 1 ? args.arg<std::string>(1) : std::string();
+    prepareCheckout([this, checkoutAction]() {
+        launchOtherCheckout(checkoutAction);
     });
 }
 
@@ -527,7 +529,7 @@ void ProjectActionsController::prepareCheckout(std::function<void()> onSaved)
     saveProjectToCloud(info, mode, std::move(onSaved));
 }
 
-void ProjectActionsController::launchOtherCheckout()
+void ProjectActionsController::launchOtherCheckout(const std::string& checkoutAction)
 {
     IAudacityProjectPtr project = currentProject();
     const auto record = project ? project->cloudRecord() : std::nullopt;
@@ -549,7 +551,12 @@ void ProjectActionsController::launchOtherCheckout()
     const QString accessTokenFile = syncDatabase + ".auth";
     const QString openUrl = cloudProjectOpenUrl(muse::String::fromStdString(record->projectId),
                                                 muse::String::fromStdString(record->snapshotId));
-    authorization()->writeAccessTokenFile(accessTokenFile, [this, syncDatabase, accessTokenFile, openUrl](Ret ret) {
+    QStringList arguments { "--checkout", "--cloud-sync-database", syncDatabase, "--cloud-auth-file", accessTokenFile };
+    if (!checkoutAction.empty()) {
+        arguments << "--checkout-action" << QString::fromStdString(checkoutAction);
+    }
+    arguments << openUrl;
+    authorization()->writeAccessTokenFile(accessTokenFile, [this, syncDatabase, arguments](Ret ret) {
         if (!ret) {
             LOGE() << "can't pass the sign-in to the other checkout: " << ret.toString();
             interactive()->error(trc("project", "Can't open the other checkout"), ret.text());
@@ -558,7 +565,7 @@ void ProjectActionsController::launchOtherCheckout()
 
         QProcess process;
         process.setProgram(QCoreApplication::applicationFilePath());
-        process.setArguments({ "--checkout", "--cloud-sync-database", syncDatabase, "--cloud-auth-file", accessTokenFile, openUrl });
+        process.setArguments(arguments);
         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
         env.insert("AU_ALLOW_MULTIPLE_PROCESSES", "1");
         process.setProcessEnvironment(env);
@@ -571,6 +578,39 @@ void ProjectActionsController::launchOtherCheckout()
         LOGI() << "Other checkout started, pid " << pid << ", sync database " << syncDatabase;
 
         startWatchingCloudHead();
+    });
+}
+
+void ProjectActionsController::performCheckoutAction()
+{
+    const std::string action = cloudConfiguration()->checkoutAction();
+    if (action.empty()) {
+        return;
+    }
+    // Once: it was meant for the project this checkout was started with
+    cloudConfiguration()->setCheckoutAction({});
+    // Its work is done once saved
+    m_quitAfterCheckoutSave = true;
+
+    // After the project is opened
+    muse::async::Async::call(this, [this, action]() {
+        LOGI() << "Checkout action: " << action;
+        dispatcher()->dispatch(muse::actions::ActionQuery(action));
+
+        // Saving conflicts if the main instance saved since; the checkout then
+        // rebases its changes onto what is on the server (handleCloudSaveError)
+        dispatcher()->dispatch("file-save");
+    });
+}
+
+void ProjectActionsController::quitIfCheckoutDone()
+{
+    if (!std::exchange(m_quitAfterCheckoutSave, false)) {
+        return;
+    }
+    LOGI() << "Checkout saved, quitting";
+    muse::async::Async::call(this, [this]() {
+        dispatcher()->dispatch("quit", actions::ActionData::make_arg1<bool>(false));
     });
 }
 
@@ -671,13 +711,20 @@ void ProjectActionsController::syncCloudHead()
         if (const auto trackeditProject = globalContext()->currentTrackeditProject()) {
             trackeditProject->reload();
         }
-        projectHistory()->pushHistoryState(trc("project", "Synced changes from the cloud"), trc("project", "Sync"));
+        if (const std::string effectName = std::exchange(m_checkoutEffectName, {}); !effectName.empty()) {
+            // As if the effect was applied here
+            const std::string longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String::fromStdString(effectName)).toStdString();
+            projectHistory()->pushHistoryState(longDesc, effectName);
+        } else {
+            projectHistory()->pushHistoryState(trc("project", "Synced changes from the cloud"), trc("project", "Sync"));
+        }
     });
 }
 
 void ProjectActionsController::discardCloudHead()
 {
     stopWatchingCloudHead();
+    m_checkoutEffectName.clear();
     dispatcher()->dispatch("unlock-all-blocks");
 
     // Overwrite what was pushed with this instance's state
@@ -697,6 +744,7 @@ void ProjectActionsController::rebaseOntoHead()
             toastService()->show(trc("project", "Changes integrated"),
                                  trc("project", "Your changes were replayed on the latest version and saved to the cloud."),
                                  muse::ui::IconCode::Code::TICK, true, {});
+            quitIfCheckoutDone();
             return;
         }
         LOGE() << "rebase failed: " << ret.toString();
@@ -948,6 +996,7 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         if (onSuccess) {
             onSuccess();
         }
+        quitIfCheckoutDone();
         return make_ok();
     }
 
@@ -977,6 +1026,7 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         if (onSuccess) {
             onSuccess();
         }
+        quitIfCheckoutDone();
     });
 
     const bool dismissible = false;
@@ -1374,6 +1424,10 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         }
 
         auto [syncRet, syncProgress] = audioComService()->resumeProjectSync(project);
+        if (syncRet && !syncProgress && cloudConfiguration()->isOtherCheckout()) {
+            // Nothing to resume
+            performCheckoutAction();
+        }
         if (!syncRet || !syncProgress || syncProgress->isCanceled()) {
             return;
         }
@@ -1382,6 +1436,10 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             if (!result.ret.success()) {
                 handleCloudSaveError(result.ret);
                 return;
+            }
+
+            if (cloudConfiguration()->isOtherCheckout()) {
+                performCheckoutAction();
             }
 
             const bool dismissable = false;

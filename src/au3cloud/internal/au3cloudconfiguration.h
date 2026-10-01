@@ -23,12 +23,15 @@ public:
     void setSyncDatabasePath(const muse::io::path_t& path) override;
     void setIsOtherCheckout(bool isOtherCheckout) override;
     bool isOtherCheckout() const override;
+    void setCheckoutAction(const std::string& action) override;
+    std::string checkoutAction() const override;
 
     void setAccessTokenFile(const muse::io::path_t& path) override;
     muse::io::path_t accessTokenFile() const override;
 
 private:
     bool m_isOtherCheckout = false;
+    std::string m_checkoutAction;
     muse::io::path_t m_accessTokenFile;
 };
 }

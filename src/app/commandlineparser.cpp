@@ -90,6 +90,8 @@ void CommandLineParser::init()
                                                  "File holding the audio.com access token of the process that started this one", "path"));
     m_parser.addOption(internalCommandLineOption("checkout",
                                                  "Edit only the selection of the opened cloud project, for the instance that shared it"));
+    m_parser.addOption(internalCommandLineOption("checkout-action",
+                                                 "Action the checkout dispatches once open, before saving to the cloud", "action"));
 
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
@@ -196,6 +198,7 @@ void CommandLineParser::parse(int argc, char** argv)
     }
 
     m_options->cloud.isOtherCheckout = m_parser.isSet("checkout");
+    m_options->cloud.checkoutAction = m_parser.value("checkout-action").toStdString();
 
     // Audio plugin registration
     if (m_parser.isSet("register-audio-plugin")) {

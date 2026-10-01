@@ -92,11 +92,16 @@ private:
     void newProject();
     void open(const muse::actions::ActionData& args);
     void openCloudProject(const muse::actions::ActionData& args);
-    void editInOtherCheckout();
+    //! Optionally with an action for the checkout to dispatch once it's open,
+    //! and the name of the effect that action applies, which names the history
+    //! item when the result is synced
+    void editInOtherCheckout(const muse::actions::ActionData& args);
     void shareCheckoutLink();
     //! Locks the selection and saves to the cloud, for a checkout to open
     void prepareCheckout(std::function<void()> onSaved);
-    void launchOtherCheckout();
+    void launchOtherCheckout(const std::string& checkoutAction);
+    void performCheckoutAction();
+    void quitIfCheckoutDone();
     void rebaseOntoHead();
     void startWatchingCloudHead();
     void stopWatchingCloudHead();
@@ -173,6 +178,8 @@ private:
 
     //! While a checkout is out, the server is polled for changes made elsewhere
     std::unique_ptr<QTimer> m_cloudHeadTimer;
+    bool m_quitAfterCheckoutSave = false;
+    std::string m_checkoutEffectName;
     std::string m_lastNotifiedCloudHead;
     bool m_cloudHeadQuestionOpen = false;
 
