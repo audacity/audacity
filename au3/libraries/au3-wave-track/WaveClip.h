@@ -846,6 +846,10 @@ public:
      */
     bool LockBlocks(double t0, double t1);
 
+    //! Ids of the blocks LockBlocks(t0, t1) would lock (in all channels),
+    //! without splitting or locking anything
+    std::vector<long long> BlockIdsInRange(double t0, double t1) const;
+
     //! See Sequence::DeepCopyEditLockedBlocks
     bool DeepCopyEditLockedBlocks();
 

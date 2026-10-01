@@ -75,6 +75,16 @@ public:
 
     virtual muse::Ret deleteCloudProject(const muse::io::path_t& localPath) = 0;
 
+    //! Replays this checkout's audio changes on the server's latest version and
+    //! pushes the result (see sync::RebaseOntoHead). `onDone` runs on the main thread.
+    virtual void rebaseOntoHead(au::project::IAudacityProjectPtr project, std::function<void(muse::Ret)> onDone) = 0;
+
+    //! For a checkout, just opened: the inverse of the main instance's lock. The
+    //! blocks of the selection it was opened with (those the main instance
+    //! locked, by the same rule as "Lock selection") are what it may replace,
+    //! so all other blocks are locked.
+    virtual void lockOutsideCheckoutRegion(au::project::IAudacityProjectPtr project) = 0;
+
     virtual void deinit() = 0;
 };
 }

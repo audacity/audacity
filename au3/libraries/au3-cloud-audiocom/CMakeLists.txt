@@ -26,6 +26,8 @@ set( SOURCES
    sync/BlockHasher.h
    sync/CheckoutRebase.cpp
    sync/CheckoutRebase.h
+   sync/CheckoutRebaseOperation.cpp
+   sync/CheckoutRebaseOperation.h
    sync/CloudProjectsDatabase.cpp
    sync/CloudProjectsDatabase.h
    sync/CloudSyncDTO.cpp

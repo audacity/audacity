@@ -1720,6 +1720,22 @@ bool WaveClip::LockBlocks(double t0, double t1)
     return changed;
 }
 
+std::vector<long long> WaveClip::BlockIdsInRange(double t0, double t1) const
+{
+    const auto s0 = TimeToSequenceSamples(t0);
+    const auto s1 = TimeToSequenceSamples(t1);
+    std::vector<long long> ids;
+    for (const auto& pSequence : mSequences) {
+        // Same rule as Sequence::LockBlocks
+        for (const auto& block : pSequence->GetBlockArray()) {
+            if (block.start >= s0 && block.start < s1) {
+                ids.push_back(block.sb->GetBlockID());
+            }
+        }
+    }
+    return ids;
+}
+
 bool WaveClip::DeepCopyEditLockedBlocks()
 {
     bool changed = false;

@@ -21,5 +21,9 @@ public:
     void setWarnOnSyncError(bool warn) override;
 
     void setSyncDatabasePath(const muse::io::path_t& path) override;
+    bool isOtherCheckout() const override;
+
+private:
+    bool m_isOtherCheckout = false;
 };
 }

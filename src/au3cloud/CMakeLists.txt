@@ -64,6 +64,8 @@ set(MODULE_LINK
         au3-string-utils
         au3-utility
         au3-wave-track
+        au3-time-frequency-selection
+        au3-track
         Qt6::Network
         Qt6::NetworkAuth
         au3-cloud-audiocom

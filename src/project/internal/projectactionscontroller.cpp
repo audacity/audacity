@@ -526,6 +526,20 @@ void ProjectActionsController::launchOtherCheckout()
     LOGI() << "Other checkout started, pid " << pid << ", sync database " << syncDatabase;
 }
 
+void ProjectActionsController::rebaseOntoHead()
+{
+    audioComService()->rebaseOntoHead(currentProject(), [this](muse::Ret ret) {
+        if (ret) {
+            toastService()->show(trc("project", "Changes integrated"),
+                                 trc("project", "Your changes were replayed on the latest version and saved to the cloud."),
+                                 muse::ui::IconCode::Code::TICK, true, {});
+            return;
+        }
+        LOGE() << "rebase failed: " << ret.toString();
+        interactive()->error(trc("project", "Couldn't integrate your changes"), ret.text());
+    });
+}
+
 void ProjectActionsController::importFiles(const muse::actions::ActionData& args)
 {
     const IAudacityProjectPtr project = globalContext()->currentProject();
@@ -1178,6 +1192,17 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         auto project = globalContext()->currentProject();
         if (!project) {
             return;
+        }
+
+        // Before any edit: what the checkout was given is what's selected now.
+        // Everything else is locked, which the lock warnings and the block
+        // overlay then show
+        if (cloudConfiguration()->isOtherCheckout()) {
+            audioComService()->lockOutsideCheckoutRegion(project);
+            projectHistory()->modifyState();
+            if (const auto trackeditProject = globalContext()->currentTrackeditProject()) {
+                trackeditProject->reload();
+            }
         }
 
         if (!ensureAuthorization()) {
@@ -1887,6 +1912,13 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
 {
     IAudacityProjectPtr project = currentProject();
     if (!project) {
+        return;
+    }
+
+    // A checkout started by "Edit in other checkout" doesn't overwrite the main
+    // instance's work: it replays its own changes on top of it
+    if (error.code() == static_cast<int>(au3cloud::Err::ProjectVersionConflict) && cloudConfiguration()->isOtherCheckout()) {
+        rebaseOntoHead();
         return;
     }
 

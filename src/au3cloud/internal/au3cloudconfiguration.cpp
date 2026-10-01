@@ -56,4 +56,10 @@ void Au3CloudConfiguration::setSyncDatabasePath(const muse::io::path_t& path)
 {
     LOGI() << "cloud sync database: " << path;
     audacity::cloud::audiocom::sync::CloudProjectsDatabase::SetDatabasePath(path.toStdString());
+    m_isOtherCheckout = true;
+}
+
+bool Au3CloudConfiguration::isOtherCheckout() const
+{
+    return m_isOtherCheckout;
 }

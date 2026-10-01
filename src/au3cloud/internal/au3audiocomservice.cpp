@@ -34,6 +34,13 @@
 #include "au3-network-manager/NetworkManager.h"
 #include "au3-network-manager/Request.h"
 #include "au3-cloud-audiocom/sync/ResumedSnaphotUploadOperation.h"
+#include "au3-cloud-audiocom/sync/CheckoutRebaseOperation.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/SampleBlock.h"
 #include "au3-cloud-audiocom/UploadService.h"
 #include "au3-concurrency/concurrency/CancellationContext.h"
 #include "au3-import-export/ExportUtils.h"
@@ -1080,6 +1087,70 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
             AudiocomTrace::ShareAudioButton);
     }).detach();
     return muse::RetVal<muse::ProgressPtr>::make_ok(progress);
+}
+
+void Au3AudioComService::rebaseOntoHead(au::project::IAudacityProjectPtr project, std::function<void(muse::Ret)> onDone)
+{
+    auto* au3Project = project ? reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr()) : nullptr;
+    if (!au3Project) {
+        onDone(muse::make_ret(muse::Ret::Code::InternalError));
+        return;
+    }
+    sync::RebaseOntoHead(*au3Project, [onDone = std::move(onDone)](std::string error) {
+        onDone(error.empty() ? muse::make_ok() : muse::make_ret(muse::Ret::Code::UnknownError, error));
+    });
+}
+
+void Au3AudioComService::lockOutsideCheckoutRegion(au::project::IAudacityProjectPtr project)
+{
+    auto* au3Project = project ? reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr()) : nullptr;
+    if (!au3Project) {
+        return;
+    }
+
+    // As "Lock selection" does: a time range on the selected tracks, else the selected clips
+    std::set<long long> region;
+    const auto& selectedRegion = ViewInfo::Get(*au3Project).selectedRegion;
+    const double t0 = selectedRegion.t0();
+    const double t1 = selectedRegion.t1();
+    for (auto* track : ::TrackList::Get(*au3Project).Any<::WaveTrack>()) {
+        for (const auto& clip : track->Intervals()) {
+            double begin = clip->GetPlayStartTime();
+            double end = clip->GetPlayEndTime();
+            if (t0 < t1) {
+                if (!track->GetSelected()) {
+                    continue;
+                }
+                begin = std::max(begin, t0);
+                end = std::min(end, t1);
+            } else if (!clip->GetSelected()) {
+                continue;
+            }
+            if (begin < end) {
+                for (const auto id : clip->BlockIdsInRange(begin, end)) {
+                    region.insert(id);
+                }
+            }
+        }
+    }
+
+    // Silent blocks have no id of their own and can't be locked; replacing them
+    // changes nothing anyway
+    size_t lockedCount = 0;
+    for (auto* track : ::TrackList::Get(*au3Project).Any<::WaveTrack>()) {
+        for (const auto& clip : track->Intervals()) {
+            for (size_t ch = 0; ch < clip->NChannels(); ++ch) {
+                for (const auto& block : clip->GetSequence(ch)->GetBlockArray()) {
+                    const auto id = block.sb->GetBlockID();
+                    if (id > 0 && !region.count(id)) {
+                        block.sb->SetEditLocked(true);
+                        ++lockedCount;
+                    }
+                }
+            }
+        }
+    }
+    LOGI() << "checkout region: " << region.size() << " blocks, " << lockedCount << " locked around it";
 }
 
 muse::Ret Au3AudioComService::deleteCloudProject(const muse::io::path_t& localPath)

@@ -79,6 +79,8 @@ public:
     std::string getTourPage() const override;
 
     muse::Ret deleteCloudProject(const muse::io::path_t& localPath) override;
+    void rebaseOntoHead(au::project::IAudacityProjectPtr project, std::function<void(muse::Ret)> onDone) override;
+    void lockOutsideCheckoutRegion(au::project::IAudacityProjectPtr project) override;
 
     void deinit() override;
 

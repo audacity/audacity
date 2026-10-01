@@ -36,3 +36,8 @@ void Au3CloudConfigurationStub::setWarnOnSyncError(bool /*warn*/)
 void Au3CloudConfigurationStub::setSyncDatabasePath(const muse::io::path_t& /*path*/)
 {
 }
+
+bool Au3CloudConfigurationStub::isOtherCheckout() const
+{
+    return false;
+}

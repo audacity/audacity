@@ -28,5 +28,8 @@ public:
 
     //! Overrides where the sync state database is. Must be set before modules are initialized.
     virtual void setSyncDatabasePath(const muse::io::path_t& path) = 0;
+    //! Whether this process is a checkout started by "Edit in other checkout",
+    //! which is what gives it a sync database of its own
+    virtual bool isOtherCheckout() const = 0;
 };
 }

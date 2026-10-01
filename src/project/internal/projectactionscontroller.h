@@ -25,6 +25,7 @@
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/icloudprojectsprovider.h"
+#include "au3cloud/iau3cloudconfiguration.h"
 #include "effects/effects_base/imissingeffectchecker.h"
 
 #include "project/iprojectconfiguration.h"
@@ -46,6 +47,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::toast::IToastService> toastService;
     muse::GlobalInject<au3cloud::IAuthorization> authorization;
     muse::GlobalInject<au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
+    muse::GlobalInject<au3cloud::IAu3CloudConfiguration> cloudConfiguration;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
@@ -88,6 +90,7 @@ private:
     void openCloudProject(const muse::actions::ActionData& args);
     void editInOtherCheckout();
     void launchOtherCheckout();
+    void rebaseOntoHead();
     void importFiles(const muse::actions::ActionData& args);
 
     void importStartupMedia(const muse::actions::ActionData& args);
