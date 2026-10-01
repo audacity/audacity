@@ -2,6 +2,9 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectsactionscontroller.h"
+
+#include <algorithm>
+
 #include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/internal/effectsutils.h"
@@ -59,14 +62,24 @@ CommandQuery effectOpenConv(const Command& command, const ActionData& args)
     return CommandQuery(makeEffectOpenCommand(effectIdFromAction(legacy)));
 }
 
-CommandQuery effectApplyConv(const Command& command, const ActionData& args)
+CommandQuery effectApplyConv(const Command& command, const ActionData& args, const EffectMetaList& effects)
 {
     IF_ASSERT_FAILED(!args.empty()) {
         return CommandQuery(command);
     }
 
     const ActionQuery legacy(args.arg<std::string>(0));
-    CommandQuery query(makeEffectApplyCommand(effectIdFromAction(legacy)));
+    const EffectId effectIdOrTitle = effectIdFromAction(legacy);
+    // Search effect by id with a convenience fallback to title for scripting
+    const auto it = std::find_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
+        return meta.id == effectIdOrTitle || meta.title == effectIdOrTitle;
+    });
+    if (it == effects.end()) {
+        LOGE() << "no effect found for symbol: " << effectIdOrTitle;
+        return CommandQuery(command);
+    }
+
+    CommandQuery query(makeEffectApplyCommand(it->id));
     for (const auto& [key, val] : legacy.params()) {
         if (key != "effectId") {
             query.addParam(key, val);
@@ -133,11 +146,15 @@ void EffectsActionsController::registerActions()
     cd->onRequest(this, EFFECTS_PRESET_IMPORT_COMMAND, [this](const Params& params) { return importPreset(params); });
     cd->onRequest(this, EFFECTS_PRESET_EXPORT_COMMAND, [this](const Params& params) { return exportPreset(params); });
 
-    static const std::vector<ActionToCommand> actionToCommand = {
+    const Convertor applyConv = [this](const Command& command, const ActionData& args) {
+        return effectApplyConv(command, args, effectsProvider()->effectMetaList());
+    };
+
+    const std::vector<ActionToCommand> actionToCommand = {
         { EFFECT_OPEN_QUERY.toString(), Command(), effectOpenConv },
         { REPEAT_LAST_EFFECT_CODE, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, {} },
         { PLUGIN_MANAGER_CODE, EFFECTS_PLUGIN_MANAGER_COMMAND, {} },
-        { EFFECT_APPLY_QUERY.toString(), Command(), effectApplyConv },
+        { EFFECT_APPLY_QUERY.toString(), Command(), applyConv },
         { TOGGLE_VENDOR_UI_QUERY.toString(), EFFECTS_TOGGLE_VENDOR_UI_COMMAND, queryParamsConv },
         { PRESET_APPLY_QUERY.toString(), EFFECTS_PRESET_APPLY_COMMAND, queryParamsConv },
         { PRESET_SAVE_QUERY.toString(), EFFECTS_PRESET_SAVE_COMMAND, queryParamsConv },
