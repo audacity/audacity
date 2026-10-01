@@ -93,6 +93,9 @@ private:
     void open(const muse::actions::ActionData& args);
     void openCloudProject(const muse::actions::ActionData& args);
     void editInOtherCheckout();
+    void shareCheckoutLink();
+    //! Locks the selection and saves to the cloud, for a checkout to open
+    void prepareCheckout(std::function<void()> onSaved);
     void launchOtherCheckout();
     void rebaseOntoHead();
     void startWatchingCloudHead();

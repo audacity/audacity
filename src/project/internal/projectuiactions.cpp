@@ -765,6 +765,15 @@ const UiActionList ProjectUiActions::m_actions = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Save to the cloud and open the project in another Audacity process")
              ),
+    UiAction("share-checkout-link",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Share checkout link"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description",
+                                "Save to the cloud and copy a link to edit the selection in Audacity on another machine")
+             ),
     UiAction("file-share-audio",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,

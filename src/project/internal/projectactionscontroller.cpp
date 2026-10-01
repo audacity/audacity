@@ -1,9 +1,11 @@
 #include "projectactionscontroller.h"
 
+#include <QClipboard>
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
 #include <QFileDialog>
+#include <QGuiApplication>
 #include <QProcess>
 #include <QWindow>
 #include <QStandardPaths>
@@ -86,6 +88,7 @@ const muse::actions::ActionCodeList& prohibitedWhileRecording()
         "file-save",
         "file-save-to-cloud",
         "edit-in-other-checkout",
+        "share-checkout-link",
         "file-save-as",
         "export-audio",
         "export-labels",
@@ -165,6 +168,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
     dispatcher()->reg(this, "file-save-to-cloud", [this]() { saveProject(SaveMode::Save, SaveLocationType::Cloud); });
     dispatcher()->reg(this, "edit-in-other-checkout", this, &ProjectActionsController::editInOtherCheckout);
+    dispatcher()->reg(this, "share-checkout-link", this, &ProjectActionsController::shareCheckoutLink);
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
@@ -468,6 +472,37 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
 
 void ProjectActionsController::editInOtherCheckout()
 {
+    prepareCheckout([this]() {
+        launchOtherCheckout();
+    });
+}
+
+void ProjectActionsController::shareCheckoutLink()
+{
+    prepareCheckout([this]() {
+        IAudacityProjectPtr project = currentProject();
+        const auto record = project ? project->cloudRecord() : std::nullopt;
+        if (!record || record->projectId.empty()) {
+            LOGE() << "The project isn't on the cloud, can't share a checkout of it";
+            return;
+        }
+
+        // Opened elsewhere with `audacity --checkout <link>`, signed in normally
+        const QString openUrl = cloudProjectOpenUrl(muse::String::fromStdString(record->projectId),
+                                                    muse::String::fromStdString(record->snapshotId));
+        QGuiApplication::clipboard()->setText(openUrl);
+        LOGI() << "Checkout link: " << openUrl;
+
+        startWatchingCloudHead();
+
+        interactive()->info(trc("project", "Checkout link copied to the clipboard"),
+                            openUrl.toStdString() + "\n\n"
+                            + trc("project", "Open it with: audacity --checkout \"<link>\""));
+    });
+}
+
+void ProjectActionsController::prepareCheckout(std::function<void()> onSaved)
+{
     IAudacityProjectPtr project = currentProject();
     if (!project) {
         return;
@@ -489,9 +524,7 @@ void ProjectActionsController::editInOtherCheckout()
         }
     }
     const CloudSaveMode mode = project->isCloudProject() ? CloudSaveMode::NormalUpdate : CloudSaveMode::CreateNew;
-    saveProjectToCloud(info, mode, [this]() {
-        launchOtherCheckout();
-    });
+    saveProjectToCloud(info, mode, std::move(onSaved));
 }
 
 void ProjectActionsController::launchOtherCheckout()
