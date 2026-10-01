@@ -10,6 +10,7 @@
 
 #include "AVCodecContextWrapper.h"
 
+#include <cerrno>
 #include <cstring>
 
 #include "../FFmpegFunctions.h"
@@ -60,6 +61,49 @@ AVCodecContextWrapper::~AVCodecContextWrapper()
                 }
             }
         }
+    }
+}
+
+void AVCodecContextWrapper::TakeOwnership() noexcept
+{
+    mIsOwned = true;
+}
+
+bool AVCodecContextWrapper::CanDecodeVideo() const noexcept
+{
+    return mFFmpeg.avcodec_send_packet != nullptr
+           && mFFmpeg.avcodec_receive_frame != nullptr;
+}
+
+int AVCodecContextWrapper::SendPacket(const AVPacketWrapper* packet)
+{
+    if (mAVCodecContext == nullptr || mFFmpeg.avcodec_send_packet == nullptr) {
+        return AUDACITY_AVERROR(EINVAL);
+    }
+
+    return mFFmpeg.avcodec_send_packet(
+        mAVCodecContext, packet != nullptr ? packet->GetWrappedValue() : nullptr);
+}
+
+int AVCodecContextWrapper::ReceiveFrame(AVFrameWrapper& frame)
+{
+    if (mAVCodecContext == nullptr || mFFmpeg.avcodec_receive_frame == nullptr) {
+        return AUDACITY_AVERROR(EINVAL);
+    }
+
+    return mFFmpeg.avcodec_receive_frame(
+        mAVCodecContext, frame.GetWrappedValue());
+}
+
+bool AVCodecContextWrapper::CanFlushBuffers() const noexcept
+{
+    return mFFmpeg.avcodec_flush_buffers != nullptr;
+}
+
+void AVCodecContextWrapper::FlushBuffers()
+{
+    if (mAVCodecContext != nullptr && mFFmpeg.avcodec_flush_buffers != nullptr) {
+        mFFmpeg.avcodec_flush_buffers(mAVCodecContext);
     }
 }
 

@@ -60,6 +60,8 @@ public:
     virtual AVSampleFormatFwd GetDiscard() const noexcept = 0;
     virtual void SetDiscard(AVDiscardFwd discard) noexcept = 0;
 
+    virtual AudacityAVRational GetAvgFrameRate() const noexcept = 0;
+
     virtual AudacityAVRational GetSampleAspectRatio() const noexcept = 0;
     virtual void SetSampleAspectRatio(AudacityAVRational sample_aspect_ratio) noexcept = 0;
 

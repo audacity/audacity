@@ -51,16 +51,25 @@ public:
         PLAYBACK_TIME_SIGNATURE,
         PLAYBACK_CONTROL,
         PROJECT_CONTROL,
-        SNAP
+        SNAP,
+        VIDEO
     };
     Q_ENUM(ItemType)
 
+    //! Whether the video thumbnail is currently one of the toolbar's items.
+    //! The toolbar row has to grow to fit it, and it has to shrink back when
+    //! the item is switched off in "Customize toolbar".
+    Q_PROPERTY(bool hasVideoItem READ hasVideoItem NOTIFY hasVideoItemChanged FINAL)
+
     Q_INVOKABLE void load() override;
+
+    bool hasVideoItem() const;
 
     bool isEnabled() const;
 
 signals:
     void isEnabledChanged();
+    void hasVideoItemChanged();
 
 private:
     void reload();
