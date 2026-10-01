@@ -9,6 +9,7 @@
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
 #include "trackedit/internal/au3/au3trackeditclipboard.h"
 #include "trackedit/internal/au3/au3trackdata.h"
@@ -93,7 +94,8 @@ public:
             TrackId trackId = au3Track->GetId();
             Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
 
-            auto clipboardTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+            auto clipboardTrack = WaveTrackUtilities::EmptyCopy(*waveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Ref,
+                                                                pSampleBlockFactory);
 
             auto waveClips = DomAccessor::waveClipsAsList(waveTrack);
 

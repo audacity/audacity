@@ -1,6 +1,7 @@
 #include "projectactionscontroller.h"
 
 #include <QFileDialog>
+#include <QWindow>
 
 #include <variant>
 
@@ -41,9 +42,9 @@ static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
 static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
-static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
-static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_ACTION("audacity://cloud/update-audio-preview");
-static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION("audacity://cloud/update-audio-preview-for-project");
+static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("action://cloud/open-audio-file");
+static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_ACTION("action://cloud/update-audio-preview");
+static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION("action://cloud/update-audio-preview-for-project");
 
 namespace {
 QString cloudProjectOpenUrl(const muse::String& projectId, const muse::String& snapshotId)
@@ -83,8 +84,8 @@ const muse::actions::ActionCodeList& prohibitedWhileRecording()
         "export-labels",
         "export-midi",
         "file-share-audio",
-        "audacity://cloud/update-audio-preview",
-        "audacity://cloud/update-audio-preview-for-project",
+        "action://cloud/update-audio-preview",
+        "action://cloud/update-audio-preview-for-project",
     };
 
     return codes;
@@ -100,8 +101,8 @@ const std::unordered_set<muse::actions::ActionCode>& dontRequireOpenProject()
         "cloud-file-open",
         "continue-last-session",
         "clear-recent",
-        "audacity://cloud/open-audio-file",
-        "audacity://cloud/update-audio-preview-for-project",
+        "action://cloud/open-audio-file",
+        "action://cloud/update-audio-preview-for-project",
         "plugin-manager",
         "project-show-in-folder",
     };
@@ -112,7 +113,7 @@ const std::unordered_set<muse::actions::ActionCode>& dontRequireOpenProject()
 const std::unordered_set<muse::actions::ActionCode>& prohibitedOnNonCloudProject()
 {
     static const std::unordered_set<muse::actions::ActionCode> codes {
-        "audacity://cloud/update-audio-preview",
+        "action://cloud/update-audio-preview",
     };
 
     return codes;
@@ -122,7 +123,7 @@ const muse::actions::ActionCodeList& prohibitedWithoutAudio()
 {
     static const muse::actions::ActionCodeList codes {
         "file-share-audio",
-        "audacity://cloud/update-audio-preview",
+        "action://cloud/update-audio-preview",
         "export-audio",
     };
 
@@ -718,11 +719,11 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
                              dismissable,
         {
             //: Label of the button that dismisses a notification
-            { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
+            { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
             { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
         }
-                             ).onResolve(this, [this, url = result.val.toQString()](muse::toast::ToastActionCode actionCode) {
-            if (actionCode == muse::toast::ToastActionCode::Custom) {
+                             ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
+            if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
                 platformInteractive()->openUrl(url);
             }
         });
@@ -741,12 +742,12 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         muse::ui::IconCode::Code::CLOUD,
         dismissible,
     {
-        { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
+        { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
         { trc("global", "Stop"), muse::toast::ToastActionCode::Custom }
     },
         showProgressInfo
-        ).onResolve(this, [this, progress = progress](const muse::toast::ToastActionCode& actionCode) {
-        if (actionCode == muse::toast::ToastActionCode::Custom) {
+        ).onResolve(this, [this, progress = progress](const muse::toast::ToastResult& toastResult) {
+        if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
             audioComService()->stopProjectSync();
             progress->cancel();
         }
@@ -1133,11 +1134,11 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
                                  muse::ui::IconCode::Code::TICK,
                                  dismissable,
             {
-                { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
+                { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
                 { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
             }
-                                 ).onResolve(this, [this, url = result.val.toQString()](muse::toast::ToastActionCode actionCode) {
-                if (actionCode == muse::toast::ToastActionCode::Custom) {
+                                 ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
+                if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
                     platformInteractive()->openUrl(url);
                 }
             });
@@ -1152,12 +1153,12 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             muse::ui::IconCode::Code::CLOUD,
             dismissible,
         {
-            { trc("project", "Dismiss"), muse::toast::ToastActionCode::None },
+            { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
             { trc("global", "Stop"), muse::toast::ToastActionCode::Custom }
         },
             showProgressInfo
-            ).onResolve(this, [this, progress = syncProgress](const muse::toast::ToastActionCode& actionCode) {
-            if (actionCode == muse::toast::ToastActionCode::Custom) {
+            ).onResolve(this, [this, progress = syncProgress](const muse::toast::ToastResult& toastResult) {
+            if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
                 audioComService()->stopProjectSync();
                 progress->cancel();
             }
@@ -1370,11 +1371,11 @@ void ProjectActionsController::shareAudio()
                                  muse::ui::IconCode::Code::TICK,
                                  dismissable,
             {
-                { trc("global", "Dismiss"), muse::toast::ToastActionCode::None },
+                { trc("global", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
                 { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
             }
-                                 ).onResolve(this, [this, url = result.val.toQString()](muse::toast::ToastActionCode actionCode) {
-                if (actionCode == muse::toast::ToastActionCode::Custom) {
+                                 ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
+                if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
                     platformInteractive()->openUrl(url);
                 }
             });
@@ -1710,16 +1711,7 @@ void ProjectActionsController::openCustomMapping()
 
 muse::Ret ProjectActionsController::ensureAuthorization()
 {
-    if (authorization()->isAuthorized()) {
-        return make_ret(Ret::Code::Ok);
-    }
-
-    muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-    query.addParam("sync", muse::Val(true));
-
-    dispatcher()->dispatch(query);
-
-    return authorization()->isAuthorized() ? make_ret(Ret::Code::Ok) : make_ret(Ret::Code::Cancel);
+    return authorization()->ensureAuthorized(iocContext());
 }
 
 void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, const io::path_t& localPath,

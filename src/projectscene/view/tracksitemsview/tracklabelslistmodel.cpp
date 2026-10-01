@@ -266,11 +266,11 @@ TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
 {
     TrackItemKeyList result = selectionController()->selectedLabels();
 
-    trackedit::TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+    const std::optional<trackedit::TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (focusedItemKey && !muse::contains(result, *focusedItemKey)) {
         const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        if (prj && prj->track(focusedItemKey.trackId)->type == TrackType::Label) {
-            result.insert(result.cbegin(), focusedItemKey);
+        if (prj && prj->track(focusedItemKey->trackId)->type == TrackType::Label) {
+            result.insert(result.cbegin(), *focusedItemKey);
         }
     }
 
@@ -286,11 +286,14 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const LabelKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
-        if (!rangeKeys.empty()) {
+        const ItemKeys box = m_context
+                             ? selectionController()->itemsTouchingSelectionBox(
+            m_context->mousePositionTime(), m_trackId)
+                             : ItemKeys();
+        if (!box.empty()) {
             selectionController()->resetDataSelection();
-            selectionController()->resetSelectedClips();
-            selectionController()->setSelectedLabels(rangeKeys, true);
+            selectionController()->setSelectedClips(box.clips, true);
+            selectionController()->setSelectedLabels(box.labels, true);
             m_needToSelectTracksData = false;
             return;
         }
@@ -299,6 +302,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         selectionController()->resetSelectedClips();
         selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
         setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         m_needToSelectTracksData = false;
         return;
     }
@@ -323,6 +329,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     }
 
     setFocusedItem(key);
+    if (m_context) {
+        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+    }
     m_needToSelectTracksData = false;
 }
 
@@ -407,6 +416,20 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
         resetSelectedTracksData();
         selectionController()->setSelectedTracks({ key.key.trackId }, true);
     }
+}
+
+double TrackLabelsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+{
+    const ViewTrackItem* item = itemByKey(key.key);
+    if (item && !muse::RealIsEqual(item->time().startTime, item->time().endTime)) {
+        if (direction == DirectionType::Direction::Right && muse::RealIsEqual(item->time().endTime, m_editedLabelStartTime)) {
+            direction = DirectionType::Direction::Left;
+        } else if (direction == DirectionType::Direction::Left && muse::RealIsEqual(item->time().startTime, m_editedLabelEndTime)) {
+            direction = DirectionType::Direction::Right;
+        }
+    }
+
+    return TrackItemsListModel::findGuideline(key, direction);
 }
 
 bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed)

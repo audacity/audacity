@@ -200,6 +200,7 @@ set(MODULE_LINK
         au3-wave-track
         au3-wave-track-fft
         shared
+        Qt::Quick
 )
 set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 

@@ -2,8 +2,7 @@
 Defines a type of track that stores sample data.
 
 The samples are organized into clips that may cover time intervals with gaps
-between them and may have hidden sample data at each end, and also embedded
-cut-lines which are nested clips.
+between them and may have hidden sample data at each end.
 
 Each clip stores an unbroken Sequence of samples at some rate.
 
@@ -59,6 +58,7 @@ PRIVATE
    au3-exceptions
    au3-project
    au3-project-rate
+   au3-realtime-effects
    au3-time-and-pitch
    au3-track
    au3-track-selection

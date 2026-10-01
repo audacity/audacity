@@ -696,16 +696,22 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const ClipKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
-        if (!rangeKeys.empty()) {
-            selectionController()->resetSelectedLabels();
-            selectionController()->setSelectedClips(rangeKeys, complete);
+        const ItemKeys box = m_context
+                             ? selectionController()->itemsTouchingSelectionBox(
+            m_context->mousePositionTime(), m_trackId)
+                             : ItemKeys();
+        if (!box.empty()) {
+            selectionController()->setSelectedClips(box.clips, complete);
+            selectionController()->setSelectedLabels(box.labels, complete);
             return;
         }
 
         selectionController()->resetSelectedLabels();
         selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
         setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         return;
     }
 
@@ -729,7 +735,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
         } else {
             selectionController()->resetSelectedLabels();
             selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);
-            trackNavigationController()->setFocusedTrack(key.key.trackId);
+            trackNavigationController()->setFocus(TrackFocus::track(key.key.trackId));
         }
     } else {
         if (mode == SelectionMode::Toggle) {
@@ -747,6 +753,9 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     }
 
     setFocusedItem(key);
+    if (m_context) {
+        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+    }
 }
 
 void TrackClipsListModel::handleClipRelease(const ClipKey& key)
@@ -776,11 +785,11 @@ TrackItemKeyList TrackClipsListModel::getSelectedItemKeys() const
 {
     TrackItemKeyList result = selectionController()->selectedClips();
 
-    trackedit::TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+    const std::optional<trackedit::TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (focusedItemKey && !muse::contains(result, *focusedItemKey)) {
         const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        if (prj && prj->track(focusedItemKey.trackId)->type != TrackType::Label) {
-            result.insert(result.cbegin(), focusedItemKey);
+        if (prj && prj->track(focusedItemKey->trackId)->type != TrackType::Label) {
+            result.insert(result.cbegin(), *focusedItemKey);
         }
     }
 

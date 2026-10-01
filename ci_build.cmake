@@ -23,6 +23,7 @@ set(BUILD_USE_UNITY "" CACHE STRING "Build use unity")
 set(BUILD_ENABLE_UNIT_TESTS "ON" CACHE STRING "Build unit tests")
 set(BUILD_ENABLE_CODE_COVERAGE "" CACHE STRING "Build with code coverage")
 set(CRASH_REPORT_URL "" CACHE STRING "Crash report url")
+set(AUDIOPLUGINS_CRASHREPORT_URL "" CACHE STRING "Crash report url for the audio plugin validation processes")
 
 option(SKIP_RPATH "Skip rpath" OFF)
 option(ENABLE_CRASHPAD_CLIENT "Enable crashpad client" ON)
@@ -58,6 +59,7 @@ message(STATUS "BUILD_ENABLE_UNIT_TESTS=${BUILD_ENABLE_UNIT_TESTS}")
 message(STATUS "BUILD_ENABLE_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}")
 message(STATUS "ENABLE_CRASHPAD_CLIENT=${ENABLE_CRASHPAD_CLIENT}")
 message(STATUS "CRASH_REPORT_URL=${CRASH_REPORT_URL}")
+message(STATUS "AUDIOPLUGINS_CRASHREPORT_URL=${AUDIOPLUGINS_CRASHREPORT_URL}")
 
 macro(do_build build_type build_dir)
 
@@ -68,13 +70,19 @@ macro(do_build build_type build_dir)
         -DMUSE_APP_INSTALL_SUFFIX=${INSTALL_SUFFIX}
         -DCMAKE_BUILD_NUMBER=${BUILD_NUMBER}
         -DAU4_REVISION=${BUILD_REVISION}
-        -DMUE_COMPILE_USE_UNITY=${BUILD_USE_UNITY}
         -DCMAKE_SKIP_RPATH=${SKIP_RPATH}
         -DMUSE_ENABLE_UNIT_TESTS=${BUILD_ENABLE_UNIT_TESTS}
         -DMUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}
         -DMUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT=${ENABLE_CRASHPAD_CLIENT}
         -DMUSE_MODULE_DIAGNOSTICS_CRASHREPORT_URL=${CRASH_REPORT_URL}
+        -DMUSE_MODULE_AUDIOPLUGINS_CRASHREPORT_URL=${AUDIOPLUGINS_CRASHREPORT_URL}
     )
+
+    # Only pass the flag when set: an empty -D value would leave the app's option() at
+    # an empty (false) value instead of its default.
+    if (NOT "${BUILD_USE_UNITY}" STREQUAL "")
+        list(APPEND CONFIGURE_ARGS -DMUSE_COMPILE_USE_UNITY=${BUILD_USE_UNITY})
+    endif()
 
     # Allow macos architecture override with env OSX_ARCHITECTURES
     if (DEFINED ENV{OSX_ARCHITECTURES} AND NOT "$ENV{OSX_ARCHITECTURES}" STREQUAL "")
@@ -174,10 +182,19 @@ elseif(BUILD_TYPE STREQUAL "APPIMAGE")
         WORKING_DIRECTORY ${INSTALL_DIR}
     )
 
-    file(COPY
-        ${BUILD_DIR}/install_manifest.txt
-        DESTINATION ${INSTALL_DIR}
-    )
+    # Rewrite install_manifest.txt so that it only lists the desktop
+    # integration resources, with paths relative to the AppDir root.
+    # portable-utils uses this manifest for `install` and `remove`, so it
+    # must not contain absolute build-machine paths (see #10135).
+    # Equivalent to the sed in MuseScore's ninja_build.sh.
+    file(STRINGS ${BUILD_DIR}/install_manifest.txt MANIFEST_LINES)
+    set(PORTABLE_MANIFEST "")
+    foreach(LINE IN LISTS MANIFEST_LINES)
+        if(LINE MATCHES "/(share/(applications|icons|man|metainfo|mime)/.*)$")
+            string(APPEND PORTABLE_MANIFEST "${CMAKE_MATCH_1}\n")
+        endif()
+    endforeach()
+    file(WRITE ${INSTALL_DIR}/install_manifest.txt "${PORTABLE_MANIFEST}")
 
     file(COPY
         ${BUILD_DIR}/org.audacityteam.Audacity${INSTALL_SUFFIX}.desktop
@@ -188,15 +205,6 @@ elseif(BUILD_TYPE STREQUAL "APPIMAGE")
         ${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Linux+BSD/aup4.svg
         DESTINATION ${INSTALL_DIR}
     )
-
-    # audacity="audacity${MUSE_APP_INSTALL_SUFFIX}"
-    # desktop="org.audacityteam.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop"
-    # icon="${audacity}.png"
-    # mani="install_manifest.txt"
-    # cp "share/applications/${desktop}" "${desktop}"
-    # cp "share/icons/hicolor/128x128/apps/${icon}" "${icon}"
-    # <"$build_dir/${mani}" >"${mani}" sed -rn 's/.*(share\/)(applications|icons|man|metainfo|mime)(.*)/\1\2\3/p'
-    # ;;
 
 
 endif()

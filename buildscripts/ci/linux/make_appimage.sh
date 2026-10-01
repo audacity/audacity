@@ -214,6 +214,7 @@ additional_libraries=(
 # Report new additions at https://github.com/linuxdeploy/linuxdeploy/issues
 fallback_libraries=(
   libjack.so.0 # https://github.com/LMMS/lmms/pull/3958
+  libOpenGL.so.0 # https://bugreports.qt.io/browse/QTBUG-89754
 )
 
 # PREVIOUSLY EXTRACTED APPIMAGES

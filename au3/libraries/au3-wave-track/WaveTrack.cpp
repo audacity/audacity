@@ -151,7 +151,7 @@ WaveTrack::IntervalHolder GetRenderedCopy(
     dst->ClearLeft(originalPlayStartTime);
     dst->ClearRight(originalPlayEndTime);
 
-    // We don't preserve cutlines but the relevant part of the envelope.
+    // Preserve the relevant part of the envelope.
     auto dstEnvelope = std::make_unique<Envelope>(interval.GetEnvelope());
     const auto samplePeriod = 1. / interval.GetRate();
     dstEnvelope->CollapseRegion(
@@ -1202,9 +1202,6 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
     const auto backup = !forClipboard;
     auto newTrack = EmptyCopy(NChannels());
     for (const auto pClip : Intervals()) {
-        // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
-        // but that was the old behavior.  But this function is also used by the
-        // Duplicate command and I changed its behavior in that case.
         if (pClip->IsEmpty()) {
             continue;
         } else if (t0 <= pClip->GetPlayStartTime() && t1 >= pClip->GetPlayEndTime()) {
@@ -1259,20 +1256,9 @@ void WaveTrack::FinishCopy(
 /*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1, bool moveClips)
 {
-    bool addCutLines = false;
     bool split = false;
 
-    HandleClear(t0, t1, addCutLines, split, moveClips);
-}
-
-/*! @excsafety{Strong} */
-void WaveTrack::ClearAndAddCutLine(double t0, double t1)
-{
-    bool addCutLines = true;
-    bool split = false;
-    bool moveClips = false;
-
-    HandleClear(t0, t1, addCutLines, split, moveClips);
+    HandleClear(t0, t1, split, moveClips);
 }
 
 namespace {
@@ -1306,9 +1292,9 @@ struct SplitInfo
 // followed by Paste() and is used mostly by effects that
 // can't replace track data directly using Get()/Set().
 //
-// HandleClear() removes any cut/split lines with the
+// HandleClear() removes any split lines with the
 // cleared range, but, in most cases, effects want to preserve
-// the existing cut/split lines, trimmed data and clip names,
+// the existing split lines, trimmed data and clip names,
 // so they are saved before the HandleClear()/Paste() and restored after.
 // When pasted track has split lines with hidden data at same places
 // as the target one, then only targets hidden data is preserved, and
@@ -1318,13 +1304,12 @@ struct SplitInfo
 // be pasted with visible split lines.  Normally, effects do not
 // want these extra lines, so they may be merged out.
 //
-/*! @excsafety{Weak} -- This WaveTrack remains destructible in case of AudacityException.
-But some of its cutline clips may have been destroyed. */
+/*! @excsafety{Weak} -- This WaveTrack remains destructible in case of AudacityException. */
 void WaveTrack::ClearAndPaste(
     double t0,                     // Start of time to clear
     double t1,                     // End of time to clear
     const WaveTrack& src,          // What to paste
-    bool preserve,                 // Whether to reinsert splits/cuts
+    bool preserve,                 // Whether to reinsert splits
     bool merge,                    // Whether to remove 'extra' splits
     const TimeWarper* effectWarper, // How does time change
     bool clearByTrimming)
@@ -1384,7 +1369,6 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     auto& track = *this;
 
     std::vector<SplitInfo> splits;
-    IntervalHolders cuts;
 
     //helper routine, that finds SplitInfo by time value,
     //or creates a new one if no one exists yet
@@ -1412,7 +1396,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     t0 = roundTime(t0);
     t1 = roundTime(t1);
 
-    // Save the cut/split lines whether preserving or not since merging
+    // Save the split lines whether preserving or not since merging
     // needs to know if a clip boundary is being crossed since Paste()
     // will add split lines around the pasted clip if so.
     for (const auto&& clip : track.Intervals()) {
@@ -1442,33 +1426,15 @@ void WaveTrack::ClearAndPasteAtSameTempo(
             }
             it->leftClipName = clip->GetName();
         }
-
-        // Search for cut lines
-        auto cutlines = clip->GetCutLines();
-        for (auto& cut : cutlines) {
-            const auto unrounded
-                =clip->GetSequenceStartTime() + cut->GetSequenceStartTime();
-            const double cs = roundTime(unrounded);
-
-            // Remember cut point
-            if (cs >= t0 && cs <= t1) {
-                // Remember the absolute offset and add to our cuts array.
-                cut->SetSequenceStartTime(cs);
-                bool removed = clip->RemoveCutLine(unrounded);
-                assert(removed);
-                cuts.push_back(move(cut));
-            }
-        }
     }
 
     const auto tolerance = 2.0 / track.GetRate();
 
-    constexpr auto addCutLines = false;
     constexpr auto split = true; // Do not move the remaining right part of the clip back to the left.
     constexpr auto moveClips = false;
 
     // Now, clear the selection
-    track.HandleClear(t0, t1, addCutLines, split, moveClips, clearByTrimming);
+    track.HandleClear(t0, t1, split, moveClips, clearByTrimming);
 
     const auto pasteDelta = srcEndTime - (t1 - t0);
     if (std::abs(pasteDelta) >= LongSamplesToTime(1)) {
@@ -1533,7 +1499,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
         }
     }
 
-    // Restore cut/split lines
+    // Restore split lines
     if (preserve) {
         auto attachLeft = [](Interval& target, Interval& src) {
             // What this lambda does is restoring the left hidden data of `target`
@@ -1629,29 +1595,6 @@ void WaveTrack::ClearAndPasteAtSameTempo(
             }
         }
 
-        // Restore the saved cut lines, also transforming if time altered
-        for (const auto&& clip : track.Intervals()) {
-            const double st = clip->GetPlayStartTime();
-            const double et = clip->GetPlayEndTime();
-
-            // Scan the cuts for any that live within this clip
-            for (auto& cut : cuts) {
-                if (!cut) {
-                    continue;
-                }
-
-                //cutlines in this array were orphaned previously
-                double cs = cut->GetSequenceStartTime();
-
-                // Offset the cut from the start of the clip and add it to
-                // this clips cutlines.
-                if (cs >= st && cs <= et) {
-                    cut->SetSequenceStartTime(warper->Warp(cs) - st);
-                    clip->AddCutLine(cut);
-                    cut = {};
-                }
-            }
-        }
     }
 
     if (joinEnds) {
@@ -1664,10 +1607,9 @@ void WaveTrack::ClearAndPasteAtSameTempo(
 /*! @excsafety{Strong} */
 void WaveTrack::SplitDelete(double t0, double t1)
 {
-    constexpr bool addCutLines = false;
     constexpr bool split = true;
     constexpr bool moveClips = false;
-    HandleClear(t0, t1, addCutLines, split, moveClips);
+    HandleClear(t0, t1, split, moveClips);
 }
 
 std::ptrdiff_t WaveTrack::FindClip(const Interval& clip)
@@ -1688,7 +1630,7 @@ void WaveTrack::RemoveClip(std::ptrdiff_t distance)
 }
 
 /*! @excsafety{Strong} */
-void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
+void WaveTrack::HandleClear(double t0, double t1,
                             const bool split, const bool moveClips, const bool clearByTrimming)
 {
     // For debugging, use an ASSERT so that we stop
@@ -1704,90 +1646,70 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
     IntervalHolders clipsToDelete;
     IntervalHolders clipsToAdd;
 
-    // We only add cut lines when deleting in the middle of a single clip
-    // The cut line code is not really prepared to handle other situations
-    if (addCutLines) {
-        for (const auto& clip : Intervals()) {
-            if (clip->PartlyWithinPlayRegion(t0, t1)) {
-                addCutLines = false;
-                break;
-            }
-        }
-    }
-
     for (const auto& clip : Intervals()) {
         if (clip->CoversEntirePlayRegion(t0, t1)) {
             // Whole clip must be deleted - remember this
             clipsToDelete.push_back(clip);
         } else if (clip->IntersectsPlayRegion(t0, t1)) {
             // Clip data is affected by command
-            if (addCutLines) {
-                // Don't modify this clip in place, because we want a strong
-                // guarantee, and might modify another clip
-                clipsToDelete.push_back(clip);
-                auto newClip = CopyClip(*clip, true);
-                newClip->ClearAndAddCutLine(t0, t1);
-                clipsToAdd.push_back(move(newClip));
-            } else {
-                if (split || clearByTrimming) {
-                    // Three cases:
+            if (split || clearByTrimming) {
+                // Three cases:
 
-                    if (clip->BeforePlayRegion(t0)) {
-                        // Delete from the left edge
-
-                        // Don't modify this clip in place, because we want a strong
-                        // guarantee, and might modify another clip
-                        clipsToDelete.push_back(clip);
-                        auto newClip = CopyClip(*clip, true);
-                        newClip->TrimLeft(t1 - clip->GetPlayStartTime());
-                        if (!split) {
-                            // If this is not a split-cut, where things are left in
-                            // place, we need to reposition the clip.
-                            newClip->ShiftBy(t0 - t1);
-                        }
-                        clipsToAdd.push_back(move(newClip));
-                    } else if (clip->AfterPlayRegion(t1)) {
-                        // Delete to right edge
-
-                        // Don't modify this clip in place, because we want a strong
-                        // guarantee, and might modify another clip
-                        clipsToDelete.push_back(clip);
-                        auto newClip = CopyClip(*clip, true);
-                        newClip->TrimRight(clip->GetPlayEndTime() - t0);
-
-                        clipsToAdd.push_back(move(newClip));
-                    } else {
-                        // Delete in the middle of the clip...we actually create two
-                        // NEW clips out of the left and right halves...
-
-                        auto leftClip = CopyClip(*clip, true);
-                        leftClip->TrimRight(clip->GetPlayEndTime() - t0);
-                        clipsToAdd.push_back(move(leftClip));
-
-                        auto rightClip = CopyClip(*clip, true);
-                        rightClip->TrimLeft(t1 - clip->GetPlayStartTime());
-                        if (!split) {
-                            // If this is not a split-cut, where things are left in
-                            // place, we need to reposition the clip.
-                            rightClip->ShiftBy(t0 - t1);
-                        }
-                        clipsToAdd.push_back(move(rightClip));
-
-                        clipsToDelete.push_back(clip);
-                    }
-                } else {
-                    // (We are not doing a split cut)
+                if (clip->BeforePlayRegion(t0)) {
+                    // Delete from the left edge
 
                     // Don't modify this clip in place, because we want a strong
                     // guarantee, and might modify another clip
                     clipsToDelete.push_back(clip);
                     auto newClip = CopyClip(*clip, true);
+                    newClip->TrimLeft(t1 - clip->GetPlayStartTime());
+                    if (!split) {
+                        // If this is not a split-cut, where things are left in
+                        // place, we need to reposition the clip.
+                        newClip->ShiftBy(t0 - t1);
+                    }
+                    clipsToAdd.push_back(move(newClip));
+                } else if (clip->AfterPlayRegion(t1)) {
+                    // Delete to right edge
 
-                    // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
-                    newClip->Clear(t0, t1);
+                    // Don't modify this clip in place, because we want a strong
+                    // guarantee, and might modify another clip
+                    clipsToDelete.push_back(clip);
+                    auto newClip = CopyClip(*clip, true);
+                    newClip->TrimRight(clip->GetPlayEndTime() - t0);
 
                     clipsToAdd.push_back(move(newClip));
+                } else {
+                    // Delete in the middle of the clip...we actually create two
+                    // NEW clips out of the left and right halves...
+
+                    auto leftClip = CopyClip(*clip, true);
+                    leftClip->TrimRight(clip->GetPlayEndTime() - t0);
+                    clipsToAdd.push_back(move(leftClip));
+
+                    auto rightClip = CopyClip(*clip, true);
+                    rightClip->TrimLeft(t1 - clip->GetPlayStartTime());
+                    if (!split) {
+                        // If this is not a split-cut, where things are left in
+                        // place, we need to reposition the clip.
+                        rightClip->ShiftBy(t0 - t1);
+                    }
+                    clipsToAdd.push_back(move(rightClip));
+
+                    clipsToDelete.push_back(clip);
                 }
+            } else {
+                // (We are not doing a split cut)
+
+                // Don't modify this clip in place, because we want a strong
+                // guarantee, and might modify another clip
+                clipsToDelete.push_back(clip);
+                auto newClip = CopyClip(*clip, true);
+
+                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
+                newClip->Clear(t0, t1);
+
+                clipsToAdd.push_back(move(newClip));
             }
         }
     }
@@ -3255,12 +3177,11 @@ WaveTrack::IntervalConstHolder WaveTrack::GetSortedClipByIndex(size_t index) con
 }
 
 auto WaveTrack::CreateClip(double offset, const wxString& name,
-                           const Interval* pToCopy, bool copyCutlines) -> IntervalHolder
+                           const Interval* pToCopy, bool copyGroupId) -> IntervalHolder
 {
     if (pToCopy) {
         constexpr auto backup = false;
-        auto pNewClip
-            =WaveClip::NewSharedFrom(*pToCopy, mpFactory, copyCutlines, backup);
+        auto pNewClip = WaveClip::NewSharedFrom(*pToCopy, mpFactory, copyGroupId, backup);
         pNewClip->SetName(name);
         pNewClip->SetSequenceStartTime(offset);
         return pNewClip;
@@ -3269,11 +3190,11 @@ auto WaveTrack::CreateClip(double offset, const wxString& name,
     }
 }
 
-auto WaveTrack::CopyClip(const Interval& toCopy, bool copyCutlines)
+auto WaveTrack::CopyClip(const Interval& toCopy, bool copyGroupId)
 -> IntervalHolder
 {
     return CreateClip(toCopy.GetSequenceStartTime(),
-                      toCopy.GetName(), &toCopy, copyCutlines);
+                      toCopy.GetName(), &toCopy, copyGroupId);
 }
 
 void WaveTrack::CreateRight()

@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "effects/builtin/view/builtineffectmodel.h"
+#include "effects/builtin/qml/Audacity/BuiltinEffects/builtineffectmodel.h"
 
 namespace au::effects {
 class ClickRemovalEffect;

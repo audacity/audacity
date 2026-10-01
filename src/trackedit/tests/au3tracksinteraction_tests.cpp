@@ -18,6 +18,9 @@
 #include "interactive/tests/mocks/interactivemock.h"
 
 #include "au3wrap/internal/trackcolor.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "project/tests/mocks/dummyeffectinstancefactory.h"
 
 using ::testing::Truly;
 using ::testing::_;
@@ -753,6 +756,47 @@ TEST_F(Au3TracksInteractionTests, DuplicateTracks)
     removeTrack(trackId);
     const TrackId newTrackId = (*projectTracks.begin())->GetId();
     removeTrack(newTrackId);
+}
+
+TEST_F(Au3TracksInteractionTests, DuplicateTracksCopiesEffectStates)
+{
+    RealtimeEffectState::EffectFactory::Scope factoryScope {
+        [](const PluginID&) -> const EffectInstanceFactory* { return &project::dummyFactory(); }
+    };
+
+    //! [GIVEN] A track with a realtime effect
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    Au3WaveTrack* origTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(origTrack) << "Precondition failed: original track not found";
+    const auto effect = RealtimeEffectState::make_shared("au-test:effect");
+    ASSERT_TRUE(RealtimeEffectList::Get(*origTrack).AddState(effect));
+
+    //! [WHEN] Duplicate the track
+    m_tracksInteraction->duplicateTracks({ trackId });
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 2) << "The number of tracks after the duplicate operation is not 2";
+
+    Au3WaveTrack* clone = nullptr;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId) {
+            clone = dynamic_cast<Au3WaveTrack*>(track);
+        }
+    }
+    ASSERT_TRUE(clone) << "The duplicated track was not found";
+
+    //! [THEN] The duplicate has its own copy of the effect, the original is untouched
+    const auto cloneEffect = RealtimeEffectList::Get(*clone).GetStateAt(0);
+    ASSERT_NE(cloneEffect, nullptr);
+    EXPECT_NE(cloneEffect, effect);
+    EXPECT_EQ(cloneEffect->GetID(), effect->GetID());
+    cloneEffect->SetActive(false);
+    EXPECT_FALSE(cloneEffect->IsEnabled());
+    EXPECT_TRUE(effect->IsEnabled());
+
+    //Cleanup
+    removeTrack(trackId);
+    removeTrack(TrackId(clone->GetId()));
 }
 
 TEST_F(Au3TracksInteractionTests, DuplicateTracksRemapsClipGroups)

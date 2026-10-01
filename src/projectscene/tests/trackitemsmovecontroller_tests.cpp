@@ -86,7 +86,7 @@ protected:
         m_navigation = std::make_shared<NiceMock<trackedit::TrackNavigationControllerMock> >();
         m_requests = std::make_shared<trackedit::TracksViewRequestsService>(muse::modularity::globalCtx());
 
-        ON_CALL(*m_navigation, focusedItem()).WillByDefault([this] { return m_focusedItem; });
+        ON_CALL(*m_navigation, focus()).WillByDefault([this] { return m_focus; });
         ON_CALL(*m_history, historyChanged()).WillByDefault(Return(m_historyChanged));
 
         ON_CALL(*m_globalContext, currentProject()).WillByDefault(Return(m_project));
@@ -202,7 +202,7 @@ protected:
     trackedit::Clip m_clip;
     trackedit::LabelKeyList m_selectedLabels;
     trackedit::ClipKeyList m_selectedClips;
-    trackedit::TrackItemKey m_focusedItem;
+    trackedit::TrackFocus m_focus;
     muse::async::Channel<trackedit::HistoryEvent> m_historyChanged;
     muse::async::Channel<trackedit::Track> m_trackRemoved;
     std::shared_ptr<NiceMock<trackedit::TrackNavigationControllerMock> > m_navigation;
@@ -389,18 +389,18 @@ TEST_F(TrackItemsMoveControllerTests, KeyboardRepeatsPreviewOriginalItemsUntilMo
 {
     selectClip();
     m_tracks.push_back({ 3, {}, trackedit::TrackType::Mono });
-    m_focusedItem = m_clip.key;
+    m_focus = trackedit::TrackFocus::item(m_clip.key);
     const auto original = m_selectedClips;
     EXPECT_CALL(*m_history, startUserInteraction()).Times(1);
     EXPECT_CALL(*m_history, endUserInteraction(false)).Times(1);
-    EXPECT_CALL(*m_navigation, focusedItem()).Times(1);
+    EXPECT_CALL(*m_navigation, focus()).Times(1);
 
     m_requests->requestItemMove(0.0, 1);
     EXPECT_TRUE(m_controller->keyboardActive());
     EXPECT_TRUE(m_viewState->keyboardMoveActive().val);
     EXPECT_EQ(m_controller->itemsOnTrack(2), original);
 
-    m_focusedItem = { 2, trackedit::INVALID_TRACK_ITEM };
+    m_focus = trackedit::TrackFocus::track(2);
     m_selectedClips = { { 2, 20 } };
     for (int i = 0; i < 20; ++i) {
         m_requests->requestItemMove(0.0, 1);
@@ -419,7 +419,7 @@ TEST_F(TrackItemsMoveControllerTests, KeyboardRepeatsPreviewOriginalItemsUntilMo
     EXPECT_CALL(*m_interaction, moveClips(original, trackedit::secs_t(0.5), 1))
     .WillOnce(Return(muse::RetVal<trackedit::ClipKeyList>::make_ok(moved)));
     EXPECT_CALL(*m_selection, setSelectedClips(original, false));
-    EXPECT_CALL(*m_navigation, setFocusedItem(moved.front(), true));
+    EXPECT_CALL(*m_navigation, setFocus(trackedit::TrackFocus::item(moved.front()), true));
     m_viewState->modifiersReleased().notify();
     expectFinished();
     m_viewState->modifiersReleased().notify();
@@ -484,7 +484,7 @@ TEST_F(TrackItemsMoveControllerTests, RepeatedKeyboardPreviewsDeleteOnlyRetiredG
 TEST_F(TrackItemsMoveControllerTests, KeyboardMovesUnselectedFocusedItemEvenWithTimeSelection)
 {
     selectLabel();
-    m_focusedItem = m_label.key;
+    m_focus = trackedit::TrackFocus::item(m_label.key);
     m_selectedLabels.clear();
     ON_CALL(*m_selection, timeSelectionIsEmpty()).WillByDefault(Return(false));
     m_requests->requestItemMove(0.5, 1);
@@ -495,7 +495,7 @@ TEST_F(TrackItemsMoveControllerTests, KeyboardMovesUnselectedFocusedItemEvenWith
     const trackedit::LabelKeyList moved { { 2, 10 } };
     EXPECT_CALL(*m_interaction, moveLabels(original, trackedit::secs_t(0.5), 1))
     .WillOnce(Return(muse::RetVal<trackedit::LabelKeyList>::make_ok(moved)));
-    EXPECT_CALL(*m_navigation, setFocusedItem(moved.front(), true));
+    EXPECT_CALL(*m_navigation, setFocus(trackedit::TrackFocus::item(moved.front()), true));
     m_viewState->modifiersReleased().notify();
     expectFinished();
 }
@@ -503,8 +503,9 @@ TEST_F(TrackItemsMoveControllerTests, KeyboardMovesUnselectedFocusedItemEvenWith
 TEST_F(TrackItemsMoveControllerTests, KeyboardIgnoresStaleFocusAndSelectionKeys)
 {
     selectClip();
-    m_focusedItem = { 2, m_clip.key.itemId };
-    m_selectedClips.push_back(m_focusedItem);
+    const trackedit::TrackItemKey staleKey { 2, m_clip.key.itemId };
+    m_focus = trackedit::TrackFocus::item(staleKey);
+    m_selectedClips.push_back(staleKey);
     m_requests->requestItemMove(0.5, 0);
 
     const trackedit::ClipKeyList original { m_clip.key };
@@ -607,7 +608,7 @@ TEST_F(TrackItemsMoveControllerTests, KeyboardDoesNotInterruptMouseDrag)
 TEST_F(TrackItemsMoveControllerTests, KeyboardStillReordersFocusedTrack)
 {
     selectClip();
-    m_focusedItem = { 1, trackedit::INVALID_TRACK_ITEM };
+    m_focus = trackedit::TrackFocus::track(1);
     EXPECT_CALL(*m_interaction, moveTracks(trackedit::TrackIdList { 1 }, trackedit::TrackMoveDirection::Down));
     m_requests->requestItemMove(0.0, 1);
     m_requests->requestItemMove(0.5, 0);

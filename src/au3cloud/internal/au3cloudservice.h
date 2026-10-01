@@ -41,6 +41,8 @@ public:
     muse::ValCh<AuthState> authState() const override;
     bool isAuthorized() const override;
 
+    muse::Ret ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode) override;
+
 private:
     bool initReplyHandlerIfNecessary();
     std::string buildOAuthRequestURL(const std::string& provider);

@@ -233,12 +233,12 @@ double TrackItemsListModel::findGuideline(const TrackItemKey& key, DirectionType
 
 void TrackItemsListModel::setFocusedItem(const TrackItemKey& key)
 {
-    trackNavigationController()->setFocusedItem(key.key);
+    trackNavigationController()->setFocus(TrackFocus::item(key.key));
 }
 
 void TrackItemsListModel::resetFocusedItem()
 {
-    trackNavigationController()->setFocusedItem({});
+    trackNavigationController()->setFocus(TrackFocus::track(trackNavigationController()->focusedTrack()));
 }
 
 QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) const
@@ -400,12 +400,12 @@ void TrackItemsListModel::init()
         updateItemsMetrics();
     });
 
-    trackNavigationController()->focusedItemChanged().onReceive(this, [this](const TrackItemKey& itemKey, bool /*highlight*/) {
-        if (itemKey.trackId() != m_trackId) {
+    trackNavigationController()->focusChanged().onReceive(this, [this](const TrackFocus& focus, bool /*highlight*/) {
+        if (focus.trackId != m_trackId || !focus.isItem()) {
             return;
         }
 
-        ViewTrackItem* item = itemByKey(itemKey.key);
+        ViewTrackItem* item = itemByKey(*focus.itemKey());
         if (item) {
             item->setFocused(true);
         }

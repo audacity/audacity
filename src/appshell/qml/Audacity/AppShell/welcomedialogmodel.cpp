@@ -58,7 +58,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             {},
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
-                muse::actions::ActionQuery query("audacity://cloud/show-tour-page");
+                muse::actions::ActionQuery query("action://cloud/show-tour-page");
                 dispatcher()->dispatch(query);
             }
         },

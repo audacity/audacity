@@ -4,7 +4,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import Muse.Ui
+import Muse.Ui 1.0
 import Muse.UiComponents
 
 RowLayout {

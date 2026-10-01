@@ -64,6 +64,12 @@ void TrackRulerModel::init()
         emit smallStepsChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    trackNavigationController()->openRulerContextMenuRequested().onReceive(this, [this](const trackedit::TrackId& trackId) {
+        if (trackId == m_trackId) {
+            emit contextMenuOpenRequested();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     emit fullStepsChanged();
     emit smallStepsChanged();
 }

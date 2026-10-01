@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import Muse.Ui
+import Muse.Ui 1.0
 import Muse.UiComponents
 
 Item {

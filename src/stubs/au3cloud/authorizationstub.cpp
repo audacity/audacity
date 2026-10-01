@@ -43,3 +43,8 @@ bool AuthorizationStub::isAuthorized() const
 {
     return false;
 }
+
+muse::Ret AuthorizationStub::ensureAuthorized(const muse::modularity::ContextPtr&, bool)
+{
+    return muse::make_ret(muse::Ret::Code::NotSupported);
+}

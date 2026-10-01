@@ -11,7 +11,7 @@ namespace au::project {
 // needed: serialization only writes the plugin id, and the state is retained on
 // reload regardless. All methods return trivial/empty values; MakeInstance() is
 // never called in this no-playback test.
-class DummyEffectInstanceFactory final : public EffectInstanceFactory
+class DummyEffectInstanceFactory : public EffectInstanceFactory
 {
 public:
     // ComponentInterface

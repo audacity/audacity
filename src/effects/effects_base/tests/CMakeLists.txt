@@ -9,6 +9,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/config_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/effectsutils_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/pluginmigration_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/realtimeeffectscopy_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/realtimeeffectservice_tests.cpp
 )
 

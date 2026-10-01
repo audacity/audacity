@@ -50,9 +50,8 @@ void AbstractViewLauncher::hideRealtimeEffect(const RealtimeEffectStatePtr& stat
     IF_ASSERT_FAILED(state) {
         return;
     }
-    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->PeekInstance());
     if (!instance) {
-        LOGW() << "Could not get instance for " << au::au3::wxToStdString(state->GetID());
         return;
     }
     const auto instanceId = instance->id();

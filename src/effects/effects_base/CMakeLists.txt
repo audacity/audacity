@@ -151,6 +151,8 @@ set(MODULE_LINK
         au3-module-manager
         au3-files
         uicomponents
+        uicomponents_qml
+        Qt::Quick
 )
 
 set(MODULE_USE_UNITY OFF)

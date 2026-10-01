@@ -10,8 +10,8 @@ using namespace muse::ui;
 using namespace au::project;
 
 namespace {
-const muse::actions::ActionCode UPDATE_AUDIO_PREVIEW_ACTION_CODE("audacity://cloud/update-audio-preview");
-const muse::actions::ActionCode UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION_CODE("audacity://cloud/update-audio-preview-for-project");
+const muse::actions::ActionCode UPDATE_AUDIO_PREVIEW_ACTION_CODE("action://cloud/update-audio-preview");
+const muse::actions::ActionCode UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION_CODE("action://cloud/update-audio-preview-for-project");
 }
 
 const UiActionList ProjectUiActions::m_actions = {
@@ -62,7 +62,7 @@ const UiActionList ProjectUiActions::m_actions = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Open recent project")
              ),
-    UiAction("audacity://cloud/open-audio-file",
+    UiAction("action://cloud/open-audio-file",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              //: Action title: shown as a menu item or a button label; keep it short

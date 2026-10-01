@@ -88,9 +88,9 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
     }
 
     if (!tracks.empty()) {
-        trackNavigationController()->setFocusedTrack(tracks.at(0), false /*highlight*/);
+        trackNavigationController()->setFocus(TrackFocus::track(tracks.at(0)), false /*highlight*/);
     } else {
-        trackNavigationController()->setFocusedItem({});
+        trackNavigationController()->setFocus(TrackFocus::track(trackNavigationController()->focusedTrack()));
     }
     selectionController()->setSelectedTracks(tracks, true);
 
@@ -259,9 +259,9 @@ void SelectionViewController::onReleased(double time, double y)
     setSelectionActive(true);
 
     if (m_startY < y) {
-        trackNavigationController()->setFocusedTrack(tracks.back());
+        trackNavigationController()->setFocus(TrackFocus::track(tracks.back()));
     } else {
-        trackNavigationController()->setFocusedTrack(tracks.front());
+        trackNavigationController()->setFocus(TrackFocus::track(tracks.front()));
     }
     selectionController()->setSelectedTracks(tracks, true);
 

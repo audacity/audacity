@@ -377,6 +377,28 @@ TEST_F(TrackLabelsLayoutManagerTests, LinkedLabels)
     ASSERT_EQ(rightLinkedLabel, key2) << "Right link should point to Label 2";
 }
 
+TEST_F(TrackLabelsLayoutManagerTests, PointLabelsAreNeverLinked)
+{
+    //! [GIVEN] A layout manager with a model set
+    m_layoutManager->setLabelsModel(m_labelsModel);
+
+    //! [WHEN] Point labels share a time with each other and with a region label's edge
+    addItem(1, u"Region", 0.0, 10.0);
+    addItem(2, u"Point 1", 10.0, 10.0);
+    addItem(3, u"Point 2", 10.0, 10.0);
+
+    m_layoutManager->init();
+
+    //! [THEN] Neither the points nor the region are linked to anything
+    for (int i = 0; i < 3; ++i) {
+        const LabelKey key = item(i)->key();
+        ASSERT_EQ(leftLinkedLabelKey(key), LabelKey()) << "Label " << i << " should not have a left link";
+        ASSERT_EQ(rightLinkedLabelKey(key), LabelKey()) << "Label " << i << " should not have a right link";
+        ASSERT_FALSE(item(i)->isLeftLinked()) << "Label " << i << " should not be marked left linked";
+        ASSERT_FALSE(item(i)->isRightLinked()) << "Label " << i << " should not be marked right linked";
+    }
+}
+
 TEST_F(TrackLabelsLayoutManagerTests, UnlinkedLabels)
 {
     //! [GIVEN] A layout manager with a model set

@@ -25,6 +25,7 @@
 #include "au3-mixer/EffectStage.h"
 #include "au3-track/TimeWarper.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-wave-track/WaveTrackSink.h"
 #include "au3-mixer/WideSampleSource.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
@@ -262,9 +263,9 @@ bool PerTrackEffect::DoProcess(TrackList& outputs,
         // Old generator code may still proceed "interval-major" and later
         // join mono into stereo
         auto wideTrack
-            =(pRight && isGenerator) ? wt.EmptyCopy() : nullptr;
+            =(pRight && isGenerator) ? WaveTrackUtilities::EmptyCopy(wt, WaveTrackUtilities::RealtimeEffectsCopy::Ref) : nullptr;
         auto narrowTrack
-            =(!pRight && isGenerator) ? wt.EmptyCopy(1) : nullptr;
+            =(!pRight && isGenerator) ? WaveTrackUtilities::EmptyCopy(wt, 1, WaveTrackUtilities::RealtimeEffectsCopy::Ref) : nullptr;
         const auto pGenerated = wideTrack
                                 ? wideTrack
                                 : narrowTrack;

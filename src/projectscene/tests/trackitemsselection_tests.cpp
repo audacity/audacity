@@ -75,7 +75,7 @@ TEST_F(TrackClipsSelectionTests, SelectClip_SetsFocusedItem)
     ON_CALL(*m_selectionController, selectedClips())
     .WillByDefault(Return(trackedit::ClipKeyList {}));
 
-    EXPECT_CALL(*m_trackNavController, setFocusedItem(key.key, _)).Times(1);
+    EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::item(key.key), _)).Times(1);
     m_model->selectClip(key);
 }
 
@@ -87,7 +87,7 @@ TEST_F(TrackClipsSelectionTests, SelectClip_SetsFocusedItem_WhenAlreadySelected)
     ON_CALL(*m_selectionController, selectedClips())
     .WillByDefault(Return(trackedit::ClipKeyList { key.key }));
 
-    EXPECT_CALL(*m_trackNavController, setFocusedItem(key.key, _)).Times(1);
+    EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::item(key.key), _)).Times(1);
     m_model->selectClip(key);
 }
 
@@ -103,7 +103,8 @@ TEST_F(TrackClipsSelectionTests, SelectClip_SetsFocusedItem_GroupedClip)
     ON_CALL(*m_trackeditInteraction, clipsInGroup(groupId))
     .WillByDefault(Return(trackedit::ClipKeyList { key.key, other.key }));
 
-    EXPECT_CALL(*m_trackNavController, setFocusedItem(key.key, _)).Times(1);
+    EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::track(key.key.trackId), _)).Times(1);
+    EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::item(key.key), _)).Times(1);
     m_model->selectClip(key);
 }
 
@@ -159,7 +160,7 @@ TEST_F(TrackLabelsSelectionTests, SelectLabel_SetsFocusedItem)
     ON_CALL(*m_selectionController, selectedLabels())
     .WillByDefault(Return(trackedit::LabelKeyList {}));
 
-    EXPECT_CALL(*m_trackNavController, setFocusedItem(key.key, _)).Times(1);
+    EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::item(key.key), _)).Times(1);
     m_model->selectLabel(key);
 }
 
@@ -171,7 +172,7 @@ TEST_F(TrackLabelsSelectionTests, SelectLabel_SetsFocusedItem_WhenAlreadySelecte
     ON_CALL(*m_selectionController, selectedLabels())
     .WillByDefault(Return(trackedit::LabelKeyList { key.key }));
 
-    EXPECT_CALL(*m_trackNavController, setFocusedItem(key.key, _)).Times(1);
+    EXPECT_CALL(*m_trackNavController, setFocus(trackedit::TrackFocus::item(key.key), _)).Times(1);
     m_model->selectLabel(key);
 }
 }

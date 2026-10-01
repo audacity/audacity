@@ -396,23 +396,23 @@ void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& ac
 
 bool TrackeditActionsController::isFocusedItemClip() const
 {
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
+    const std::optional<TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (!focusedItemKey) {
         return false;
     }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    return prj ? prj->track(focusedItemKey.trackId)->type != TrackType::Label : false;
+    return prj ? prj->track(focusedItemKey->trackId)->type != TrackType::Label : false;
 }
 
 ClipKeyList TrackeditActionsController::clipsForInteraction() const
 {
     ClipKeyList result = selectionController()->selectedClips();
 
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+    const std::optional<TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (focusedItemKey && !muse::contains(result, *focusedItemKey)) {
         if (isFocusedItemClip()) {
-            result.insert(result.cbegin(), focusedItemKey);
+            result.insert(result.cbegin(), *focusedItemKey);
         }
     }
 
@@ -421,23 +421,23 @@ ClipKeyList TrackeditActionsController::clipsForInteraction() const
 
 bool TrackeditActionsController::isFocusedItemLabel() const
 {
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (!focusedItemKey.isValid()) {
+    const std::optional<TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (!focusedItemKey) {
         return false;
     }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    return prj ? prj->track(focusedItemKey.trackId)->type == TrackType::Label : false;
+    return prj ? prj->track(focusedItemKey->trackId)->type == TrackType::Label : false;
 }
 
 LabelKeyList TrackeditActionsController::labelsForInteraction() const
 {
     LabelKeyList result = selectionController()->selectedLabels();
 
-    TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+    const std::optional<TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (focusedItemKey && !muse::contains(result, *focusedItemKey)) {
         if (isFocusedItemLabel()) {
-            result.insert(result.cbegin(), focusedItemKey);
+            result.insert(result.cbegin(), *focusedItemKey);
         }
     }
 
@@ -716,7 +716,7 @@ void TrackeditActionsController::doGlobalCancel()
         return;
     }
 
-    const TrackItemKey focusedItem = trackNavigationController()->focusedItem();
+    const std::optional<TrackItemKey> focusedItem = trackNavigationController()->focus().itemKey();
     const ClipKeyList selectedClips = selectionController()->selectedClips();
     const LabelKeyList selectedLabels = selectionController()->selectedLabels();
 
@@ -724,14 +724,14 @@ void TrackeditActionsController::doGlobalCancel()
 
     //! [Stage 1] A clip/label is focused: drop the navigation focus, then step out of the current
     //! item: onto the selection if the focus is not part of it, otherwise back onto the track.
-    if (focusedItem.isValid()) {
+    if (focusedItem) {
         trackNavigationController()->resetNavigation();
 
-        if (stepFocusOutOfSelection(selectedClips, focusedItem, currentTrack,
+        if (stepFocusOutOfSelection(selectedClips, *focusedItem, currentTrack,
                                     [this]() { selectionController()->resetSelectedClips(); })) {
             return;
         }
-        if (stepFocusOutOfSelection(selectedLabels, focusedItem, currentTrack,
+        if (stepFocusOutOfSelection(selectedLabels, *focusedItem, currentTrack,
                                     [this]() { selectionController()->resetSelectedLabels(); })) {
             return;
         }
@@ -757,7 +757,7 @@ void TrackeditActionsController::doGlobalCancel()
 void TrackeditActionsController::focusTrack(const TrackId& trackId)
 {
     if (trackId != INVALID_TRACK) {
-        trackNavigationController()->setFocusedTrack(trackId, false /*highlight*/);
+        trackNavigationController()->setFocus(TrackFocus::track(trackId), false /*highlight*/);
     }
 }
 
@@ -775,7 +775,7 @@ bool TrackeditActionsController::stepFocusOutOfSelection(const TrackItemKeyList&
         resetSelection();
         focusTrack(currentTrack);
     } else {
-        trackNavigationController()->setFocusedItem(selectedItems.front(), false /*highlight*/);
+        trackNavigationController()->setFocus(TrackFocus::item(selectedItems.front()), false /*highlight*/);
     }
 
     return true;
@@ -783,7 +783,7 @@ bool TrackeditActionsController::stepFocusOutOfSelection(const TrackItemKeyList&
 
 TrackId TrackeditActionsController::currentFocusedOrSelectedTrack() const
 {
-    const TrackId focusedTrack = trackNavigationController()->focusedItem().trackId;
+    const TrackId focusedTrack = trackNavigationController()->focus().trackId;
     if (focusedTrack != INVALID_TRACK) {
         return focusedTrack;
     }

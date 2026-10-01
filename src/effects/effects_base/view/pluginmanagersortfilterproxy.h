@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "uicomponents/components/tablesortfilterproxymodel.h"
+#include "uicomponents/qml/Audacity/UiComponents/tablesortfilterproxymodel.h"
 
 namespace au::effects {
 class PluginManagerTableViewModel;

@@ -12,6 +12,7 @@ set(MODULE_TEST_INCLUDE ${CMAKE_CURRENT_LIST_DIR}/..)
 
 set(MODULE_TEST_LINK
     uicomponents
+    uicomponents_qml
 
     muse::uicomponents
     muse::ui
