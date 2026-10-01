@@ -10,7 +10,7 @@
 **********************************************************************/
 #include "MockedPrefs.h"
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 #include <unordered_map>
 #include <variant>
