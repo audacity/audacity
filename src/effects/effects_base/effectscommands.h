@@ -3,6 +3,9 @@
 */
 #pragma once
 
+#include <iomanip>
+#include <sstream>
+
 #include "framework/global/stringutils.h"
 #include "framework/rcommand/commandtypes.h"
 
@@ -24,6 +27,42 @@ constexpr std::string_view EFFECTS_SCHEME = "effects";
 constexpr std::string_view EFFECT_OPEN_COMMAND = "open";
 constexpr std::string_view EFFECT_APPLY_COMMAND = "apply";
 
+// RFC 3986 percent-encoding: an effect id is a plugin path that may contain Uri delimiters such as ? and /
+inline std::string encodeEffectId(const EffectId& effectId)
+{
+    static const std::string unreserved
+        ="abcdefghijklmnopqrstuvwxyz"
+         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+         "0123456789"
+         "-_.~";
+
+    std::ostringstream encoded;
+    encoded.fill('0');
+    encoded << std::hex << std::uppercase;
+    for (const char c : effectId.toStdString()) {
+        if (unreserved.find(c) != std::string::npos) {
+            encoded << c;
+        } else {
+            encoded << '%' << std::setw(2) << static_cast<int>(static_cast<unsigned char>(c));
+        }
+    }
+    return encoded.str();
+}
+
+inline EffectId decodeEffectId(const std::string& encoded)
+{
+    std::string decoded;
+    for (size_t i = 0; i < encoded.size(); ++i) {
+        if (encoded[i] == '%' && i + 2 < encoded.size()) {
+            decoded += static_cast<char>(std::stoi(encoded.substr(i + 1, 2), nullptr, 16));
+            i += 2;
+        } else {
+            decoded += encoded[i];
+        }
+    }
+    return EffectId::fromStdString(decoded);
+}
+
 inline muse::rcommand::Command makeEffectCommand(std::string_view commandName, const EffectId& effectId)
 {
     // effects + commandName + effectId -> command://effects/commandName/effectId
@@ -31,7 +70,7 @@ inline muse::rcommand::Command makeEffectCommand(std::string_view commandName, c
     command.setScheme(std::string(muse::rcommand::COMMAND_SCHEME));
     command.addPath(std::string(EFFECTS_SCHEME));
     command.addPath(std::string(commandName));
-    command.addPath(effectId.toStdString());
+    command.addPath(encodeEffectId(effectId));
     return command;
 }
 
@@ -41,7 +80,7 @@ inline EffectId effectIdFromCommand(const muse::rcommand::Command& command)
     for (const std::string_view commandName : { EFFECT_OPEN_COMMAND, EFFECT_APPLY_COMMAND }) {
         const std::string prefix = std::string(EFFECTS_SCHEME) + "/" + std::string(commandName) + "/";
         if (muse::strings::startsWith(path, prefix)) {
-            return EffectId::fromStdString(path.substr(prefix.size()));
+            return decodeEffectId(path.substr(prefix.size()));
         }
     }
 
