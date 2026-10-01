@@ -55,7 +55,7 @@ struct AcidizerTags : LibFileFormats::AcidizerTags
  * file is closed. This class handles that, beside the regular file opening and
  * closing.
  */
-class IMPORT_EXPORT_API LibsndfileTagger final
+class LibsndfileTagger final
 {
 public:
     LibsndfileTagger(double duration = 0., const std::string& filename = "");

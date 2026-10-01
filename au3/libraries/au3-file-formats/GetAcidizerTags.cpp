@@ -8,7 +8,7 @@
   Matthieu Hodgkinson
 
 **********************************************************************/
-#include "au3-import-export/GetAcidizerTags.h"
+#include "au3-file-formats/GetAcidizerTags.h"
 #include "au3-file-formats/AcidizerTags.h"
 
 #include <algorithm>
@@ -16,7 +16,7 @@
 #include <cstring> // memset
 #include <memory>
 
-namespace LibImportExport {
+namespace LibFileFormats {
 std::optional<LibFileFormats::AcidizerTags> GetAcidizerTags(
     SNDFILE& file, const std::vector<std::string>& trustedDistributors)
 {
@@ -114,4 +114,4 @@ std::optional<LibFileFormats::AcidizerTags> GetAcidizerTags(
     // No luck:
     return {};
 }
-} // namespace LibImportExport
+} // namespace LibFileFormats
