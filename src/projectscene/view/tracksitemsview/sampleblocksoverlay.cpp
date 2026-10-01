@@ -23,6 +23,7 @@ constexpr qreal HIDDEN_PEN_WIDTH = 1.5;
 constexpr qreal CHANNEL_MARGIN = 3.0;
 constexpr qreal BLOCK_GAP = 2.0;
 constexpr int HIDDEN_ALPHA = 150;
+const QColor LOCK_HATCH_COLOR(0, 0, 0, 110);
 
 //! Same id -> same colour, so a block can be followed across edits.
 QColor blockColor(long long blockId)
@@ -85,9 +86,11 @@ void SampleBlocksOverlay::subscribeToProject()
 
 void SampleBlocksOverlay::paint(QPainter* painter)
 {
-    if (!blocksVisible() || !m_context) {
+    if (!m_context) {
         return;
     }
+    // Locked blocks are always shown; all blocks only with the Diagnostics toggle
+    const bool allBlocks = blocksVisible();
 
     const auto project = globalContext()->currentProject();
     if (!project) {
@@ -145,6 +148,11 @@ void SampleBlocksOverlay::paint(QPainter* painter)
                     continue;
                 }
 
+                const bool locked = block.sb->IsEditLocked();
+                if (!allBlocks && !locked) {
+                    continue;
+                }
+
                 const long long id = block.sb->GetBlockID();
                 const QColor color = blockColor(id);
                 QColor hiddenColor = color;
@@ -158,7 +166,15 @@ void SampleBlocksOverlay::paint(QPainter* painter)
                 }
 
                 // Locked blocks are hatched
-                if (block.sb->IsEditLocked()) {
+                if (!allBlocks) {
+                    // Just the lock, over the audio that can be seen
+                    painter->save();
+                    painter->setClipRect(visibleSpan);
+                    painter->fillRect(QRectF(x0, band.top(), x1 - x0, band.height()), QBrush(LOCK_HATCH_COLOR, Qt::BDiagPattern));
+                    painter->restore();
+                    continue;
+                }
+                if (locked) {
                     QColor hatchColor = color;
                     hatchColor.setAlpha(120);
                     painter->fillRect(rect, QBrush(hatchColor, Qt::BDiagPattern));

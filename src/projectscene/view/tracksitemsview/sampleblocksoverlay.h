@@ -14,9 +14,9 @@
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-//! Debug overlay showing the sample blocks of every clip of a track, including
+//! Shows the edit-locked audio of a track's clips (hatched). With Diagnostics >
+//! Project > Show sample blocks, a debug view of all the sample blocks, including
 //! the parts of blocks that lie in trimmed (hidden) regions.
-//! Toggled with Diagnostics > Project > Show sample blocks.
 class SampleBlocksOverlay : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT

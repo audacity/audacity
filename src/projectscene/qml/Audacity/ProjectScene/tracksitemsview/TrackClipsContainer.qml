@@ -677,11 +677,11 @@ TrackItemsContainer {
                 }
             }
 
-            // Debug: sample blocks of all clips (Diagnostics > Project > Show sample blocks)
+            // Locked audio, and with Diagnostics > Project > Show sample blocks all sample blocks
             SampleBlocksOverlay {
                 id: sampleBlocksOverlay
 
-                visible: blocksVisible && root.isWaveformViewVisible && !root.trackViewState.isTrackCollapsed
+                visible: root.isWaveformViewVisible && !root.trackViewState.isTrackCollapsed
 
                 y: root.headerHeight
                 height: prv.viewHeight
