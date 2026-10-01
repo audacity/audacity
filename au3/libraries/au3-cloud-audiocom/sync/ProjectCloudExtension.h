@@ -116,11 +116,12 @@ public:
     bool IsFirstSyncDialogShown() const;
     void SetFirstSyncDialogShown(bool shown = true);
 
+    //! Reloads the project and snapshot ids from the cloud projects database
+    void UpdateIdFromDatabase();
+
 private:
     struct UploadQueueElement;
     struct CloudStatusChangedNotifier;
-
-    void UpdateIdFromDatabase();
 
     void UnsafeUpdateProgress();
     void Publish(CloudStatusChangedMessage cloudStatus, bool canMerge);

@@ -816,6 +816,27 @@ bool Sequence::DeepCopyEditLockedBlocks()
     return changed;
 }
 
+void Sequence::ReplaceBlocks(size_t first, size_t count, const std::vector<SeqBlock::SampleBlockPtr>& blocks)
+{
+    if (first + count > mBlock.size()) {
+        THROW_INCONSISTENCY_EXCEPTION;
+    }
+
+    BlockArray newBlock;
+    std::copy(mBlock.begin(), mBlock.begin() + first, std::back_inserter(newBlock));
+    sampleCount start = first < mBlock.size() ? mBlock[first].start : mNumSamples;
+    for (const auto& block : blocks) {
+        newBlock.push_back(SeqBlock(block, start));
+        start += block->GetSampleCount();
+    }
+    for (size_t i = first + count; i < mBlock.size(); ++i) {
+        newBlock.push_back(SeqBlock(mBlock[i].sb, start));
+        start += mBlock[i].sb->GetSampleCount();
+    }
+
+    CommitChangesIfConsistent(newBlock, start, wxT("ReplaceBlocks"));
+}
+
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 {
     auto& factory = *mpFactory;

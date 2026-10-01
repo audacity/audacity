@@ -1153,6 +1153,25 @@ void Au3AudioComService::lockOutsideCheckoutRegion(au::project::IAudacityProject
     LOGI() << "checkout region: " << region.size() << " blocks, " << lockedCount << " locked around it";
 }
 
+void Au3AudioComService::integrateCloudHead(au::project::IAudacityProjectPtr project, std::function<void()> beforeApply,
+                                            std::function<void(muse::Ret)> onDone)
+{
+    auto* au3Project = project ? reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr()) : nullptr;
+    if (!au3Project) {
+        onDone(muse::make_ret(muse::Ret::Code::InternalError));
+        return;
+    }
+    sync::FetchHeadChanges(*au3Project, [project, beforeApply = std::move(beforeApply), onDone = std::move(onDone)](
+                               sync::HeadChangesPtr changes, std::string error) {
+        auto* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+        if (changes && au3Project) {
+            beforeApply();
+            error = sync::ApplyHeadChanges(*au3Project, *changes);
+        }
+        onDone(error.empty() ? muse::make_ok() : muse::make_ret(muse::Ret::Code::UnknownError, error));
+    });
+}
+
 muse::Ret Au3AudioComService::deleteCloudProject(const muse::io::path_t& localPath)
 {
     auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(localPath.toStdString());

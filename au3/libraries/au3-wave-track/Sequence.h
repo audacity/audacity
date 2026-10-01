@@ -173,6 +173,10 @@ public:
     //! @return whether a block was split
     bool SplitBlockAt(sampleCount s);
 
+    //! Replaces the `count` blocks starting at index `first` by `blocks`; the
+    //! starts of the following blocks are shifted if the length changes
+    void ReplaceBlocks(size_t first, size_t count, const std::vector<SeqBlock::SampleBlockPtr>& blocks);
+
     //! Edit-locks the blocks that start in [s0, s1). Silent blocks are first
     //! replaced by ordinary blocks of zeros, because silent blocks are shared
     //! by all silences of the same length and have no id of their own.

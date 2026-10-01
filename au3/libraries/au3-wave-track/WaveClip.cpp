@@ -1720,6 +1720,12 @@ bool WaveClip::LockBlocks(double t0, double t1)
     return changed;
 }
 
+void WaveClip::ReplaceBlocks(size_t channel, size_t first, size_t count, const std::vector<std::shared_ptr<SampleBlock> >& blocks)
+{
+    mSequences.at(channel)->ReplaceBlocks(first, count, blocks);
+    MarkChanged();
+}
+
 std::vector<long long> WaveClip::BlockIdsInRange(double t0, double t1) const
 {
     const auto s0 = TimeToSequenceSamples(t0);

@@ -24,6 +24,7 @@
 #include "ProjectCloudExtension.h"
 #include "ProjectDocument.h"
 #include "WavPackCompressor.h"
+#include "CloudProjectsDatabase.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-crypto/crypto/SHA256.h"
@@ -39,6 +40,7 @@
 #include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-math/SampleFormat.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {
@@ -323,5 +325,318 @@ void RebaseOntoHead(AudacityProject& project, std::function<void(std::string err
         }
         BasicUI::CallAfter([onDone, error] { onDone(error); });
     }).detach();
+}
+
+struct HeadChanges final
+{
+    std::string headSnapshotId;
+    ProjectPatch patch;
+    std::map<long long, DecompressedBlock> blocks;
+};
+
+
+namespace {
+long long UidAttribute(const DocumentElement& element)
+{
+    if (const auto uid = element.IntAttribute("uid")) {
+        return *uid;
+    }
+    return 0;
+}
+
+double DoubleAttribute(const DocumentElement& element, std::string_view name, double fallback)
+{
+    const auto value = element.Attribute(name);
+    if (!value) {
+        return fallback;
+    }
+    if (const auto v = std::get_if<double>(value)) {
+        return *v;
+    }
+    if (const auto v = std::get_if<float>(value)) {
+        return *v;
+    }
+    if (const auto v = element.IntAttribute(name)) {
+        return static_cast<double>(*v);
+    }
+    if (const auto v = std::get_if<std::string>(value)) {
+        try {
+            return std::stod(*v);
+        } catch (...) {
+        }
+    }
+    return fallback;
+}
+
+//! The samples of a saved channel of a clip, as floats
+std::vector<float> ClipChannelSamples(const DocumentElement& clip, const std::map<long long, DecompressedBlock>& blocks)
+{
+    std::vector<float> samples;
+    for (const auto& sequence : clip.children) {
+        if (sequence.name != "sequence") {
+            continue;
+        }
+        for (const auto& waveblock : sequence.children) {
+            if (waveblock.name != "waveblock") {
+                continue;
+            }
+            const auto id = waveblock.IntAttribute("blockid").value_or(0);
+            const auto length = waveblock.IntAttribute("length").value_or(0);
+            const auto offset = samples.size();
+            samples.resize(offset + length, 0.f);
+            const auto it = id > 0 ? blocks.find(id) : blocks.end();
+            if (it == blocks.end()) {
+                continue; // silent
+            }
+            const auto& block = it->second;
+            const auto count = std::min<size_t>(length, block.Data.size() / SAMPLE_SIZE(block.Format));
+            CopySamples(reinterpret_cast<constSamplePtr>(block.Data.data()), block.Format,
+                        reinterpret_cast<samplePtr>(samples.data() + offset), floatSample, count);
+        }
+    }
+    return samples;
+}
+
+//! Builds a clip from its saved channels (one element per channel) and adds it to the track
+void AddClip(WaveTrack& track, const std::vector<const DocumentElement*>& channels,
+             const std::map<long long, DecompressedBlock>& blocks)
+{
+    const auto& first = *channels.front();
+    const double offset = DoubleAttribute(first, "offset", 0.0);
+    auto clip = track.CreateClip(offset, wxString::FromUTF8(first.StringAttribute("name").value_or("")));
+
+    std::vector<std::vector<float> > samples;
+    for (const auto* channel : channels) {
+        samples.push_back(ClipChannelSamples(*channel, blocks));
+    }
+    // A mono clip saved in a stereo track can't be; repeat the channel if needed
+    while (samples.size() < clip->NChannels()) {
+        samples.push_back(samples.back());
+    }
+    const size_t length = samples.front().size();
+    std::vector<constSamplePtr> buffers;
+    for (auto& channel : samples) {
+        channel.resize(length, 0.f);
+        buffers.push_back(reinterpret_cast<constSamplePtr>(channel.data()));
+    }
+    clip->Append(buffers.data(), floatSample, length, 1, floatSample);
+    clip->Flush();
+
+    clip->TrimLeftTo(offset + DoubleAttribute(first, "trimLeft", 0.0));
+    clip->TrimRightTo(clip->GetSequenceEndTime() - DoubleAttribute(first, "trimRight", 0.0));
+    clip->SetPersistentId(UidAttribute(first));
+    track.InsertInterval(clip, true);
+}
+
+//! Saved clips of a track (channel elements), grouped by clip uid, in order
+std::vector<std::vector<const DocumentElement*> > ClipsByUid(const std::vector<const DocumentElement*>& trackChannels)
+{
+    std::vector<std::vector<const DocumentElement*> > clips;
+    std::map<long long, size_t> index;
+    for (const auto* channel : trackChannels) {
+        for (const auto& clip : channel->children) {
+            if (clip.name != "waveclip") {
+                continue;
+            }
+            const auto uid = UidAttribute(clip);
+            const auto [it, inserted] = index.emplace(uid, clips.size());
+            if (inserted) {
+                clips.emplace_back();
+            }
+            clips[it->second].push_back(&clip);
+        }
+    }
+    return clips;
+}
+}
+
+void FetchHeadChanges(AudacityProject& project, std::function<void(HeadChangesPtr changes, std::string error)> onDone)
+{
+    auto& cloudExtension = ProjectCloudExtension::Get(project);
+    const auto projectId = cloudExtension.GetCloudProjectId();
+    const auto baseSnapshotId = cloudExtension.GetSnapshotId();
+    if (projectId.empty() || baseSnapshotId.empty()) {
+        onDone(nullptr, "not a cloud project");
+        return;
+    }
+
+    std::thread([projectId, baseSnapshotId, lockedIds = EditLockedBlockIds(project), onDone = std::move(onDone)]() {
+        auto changes = std::make_shared<HeadChanges>();
+        std::string error;
+        try {
+            const auto& config = GetServiceConfig();
+            const auto head = WaitForSyncedHead(config, projectId);
+            if (head.Id == baseSnapshotId) {
+                throw Failure { "nothing new on the server" };
+            }
+            const auto headInfo = GetSnapshot(config, projectId, head.Id);
+            const auto headDocument = DecodeProjectBlob(Download(headInfo.FileUrl));
+            const auto baseDocument = DecodeProjectBlob(Download(GetSnapshot(config, projectId, baseSnapshotId).FileUrl));
+            if (!headDocument || !baseDocument) {
+                throw Failure { "can't read the project's versions" };
+            }
+
+            changes->headSnapshotId = head.Id;
+            changes->patch = ComputePatch(*baseDocument, *headDocument);
+
+            std::map<long long, std::string> urls;
+            for (const auto& block : headInfo.Blocks) {
+                urls[std::stoll(block.Hash.substr(0, 8), nullptr, 16)] = block.Url;
+            }
+            CheckReplacements(*baseDocument, *headDocument, [&](long long id) { return lockedIds.count(id) > 0; },
+                              "the changes on the server touch audio that isn't locked");
+            // The new blocks: replacing locked runs, and in new tracks and clips
+            std::set<long long> neededIds;
+            for (const auto& replacement : changes->patch.replacements) {
+                neededIds.insert(replacement.addedBlockIds.begin(), replacement.addedBlockIds.end());
+            }
+            for (const auto& track : changes->patch.newTracks) {
+                CollectBlockIds(track, neededIds);
+            }
+            for (const auto& addition : changes->patch.newClips) {
+                CollectBlockIds(addition.clip, neededIds);
+            }
+            {
+                for (const auto id : neededIds) {
+                    if (id <= 0 || changes->blocks.count(id)) {
+                        continue;
+                    }
+                    const auto url = urls.find(id);
+                    if (url == urls.end()) {
+                        throw Failure { "the server has no block " + std::to_string(id) };
+                    }
+                    const auto data = Download(url->second);
+                    auto block = DecompressBlock(data.data(), data.size());
+                    if (!block) {
+                        throw Failure { "can't read block " + std::to_string(id) };
+                    }
+                    changes->blocks.emplace(id, std::move(*block));
+                }
+            }
+        } catch (const Failure& failure) {
+            error = failure.reason;
+        } catch (const std::exception& e) {
+            error = e.what();
+        }
+        HeadChangesPtr result = error.empty() ? changes : nullptr;
+        BasicUI::CallAfter([onDone, result, error] { onDone(result, error); });
+    }).detach();
+}
+
+namespace {
+std::string AddNewClipsAndTracks(AudacityProject& project, const HeadChanges& changes)
+{
+    auto& trackList = TrackList::Get(project);
+
+    // New clips in existing tracks, grouped by track and clip
+    std::map<std::pair<std::string, long long>, std::vector<const DocumentElement*> > newClipChannels;
+    for (const auto& addition : changes.patch.newClips) {
+        newClipChannels[{ addition.trackUid, UidAttribute(addition.clip) }].push_back(&addition.clip);
+    }
+    for (const auto& [key, channels] : newClipChannels) {
+        WaveTrack* track = nullptr;
+        for (auto* t : trackList.Any<WaveTrack>()) {
+            if (std::to_string(t->GetPersistentId()) == key.first) {
+                track = t;
+            }
+        }
+        if (!track) {
+            return "a track that got a new clip isn't in this project any more";
+        }
+        AddClip(*track, channels, changes.blocks);
+    }
+
+    // New tracks: consecutive channel elements share the track's uid
+    for (size_t i = 0; i < changes.patch.newTracks.size();) {
+        std::vector<const DocumentElement*> channels { &changes.patch.newTracks[i++] };
+        while (i < changes.patch.newTracks.size()
+               && UidAttribute(changes.patch.newTracks[i]) == UidAttribute(*channels.front())) {
+            channels.push_back(&changes.patch.newTracks[i++]);
+        }
+        const auto& first = *channels.front();
+        const auto format = static_cast<sampleFormat>(first.IntAttribute("sampleformat").value_or(static_cast<long long>(floatSample)));
+        const double rate = DoubleAttribute(first, "rate", 44100.0);
+        auto track = WaveTrackFactory::Get(project).Create(channels.size(), format, rate);
+        track->SetName(wxString::FromUTF8(first.StringAttribute("name").value_or("")));
+        track->SetPersistentId(UidAttribute(first));
+        for (const auto& clipChannels : ClipsByUid(channels)) {
+            AddClip(*track, clipChannels, changes.blocks);
+        }
+        trackList.Add(track);
+    }
+    return {};
+}
+}
+
+std::string ApplyHeadChanges(AudacityProject& project, const HeadChanges& changes)
+{
+    auto factory = SampleBlockFactory::New(project);
+
+    // Find all runs first, so that nothing is changed if one is missing
+    struct Target {
+        std::shared_ptr<WaveClip> clip;
+        size_t channel;
+        size_t first;
+        const ClipReplacement* replacement;
+    };
+    std::vector<Target> targets;
+    for (const auto& replacement : changes.patch.replacements) {
+        std::optional<Target> target;
+        for (auto* track : TrackList::Get(project).Any<WaveTrack>()) {
+            for (const auto& clip : track->Intervals()) {
+                if (target || std::to_string(clip->GetPersistentId()) != replacement.clipUid
+                    || replacement.channel >= static_cast<long long>(clip->NChannels())) {
+                    continue;
+                }
+                std::vector<long long> ids;
+                for (const auto& block : clip->GetSequence(replacement.channel)->GetBlockArray()) {
+                    ids.push_back(block.sb->GetBlockID());
+                }
+                // Same lookup as ApplyPatch on documents
+                if (const auto at = FindBlockRun(ids, replacement.removedBlockIds)) {
+                    target = Target { clip, static_cast<size_t>(replacement.channel), *at, &replacement };
+                }
+            }
+        }
+        if (!target || replacement.addedBlockIds.empty()) {
+            return "the audio changed on the server isn't in this project any more";
+        }
+        targets.push_back(*target);
+    }
+
+    for (const auto& target : targets) {
+        const auto format = target.clip->GetSequence(target.channel)->GetSampleFormats().Stored();
+        std::vector<std::shared_ptr<SampleBlock> > newBlocks;
+        const auto& replacement = *target.replacement;
+        for (size_t i = 0; i < replacement.addedBlockIds.size(); ++i) {
+            const auto id = replacement.addedBlockIds[i];
+            if (id <= 0) {
+                newBlocks.push_back(factory->CreateSilent(replacement.addedBlockLengths[i], format));
+                continue;
+            }
+            const auto& block = changes.blocks.at(id);
+            const auto count = block.Data.size() / SAMPLE_SIZE(block.Format);
+            newBlocks.push_back(factory->Create(reinterpret_cast<constSamplePtr>(block.Data.data()), count, block.Format));
+        }
+        target.clip->ReplaceBlocks(target.channel, target.first, replacement.removedBlockIds.size(), newBlocks);
+    }
+
+    // New clips and tracks are built from their saved form, keeping their uids
+    // so that later patches can refer to them
+    if (const auto error = AddNewClipsAndTracks(project, changes); !error.empty()) {
+        return error;
+    }
+
+    // The head is the new base: the next save builds on it
+    auto& cloudExtension = ProjectCloudExtension::Get(project);
+    auto& database = CloudProjectsDatabase::Get();
+    auto data = database.GetProjectData(cloudExtension.GetCloudProjectId());
+    if (!data) {
+        return "the project isn't in the cloud projects database";
+    }
+    data->SnapshotId = changes.headSnapshotId;
+    database.UpdateProjectData(*data);
+    cloudExtension.UpdateIdFromDatabase();
+    return {};
 }
 } // namespace audacity::cloud::audiocom::sync

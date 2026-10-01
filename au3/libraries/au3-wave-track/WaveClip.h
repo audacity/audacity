@@ -853,6 +853,10 @@ public:
     //! See Sequence::DeepCopyEditLockedBlocks
     bool DeepCopyEditLockedBlocks();
 
+    //! See Sequence::ReplaceBlocks. All channels must be given the same length
+    //! change before the clip is used again.
+    void ReplaceBlocks(size_t channel, size_t first, size_t count, const std::vector<std::shared_ptr<SampleBlock> >& blocks);
+
     //! Get one channel of the append buffer
     /*!
      @param ii identifies the channel

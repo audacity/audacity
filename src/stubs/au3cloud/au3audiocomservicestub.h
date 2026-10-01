@@ -39,6 +39,8 @@ public:
     muse::Ret deleteCloudProject(const muse::io::path_t& localPath) override;
     void rebaseOntoHead(au::project::IAudacityProjectPtr project, std::function<void(muse::Ret)> onDone) override;
     void lockOutsideCheckoutRegion(au::project::IAudacityProjectPtr project) override;
+    void integrateCloudHead(au::project::IAudacityProjectPtr project, std::function<void()> beforeApply,
+                            std::function<void(muse::Ret)> onDone) override;
 
     std::string getCloudProjectPage(const std::string& projectId) const override;
     std::string getCloudAudioPage(const std::string& audioId) const override;

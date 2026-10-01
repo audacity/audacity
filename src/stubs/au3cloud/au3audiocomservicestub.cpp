@@ -87,6 +87,12 @@ void Au3AudioComServiceStub::lockOutsideCheckoutRegion(au::project::IAudacityPro
 {
 }
 
+void Au3AudioComServiceStub::integrateCloudHead(au::project::IAudacityProjectPtr, std::function<void()>,
+                                                std::function<void(muse::Ret)> onDone)
+{
+    onDone(muse::make_ret(muse::Ret::Code::NotSupported));
+}
+
 muse::Ret Au3AudioComServiceStub::deleteCloudProject(const muse::io::path_t&)
 {
     return muse::make_ret(muse::Ret::Code::NotSupported);
