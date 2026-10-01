@@ -83,6 +83,10 @@ void CommandLineParser::init()
     m_parser.addOption(internalCommandLineOption("crash-dumps-dir", "Directory the crash dumps of this process are written to", "path"));
     m_parser.addOption(internalCommandLineOption("crash-server-url", "URL the crash dumps of this process are sent to", "url"));
 
+    // Cloud
+    m_parser.addOption(internalCommandLineOption("cloud-sync-database",
+                                                 "Database file holding the cloud sync state of this process", "path"));
+
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
     m_parser.addOption(QCommandLineOption("test-case", "Run test case by name or file", "nameOrFile"));
@@ -177,6 +181,10 @@ void CommandLineParser::parse(int argc, char** argv)
         } else if (!crashServerUrl.empty()) {
             LOGE() << "--crash-server-url without --crash-dumps-dir, crash reporting is left unconfigured";
         }
+    }
+
+    if (m_parser.isSet("cloud-sync-database")) {
+        m_options->cloud.syncDatabasePath = fromUserInputPath(m_parser.value("cloud-sync-database"));
     }
 
     // Audio plugin registration

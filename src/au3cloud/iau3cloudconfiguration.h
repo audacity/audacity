@@ -25,5 +25,8 @@ public:
 
     virtual bool shouldWarnOnSyncError() const = 0;
     virtual void setWarnOnSyncError(bool warn) = 0;
+
+    //! Overrides where the sync state database is. Must be set before modules are initialized.
+    virtual void setSyncDatabasePath(const muse::io::path_t& path) = 0;
 };
 }

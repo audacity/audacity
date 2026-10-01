@@ -5,9 +5,11 @@
 
 #include "framework/global/io/dir.h"
 #include "framework/global/settings.h"
+#include "framework/global/log.h"
 
 #include "au3-cloud-audiocom/CloudLibrarySettings.h"
 #include "au3-cloud-audiocom/ServiceConfig.h"
+#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
 
 using namespace au::au3cloud;
 
@@ -48,4 +50,10 @@ bool Au3CloudConfiguration::shouldWarnOnSyncError() const
 void Au3CloudConfiguration::setWarnOnSyncError(bool warn)
 {
     muse::settings()->setSharedValue(WARN_ON_SYNC_ERROR, muse::Val(warn));
+}
+
+void Au3CloudConfiguration::setSyncDatabasePath(const muse::io::path_t& path)
+{
+    LOGI() << "cloud sync database: " << path;
+    audacity::cloud::audiocom::sync::CloudProjectsDatabase::SetDatabasePath(path.toStdString());
 }

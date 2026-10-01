@@ -32,3 +32,7 @@ bool Au3CloudConfigurationStub::shouldWarnOnSyncError() const
 void Au3CloudConfigurationStub::setWarnOnSyncError(bool /*warn*/)
 {
 }
+
+void Au3CloudConfigurationStub::setSyncDatabasePath(const muse::io::path_t& /*path*/)
+{
+}

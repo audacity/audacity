@@ -130,6 +130,10 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
     if (options->app.revertToFactorySettings) {
         appshellConfiguration()->revertToFactorySettings();
     }
+
+    if (options->cloud.syncDatabasePath) {
+        au3cloudConfiguration()->setSyncDatabasePath(*options->cloud.syncDatabasePath);
+    }
 }
 
 void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)

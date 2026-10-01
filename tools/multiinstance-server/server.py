@@ -14,9 +14,11 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 import threading
 import time
+import urllib.request
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -372,14 +374,73 @@ def make_handler(api: Api, verbose: bool):
     return Handler
 
 
+def is_running(base_url):
+    try:
+        with urllib.request.urlopen(f"{base_url}/me", timeout=1):
+            return True
+    except OSError:
+        return False
+
+
+def detach(args, base_url):
+    """Starts the server as a background process, unless one is already running."""
+    if is_running(base_url):
+        print(f"Already running on {base_url}")
+        return
+    args.data_dir.mkdir(parents=True, exist_ok=True)
+    log = open(args.data_dir / "server.log", "ab")
+    command = [sys.executable, str(Path(__file__).resolve()), "--port", str(args.port), "--data-dir", str(args.data_dir)]
+    if sys.platform == "win32":
+        flags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+        subprocess.Popen(command, stdout=log, stderr=log, stdin=subprocess.DEVNULL, creationflags=flags)
+    else:
+        subprocess.Popen(command, stdout=log, stderr=log, stdin=subprocess.DEVNULL, start_new_session=True)
+    for _ in range(50):
+        if is_running(base_url):
+            print(f"Started on {base_url}, log in {args.data_dir / 'server.log'}")
+            return
+        time.sleep(0.1)
+    sys.exit(f"Server didn't start, see {args.data_dir / 'server.log'}")
+
+
+def seed_profile(profile_dir, base_url):
+    """Creates an Audacity profile (Linux XDG layout) that uses this server and starts signed in."""
+    ini = profile_dir / "config/Audacity/Audacity4Development.ini"
+    if ini.exists():
+        return
+    ini.parent.mkdir(parents=True, exist_ok=True)
+    for sub in ("data", "cache"):
+        (profile_dir / sub).mkdir(parents=True, exist_ok=True)
+    ini.write_text(f"""[CloudServices]
+AudioCom\\ApiEndpoint={base_url}
+
+[cloud]
+audiocom\\refreshToken=local
+
+[application]
+hasCompletedFirstLaunchSetup=true
+welcomeDialogShowOnStartup=false
+""")
+    print(f"Seeded profile {profile_dir}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--port", type=int, default=8090)
     parser.add_argument("--data-dir", type=Path, default=default_data_dir())
     parser.add_argument("--verbose", action="store_true", help="log every request")
+    parser.add_argument("--detach", action="store_true", help="run in the background, unless already running")
+    parser.add_argument("--seed-profile", type=Path, metavar="DIR",
+                        help="create an Audacity profile in DIR that uses this server, if there is none yet")
     args = parser.parse_args()
 
     base_url = f"http://127.0.0.1:{args.port}"
+    if args.seed_profile:
+        seed_profile(args.seed_profile, base_url)
+    if args.detach:
+        detach(args, base_url)
+        return
+
     api = Api(Store(args.data_dir), base_url)
     # Loopback only: there is no authentication
     server = ThreadingHTTPServer(("127.0.0.1", args.port), make_handler(api, args.verbose))

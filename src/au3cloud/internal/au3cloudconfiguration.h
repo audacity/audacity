@@ -19,5 +19,7 @@ public:
 
     bool shouldWarnOnSyncError() const override;
     void setWarnOnSyncError(bool warn) override;
+
+    void setSyncDatabasePath(const muse::io::path_t& path) override;
 };
 }

@@ -12,6 +12,16 @@
             "problemMatcher": []
         },
         {
+            // Starts the local multi-instance project server (if not running) and
+            // creates a dev profile that uses it, leaving the real profile alone
+            "label": "multi-instance server: start",
+            "type": "shell",
+            "command": "python3 tools/multiinstance-server/server.py --detach --seed-profile '${userHome}/.local/share/audacity-multiinstance-server/profile'",
+            "options": { "cwd": "${workspaceFolder}" },
+            "dependsOn": ["CMake: install"],
+            "problemMatcher": []
+        },
+        {
             "label": "testflow: run all test cases",
             "type": "shell",
             "command": "buildscripts/tools/run_testflow.sh --all",
