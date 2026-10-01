@@ -45,6 +45,14 @@ struct AudacityCmdOptions : public muse::CmdOptions {
         std::optional<muse::diagnostics::CrashDumpConfig> crashDumpConfig;
     } diagnostics;
 
+    struct Cloud {
+        std::optional<muse::io::path_t> syncDatabasePath;
+        std::optional<muse::io::path_t> accessTokenFilePath;
+        bool isOtherCheckout = false;
+        std::string checkoutAction;
+        bool checkoutSkipsSave = false;
+    } cloud;
+
     struct AudioPluginRegistration {
         muse::io::path_t pluginPath;
         muse::io::path_t outputPath;

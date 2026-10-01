@@ -211,3 +211,23 @@ muse::async::Notification EffectsConfiguration::vst3CustomPathsChanged() const
 {
     return m_vst3CustomPathsChanged;
 }
+
+bool EffectsConfiguration::applyInOtherCheckout() const
+{
+    return m_applyInOtherCheckout;
+}
+
+void EffectsConfiguration::setApplyInOtherCheckout(bool value)
+{
+    m_applyInOtherCheckout = value;
+}
+
+bool EffectsConfiguration::otherCheckoutSkipsSave() const
+{
+    return m_otherCheckoutSkipsSave;
+}
+
+void EffectsConfiguration::setOtherCheckoutSkipsSave(bool value)
+{
+    m_otherCheckoutSkipsSave = value;
+}

@@ -266,7 +266,7 @@ EffectStyledDialogView {
             id: bottomPanelContainer
 
             width: parent.width
-            height: prv.panelMargins * 2 + bbox.height
+            height: prv.panelMargins * 2 + checkoutOptions.height + prv.panelMargins + bbox.height
 
             window: Window {
                 id: bottomPanel
@@ -280,9 +280,38 @@ EffectStyledDialogView {
                     anchors.fill: parent
                     anchors.margins: prv.panelMargins
 
+                    Column {
+                        id: checkoutOptions
+
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 8
+
+                        CheckBox {
+                            //: Checkbox in the effect dialog: the effect is applied by another Audacity process working on a copy of the project
+                            text: qsTrc("effects", "Apply in other checkout")
+                            checked: viewerModel.applyInOtherCheckout
+                            onClicked: {
+                                viewerModel.applyInOtherCheckout = !checked
+                            }
+                        }
+
+                        CheckBox {
+                            visible: viewerModel.applyInOtherCheckout
+                            //: Checkbox in the effect dialog, for testing: the other checkout doesn't save its result
+                            text: qsTrc("effects", "Don't automatically save (for testing)")
+                            checked: viewerModel.otherCheckoutSkipsSave
+                            onClicked: {
+                                viewerModel.otherCheckoutSkipsSave = !checked
+                            }
+                        }
+                    }
+
                     ButtonBox {
                         id: bbox
 
+                        anchors.top: checkoutOptions.bottom
+                        anchors.topMargin: prv.panelMargins
                         anchors.left: parent.left
                         anchors.right: parent.right
 

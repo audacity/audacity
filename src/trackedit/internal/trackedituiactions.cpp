@@ -480,6 +480,31 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action_description", "Silence"),
              IconCode::Code::SILENCE_AUDIO_SELECTION
              ),
+    UiAction("lock-selection",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Lock selection"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Give the selected audio sample blocks of its own and lock them, without changing the audio")
+             ),
+    UiAction("unlock-all-blocks",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Unlock all blocks"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Remove the edit lock from all sample blocks")
+             ),
+    UiAction("toggle-history-xml-dump",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Dump project XML per history step"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Write the project XML of each undo step to a folder, for debugging"),
+             Checkable::Yes
+             ),
     UiAction("group-clips",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

@@ -20,6 +20,10 @@ public:
     void setVerticalRulersVisible(bool visible) override;
     muse::async::Channel<bool> isVerticalRulersVisibleChanged() const override;
 
+    bool isSampleBlocksVisible() const override;
+    void setSampleBlocksVisible(bool visible) override;
+    muse::async::Channel<bool> isSampleBlocksVisibleChanged() const override;
+
     bool isRMSInWaveformVisible() const override;
     void setRMSInWaveformVisible(bool visible) override;
     muse::async::Channel<bool> isRMSInWaveformVisibleChanged() const override;
@@ -85,6 +89,7 @@ private:
     muse::ByteArray labelEditorColumnFormatJson() const;
 
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
+    muse::async::Channel<bool> m_isSampleBlocksVisibleChanged;
     muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
     muse::async::Channel<bool> m_isClippingInWaveformVisibleChanged;
     muse::async::Notification m_effectsPanelVisible;

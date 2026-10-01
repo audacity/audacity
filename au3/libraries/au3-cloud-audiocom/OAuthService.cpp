@@ -110,7 +110,7 @@ void OAuthService::ValidateAuth(
     std::function<void(std::string_view)> completedHandler, AudiocomTrace trace,
     bool silent)
 {
-    if (HasAccessToken() || !HasRefreshToken()) {
+    if (HasAccessToken() || !HasRefreshToken() || mRefreshDisabled) {
         if (completedHandler) {
             completedHandler(GetAccessToken());
         }
@@ -277,6 +277,13 @@ void OAuthService::AuthoriseRefreshToken(
 {
     std::lock_guard<std::recursive_mutex> lock(mMutex);
 
+    if (mRefreshDisabled) {
+        if (completedHandler) {
+            completedHandler(GetAccessToken());
+        }
+        return;
+    }
+
     AuthoriseRefreshToken(
         config, audacity::ToUTF8(refreshToken.Read()), trace,
         std::move(completedHandler), silent);
@@ -360,6 +367,35 @@ std::string OAuthService::GetAccessToken() const
     }
 
     return {};
+}
+
+std::chrono::seconds OAuthService::GetAccessTokenTimeLeft() const
+{
+    std::lock_guard<std::recursive_mutex> lock(mMutex);
+
+    const auto now = Clock::now();
+    if (now >= mTokenExpirationTime) {
+        return {};
+    }
+    return std::chrono::duration_cast<std::chrono::seconds>(mTokenExpirationTime - now);
+}
+
+void OAuthService::RefreshAccessToken(AuthSuccessCallback completedHandler)
+{
+    AuthoriseRefreshToken(GetServiceConfig(), AudiocomTrace::ignore, std::move(completedHandler), true);
+}
+
+void OAuthService::UseAccessTokenWithoutRefresh(std::string accessToken, std::chrono::seconds validFor)
+{
+    {
+        std::lock_guard<std::recursive_mutex> lock(mMutex);
+
+        mAccessToken = std::move(accessToken);
+        mTokenExpirationTime = Clock::now() + validFor;
+        mRefreshDisabled = true;
+    }
+
+    SafePublish({ GetAccessToken(), {}, AudiocomTrace::ignore, true, true });
 }
 
 std::string OAuthService::MakeOAuthRequestURL(std::string_view authClientId)

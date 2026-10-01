@@ -20,6 +20,9 @@
 #include "au3wrap/internal/trackcolor.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/SampleBlock.h"
+#include "au3-project-file-io/ProjectFileIO.h"
 #include "project/tests/mocks/dummyeffectinstancefactory.h"
 
 using ::testing::Truly;
@@ -1797,6 +1800,353 @@ TEST_F(Au3TracksInteractionTests, PasteClipAtStartOfItselfIntoExistingClipDoesNo
     EXPECT_DOUBLE_EQ(track->GetEndTime(), 2 * clipDuration);
 
     // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, LockTracksDataSplitsBlocksAtSelectionEdges)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto clip = track->GetSortedClipByIndex(0);
+    ASSERT_NE(clip, nullptr);
+
+    const Sequence* pSequence = clip->GetSequence(0);
+    ASSERT_NE(pSequence, nullptr);
+    const Sequence& sequence = *pSequence;
+    const size_t numSamples = sequence.GetNumSamples().as_size_t();
+    std::vector<float> before(numSamples);
+    ASSERT_TRUE(sequence.Get(reinterpret_cast<samplePtr>(before.data()), floatSample, 0, numSamples, true));
+
+    auto boundaries = [&] {
+        std::vector<sampleCount> starts;
+        for (const auto& block : sequence.GetBlockArray()) {
+            starts.push_back(block.start);
+        }
+        return starts;
+    };
+    const sampleCount s0 = 100;
+    const sampleCount s1 = 200;
+    const auto initial = boundaries();
+    ASSERT_EQ(std::count(initial.begin(), initial.end(), s0), 0) << "Precondition failed: already a block boundary";
+    ASSERT_EQ(std::count(initial.begin(), initial.end(), s1), 0) << "Precondition failed: already a block boundary";
+
+    //! [WHEN] Locking a selection whose edges fall inside blocks
+    const double t0 = TRACK_MIN_SILENCE_CLIP_START + s0.as_double() * SAMPLE_INTERVAL;
+    const double t1 = TRACK_MIN_SILENCE_CLIP_START + s1.as_double() * SAMPLE_INTERVAL;
+    EXPECT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, t0, t1));
+
+    //! [THEN] Blocks now start exactly at both edges
+    const auto after = boundaries();
+    EXPECT_EQ(std::count(after.begin(), after.end(), s0), 1);
+    EXPECT_EQ(std::count(after.begin(), after.end(), s1), 1);
+
+    //! [THEN] The audio is unchanged
+    std::vector<float> samplesAfter(numSamples);
+    ASSERT_TRUE(sequence.Get(reinterpret_cast<samplePtr>(samplesAfter.data()), floatSample, 0, numSamples, true));
+    EXPECT_EQ(before, samplesAfter);
+
+    //! [THEN] Exactly the blocks inside the selection are locked
+    for (const auto& block : sequence.GetBlockArray()) {
+        const bool inside = block.start >= s0 && block.start < s1;
+        EXPECT_EQ(block.sb->IsEditLocked(), inside) << "block starting at " << block.start.as_long_long();
+    }
+
+    //! [THEN] Locking again changes nothing
+    EXPECT_FALSE(m_tracksInteraction->lockTracksData({ trackId }, t0, t1));
+
+    //! [WHEN] Unlocking all blocks
+    EXPECT_TRUE(m_tracksInteraction->unlockAllBlocks());
+
+    //! [THEN] No block is locked
+    for (const auto& block : sequence.GetBlockArray()) {
+        EXPECT_FALSE(block.sb->IsEditLocked());
+    }
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, LockTracksDataOverTrimmedClipSplitsAtTrimEdges)
+{
+    //! [GIVEN] A clip trimmed on both sides
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const std::shared_ptr<WaveClip> clip = *track->Intervals().begin();
+    ASSERT_NE(clip, nullptr);
+    const sampleCount trimLeft = 50;
+    const sampleCount trimRight = 60;
+    clip->SetTrimLeft(trimLeft.as_double() * SAMPLE_INTERVAL);
+    clip->SetTrimRight(trimRight.as_double() * SAMPLE_INTERVAL);
+
+    const Sequence* pSequence = clip->GetSequence(0);
+    ASSERT_NE(pSequence, nullptr);
+    const sampleCount numSamples = pSequence->GetNumSamples();
+
+    //! [WHEN] Locking the clip's visible range, as clip selection does
+    EXPECT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, clip->GetPlayStartTime(), clip->GetPlayEndTime()));
+
+    //! [THEN] Blocks start exactly at both trim edges
+    std::vector<sampleCount> starts;
+    for (const auto& block : pSequence->GetBlockArray()) {
+        starts.push_back(block.start);
+    }
+    EXPECT_EQ(std::count(starts.begin(), starts.end(), trimLeft), 1);
+    EXPECT_EQ(std::count(starts.begin(), starts.end(), numSamples - trimRight), 1);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, LockTracksDataReplacesSilentBlocksWithLockedZeroBlocks)
+{
+    //! [GIVEN] A clip made of inserted silence, which is held by shared silent blocks
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    const secs_t silenceBegin = TRACK_TWO_CLIPS_CLIP2_END + 10 * SAMPLE_INTERVAL;
+    const secs_t silenceEnd = silenceBegin + 1.0;
+    m_tracksInteraction->insertSilence({ trackId }, silenceBegin, silenceEnd, silenceEnd - silenceBegin);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder silenceClip = track->GetSortedClipByIndex(2);
+    ASSERT_NE(silenceClip, nullptr);
+    const Sequence* pSequence = silenceClip->GetSequence(0);
+    ASSERT_NE(pSequence, nullptr);
+    const auto& blockArray = pSequence->GetBlockArray();
+    const auto silent = std::find_if(blockArray.begin(), blockArray.end(), [](const SeqBlock& b) { return b.sb->GetBlockID() <= 0; });
+    ASSERT_NE(silent, blockArray.end()) << "Precondition failed: no silent block";
+
+    //! [WHEN] Locking a range inside a silent block
+    const sampleCount s0 = silent->start + 200;
+    const sampleCount s1 = silent->start + 400;
+    const double clipStart = silenceClip->GetSequenceStartTime();
+    EXPECT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, clipStart + s0.as_double() * SAMPLE_INTERVAL,
+                                                    clipStart + s1.as_double() * SAMPLE_INTERVAL));
+
+    //! [THEN] The locked range is held by a locked ordinary block (own id) of zeros
+    const auto locked = std::find_if(blockArray.begin(), blockArray.end(), [&](const SeqBlock& b) { return b.start == s0; });
+    ASSERT_NE(locked, blockArray.end());
+    EXPECT_GT(locked->sb->GetBlockID(), 0) << "Expected an ordinary block";
+    EXPECT_TRUE(locked->sb->IsEditLocked());
+    const size_t len = locked->sb->GetSampleCount();
+    std::vector<float> samples(len, 1.f);
+    locked->sb->GetSamples(reinterpret_cast<samplePtr>(samples.data()), floatSample, 0, len);
+    EXPECT_TRUE(std::all_of(samples.begin(), samples.end(), [](float x) { return x == 0.f; }));
+
+    //! [THEN] Other silences of the same length are not locked
+    const auto sameLength = track->GetSampleBlockFactory()->CreateSilent(len, floatSample);
+    EXPECT_FALSE(sameLength->IsEditLocked());
+
+    // Cleanup
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
+
+namespace {
+std::vector<std::shared_ptr<SampleBlock> > blocksOf(const WaveTrack& track)
+{
+    std::vector<std::shared_ptr<SampleBlock> > blocks;
+    for (const auto& clip : track.Intervals()) {
+        for (size_t ch = 0; ch < clip->NChannels(); ++ch) {
+            for (const auto& block : clip->GetSequence(ch)->GetBlockArray()) {
+                blocks.push_back(block.sb);
+            }
+        }
+    }
+    return blocks;
+}
+
+void expectUnlockedAndNotShared(const WaveTrack& copy, const WaveTrack& original)
+{
+    const auto originalBlocks = blocksOf(original);
+    for (const auto& block : blocksOf(copy)) {
+        EXPECT_FALSE(block->IsEditLocked());
+        if (block->GetBlockID() > 0) {
+            for (const auto& originalBlock : originalBlocks) {
+                if (originalBlock->IsEditLocked()) {
+                    EXPECT_NE(block, originalBlock) << "copy shares a locked block";
+                }
+            }
+        }
+    }
+}
+
+size_t lockedCount(const WaveTrack& track)
+{
+    const auto blocks = blocksOf(track);
+    return std::count_if(blocks.begin(), blocks.end(), [](const auto& b) { return b->IsEditLocked(); });
+}
+}
+
+TEST_F(Au3TracksInteractionTests, CopyOfLockedRangeIsUnlockedDeepCopy)
+{
+    //! [GIVEN] A track with a locked range
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const double t0 = TRACK_MIN_SILENCE_CLIP_START + 100 * SAMPLE_INTERVAL;
+    const double t1 = TRACK_MIN_SILENCE_CLIP_START + 200 * SAMPLE_INTERVAL;
+    ASSERT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, t0, t1));
+    const size_t lockedBefore = lockedCount(*track);
+    ASSERT_GT(lockedBefore, 0u);
+
+    //! [WHEN] Copying the whole track's data to the clipboard
+    const auto data = std::static_pointer_cast<Au3TrackData>(
+        m_tracksInteraction->copyContinuousTrackData(trackId, track->GetStartTime(), track->GetEndTime()));
+    ASSERT_NE(data, nullptr);
+    const auto* copy = dynamic_cast<const WaveTrack*>(data->track().get());
+    ASSERT_NE(copy, nullptr);
+
+    //! [THEN] The copy is unlocked and shares no locked block; the original keeps its locks
+    expectUnlockedAndNotShared(*copy, *track);
+    EXPECT_EQ(lockedCount(*track), lockedBefore);
+
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, DuplicateOfTrackWithLockedBlocksIsUnlockedDeepCopy)
+{
+    //! [GIVEN] A track with a locked range
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, TRACK_MIN_SILENCE_CLIP_START + 100 * SAMPLE_INTERVAL,
+                                                    TRACK_MIN_SILENCE_CLIP_START + 200 * SAMPLE_INTERVAL));
+    const size_t lockedBefore = lockedCount(*track);
+    const size_t trackCountBefore = Au3TrackList::Get(projectRef()).Size();
+
+    //! [WHEN] Duplicating the track
+    ASSERT_TRUE(m_tracksInteraction->duplicateTracks({ trackId }));
+
+    //! [THEN] The duplicate is unlocked and shares no locked block; the original keeps its locks
+    auto& tracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(tracks.Size(), trackCountBefore + 1);
+    const WaveTrack* duplicate = nullptr;
+    for (const WaveTrack* t : tracks.Any<const WaveTrack>()) {
+        if (t != track) {
+            duplicate = t;
+        }
+    }
+    ASSERT_NE(duplicate, nullptr);
+    expectUnlockedAndNotShared(*duplicate, *track);
+    EXPECT_EQ(lockedCount(*track), lockedBefore);
+
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(duplicate->GetId());
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, DeletingNextToLockedRangeDoesNotRewriteLockedBlocks)
+{
+    //! [GIVEN] A track with a locked range [100, 200)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const double start = TRACK_MIN_SILENCE_CLIP_START;
+    ASSERT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, start + 100 * SAMPLE_INTERVAL, start + 200 * SAMPLE_INTERVAL));
+    const auto lockedBefore = blocksOf(*track);
+
+    //! [WHEN] Deleting a sliver right after it, whose leftover would normally be merged into the locked block
+    m_tracksInteraction->removeTracksData({ trackId }, start + 210 * SAMPLE_INTERVAL, start + 220 * SAMPLE_INTERVAL, true);
+
+    //! [THEN] Every locked block is still in the track
+    const auto after = blocksOf(*track);
+    for (const auto& block : lockedBefore) {
+        if (block->IsEditLocked()) {
+            EXPECT_NE(std::find(after.begin(), after.end(), block), after.end()) << "locked block was rewritten";
+        }
+    }
+
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PastingAtStartOfLockedRangeDoesNotRewriteLockedBlocks)
+{
+    //! [GIVEN] A track with a locked range [100, 200)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const double start = TRACK_MIN_SILENCE_CLIP_START;
+    ASSERT_TRUE(m_tracksInteraction->lockTracksData({ trackId }, start + 100 * SAMPLE_INTERVAL, start + 200 * SAMPLE_INTERVAL));
+    const auto lockedBefore = blocksOf(*track);
+    const auto numSamplesBefore = (*track->Intervals().begin())->GetSequence(0)->GetNumSamples();
+
+    //! [WHEN] Pasting 10 samples into the clip exactly at the start of the locked range
+    const auto copy = track->Copy(start + 300 * SAMPLE_INTERVAL, start + 310 * SAMPLE_INTERVAL);
+    const auto& copyTrack = static_cast<const WaveTrack&>(*copy);
+    const std::shared_ptr<WaveClip> clip = *track->Intervals().begin();
+    ASSERT_TRUE(clip->Paste(start + 100 * SAMPLE_INTERVAL, **copyTrack.Intervals().begin()));
+
+    //! [THEN] Every locked block is still in the track, and the samples were inserted
+    const auto after = blocksOf(*track);
+    for (const auto& block : lockedBefore) {
+        if (block->IsEditLocked()) {
+            EXPECT_NE(std::find(after.begin(), after.end(), block), after.end()) << "locked block was rewritten";
+        }
+    }
+    EXPECT_EQ((*track->Intervals().begin())->GetSequence(0)->GetNumSamples(), numSamplesBefore + 10);
+
+    m_tracksInteraction->unlockAllBlocks();
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PersistentIdsAreSavedAndLoaded)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const std::shared_ptr<WaveClip> clip = *track->Intervals().begin();
+
+    //! [THEN] Both ids are in the project XML
+    const std::string xml = ProjectFileIO::Get(projectRef()).GenerateDoc().ToStdString();
+    EXPECT_NE(xml.find("uid=\"" + std::to_string(track->GetPersistentId()) + "\""), std::string::npos);
+    EXPECT_NE(xml.find("uid=\"" + std::to_string(clip->GetPersistentId()) + "\""), std::string::npos);
+
+    //! [THEN] Reading the attribute back sets the id
+    const long long saved = 123456789012345;
+    EXPECT_TRUE(track->HandleCommonXMLAttribute("uid", XMLAttributeValueView(saved)));
+    EXPECT_EQ(track->GetPersistentId(), saved);
+    EXPECT_TRUE(clip->HandleXMLTag("waveclip", { { "uid", XMLAttributeValueView(saved) } }));
+    EXPECT_EQ(clip->GetPersistentId(), saved);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PersistentIdsFollowCopyRules)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const PersistentId trackUid = track->GetPersistentId();
+    const PersistentId clipUid = (*track->Intervals().begin())->GetPersistentId();
+
+    //! [THEN] An undo backup keeps both ids
+    const auto backup = std::static_pointer_cast<WaveTrack>(track->Duplicate(::Track::DuplicateOptions {}.Backup()));
+    EXPECT_EQ(backup->GetPersistentId(), trackUid);
+    EXPECT_EQ((*backup->Intervals().begin())->GetPersistentId(), clipUid);
+
+    //! [THEN] A backup added next to its original gets a new track id
+    auto& tracks = Au3TrackList::Get(projectRef());
+    tracks.Add(backup);
+    EXPECT_NE(backup->GetPersistentId(), trackUid);
+    EXPECT_EQ(track->GetPersistentId(), trackUid);
+    removeTrack(backup->GetId());
+
+    //! [THEN] A user-level duplicate gets new ids
+    const auto duplicate = std::static_pointer_cast<WaveTrack>(track->Duplicate());
+    EXPECT_NE(duplicate->GetPersistentId(), trackUid);
+    EXPECT_NE((*duplicate->Intervals().begin())->GetPersistentId(), clipUid);
+
+    //! [WHEN] Splitting the clip
+    m_tracksInteraction->splitTracksAt({ trackId }, { TRACK_MIN_SILENCE_CLIP_START + 100 * SAMPLE_INTERVAL });
+
+    //! [THEN] The left part keeps the id, the right part gets a new one
+    ASSERT_EQ(track->NIntervals(), 2u);
+    EXPECT_EQ(track->GetSortedClipByIndex(0)->GetPersistentId(), clipUid);
+    EXPECT_NE(track->GetSortedClipByIndex(1)->GetPersistentId(), clipUid);
+
     removeTrack(trackId);
 }
 }

@@ -15,6 +15,7 @@
 #include "usageinfo/iusageinfo.h"
 
 #include "au3cloud/iauthorization.h"
+#include "au3cloud/iau3cloudconfiguration.h"
 #include "au3cloud/cloudtypes.h"
 
 #include "oauthhttpserverreplyhandler.h"
@@ -26,6 +27,7 @@ class Au3CloudService : public QObject, public muse::async::Asyncable, public IA
 
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
     muse::GlobalInject<usageinfo::IUsageInfo> usageInfo;
+    muse::GlobalInject<IAu3CloudConfiguration> configuration;
 
 public:
     void init();
@@ -40,10 +42,13 @@ public:
 
     muse::ValCh<AuthState> authState() const override;
     bool isAuthorized() const override;
+    void writeAccessTokenFile(const muse::io::path_t& path, std::function<void(muse::Ret)> onDone) override;
 
     muse::Ret ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode) override;
 
 private:
+    static muse::Ret doWriteAccessTokenFile(const muse::io::path_t& path, const std::string& token);
+
     bool initReplyHandlerIfNecessary();
     std::string buildOAuthRequestURL(const std::string& provider);
     void syncUsageInfoPrefs();

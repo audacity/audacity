@@ -19,6 +19,7 @@ using namespace au::projectscene;
 static const std::string moduleName("projectscene");
 
 static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
+static const muse::Settings::Key IS_SAMPLE_BLOCKS_VISIBLE(moduleName, "projectscene/sampleBlocksVisible");
 static const muse::Settings::Key IS_RMS_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/rmsInWaveformVisible");
 static const muse::Settings::Key IS_CLIPPING_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/clippingInWaveformVisible");
 static const muse::Settings::Key EFFECTS_PANEL_VISIBILITY(moduleName, "projectscene/effectsPanelVisible");
@@ -48,6 +49,11 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(IS_VERTICAL_RULERS_VISIBLE, muse::Val(DEFAULT_VERTICAL_RULERS_VISIBILITY));
     muse::settings()->valueChanged(IS_VERTICAL_RULERS_VISIBLE).onReceive(nullptr, [this](const muse::Val&) {
         m_isVerticalRulersVisibleChanged.send(isVerticalRulersVisible());
+    });
+
+    muse::settings()->setDefaultValue(IS_SAMPLE_BLOCKS_VISIBLE, muse::Val(false));
+    muse::settings()->valueChanged(IS_SAMPLE_BLOCKS_VISIBLE).onReceive(nullptr, [this](const muse::Val&) {
+        m_isSampleBlocksVisibleChanged.send(isSampleBlocksVisible());
     });
 
     muse::settings()->setDefaultValue(IS_RMS_IN_WAVEFORM_VISIBLE, muse::Val(DEFAULT_RMS_IN_WAVEFORM_VISIBILITY));
@@ -128,6 +134,21 @@ void ProjectSceneConfiguration::setVerticalRulersVisible(bool visible)
 muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleChanged() const
 {
     return m_isVerticalRulersVisibleChanged;
+}
+
+bool ProjectSceneConfiguration::isSampleBlocksVisible() const
+{
+    return muse::settings()->value(IS_SAMPLE_BLOCKS_VISIBLE).toBool();
+}
+
+void ProjectSceneConfiguration::setSampleBlocksVisible(bool visible)
+{
+    muse::settings()->setSharedValue(IS_SAMPLE_BLOCKS_VISIBLE, muse::Val(visible));
+}
+
+muse::async::Channel<bool> ProjectSceneConfiguration::isSampleBlocksVisibleChanged() const
+{
+    return m_isSampleBlocksVisibleChanged;
 }
 
 bool ProjectSceneConfiguration::isRMSInWaveformVisible() const

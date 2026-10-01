@@ -130,6 +130,17 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
     if (options->app.revertToFactorySettings) {
         appshellConfiguration()->revertToFactorySettings();
     }
+
+    if (options->cloud.syncDatabasePath) {
+        au3cloudConfiguration()->setSyncDatabasePath(*options->cloud.syncDatabasePath);
+    }
+
+    if (options->cloud.accessTokenFilePath) {
+        au3cloudConfiguration()->setAccessTokenFile(*options->cloud.accessTokenFilePath);
+    }
+
+    au3cloudConfiguration()->setIsOtherCheckout(options->cloud.isOtherCheckout);
+    au3cloudConfiguration()->setCheckoutAction(options->cloud.checkoutAction, options->cloud.checkoutSkipsSave);
 }
 
 void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)

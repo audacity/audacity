@@ -84,12 +84,21 @@ public:
 
     virtual void SaveXML(XMLWriter& xmlFile) = 0;
 
+    //! Edit lock: the block's audio is reserved (e.g. by a pending job) and
+    //! should not leave its place in the project. Runtime only, not saved.
+    //! Unrelated to CloseLock(), which only keeps the block's storage alive.
+    bool IsEditLocked() const { return mEditLocked; }
+    void SetEditLocked(bool locked) { mEditLocked = locked; }
+
 protected:
     virtual size_t DoGetSamples(samplePtr dest, sampleFormat destformat, size_t sampleoffset, size_t numsamples) = 0;
 
     virtual MinMaxRMS DoGetMinMaxRMS(size_t start, size_t len) = 0;
 
     virtual MinMaxRMS DoGetMinMaxRMS() const = 0;
+
+private:
+    bool mEditLocked = false;
 };
 
 // Makes a useful function object

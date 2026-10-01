@@ -1336,6 +1336,7 @@ void WaveTrack::ClearAndPaste(
         }
         for (size_t i = 0; i < clipsBefore.size(); ++i) {
             clipsAfter[i]->SetId(clipsBefore[i]->GetId());
+            clipsAfter[i]->SetPersistentId(clipsBefore[i]->GetPersistentId());
         }
     }
 }
@@ -1931,6 +1932,17 @@ bool WaveTrack::InsertClip(WaveClipHolders& clips, WaveClipHolder clip,
         return false;
     }
 
+    // A copy inserted next to its original is a new clip
+    if (!backup) {
+        const auto clash = [&] {
+            return std::any_of(clips.begin(), clips.end(), [&](const WaveClipHolder& other) {
+                return other->GetPersistentId() == clip->GetPersistentId();
+            });
+        };
+        while (clash()) {
+            clip->SetPersistentId(NewPersistentId());
+        }
+    }
     clips.push_back(std::move(clip));
     Publish({ clips.back(),
               newClip ? WaveTrackMessage::New : WaveTrackMessage::Inserted });

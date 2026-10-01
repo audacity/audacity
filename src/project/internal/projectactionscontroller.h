@@ -1,6 +1,10 @@
 #ifndef AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 #define AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 
+#include <memory>
+
+#include <QTimer>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
@@ -25,6 +29,7 @@
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/icloudprojectsprovider.h"
+#include "au3cloud/iau3cloudconfiguration.h"
 #include "effects/effects_base/imissingeffectchecker.h"
 
 #include "project/iprojectconfiguration.h"
@@ -46,6 +51,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::toast::IToastService> toastService;
     muse::GlobalInject<au3cloud::IAuthorization> authorization;
     muse::GlobalInject<au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
+    muse::GlobalInject<au3cloud::IAu3CloudConfiguration> cloudConfiguration;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
@@ -86,6 +92,24 @@ private:
     void newProject();
     void open(const muse::actions::ActionData& args);
     void openCloudProject(const muse::actions::ActionData& args);
+    //! Optionally with an action for the checkout to dispatch once it's open,
+    //! the name of the effect that action applies, which names the history item
+    //! when the result is synced, and whether the checkout skips saving to the
+    //! cloud after the action (for testing)
+    void editInOtherCheckout(const muse::actions::ActionData& args);
+    void shareCheckoutLink();
+    //! Locks the selection and saves to the cloud, for a checkout to open
+    void prepareCheckout(std::function<void()> onSaved);
+    void launchOtherCheckout(const std::string& checkoutAction, bool checkoutSkipsSave);
+    void performCheckoutAction();
+    void quitIfCheckoutDone();
+    void rebaseOntoHead();
+    void startWatchingCloudHead();
+    void stopWatchingCloudHead();
+    void checkCloudHead();
+    void askAboutNewCloudHead();
+    void syncCloudHead();
+    void discardCloudHead();
     void importFiles(const muse::actions::ActionData& args);
 
     void importStartupMedia(const muse::actions::ActionData& args);
@@ -152,6 +176,13 @@ private:
     bool m_isProjectSaving = false;
     bool m_isProjectClosing = false;
     bool m_isProjectProcessing = false;
+
+    //! While a checkout is out, the server is polled for changes made elsewhere
+    std::unique_ptr<QTimer> m_cloudHeadTimer;
+    bool m_quitAfterCheckoutSave = false;
+    std::string m_checkoutEffectName;
+    std::string m_lastNotifiedCloudHead;
+    bool m_cloudHeadQuestionOpen = false;
 
     ProjectBeingDownloaded m_projectBeingDownloaded;
     muse::async::Notification m_projectBeingDownloadedChanged;

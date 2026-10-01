@@ -46,6 +46,8 @@ public:
 
     muse::async::Notification projectChanged() const override;
 
+    int64_t sampleBlocksUsage(bool includeUndoHistory) const override;
+
     // internal
     uintptr_t au3ProjectPtr() const override;
 

@@ -59,4 +59,8 @@ void trimOrDeleteOverlapping(const ITrackeditProjectPtr& project, au3::Au3WaveTr
 
 void remapCopiedClipGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks,
                            const std::vector<au3::Au3WaveTrack*>& copies);
+
+//! For user-level copies (clipboard, duplicate): give @p track copies of any
+//! edit-locked blocks, so the copy is not locked with the original.
+void deepCopyEditLockedBlocks(au3::Au3Track& track);
 }

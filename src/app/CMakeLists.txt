@@ -133,6 +133,7 @@ add_to_link_if_exists(muse::update)
 add_to_link_if_exists(muse::ui_dialogs_qml)
 add_to_link_if_exists(muse::ui)
 add_to_link_if_exists(muse::uicomponents)
+add_to_link_if_exists(muse::uicomponents_qmlapi)
 add_to_link_if_exists(muse::workspace)
 
 add_to_link_if_exists(appshell)

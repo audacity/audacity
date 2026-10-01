@@ -33,6 +33,7 @@ public:
 
     MOCK_METHOD(muse::async::Notification, projectChanged, (), (const, override));
 
+    MOCK_METHOD(int64_t, sampleBlocksUsage, (bool), (const, override));
     MOCK_METHOD(uintptr_t, au3ProjectPtr, (), (const, override));
 };
 

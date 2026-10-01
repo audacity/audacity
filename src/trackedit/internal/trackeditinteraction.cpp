@@ -31,9 +31,24 @@ bool TrackeditInteraction::trimTracksData(const std::vector<trackedit::TrackId>&
     return withPlaybackStop(&ITrackeditInteraction::trimTracksData, tracksIds, begin, end);
 }
 
+bool TrackeditInteraction::lockTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::lockTracksData, tracksIds, begin, end);
+}
+
 bool TrackeditInteraction::silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     return withPlaybackStop(&ITrackeditInteraction::silenceTracksData, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::unlockAllBlocks()
+{
+    return withPlaybackStop(&ITrackeditInteraction::unlockAllBlocks);
+}
+
+bool TrackeditInteraction::lockClips(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::lockClips, clipKeyList);
 }
 
 bool TrackeditInteraction::silenceClips(const ClipKeyList& clipKeyList)

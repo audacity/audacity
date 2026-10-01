@@ -44,6 +44,19 @@ bool TrackeditOperationController::trimTracksData(const std::vector<trackedit::T
     return false;
 }
 
+bool TrackeditOperationController::lockTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
+{
+    if (tracksInteraction()->lockTracksData(tracksIds, begin, end)) {
+        projectHistory()->pushHistoryState(
+            //: History entry. %1 and %2 are positions in seconds
+            muse::qtrc("trackedit", "Locked selected tracks from %1 seconds to %2 seconds")
+            .arg(begin.to_double()).arg(end.to_double()).toStdString(),
+            muse::trc("trackedit", "Lock selection"));
+        return true;
+    }
+    return false;
+}
+
 bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     if (tracksInteraction()->silenceTracksData(tracksIds, begin, end)) {
@@ -55,6 +68,34 @@ bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit
         return true;
     }
     return false;
+}
+
+bool TrackeditOperationController::unlockAllBlocks()
+{
+    if (!tracksInteraction()->unlockAllBlocks()) {
+        return false;
+    }
+    // Locks are part of the undo state: record the unlock in the current state,
+    // without a history entry of its own
+    projectHistory()->modifyState();
+    return true;
+}
+
+bool TrackeditOperationController::lockClips(const ClipKeyList& clipKeyList)
+{
+    bool anyLocked = false;
+    for (const auto& clipKey : clipKeyList) {
+        const secs_t begin = clipsInteraction()->clipStartTime(clipKey);
+        const secs_t end = clipsInteraction()->clipEndTime(clipKey);
+        if (tracksInteraction()->lockTracksData({ clipKey.trackId }, begin, end)) {
+            anyLocked = true;
+        }
+    }
+
+    if (anyLocked) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Locked selected clips"), muse::trc("trackedit", "Lock selection"));
+    }
+    return anyLocked;
 }
 
 bool TrackeditOperationController::silenceClips(const ClipKeyList& clipKeyList)

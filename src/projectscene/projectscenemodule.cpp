@@ -69,6 +69,7 @@
 #include "view/timeline/playregionmodel.h"
 
 #include "view/timeline/gridlines.h"
+#include "view/tracksitemsview/sampleblocksoverlay.h"
 
 #include "view/playcursor/playcursorcontroller.h"
 #include "view/playcursor/playpositionactioncontroller.h"
@@ -181,6 +182,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TrackLabelsLayoutManager>("Audacity.ProjectScene", 1, 0, "TrackLabelsLayoutManager");
     qmlRegisterUncreatableType<TrackLabelItem>("Audacity.ProjectScene", 1, 0, "TrackLabelItem", "Not creatable from QML");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
+    qmlRegisterType<SampleBlocksOverlay>("Audacity.ProjectScene", 1, 0, "SampleBlocksOverlay");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
     qmlRegisterType<MultiClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "MultiClipContextMenuModel");
     qmlRegisterType<LabelContextMenuModel>("Audacity.ProjectScene", 1, 0, "LabelContextMenuModel");

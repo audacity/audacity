@@ -18,6 +18,7 @@
 #include "au3-math/SampleCount.h"
 #include "au3-stretching-sequence/ClipInterface.h"
 #include "au3-xml/XMLTagHandler.h"
+#include "au3-track/PersistentId.h"
 #include "au3-stretching-sequence/AudioSegmentSampleView.h"
 
 #include <wx/longlong.h>
@@ -301,6 +302,7 @@ public:
         WaveClip* clip = new WaveClip(orig, factory, copyGroupId);
         if (!backup) {
             clip->mId = NewID();
+            clip->mPersistentId = NewPersistentId();
         }
         return clip;
     }
@@ -320,6 +322,7 @@ public:
         WaveClip* clip = new WaveClip(orig, factory, copyGroupId, t0, t1);
         if (!backup) {
             clip->mId = NewID();
+            clip->mPersistentId = NewPersistentId();
         }
         return clip;
     }
@@ -336,6 +339,9 @@ public:
 
     int64_t GetId() const;
     void SetId(int64_t id);
+
+    PersistentId GetPersistentId() const { return mPersistentId; }
+    void SetPersistentId(PersistentId id) { mPersistentId = id; }
 
     int64_t GetVersion() const;
 
@@ -830,6 +836,27 @@ public:
      */
     void SetSilence(sampleCount offset, sampleCount length);
 
+    //! Splits the sample blocks that straddle `t0` or `t1`, so that the audio
+    //! between them is held by blocks of its own, and edit-locks those blocks.
+    //! The audio is unchanged.
+    /*!
+     @pre `StrongInvariant()`
+     @post `StrongInvariant()`
+     @return whether any block was split or newly locked
+     */
+    bool LockBlocks(double t0, double t1);
+
+    //! Ids of the blocks LockBlocks(t0, t1) would lock (in all channels),
+    //! without splitting or locking anything
+    std::vector<long long> BlockIdsInRange(double t0, double t1) const;
+
+    //! See Sequence::DeepCopyEditLockedBlocks
+    bool DeepCopyEditLockedBlocks();
+
+    //! See Sequence::ReplaceBlocks. All channels must be given the same length
+    //! change before the clip is used again.
+    void ReplaceBlocks(size_t channel, size_t first, size_t count, const std::vector<std::shared_ptr<SampleBlock> >& blocks);
+
     //! Get one channel of the append buffer
     /*!
      @param ii identifies the channel
@@ -986,6 +1013,9 @@ private:
     };
 
     int64_t mId = -1;
+    //! Identifies the clip persistently (saved as "uid"), see PersistentId.
+    //! Follows the same copy rules as mId.
+    PersistentId mPersistentId{ NewPersistentId() };
     int64_t mVersion = 0;
 
     //! Real-time durations, i.e., stretching the clip modifies these.

@@ -617,6 +617,7 @@ bool Au3ClipsInteraction::duplicateClips(const ClipKeyList& clipKeyList)
 
             newTrack->InsertInterval(track->CopyClip(*clip, true), false);
         }
+        utils::deepCopyEditLockedBlocks(*newTrack);
         newTracks.push_back(newTrack);
     }
 

@@ -25,5 +25,27 @@ public:
 
     virtual bool shouldWarnOnSyncError() const = 0;
     virtual void setWarnOnSyncError(bool warn) = 0;
+
+    //! Overrides where the sync state database is. Must be set before modules are initialized.
+    virtual void setSyncDatabasePath(const muse::io::path_t& path) = 0;
+
+    //! Whether this process is a checkout of a project another instance works on
+    //! ("Edit in other checkout"): it may only edit the selection it was given,
+    //! and rebases its changes onto the server's head on conflict
+    virtual void setIsOtherCheckout(bool isOtherCheckout) = 0;
+    virtual bool isOtherCheckout() const = 0;
+
+    //! What the other checkout does once open, e.g. apply an effect
+    //! ("action://effects/apply?…"), before saving to the cloud and quitting,
+    //! unless it skips saving (for testing)
+    virtual void setCheckoutAction(const std::string& action, bool skipsSave) = 0;
+    virtual std::string checkoutAction() const = 0;
+    virtual bool checkoutSkipsSave() const = 0;
+
+    //! A file with an access token to sign in with, written by the process
+    //! that started this one (see IAuthorization::writeAccessTokenFile).
+    //! Must be set before modules are initialized.
+    virtual void setAccessTokenFile(const muse::io::path_t& path) = 0;
+    virtual muse::io::path_t accessTokenFile() const = 0;
 };
 }

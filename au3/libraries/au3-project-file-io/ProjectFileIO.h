@@ -231,11 +231,13 @@ public:
     //! Return a strings representation of the active project XML doc
     wxString GenerateDoc();
 
+    //! Writes the active project document, e.g. into a ProjectSerializer
+    void WriteXML(XMLWriter& xmlFile, bool recording = false, const TrackList* tracks = nullptr) /* not override */;
+
 private:
     void OnCheckpointFailure();
 
     void WriteXMLHeader(XMLWriter& xmlFile) const;
-    void WriteXML(XMLWriter& xmlFile, bool recording = false, const TrackList* tracks = nullptr) /* not override */;
 
     // XMLTagHandler callback methods
     bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;

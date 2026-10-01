@@ -1,7 +1,15 @@
 #include "projectactionscontroller.h"
 
+#include <QClipboard>
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDir>
 #include <QFileDialog>
+#include <QGuiApplication>
+#include <QProcess>
 #include <QWindow>
+#include <QStandardPaths>
+#include <QTimer>
 
 #include <variant>
 
@@ -79,6 +87,8 @@ const muse::actions::ActionCodeList& prohibitedWhileRecording()
         "project-import",
         "file-save",
         "file-save-to-cloud",
+        "edit-in-other-checkout",
+        "share-checkout-link",
         "file-save-as",
         "export-audio",
         "export-labels",
@@ -157,6 +167,8 @@ void ProjectActionsController::init()
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
     dispatcher()->reg(this, "file-save-to-cloud", [this]() { saveProject(SaveMode::Save, SaveLocationType::Cloud); });
+    dispatcher()->reg(this, "edit-in-other-checkout", this, &ProjectActionsController::editInOtherCheckout);
+    dispatcher()->reg(this, "share-checkout-link", this, &ProjectActionsController::shareCheckoutLink);
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
@@ -458,6 +470,295 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
     }
 }
 
+void ProjectActionsController::editInOtherCheckout(const muse::actions::ActionData& args)
+{
+    const std::string checkoutAction = args.count() > 0 ? args.arg<std::string>(0) : std::string();
+    m_checkoutEffectName = args.count() > 1 ? args.arg<std::string>(1) : std::string();
+    const bool checkoutSkipsSave = args.count() > 2 ? args.arg<bool>(2) : false;
+    prepareCheckout([this, checkoutAction, checkoutSkipsSave]() {
+        launchOtherCheckout(checkoutAction, checkoutSkipsSave);
+    });
+}
+
+void ProjectActionsController::shareCheckoutLink()
+{
+    prepareCheckout([this]() {
+        IAudacityProjectPtr project = currentProject();
+        const auto record = project ? project->cloudRecord() : std::nullopt;
+        if (!record || record->projectId.empty()) {
+            LOGE() << "The project isn't on the cloud, can't share a checkout of it";
+            return;
+        }
+
+        // Opened elsewhere with `audacity --checkout <link>`, signed in normally
+        const QString openUrl = cloudProjectOpenUrl(muse::String::fromStdString(record->projectId),
+                                                    muse::String::fromStdString(record->snapshotId));
+        QGuiApplication::clipboard()->setText(openUrl);
+        LOGI() << "Checkout link: " << openUrl;
+
+        startWatchingCloudHead();
+
+        interactive()->info(trc("project", "Checkout link copied to the clipboard"),
+                            openUrl.toStdString() + "\n\n"
+                            + trc("project", "Open it with: audacity --checkout \"<link>\""));
+    });
+}
+
+void ProjectActionsController::prepareCheckout(std::function<void()> onSaved)
+{
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return;
+    }
+
+    // This instance holds the lock: the other checkout's result may only replace
+    // the locked audio, which is checked when integrating it
+    dispatcher()->dispatch("lock-selection");
+
+    // The other checkout opens what is on the server, so save there first.
+    // The selection is part of the project, so it goes along.
+    CloudProjectInfo info;
+    // A new project's display name is its temporary file's name
+    info.name = project->displayName();
+    for (const QString& suffix : { QString(".aup4unsaved"), QString(".aup4"), QString(".aup3") }) {
+        if (info.name.endsWith(suffix)) {
+            info.name.chop(suffix.size());
+            break;
+        }
+    }
+    const CloudSaveMode mode = project->isCloudProject() ? CloudSaveMode::NormalUpdate : CloudSaveMode::CreateNew;
+    saveProjectToCloud(info, mode, std::move(onSaved));
+}
+
+void ProjectActionsController::launchOtherCheckout(const std::string& checkoutAction, bool checkoutSkipsSave)
+{
+    IAudacityProjectPtr project = currentProject();
+    const auto record = project ? project->cloudRecord() : std::nullopt;
+    if (!record || record->projectId.empty()) {
+        LOGE() << "The project isn't on the cloud, can't open it in another checkout";
+        return;
+    }
+
+    // A separate process: windows of this process share one cloud sync database,
+    // but each checkout must keep its own sync state (in particular its base snapshot)
+    const QString checkoutsDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/checkouts";
+    QDir().mkpath(checkoutsDir);
+    const QString syncDatabase = QString("%1/%2-%3.db").arg(checkoutsDir, QString::fromStdString(record->projectId))
+                                 .arg(QDateTime::currentMSecsSinceEpoch());
+
+    // The checkout signs in with this instance's token, refreshed first so that it
+    // lasts as long as possible: refreshing the shared sign-in from the checkout
+    // would invalidate this instance's tokens
+    const QString accessTokenFile = syncDatabase + ".auth";
+    const QString openUrl = cloudProjectOpenUrl(muse::String::fromStdString(record->projectId),
+                                                muse::String::fromStdString(record->snapshotId));
+    QStringList arguments { "--checkout", "--cloud-sync-database", syncDatabase, "--cloud-auth-file", accessTokenFile };
+    if (!checkoutAction.empty()) {
+        arguments << "--checkout-action" << QString::fromStdString(checkoutAction);
+        if (checkoutSkipsSave) {
+            arguments << "--checkout-skips-save";
+        }
+    }
+    arguments << openUrl;
+    authorization()->writeAccessTokenFile(accessTokenFile, [this, syncDatabase, arguments](Ret ret) {
+        if (!ret) {
+            LOGE() << "can't pass the sign-in to the other checkout: " << ret.toString();
+            interactive()->error(trc("project", "Can't open the other checkout"), ret.text());
+            return;
+        }
+
+        QProcess process;
+        process.setProgram(QCoreApplication::applicationFilePath());
+        process.setArguments(arguments);
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert("AU_ALLOW_MULTIPLE_PROCESSES", "1");
+        process.setProcessEnvironment(env);
+
+        qint64 pid = 0;
+        if (!process.startDetached(&pid)) {
+            LOGE() << "Failed to start other checkout: " << process.errorString();
+            return;
+        }
+        LOGI() << "Other checkout started, pid " << pid << ", sync database " << syncDatabase;
+
+        startWatchingCloudHead();
+    });
+}
+
+void ProjectActionsController::performCheckoutAction()
+{
+    const std::string action = cloudConfiguration()->checkoutAction();
+    if (action.empty()) {
+        return;
+    }
+    const bool skipsSave = cloudConfiguration()->checkoutSkipsSave();
+    // Once: it was meant for the project this checkout was started with
+    cloudConfiguration()->setCheckoutAction({}, false);
+    // Its work done once saved, whether automatically or not
+    m_quitAfterCheckoutSave = true;
+
+    // After the project is opened
+    muse::async::Async::call(this, [this, action, skipsSave]() {
+        LOGI() << "Checkout action: " << action;
+        dispatcher()->dispatch(muse::actions::ActionQuery(action));
+
+        // Saving conflicts if the main instance saved since; the checkout then
+        // rebases its changes onto what is on the server (handleCloudSaveError)
+        if (!skipsSave) {
+            dispatcher()->dispatch("file-save");
+        }
+    });
+}
+
+void ProjectActionsController::quitIfCheckoutDone()
+{
+    if (!std::exchange(m_quitAfterCheckoutSave, false)) {
+        return;
+    }
+    LOGI() << "Checkout saved, quitting";
+    muse::async::Async::call(this, [this]() {
+        dispatcher()->dispatch("quit", actions::ActionData::make_arg1<bool>(false));
+    });
+}
+
+void ProjectActionsController::startWatchingCloudHead()
+{
+    // The server doesn't notify: poll it while a checkout is out
+    if (!m_cloudHeadTimer) {
+        m_cloudHeadTimer = std::make_unique<QTimer>();
+        m_cloudHeadTimer->setInterval(3000);
+        QObject::connect(m_cloudHeadTimer.get(), &QTimer::timeout, [this]() { checkCloudHead(); });
+    }
+    m_cloudHeadTimer->start();
+}
+
+void ProjectActionsController::stopWatchingCloudHead()
+{
+    if (m_cloudHeadTimer) {
+        m_cloudHeadTimer->stop();
+    }
+    m_lastNotifiedCloudHead.clear();
+}
+
+void ProjectActionsController::checkCloudHead()
+{
+    if (m_cloudHeadQuestionOpen) {
+        return;
+    }
+
+    IAudacityProjectPtr project = currentProject();
+    const auto record = project ? project->cloudRecord() : std::nullopt;
+    if (!record) {
+        stopWatchingCloudHead();
+        return;
+    }
+
+    audioComService()->fetchProjectHead(record->projectId, [this, projectId = record->projectId](std::optional<au3cloud::CloudProjectHead> head) {
+        IAudacityProjectPtr project = currentProject();
+        const auto record = project ? project->cloudRecord() : std::nullopt;
+        if (!head || !record || record->projectId != projectId || m_cloudHeadQuestionOpen) {
+            return;
+        }
+        // Our own snapshots are recorded as our base as soon as they're created
+        if (!head->synced || head->snapshotId == record->snapshotId || head->snapshotId == m_lastNotifiedCloudHead) {
+            return;
+        }
+        m_lastNotifiedCloudHead = head->snapshotId;
+        askAboutNewCloudHead();
+    });
+}
+
+void ProjectActionsController::askAboutNewCloudHead()
+{
+    const int syncBtn = static_cast<int>(IInteractive::Button::CustomButton);
+    const int discardBtn = syncBtn + 1;
+    const int doNothingBtn = syncBtn + 2;
+    const IInteractive::ButtonDatas buttons {
+        IInteractive::ButtonData(doNothingBtn, trc("project", "Do nothing")),
+        IInteractive::ButtonData(discardBtn, trc("project", "Discard")),
+        IInteractive::ButtonData(syncBtn, trc("project", "Sync"), /*accent=*/ true),
+    };
+
+    m_cloudHeadQuestionOpen = true;
+    interactive()->question(trc("project", "There is something new on the server"),
+                            trc("project", "The project was changed elsewhere, for example by the other checkout. "
+                                           "Sync to bring these changes in, or discard them."),
+                            buttons, syncBtn)
+    .onResolve(this, [this, syncBtn, discardBtn](const IInteractive::Result& result) {
+        m_cloudHeadQuestionOpen = false;
+        if (result.isButton(syncBtn)) {
+            syncCloudHead();
+        } else if (result.isButton(discardBtn)) {
+            discardCloudHead();
+        }
+        // "Do nothing": asked again only if the project changes again
+    });
+}
+
+void ProjectActionsController::syncCloudHead()
+{
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return;
+    }
+
+    // Applied to the open project, so that whatever is unsaved there is kept
+    audioComService()->integrateCloudHead(project, [this]() {
+        // Called once it's verified that only locked audio is replaced: the
+        // locks have served their purpose, and replacing locked blocks would
+        // count as violating them
+        dispatcher()->dispatch("unlock-all-blocks");
+    }, [this](muse::Ret ret) {
+        if (!ret) {
+            LOGE() << "changes on the server can't be integrated: " << ret.toString();
+            interactive()->error(trc("project", "Can't sync"), ret.text());
+            return;
+        }
+        stopWatchingCloudHead();
+        if (const auto trackeditProject = globalContext()->currentTrackeditProject()) {
+            trackeditProject->reload();
+        }
+        if (const std::string effectName = std::exchange(m_checkoutEffectName, {}); !effectName.empty()) {
+            // As if the effect was applied here
+            const std::string longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String::fromStdString(effectName)).toStdString();
+            projectHistory()->pushHistoryState(longDesc, effectName);
+        } else {
+            projectHistory()->pushHistoryState(trc("project", "Synced changes from the cloud"), trc("project", "Sync"));
+        }
+    });
+}
+
+void ProjectActionsController::discardCloudHead()
+{
+    stopWatchingCloudHead();
+    m_checkoutEffectName.clear();
+    dispatcher()->dispatch("unlock-all-blocks");
+
+    // Overwrite what was pushed with this instance's state
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return;
+    }
+    CloudProjectInfo info;
+    info.name = project->displayName();
+    saveProjectToCloud(info, CloudSaveMode::ForceOverwrite);
+}
+
+void ProjectActionsController::rebaseOntoHead()
+{
+    audioComService()->rebaseOntoHead(currentProject(), [this](muse::Ret ret) {
+        if (ret) {
+            toastService()->show(trc("project", "Changes integrated"),
+                                 trc("project", "Your changes were replayed on the latest version and saved to the cloud."),
+                                 muse::ui::IconCode::Code::TICK, true, {});
+            quitIfCheckoutDone();
+            return;
+        }
+        LOGE() << "rebase failed: " << ret.toString();
+        interactive()->error(trc("project", "Couldn't integrate your changes"), ret.text());
+    });
+}
+
 void ProjectActionsController::importFiles(const muse::actions::ActionData& args)
 {
     const IAudacityProjectPtr project = globalContext()->currentProject();
@@ -702,6 +1003,7 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         if (onSuccess) {
             onSuccess();
         }
+        quitIfCheckoutDone();
         return make_ok();
     }
 
@@ -731,6 +1033,7 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         if (onSuccess) {
             onSuccess();
         }
+        quitIfCheckoutDone();
     });
 
     const bool dismissible = false;
@@ -1112,11 +1415,26 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             return;
         }
 
+        // Before any edit: what the checkout was given is what's selected now.
+        // Everything else is locked, which the lock warnings and the block
+        // overlay then show
+        if (cloudConfiguration()->isOtherCheckout()) {
+            audioComService()->lockOutsideCheckoutRegion(project);
+            projectHistory()->modifyState();
+            if (const auto trackeditProject = globalContext()->currentTrackeditProject()) {
+                trackeditProject->reload();
+            }
+        }
+
         if (!ensureAuthorization()) {
             return;
         }
 
         auto [syncRet, syncProgress] = audioComService()->resumeProjectSync(project);
+        if (syncRet && !syncProgress && cloudConfiguration()->isOtherCheckout()) {
+            // Nothing to resume
+            performCheckoutAction();
+        }
         if (!syncRet || !syncProgress || syncProgress->isCanceled()) {
             return;
         }
@@ -1125,6 +1443,10 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             if (!result.ret.success()) {
                 handleCloudSaveError(result.ret);
                 return;
+            }
+
+            if (cloudConfiguration()->isOtherCheckout()) {
+                performCheckoutAction();
             }
 
             const bool dismissable = false;
@@ -1819,6 +2141,13 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
 {
     IAudacityProjectPtr project = currentProject();
     if (!project) {
+        return;
+    }
+
+    // A checkout started by "Edit in other checkout" doesn't overwrite the main
+    // instance's work: it replays its own changes on top of it
+    if (error.code() == static_cast<int>(au3cloud::Err::ProjectVersionConflict) && cloudConfiguration()->isOtherCheckout()) {
+        rebaseOntoHead();
         return;
     }
 

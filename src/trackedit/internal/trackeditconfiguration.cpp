@@ -14,9 +14,15 @@ static const muse::Settings::Key DELETE_BEHAVIOR(moduleName, "trackedit/deleteBe
 static const muse::Settings::Key CLOSE_GAP_BEHAVIOR(moduleName, "trackedit/closeGapBehavior");
 static const muse::Settings::Key PASTE_BEHAVIOR(moduleName, "trackedit/pasteBehavior");
 static const muse::Settings::Key PASTE_INSERT_BEHAVIOR(moduleName, "trackedit/pasteInsertBehavior");
+static const muse::Settings::Key HISTORY_XML_DUMP_ENABLED(moduleName, "trackedit/historyXmlDumpEnabled");
 
 void TrackeditConfiguration::init()
 {
+    muse::settings()->setDefaultValue(HISTORY_XML_DUMP_ENABLED, muse::Val(false));
+    muse::settings()->valueChanged(HISTORY_XML_DUMP_ENABLED).onReceive(nullptr, [this](const muse::Val&) {
+        m_historyXmlDumpEnabledChanged.notify();
+    });
+
     muse::settings()->setDefaultValue(PASTE_AS_NEW_CLIP, muse::Val(true));
     muse::settings()->valueChanged(PASTE_AS_NEW_CLIP).onReceive(nullptr, [this](const muse::Val&) {
         m_pasteAsNewClipChanged.notify();
@@ -140,6 +146,21 @@ void TrackeditConfiguration::setPasteInsertBehavior(PasteInsertBehavior value)
 muse::async::Notification TrackeditConfiguration::pasteInsertBehaviorChanged() const
 {
     return m_pasteInsertBehaviorChanged;
+}
+
+bool TrackeditConfiguration::historyXmlDumpEnabled() const
+{
+    return muse::settings()->value(HISTORY_XML_DUMP_ENABLED).toBool();
+}
+
+void TrackeditConfiguration::setHistoryXmlDumpEnabled(bool value)
+{
+    muse::settings()->setSharedValue(HISTORY_XML_DUMP_ENABLED, muse::Val(value));
+}
+
+muse::async::Notification TrackeditConfiguration::historyXmlDumpEnabledChanged() const
+{
+    return m_historyXmlDumpEnabledChanged;
 }
 
 bool TrackeditConfiguration::pasteAsNewClip() const
