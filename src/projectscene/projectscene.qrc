@@ -51,6 +51,8 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipPreview.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandles.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ChannelSplitter.qml</file>
+        <file>images/customCursorShapes/ClipRepeatLeft.png</file>
+        <file>images/customCursorShapes/ClipRepeatRight.png</file>
         <file>images/customCursorShapes/ClipStretchBoth.png</file>
         <file>images/customCursorShapes/ClipStretchLeft.png</file>
         <file>images/customCursorShapes/ClipStretchRight.png</file>

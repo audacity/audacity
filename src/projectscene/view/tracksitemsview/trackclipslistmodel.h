@@ -41,6 +41,8 @@ public:
     void endEditItem(const TrackItemKey& key) override;
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
     Q_INVOKABLE bool trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
+    Q_INVOKABLE bool repeatLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Expand);
+    Q_INVOKABLE bool repeatRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Expand);
     Q_INVOKABLE bool stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
     Q_INVOKABLE bool stretchRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
 

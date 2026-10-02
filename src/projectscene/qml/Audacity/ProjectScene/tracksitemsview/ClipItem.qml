@@ -85,6 +85,8 @@ Rectangle {
 
     signal clipLeftTrimRequested(bool completed, int action)
     signal clipRightTrimRequested(bool completed, int action)
+    signal clipLeftRepeatRequested(bool completed, int action)
+    signal clipRightRepeatRequested(bool completed, int action)
     signal clipLeftStretchRequested(bool completed, int action)
     signal clipRightStretchRequested(bool completed, int action)
 
@@ -1160,6 +1162,8 @@ Rectangle {
         clipHeight: root.height
         headerHeight: header.height
         altPressed: root.altPressed
+        clipColor: root.clipColor
+        clipTitle: root.title
 
         clipNavigationPanel: root.clipNavigationPanel
 
@@ -1187,6 +1191,14 @@ Rectangle {
 
         onTrimRightRequested: function (completed, action) {
             root.clipRightTrimRequested(completed, action)
+        }
+
+        onRepeatLeftRequested: function (completed, action) {
+            root.clipLeftRepeatRequested(completed, action)
+        }
+
+        onRepeatRightRequested: function (completed, action) {
+            root.clipRightRepeatRequested(completed, action)
         }
 
         onStretchLeftRequested: function (completed, action) {

@@ -539,6 +539,106 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
     return ok;
 }
 
+bool TrackClipsListModel::repeatLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
+{
+    TrackClipItem* item = clipItemByKey(key.key);
+    IF_ASSERT_FAILED(item) {
+        return false;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return false;
+    }
+
+    UndoPushType undoType = UndoPushType::NONE;
+
+    const secs_t startTime = item->time().startTime;
+    const secs_t clipDuration = item->time().endTime - startTime;
+    if (clipDuration <= 0.0) {
+        return false;
+    }
+
+    double newStartTime = -1.0;
+    if (isKeyboardTriggered()) {
+        newStartTime = action == ClipBoundary::Action::Expand ? startTime - clipDuration : startTime + clipDuration;
+        if (vs->lastEditedClip().isValid() && vs->lastEditedClip() == key.key) {
+            undoType = UndoPushType::CONSOLIDATE;
+        }
+    } else {
+        //! NOTE: unlike trim/stretch, the repeat count is measured from the clip
+        //! edge (how many clip durations the cursor covers), not from the grab point
+        newStartTime = m_context->mousePositionTime();
+        if (vs->isSnapEnabled()) {
+            newStartTime = m_context->applySnapToTime(newStartTime);
+        } else {
+            newStartTime = m_context->applySnapToItem(newStartTime);
+        }
+    }
+
+    newStartTime = std::max(0.0, newStartTime);
+
+    bool ok = trackeditInteraction()->repeatClipsLeft(clipsForInteraction(key), newStartTime, completed, undoType);
+    if (ok) {
+        vs->setLastEditedClip(key.key);
+    }
+
+    handleAutoScroll(ok, completed, [this, key]() {
+        repeatLeftClip(key, false);
+    });
+
+    return ok;
+}
+
+bool TrackClipsListModel::repeatRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
+{
+    TrackClipItem* item = clipItemByKey(key.key);
+    IF_ASSERT_FAILED(item) {
+        return false;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return false;
+    }
+
+    UndoPushType undoType = UndoPushType::NONE;
+
+    const secs_t endTime = item->time().endTime;
+    const secs_t clipDuration = endTime - item->time().startTime;
+    if (clipDuration <= 0.0) {
+        return false;
+    }
+
+    double newEndTime = -1.0;
+    if (isKeyboardTriggered()) {
+        newEndTime = action == ClipBoundary::Action::Expand ? endTime + clipDuration : endTime - clipDuration;
+        if (vs->lastEditedClip().isValid() && vs->lastEditedClip() == key.key) {
+            undoType = UndoPushType::CONSOLIDATE;
+        }
+    } else {
+        //! NOTE: unlike trim/stretch, the repeat count is measured from the clip
+        //! edge (how many clip durations the cursor covers), not from the grab point
+        newEndTime = m_context->mousePositionTime();
+        if (vs->isSnapEnabled()) {
+            newEndTime = m_context->applySnapToTime(newEndTime);
+        } else {
+            newEndTime = m_context->applySnapToItem(newEndTime);
+        }
+    }
+
+    bool ok = trackeditInteraction()->repeatClipsRight(clipsForInteraction(key), newEndTime, completed, undoType);
+    if (ok) {
+        vs->setLastEditedClip(key.key);
+    }
+
+    handleAutoScroll(ok, completed, [this, key]() {
+        repeatRightClip(key, false);
+    });
+
+    return ok;
+}
+
 bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     TrackClipItem* item = clipItemByKey(key.key);

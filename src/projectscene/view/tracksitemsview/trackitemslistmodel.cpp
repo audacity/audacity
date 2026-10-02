@@ -430,6 +430,15 @@ void TrackItemsListModel::reload()
         return;
     }
 
+    //! Reloading recreates the item objects, which would destroy the QML item
+    //! currently being interacted with (e.g. dragged) and swallow the release
+    //! event, leaving the user interaction (projectHistory) open forever.
+    //! Defer the reload until the edit is finished.
+    if (m_itemEditInProgress) {
+        m_reloadPending = true;
+        return;
+    }
+
     disconnectAutoScroll();
 
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -461,17 +470,40 @@ void TrackItemsListModel::reload()
 
 void TrackItemsListModel::startEditItem(const TrackItemKey& key)
 {
-    ViewTrackItem* item = itemByKey(key.key);
-    if (!item) {
-        return;
-    }
-
     auto vs = globalContext()->currentProject()->viewState();
     if (!vs) {
         return;
     }
 
+    if (m_itemEditInProgress) {
+        //! A previous edit was not ended gracefully (e.g. the QML item being dragged was
+        //! destroyed before the release event was delivered). Close that interaction
+        //! first, otherwise projectHistory()->startUserInteraction() will assert.
+        vs->setItemEditStartTimeOffset(-1.0);
+        vs->setItemEditEndTimeOffset(-1.0);
+        vs->setMoveInitiated(false);
+        vs->setEditedItem(trackedit::TrackItemKey {});
+        vs->updateItemsBoundaries(false);
+
+        disconnectAutoScroll();
+
+        projectHistory()->endUserInteraction();
+
+        m_itemEditInProgress = false;
+        if (m_reloadPending) {
+            m_reloadPending = false;
+            reload();
+        }
+    }
+
+    ViewTrackItem* item = itemByKey(key.key);
+    if (!item) {
+        return;
+    }
+
     projectHistory()->startUserInteraction();
+
+    m_itemEditInProgress = true;
 
     double mousePositionTime = m_context->mousePositionTime();
 
@@ -490,15 +522,14 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
 
 void TrackItemsListModel::endEditItem(const TrackItemKey& key)
 {
-    ViewTrackItem* item = itemByKey(key.key);
-    if (!item) {
-        return;
-    }
-
     auto vs = globalContext()->currentProject()->viewState();
     if (!vs) {
         return;
     }
+
+    //! NOTE: no itemByKey() check here on purpose - the item may no longer exist
+    //! (e.g. it was overwritten by another clip's repeat paste while multiple clips
+    //! were selected). The history interaction must be ended regardless.
 
     vs->setItemEditStartTimeOffset(-1.0);
     vs->setItemEditEndTimeOffset(-1.0);
@@ -509,14 +540,18 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
     disconnectAutoScroll();
 
     projectHistory()->endUserInteraction();
+
+    m_itemEditInProgress = false;
+    if (m_reloadPending) {
+        m_reloadPending = false;
+        reload();
+    }
 }
 
 bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
 {
-    ViewTrackItem* item = itemByKey(key.key);
-    if (!item) {
-        return false;
-    }
+    //! NOTE: no itemByKey() check here on purpose - the item may no longer exist.
+    //! The history interaction must be ended regardless.
 
     auto vs = globalContext()->currentProject()->viewState();
     IF_ASSERT_FAILED(vs) {
@@ -537,6 +572,12 @@ bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
 
     constexpr auto modifyState = false;
     projectHistory()->endUserInteraction(modifyState);
+
+    m_itemEditInProgress = false;
+    if (m_reloadPending) {
+        m_reloadPending = false;
+        reload();
+    }
 
     return true;
 }

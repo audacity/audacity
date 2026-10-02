@@ -70,6 +70,8 @@ private:
                         UndoPushType type) override;
     bool stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                           UndoPushType type) override;
+    bool repeatClipsLeft(const ClipKeyList& clipKeyList, secs_t newStartTime, bool completed, UndoPushType type) override;
+    bool repeatClipsRight(const ClipKeyList& clipKeyList, secs_t newEndTime, bool completed, UndoPushType type) override;
     bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                            UndoPushType type) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
