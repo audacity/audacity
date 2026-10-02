@@ -19916,7 +19916,7 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="136"/>
         <source>Add effect</source>
-        <translation>Menambahkan efek</translation>
+        <translation>Tambahkan efek</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
