@@ -123,6 +123,7 @@ private:
     muse::uicomponents::MenuItemList makeAudioClipsSelectionItems();
     muse::uicomponents::MenuItemList makeSpectralSelectionItems();
     muse::uicomponents::MenuItemList makeLoopingItems();
+    muse::uicomponents::MenuItemList makeCursorToItems();
     muse::uicomponents::MenuItemList makeZoomItems();
     muse::uicomponents::MenuItemList makeSkipToItems();
     muse::uicomponents::MenuItemList makeAlignItems();
