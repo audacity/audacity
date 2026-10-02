@@ -60,5 +60,10 @@ public:
     virtual bool selectionFollowsLoopRegion() const = 0;
     virtual void setSelectionFollowsLoopRegion(bool follows) = 0;
     virtual muse::async::Notification selectionFollowsLoopRegionChanged() const = 0;
+
+    //! Play-at-Speed: time-stretch instead of resampling (keeps pitch)
+    virtual bool preservePitch() const = 0;
+    virtual void setPreservePitch(bool preserve) = 0;
+    virtual muse::async::Notification preservePitchChanged() const = 0;
 };
 }

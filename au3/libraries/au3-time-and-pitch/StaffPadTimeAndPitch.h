@@ -12,6 +12,7 @@ public:
     void GetSamples(float* const*, size_t) override;
     void OnCentShiftChange(int cents) override;
     void OnFormantPreservationChange(bool preserve) override;
+    void OnTimeRatioChange(double timeRatio) override;
 
 private:
     bool IllState() const;

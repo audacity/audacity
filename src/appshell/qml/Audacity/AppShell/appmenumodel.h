@@ -124,6 +124,7 @@ private:
     muse::uicomponents::MenuItemList makeSpectralSelectionItems();
     muse::uicomponents::MenuItemList makeLoopingItems();
     muse::uicomponents::MenuItemList makeZoomItems();
+    muse::uicomponents::MenuItemList makePlayAtSpeedItems();
     muse::uicomponents::MenuItemList makeSkipToItems();
     muse::uicomponents::MenuItemList makeAlignItems();
     muse::uicomponents::MenuItemList makeSortItems();

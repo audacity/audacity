@@ -12,6 +12,7 @@
 
 #include "au3-mixer/AudioIOSequences.h"
 #include "PlaybackDirection.h"
+#include "PlaybackTempoScale.h"
 
 #include <memory>
 #include <optional>
@@ -27,8 +28,10 @@ using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface> >;
 class STRETCHING_SEQUENCE_API StretchingSequence final : public PlayableSequence
 {
 public:
+    //! @param tempoScale Operation-owned scale; omit (or pass null) for 1.0.
     static std::shared_ptr<StretchingSequence>
-    Create(const PlayableSequence&, const ClipConstHolders& clips);
+    Create(const PlayableSequence&, const ClipConstHolders& clips,
+           PlaybackTempoScale::Ptr tempoScale = {});
 
     StretchingSequence(
         const PlayableSequence&, int sampleRate, size_t numChannels, std::unique_ptr<AudioSegmentFactoryInterface>);

@@ -26,6 +26,8 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
         const auto& playRegion = ViewInfo::Get(project).playRegion;
         const bool loopEnabled = playRegion.Active();
         options.loopEnabled = loopEnabled;
+        // Honour ProjectAudioIO play speed (Play-at-Speed toolbar / slider).
+        options.variableSpeed = true;
 
         if (newDefault) {
             const double trackEndTime = TrackList::Get(project).GetEndTime();

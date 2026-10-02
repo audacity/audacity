@@ -243,6 +243,7 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
 set(MODULE_LINK
         au3wrap
+        au3-audio-io
         au3-channel
         au3-mixer
         au3-preferences
@@ -254,6 +255,7 @@ set(MODULE_LINK
         trackedit
         record_qml # PlaybackToolBarRecordLevelItem is created in C++ by PlaybackToolBarModel
         spectrogram
+        playback
         uicomponents
         uicomponents_qml
         au3-registries

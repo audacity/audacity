@@ -53,5 +53,9 @@ public:
     MOCK_METHOD(bool, selectionFollowsLoopRegion, (), (const, override));
     MOCK_METHOD(void, setSelectionFollowsLoopRegion, (bool follows), (override));
     MOCK_METHOD(muse::async::Notification, selectionFollowsLoopRegionChanged, (), (const, override));
+
+    MOCK_METHOD(bool, preservePitch, (), (const, override));
+    MOCK_METHOD(void, setPreservePitch, (bool preserve), (override));
+    MOCK_METHOD(muse::async::Notification, preservePitchChanged, (), (const, override));
 };
 }

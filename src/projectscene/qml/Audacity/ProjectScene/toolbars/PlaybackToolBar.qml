@@ -78,6 +78,8 @@ Item {
                 return projectControlComp
             case PlaybackToolBarModel.SNAP:
                 return snapComp
+            case PlaybackToolBarModel.PLAY_AT_SPEED:
+                return playAtSpeedComp
             }
 
             return null
@@ -329,6 +331,14 @@ Item {
                 onHandleMenuItem: function (itemId) {
                     itemData.handleMenuItem(itemId)
                 }
+            }
+        }
+
+        Component {
+            id: playAtSpeedComp
+
+            PlayAtSpeed {
+                navigationPanel: root.navigationPanel
             }
         }
     }

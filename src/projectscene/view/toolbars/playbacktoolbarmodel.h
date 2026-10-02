@@ -51,7 +51,8 @@ public:
         PLAYBACK_TIME_SIGNATURE,
         PLAYBACK_CONTROL,
         PROJECT_CONTROL,
-        SNAP
+        SNAP,
+        PLAY_AT_SPEED
     };
     Q_ENUM(ItemType)
 

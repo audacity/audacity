@@ -16,7 +16,7 @@ class DefaultPlaybackPolicy final : public PlaybackPolicy, public NonInterfering
 public:
     DefaultPlaybackPolicy(AudacityProject& project, double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
                           bool loopEnabled, bool variableSpeed);
-    ~DefaultPlaybackPolicy() override = default;
+    ~DefaultPlaybackPolicy() override;
 
     void Initialize(PlaybackSchedule& schedule, double rate) override;
 
@@ -42,7 +42,9 @@ public:
 private:
     bool RevertToOldDefault(const PlaybackSchedule& schedule) const;
     void WriteMessage();
+    void UpdatePlaybackTempoScale();
     double GetPlaySpeed();
+    bool GetPreservePitch() const;
 
     AudacityProject& mProject;
 
@@ -57,9 +59,11 @@ private:
     MessageBuffer<SlotData> mMessageChannel;
 
     Observer::Subscription mRegionSubscription,
-                           mSpeedSubscription;
+                           mSpeedSubscription,
+                           mPreservePitchSubscription;
 
     double mLastPlaySpeed{ 1.0 };
+    bool mLastPreservePitch{ false };
     const double mTrackEndTime;
     double mLoopEndTime;
     std::optional<double> mpStartTime;

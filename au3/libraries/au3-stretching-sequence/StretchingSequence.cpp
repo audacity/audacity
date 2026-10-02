@@ -11,6 +11,7 @@
 #include "StretchingSequence.h"
 #include "AudioSegment.h"
 #include "AudioSegmentFactory.h"
+#include "PlaybackTempoScale.h"
 #include "au3-time-and-pitch/StaffPadTimeAndPitch.h"
 
 #include <cassert>
@@ -189,11 +190,15 @@ bool StretchingSequence::MutableGet(
 }
 
 std::shared_ptr<StretchingSequence> StretchingSequence::Create(
-    const PlayableSequence& sequence, const ClipConstHolders& clips)
+    const PlayableSequence& sequence, const ClipConstHolders& clips,
+    PlaybackTempoScale::Ptr tempoScale)
 {
     const int sampleRate = sequence.GetRate();
+    if (!tempoScale) {
+        tempoScale = PlaybackTempoScale::Create(1.0);
+    }
     return std::make_shared<StretchingSequence>(
         sequence, sampleRate, sequence.NChannels(),
         std::make_unique<AudioSegmentFactory>(
-            sampleRate, sequence.NChannels(), clips));
+            sampleRate, sequence.NChannels(), clips, std::move(tempoScale)));
 }

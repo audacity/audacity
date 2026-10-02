@@ -116,6 +116,17 @@ void ProjectAudioIO::SetPlaySpeed(double value)
 {
     if (auto oldValue = GetPlaySpeed(); value != oldValue) {
         mPlaySpeed.store(value, std::memory_order_relaxed);
-        Publish({});
+        Observer::Publisher<SpeedChangeMessage>::Publish({});
     }
+}
+
+void ProjectAudioIO::SetPreservePitch(bool preserve)
+{
+    if (GetPreservePitch() == preserve) {
+        return;
+    }
+    mPreservePitch.store(preserve, std::memory_order_relaxed);
+    Observer::Publisher<PreservePitchChangeMessage>::Publish({});
+    // Also notify speed subscribers so the playback policy refreshes stretch/resample mode.
+    Observer::Publisher<SpeedChangeMessage>::Publish({});
 }
