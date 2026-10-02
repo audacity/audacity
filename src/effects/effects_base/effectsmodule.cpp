@@ -10,7 +10,11 @@
 
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/diagnostics/idiagnosticspathsregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
+#include "internal/effectscommandsregister.h"
+#include "internal/effectscommandsstate.h"
 #include "internal/effectconfigsettings.h"
 #include "internal/effectidresolver.h"
 #include "internal/effectsprovider.h"
@@ -80,6 +84,13 @@ void EffectsModule::resolveImports()
 
     // must run before the audioplugins cache loads in onInit
     KnownAudioPluginsConfigurator().init();
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        auto ecr = std::make_shared<EffectsCommandsRegister>();
+        ecr->init();
+        cr->reg(ecr);
+    }
 }
 
 void EffectsModule::registerResources()
@@ -158,6 +169,14 @@ void EffectsContext::registerExports()
     ioc()->registerExport<IRealtimeEffectService>(mname, m_realtimeEffectService);
     ioc()->registerExport<IEffectsProviderInitializer>(mname, std::make_shared<EffectsProviderInitializer>(iocContext()));
     ioc()->registerExport<IMissingEffectChecker>(mname, std::make_shared<MissingEffectChecker>(iocContext()));
+}
+
+void EffectsContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<EffectsCommandsState>(iocContext()));
+    }
 }
 
 void EffectsContext::onInit(const muse::IApplication::RunMode&)
