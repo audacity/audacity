@@ -165,6 +165,8 @@ public:
     muse::Progress progress() const override;
 
 private:
+    void recordLock();
+
     struct MovedItems {
         ClipKeyList clips;
         LabelKeyList labels;

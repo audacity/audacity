@@ -47,11 +47,7 @@ bool TrackeditOperationController::trimTracksData(const std::vector<trackedit::T
 bool TrackeditOperationController::lockTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     if (tracksInteraction()->lockTracksData(tracksIds, begin, end)) {
-        projectHistory()->pushHistoryState(
-            //: History entry. %1 and %2 are positions in seconds
-            muse::qtrc("trackedit", "Locked selected tracks from %1 seconds to %2 seconds")
-            .arg(begin.to_double()).arg(end.to_double()).toStdString(),
-            muse::trc("trackedit", "Lock selection"));
+        recordLock();
         return true;
     }
     return false;
@@ -68,6 +64,16 @@ bool TrackeditOperationController::silenceTracksData(const std::vector<trackedit
         return true;
     }
     return false;
+}
+
+void TrackeditOperationController::recordLock()
+{
+    // Locking is an implementation detail of handing audio over (e.g. to an
+    // effect processed elsewhere), not something to show in the history: it
+    // goes into the current state. It splits the blocks at the edges though,
+    // which a save must write
+    projectHistory()->modifyState();
+    projectHistory()->markUnsaved();
 }
 
 bool TrackeditOperationController::unlockAllBlocks()
@@ -93,7 +99,7 @@ bool TrackeditOperationController::lockClips(const ClipKeyList& clipKeyList)
     }
 
     if (anyLocked) {
-        projectHistory()->pushHistoryState(muse::trc("trackedit", "Locked selected clips"), muse::trc("trackedit", "Lock selection"));
+        recordLock();
     }
     return anyLocked;
 }
