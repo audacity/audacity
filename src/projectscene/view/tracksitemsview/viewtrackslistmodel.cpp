@@ -302,10 +302,10 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
             return false;
         }
 
-        if (trackPlaybackControl()->solo(track.id)) {
-            return true;
-        } else if (trackPlaybackControl()->muted(track.id)) {
+        if (trackPlaybackControl()->muted(track.id)) {
             return false;
+        } else if (trackPlaybackControl()->solo(track.id)) {
+            return true;
         } else {
             return std::none_of(m_trackList.begin(), m_trackList.end(), [this](const au::trackedit::Track& t) {
                     return trackPlaybackControl()->solo(t.id);
