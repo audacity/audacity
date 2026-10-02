@@ -176,7 +176,8 @@ bool labelsPair(ITrackeditProjectPtr trackeditProjectPtr,
 
         return first.startTime == second.startTime
                && first.endTime == second.endTime
-               && first.title == second.title;
+               && first.title == second.title
+               && first.groupId == second.groupId;
     };
 
     // Brute force I'm afraid. Still much faster than redrawing:

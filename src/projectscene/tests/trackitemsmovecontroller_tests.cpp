@@ -298,6 +298,22 @@ TEST_F(TrackItemsMoveControllerTests, ClipsMoveOnlyOnceOnDrop)
     expectFinished();
 }
 
+TEST_F(TrackItemsMoveControllerTests, MouseDropRefocusesTheMovedItemWithoutHighlight)
+{
+    selectClip();
+    m_focus = trackedit::TrackFocus::item(m_clip.key);
+    m_controller->start(TrackItemKey(m_clip.key));
+    movePointer(20.0, 150.0);
+    m_controller->update();
+
+    const trackedit::ClipKeyList moved { { 2, 20 } };
+    EXPECT_CALL(*m_interaction, moveClips(m_selectedClips, trackedit::secs_t(10.0), 1))
+    .WillOnce(Return(muse::RetVal<trackedit::ClipKeyList>::make_ok(moved)));
+    EXPECT_CALL(*m_navigation, setFocus(trackedit::TrackFocus::item(moved.front()), false));
+    EXPECT_EQ(m_controller->finish().key, moved.front());
+    expectFinished();
+}
+
 TEST_F(TrackItemsMoveControllerTests, CancelRemovesOnlyTracksAddedForPreview)
 {
     selectClip();

@@ -59,6 +59,9 @@ void LabelContextMenuModel::load()
         makeMenu(muse::TranslatableString("label", "Cut and…"), cutAndItems, "menu-cut-and"),
         makeMenu(muse::TranslatableString("label", "Paste and…"), pasteAndItems, "menu-paste-and"),
         makeMenu(muse::TranslatableString("label", "Delete and…"), deleteAndItems, "menu-delete-and"),
+        makeSeparator(),
+        makeMenuItem("group-items"),
+        makeMenuItem("ungroup-items"),
     };
 
     setItems(items);

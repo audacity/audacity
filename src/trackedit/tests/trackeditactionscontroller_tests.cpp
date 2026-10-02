@@ -10,6 +10,10 @@
 #include "mocks/tracknavigationcontrollermock.h"
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/projecthistorymock.h"
+#include "mocks/trackeditprojectmock.h"
+#include "actions/tests/mocks/actionsdispatchermock.h"
+#include "context/tests/mocks/globalcontextmock.h"
+#include "project/tests/mocks/audacityprojectmock.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -34,6 +38,16 @@ public:
         m_controller->projectHistory.set(m_projectHistory);
         m_requests = std::make_shared<TracksViewRequestsService>(m_testCtx);
         m_controller->tracksViewRequestsService.set(m_requests);
+        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
+        m_controller->dispatcher.set(m_dispatcher);
+
+        m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
+        m_project = std::make_shared<NiceMock<project::AudacityProjectMock> >();
+        m_trackeditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
+        m_controller->globalContext.set(m_globalContext);
+        ON_CALL(*m_globalContext, currentProject()).WillByDefault(Return(m_project));
+        ON_CALL(*m_globalContext, currentTrackeditProject()).WillByDefault(Return(m_trackeditProject));
+        ON_CALL(*m_project, trackeditProject()).WillByDefault(Return(m_trackeditProject));
 
         ON_CALL(*m_trackNavigationController, focus())
         .WillByDefault(Return(TrackFocus::track(INVALID_TRACK)));
@@ -68,6 +82,16 @@ public:
         m_controller->moveFocusedItem(timeOffset, trackOffset);
     }
 
+    void copyMultiItems()
+    {
+        m_controller->multiClipCopy();
+    }
+
+    void cutMultiItems(bool moveClips)
+    {
+        m_controller->multiClipCut(muse::actions::ActionData::make_arg1<bool>(moveClips));
+    }
+
     std::shared_ptr<muse::modularity::Context> m_testCtx;
     std::shared_ptr<TrackeditActionsController> m_controller;
 
@@ -75,8 +99,82 @@ public:
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
+    std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
     std::shared_ptr<TracksViewRequestsService> m_requests;
+    std::shared_ptr<context::GlobalContextMock> m_globalContext;
+    std::shared_ptr<project::AudacityProjectMock> m_project;
+    std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
 };
+
+TEST_F(TrackeditActionsControllerTests, HistoryEventsRefreshTheGroupActions)
+{
+    //! [GIVEN] A controller listening to the history, whose events can restore group ids without touching the selection
+    muse::async::Channel<HistoryEvent> historyChanged;
+    ON_CALL(*m_projectHistory, historyChanged()).WillByDefault(Return(historyChanged));
+    m_controller->init();
+    std::vector<muse::actions::ActionCode> refreshed;
+    m_controller->actionEnabledChanged().onReceive(m_controller.get(), [&refreshed](const muse::actions::ActionCode& code) {
+        refreshed.push_back(code);
+    });
+
+    //! [WHEN] The history reports a restored state
+    historyChanged.send(HistoryEvent::RestoredState);
+
+    //! [THEN] Both group actions are re-evaluated
+    EXPECT_TRUE(muse::contains(refreshed, muse::actions::ActionCode("group-items")));
+    EXPECT_TRUE(muse::contains(refreshed, muse::actions::ActionCode("ungroup-items")));
+}
+
+TEST_F(TrackeditActionsControllerTests, UngroupIsAvailableForASingleGroupedItem)
+{
+    //! [GIVEN] One selected clip that still carries a group id, the rest of its group having been removed
+    const ClipKey clipKey { 1, 10 };
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList { clipKey }));
+    ON_CALL(*m_trackeditInteraction, itemGroupId(clipKey)).WillByDefault(Return(int64_t(7)));
+
+    //! [THEN] Ungroup can clear that id, while Group needs more than one item
+    EXPECT_TRUE(m_controller->canReceiveAction("ungroup-items"));
+    EXPECT_FALSE(m_controller->canReceiveAction("group-items"));
+
+    //! [WHEN] The clip is not grouped
+    ON_CALL(*m_trackeditInteraction, itemGroupId(clipKey)).WillByDefault(Return(int64_t(-1)));
+
+    //! [THEN] Neither action applies to it alone
+    EXPECT_FALSE(m_controller->canReceiveAction("ungroup-items"));
+    EXPECT_FALSE(m_controller->canReceiveAction("group-items"));
+}
+
+TEST_F(TrackeditActionsControllerTests, MultiClipCopyHandsClipsAndLabelsToOneCopy)
+{
+    //! [GIVEN] A clip and a label are selected
+    const ClipKey clipKey { 1, 10 };
+    const LabelKey labelKey { 2, 20 };
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList { clipKey }));
+    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList { labelKey }));
+
+    //! [EXPECT] Both go to the copy operation together
+    EXPECT_CALL(*m_trackeditInteraction, copyItems(ClipKeyList { clipKey }, LabelKeyList { labelKey })).Times(1);
+
+    //! [WHEN] The multi-item copy runs
+    copyMultiItems();
+}
+
+TEST_F(TrackeditActionsControllerTests, MultiClipCutHandsClipsAndLabelsToOneCut)
+{
+    //! [GIVEN] A clip and a label are selected
+    const ClipKey clipKey { 1, 10 };
+    const LabelKey labelKey { 2, 20 };
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList { clipKey }));
+    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList { labelKey }));
+
+    //! [EXPECT] Both go to the cut operation together, which owns the copy and the removal
+    EXPECT_CALL(*m_trackeditInteraction, cutItems(ClipKeyList { clipKey }, LabelKeyList { labelKey }, false)).Times(1);
+    EXPECT_CALL(*m_trackeditInteraction, removeClips(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_trackeditInteraction, removeLabels(::testing::_, ::testing::_)).Times(0);
+
+    //! [WHEN] The multi-item cut runs
+    cutMultiItems(false);
+}
 
 TEST_F(TrackeditActionsControllerTests, KeyboardMoveRequestsPreviewInsteadOfEditingItems)
 {

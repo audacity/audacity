@@ -18,6 +18,7 @@ struct Label {
     double endTime = 0.0;
     double lowFrequency = 0.0;
     double highFrequency = 0.0;
+    int64_t groupId = -1;
 
     inline bool isValid() const { return key.isValid(); }
 };

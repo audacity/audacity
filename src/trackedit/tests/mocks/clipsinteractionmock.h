@@ -57,8 +57,6 @@ public:
 
     MOCK_METHOD(int64_t, clipGroupId, (const trackedit::ClipKey&), (const, override));
     MOCK_METHOD(void, setClipGroupId, (const trackedit::ClipKey&, int64_t), (override));
-    MOCK_METHOD(void, groupClips, (const trackedit::ClipKeyList&), (override));
-    MOCK_METHOD(void, ungroupClips, (const trackedit::ClipKeyList&), (override));
     MOCK_METHOD(ClipKeyList, clipsInGroup, (int64_t), (const, override));
 
     MOCK_METHOD(muse::Progress, progress, (), (const, override));

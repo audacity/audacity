@@ -102,6 +102,13 @@ void ViewTracksListModel::load()
         emit dataChanged(index(0), index(lastIndex), { IsMultiSelectionActiveRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList& labelKeys) {
+        Q_UNUSED(labelKeys);
+
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsMultiSelectionActiveRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     selectionController()->selectedTracksChanged().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
         Q_UNUSED(trackIds);
 
@@ -295,7 +302,7 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
         return trackNavigationController()->focusedTrack() == track.id;
     }
     case IsMultiSelectionActiveRole: {
-        return selectionController()->selectedClips().size() > 1;
+        return selectionController()->selectedClips().size() + selectionController()->selectedLabels().size() > 1;
     }
     case IsTrackAudibleRole: {
         if (track.type == au::trackedit::TrackType::Label) {
