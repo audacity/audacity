@@ -15,6 +15,8 @@
 
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <dispatch/dispatch.h>
+#include <algorithm>
+#include <cmath>
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-exceptions/AudacityException.h"
 #include <wx/log.h>
@@ -69,6 +71,7 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect& effect,
     mAudioIns = audioIns;
     mAudioOuts = audioOuts;
     CreateAudioUnit();
+    SetHostCallbacks();
 }
 
 AudioUnitInstance::~AudioUnitInstance()
@@ -172,7 +175,13 @@ bool AudioUnitInstance::Initialize()
 }
 
 bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
-                                          double sampleRate, ChannelNames chanMap)
+                                          double sampleRate, ChannelNames)
+{
+    return InitializeProcessing(settings, sampleRate, false);
+}
+
+bool AudioUnitInstance::InitializeProcessing(EffectSettings& settings,
+                                             double sampleRate, bool realtime)
 {
     mLastError.clear();
 
@@ -213,6 +222,12 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
             return false;
         }
 
+        // Reinstall the transport callbacks before the unit is initialized:
+        // uninitializing may have dropped them along with the rest of its
+        // state, and a plug-in that reads them once is likely to read them
+        // here
+        SetHostCallbacks();
+
         if (!Initialize()) {
             return false;
         }
@@ -245,7 +260,16 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
         }
     }
 
-    if (AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0)) {
+    //! NOTE Resetting discards the plug-in's state, which is right when it is
+    //! starting from nothing but not when a realtime instance that the user
+    //! keeps open in its own editor is merely beginning another playback: a
+    //! plug-in that has been armed to capture audio loses that along with the
+    //! stale tail this was meant to flush. So flush only for one-shot
+    //! processing, or when the unit was just (re)initialized and so has
+    //! nothing to lose anyway. Toggling the effect off and on still flushes,
+    //! by way of BypassEffect.
+    if ((!realtime || needsReinitialize)
+        && AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0)) {
         return false;
     }
 
@@ -253,13 +277,35 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings& settings,
         // Ignore bad return value.  Some (like Xfer OTT) give a bad status.
     }
 
+    // Size the buffers for the final block now, so that finalizing - which
+    // must not throw - allocates nothing
+    try {
+        mStopBlock.assign((mAudioIns + mAudioOuts) * mBlockSize, 0.0f);
+    }
+    catch (...) {
+        mStopBlock.clear();
+    }
+
+    // Tell the plug-in that a transfer is beginning. Until this, and the
+    // callbacks installed above, an AudioUnit in Audacity could not tell
+    // playback from silence. Report the transition unconditionally rather
+    // than through SetTransportPlaying, so that an instance left marked as
+    // playing by an abandoned scope still sees a start here.
+    mTransportSampleTime.store(0.0, std::memory_order_release);
+    mTransportPlaying.store(true, std::memory_order_release);
+    mTransportChanged.store(true, std::memory_order_release);
+
     return true;
 }
 
 bool AudioUnitInstance::ProcessFinalize() noexcept
 {
+    // Before the buffers go away, let the plug-in see the end of the transfer
+    NotifyTransportStopped();
     mOutputList.reset();
     mInputList.reset();
+    // Release the buffer without risking an allocation in a noexcept function
+    std::vector<float>().swap(mStopBlock);
     return true;
 }
 
@@ -299,6 +345,11 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
                            outBlock[i] };
     }
 
+    // Publish where this block sits in the timeline before rendering it: the
+    // plug-in reads this from inside AudioUnitRender, through the transport
+    // callbacks
+    mTransportSampleTime.store(mTimeStamp.mSampleTime, std::memory_order_release);
+
     AudioUnitRenderActionFlags flags = 0;
     OSStatus result;
 
@@ -308,6 +359,11 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
                              0,
                              blockLen,
                              mOutputList.get());
+
+    // A transition is reported for the whole of the block it took effect in,
+    // however many times the plug-in asks during that block, and no longer
+    mTransportChanged.store(false, std::memory_order_release);
+
     if (result != noErr) {
         wxLogError("Render failed: %d %4.4s\n",
                    static_cast<int>(result), reinterpret_cast<char*>(&result));
@@ -328,7 +384,7 @@ bool AudioUnitInstance::RealtimeInitialize(
     EffectSettings& settings, double sampleRate, size_t)
 {
     mRealtimeErrorReported.store(false);
-    return ProcessInitialize(settings, sampleRate, nullptr);
+    return InitializeProcessing(settings, sampleRate, true);
 }
 
 bool AudioUnitInstance::RealtimeAddProcessor(
@@ -346,7 +402,7 @@ bool AudioUnitInstance::RealtimeAddProcessor(
                                                           mComponent, mParameters, mIdentifier,
                                                           mAudioIns, mAudioOuts, mUseLatency);
     uProcessor->SetBlockSize(mBlockSize);
-    if (!uProcessor->ProcessInitialize(settings, sampleRate, nullptr)) {
+    if (!uProcessor->InitializeProcessing(settings, sampleRate, true)) {
         return false;
     }
     mSlaves.push_back(move(uProcessor));
@@ -520,6 +576,208 @@ OSStatus AudioUnitInstance::RenderCallback(void* inRefCon,
 {
     return static_cast<AudioUnitInstance*>(inRefCon)->Render(inActionFlags,
                                                              inTimeStamp, inBusNumber, inNumFrames, ioData);
+}
+
+bool AudioUnitInstance::SetHostCallbacks()
+{
+    // Without this property a plug-in has no way to learn the transport state.
+    // AudioUnitRender says nothing about whether the host is playing or where
+    // the block belongs, and JUCE implements AudioPlayHead for AudioUnits
+    // entirely on top of these callbacks, so a plug-in that waits for playback
+    // to start before it does anything waits forever.
+    if (!mUnit) {
+        return false;
+    }
+    if (SetProperty(kAudioUnitProperty_HostCallbacks,
+                    AudioUnitUtils::HostCallbacks {
+        this,
+        GetBeatAndTempoCallback,
+        GetMusicalTimeLocationCallback,
+        GetTransportStateCallback,
+        GetTransportState2Callback
+    })) {
+        // Not fatal: a plug-in is free to refuse callbacks it will never use
+        wxLogMessage("%ls did not accept the host transport callbacks\n",
+                     mIdentifier.wx_str());
+        return false;
+    }
+    return true;
+}
+
+void AudioUnitInstance::SetTransportPlaying(bool playing)
+{
+    if (mTransportPlaying.exchange(playing, std::memory_order_acq_rel)
+        != playing) {
+        mTransportChanged.store(true, std::memory_order_release);
+    }
+}
+
+void AudioUnitInstance::NotifyTransportStopped() noexcept
+{
+    if (!mTransportPlaying.load(std::memory_order_acquire)) {
+        return;
+    }
+    SetTransportPlaying(false);
+
+    // Nothing left to render through, so the flag alone will have to do
+    if (!mUnit || !mInitialization || !mInputList || !mOutputList
+        || mStopBlock.size() < (mAudioIns + mAudioOuts) * mBlockSize) {
+        mTransportChanged.store(false, std::memory_order_release);
+        return;
+    }
+
+    // One more block, of silence, with the transport now reported as stopped.
+    // A plug-in that has been accumulating what it is fed sees the end of the
+    // transfer here and can start doing whatever it does with the audio.
+    auto* const data = mStopBlock.data();
+    const auto blockBytes = static_cast<UInt32>(sizeof(float) * mBlockSize);
+    std::fill_n(data, mAudioIns * mBlockSize, 0.0f);
+    for (size_t i = 0; i < mAudioIns; ++i) {
+        mInputList[i] = { 1, blockBytes, data + i * mBlockSize };
+    }
+    for (size_t i = 0; i < mAudioOuts; ++i) {
+        mOutputList[i]
+            = { 1, blockBytes, data + (mAudioIns + i) * mBlockSize };
+    }
+
+    mTransportSampleTime.store(mTimeStamp.mSampleTime,
+                               std::memory_order_release);
+    AudioUnitRenderActionFlags flags = 0;
+    const auto result = AudioUnitRender(mUnit.get(), &flags, &mTimeStamp, 0,
+                                        static_cast<UInt32>(mBlockSize),
+                                        mOutputList.get());
+    if (result != noErr) {
+        // The output is discarded anyway; a plug-in that has already gone away
+        // just means there is nobody left to tell
+        wxLogMessage("Final stopped block failed: %d %4.4s\n",
+                     static_cast<int>(result), reinterpret_cast<const char*>(&result));
+    } else {
+        mTimeStamp.mSampleTime += mBlockSize;
+    }
+    mTransportChanged.store(false, std::memory_order_release);
+}
+
+OSStatus AudioUnitInstance::GetTransportState(
+    Boolean* outIsPlaying, Boolean* outIsRecording,
+    Boolean* outTransportStateChanged, Float64* outCurrentSampleInTimeLine,
+    Boolean* outIsCycling, Float64* outCycleStartBeat,
+    Float64* outCycleEndBeat) const
+{
+    if (outIsPlaying) {
+        *outIsPlaying = mTransportPlaying.load(std::memory_order_acquire);
+    }
+    if (outIsRecording) {
+        // Audacity does not put the effect stack in the recording path
+        *outIsRecording = false;
+    }
+    if (outTransportStateChanged) {
+        *outTransportStateChanged
+            = mTransportChanged.load(std::memory_order_acquire);
+    }
+    if (outCurrentSampleInTimeLine) {
+        *outCurrentSampleInTimeLine
+            = mTransportSampleTime.load(std::memory_order_acquire);
+    }
+    // Audacity's loop region is not visible from here
+    if (outIsCycling) {
+        *outIsCycling = false;
+    }
+    if (outCycleStartBeat) {
+        *outCycleStartBeat = 0.0;
+    }
+    if (outCycleEndBeat) {
+        *outCycleEndBeat = 0.0;
+    }
+    return noErr;
+}
+
+// static
+OSStatus AudioUnitInstance::GetTransportStateCallback(void* inHostUserData,
+                                                      Boolean* outIsPlaying, Boolean* outTransportStateChanged,
+                                                      Float64* outCurrentSampleInTimeLine, Boolean* outIsCycling,
+                                                      Float64* outCycleStartBeat, Float64* outCycleEndBeat)
+{
+    if (!inHostUserData) {
+        return kAudioUnitErr_InvalidParameter;
+    }
+    return static_cast<const AudioUnitInstance*>(inHostUserData)
+           ->GetTransportState(outIsPlaying, nullptr, outTransportStateChanged,
+                               outCurrentSampleInTimeLine, outIsCycling,
+                               outCycleStartBeat, outCycleEndBeat);
+}
+
+// static
+OSStatus AudioUnitInstance::GetTransportState2Callback(void* inHostUserData,
+                                                       Boolean* outIsPlaying, Boolean* outIsRecording,
+                                                       Boolean* outTransportStateChanged, Float64* outCurrentSampleInTimeLine,
+                                                       Boolean* outIsCycling, Float64* outCycleStartBeat,
+                                                       Float64* outCycleEndBeat)
+{
+    if (!inHostUserData) {
+        return kAudioUnitErr_InvalidParameter;
+    }
+    return static_cast<const AudioUnitInstance*>(inHostUserData)
+           ->GetTransportState(outIsPlaying, outIsRecording,
+                               outTransportStateChanged, outCurrentSampleInTimeLine,
+                               outIsCycling, outCycleStartBeat, outCycleEndBeat);
+}
+
+// static
+OSStatus AudioUnitInstance::GetBeatAndTempoCallback(void* inHostUserData,
+                                                    Float64* outCurrentBeat, Float64* outCurrentTempo)
+{
+    if (!inHostUserData) {
+        return kAudioUnitErr_InvalidParameter;
+    }
+    const auto& instance
+        = *static_cast<const AudioUnitInstance*>(inHostUserData);
+    if (outCurrentTempo) {
+        *outCurrentTempo = sDefaultTempo;
+    }
+    if (outCurrentBeat) {
+        const auto rate = instance.mInitializedSampleRate;
+        const auto samples
+            = instance.mTransportSampleTime.load(std::memory_order_acquire);
+        *outCurrentBeat
+            = (rate > 0) ? samples / rate * (sDefaultTempo / 60.0) : 0.0;
+    }
+    return noErr;
+}
+
+// static
+OSStatus AudioUnitInstance::GetMusicalTimeLocationCallback(
+    void* inHostUserData, UInt32* outDeltaSampleOffsetToNextBeat,
+    Float32* outTimeSigNumerator, UInt32* outTimeSigDenominator,
+    Float64* outCurrentMeasureDownBeat)
+{
+    if (!inHostUserData) {
+        return kAudioUnitErr_InvalidParameter;
+    }
+    const auto& instance
+        = *static_cast<const AudioUnitInstance*>(inHostUserData);
+    const auto rate = instance.mInitializedSampleRate;
+    const double samplesPerBeat
+        = (rate > 0) ? rate * 60.0 / sDefaultTempo : 0.0;
+    const double beat = (samplesPerBeat > 0)
+                        ? instance.mTransportSampleTime.load(std::memory_order_acquire)
+                        / samplesPerBeat
+                        : 0.0;
+    if (outDeltaSampleOffsetToNextBeat) {
+        *outDeltaSampleOffsetToNextBeat = (samplesPerBeat > 0)
+                                          ? static_cast<UInt32>((std::ceil(beat) - beat) * samplesPerBeat)
+                                          : 0;
+    }
+    if (outTimeSigNumerator) {
+        *outTimeSigNumerator = static_cast<Float32>(sDefaultBeatsPerBar);
+    }
+    if (outTimeSigDenominator) {
+        *outTimeSigDenominator = 4;
+    }
+    if (outCurrentMeasureDownBeat) {
+        *outCurrentMeasureDownBeat
+            = std::floor(beat / sDefaultBeatsPerBar) * sDefaultBeatsPerBar;
+    }
+    return noErr;
 }
 
 void AudioUnitInstance::EventListener(const AudioUnitEvent* inEvent,
