@@ -4,18 +4,18 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "actions/tests/mocks/actionsdispatchermock.h"
+#include "framework/actions/tests/mocks/actionsdispatchermock.h"
+#include "framework/rcommand/tests/mocks/commanddispatchermock.h"
+#include "framework/interactive/tests/mocks/interactivemock.h"
 #include "audio/tests/mocks/audiodrivercontrollermock.h"
 #include "au3audio/tests/mocks/audioenginemock.h"
 #include "context/tests/mocks/globalcontextmock.h"
-#include "interactive/tests/mocks/interactivemock.h"
 #include "mocks/playbackmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "record/recordcommands.h"
 #include "record/tests/mocks/recordcontrollermock.h"
 #include "record/tests/mocks/recordmock.h"
-#include "trackedit/tests/mocks/commanddispatchermock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
