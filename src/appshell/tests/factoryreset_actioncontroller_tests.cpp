@@ -48,7 +48,7 @@ public:
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
         m_controller->commandDispatcher.set(m_commandDispatcher);
 
-        ON_CALL(*m_commandDispatcher, onRequest(_, _, _))
+        ON_CALL(*m_commandDispatcher, onRequest(_, _, ::testing::Matcher<const CommandCB&>(_)))
         .WillByDefault([this](muse::rcommand::Commandable*, const muse::rcommand::Command& command,
                               const CommandCB& cb) {
             m_registeredCommands[command] = cb;
