@@ -162,22 +162,7 @@ void DropController::prepareConditionalTracks(int currentTrackId, int draggedFil
     const int toCreate = std::min(missingTracks, maxNewAllowed);
 
     for (int i = 0; i < toCreate; ++i) {
-        const auto trackId = tracksInteraction()->addWaveTrack(1);
-        const int targetTrackIndex = availableAudioTracks + i;
-
-        int trackIndex = 0;
-        for (const auto& fileInfo : m_lastDraggedFilesInfo) {
-            if (targetTrackIndex < trackIndex + fileInfo.trackCount) {
-                const auto fileName = muse::io::filename(fileInfo.path, false);
-
-                tracksInteraction()->changeTrackTitle(
-                    trackId,
-                    muse::String::fromUtf8(fileName.toStdString())
-                );
-                break;
-            }
-            trackIndex += fileInfo.trackCount;
-        }
+        tracksInteraction()->addWaveTrack(1);
     }
 }
 
@@ -328,10 +313,21 @@ void DropController::handleDroppedFiles(const std::vector<trackedit::TrackId>& t
     // while `trackIds` contains all, we may need to skip some of them
     std::vector<trackedit::TrackId> adjustedDstTrackIds;
     auto dstTrackIter = trackIds.begin();
+    size_t trackIndex = 0;
     for (const auto& info : m_lastDraggedFilesInfo) {
         localPaths.push_back(info.path);
 
         adjustedDstTrackIds.push_back(*dstTrackIter);
+
+        const auto fileName = muse::io::filename(info.path, false);
+        const auto title = muse::String::fromUtf8(fileName.toStdString());
+        for (int i = 0; i < info.trackCount; ++i) {
+            if (trackIndex < trackIds.size()) {
+                tracksInteraction()->changeTrackTitle(trackIds[trackIndex], title);
+            }
+            trackIndex++;
+        }
+
         std::advance(dstTrackIter, info.trackCount);
     }
 
