@@ -55,8 +55,6 @@ static const muse::Uri GET_EFFECTS_URI("audacity://projectscene/geteffects");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
-static const std::string ONLY_IF_PLAYHEAD_NOT_VISIBLE_PARAM("only_if_playhead_not_visible");
-
 namespace {
 CommandQuery queryParamsConv(const Command& command, const ActionData& args)
 {
@@ -78,8 +76,8 @@ CommandQuery clipKeyConv(const Command& command, const ActionData& args)
     }
 
     const au::trackedit::ClipKey clipKey = args.arg<au::trackedit::ClipKey>(0);
-    query.addParam("trackId", Val(static_cast<int64_t>(clipKey.trackId)));
-    query.addParam("clipId", Val(static_cast<int64_t>(clipKey.itemId)));
+    query.addParam(PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM, Val(static_cast<int64_t>(clipKey.trackId)));
+    query.addParam(PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM, Val(static_cast<int64_t>(clipKey.itemId)));
     return query;
 }
 
@@ -90,7 +88,7 @@ CommandQuery centerViewOnPlayheadConv(const Command& command, const ActionData& 
         return query;
     }
 
-    query.addParam(ONLY_IF_PLAYHEAD_NOT_VISIBLE_PARAM, Val(args.arg<bool>(0)));
+    query.addParam(PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_ONLY_IF_NOT_VISIBLE_PARAM, Val(args.arg<bool>(0)));
     return query;
 }
 }
@@ -312,7 +310,7 @@ void ProjectSceneActionsController::registerViewCommand(const Command& command, 
 
 muse::Ret ProjectSceneActionsController::centerViewOnPlayhead(const Params& params)
 {
-    if (!params.contains(ONLY_IF_PLAYHEAD_NOT_VISIBLE_PARAM)) {
+    if (!params.contains(PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_ONLY_IF_NOT_VISIBLE_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
@@ -320,7 +318,7 @@ muse::Ret ProjectSceneActionsController::centerViewOnPlayhead(const Params& para
         return make_ret(Ret::Code::NotSupported);
     }
 
-    m_timelineViewController->centerViewOnPlayhead(params.at(ONLY_IF_PLAYHEAD_NOT_VISIBLE_PARAM).toBool());
+    m_timelineViewController->centerViewOnPlayhead(params.at(PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_ONLY_IF_NOT_VISIBLE_PARAM).toBool());
     return make_ok();
 }
 
@@ -382,11 +380,13 @@ muse::Ret ProjectSceneActionsController::openClipPitchAndSpeedEdit(const Params&
         return make_ret(Ret::Code::Busy);
     }
 
-    IF_ASSERT_FAILED(params.contains("trackId") && params.contains("clipId")) {
+    IF_ASSERT_FAILED(params.contains(PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM)
+                     && params.contains(PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    const trackedit::ClipKey clipKey(params.at("trackId").toInt64(), params.at("clipId").toInt64());
+    const trackedit::ClipKey clipKey(params.at(PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM).toInt64(),
+                                     params.at(PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM).toInt64());
     if (!clipKey.isValid()) {
         return make_ret(Ret::Code::BadArgs);
     }
@@ -438,10 +438,10 @@ muse::Ret ProjectSceneActionsController::toggleAutomation()
 
 muse::Ret ProjectSceneActionsController::toggleTrackHalfWave(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("trackId")) {
+    IF_ASSERT_FAILED(params.contains(PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
-    const int trackId = params.at("trackId").toInt();
+    const int trackId = params.at(PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM).toInt();
 
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {

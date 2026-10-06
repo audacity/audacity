@@ -18,9 +18,12 @@ inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_PINNED_PLAY_HEAD
 inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_PLAYBACK_ON_RULER_CLICK_COMMAND(
     "command://projectscene/toggle-playback-on-ruler-click");
 inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND("command://projectscene/toggle-track-half-wave");
+inline static const std::string PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM("trackId");
 inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND(
     "command://projectscene/toggle-clip-gain-automation");
 inline static const muse::rcommand::Command PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND("command://projectscene/clip-pitch-and-speed");
+inline static const std::string PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM("trackId");
+inline static const std::string PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM("clipId");
 inline static const muse::rcommand::Command PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND("command://projectscene/open-label-editor");
 
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_IN_COMMAND("command://projectscene/zoom-in");
@@ -30,6 +33,7 @@ inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_SELECTION_COMMA
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND("command://projectscene/zoom-to-fit-project");
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TOGGLE_COMMAND("command://projectscene/zoom-toggle");
 inline static const muse::rcommand::Command PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND("command://projectscene/center-view-on-playhead");
+inline static const std::string PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_ONLY_IF_NOT_VISIBLE_PARAM("only_if_playhead_not_visible");
 inline static const muse::rcommand::Command PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND("command://projectscene/timeline-context-menu");
 
 inline static const muse::rcommand::Command PROJECTSCENE_PLAY_POSITION_DECREASE_COMMAND("command://projectscene/play-position-decrease");
