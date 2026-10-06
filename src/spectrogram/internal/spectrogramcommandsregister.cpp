@@ -18,12 +18,12 @@ using muse::rcommand::InputSchema;
 const std::vector<CommandInfo> s_commandInfos = {
     CommandInfo{
         TRACK_SPECTROGRAM_SETTINGS_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        muse::TranslatableString("action", "Spectrogram settings…"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        muse::TranslatableString("action_description", "Spectrogram settings…"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        muse::TranslatableString("command", "Spectrogram settings…"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        muse::TranslatableString("command_description", "Spectrogram settings…"),
         InputSchema({
-                    { "trackId", Arg(DataType::Integer, u"Id of the track") },
+                    { TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM, Arg(DataType::Integer, u"Id of the track") },
                 }),
         Decoration()
     },
