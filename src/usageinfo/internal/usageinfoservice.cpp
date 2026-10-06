@@ -115,7 +115,7 @@ void UsageInfoService::sendOptOutRequest()
     auto outgoingData = std::make_shared<QBuffer>();
     outgoingData->setData(QByteArray::fromStdString("{\"uuid\":\"" + uuid + "\"}"));
 
-    network::RequestHeaders headers;
+    network::RequestHeaders headers = cloudConfiguration()->headers();
     headers.knownHeaders[QNetworkRequest::ContentTypeHeader] = "application/json";
 
     RetVal<Progress> progress = m_networkManager->post(UUID_OPT_OUT_URL, outgoingData, nullptr, headers);

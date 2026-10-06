@@ -53,8 +53,6 @@ void Au3CloudService::init()
             service.ClearUserData();
         }
     });
-    oauthService.ValidateAuth(nullptr, AudiocomTrace::ignore, true);
-
     auto& userService = audacity::cloud::audiocom::GetUserService();
     usageInfo()->setUserId(userService.GetUserId().ToStdString());
 
@@ -88,6 +86,11 @@ void Au3CloudService::init()
         usageInfo()->setUserId(m_accountInfo.id);
         m_accountInfoChanged.notify();
     });
+}
+
+void Au3CloudService::onAllInited()
+{
+    audacity::cloud::audiocom::GetOAuthService().ValidateAuth(nullptr, AudiocomTrace::ignore, true);
 }
 
 bool Au3CloudService::initReplyHandlerIfNecessary()
