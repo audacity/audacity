@@ -29,6 +29,11 @@ Item {
     // outer ticks correspond to the data range bounds (e.g. EQ frequency axis).
     property bool alignEdgeLabels: false
 
+    // When false, the plotting background fills the whole item.
+    property bool showTicks: true
+
+    property alias radius: background.radius
+
     // Read-only geometry of the plotting background, in root's coordinate
     // space. Exposed so callers can align external items (e.g. toolbar
     // controls) to the plot edges.
@@ -40,11 +45,13 @@ Item {
     QtObject {
         id: prv
 
-        readonly property int tickLength: 4
-        readonly property int labelHeight: fontMetrics.boundingRect("0").height
-        readonly property int labelMargin: 4
+        readonly property int tickLength: root.showTicks ? 4 : 0
+        readonly property int labelHeight: root.showTicks ? fontMetrics.boundingRect("0").height : 0
+        readonly property int labelMargin: root.showTicks ? 4 : 0
 
         function maxLabelWidth(ticks) {
+            if (!root.showTicks)
+                return 0
             var w = 0
             for (var i = 0; i < ticks.length; ++i) {
                 var bw = fontMetrics.boundingRect(ticks[i].label).width
@@ -80,10 +87,13 @@ Item {
 
             model: root.xTicks
             delegate: Item {
+                z: modelData.emphasized ? 1 : 0
                 x: background.width * modelData.position
                 y: root.xTickPosition === GridPlot.Top ? -prv.tickLength : 0
 
                 StyledTextLabel {
+                    visible: root.showTicks
+
                     readonly property bool isFirst: root.alignEdgeLabels && index === 0
                     readonly property bool isLast: root.alignEdgeLabels && index === root.xTicks.length - 1
 
@@ -108,7 +118,7 @@ Item {
 
                     width: 1
                     height: background.height + prv.tickLength
-                    color: ui.theme.extra["dynamics_grid_color"]
+                    color: ui.theme.extra[modelData.emphasized ? "dynamics_emphasis_grid_color" : "dynamics_grid_color"]
                 }
             }
         }
@@ -117,10 +127,13 @@ Item {
             id: horizontalLines
             model: root.yTicks
             delegate: Item {
+                z: modelData.emphasized ? 1 : 0
                 x: root.yTickPosition === GridPlot.Right ? 0 : -prv.tickLength
                 y: background.height * (1 - modelData.position)
 
                 StyledTextLabel {
+                    visible: root.showTicks
+
                     readonly property bool isBottom: root.alignEdgeLabels && index === 0
                     readonly property bool isTop: root.alignEdgeLabels && index === root.yTicks.length - 1
 
@@ -141,20 +154,23 @@ Item {
 
                     width: background.width + prv.tickLength
                     height: 1
-                    color: ui.theme.extra["dynamics_grid_color"]
+                    color: ui.theme.extra[modelData.emphasized ? "dynamics_emphasis_grid_color" : "dynamics_grid_color"]
                 }
             }
         }
 
         Rectangle {
             anchors.fill: parent
+            z: 2 // above all grid lines
             color: background.color
+            radius: background.radius
             visible: !root.showGrid
         }
 
         Item {
             id: contentSlot
             anchors.fill: parent
+            z: 2
         }
     }
 }
