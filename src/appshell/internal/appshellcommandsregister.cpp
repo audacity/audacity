@@ -17,10 +17,10 @@ namespace {
 const std::vector<CommandInfo> s_commandInfos = {
     CommandInfo{
         APP_QUIT_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Exit"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Exit"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Exit"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Exit"),
         InputSchema({
                 { "installer_path", Arg(DataType::String, u"Path of an update package to apply after all windows are closed") },
             }),
@@ -28,208 +28,208 @@ const std::vector<CommandInfo> s_commandInfos = {
     },
     CommandInfo{
         APP_RESTART_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Restart"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Restart"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Restart"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Restart"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_TOGGLE_FULLSCREEN_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Full screen"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Full screen"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Full screen"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Full screen"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes)
     },
     CommandInfo{
         APP_ABOUT_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&About Audacity…"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "About Audacity"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&About Audacity…"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "About Audacity"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_ABOUT_QT_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "About &Qt…"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "About Qt"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "About &Qt…"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "About Qt"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_ONLINE_HANDBOOK_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Online &handbook"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Open online handbook"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Online &handbook"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open online handbook"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_ASK_HELP_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "As&k for help"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Ask for help"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "As&k for help"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Ask for help"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_PREFERENCES_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Preferences"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Preferences…"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Preferences"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Preferences…"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_REVERT_FACTORY_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Revert to &factory settings"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Revert to factory settings"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Revert to &factory settings"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Revert to factory settings"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_AUDIO_SETTINGS_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Audio settings"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Open audio setup dialog"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Audio settings"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open audio setup dialog"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_SHORTCUTS_PREFERENCES_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Shortcuts"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Open shortcuts preferences"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Shortcuts"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open shortcuts preferences"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_EDITING_PREFERENCES_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Editing"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Open editing preferences"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Editing"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open editing preferences"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_SPECTROGRAM_PREFERENCES_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Spectrogram"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Open spectrogram preferences"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Spectrogram"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open spectrogram preferences"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_COPY_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Copy"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Copy"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Copy"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Copy"),
         InputSchema(),
         Decoration(IconCode::Code::COPY)
     },
     CommandInfo{
         APP_CUT_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Cut"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Cut"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Cut"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Cut"),
         InputSchema(),
         Decoration(IconCode::Code::CUT)
     },
     CommandInfo{
         APP_PASTE_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Paste"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Paste"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Paste"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Paste"),
         InputSchema(),
         Decoration(IconCode::Code::PASTE)
     },
     CommandInfo{
         APP_UNDO_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Undo"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Undo"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Undo"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Undo"),
         InputSchema(),
         Decoration(IconCode::Code::UNDO)
     },
     CommandInfo{
         APP_REDO_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Redo"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Redo"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Redo"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Redo"),
         InputSchema(),
         Decoration(IconCode::Code::REDO)
     },
     CommandInfo{
         APP_DELETE_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "De&lete"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Delete"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "De&lete"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Delete"),
         InputSchema(),
         Decoration(IconCode::Code::DELETE_TANK)
     },
     CommandInfo{
         APP_CANCEL_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Cancel"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Cancel"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Cancel"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Cancel"),
         InputSchema(),
         Decoration(IconCode::Code::DELETE_TANK)
     },
     CommandInfo{
         APP_TRIGGER_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Trigger"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Trigger"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Trigger"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Trigger"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_ENTER_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Enter"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Trigger the focused control or select the focused track item"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Enter"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Trigger the focused control or select the focused track item"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_SHIFT_ENTER_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Shift+&Enter"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Trigger the focused control or make a range selection of track items"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Shift+&Enter"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Trigger the focused control or make a range selection of track items"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         APP_CONTEXT_MENU_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Open item context menu"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Open the context menu of the focused item"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Open item context menu"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open the context menu of the focused item"),
         InputSchema(),
         Decoration()
     },
