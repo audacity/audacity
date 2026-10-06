@@ -14,8 +14,12 @@
 
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-effects/StatefulEffect.h"
+#include "au3-track/Track.h"
 
 #include <cfloat>
+#include <optional>
+#include <string>
+#include <vector>
 
 class WaveChannel;
 class WaveTrack;
@@ -50,6 +54,18 @@ public:
     bool Init() override;
     bool Process(::EffectInstance& instance, EffectSettings& settings) override;
 
+    // AutoDuckEffect implementation
+
+    struct ControlTrackCandidate {
+        ::TrackId id;
+        std::string name;
+    };
+
+    //! Wave tracks that are not selected, in project order. Updated by Init().
+    const std::vector<ControlTrackCandidate>& ControlTrackCandidates() const;
+    std::optional<::TrackId> ControlTrackId() const;
+    void SetControlTrackId(::TrackId id);
+
     double mDuckAmountDb = DuckAmountDb.def;
     double mInnerFadeDownLen = InnerFadeDownLen.def;
     double mInnerFadeUpLen = InnerFadeUpLen.def;
@@ -59,11 +75,11 @@ public:
     double mMaximumPause = MaximumPause.def;
 
 private:
-    // AutoDuckEffect implementation
-
     bool ApplyDuckFade(int trackNum, WaveChannel& track, double t0, double t1);
+    const WaveTrack* FindControlTrack() const;
 
-    const WaveTrack* mControlTrack {};
+    std::vector<ControlTrackCandidate> mControlTrackCandidates;
+    std::optional<::TrackId> mControlTrackId;
 
 protected:
     const EffectParameterMethods& Parameters() const override;
