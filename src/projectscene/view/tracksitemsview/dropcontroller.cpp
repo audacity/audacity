@@ -307,31 +307,30 @@ void DropController::removeDragAddedTracks(int currentTrackId, int draggedFilesC
 
 void DropController::handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime)
 {
-    std::vector<muse::io::path_t> localPaths;
-
     // NOTE: importer only needs the first trackId (out of many) for multichannel files
     // while `trackIds` contains all, we may need to skip some of them
-    std::vector<trackedit::TrackId> adjustedDstTrackIds;
     auto dstTrackIter = trackIds.begin();
     size_t trackIndex = 0;
+
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+
     for (const auto& info : m_lastDraggedFilesInfo) {
-        localPaths.push_back(info.path);
+        const auto result = prj->importIntoTrack(info.path, *dstTrackIter, startTime);
 
-        adjustedDstTrackIds.push_back(*dstTrackIter);
+        if (result) {
+            const auto fileName = muse::io::filename(info.path, false);
+            const auto title = muse::String::fromUtf8(fileName.toStdString());
 
-        const auto fileName = muse::io::filename(info.path, false);
-        const auto title = muse::String::fromUtf8(fileName.toStdString());
-        for (int i = 0; i < info.trackCount; ++i) {
-            if (trackIndex < trackIds.size()) {
-                tracksInteraction()->changeTrackTitle(trackIds[trackIndex], title);
+            for (int i = 0; i < info.trackCount; ++i) {
+                if (trackIndex < trackIds.size()) {
+                    tracksInteraction()->changeTrackTitle(trackIds[trackIndex], title);
+                }
+                ++trackIndex;
             }
-            trackIndex++;
+        } else {
+            trackIndex += info.trackCount;
         }
 
         std::advance(dstTrackIter, info.trackCount);
     }
-
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-
-    prj->importIntoTracks(localPaths, adjustedDstTrackIds, startTime);
 }
