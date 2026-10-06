@@ -229,6 +229,11 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
     # Disable warnings for AU3 code
     target_no_warning(${au3_target_name} -w)
 
+    # Code coverage, same flags as muse_create_module, so the scheduled coverage job sees the AU3 libraries too
+    if(MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
+        target_compile_options(${au3_target_name} PRIVATE -fprofile-arcs -ftest-coverage --coverage)
+    endif()
+
     if(MUSE_ENABLE_UNIT_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
         add_subdirectory(tests)
     endif()
@@ -333,6 +338,11 @@ macro(add_unit_test)
 
     # Disable warnings for AU3 test code
     target_no_warning(${test_target_name} -w)
+
+    if(MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
+        target_compile_options(${test_target_name} PRIVATE -fprofile-arcs -ftest-coverage --coverage)
+        target_link_options(${test_target_name} PRIVATE --coverage)
+    endif()
 
     # Add the test to CTest (same label family as the GoogleTest executables, run by ctest in CI)
     add_test(NAME ${test_target_name} COMMAND ${test_target_name} WORKING_DIRECTORY "${AUDACITY_ROOT}")
