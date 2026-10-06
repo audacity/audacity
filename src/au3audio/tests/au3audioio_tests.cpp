@@ -2,7 +2,9 @@
  * Audacity: A Digital Audio Editor
  */
 #include <algorithm>
+#include <future>
 #include <string>
+#include <thread>
 
 #include <gtest/gtest.h>
 
@@ -15,19 +17,17 @@
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/au3types.h"
 #include "project/tests/testtools.h"
-#include "mocks/audiothreadloopcontroller.h"
 
 using namespace std::chrono_literals;
 
 namespace au::au3audio {
 /**
- * @brief Fixture allowing to test concurrency between the main thread and the audio thread.
+ * @brief Fixture for testing AudioIO monitoring against a real PortAudio stream.
  *
- * @details Uses a pacer for the loop in `::AudioThread`.
- * Runs on any platform with a capture device; on headless Linux CI, ALSA's `null` device fills that role.
+ * @details Runs on any platform with a capture device; on headless Linux CI, ALSA's `null` device fills that role.
  * No audio needs to flow, the only hardware dependency is that Pa_OpenStream must succeed.
  */
-class MainAndAudioThreadConcurrencyTest : public ::testing::Test
+class AudioIOMonitoringTest : public ::testing::Test
 {
 protected:
     void SetUp() override
@@ -46,9 +46,7 @@ protected:
 
     void TearDown() override
     {
-        m_pacer->release(); // Deinit joins the audio thread
         AudioIO::Deinit();
-        AudioIoCallback::SetAudioThreadPacerForTests(nullptr);
 
         if (m_au3ProjectAccessor && m_au3ProjectAccessor->au3ProjectPtr()) {
             m_au3ProjectAccessor->clearSavedState();
@@ -98,39 +96,49 @@ protected:
         return true;
     }
 
-    std::shared_ptr<test::AudioThreadLoopController> m_pacer;
     std::shared_ptr<au::au3::Au3ProjectAccessor> m_au3ProjectAccessor;
     std::string m_workingProjectPath;
 };
 
 //! https://github.com/audacity/audacity/issues/11571 and https://github.com/audacity/audacity/issues/11825
-//! are caused by `StartMonitoring` - `StopMonitoring` calls sufficiently fast one after the other so that
-//! the `AudioThread` doesn't have time to complete the otherwise expected iterations.
+//! are caused by `StopMonitoring` waiting for an acknowledgement from the `AudioThread`, which may never come
+//! if `StartMonitoring` - `StopMonitoring` are called in quick succession.
 //!
 //! (In #11825 the calls are fast because due to repeated track-focus toggling (and hence monitoring) upon track creation.
 //! In #11571 it was for something similar.)
 //!
-//! We simulate this situation by not letting the `AudioThreadLoopController` any iteration of the `AudioThread` loop complete.
-TEST_F(MainAndAudioThreadConcurrencyTest, ImmediateStopAfterStartDoesNotDeadlock)
+//! Monitoring does not involve the audio thread, so we replace it with one that does nothing:
+//! `StopMonitoring` must still return.
+TEST_F(AudioIOMonitoringTest, MonitoringDoesNotNeedAudioThread)
 {
-    // Three iterations are normally sufficient for the handshake to complete.
-    constexpr auto maxLoopIterations = 0;
-    m_pacer = std::make_shared<test::AudioThreadLoopController>(maxLoopIterations);
-
-    AudioIoCallback::SetAudioThreadPacerForTests(m_pacer);
     AudioIO::Init();
-
     if (!selectCaptureDevice()) {
         GTEST_SKIP() << "no capture device available";
     }
+    AudioIO* audioIO = AudioIO::Get();
 
-    AudioIO* gAudioIO = AudioIO::Get();
+    audioIO->mFinishAudioThread.store(true, std::memory_order_release);
+    audioIO->mAudioThread.join();
+    audioIO->mAudioThread = std::thread([] {});
+
     const AudioIOStartStreamOptions options(projectRef().shared_from_this(), 44100.0);
+    audioIO->StartMonitoring(options);
+    ASSERT_TRUE(audioIO->IsMonitoring());
 
-    gAudioIO->StartMonitoring(options);
-    ASSERT_TRUE(gAudioIO->IsMonitoring());
-    gAudioIO->StopMonitoring();
+    std::promise<void> stopped;
+    std::future<void> result = stopped.get_future();
+    std::thread stopper([audioIO, &stopped] {
+        audioIO->StopMonitoring();
+        stopped.set_value();
+    });
 
-    EXPECT_FALSE(m_pacer->waitGaveUp()) << "acknowledge handshake never completed";
+    const bool hung = result.wait_for(5s) == std::future_status::timeout;
+    if (hung) {
+        // unblock StopMonitoring if it hung
+        audioIO->mBufferExchangeAcknowledge.store(Acknowledge::eStop, std::memory_order_release);
+    }
+    stopper.join();
+
+    EXPECT_FALSE(hung) << "StopMonitoring waits for the audio thread";
 }
 } // namespace au::au3audio

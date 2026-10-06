@@ -10,7 +10,6 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3audiodrivercontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3audioio_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/audioenginemock.h
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/audiothreadloopcontroller.h
     )
 
 set(MODULE_TEST_LINK
