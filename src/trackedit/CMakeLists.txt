@@ -15,6 +15,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/trackeditcommands.h
     ${CMAKE_CURRENT_LIST_DIR}/iselectioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/itracksviewrequestsservice.h
     ${CMAKE_CURRENT_LIST_DIR}/itracksinteraction.h
@@ -52,6 +53,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackedituiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsstate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.cpp

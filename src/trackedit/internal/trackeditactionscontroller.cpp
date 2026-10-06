@@ -5,14 +5,19 @@
 
 #include <algorithm>
 #include <limits>
+#include <type_traits>
 
-#include "global/translation.h"
-#include "global/defer.h"
+#include "framework/global/translation.h"
+#include "framework/global/defer.h"
+#include "framework/rcommand/actiontocommand.h"
+
+#include "../trackeditcommands.h"
 
 using namespace muse;
 using namespace au::trackedit;
 using namespace muse::async;
 using namespace muse::actions;
+using namespace muse::rcommand;
 
 namespace {
 muse::UriQuery makePlaybackPosUri()
@@ -20,6 +25,110 @@ muse::UriQuery makePlaybackPosUri()
     muse::UriQuery uri("audacity://trackedit/custom_time");
     uri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
     return uri;
+}
+
+CommandQuery queryParamsConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.empty()) {
+        return query;
+    }
+
+    const ActionQuery legacy(args.arg<std::string>(0));
+    query.setParams(legacy.params());
+    return query;
+}
+
+CommandQuery clipKeyConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.empty()) {
+        return query;
+    }
+
+    const ClipKey clipKey = args.arg<ClipKey>(0);
+    query.addParam(TRACKEDIT_TRACK_ID_PARAM, Val(static_cast<int64_t>(clipKey.trackId)));
+    query.addParam(TRACKEDIT_CLIP_ID_PARAM, Val(static_cast<int64_t>(clipKey.itemId)));
+    return query;
+}
+
+CommandQuery trackSplitAtConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    IF_ASSERT_FAILED(args.count() == 2) {
+        return query;
+    }
+
+    ValList trackIds;
+    for (const TrackId& trackId : args.arg<TrackIdList>(0)) {
+        trackIds.push_back(Val(static_cast<int64_t>(trackId)));
+    }
+
+    ValList pivots;
+    for (const secs_t& pivot : args.arg<std::vector<secs_t> >(1)) {
+        pivots.push_back(Val(pivot.to_double()));
+    }
+
+    query.addParam(TRACKEDIT_TRACK_IDS_PARAM, Val(trackIds));
+    query.addParam(TRACKEDIT_PIVOTS_PARAM, Val(pivots));
+    return query;
+}
+
+template<typename Op, typename ... Args>
+Ret applyOp(const Op& op, Args&&... args)
+{
+    if constexpr (std::is_void_v<std::invoke_result_t<const Op&, Args...> >) {
+        op(std::forward<Args>(args)...);
+        return make_ok();
+    } else {
+        return op(std::forward<Args>(args)...);
+    }
+}
+
+template<typename Op>
+ICommandDispatcher::CallBackRet apply(Op op)
+{
+    return [op]() -> Ret {
+        return applyOp(op);
+    };
+}
+
+template<typename Op>
+ICommandDispatcher::CallBackParamsRet applyToClip(Op op)
+{
+    return [op](const Params& params) -> Ret {
+        if (!params.contains(TRACKEDIT_TRACK_ID_PARAM) || !params.contains(TRACKEDIT_CLIP_ID_PARAM)) {
+            return make_ret(Ret::Code::BadArgs);
+        }
+
+        const ClipKey clipKey(params.at(TRACKEDIT_TRACK_ID_PARAM).toInt64(), params.at(TRACKEDIT_CLIP_ID_PARAM).toInt64());
+        if (!clipKey.isValid()) {
+            return make_ret(Ret::Code::BadArgs);
+        }
+
+        return applyOp(op, clipKey);
+    };
+}
+
+template<typename Op>
+ICommandDispatcher::CallBackParamsRet applyToTrack(Op op)
+{
+    return [op](const Params& params) -> Ret {
+        if (!params.contains(TRACKEDIT_TRACK_ID_PARAM)) {
+            return make_ret(Ret::Code::BadArgs);
+        }
+
+        return applyOp(op, TrackId(params.at(TRACKEDIT_TRACK_ID_PARAM).toInt64()));
+    };
+}
+
+ActionCode legacyActionCode(const ActionQuery& query, const Params& params)
+{
+    ActionQuery legacy(query);
+    for (const auto& [key, val] : params) {
+        legacy.addParam(key, val);
+    }
+    return legacy.toString();
 }
 }
 
@@ -211,15 +320,9 @@ void TrackeditActionsController::init()
 {
     dispatcher()->reg(this, TRACKEDIT_COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
     dispatcher()->reg(this, TRACKEDIT_CUT_CODE, this, &TrackeditActionsController::doGlobalCut);
-    dispatcher()->reg(this, TRACKEDIT_UNDO, this, &TrackeditActionsController::undo);
-    dispatcher()->reg(this, TRACKEDIT_REDO, this, &TrackeditActionsController::redo);
     dispatcher()->reg(this, TRACKEDIT_DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
-    dispatcher()->reg(this, TRACKEDIT_CANCEL_CODE, this, &TrackeditActionsController::doGlobalCancel);
 
     dispatcher()->reg(this, TRACKEDIT_PASTE_DEFAULT_CODE, this, &TrackeditActionsController::pasteDefault);
-    dispatcher()->reg(this, TRACKEDIT_PASTE_INSERT_CODE, this, &TrackeditActionsController::pasteInsert);
-    dispatcher()->reg(this, TRACKEDIT_PASTE_OVERLAP_CODE, this, &TrackeditActionsController::pasteOverlap);
-    dispatcher()->reg(this, TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::pasteInsertRipple);
 
     dispatcher()->reg(this, SPLIT_CODE, this, &TrackeditActionsController::doGlobalSplit);
     dispatcher()->reg(this, SPLIT_INTO_NEW_TRACK_CODE, this, &TrackeditActionsController::doGlobalSplitIntoNewTrack);
@@ -237,23 +340,16 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, DELETE_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerTrackRipple);
     dispatcher()->reg(this, DELETE_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeleteAllTracksRipple);
 
-    dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
     dispatcher()->reg(this, MULTI_CLIP_CUT_CODE, this, &TrackeditActionsController::multiClipCut);
     dispatcher()->reg(this, RANGE_SELECTION_CUT_CODE, this, &TrackeditActionsController::rangeSelectionCut);
 
-    dispatcher()->reg(this, CLIP_COPY_CODE, this, &TrackeditActionsController::clipCopy);
     dispatcher()->reg(this, MULTI_CLIP_COPY_CODE, this, &TrackeditActionsController::multiClipCopy);
     dispatcher()->reg(this, RANGE_SELECTION_COPY_CODE, this, &TrackeditActionsController::rangeSelectionCopy);
 
-    dispatcher()->reg(this, CLIP_DELETE_CODE, this, &TrackeditActionsController::clipDelete);
     dispatcher()->reg(this, MULTI_CLIP_DELETE_CODE, this, &TrackeditActionsController::multiClipDelete);
     dispatcher()->reg(this, RANGE_SELECTION_DELETE_CODE, this, &TrackeditActionsController::rangeSelectionDelete);
 
-    dispatcher()->reg(this, OPEN_CLIP_AND_SPEED_CODE, this, &TrackeditActionsController::openClipPitchAndSpeed);
-    dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
-    dispatcher()->reg(this, CLIP_RESET_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::resetClipPitchAndSpeed);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
-    dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::tracksSplitAt);
     dispatcher()->reg(this, SPLIT_RANGE_SELECTION_AT_SILENCES, this, &TrackeditActionsController::splitRangeSelectionAtSilences);
     dispatcher()->reg(this, SPLIT_CLIPS_AT_SILENCES, this, &TrackeditActionsController::splitClipsAtSilences);
     dispatcher()->reg(this, SPLIT_RANGE_SELECTION_INTO_NEW_TRACKS, this, &TrackeditActionsController::splitRangeSelectionIntoNewTracks);
@@ -261,73 +357,191 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
     dispatcher()->reg(this, DUPLICATE_RANGE_SELECTION_CODE, this, &TrackeditActionsController::duplicateSelected);
     dispatcher()->reg(this, DUPLICATE_CLIPS_CODE, this, &TrackeditActionsController::duplicateClips);
-    dispatcher()->reg(this, CLIP_SPLIT_CUT, this, &TrackeditActionsController::clipSplitCut);
-    dispatcher()->reg(this, CLIP_SPLIT_DELETE, this, &TrackeditActionsController::clipSplitDelete);
     dispatcher()->reg(this, RANGE_SELECTION_SPLIT_CUT, this, &TrackeditActionsController::splitCutSelected);
     dispatcher()->reg(this, RANGE_SELECTION_SPLIT_DELETE, this, &TrackeditActionsController::splitDeleteSelected);
-    dispatcher()->reg(this, NEW_MONO_TRACK, this, &TrackeditActionsController::newMonoTrack);
-    dispatcher()->reg(this, NEW_STEREO_TRACK, this, &TrackeditActionsController::newStereoTrack);
-    dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
     dispatcher()->reg(this, TRACK_DELETE, this, &TrackeditActionsController::deleteTracks);
-    dispatcher()->reg(this, TRACK_DUPLICATE_CODE, this, &TrackeditActionsController::duplicateTracks);
-    dispatcher()->reg(this, TRACK_MOVE_UP, this, &TrackeditActionsController::moveTracksUp);
-    dispatcher()->reg(this, TRACK_MOVE_DOWN, this, &TrackeditActionsController::moveTracksDown);
-    dispatcher()->reg(this, TRACK_MOVE_TOP, this, &TrackeditActionsController::moveTracksToTop);
-    dispatcher()->reg(this, TRACK_MOVE_BOTTOM, this, &TrackeditActionsController::moveTracksToBottom);
-    dispatcher()->reg(this, TRACK_SWAP_CHANNELS, this, &TrackeditActionsController::swapStereoChannels);
-    dispatcher()->reg(this, TRACK_SPLIT_STEREO_TO_LR, this, &TrackeditActionsController::splitStereoToLR);
-    dispatcher()->reg(this, TRACK_SPLIT_STEREO_TO_CENTER, this, &TrackeditActionsController::splitStereoToCenter);
-    dispatcher()->reg(this, TRACK_CHANGE_RATE_CUSTOM, this, &TrackeditActionsController::setCustomTrackRate);
-    dispatcher()->reg(this, TRACK_MAKE_STEREO, this, &TrackeditActionsController::makeStereoTrack);
-    dispatcher()->reg(this, TRACK_RESAMPLE, this, &TrackeditActionsController::resampleTracks);
-
-    dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
-    dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::doGlobalSilence);
-
-    dispatcher()->reg(this, STRETCH_ENABLED_CODE, this, &TrackeditActionsController::toggleStretchClipToMatchTempo);
-
-    dispatcher()->reg(this, GROUP_CLIPS_CODE, this, &TrackeditActionsController::groupClips);
-    dispatcher()->reg(this, UNGROUP_CLIPS_CODE, this, &TrackeditActionsController::ungroupClips);
-
-    dispatcher()->reg(this, SELECT_ALL, this, &TrackeditActionsController::selectAll);
-    dispatcher()->reg(this, SELECT_CLEAR, this, &TrackeditActionsController::selectNone);
-    dispatcher()->reg(this, SELECT_ALL_TRACKS, this, &TrackeditActionsController::selectAllTracks);
-    dispatcher()->reg(this, SELECT_LEFT_OF_PLAYBACK_POS, this, &TrackeditActionsController::selectLeftOfPlaybackPos);
-    dispatcher()->reg(this, SELECT_RIGHT_OF_PLAYBACK_POS, this, &TrackeditActionsController::selectRightOfPlaybackPos);
-    dispatcher()->reg(this, SELECT_TRACK_START_TO_CURSOR, this, &TrackeditActionsController::selectTrackStartToCursor);
-    dispatcher()->reg(this, SELECT_CURSOR_TO_TRACK_END, this, &TrackeditActionsController::selectCursorToTrackEnd);
-    dispatcher()->reg(this, SELECT_TRACK_START_TO_END, this, &TrackeditActionsController::selectTrackStartToEnd);
-    dispatcher()->reg(this, SET_SELECTION, this, &TrackeditActionsController::setSelection);
-    dispatcher()->reg(this, SELECT_TRACK, this, &TrackeditActionsController::selectTrackByIndex);
-    dispatcher()->reg(this, SELECT_ZERO_CROSSING, this, &TrackeditActionsController::moveCursorToClosestZeroCrossing);
-
-    dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
-    dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
-
-    dispatcher()->reg(this, TRACK_CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setTrackColor);
-    dispatcher()->reg(this, TRACK_CHANGE_FORMAT_QUERY, this, &TrackeditActionsController::setTrackFormat);
-    dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
-
-    dispatcher()->reg(this, TOGGLE_GLOBAL_VIEW_SPECTROGRAM, this, &TrackeditActionsController::toggleGlobalSpectrogramView);
-    dispatcher()->reg(this, SET_TRACK_VIEW_WAVEFORM, this, &TrackeditActionsController::changeTrackViewToWaveform);
-    dispatcher()->reg(this, SET_TRACK_VIEW_SPECTROGRAM, this, &TrackeditActionsController::changeTrackViewToSpectrogram);
-    dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram);
-
-    dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
-    dispatcher()->reg(this, RENAME_ITEM_CODE, this, &TrackeditActionsController::renameSelectedItem);
 
     dispatcher()->reg(this, LABEL_DELETE_MULTI_CODE, this, &TrackeditActionsController::labelDeleteMulti);
     dispatcher()->reg(this, LABEL_CUT_MULTI_CODE, this, &TrackeditActionsController::labelCutMulti);
     dispatcher()->reg(this, LABEL_COPY_MULTI_CODE, this, &TrackeditActionsController::labelCopyMulti);
 
-    dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_LEFT_CODE, this, &TrackeditActionsController::moveFocusedItemLeft);
-    dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_RIGHT_CODE, this, &TrackeditActionsController::moveFocusedItemRight);
-    dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_UP_CODE, this, &TrackeditActionsController::moveFocusedItemUp);
-    dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_DOWN_CODE, this, &TrackeditActionsController::moveFocusedItemDown);
-    dispatcher()->reg(this, TRACK_VIEW_ITEM_EXTEND_LEFT_CODE, this, &TrackeditActionsController::extendFocusedItemBoundaryLeft);
-    dispatcher()->reg(this, TRACK_VIEW_ITEM_EXTEND_RIGHT_CODE, this, &TrackeditActionsController::extendFocusedItemBoundaryRight);
-    dispatcher()->reg(this, TRACK_VIEW_ITEM_REDUCE_LEFT_CODE, this, &TrackeditActionsController::reduceFocusedItemBoundaryLeft);
-    dispatcher()->reg(this, TRACK_VIEW_ITEM_REDUCE_RIGHT_CODE, this, &TrackeditActionsController::reduceFocusedItemBoundaryRight);
+    auto cd = commandDispatcher();
+    cd->onRequest(this, TRACKEDIT_UNDO_COMMAND, apply([this]() { return trackeditInteraction()->undo(); }));
+    cd->onRequest(this, TRACKEDIT_REDO_COMMAND, apply([this]() { return trackeditInteraction()->redo(); }));
+    cd->onRequest(this, TRACKEDIT_CANCEL_COMMAND, [this]() { return doGlobalCancel(); });
+
+    cd->onRequest(this, TRACKEDIT_PASTE_OVERLAP_COMMAND, [this]() { return pasteOverlap(); });
+    cd->onRequest(this, TRACKEDIT_PASTE_INSERT_COMMAND, [this]() { return pasteInsert(); });
+    cd->onRequest(this, TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_COMMAND, [this]() { return pasteInsertRipple(); });
+
+    cd->onRequest(this, TRACKEDIT_CLIP_CUT_COMMAND, applyToClip([this](const ClipKey& clipKey) {
+        trackeditInteraction()->clearClipboard();
+        return trackeditInteraction()->cutClipIntoClipboard(clipKey);
+    }));
+    cd->onRequest(this, TRACKEDIT_CLIP_COPY_COMMAND, applyToClip([this](const ClipKey& clipKey) {
+        trackeditInteraction()->clearClipboard();
+        return trackeditInteraction()->copyClipIntoClipboard(clipKey);
+    }));
+    cd->onRequest(this, TRACKEDIT_CLIP_DELETE_COMMAND, applyToClip([this](const ClipKey& clipKey) {
+        selectionController()->resetSelectedClips();
+        return trackeditInteraction()->removeClip(clipKey);
+    }));
+    cd->onRequest(this, TRACKEDIT_CLIP_SPLIT_CUT_COMMAND, applyToClip([this](const ClipKey& clipKey) {
+        trackeditInteraction()->clearClipboard();
+        return trackeditInteraction()->clipSplitCut(clipKey);
+    }));
+    cd->onRequest(this, TRACKEDIT_CLIP_SPLIT_DELETE_COMMAND, applyToClip([this](const ClipKey& clipKey) {
+        return trackeditInteraction()->clipSplitDelete(clipKey);
+    }));
+    cd->onRequest(this, TRACKEDIT_CLIP_PITCH_SPEED_OPEN_COMMAND, [this]() { return openClipPitchAndSpeed(); });
+    cd->onRequest(this, TRACKEDIT_CLIP_RENDER_PITCH_SPEED_COMMAND, applyToClip([this](const ClipKey& clipKey) {
+        return trackeditInteraction()->renderClipPitchAndSpeed(clipKey);
+    }));
+    cd->onRequest(this, TRACKEDIT_CLIP_RESET_PITCH_SPEED_COMMAND, applyToClip([this](const ClipKey& clipKey) {
+        return trackeditInteraction()->resetClipPitchAndSpeed(clipKey);
+    }));
+    cd->onRequest(this, TRACKEDIT_STRETCH_CLIP_TO_MATCH_TEMPO_COMMAND, applyToClip([this](const ClipKey& clipKey) {
+        const bool toggled = trackeditInteraction()->toggleStretchToMatchProjectTempo(clipKey);
+        notifyActionCheckedChanged(STRETCH_ENABLED_CODE);
+        return toggled;
+    }));
+
+    cd->onRequest(this, TRACKEDIT_TRACK_SPLIT_AT_COMMAND, [this](const Params& params) { return tracksSplitAt(params); });
+
+    cd->onRequest(this, TRACKEDIT_NEW_MONO_TRACK_COMMAND, apply([this]() { return trackeditInteraction()->newMonoTrack(); }));
+    cd->onRequest(this, TRACKEDIT_NEW_STEREO_TRACK_COMMAND, apply([this]() { return trackeditInteraction()->newStereoTrack(); }));
+    cd->onRequest(this, TRACKEDIT_NEW_LABEL_TRACK_COMMAND, apply([this]() { return trackeditInteraction()->newLabelTrack().ret; }));
+
+    cd->onRequest(this, TRACKEDIT_TRACK_DUPLICATE_COMMAND, [this]() { return duplicateTracks(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_MOVE_UP_COMMAND, [this]() { return moveTracksUp(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_MOVE_DOWN_COMMAND, [this]() { return moveTracksDown(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_MOVE_TOP_COMMAND, [this]() { return moveTracksToTop(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_MOVE_BOTTOM_COMMAND, [this]() { return moveTracksToBottom(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_SWAP_CHANNELS_COMMAND, [this]() { return swapStereoChannels(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_SPLIT_STEREO_TO_LR_COMMAND, [this]() { return splitStereoToLR(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_SPLIT_STEREO_TO_CENTER_COMMAND, [this]() { return splitStereoToCenter(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, [this]() { return setCustomTrackRate(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, [this]() { return makeStereoTrack(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_RESAMPLE_COMMAND, [this]() { return resampleTracks(); });
+
+    cd->onRequest(this, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, [this]() { return trimAudioOutsideSelection(); });
+    cd->onRequest(this, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, [this]() { return doGlobalSilence(); });
+
+    cd->onRequest(this, TRACKEDIT_GROUP_CLIPS_COMMAND, [this]() { return groupClips(); });
+    cd->onRequest(this, TRACKEDIT_UNGROUP_CLIPS_COMMAND, [this]() { return ungroupClips(); });
+
+    cd->onRequest(this, TRACKEDIT_SELECT_ALL_COMMAND, apply([this]() { selectionController()->setSelectedAllAudioData(); }));
+    cd->onRequest(this, TRACKEDIT_CLEAR_SELECTION_COMMAND, [this]() { return selectNone(); });
+    cd->onRequest(this, TRACKEDIT_SELECT_ALL_TRACKS_COMMAND, [this]() { return selectAllTracks(); });
+    cd->onRequest(this, TRACKEDIT_SELECT_LEFT_OF_PLAYBACK_POSITION_COMMAND, [this]() { return selectLeftOfPlaybackPos(); });
+    cd->onRequest(this, TRACKEDIT_SELECT_RIGHT_OF_PLAYBACK_POSITION_COMMAND, [this]() { return selectRightOfPlaybackPos(); });
+    cd->onRequest(this, TRACKEDIT_SELECT_TRACK_START_TO_CURSOR_COMMAND, [this]() { return selectTrackStartToCursor(); });
+    cd->onRequest(this, TRACKEDIT_SELECT_CURSOR_TO_TRACK_END_COMMAND, [this]() { return selectCursorToTrackEnd(); });
+    cd->onRequest(this, TRACKEDIT_SELECT_TRACK_START_TO_END_COMMAND, [this]() { return selectTrackStartToEnd(); });
+    cd->onRequest(this, TRACKEDIT_SET_SELECTION_COMMAND, [this](const Params& params) { return setSelection(params); });
+    cd->onRequest(this, TRACKEDIT_SELECT_TRACK_COMMAND, [this](const Params& params) { return selectTrackByIndex(params); });
+    cd->onRequest(this, TRACKEDIT_ZERO_CROSS_COMMAND, [this]() { return moveCursorToClosestZeroCrossing(); });
+
+    cd->onRequest(this, TRACKEDIT_CLIP_CHANGE_COLOR_AUTO_COMMAND, [this](const Params& params) {
+        return setClipColor(params, [this, params]() { notifyActionCheckedChanged(legacyActionCode(AUTO_COLOR_QUERY, params)); });
+    });
+    cd->onRequest(this, TRACKEDIT_CLIP_CHANGE_COLOR_COMMAND, [this](const Params& params) {
+        return setClipColor(params, [this, params]() { notifyActionCheckedChanged(legacyActionCode(CHANGE_COLOR_QUERY, params)); });
+    });
+    cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, [this](const Params& params) { return setTrackColor(params); });
+    cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND, [this](const Params& params) { return setTrackFormat(params); });
+    cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_RATE_COMMAND, [this](const Params& params) { return setTrackRate(params); });
+
+    cd->onRequest(this, TRACKEDIT_GLOBAL_VIEW_SPECTROGRAM_COMMAND, [this]() { return toggleGlobalSpectrogramView(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_WAVEFORM_COMMAND, applyToTrack([this](const TrackId& trackId) {
+        return changeTrackView(trackId, TrackViewType::Waveform);
+    }));
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_SPECTROGRAM_COMMAND, applyToTrack([this](const TrackId& trackId) {
+        return changeTrackView(trackId, TrackViewType::Spectrogram);
+    }));
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_MULTI_COMMAND, applyToTrack([this](const TrackId& trackId) {
+        return changeTrackView(trackId, TrackViewType::WaveformAndSpectrogram);
+    }));
+
+    cd->onRequest(this, TRACKEDIT_LABEL_ADD_COMMAND, [this]() { return addLabel(); });
+    cd->onRequest(this, TRACKEDIT_RENAME_ITEM_COMMAND, [this]() { return renameSelectedItem(); });
+
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_LEFT_COMMAND, apply([this]() { moveFocusedItem(-calculateStepSize(), 0); }));
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_RIGHT_COMMAND, apply([this]() { moveFocusedItem(calculateStepSize(), 0); }));
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_UP_COMMAND, apply([this]() { moveFocusedItem(0.0, -1); }));
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_DOWN_COMMAND, apply([this]() { moveFocusedItem(0.0, 1); }));
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_LEFT_COMMAND, [this]() { return extendFocusedItemBoundaryLeft(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_RIGHT_COMMAND, [this]() { return extendFocusedItemBoundaryRight(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_LEFT_COMMAND, [this]() { return reduceFocusedItemBoundaryLeft(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_RIGHT_COMMAND, [this]() { return reduceFocusedItemBoundaryRight(); });
+
+    static const std::vector<ActionToCommand> actionToCommand = {
+        { TRACKEDIT_UNDO, TRACKEDIT_UNDO_COMMAND, {} },
+        { TRACKEDIT_REDO, TRACKEDIT_REDO_COMMAND, {} },
+        { TRACKEDIT_CANCEL_CODE, TRACKEDIT_CANCEL_COMMAND, {} },
+        { TRACKEDIT_PASTE_OVERLAP_CODE, TRACKEDIT_PASTE_OVERLAP_COMMAND, {} },
+        { TRACKEDIT_PASTE_INSERT_CODE, TRACKEDIT_PASTE_INSERT_COMMAND, {} },
+        { TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE, TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_COMMAND, {} },
+        { CLIP_CUT_CODE, TRACKEDIT_CLIP_CUT_COMMAND, clipKeyConv },
+        { CLIP_COPY_CODE, TRACKEDIT_CLIP_COPY_COMMAND, clipKeyConv },
+        { CLIP_DELETE_CODE, TRACKEDIT_CLIP_DELETE_COMMAND, clipKeyConv },
+        { CLIP_SPLIT_CUT, TRACKEDIT_CLIP_SPLIT_CUT_COMMAND, clipKeyConv },
+        { CLIP_SPLIT_DELETE, TRACKEDIT_CLIP_SPLIT_DELETE_COMMAND, clipKeyConv },
+        { OPEN_CLIP_AND_SPEED_CODE, TRACKEDIT_CLIP_PITCH_SPEED_OPEN_COMMAND, {} },
+        { CLIP_RENDER_PITCH_AND_SPEED_CODE, TRACKEDIT_CLIP_RENDER_PITCH_SPEED_COMMAND, clipKeyConv },
+        { CLIP_RESET_PITCH_AND_SPEED_CODE, TRACKEDIT_CLIP_RESET_PITCH_SPEED_COMMAND, clipKeyConv },
+        { STRETCH_ENABLED_CODE, TRACKEDIT_STRETCH_CLIP_TO_MATCH_TEMPO_COMMAND, clipKeyConv },
+        { TRACK_SPLIT_AT, TRACKEDIT_TRACK_SPLIT_AT_COMMAND, trackSplitAtConv },
+        { NEW_MONO_TRACK, TRACKEDIT_NEW_MONO_TRACK_COMMAND, {} },
+        { NEW_STEREO_TRACK, TRACKEDIT_NEW_STEREO_TRACK_COMMAND, {} },
+        { NEW_LABEL_TRACK, TRACKEDIT_NEW_LABEL_TRACK_COMMAND, {} },
+        { TRACK_DUPLICATE_CODE, TRACKEDIT_TRACK_DUPLICATE_COMMAND, {} },
+        { TRACK_MOVE_UP, TRACKEDIT_TRACK_MOVE_UP_COMMAND, {} },
+        { TRACK_MOVE_DOWN, TRACKEDIT_TRACK_MOVE_DOWN_COMMAND, {} },
+        { TRACK_MOVE_TOP, TRACKEDIT_TRACK_MOVE_TOP_COMMAND, {} },
+        { TRACK_MOVE_BOTTOM, TRACKEDIT_TRACK_MOVE_BOTTOM_COMMAND, {} },
+        { TRACK_SWAP_CHANNELS, TRACKEDIT_TRACK_SWAP_CHANNELS_COMMAND, {} },
+        { TRACK_SPLIT_STEREO_TO_LR, TRACKEDIT_TRACK_SPLIT_STEREO_TO_LR_COMMAND, {} },
+        { TRACK_SPLIT_STEREO_TO_CENTER, TRACKEDIT_TRACK_SPLIT_STEREO_TO_CENTER_COMMAND, {} },
+        { TRACK_CHANGE_RATE_CUSTOM, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, {} },
+        { TRACK_MAKE_STEREO, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, {} },
+        { TRACK_RESAMPLE, TRACKEDIT_TRACK_RESAMPLE_COMMAND, {} },
+        { TRIM_AUDIO_OUTSIDE_SELECTION, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, {} },
+        { SILENCE_AUDIO_SELECTION, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, {} },
+        { GROUP_CLIPS_CODE, TRACKEDIT_GROUP_CLIPS_COMMAND, {} },
+        { UNGROUP_CLIPS_CODE, TRACKEDIT_UNGROUP_CLIPS_COMMAND, {} },
+        { SELECT_ALL, TRACKEDIT_SELECT_ALL_COMMAND, {} },
+        { SELECT_CLEAR, TRACKEDIT_CLEAR_SELECTION_COMMAND, {} },
+        { SELECT_ALL_TRACKS, TRACKEDIT_SELECT_ALL_TRACKS_COMMAND, {} },
+        { SELECT_LEFT_OF_PLAYBACK_POS, TRACKEDIT_SELECT_LEFT_OF_PLAYBACK_POSITION_COMMAND, {} },
+        { SELECT_RIGHT_OF_PLAYBACK_POS, TRACKEDIT_SELECT_RIGHT_OF_PLAYBACK_POSITION_COMMAND, {} },
+        { SELECT_TRACK_START_TO_CURSOR, TRACKEDIT_SELECT_TRACK_START_TO_CURSOR_COMMAND, {} },
+        { SELECT_CURSOR_TO_TRACK_END, TRACKEDIT_SELECT_CURSOR_TO_TRACK_END_COMMAND, {} },
+        { SELECT_TRACK_START_TO_END, TRACKEDIT_SELECT_TRACK_START_TO_END_COMMAND, {} },
+        { SET_SELECTION.toString(), TRACKEDIT_SET_SELECTION_COMMAND, queryParamsConv },
+        { SELECT_TRACK.toString(), TRACKEDIT_SELECT_TRACK_COMMAND, queryParamsConv },
+        { SELECT_ZERO_CROSSING, TRACKEDIT_ZERO_CROSS_COMMAND, {} },
+        { AUTO_COLOR_QUERY.toString(), TRACKEDIT_CLIP_CHANGE_COLOR_AUTO_COMMAND, {} },
+        { CHANGE_COLOR_QUERY.toString(), TRACKEDIT_CLIP_CHANGE_COLOR_COMMAND, queryParamsConv },
+        { TRACK_CHANGE_COLOR_QUERY.toString(), TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, queryParamsConv },
+        { TRACK_CHANGE_FORMAT_QUERY.toString(), TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND, queryParamsConv },
+        { TRACK_CHANGE_RATE_QUERY.toString(), TRACKEDIT_TRACK_CHANGE_RATE_COMMAND, queryParamsConv },
+        { TOGGLE_GLOBAL_VIEW_SPECTROGRAM.toString(), TRACKEDIT_GLOBAL_VIEW_SPECTROGRAM_COMMAND, {} },
+        { SET_TRACK_VIEW_WAVEFORM.toString(), TRACKEDIT_TRACK_VIEW_WAVEFORM_COMMAND, queryParamsConv },
+        { SET_TRACK_VIEW_SPECTROGRAM.toString(), TRACKEDIT_TRACK_VIEW_SPECTROGRAM_COMMAND, queryParamsConv },
+        { SET_TRACK_VIEW_MULTI.toString(), TRACKEDIT_TRACK_VIEW_MULTI_COMMAND, queryParamsConv },
+        { LABEL_ADD_CODE, TRACKEDIT_LABEL_ADD_COMMAND, {} },
+        { RENAME_ITEM_CODE, TRACKEDIT_RENAME_ITEM_COMMAND, {} },
+        { TRACK_VIEW_ITEM_MOVE_LEFT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_LEFT_COMMAND, {} },
+        { TRACK_VIEW_ITEM_MOVE_RIGHT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_RIGHT_COMMAND, {} },
+        { TRACK_VIEW_ITEM_MOVE_UP_CODE, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_UP_COMMAND, {} },
+        { TRACK_VIEW_ITEM_MOVE_DOWN_CODE, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_DOWN_COMMAND, {} },
+        { TRACK_VIEW_ITEM_EXTEND_LEFT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_LEFT_COMMAND, {} },
+        { TRACK_VIEW_ITEM_EXTEND_RIGHT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_RIGHT_COMMAND, {} },
+        { TRACK_VIEW_ITEM_REDUCE_LEFT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_LEFT_COMMAND, {} },
+        { TRACK_VIEW_ITEM_REDUCE_RIGHT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_RIGHT_COMMAND, {} },
+    };
+    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
@@ -706,14 +920,14 @@ void TrackeditActionsController::doGlobalDelete()
                              muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
-void TrackeditActionsController::doGlobalCancel()
+muse::Ret TrackeditActionsController::doGlobalCancel()
 {
     const bool interactionOngoing = projectHistory()->interactionOngoing();
     trackeditInteraction()->notifyAboutCancelDragEdit();
 
     // Cancel the drag without clearing the selection restored by rollback.
     if (interactionOngoing) {
-        return;
+        return make_ok();
     }
 
     const std::optional<TrackItemKey> focusedItem = trackNavigationController()->focus().itemKey();
@@ -729,15 +943,15 @@ void TrackeditActionsController::doGlobalCancel()
 
         if (stepFocusOutOfSelection(selectedClips, *focusedItem, currentTrack,
                                     [this]() { selectionController()->resetSelectedClips(); })) {
-            return;
+            return make_ok();
         }
         if (stepFocusOutOfSelection(selectedLabels, *focusedItem, currentTrack,
                                     [this]() { selectionController()->resetSelectedLabels(); })) {
-            return;
+            return make_ok();
         }
 
         focusTrack(currentTrack);
-        return;
+        return make_ok();
     }
 
     //! [Stage 2] No item is focused: reset the active selection and move the focus back to the track.
@@ -748,10 +962,11 @@ void TrackeditActionsController::doGlobalCancel()
     } else if (!selectionController()->timeSelectionIsEmpty()) {
         selectionController()->resetTimeSelection();
     } else {
-        return;
+        return make_ok();
     }
 
     focusTrack(currentTrack);
+    return make_ok();
 }
 
 void TrackeditActionsController::focusTrack(const TrackId& trackId)
@@ -1048,16 +1263,6 @@ void TrackeditActionsController::doGlobalDisjoin()
     dispatcher()->dispatch(SPLIT_CLIPS_AT_SILENCES, ActionData::make_arg1<ClipKeyList>(selectedClips));
 }
 
-void TrackeditActionsController::undo()
-{
-    trackeditInteraction()->undo();
-}
-
-void TrackeditActionsController::redo()
-{
-    trackeditInteraction()->redo();
-}
-
 void TrackeditActionsController::doGlobalDuplicate()
 {
     const auto selectedTracks = selectionController()->selectedTracks();
@@ -1079,40 +1284,6 @@ void TrackeditActionsController::doGlobalDuplicate()
             dispatcher()->dispatch(DUPLICATE_CLIPS_CODE, ActionData::make_arg1<ClipKeyList>(selectedClips));
         }
     }
-}
-
-void TrackeditActionsController::clipCut(const ActionData& args)
-{
-    ClipKey clipKey = args.arg<ClipKey>(0);
-    if (!clipKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->cutClipIntoClipboard(clipKey);
-}
-
-void TrackeditActionsController::clipCopy(const ActionData& args)
-{
-    ClipKey clipKey = args.arg<ClipKey>(0);
-    if (!clipKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->copyClipIntoClipboard(clipKey);
-}
-
-void TrackeditActionsController::clipDelete(const ActionData& args)
-{
-    ClipKey clipKey = args.arg<ClipKey>(0);
-    if (!clipKey.isValid()) {
-        return;
-    }
-
-    selectionController()->resetSelectedClips();
-
-    trackeditInteraction()->removeClip(clipKey);
 }
 
 void TrackeditActionsController::multiClipDelete(const ActionData& args)
@@ -1334,46 +1505,55 @@ void TrackeditActionsController::pasteDefault()
     }
 }
 
-void TrackeditActionsController::pasteOverlap()
+muse::Ret TrackeditActionsController::pasteOverlap()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
     const double selectedStartTime = playbackState()->playbackPosition();
 
-    if (selectedStartTime >= 0) {
-        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false);
-        if (!ret && !ret.text().empty()) {
-            interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
-        }
+    if (selectedStartTime < 0) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    const Ret ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false);
+    if (!ret && !ret.text().empty()) {
+        interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
+    }
+    return ret;
 }
 
-void TrackeditActionsController::pasteInsert()
+muse::Ret TrackeditActionsController::pasteInsert()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
     const double selectedStartTime = playbackState()->playbackPosition();
 
-    if (selectedStartTime >= 0) {
-        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, true);
-        if (!ret && !ret.text().empty()) {
-            interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
-        }
+    if (selectedStartTime < 0) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    const Ret ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, true);
+    if (!ret && !ret.text().empty()) {
+        interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
+    }
+    return ret;
 }
 
-void TrackeditActionsController::pasteInsertRipple()
+muse::Ret TrackeditActionsController::pasteInsertRipple()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
     const double selectedStartTime = playbackState()->playbackPosition();
 
-    if (selectedStartTime >= 0) {
-        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false, true);
-        if (!ret && !ret.text().empty()) {
-            interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
-        }
+    if (selectedStartTime < 0) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    const Ret ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false, true);
+    if (!ret && !ret.text().empty()) {
+        interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
+    }
+    return ret;
 }
 
 void TrackeditActionsController::trackSplit(const ActionData& args)
@@ -1392,17 +1572,20 @@ void TrackeditActionsController::trackSplit(const ActionData& args)
     dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>({ trackIdToSplit }, playbackPosition));
 }
 
-void TrackeditActionsController::tracksSplitAt(const ActionData& args)
+muse::Ret TrackeditActionsController::tracksSplitAt(const Params& params)
 {
-    IF_ASSERT_FAILED(args.count() == 2) {
-        return;
+    if (!params.contains(TRACKEDIT_TRACK_IDS_PARAM) || !params.contains(TRACKEDIT_PIVOTS_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
     }
-
-    TrackIdList tracksIds = args.arg<TrackIdList>(0);
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (!prj) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    TrackIdList tracksIds;
+    for (const Val& trackId : params.at(TRACKEDIT_TRACK_IDS_PARAM).toList()) {
+        tracksIds.push_back(trackId.toInt64());
     }
 
     muse::remove_if(tracksIds, [&prj](const TrackId& trackId) {
@@ -1411,12 +1594,15 @@ void TrackeditActionsController::tracksSplitAt(const ActionData& args)
     });
 
     if (tracksIds.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    auto pivot = args.arg<std::vector<secs_t> >(1);
+    std::vector<secs_t> pivots;
+    for (const Val& pivot : params.at(TRACKEDIT_PIVOTS_PARAM).toList()) {
+        pivots.push_back(pivot.toDouble());
+    }
 
-    trackeditInteraction()->splitTracksAt(tracksIds, pivot);
+    return Ret(trackeditInteraction()->splitTracksAt(tracksIds, pivots));
 }
 
 void TrackeditActionsController::splitClipsAtSilences(const ActionData& args)
@@ -1525,35 +1711,6 @@ void TrackeditActionsController::duplicateClips(const muse::actions::ActionData&
     trackeditInteraction()->duplicateClips(clipKeyList);
 }
 
-void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() == 1) {
-        return;
-    }
-
-    ClipKey clipKey = args.arg<ClipKey>(0);
-    if (!clipKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->clipSplitCut(clipKey);
-}
-
-void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() == 1) {
-        return;
-    }
-
-    ClipKey clipKey = args.arg<ClipKey>(0);
-    if (!clipKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->clipSplitDelete(clipKey);
-}
-
 void TrackeditActionsController::splitCutSelected(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
@@ -1593,21 +1750,6 @@ void TrackeditActionsController::splitDeleteSelected(const muse::actions::Action
     selectionController()->resetDataSelection();
 }
 
-void TrackeditActionsController::newMonoTrack()
-{
-    trackeditInteraction()->newMonoTrack();
-}
-
-void TrackeditActionsController::newStereoTrack()
-{
-    trackeditInteraction()->newStereoTrack();
-}
-
-void TrackeditActionsController::newLabelTrack()
-{
-    trackeditInteraction()->newLabelTrack();
-}
-
 void TrackeditActionsController::deleteTracks(const muse::actions::ActionData&)
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
@@ -1619,81 +1761,85 @@ void TrackeditActionsController::deleteTracks(const muse::actions::ActionData&)
     trackeditInteraction()->deleteTracks(trackIds);
 }
 
-void TrackeditActionsController::duplicateTracks(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::duplicateTracks()
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
     if (trackIds.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    trackeditInteraction()->duplicateTracks(trackIds);
+    return Ret(trackeditInteraction()->duplicateTracks(trackIds));
 }
 
-void TrackeditActionsController::moveTracksUp(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::moveTracksUp()
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
     if (trackIds.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Up);
+    return make_ok();
 }
 
-void TrackeditActionsController::moveTracksDown(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::moveTracksDown()
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
     if (trackIds.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Down);
+    return make_ok();
 }
 
-void TrackeditActionsController::moveTracksToTop(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::moveTracksToTop()
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
     if (trackIds.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Top);
+    return make_ok();
 }
 
-void TrackeditActionsController::moveTracksToBottom(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::moveTracksToBottom()
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
     if (trackIds.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Bottom);
+    return make_ok();
 }
 
-void TrackeditActionsController::swapStereoChannels(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::swapStereoChannels()
 {
     const TrackIdList trackIds = selectionController()->selectedTracks();
     if (trackIds.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    trackeditInteraction()->swapStereoChannels(trackIds);
+    return Ret(trackeditInteraction()->swapStereoChannels(trackIds));
 }
 
-void TrackeditActionsController::splitStereoToLR(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::splitStereoToLR()
 {
     const auto project = globalContext()->currentProject();
     if (!project) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const TrackIdList selectedTracks = selectionController()->selectedTracks();
     if (selectedTracks.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     auto tracks = project->trackeditProject()->trackList();
@@ -1706,19 +1852,19 @@ void TrackeditActionsController::splitStereoToLR(const muse::actions::ActionData
         tracksIdsToSplit.push_back(track.id);
     }
 
-    trackeditInteraction()->splitStereoTracksToLRMono(tracksIdsToSplit);
+    return Ret(trackeditInteraction()->splitStereoTracksToLRMono(tracksIdsToSplit));
 }
 
-void TrackeditActionsController::splitStereoToCenter(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::splitStereoToCenter()
 {
     const auto project = globalContext()->currentProject();
     if (!project) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const TrackIdList selectedTracks = selectionController()->selectedTracks();
     if (selectedTracks.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     auto tracks = project->trackeditProject()->trackList();
@@ -1731,10 +1877,10 @@ void TrackeditActionsController::splitStereoToCenter(const muse::actions::Action
         tracksIdsToSplit.push_back(track.id);
     }
 
-    trackeditInteraction()->splitStereoTracksToCenterMono(tracksIdsToSplit);
+    return Ret(trackeditInteraction()->splitStereoTracksToCenterMono(tracksIdsToSplit));
 }
 
-void TrackeditActionsController::trimAudioOutsideSelection()
+muse::Ret TrackeditActionsController::trimAudioOutsideSelection()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto selectedTracks = selectionController()->selectedTracks();
@@ -1743,7 +1889,7 @@ void TrackeditActionsController::trimAudioOutsideSelection()
     auto tracks = project->trackeditProject()->trackList();
 
     if (selectedStartTime >= selectedEndTime) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     std::vector<TrackId> tracksIdsToTrim;
@@ -1756,26 +1902,27 @@ void TrackeditActionsController::trimAudioOutsideSelection()
     }
 
     if (tracksIdsToTrim.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    trackeditInteraction()->trimTracksData(tracksIdsToTrim, selectedStartTime, selectedEndTime);
+    return Ret(trackeditInteraction()->trimTracksData(tracksIdsToTrim, selectedStartTime, selectedEndTime));
 }
 
-void TrackeditActionsController::doGlobalSilence()
+muse::Ret TrackeditActionsController::doGlobalSilence()
 {
     if (!selectionController()->timeSelectionIsEmpty()) {
-        silenceAudioSelection();
-        return;
+        return silenceAudioSelection();
     }
 
     ClipKeyList selectedClips = selectionController()->selectedClips();
-    if (!selectedClips.empty()) {
-        silenceClips(selectedClips);
+    if (selectedClips.empty()) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    return Ret(trackeditInteraction()->silenceClips(selectedClips));
 }
 
-void TrackeditActionsController::silenceAudioSelection()
+muse::Ret TrackeditActionsController::silenceAudioSelection()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto selectedTracks = selectionController()->selectedTracks();
@@ -1793,72 +1940,25 @@ void TrackeditActionsController::silenceAudioSelection()
     }
 
     if (tracksIdsToSilence.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    trackeditInteraction()->silenceTracksData(tracksIdsToSilence, selectedStartTime, selectedEndTime);
+    return Ret(trackeditInteraction()->silenceTracksData(tracksIdsToSilence, selectedStartTime, selectedEndTime));
 }
 
-void TrackeditActionsController::silenceClips(const ClipKeyList& clipKeys)
-{
-    trackeditInteraction()->silenceClips(clipKeys);
-}
-
-void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() == 1) {
-        return;
-    }
-
-    trackedit::ClipKey clipKey = args.arg<trackedit::ClipKey>(0);
-    if (!clipKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->toggleStretchToMatchProjectTempo(clipKey);
-    notifyActionCheckedChanged(STRETCH_ENABLED_CODE);
-}
-
-void TrackeditActionsController::openClipPitchAndSpeed()
+muse::Ret TrackeditActionsController::openClipPitchAndSpeed()
 {
     auto selectedClips = clipsForInteraction();
 
     if (selectedClips.empty() || selectedClips.size() > 1) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     dispatcher()->dispatch("clip-pitch-speed", ActionData::make_arg1<trackedit::ClipKey>(selectedClips.front()));
+    return make_ok();
 }
 
-void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() == 1) {
-        return;
-    }
-
-    trackedit::ClipKey clipKey = args.arg<trackedit::ClipKey>(0);
-    if (!clipKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->renderClipPitchAndSpeed(clipKey);
-}
-
-void TrackeditActionsController::resetClipPitchAndSpeed(const muse::actions::ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() == 1) {
-        return;
-    }
-
-    trackedit::ClipKey clipKey = args.arg<trackedit::ClipKey>(0);
-    if (!clipKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->resetClipPitchAndSpeed(clipKey);
-}
-
-void TrackeditActionsController::groupClips()
+muse::Ret TrackeditActionsController::groupClips()
 {
     const auto selectedClips = clipsForInteraction();
 
@@ -1866,73 +1966,73 @@ void TrackeditActionsController::groupClips()
 
     notifyActionEnabledChanged(GROUP_CLIPS_CODE);
     notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+    return make_ok();
 }
 
-void TrackeditActionsController::ungroupClips()
+muse::Ret TrackeditActionsController::ungroupClips()
 {
     trackeditInteraction()->ungroupClips(clipsForInteraction());
 
     notifyActionEnabledChanged(GROUP_CLIPS_CODE);
     notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+    return make_ok();
 }
 
-void TrackeditActionsController::selectAll()
-{
-    selectionController()->setSelectedAllAudioData();
-}
-
-void TrackeditActionsController::selectNone()
+muse::Ret TrackeditActionsController::selectNone()
 {
     selectionController()->resetTimeSelection();
     selectionController()->resetDataSelection();
     selectionController()->resetSelectedClips();
     selectionController()->resetSelectedTracks();
+    return make_ok();
 }
 
-void TrackeditActionsController::selectAllTracks()
+muse::Ret TrackeditActionsController::selectAllTracks()
 {
     auto prj = globalContext()->currentTrackeditProject();
     if (!prj) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     selectionController()->setSelectedTracks(prj->trackIdList());
+    return make_ok();
 }
 
-void TrackeditActionsController::selectLeftOfPlaybackPos()
+muse::Ret TrackeditActionsController::selectLeftOfPlaybackPos()
 {
     RetVal<Val> rv = interactive()->openSync(makePlaybackPosUri());
     if (!rv.ret) {
-        return;
+        return rv.ret;
     }
 
     secs_t playbackTime = playbackState()->playbackPosition();
 
     if (muse::RealIsEqualOrMore(rv.val.toDouble(), playbackTime)) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     selectionController()->setDataSelectedStartTime(rv.val.toDouble(), true);
     selectionController()->setDataSelectedEndTime(playbackTime, true);
+    return make_ok();
 }
 
-void TrackeditActionsController::selectRightOfPlaybackPos()
+muse::Ret TrackeditActionsController::selectRightOfPlaybackPos()
 {
     RetVal<Val> rv = interactive()->openSync(makePlaybackPosUri());
     if (!rv.ret) {
-        return;
+        return rv.ret;
     }
 
     secs_t playbackTime = playbackState()->playbackPosition();
     secs_t rightOfPlaybackValue = rv.val.toDouble();
     if (muse::RealIsEqualOrLess(rightOfPlaybackValue, playbackTime)) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     //! NOTE: clamp to 2x size of project
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     secs_t maxTime = prj->trackeditProject()->totalTime().to_double() * 2;
@@ -1940,9 +2040,10 @@ void TrackeditActionsController::selectRightOfPlaybackPos()
 
     selectionController()->setDataSelectedStartTime(playbackTime, true);
     selectionController()->setDataSelectedEndTime(rightOfPlaybackValue, true);
+    return make_ok();
 }
 
-void TrackeditActionsController::selectTrackStartToCursor()
+muse::Ret TrackeditActionsController::selectTrackStartToCursor()
 {
     std::optional<secs_t> leftmostItemStartTime = selectionController()->selectedTracksStartTime();
     if (leftmostItemStartTime.has_value()) {
@@ -1952,69 +2053,78 @@ void TrackeditActionsController::selectTrackStartToCursor()
     }
 
     selectionController()->setDataSelectedEndTime(playbackState()->playbackPosition(), true);
+    return make_ok();
 }
 
-void TrackeditActionsController::selectCursorToTrackEnd()
+muse::Ret TrackeditActionsController::selectCursorToTrackEnd()
 {
     std::optional<secs_t> rightmostItemEndTime = selectionController()->selectedTracksEndTime();
-    if (rightmostItemEndTime.has_value()) {
-        selectionController()->setDataSelectedStartTime(playbackState()->playbackPosition(), true);
-        selectionController()->setDataSelectedEndTime(rightmostItemEndTime.value(), true);
-    } else {
+    if (!rightmostItemEndTime.has_value()) {
         //! NOTE: AU3 behavior
-        selectTrackStartToCursor();
+        return selectTrackStartToCursor();
     }
+
+    selectionController()->setDataSelectedStartTime(playbackState()->playbackPosition(), true);
+    selectionController()->setDataSelectedEndTime(rightmostItemEndTime.value(), true);
+    return make_ok();
 }
 
-void TrackeditActionsController::selectTrackStartToEnd()
+muse::Ret TrackeditActionsController::selectTrackStartToEnd()
 {
     std::optional<secs_t> leftmostItemStartTime = selectionController()->selectedTracksStartTime();
     std::optional<secs_t> rightmostItemEndTime = selectionController()->selectedTracksEndTime();
 
-    if (leftmostItemStartTime.has_value() && rightmostItemEndTime.has_value()) {
-        selectionController()->setDataSelectedStartTime(leftmostItemStartTime.value(), true);
-        selectionController()->setDataSelectedEndTime(rightmostItemEndTime.value(), true);
+    if (!leftmostItemStartTime.has_value() || !rightmostItemEndTime.has_value()) {
+        return make_ret(Ret::Code::NotSupported);
     }
+
+    selectionController()->setDataSelectedStartTime(leftmostItemStartTime.value(), true);
+    selectionController()->setDataSelectedEndTime(rightmostItemEndTime.value(), true);
+    return make_ok();
 }
 
-void TrackeditActionsController::setSelection(const muse::actions::ActionQuery& query)
+muse::Ret TrackeditActionsController::setSelection(const Params& params)
 {
-    if (!query.contains("start") || !query.contains("end")) {
+    if (!params.contains(TRACKEDIT_START_PARAM) || !params.contains(TRACKEDIT_END_PARAM)) {
         LOGE() << "set-selection missing required 'start' or 'end' param";
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const double startTime = query.param("start").toDouble();
-    const double endTime = query.param("end").toDouble();
+    const double startTime = params.at(TRACKEDIT_START_PARAM).toDouble();
+    const double endTime = params.at(TRACKEDIT_END_PARAM).toDouble();
     if (startTime < 0.0 || endTime < startTime) {
         LOGE() << "set-selection invalid range: start=" << startTime << " end=" << endTime;
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
 
     selectionController()->setDataSelectedStartTime(startTime, true);
     selectionController()->setDataSelectedEndTime(endTime, true);
+    return make_ok();
 }
 
-void TrackeditActionsController::selectTrackByIndex(const muse::actions::ActionQuery& query)
+muse::Ret TrackeditActionsController::selectTrackByIndex(const Params& params)
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    if (!query.contains("trackIndex")) {
+    if (!params.contains(TRACKEDIT_TRACK_INDEX_PARAM)) {
         LOGE() << "select-track missing required 'trackIndex' param";
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const int trackIndex = query.param("trackIndex").toInt();
+    const int trackIndex = params.at(TRACKEDIT_TRACK_INDEX_PARAM).toInt();
     auto ids = prj->trackIdList();
-    if (trackIndex >= 0 && trackIndex < static_cast<int>(ids.size())) {
-        selectionController()->setSelectedTracks({ ids[trackIndex] }, true);
+    if (trackIndex < 0 || trackIndex >= static_cast<int>(ids.size())) {
+        return make_ret(Ret::Code::BadArgs);
     }
+
+    selectionController()->setSelectedTracks({ ids[trackIndex] }, true);
+    return make_ok();
 }
 
-void TrackeditActionsController::moveCursorToClosestZeroCrossing()
+muse::Ret TrackeditActionsController::moveCursorToClosestZeroCrossing()
 {
     secs_t zeroCrossing = trackeditInteraction()->nearestZeroCrossing(playbackState()->playbackPosition());
     zeroCrossing = std::max(zeroCrossing.to_double(), 0.0);
@@ -2023,74 +2133,73 @@ void TrackeditActionsController::moveCursorToClosestZeroCrossing()
     q.addParam("seekTime", muse::Val(zeroCrossing));
     q.addParam("triggerPlay", muse::Val(false));
     dispatcher()->dispatch(q);
+    return make_ok();
 }
 
-void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& q)
+muse::Ret TrackeditActionsController::setClipColor(const Params& params, const std::function<void()>& onSet)
 {
     auto selectedClips = clipsForInteraction();
     if (selectedClips.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    trackedit::ClipColorIndex colorIndex = trackedit::CLIP_COLOR_INDEX_NONE;
-    if (q.contains("colorindex")) {
-        colorIndex = q.param("colorindex").toInt();
-    }
+    const trackedit::ClipColorIndex colorIndex = params.at(TRACKEDIT_COLOR_INDEX_PARAM, Val(trackedit::CLIP_COLOR_INDEX_NONE)).toInt();
 
     auto clipKey = selectedClips.front();
-    trackeditInteraction()->changeClipColor(clipKey, colorIndex);
-    notifyActionCheckedChanged(q.toString());
+    const bool changed = trackeditInteraction()->changeClipColor(clipKey, colorIndex);
+    onSet();
+    return Ret(changed);
 }
 
-void TrackeditActionsController::setTrackColor(const muse::actions::ActionQuery& q)
+muse::Ret TrackeditActionsController::setTrackColor(const Params& params)
 {
     const auto tracks = selectionController()->selectedTracks();
     if (tracks.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    trackedit::ClipColorIndex colorIndex = trackedit::CLIP_COLOR_INDEX_NONE;
-    if (q.contains("colorindex")) {
-        colorIndex = q.param("colorindex").toInt();
-    }
+    const trackedit::ClipColorIndex colorIndex = params.at(TRACKEDIT_COLOR_INDEX_PARAM, Val(trackedit::CLIP_COLOR_INDEX_NONE)).toInt();
 
-    trackeditInteraction()->changeTracksColor(tracks, colorIndex);
-    notifyActionCheckedChanged(q.toString());
+    const bool changed = trackeditInteraction()->changeTracksColor(tracks, colorIndex);
+    notifyActionCheckedChanged(legacyActionCode(TRACK_CHANGE_COLOR_QUERY, params));
+    return Ret(changed);
 }
 
-void TrackeditActionsController::setTrackFormat(const muse::actions::ActionQuery& q)
+muse::Ret TrackeditActionsController::setTrackFormat(const Params& params)
 {
     const auto tracks = selectionController()->selectedTracks();
     if (tracks.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    if (!q.contains("format")) {
-        return;
+    if (!params.contains(TRACKEDIT_FORMAT_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const int format = q.param("format").toInt();
-    if (trackeditInteraction()->changeTracksFormat(tracks, static_cast<TrackFormat>(format))) {
-        notifyActionCheckedChanged(q.toString());
+    const int format = params.at(TRACKEDIT_FORMAT_PARAM).toInt();
+    const bool changed = trackeditInteraction()->changeTracksFormat(tracks, static_cast<TrackFormat>(format));
+    if (changed) {
+        notifyActionCheckedChanged(legacyActionCode(TRACK_CHANGE_FORMAT_QUERY, params));
     }
+    return Ret(changed);
 }
 
-void TrackeditActionsController::setCustomTrackRate(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::setCustomTrackRate()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const TrackIdList tracks = selectionController()->selectedTracks();
     if (tracks.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const TrackId focusedTrackId = trackNavigationController()->focusedTrack();
     const std::optional<Track> focused = project->trackeditProject()->track(focusedTrackId);
     if (!focused) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     muse::UriQuery customRateUri("audacity://trackedit/custom_rate");
@@ -2099,44 +2208,46 @@ void TrackeditActionsController::setCustomTrackRate(const muse::actions::ActionD
 
     RetVal<Val> rv = interactive()->openSync(customRateUri);
     if (rv.ret.code() != static_cast<int>(Ret::Code::Ok)) {
-        return;
+        return rv.ret;
     }
 
     const auto customRate = rv.val.toInt();
     if (customRate <= 0) {
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    trackeditInteraction()->changeTracksRate(tracks, customRate);
+    return Ret(trackeditInteraction()->changeTracksRate(tracks, customRate));
 }
 
-void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& q)
+muse::Ret TrackeditActionsController::setTrackRate(const Params& params)
 {
     const auto tracks = selectionController()->selectedTracks();
     if (tracks.empty()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    if (!q.contains("rate")) {
-        return;
+    if (!params.contains(TRACKEDIT_RATE_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const int rate = q.param("rate").toInt();
-    if (trackeditInteraction()->changeTracksRate(tracks, rate)) {
-        notifyActionCheckedChanged(q.toString());
+    const int rate = params.at(TRACKEDIT_RATE_PARAM).toInt();
+    const bool changed = trackeditInteraction()->changeTracksRate(tracks, rate);
+    if (changed) {
+        notifyActionCheckedChanged(legacyActionCode(TRACK_CHANGE_RATE_QUERY, params));
     }
+    return Ret(changed);
 }
 
-void TrackeditActionsController::toggleGlobalSpectrogramView()
+muse::Ret TrackeditActionsController::toggleGlobalSpectrogramView()
 {
     const auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const auto viewState = project->viewState();
     IF_ASSERT_FAILED(viewState) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const bool enablingGlobalSpectrogram = !viewState->globalSpectrogramToggleIsOn();
@@ -2145,32 +2256,14 @@ void TrackeditActionsController::toggleGlobalSpectrogramView()
     }
 
     viewState->toggleGlobalSpectrogramView();
+    return make_ok();
 }
 
-void TrackeditActionsController::changeTrackViewToWaveform(const muse::actions::ActionQuery& q)
+muse::Ret TrackeditActionsController::changeTrackView(const TrackId& trackId, TrackViewType trackView)
 {
-    changeTrackView(q, TrackViewType::Waveform);
-}
-
-void TrackeditActionsController::changeTrackViewToSpectrogram(const muse::actions::ActionQuery& q)
-{
-    changeTrackView(q, TrackViewType::Spectrogram);
-}
-
-void TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionQuery& q)
-{
-    changeTrackView(q, TrackViewType::WaveformAndSpectrogram);
-}
-
-void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuery& q, TrackViewType trackView)
-{
-    IF_ASSERT_FAILED(q.params().size() >= 1) {
-        return;
-    }
-    const auto trackId = q.param("trackId").toInt();
     const auto prj = globalContext()->currentProject();
     IF_ASSERT_FAILED(prj) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
     prj->viewState()->setTrackViewType(trackId, trackView);
     switch (trackView) {
@@ -2186,41 +2279,46 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
     default:
         assert(false);
     }
+    return make_ok();
 }
 
-void TrackeditActionsController::addLabel()
+muse::Ret TrackeditActionsController::addLabel()
 {
     const muse::RetVal<LabelKey> newLabel = trackeditInteraction()->addLabelToSelection();
-    if (newLabel.ret) {
-        tracksViewRequestsService()->requestLabelTitleEdit(newLabel.val);
+    if (!newLabel.ret) {
+        return newLabel.ret;
     }
+
+    tracksViewRequestsService()->requestLabelTitleEdit(newLabel.val);
+    return make_ok();
 }
 
-void TrackeditActionsController::renameSelectedItem()
+muse::Ret TrackeditActionsController::renameSelectedItem()
 {
     const LabelKeyList labels = labelsForInteraction();
     if (labels.size() != 1 || !labels.front().isValid()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     tracksViewRequestsService()->requestLabelTitleEdit(labels.front());
+    return make_ok();
 }
 
-void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::makeStereoTrack()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const auto selectedTracks = selectionController()->selectedTracks();
     if (selectedTracks.size() != 1) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const std::optional<Track> selectedTrack = project->trackeditProject()->track(selectionController()->selectedTracks().front());
     if (!selectedTrack || selectedTrack->type != TrackType::Mono) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const TrackList tracks = project->trackeditProject()->trackList();
@@ -2228,33 +2326,33 @@ void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData
                                  [&selectedTrack](const Track& track) { return track.id == selectedTrack->id; });
 
     if (it == tracks.end()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const auto nextTrack = std::next(it);
     if ((nextTrack == tracks.end()) || nextTrack->type != TrackType::Mono) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
-    trackeditInteraction()->makeStereoTrack(selectedTrack->id, nextTrack->id);
+    return Ret(trackeditInteraction()->makeStereoTrack(selectedTrack->id, nextTrack->id));
 }
 
-void TrackeditActionsController::resampleTracks(const muse::actions::ActionData&)
+muse::Ret TrackeditActionsController::resampleTracks()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const TrackIdList selectedTracks = selectionController()->selectedTracks();
     if (selectedTracks.size() == 0) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     const TrackId focusedTrackId = trackNavigationController()->focusedTrack();
     const std::optional<Track> focused = project->trackeditProject()->track(focusedTrackId);
     if (!focused) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     muse::UriQuery resampleUri("audacity://trackedit/custom_rate");
@@ -2269,15 +2367,15 @@ void TrackeditActionsController::resampleTracks(const muse::actions::ActionData&
 
     const RetVal<Val> rv = interactive()->openSync(resampleUri);
     if (rv.ret.code() != static_cast<int>(Ret::Code::Ok)) {
-        return;
+        return rv.ret;
     }
 
     const int customRate = rv.val.toInt();
     if (customRate <= 0) {
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    trackeditInteraction()->resampleTracks(selectedTracks, customRate);
+    return Ret(trackeditInteraction()->resampleTracks(selectedTracks, customRate));
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode&) const
@@ -2338,32 +2436,12 @@ bool TrackeditActionsController::canSilenceAudio() const
     return false;
 }
 
-void TrackeditActionsController::moveFocusedItemLeft()
-{
-    moveFocusedItem(-calculateStepSize(), 0);
-}
-
-void TrackeditActionsController::moveFocusedItemRight()
-{
-    moveFocusedItem(calculateStepSize(), 0);
-}
-
-void TrackeditActionsController::moveFocusedItemUp()
-{
-    moveFocusedItem(0.0, -1);
-}
-
-void TrackeditActionsController::moveFocusedItemDown()
-{
-    moveFocusedItem(0.0, 1);
-}
-
 void TrackeditActionsController::moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset)
 {
     tracksViewRequestsService()->requestItemMove(timePositionOffset, trackPositionOffset);
 }
 
-void TrackeditActionsController::extendFocusedItemBoundaryLeft()
+muse::Ret TrackeditActionsController::extendFocusedItemBoundaryLeft()
 {
     const double stepSize = calculateStepSize();
     static bool completed = true;
@@ -2376,9 +2454,10 @@ void TrackeditActionsController::extendFocusedItemBoundaryLeft()
     } else {
         dispatcher()->dispatch("sel-ext-left");
     }
+    return make_ok();
 }
 
-void TrackeditActionsController::extendFocusedItemBoundaryRight()
+muse::Ret TrackeditActionsController::extendFocusedItemBoundaryRight()
 {
     const double stepSize = calculateStepSize();
     static bool completed = true;
@@ -2391,9 +2470,10 @@ void TrackeditActionsController::extendFocusedItemBoundaryRight()
     } else {
         dispatcher()->dispatch("sel-ext-right");
     }
+    return make_ok();
 }
 
-void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
+muse::Ret TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 {
     const double stepSize = calculateStepSize();
     static bool completed = true;
@@ -2406,9 +2486,10 @@ void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
     } else {
         dispatcher()->dispatch("sel-cntr-right");
     }
+    return make_ok();
 }
 
-void TrackeditActionsController::reduceFocusedItemBoundaryRight()
+muse::Ret TrackeditActionsController::reduceFocusedItemBoundaryRight()
 {
     const double stepSize = calculateStepSize();
     static bool completed = true;
@@ -2421,6 +2502,7 @@ void TrackeditActionsController::reduceFocusedItemBoundaryRight()
     } else {
         dispatcher()->dispatch("sel-cntr-left");
     }
+    return make_ok();
 }
 
 double TrackeditActionsController::zoomLevel() const
