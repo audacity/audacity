@@ -22,6 +22,8 @@ inline static const muse::rcommand::Command APP_SPECTROGRAM_PREFERENCES_COMMAND(
 //! SingleProcessProvider::quitForAll and AppUpdateScenario dispatch this command
 //! with all_instances=false, expecting only the current window to close.
 inline static const muse::rcommand::Command APP_QUIT_COMMAND("command://app/quit");
+inline static const std::string INSTALLER_PATH_PARAM("installer_path");
+
 inline static const muse::rcommand::Command APP_RESTART_COMMAND("command://app/restart");
 inline static const muse::rcommand::Command APP_COPY_COMMAND("command://app/copy");
 inline static const muse::rcommand::Command APP_CUT_COMMAND("command://app/cut");

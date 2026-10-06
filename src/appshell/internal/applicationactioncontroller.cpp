@@ -49,8 +49,6 @@ static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
 static const QString TIMELINE_SECTION_NAME("TimelineSection");
 static const QString VERTICAL_RULER_CONTROL_NAME("VerticalRuler");
 
-static const std::string INSTALLER_PATH_PARAM("installer_path");
-
 static CommandQuery quitConv(const Command& command, const ActionData& args)
 {
     CommandQuery query(command);
