@@ -161,12 +161,13 @@ void DropController::prepareConditionalTracks(int currentTrackId, int draggedFil
 
     const int toCreate = std::min(missingTracks, maxNewAllowed);
 
+    const auto fileNames = lastProbedFileNames();
+
     for (int i = 0; i < toCreate; ++i) {
         const auto trackId = tracksInteraction()->addWaveTrack(1);
-        const auto fileName = muse::io::filename(m_lastDraggedFilesInfo[i].path, false);
         tracksInteraction()->changeTrackTitle(
             trackId,
-            muse::String::fromUtf8(fileName.toStdString())
+            muse::String::fromUtf8(fileNames[i].toString().toStdString())
         );
     }
 }
