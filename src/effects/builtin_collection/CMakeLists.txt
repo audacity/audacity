@@ -38,6 +38,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/autoduck/autoduckeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/autoduck/autoduckeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/autoduck/autoduckviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/autoduck/autoduckviewmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/loudness/normalizeloudnesseffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/loudness/normalizeloudnesseffect.h
