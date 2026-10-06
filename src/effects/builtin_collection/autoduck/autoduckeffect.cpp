@@ -2,20 +2,21 @@
 
   Audacity: A Digital Audio Editor
 
-  AutoDuckBase.cpp
+  autoduckeffect.cpp
 
   Markus Meyer
 
 *******************************************************************//**
 
-\class AutoDuckBase
+\class AutoDuckEffect
 \brief Implements the Auto Ducking effect
 
 \class AutoDuckRegion
 \brief a struct that holds a start and end time.
 
 *******************************************************************/
-#include "AutoDuckBase.h"
+#include "autoduckeffect.h"
+
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
@@ -23,14 +24,17 @@
 #include "au3-exceptions/UserException.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+
 #include <cmath>
 
-const ComponentInterfaceSymbol AutoDuckBase::Symbol { TranslatableString("builtin-effects", "Auto Duck") };
+using namespace au::effects;
 
-const EffectParameterMethods& AutoDuckBase::Parameters() const
+const ComponentInterfaceSymbol AutoDuckEffect::Symbol { "Auto Duck", TranslatableString("effects-autoduck", "Auto duck") };
+
+const EffectParameterMethods& AutoDuckEffect::Parameters() const
 {
     static CapturedParameters<
-        AutoDuckBase, DuckAmountDb, InnerFadeDownLen, InnerFadeUpLen,
+        AutoDuckEffect, DuckAmountDb, InnerFadeDownLen, InnerFadeUpLen,
         OuterFadeDownLen, OuterFadeUpLen, ThresholdDb, MaximumPause>
     parameters;
     return parameters;
@@ -60,43 +64,44 @@ struct AutoDuckRegion
     double t1;
 };
 
-AutoDuckBase::AutoDuckBase()
+AutoDuckEffect::AutoDuckEffect()
 {
     Parameters().Reset(*this);
     SetLinearEffectFlag(true);
 }
 
-AutoDuckBase::~AutoDuckBase()
+AutoDuckEffect::~AutoDuckEffect()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol AutoDuckBase::GetSymbol() const
+ComponentInterfaceSymbol AutoDuckEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString AutoDuckBase::GetDescription() const
+TranslatableString AutoDuckEffect::GetDescription() const
 {
-    return TranslatableString("builtin-effects", "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level");
+    return TranslatableString("effects-autoduck",
+                              "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level");
 }
 
-ManualPageID AutoDuckBase::ManualPage() const
+ManualPageID AutoDuckEffect::ManualPage() const
 {
     return L"Auto_Duck";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType AutoDuckBase::GetType() const
+::EffectType AutoDuckEffect::GetType() const
 {
     return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool AutoDuckBase::Init()
+bool AutoDuckEffect::Init()
 {
     mControlTrack = nullptr;
 
@@ -125,7 +130,7 @@ bool AutoDuckBase::Init()
                     /*: Auto duck is the name of an effect that 'ducks'
                      (reduces the volume) of the audio automatically when there is
                      sound on another track.  Not as in 'Donald-Duck'!*/
-                    TranslatableString("builtin-effects", "You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
+                    TranslatableString("effects-autoduck", "You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
                     MessageBoxOptions {}.IconStyle(Icon::Error));
                 return false;
             });
@@ -141,7 +146,7 @@ bool AutoDuckBase::Init()
             /*: Auto duck is the name of an effect that 'ducks' (reduces
              the volume) of the audio automatically when there is sound on another
              track.  Not as in 'Donald-Duck'!*/
-            TranslatableString("builtin-effects", "Auto Duck needs a control track which must be placed below the selected track(s)."),
+            TranslatableString("effects-autoduck", "Auto Duck needs a control track which must be placed below the selected track(s)."),
             MessageBoxOptions {}.IconStyle(Icon::Error));
         return false;
     }
@@ -150,7 +155,7 @@ bool AutoDuckBase::Init()
     return true;
 }
 
-bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
+bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
 {
     if (GetNumWaveTracks() == 0 || !mControlTrack) {
         return false;
@@ -181,7 +186,7 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
                         { { t0, t1 } }, reportProgress);
                 },
                     TimeStretching::defaultStretchRenderingTitle,
-                    TranslatableString("builtin-effects", "Rendering Control-Track Time-Stretched Audio"));
+                    TranslatableString("effects-autoduck", "Rendering Control-Track Time-Stretched Audio"));
                 pControlTrack = pFirstTrack.get();
             }
         }
@@ -320,10 +325,10 @@ done:
     return !cancel;
 }
 
-// AutoDuckBase implementation
+// AutoDuckEffect implementation
 
 // this currently does an exponential fade
-bool AutoDuckBase::ApplyDuckFade(
+bool AutoDuckEffect::ApplyDuckFade(
     int trackNum, WaveChannel& track, double t0, double t1)
 {
     bool cancel = false;
