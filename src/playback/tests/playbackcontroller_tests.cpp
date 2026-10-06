@@ -20,6 +20,7 @@
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
 #include "../internal/playbackcontroller.h"
+#include "../playbackcommands.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -158,16 +159,16 @@ public:
     void changePlaybackRegion(const secs_t start, const secs_t end)
     {
         m_controller->onChangePlaybackRegionAction({
-                { "start", muse::Val(start) },
-                { "end", muse::Val(end) },
+                { PLAYBACK_CHANGE_PLAY_REGION_START_PARAM, muse::Val(start) },
+                { PLAYBACK_CHANGE_PLAY_REGION_END_PARAM, muse::Val(end) },
             });
     }
 
     void seek(const secs_t seekTime, const bool triggerPlay = false)
     {
         m_controller->onSeekAction({
-                { "seekTime", muse::Val(seekTime) },
-                { "triggerPlay", muse::Val(triggerPlay) },
+                { PLAYBACK_SEEK_TIME_PARAM, muse::Val(seekTime) },
+                { PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(triggerPlay) },
             });
     }
 
@@ -217,12 +218,12 @@ public:
 
     void changeAudioApi(int index)
     {
-        m_controller->setAudioApi({ { "api_index", muse::Val(index) } });
+        m_controller->setAudioApi({ { PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM, muse::Val(index) } });
     }
 
     void changeInputDevice(int index)
     {
-        m_controller->setAudioInputDevice({ { "device_index", muse::Val(index) } });
+        m_controller->setAudioInputDevice({ { PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM, muse::Val(index) } });
     }
 
     void playFromCurrentState()
