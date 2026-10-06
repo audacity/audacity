@@ -22,7 +22,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Exit"),
         InputSchema({
-                { "installer_path", Arg(DataType::String, u"Path of an update package to apply after all windows are closed") },
+                { INSTALLER_PATH_PARAM, Arg(DataType::String, u"Path of an update package to apply after all windows are closed") },
             }),
         Decoration()
     },
