@@ -17,7 +17,6 @@
 *******************************************************************/
 #include "autoduckeffect.h"
 
-#include "au3-basic-ui/BasicUI.h"
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-wave-track/TimeStretching.h"
@@ -101,67 +100,89 @@ ManualPageID AutoDuckEffect::ManualPage() const
 
 // Effect implementation
 
+namespace {
+bool isIn(::TrackId id, const std::vector<AutoDuckEffect::ControlTrackCandidate>& candidates)
+{
+    return std::ranges::any_of(candidates, [id](const AutoDuckEffect::ControlTrackCandidate& c) { return c.id == id; });
+}
+}
+
 bool AutoDuckEffect::Init()
 {
-    mControlTrack = nullptr;
-
-    // Find the control track, which is the non-selected wave track immediately
-    // after the last selected wave track.  Fail if there is no such track or if
-    // any selected track is not a wave track.
+    // Any wave track that is not processed may serve as control track. The
+    // default is AU3's choice, i.e., the non-selected wave track immediately
+    // after the last selected wave track.
+    mControlTrackCandidates.clear();
+    std::optional<::TrackId> waveTrackJustBelowSelection;
     bool lastWasSelectedWaveTrack = false;
-    const WaveTrack* controlTrackCandidate = nullptr;
-    for (auto t : *inputTracks()) {
-        if (lastWasSelectedWaveTrack && !t->GetSelected()) {
-            // This could be the control track, so remember it
-            controlTrackCandidate = dynamic_cast<const WaveTrack*>(t);
-        }
-
-        lastWasSelectedWaveTrack = false;
+    for (const Track* t : *inputTracks()) {
+        const auto waveTrack = dynamic_cast<const WaveTrack*>(t);
         if (t->GetSelected()) {
-            bool ok = t->TypeSwitch<bool>(
-                [&](const WaveTrack&) {
-                lastWasSelectedWaveTrack = true;
-                controlTrackCandidate = nullptr;
-                return true;
-            },
-                [&](const Track&) {
-                using namespace BasicUI;
-                ShowMessageBox(
-                    /*: Auto duck is the name of an effect that 'ducks'
-                     (reduces the volume) of the audio automatically when there is
-                     sound on another track.  Not as in 'Donald-Duck'!*/
-                    TranslatableString("effects-autoduck", "You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
-                    MessageBoxOptions {}.IconStyle(Icon::Error));
-                return false;
-            });
-            if (!ok) {
-                return false;
+            lastWasSelectedWaveTrack = waveTrack != nullptr;
+            if (waveTrack) {
+                waveTrackJustBelowSelection.reset();
+            }
+            continue;
+        }
+        if (waveTrack) {
+            mControlTrackCandidates.push_back({ waveTrack->GetId(), waveTrack->GetName().ToStdString() });
+            if (lastWasSelectedWaveTrack) {
+                waveTrackJustBelowSelection = waveTrack->GetId();
             }
         }
+        lastWasSelectedWaveTrack = false;
     }
 
-    if (!controlTrackCandidate) {
-        using namespace BasicUI;
-        ShowMessageBox(
-            /*: Auto duck is the name of an effect that 'ducks' (reduces
-             the volume) of the audio automatically when there is sound on another
-             track.  Not as in 'Donald-Duck'!*/
-            TranslatableString("effects-autoduck", "Auto Duck needs a control track which must be placed below the selected track(s)."),
-            MessageBoxOptions {}.IconStyle(Icon::Error));
-        return false;
+    if (!mControlTrackId || !isIn(*mControlTrackId, mControlTrackCandidates)) {
+        // User hasn't made a choice or it doesn't apply anymore.
+        if (waveTrackJustBelowSelection) {
+            mControlTrackId = waveTrackJustBelowSelection;
+        } else if (!mControlTrackCandidates.empty()) {
+            mControlTrackId = mControlTrackCandidates.front().id;
+        } else {
+            mControlTrackId.reset();
+        }
     }
 
-    mControlTrack = controlTrackCandidate;
+    // Do not fail if there is no control track: the dialog tells the user.
     return true;
+}
+
+const std::vector<AutoDuckEffect::ControlTrackCandidate>& AutoDuckEffect::ControlTrackCandidates() const
+{
+    return mControlTrackCandidates;
+}
+
+std::optional<::TrackId> AutoDuckEffect::ControlTrackId() const
+{
+    return mControlTrackId;
+}
+
+void AutoDuckEffect::SetControlTrackId(::TrackId id)
+{
+    mControlTrackId = id;
+}
+
+const WaveTrack* AutoDuckEffect::FindControlTrack() const
+{
+    if (!mControlTrackId || !inputTracks()) {
+        return nullptr;
+    }
+    // During preview, inputTracks() only contains the preview tracks, but they
+    // share the owning project.
+    const auto project = inputTracks()->GetOwner();
+    if (!project) {
+        return nullptr;
+    }
+    return dynamic_cast<const WaveTrack*>(TrackList::Get(*project).FindById(*mControlTrackId));
 }
 
 bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
 {
-    if (GetNumWaveTracks() == 0 || !mControlTrack) {
+    const WaveTrack* controlTrack = FindControlTrack();
+    if (GetNumWaveTracks() == 0 || !controlTrack) {
         return false;
     }
-
-    const WaveTrack* controlTrack = mControlTrack;
 
     bool cancel = false;
 
