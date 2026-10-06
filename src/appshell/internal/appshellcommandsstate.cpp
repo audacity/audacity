@@ -24,7 +24,7 @@ void AppShellCommandsState::init()
     }
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
-        updateCommandStates({ GLOBAL_QUIT_COMMAND, GLOBAL_RESTART_COMMAND });
+        updateCommandStates({ APP_QUIT_COMMAND, APP_RESTART_COMMAND });
     });
 
     mainWindow()->isFullScreenChanged().onNotify(this, [this]() {
@@ -32,7 +32,7 @@ void AppShellCommandsState::init()
     });
 
     uiContextResolver()->currentUiContextChanged().onNotify(this, [this]() {
-        updateCommandStates({ GLOBAL_CONTEXT_MENU_COMMAND });
+        updateCommandStates({ APP_CONTEXT_MENU_COMMAND });
     });
 
     updateCommandStates();
@@ -64,7 +64,7 @@ void AppShellCommandsState::updateCommandStates(const std::vector<Command>& comm
 
 CommandState AppShellCommandsState::commandState(const Command& command) const
 {
-    if (command == GLOBAL_QUIT_COMMAND || command == GLOBAL_RESTART_COMMAND) {
+    if (command == APP_QUIT_COMMAND || command == APP_RESTART_COMMAND) {
         return CommandState(!recordController()->isRecording(), false);
     }
 
@@ -72,7 +72,7 @@ CommandState AppShellCommandsState::commandState(const Command& command) const
         return CommandState(true, mainWindow()->isFullScreen());
     }
 
-    if (command == GLOBAL_CONTEXT_MENU_COMMAND) {
+    if (command == APP_CONTEXT_MENU_COMMAND) {
         return CommandState(uiContextResolver()->matchWithCurrent(context::UiCtxProjectFocused), false);
     }
 
