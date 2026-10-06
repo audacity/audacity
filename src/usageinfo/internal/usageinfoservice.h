@@ -8,7 +8,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/network/inetworkmanagercreator.h"
-#include "framework/cloud/icloudconfiguration.h"
+#include "framework/network/inetworkconfiguration.h"
 
 #include "iusageinfo.h"
 
@@ -16,7 +16,7 @@ namespace au::usageinfo {
 class UsageInfoService : public IUsageInfo, public muse::update::IUpdateRequestParamsProvider, public muse::async::Asyncable
 {
     muse::GlobalInject<muse::network::INetworkManagerCreator> networkManagerCreator;
-    muse::GlobalInject<muse::cloud::ICloudConfiguration> cloudConfiguration;
+    muse::GlobalInject<muse::network::INetworkConfiguration> networkConfiguration;
 
 public:
     void init();
