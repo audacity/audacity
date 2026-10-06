@@ -1907,21 +1907,9 @@ double AudioIO::GetStreamTime()
 //
 //////////////////////////////////////////////////////////////////////
 
-static std::shared_ptr<AudioIoCallback::AudioThreadPacer>& AudioThreadPacerStorage()
-{
-    static std::shared_ptr<AudioIoCallback::AudioThreadPacer> pacer = std::make_shared<AudioIoCallback::AudioThreadPacer>();
-    return pacer;
-}
-
-void AudioIoCallback::SetAudioThreadPacerForTests(std::shared_ptr<AudioThreadPacer> pacer)
-{
-    AudioThreadPacerStorage() = pacer ? std::move(pacer) : std::make_shared<AudioThreadPacer>();
-}
-
 //! Sits in a thread loop reading and writing audio.
 void AudioIO::AudioThread(std::atomic<bool>& finish)
 {
-    const auto pacer = AudioThreadPacerStorage();
     enum class ProcessingState {
         eSkipProcessing, ePrimeProcessing, eCallbackProcessing
     } lastState = ProcessingState::eSkipProcessing;
@@ -1972,7 +1960,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
         gAudioIO->mAudioThreadSequenceBufferExchangeLoopActive
         .store(false, std::memory_order_relaxed);
 
-        pacer->SleepUntil(loopPassStart + interval);
+        std::this_thread::sleep_until(loopPassStart + interval);
     }
 }
 
@@ -3597,12 +3585,10 @@ void AudioIoCallback::StartBufferExchangeOnAudioThread()
 
 void AudioIoCallback::WaitForBufferExchangeStartedOnAudioThread()
 {
-    const auto pacer = AudioThreadPacerStorage();
-    while (mBufferExchangeAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStart
-           && pacer->KeepWaiting())
+    while (mBufferExchangeAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStart)
     {
         using namespace std::chrono;
-        pacer->SleepFor(50ms);
+        std::this_thread::sleep_for(50ms);
     }
     mBufferExchangeAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
@@ -3614,12 +3600,10 @@ void AudioIoCallback::StopBufferExchangeOnAudioThread()
 
 void AudioIoCallback::WaitForBufferExchangeStoppedOnAudioThread()
 {
-    const auto pacer = AudioThreadPacerStorage();
-    while (mBufferExchangeAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStop
-           && pacer->KeepWaiting())
+    while (mBufferExchangeAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStop)
     {
         using namespace std::chrono;
-        pacer->SleepFor(50ms);
+        std::this_thread::sleep_for(50ms);
     }
     mBufferExchangeAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
