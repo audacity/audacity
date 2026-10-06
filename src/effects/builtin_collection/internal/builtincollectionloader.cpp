@@ -19,6 +19,7 @@
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
+#include "autoduck/autoduckeffect.h"
 #include "loudness/normalizeloudnesseffect.h"
 #include "loudness/normalizeloudnessviewmodel.h"
 #include "clickremoval/clickremovaleffect.h"
@@ -89,6 +90,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< ChangePitchEffect > regChangePitch;
 #endif
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
+    static BuiltinEffectsModule::Registration< AutoDuckEffect > regAutoDuck;
     static BuiltinEffectsModule::Registration< NormalizeLoudnessEffect > regLoudness;
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
     static BuiltinEffectsModule::Registration< FilterCurveEq > regFilterCurveEq;
