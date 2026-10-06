@@ -103,6 +103,7 @@ ManualPageID AutoDuckEffect::ManualPage() const
 
 bool AutoDuckEffect::Init()
 {
+    mSelectionT0 = mT0;
     mControlTrack = nullptr;
 
     // Find the control track, which is the non-selected wave track immediately
@@ -161,17 +162,28 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
         return false;
     }
 
+    const WaveTrack* controlTrack = mControlTrack;
+
+    // Preview tracks are copies of the selection, moved to start at time zero.
+    // Do the same with the control track so that it lines up with them.
+    WaveTrack::Holder previewControlTrack;
+    if (IsPreviewing()) {
+        previewControlTrack = std::static_pointer_cast<WaveTrack>(
+            controlTrack->Copy(mSelectionT0 + mT0, mSelectionT0 + mT1, /*forClipboard=*/ false));
+        controlTrack = previewControlTrack.get();
+    }
+
     bool cancel = false;
 
-    const auto controlTrackStart = mControlTrack->TimeToLongSamples(mT0 + mOuterFadeDownLen);
-    const auto controlTrackEnd = mControlTrack->TimeToLongSamples(mT1 - mOuterFadeUpLen);
+    const auto controlTrackStart = controlTrack->TimeToLongSamples(mT0 + mOuterFadeDownLen);
+    const auto controlTrackEnd = controlTrack->TimeToLongSamples(mT1 - mOuterFadeUpLen);
 
     if (controlTrackEnd <= controlTrackStart) {
         return false;
     }
 
     WaveTrack::Holder pFirstTrack;
-    auto pControlTrack = mControlTrack;
+    auto pControlTrack = controlTrack;
     // If there is any stretch in the control track, substitute a temporary
     // rendering before trying to use GetFloats
     {
