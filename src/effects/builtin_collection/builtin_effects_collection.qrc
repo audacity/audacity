@@ -8,6 +8,9 @@
         <file>qml/Audacity/BuiltinEffectsCollection/SettingKnob.qml</file>
 
         <file>amplify/AmplifyView.qml</file>
+        <file>autoduck/AutoDuckView.qml</file>
+        <file>autoduck/AutoDuckGraph.qml</file>
+        <file>autoduck/duck.png</file>
         <file>clickremoval/ClickRemovalView.qml</file>
         <file>loudness/NormalizeLoudnessView.qml</file>
         <file>truncatesilence/TruncateSilenceView.qml</file>

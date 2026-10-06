@@ -31,6 +31,7 @@ Item {
 
     // When false, the plotting background fills the whole item.
     property bool showTicks: true
+    property bool showBorder: false
 
     property alias radius: background.radius
 
@@ -165,6 +166,16 @@ Item {
             color: background.color
             radius: background.radius
             visible: !root.showGrid
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            z: 2 // above all grid lines and the overlay hiding them, below the content
+            color: "transparent"
+            radius: background.radius
+            border.width: 1
+            border.color: ui.theme.extra["dynamics_grid_color"]
+            visible: root.showBorder
         }
 
         Item {
