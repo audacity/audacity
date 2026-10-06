@@ -86,7 +86,7 @@ void TrackSpectrogramContextMenuModel::load()
     }
 
     uicomponents::MenuItem* const settingsItem = makeMenuItem(muse::rcommand::make_query(TRACK_SPECTROGRAM_SETTINGS_COMMAND, {
-            { "trackId", muse::Val(m_trackId) }
+            { TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM, muse::Val(m_trackId) }
         }));
     IF_ASSERT_FAILED(settingsItem) {
         return;
