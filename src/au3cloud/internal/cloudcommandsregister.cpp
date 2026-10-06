@@ -48,7 +48,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action title: shown as a menu item or a button label; keep it short
         muse::TranslatableString("action", "View profile on audio.com"),
         //: Action description: shown as a tooltip; can be a full sentence
-        muse::TranslatableString("action_description", "Open the signed in user's audio.com profile page"),
+        muse::TranslatableString("action_description", "Open the signed in user’s audio.com profile page"),
         InputSchema(),
         Decoration()
     },
