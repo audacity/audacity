@@ -56,12 +56,12 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="238"/>
         <source>Shift+&amp;Enter</source>
-        <translation>Shift+&amp;Enter</translation>
+        <translation>Maiusc+&amp;Entrée</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
         <source>Trigger the focused control or make a range selection of track items</source>
-        <translation>Scruchjà u cuntrollu messu in evidenza o fà una selezzione di zona di l’elementi di traccia</translation>
+        <translation>Scruchjà u cuntrollu messu in evidenza o fà una selezzione di seria d’elementi di traccia</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
@@ -109,11 +109,11 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
         <source>Restore the &amp;default layout</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Risturà l&apos;accunciamentu &amp;predefinitu</translation>
+        <translation>Risturà l’accunciamentu &amp;predefinitu</translation>
     </message>
     <message>
         <source>Restore the default layout</source>
-        <translation type="vanished">Risturà l&apos;accunciamentu predefinitu</translation>
+        <translation type="vanished">Risturà l’accunciamentu predefinitu</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
@@ -511,13 +511,13 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="208"/>
         <source>Change playback device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cambià l&apos;apparechju di lettura</translation>
+        <translation>Cambià l’apparechju di lettura</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
         <source>Change recording device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cambià l&apos;apparechju d&apos;arregistramentu</translation>
+        <translation>Cambià l’apparechju d&apos;arregistramentu</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="226"/>
@@ -565,13 +565,13 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="284"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="285"/>
         <source>Mute/unmute focused track</source>
-        <translation>Ammutulì / Disammutulì a traccia messa in evidenza</translation>
+        <translation>Ammutulì/ùn ammuttulì a traccia messa in evidenza</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="292"/>
         <source>Solo/unsolo focused track</source>
-        <translation>Solo / Micca solo per a traccia messa in evidenza</translation>
+        <translation>Rende solo, o micca, a traccia messa in evidenza</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="298"/>
@@ -583,7 +583,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="305"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="306"/>
         <source>Unmute all tracks</source>
-        <translation>Disammutulì tutte e traccie</translation>
+        <translation>Ùn ammutulì tutte e traccie</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="312"/>
@@ -595,7 +595,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="319"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="320"/>
         <source>Unmute selected tracks</source>
-        <translation>Disammutulì e traccie selezziunate</translation>
+        <translation>Ùn ammutulì e traccie selezziunate</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="330"/>
@@ -2148,7 +2148,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
         <source>Restore the default layout</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Risturà l&apos;accunciamentu predefinitu</translation>
+        <translation>Risturà l’accunciamentu predefinitu</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
@@ -2388,13 +2388,13 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
         <source>Change playback device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Cambià l&apos;apparechju di lettura</translation>
+        <translation>Cambià l’apparechju di lettura</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="219"/>
         <source>Change recording device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Cambià l&apos;apparechju d&apos;arregistramentu</translation>
+        <translation>Cambià l’apparechju d&apos;arregistramentu</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="228"/>
@@ -4978,7 +4978,7 @@ St’azzione ùn squasserà alcunu di i vostri prughjetti.</translation>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="178"/>
         <source>Could not start the sign-in process. Please try again.</source>
-        <translation>Ùn hè micca pussibule di lancià u prucessu di cunnessione. Ci vole à pruvà torna.</translation>
+        <translation>Ùn si pò micca lancià u trattamentu di cunnessione. Ci vole à pruvà torna.</translation>
     </message>
 </context>
 <context>
@@ -7200,7 +7200,7 @@ Pruvate di reinizià tutti i pezzi stinzati o di mischià è trasfurmà e tracci
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
         <source>Show commands list</source>
-        <translation>Affissà a lista di i cumandi</translation>
+        <translation>Affissà a lista di e cumande</translation>
     </message>
     <message>
         <source>Show rcommands list</source>
@@ -11764,12 +11764,12 @@ Ci vole à infurmà a squadra Audacity à https://forum.audacityteam.org/.</tran
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
         <source>Number files in label order</source>
-        <translation>Numerutà i schedarii in l&apos;ordine di l&apos;etichette</translation>
+        <translation>Numerà i schedarii in l’ordine di l’etichette</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
         <source>Number files in track order</source>
-        <translation>Numerutà i schedarii in l&apos;ordine di e traccie</translation>
+        <translation>Numerà i schedarii in l’ordine di e traccie</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="232"/>
@@ -11846,7 +11846,7 @@ Ci vole à infurmà a squadra Audacity à https://forum.audacityteam.org/.</tran
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="682"/>
         <source>Include audio before first label</source>
-        <translation>Include l&apos;audio nanzu à a prima etichetta</translation>
+        <translation>Include l’audio nanzu à a prima etichetta</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
@@ -12123,12 +12123,12 @@ Certi cudechi ponu solu accettà valori specifichi (128k, 192k, 256k, ecc.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="573"/>
         <source>No labels to export.</source>
-        <translation>Nulla etichetta à espurtà.</translation>
+        <translation>Nisuna etichetta à espurtà.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="578"/>
         <source>There are no tracks to export</source>
-        <translation>Ùn ci hè nulla traccia à espurtà</translation>
+        <translation>Ùn ci hè alcuna traccia à espurtà</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="44"/>
@@ -12142,7 +12142,7 @@ Certi cudechi ponu solu accettà valori specifichi (128k, 192k, 256k, ecc.)
     </message>
     <message>
         <source>Export full project audio</source>
-        <translation type="vanished">Espurtà u prughjettu audio sanu</translation>
+        <translation type="vanished">Espurtà l’audio cumpletu di u prughjettu</translation>
     </message>
     <message>
         <source>Export selected audio</source>
@@ -12175,24 +12175,24 @@ Certi cudechi ponu solu accettà valori specifichi (128k, 192k, 256k, ecc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
         <source>No labels</source>
-        <translation>Nulla etichetta</translation>
+        <translation>Nisuna etichetta</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="240"/>
         <source>Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</source>
-        <translation>Espurtà e regioni etichettate cum&apos;è schedarii audio separati richiede almenu una etichetta nant&apos;à a prima traccia d&apos;etichette. Turnate à u prughjettu, aghjunghjete etichette è pruvate torna.</translation>
+        <translation>L’espurtazione di regioni etichettate cum’è schedarii audio staccati richiede omancu un’etichetta nant’à a prima traccia d&apos;etichette. Ci vole à riturnà à u prughjettu, aghjunghje l’etichette è pruvà torna.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="334"/>
         <source>LabelName</source>
         <extracomment>Placeholder for a label's name in the export file name preview</extracomment>
-        <translation>NomeEtichetta</translation>
+        <translation>NomeDEtichetta</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="336"/>
         <source>TrackName</source>
         <extracomment>Placeholder for a track's name in the export file name preview</extracomment>
-        <translation>NomeTraccia</translation>
+        <translation>NomeDiTraccia</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="558"/>
@@ -12207,7 +12207,7 @@ Certi cudechi ponu solu accettà valori specifichi (128k, 192k, 256k, ecc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
         <source>Export failed</source>
-        <translation>Fiascu di l&apos;espurtazione</translation>
+        <translation>Fiascu di l’espurtazione</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="760"/>
@@ -12217,7 +12217,7 @@ Certi cudechi ponu solu accettà valori specifichi (128k, 192k, 256k, ecc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="781"/>
         <source>Some of the files already exist. Do you want to overwrite them?</source>
-        <translation>Certi schedarii esistinu digià. Vulete rimpiazzalli ?</translation>
+        <translation>Certi schedarii esistenu dighjà. Vulete rimpiazzalli ?</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="791"/>
@@ -12232,7 +12232,7 @@ Certi cudechi ponu solu accettà valori specifichi (128k, 192k, 256k, ecc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="54"/>
         <source>Full project audio</source>
-        <translation>Audio sanu di u prughjettu</translation>
+        <translation>Audio cumpletu di u prughjettu</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="55"/>
@@ -12247,12 +12247,12 @@ Certi cudechi ponu solu accettà valori specifichi (128k, 192k, 256k, ecc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="57"/>
         <source>Tracks as separate audio files</source>
-        <translation>Traccie cum&apos;è schedarii audio separati</translation>
+        <translation>Traccie cum’è schedarii audio staccati</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="58"/>
         <source>Labeled regions as separate audio files</source>
-        <translation>Regioni etichettate cum&apos;è schedarii audio separati</translation>
+        <translation>Regioni etichettate cum’è schedarii audio staccati</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="865"/>
@@ -16830,7 +16830,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="51"/>
         <source>An unknown network-related error occurred</source>
-        <translation>Un errore scunnisciutu in relazione cù a reta s&apos;hè affacatu</translation>
+        <translation>Un sbagliu scunnisciutu in relazione cù a reta hè accadutu</translation>
     </message>
     <message>
         <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
@@ -18416,7 +18416,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="143"/>
         <source>Projects tab bar</source>
-        <translation>Barra d’unghjetta di i prughjetti</translation>
+        <translation>Barra d’unghjette di i prughjetti</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="154"/>
@@ -20293,7 +20293,7 @@ Ci vole à lancià sta versione d’Audacity per ricuperà u prughjettu.</transl
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="55"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="66"/>
         <source>Timeline</source>
-        <translation>Linea di tempu</translation>
+        <translation>Linea tempurale</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
@@ -22771,7 +22771,7 @@ Vulete cuntinuà ?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="85"/>
         <source>A new update is ready to install</source>
-        <translation>Un novu rinnovu hè prontu à esse installatu</translation>
+        <translation>Una messa à livellu nova hè prontu à installà</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="86"/>
@@ -22781,7 +22781,7 @@ Vulete cuntinuà ?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="97"/>
         <source>%1 has downloaded an update and is ready to install. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
-        <translation>%1 hà scaricatu un rinnovu è hè prontu à l’installà. %1 serà rilanciatu per compie l’installazione. S’è vo avete mudificazioni micca arregistrate, vi serà dumandatu di l’arregistrà prima.</translation>
+        <translation>%1 hà scaricatu una messa à livellu è hè prontu à installalla. %1 serà rilanciatu per compie l’installazione. S’è vo avete certi cambiamenti chì ùn sò ancu arregistrati, vi serà dumandatu d’arregistralli prima.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="110"/>
@@ -22792,7 +22792,7 @@ Vulete cuntinuà ?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="131"/>
         <source>%1 Release notes</source>
-        <translation>Annutazioni di versione %1</translation>
+        <translation>Annutazioni di versione di %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
@@ -22807,11 +22807,11 @@ Vulete cuntinuà ?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="89"/>
         <source>Update now</source>
-        <translation>Rinnuvà avà</translation>
+        <translation>Mette à livellu subitu</translation>
     </message>
     <message>
         <source>Install update</source>
-        <translation type="vanished">Installà u rinnovu</translation>
+        <translation type="vanished">Installà a messa à livellu</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22849,12 +22849,12 @@ Vulete cuntinuà ?</translation>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="188"/>
         <source>Not enough disk space</source>
-        <translation>Micca abbastanza spaziu nant’à u discu</translation>
+        <translation>Ùn ci hè abbastanza spaziu nant’à u discu</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="265"/>
         <source>%1 has downloaded an update and is ready to install it. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
-        <translation>%1 hà scaricatu un rinnovu è hè prontu à l’installà. %1 serà rilanciatu per compie l’installazione. S’è vo avete mudificazioni micca arregistrate, vi serà dumandatu di l’arregistrà prima.</translation>
+        <translation>%1 hà scaricatu una messa à livellu è hè prontu à installalla. %1 serà rilanciatu per compie l’installazione. S’è vo avete certi cambiamenti chì ùn sò ancu arregistrati, vi serà dumandatu d’arregistralli prima.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="272"/>
@@ -22885,27 +22885,27 @@ Vulete cuntinuà ?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="65"/>
         <source>Updated successfully</source>
-        <translation>Rinnuvatu bè</translation>
+        <translation>Messu à livellu currettamente</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="53"/>
         <source>Update available</source>
-        <translation>Rinnovu dispunibule</translation>
+        <translation>Messa à livellu dispunibule</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="87"/>
         <source>See details</source>
-        <translation>Vede i detagli</translation>
+        <translation>Affissà i detaglii</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="97"/>
         <source>Update</source>
-        <translation>Rinnuvà</translation>
+        <translation>Mette à livellu</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="375"/>
         <source>Free up at least %1 MB of disk space and try again.</source>
-        <translation>Liberate almenu %1 MB di spaziu nant’à u discu è pruvate torna.</translation>
+        <translation>Liberà omancu %1 Mo di spaziu nant’à u discu è pruvà torna.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="546"/>
