@@ -15,6 +15,7 @@
 #include "au3-project/Project.h"
 #include "au3-effects/Effect.h"
 #include "au3-effects/MixAndRender.h"
+#include "au3-exceptions/AudacityException.h"
 
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -718,13 +719,23 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
     return success;
 }
 
-namespace {
-void restoreEffectStateHack(EffectBase& effect)
+void EffectExecutionScenario::restoreEffectStateHack(EffectBase& effect, const EffectContext& ctx) noexcept
 {
-    if (auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance())) {
-        pInstance->Init();
-    }
-}
+    effect.mT0 = ctx.t0;
+    effect.mT1 = ctx.t1;
+    effect.mTracks = ctx.tracks;
+    effect.mProgress = ctx.preparingPreviewProgress;
+    effect.mIsPreview = ctx.isPreview;
+    effect.CountWaveTracks();
+
+    // Process() may have altered the state of stateful effects:
+    // Init() again so that it is the way it was before the preview.
+    // Called from destructors, so it must not throw.
+    GuardedCall([&] {
+        if (auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance())) {
+            pInstance->Init();
+        }
+    });
 }
 
 muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, EffectSettings& settings)
@@ -762,8 +773,10 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
     // Effect is already inited; we will call Process and then Init
     // again, so the state is exactly the way it was before Preview
     // was called.
+    // Called synchronously on return: the entire selection is processed and placed into
+    // tracks for playback, during which nothing refers to the effect anymore.
     auto cleanup1 = finally([&] {
-        restoreEffectStateHack(effect);
+        restoreEffectStateHack(effect, originCtx);
     });
 
     //! ============================================================================
@@ -965,18 +978,6 @@ void EffectExecutionScenario::stopPreview()
 
     if (player->playbackStatus() == playback::PlaybackStatus::Running) {
         player->stop();
-    }
-
-    EffectBase* effect = effectsProvider()->effect(m_effectPreviewState->effectId);
-    if (effect) {
-        const EffectContext& originCtx = m_effectPreviewState->originContext;
-        effect->mT0 = originCtx.t0;
-        effect->mT1 = originCtx.t1;
-        effect->mTracks = originCtx.tracks;
-        effect->mProgress = originCtx.preparingPreviewProgress;
-        effect->mIsPreview = originCtx.isPreview;
-
-        effect->CountWaveTracks();
     }
 
     player->setLoopRegionActive(m_effectPreviewState->loopWasActive);

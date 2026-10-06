@@ -94,6 +94,9 @@ private:
         bool isPreview = false;
     };
 
+    //! `noexcept` because called from `Defer` dtor.
+    static void restoreEffectStateHack(EffectBase& effect, const EffectContext& ctx) noexcept;
+
     struct EffectPreviewState {
         EffectPreviewState(const EffectId& effectId, const EffectContext& originContext,
                            const std::shared_ptr<::TrackList>& previewTracks, bool loopWasActive)
