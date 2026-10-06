@@ -16,7 +16,7 @@ using namespace muse::ui;
 namespace {
 const std::vector<CommandInfo> s_commandInfos = {
     CommandInfo{
-        GLOBAL_QUIT_COMMAND,
+        APP_QUIT_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "Exit"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -27,7 +27,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
-        GLOBAL_RESTART_COMMAND,
+        APP_RESTART_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "Restart"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -135,7 +135,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
-        GLOBAL_COPY_COMMAND,
+        APP_COPY_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "Copy"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -144,7 +144,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::COPY)
     },
     CommandInfo{
-        GLOBAL_CUT_COMMAND,
+        APP_CUT_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "Cut"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -153,7 +153,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::CUT)
     },
     CommandInfo{
-        GLOBAL_PASTE_COMMAND,
+        APP_PASTE_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "&Paste"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -162,7 +162,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::PASTE)
     },
     CommandInfo{
-        GLOBAL_UNDO_COMMAND,
+        APP_UNDO_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "&Undo"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -171,7 +171,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::UNDO)
     },
     CommandInfo{
-        GLOBAL_REDO_COMMAND,
+        APP_REDO_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "&Redo"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -180,7 +180,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::REDO)
     },
     CommandInfo{
-        GLOBAL_DELETE_COMMAND,
+        APP_DELETE_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "De&lete"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -189,7 +189,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::DELETE_TANK)
     },
     CommandInfo{
-        GLOBAL_CANCEL_COMMAND,
+        APP_CANCEL_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "&Cancel"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -198,7 +198,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::DELETE_TANK)
     },
     CommandInfo{
-        GLOBAL_TRIGGER_COMMAND,
+        APP_TRIGGER_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "&Trigger"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -207,7 +207,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
-        GLOBAL_ENTER_COMMAND,
+        APP_ENTER_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "&Enter"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -216,7 +216,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
-        GLOBAL_SHIFT_ENTER_COMMAND,
+        APP_SHIFT_ENTER_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "Shift+&Enter"),
         //: Action description: shown as a tooltip; can be a full sentence
@@ -225,7 +225,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
-        GLOBAL_CONTEXT_MENU_COMMAND,
+        APP_CONTEXT_MENU_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("action", "Open item context menu"),
         //: Action description: shown as a tooltip; can be a full sentence

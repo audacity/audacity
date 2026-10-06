@@ -82,11 +82,11 @@ void ApplicationActionController::preInit()
 void ApplicationActionController::init()
 {
     auto cd = commandDispatcher();
-    cd->onRequest(this, GLOBAL_QUIT_COMMAND, [this](const Params& params) {
+    cd->onRequest(this, APP_QUIT_COMMAND, [this](const Params& params) {
         const muse::io::path_t installerPath = params.at(INSTALLER_PATH_PARAM).toString();
         return quit(installerPath) ? make_ok() : make_ret(Ret::Code::Cancel);
     });
-    cd->onRequest(this, GLOBAL_RESTART_COMMAND, [this]() { return restart(); });
+    cd->onRequest(this, APP_RESTART_COMMAND, [this]() { return restart(); });
     cd->onRequest(this, APP_TOGGLE_FULLSCREEN_COMMAND, [this]() { return toggleFullScreen(); });
     cd->onRequest(this, APP_ABOUT_COMMAND, [this]() { return openAboutDialog(); });
     cd->onRequest(this, APP_ABOUT_QT_COMMAND, [this]() { return openAboutQtDialog(); });
@@ -99,23 +99,23 @@ void ApplicationActionController::init()
     cd->onRequest(this, APP_EDITING_PREFERENCES_COMMAND, [this]() { return openEditingPreferencesDialog(); });
     cd->onRequest(this, APP_SPECTROGRAM_PREFERENCES_COMMAND, [this]() { return openSpectrogramPreferencesDialog(); });
 
-    cd->onRequest(this, GLOBAL_COPY_COMMAND, [this]() { return doGlobalCopy(); });
-    cd->onRequest(this, GLOBAL_CUT_COMMAND, [this]() { return doGlobalCut(); });
-    cd->onRequest(this, GLOBAL_PASTE_COMMAND, [this]() { return doGlobalPaste(); });
-    cd->onRequest(this, GLOBAL_UNDO_COMMAND, [this]() { return doGlobalUndo(); });
-    cd->onRequest(this, GLOBAL_REDO_COMMAND, [this]() { return doGlobalRedo(); });
-    cd->onRequest(this, GLOBAL_DELETE_COMMAND, [this]() { return doGlobalDelete(); });
-    cd->onRequest(this, GLOBAL_CANCEL_COMMAND, [this]() { return doGlobalCancel(); });
-    cd->onRequest(this, GLOBAL_TRIGGER_COMMAND, [this]() { return doGlobalTrigger(); });
-    cd->onRequest(this, GLOBAL_ENTER_COMMAND, [this]() { return doGlobalEnter(); });
-    cd->onRequest(this, GLOBAL_SHIFT_ENTER_COMMAND, [this]() { return doGlobalShiftEnter(); });
-    cd->onRequest(this, GLOBAL_CONTEXT_MENU_COMMAND, [this]() { return doGlobalContextMenu(); });
+    cd->onRequest(this, APP_COPY_COMMAND, [this]() { return doGlobalCopy(); });
+    cd->onRequest(this, APP_CUT_COMMAND, [this]() { return doGlobalCut(); });
+    cd->onRequest(this, APP_PASTE_COMMAND, [this]() { return doGlobalPaste(); });
+    cd->onRequest(this, APP_UNDO_COMMAND, [this]() { return doGlobalUndo(); });
+    cd->onRequest(this, APP_REDO_COMMAND, [this]() { return doGlobalRedo(); });
+    cd->onRequest(this, APP_DELETE_COMMAND, [this]() { return doGlobalDelete(); });
+    cd->onRequest(this, APP_CANCEL_COMMAND, [this]() { return doGlobalCancel(); });
+    cd->onRequest(this, APP_TRIGGER_COMMAND, [this]() { return doGlobalTrigger(); });
+    cd->onRequest(this, APP_ENTER_COMMAND, [this]() { return doGlobalEnter(); });
+    cd->onRequest(this, APP_SHIFT_ENTER_COMMAND, [this]() { return doGlobalShiftEnter(); });
+    cd->onRequest(this, APP_CONTEXT_MENU_COMMAND, [this]() { return doGlobalContextMenu(); });
 
     //! Note: This table won't be necessary after the actions to commands complete refactor.
     //! It will be removed on https://github.com/audacity/audacity/issues/12321
     static const std::vector<ActionToCommand> actionToCommand = {
-        { "quit", GLOBAL_QUIT_COMMAND, quitConv },
-        { "restart", GLOBAL_RESTART_COMMAND, {} },
+        { "quit", APP_QUIT_COMMAND, quitConv },
+        { "restart", APP_RESTART_COMMAND, {} },
         { "fullscreen", APP_TOGGLE_FULLSCREEN_COMMAND, {} },
         { "about-audacity", APP_ABOUT_COMMAND, {} },
         { "about-qt", APP_ABOUT_QT_COMMAND, {} },
@@ -127,17 +127,17 @@ void ApplicationActionController::init()
         { "shortcuts-preferences", APP_SHORTCUTS_PREFERENCES_COMMAND, {} },
         { "editing-preferences", APP_EDITING_PREFERENCES_COMMAND, {} },
         { "spectrogram-preferences", APP_SPECTROGRAM_PREFERENCES_COMMAND, {} },
-        { "action://copy", GLOBAL_COPY_COMMAND, {} },
-        { "action://cut", GLOBAL_CUT_COMMAND, {} },
-        { "action://paste", GLOBAL_PASTE_COMMAND, {} },
-        { "action://undo", GLOBAL_UNDO_COMMAND, {} },
-        { "action://redo", GLOBAL_REDO_COMMAND, {} },
-        { "action://delete", GLOBAL_DELETE_COMMAND, {} },
-        { "action://cancel", GLOBAL_CANCEL_COMMAND, {} },
-        { "action://trigger", GLOBAL_TRIGGER_COMMAND, {} },
-        { "action://enter", GLOBAL_ENTER_COMMAND, {} },
-        { "action://shift-enter", GLOBAL_SHIFT_ENTER_COMMAND, {} },
-        { "action://context-menu", GLOBAL_CONTEXT_MENU_COMMAND, {} },
+        { "action://copy", APP_COPY_COMMAND, {} },
+        { "action://cut", APP_CUT_COMMAND, {} },
+        { "action://paste", APP_PASTE_COMMAND, {} },
+        { "action://undo", APP_UNDO_COMMAND, {} },
+        { "action://redo", APP_REDO_COMMAND, {} },
+        { "action://delete", APP_DELETE_COMMAND, {} },
+        { "action://cancel", APP_CANCEL_COMMAND, {} },
+        { "action://trigger", APP_TRIGGER_COMMAND, {} },
+        { "action://enter", APP_ENTER_COMMAND, {} },
+        { "action://shift-enter", APP_SHIFT_ENTER_COMMAND, {} },
+        { "action://context-menu", APP_CONTEXT_MENU_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 }
