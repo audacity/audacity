@@ -163,10 +163,10 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
 
     bool cancel = false;
 
-    auto start = mControlTrack->TimeToLongSamples(mT0 + mOuterFadeDownLen);
-    auto end = mControlTrack->TimeToLongSamples(mT1 - mOuterFadeUpLen);
+    const auto controlTrackStart = mControlTrack->TimeToLongSamples(mT0 + mOuterFadeDownLen);
+    const auto controlTrackEnd = mControlTrack->TimeToLongSamples(mT1 - mOuterFadeUpLen);
 
-    if (end <= start) {
+    if (controlTrackEnd <= controlTrackStart) {
         return false;
     }
 
@@ -175,8 +175,8 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
     // If there is any stretch in the control track, substitute a temporary
     // rendering before trying to use GetFloats
     {
-        const auto t0 = pControlTrack->LongSamplesToTime(start);
-        const auto t1 = pControlTrack->LongSamplesToTime(end);
+        const auto t0 = pControlTrack->LongSamplesToTime(controlTrackStart);
+        const auto t1 = pControlTrack->LongSamplesToTime(controlTrackEnd);
         if (TimeStretching::HasPitchOrSpeed(*pControlTrack, t0, t1)) {
             pFirstTrack = pControlTrack->Duplicate()->SharedPointer<WaveTrack>();
             if (pFirstTrack) {
@@ -212,7 +212,7 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
     double rmsSum = 0;
     // to make the progress bar appear more natural, we first look for all
     // duck regions and apply them all at once afterwards
-    std::vector<AutoDuckRegion> regions;
+    std::vector<AutoDuckRegion> processedTracksRegions;
     bool inDuckRegion = false;
     {
         Floats rmsWindow { kRMSWindowSize, true };
@@ -223,12 +223,12 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
         double duckRegionStart = 0;
         sampleCount curSamplesPause = 0;
 
-        auto pos = start;
+        auto pos = controlTrackStart;
 
         const auto pControlChannel = *pControlTrack->Channels().begin();
-        while (pos < end)
+        while (pos < controlTrackEnd)
         {
-            const auto len = limitSampleBufferSize(kBufSize, end - pos);
+            const auto len = limitSampleBufferSize(kBufSize, controlTrackEnd - pos);
 
             pControlChannel->GetFloats(buf.get(), pos, len);
 
@@ -263,13 +263,10 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
 
                     if (curSamplesPause >= minSamplesPause) {
                         // do the actual duck fade and reset all values
-                        double duckRegionEnd
-                            =pControlTrack->LongSamplesToTime(i - curSamplesPause);
-
-                        regions.push_back(AutoDuckRegion(
-                                              duckRegionStart - mOuterFadeDownLen,
-                                              duckRegionEnd + mOuterFadeUpLen));
-
+                        double duckRegionEnd = pControlTrack->LongSamplesToTime(i - curSamplesPause);
+                        processedTracksRegions.push_back(AutoDuckRegion(
+                                                             duckRegionStart - mOuterFadeDownLen,
+                                                             duckRegionEnd + mOuterFadeUpLen));
                         inDuckRegion = false;
                     }
                 }
@@ -278,7 +275,7 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
             pos += len;
 
             if (TotalProgress(
-                    (pos - start).as_double() / (end - start).as_double()
+                    (pos - controlTrackStart).as_double() / (controlTrackEnd - controlTrackStart).as_double()
                     / (GetNumWaveTracks() + 1))) {
                 cancel = true;
                 break;
@@ -287,11 +284,10 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
 
         // apply last duck fade, if any
         if (inDuckRegion) {
-            double duckRegionEnd
-                =pControlTrack->LongSamplesToTime(end - curSamplesPause);
-            regions.push_back(AutoDuckRegion(
-                                  duckRegionStart - mOuterFadeDownLen,
-                                  duckRegionEnd + mOuterFadeUpLen));
+            double duckRegionEnd = pControlTrack->LongSamplesToTime(controlTrackEnd - curSamplesPause);
+            processedTracksRegions.push_back(AutoDuckRegion(
+                                                 duckRegionStart - mOuterFadeDownLen,
+                                                 duckRegionEnd + mOuterFadeUpLen));
         }
     }
 
@@ -302,8 +298,8 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
 
         for (auto iterTrack : outputs.Get().Selected<WaveTrack>()) {
             for (const auto pChannel : iterTrack->Channels()) {
-                for (size_t i = 0; i < regions.size(); ++i) {
-                    const AutoDuckRegion& region = regions[i];
+                for (size_t i = 0; i < processedTracksRegions.size(); ++i) {
+                    const AutoDuckRegion& region = processedTracksRegions[i];
                     if (ApplyDuckFade(trackNum++, *pChannel, region.t0, region.t1)) {
                         cancel = true;
                         goto done;
