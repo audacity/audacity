@@ -600,10 +600,10 @@ muse::Ret PlaybackController::rewindToEndAction()
 
 muse::Ret PlaybackController::onSeekAction(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("seekTime")) {
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_SEEK_TIME_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
-    IF_ASSERT_FAILED(params.contains("triggerPlay")) {
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_SEEK_TRIGGER_PLAY_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
@@ -611,8 +611,8 @@ muse::Ret PlaybackController::onSeekAction(const Params& params)
         return make_ret(Ret::Code::Busy);
     }
 
-    const muse::secs_t secs = params.at("seekTime").toDouble();
-    const bool triggerPlay = params.at("triggerPlay").toBool();
+    const muse::secs_t secs = params.at(PLAYBACK_SEEK_TIME_PARAM).toDouble();
+    const bool triggerPlay = params.at(PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool();
 
     const bool isSeekStartPositionValid = isSeekPositionValid(secs);
 
@@ -644,15 +644,15 @@ void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
 
 muse::Ret PlaybackController::onChangePlaybackRegionAction(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("start")) {
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_PLAY_REGION_START_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
-    IF_ASSERT_FAILED(params.contains("end")) {
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_PLAY_REGION_END_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    const muse::secs_t start = params.at("start").toDouble();
-    const muse::secs_t end = params.at("end").toDouble();
+    const muse::secs_t start = params.at(PLAYBACK_CHANGE_PLAY_REGION_START_PARAM).toDouble();
+    const muse::secs_t end = params.at(PLAYBACK_CHANGE_PLAY_REGION_END_PARAM).toDouble();
 
     doChangePlaybackRegion({ start, end });
     return make_ok();
@@ -1003,11 +1003,11 @@ muse::Ret PlaybackController::setSelectionFollowsLoopRegion()
 
 muse::Ret PlaybackController::setAudioApi(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("api_index")) {
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    const int index = params.at("api_index").toInt();
+    const int index = params.at(PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM).toInt();
     const auto values = audioDriverController()->apis();
     if (index < 0 || static_cast<size_t>(index) >= values.size()) {
         return make_ret(Ret::Code::BadArgs);
@@ -1021,14 +1021,14 @@ muse::Ret PlaybackController::setAudioApi(const Params& params)
 muse::Ret PlaybackController::setAudioOutputDevice(const Params& params)
 {
     AudioConfigurationChange change;
-    if (params.at("is_default_device", muse::Val(false)).toBool()) {
+    if (params.at(PLAYBACK_CHANGE_PLAYBACK_DEVICE_IS_DEFAULT_PARAM, muse::Val(false)).toBool()) {
         change.outputDevice = AudioDeviceSelection {};
     } else {
-        IF_ASSERT_FAILED(params.contains("device_index")) {
+        IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM)) {
             return make_ret(Ret::Code::BadArgs);
         }
 
-        const int index = params.at("device_index").toInt();
+        const int index = params.at(PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM).toInt();
         const auto values = audioDriverController()->outputDevices();
         if (index < 0 || static_cast<size_t>(index) >= values.size()) {
             return make_ret(Ret::Code::BadArgs);
@@ -1042,14 +1042,14 @@ muse::Ret PlaybackController::setAudioOutputDevice(const Params& params)
 muse::Ret PlaybackController::setAudioInputDevice(const Params& params)
 {
     AudioConfigurationChange change;
-    if (params.at("is_default_device", muse::Val(false)).toBool()) {
+    if (params.at(PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM, muse::Val(false)).toBool()) {
         change.inputDevice = AudioDeviceSelection {};
     } else {
-        IF_ASSERT_FAILED(params.contains("device_index")) {
+        IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM)) {
             return make_ret(Ret::Code::BadArgs);
         }
 
-        const int index = params.at("device_index").toInt();
+        const int index = params.at(PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM).toInt();
         const auto values = audioDriverController()->inputDevices();
         if (index < 0 || static_cast<size_t>(index) >= values.size()) {
             return make_ret(Ret::Code::BadArgs);

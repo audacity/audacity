@@ -17,11 +17,20 @@ inline static const muse::rcommand::Command PLAYBACK_STOP_COMMAND("command://pla
 inline static const muse::rcommand::Command PLAYBACK_REWIND_START_COMMAND("command://playback/rewind-start");
 inline static const muse::rcommand::Command PLAYBACK_REWIND_END_COMMAND("command://playback/rewind-end");
 inline static const muse::rcommand::Command PLAYBACK_SEEK_COMMAND("command://playback/seek");
+inline static const std::string PLAYBACK_SEEK_TIME_PARAM("seekTime");
+inline static const std::string PLAYBACK_SEEK_TRIGGER_PLAY_PARAM("triggerPlay");
 inline static const muse::rcommand::Command PLAYBACK_CHANGE_PLAY_REGION_COMMAND("command://playback/play-region-change");
+inline static const std::string PLAYBACK_CHANGE_PLAY_REGION_START_PARAM("start");
+inline static const std::string PLAYBACK_CHANGE_PLAY_REGION_END_PARAM("end");
 
 inline static const muse::rcommand::Command PLAYBACK_CHANGE_AUDIO_API_COMMAND("command://playback/change-api");
+inline static const std::string PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM("api_index");
 inline static const muse::rcommand::Command PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND("command://playback/change-playback-device");
+inline static const std::string PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM("device_index");
+inline static const std::string PLAYBACK_CHANGE_PLAYBACK_DEVICE_IS_DEFAULT_PARAM("is_default_device");
 inline static const muse::rcommand::Command PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND("command://playback/change-recording-device");
+inline static const std::string PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM("device_index");
+inline static const std::string PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM("is_default_device");
 inline static const muse::rcommand::Command PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND("command://playback/change-input-channels");
 inline static const muse::rcommand::Command PLAYBACK_RESCAN_DEVICES_COMMAND("command://playback/rescan-devices");
 
