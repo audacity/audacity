@@ -303,7 +303,7 @@ AudioIO::AudioIO()
 
 void AudioIO::StartThread()
 {
-    mAudioThread = std::thread(AudioThread, ref(mFinishAudioThread));
+    mAudioThread = std::thread([this] { AudioThread(*this, ref(mFinishAudioThread)); });
 }
 
 AudioIO::~AudioIO()
@@ -1908,34 +1908,33 @@ double AudioIO::GetStreamTime()
 //////////////////////////////////////////////////////////////////////
 
 //! Sits in a thread loop reading and writing audio.
-void AudioIO::AudioThread(std::atomic<bool>& finish)
+void AudioIO::AudioThread(AudioIO& audioIO, std::atomic<bool>& finish)
 {
     enum class ProcessingState {
         eSkipProcessing, ePrimeProcessing, eCallbackProcessing
     } lastState = ProcessingState::eSkipProcessing;
-    AudioIO* const gAudioIO = AudioIO::Get();
     while (!finish.load(std::memory_order_acquire)) {
         using Clock = std::chrono::steady_clock;
         auto loopPassStart = Clock::now();
-        auto& schedule = gAudioIO->mPlaybackSchedule;
+        auto& schedule = audioIO.mPlaybackSchedule;
         const auto interval = schedule.GetPolicy().SleepInterval(schedule);
 
         // Set LoopActive outside the tests to avoid race condition
-        gAudioIO->mAudioThreadSequenceBufferExchangeLoopActive
+        audioIO.mAudioThreadSequenceBufferExchangeLoopActive
         .store(true, std::memory_order_relaxed);
-        if (gAudioIO->mAudioThreadShouldCallSequenceBufferExchangeOnce
+        if (audioIO.mAudioThreadShouldCallSequenceBufferExchangeOnce
             .load(std::memory_order_acquire)) {
-            gAudioIO->SequenceBufferExchange();
-            gAudioIO->mAudioThreadShouldCallSequenceBufferExchangeOnce
+            audioIO.SequenceBufferExchange();
+            audioIO.mAudioThreadShouldCallSequenceBufferExchangeOnce
             .store(false, std::memory_order_release);
 
             lastState = ProcessingState::ePrimeProcessing;
-        } else if (gAudioIO->mAudioThreadSequenceBufferExchangeLoopRunning
+        } else if (audioIO.mAudioThreadSequenceBufferExchangeLoopRunning
                    .load(std::memory_order_relaxed)) {
             if (lastState != ProcessingState::eCallbackProcessing) {
                 // Main thread has told us to start - acknowledge that we do
-                gAudioIO->mBufferExchangeAcknowledge.store(Acknowledge::eStart,
-                                                           std::memory_order_release);
+                audioIO.mBufferExchangeAcknowledge.store(Acknowledge::eStart,
+                                                         std::memory_order_release);
             }
             lastState = ProcessingState::eCallbackProcessing;
 
@@ -1945,19 +1944,19 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             // This is unlike the case with mAudioThreadShouldCallSequenceBufferExchangeOnce where the
             // store really means that the one-time exchange was done.
 
-            gAudioIO->SequenceBufferExchange();
+            audioIO.SequenceBufferExchange();
         } else {
             if ((lastState == ProcessingState::eCallbackProcessing)
                 || (lastState == ProcessingState::ePrimeProcessing)) {
                 // Main thread has told us to stop; (actually: to neither process "once" nor "loop running")
                 // acknowledge that we received the order and that no more processing will be done.
-                gAudioIO->mBufferExchangeAcknowledge.store(Acknowledge::eStop,
-                                                           std::memory_order_release);
+                audioIO.mBufferExchangeAcknowledge.store(Acknowledge::eStop,
+                                                         std::memory_order_release);
             }
             lastState = ProcessingState::eSkipProcessing;
         }
 
-        gAudioIO->mAudioThreadSequenceBufferExchangeLoopActive
+        audioIO.mAudioThreadSequenceBufferExchangeLoopActive
         .store(false, std::memory_order_relaxed);
 
         std::this_thread::sleep_until(loopPassStart + interval);
