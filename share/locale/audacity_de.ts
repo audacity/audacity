@@ -815,7 +815,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
         <source>Toggle spectral selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spektralauswahl umschalten</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="288"/>
@@ -857,13 +857,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
         <source>Collapse all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Alle Spuren einklappen</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="306"/>
         <source>Expand all tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Alle Spuren ausklappen</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
@@ -1093,7 +1093,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
         <source>Apply macros palette</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Makropalette anwenden</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="567"/>
@@ -1324,7 +1324,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
         <source>Beats &amp;&amp; measures</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Beats &amp;&amp; Takte</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="156"/>
@@ -2045,12 +2045,12 @@
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
         <source>Show &amp;rcommands list</source>
-        <translation type="unfinished"/>
+        <translation>&amp;rcommands-Liste anzeigen</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
         <source>Show rcommands list</source>
-        <translation type="unfinished"/>
+        <translation>rcommands-Liste anzeigen</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
@@ -2632,7 +2632,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="282"/>
         <source>Toggle spectral selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spektralauswahl umschalten</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="290"/>
@@ -2644,13 +2644,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="300"/>
         <source>Collapse all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Alle Spuren einklappen</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="308"/>
         <source>Expand all tracks</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Alle Spuren ausklappen</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="316"/>
@@ -2824,13 +2824,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="561"/>
         <source>Apply macros palette</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Makro-Palette anwenden</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="569"/>
         <source>Macro fade ends</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Makroblende endet</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="577"/>
@@ -3077,7 +3077,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="149"/>
         <source>Beats &amp;&amp; measures</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Beats &amp;&amp; Takte</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="158"/>
@@ -3792,12 +3792,12 @@
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="81"/>
         <source>Produce MIDI 2.0 output if supported by the receiver</source>
-        <translation type="unfinished"/>
+        <translation>MIDI-2.0-Ausgabe für unterstützte Empfänger erzeugen</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
         <source>Are you sure you want to revert to factory settings?</source>
-        <translation type="unfinished"/>
+        <translation>Sollen wirklich alle Einstellungen auf Werkseinstellungen zurücksetzt werden?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="448"/>
@@ -3821,12 +3821,12 @@ Diese Aktion löscht keiner Ihrer Projekte.</translation>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="474"/>
         <source>Would you like to restart Audacity now?</source>
-        <translation type="unfinished"/>
+        <translation>Soll Audacity jetzt neu gestartet werden?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="475"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity muss neu gestartet werden, um die Änderungen anzuwenden.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="481"/>
@@ -3876,7 +3876,7 @@ Diese Aktion löscht keiner Ihrer Projekte.</translation>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Skip this time</source>
-        <translation type="unfinished"/>
+        <translation>Dieses Mal überspringen</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="44"/>
@@ -4389,7 +4389,7 @@ Diese Aktion löscht keiner Ihrer Projekte.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
         <source>Audacity the free, open source, cross-platform software for recording and editing sounds.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity, die freie, quelloffene und plattformübergreifende Software für die Audioaufnahme und -bearbeitung</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
@@ -4464,7 +4464,7 @@ Diese Aktion löscht keiner Ihrer Projekte.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="40"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
-        <translation type="unfinished"/>
+        <translation>Dies kann jederzeit auf %1 deaktiviert werden</translation>
     </message>
     <message>
         <source>Usage Info</source>
@@ -4508,7 +4508,7 @@ Diese Aktion löscht keiner Ihrer Projekte.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="48"/>
         <source>You can disable this anytime in %1.</source>
-        <translation type="unfinished"/>
+        <translation>Dies kann jederzeit auf %1 deaktiviert werden</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="49"/>
@@ -7203,7 +7203,7 @@ Versuchen Sie, alle gestreckten Clips zurückzusetzen oder die Spuren vor der An
     </message>
     <message>
         <source>Show rcommands list</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">rcommands-Liste anzeigen</translation>
     </message>
     <message>
         <source>Test query action</source>
@@ -17454,7 +17454,7 @@ Es wird nicht geladen.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="55"/>
         <source>Dragging on the center line may adjust the height of the channel:</source>
-        <translation type="unfinished"/>
+        <translation>Ziehen der Mittellinie passt die Höhe des Audiokanals an:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
@@ -17577,7 +17577,7 @@ Es wird nicht geladen.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="26"/>
         <source>FFmpeg library version:</source>
-        <translation>FFmpeg-Bibliotheksversion:</translation>
+        <translation>FFmpeg-Bibliotheksversion: </translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="42"/>
@@ -18726,7 +18726,8 @@ You can manage this file from your updated projects page on audio.com</source>
         <location filename="../../src/project/projecterrors.cpp" line="46"/>
         <source>An error occurred while trying to access the project database.
 Failed to load project: “%1”</source>
-        <translation type="unfinished"/>
+        <translation>Ein Fehler ist während des Zugriffs auf die Projektdatenbank aufgetreten.
+Das Laden des Projekts „%1“ ist fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="52"/>
@@ -18752,7 +18753,7 @@ Bitte überprüfen Sie die Eigenschaften und Berechtigungen der Datei und stelle
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="63"/>
         <source>This file is write-protected and cannot be opened</source>
-        <translation type="unfinished"/>
+        <translation>Diese Datei ist schreibgeschützt und kann nicht geöffnet werden</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="65"/>
@@ -18887,7 +18888,7 @@ Bitte wählen Sie einen größeren temporären Verzeichnisort in den Verzeichnis
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="487"/>
         <source>Failed to open the project’s database</source>
-        <translation type="unfinished"/>
+        <translation>Das Öffnen der Projektdatenbank ist fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="547"/>
@@ -18946,7 +18947,9 @@ Sie müssen eine Aktualisierung durchführen, um sie zu öffnen.</translation>
         <source>Failed to upgrade the project schema.
 
 File might be corrupted or read only.</source>
-        <translation type="unfinished"/>
+        <translation>Das Projektschema konnte nicht auf die neue Version migriert werden.
+
+Die Datei könnte möglicherweise beschädigt oder schreibgeschützt.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="845"/>
@@ -19074,7 +19077,7 @@ Das folgende Kommando schlug fehl:
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1185"/>
         <source>Failed to copy the project history.</source>
-        <translation type="unfinished"/>
+        <translation>Das Kopieren des Projektverlaufs ist fehlgeschlagen.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
@@ -19162,7 +19165,7 @@ Sie nutzen Audacity %2. Bitte verwenden Sie eine neuere Version, um diese Datei 
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2294"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="unfinished"/>
+        <translation>Die Projektdatenbank konnte nicht erneut geöffnet werden, da möglicherweise wenig Platz auf dem Datenträger vorhanden ist.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2310"/>
@@ -19253,17 +19256,17 @@ Sie müssen diese Version von Audacity benutzen, um das Projekt wiederherzustell
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="117"/>
         <source>Would you also like to share your music on Audio.com?</source>
-        <translation type="unfinished"/>
+        <translation>Möchten Sie ihre Musik auf Audio.com teilen?</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="126"/>
         <source>Share your project’s audio with millions of listeners on this free streaming platform</source>
-        <translation type="unfinished"/>
+        <translation>Teilen Sie ihre Projektaudio mit Millionen von Zuhörern kostenlos auf dieser Streaming-Plattform</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="145"/>
         <source>You can change this setting in Preferences at any time.</source>
-        <translation type="unfinished"/>
+        <translation>Sie können diese Option jederzeit in den Einstellungen ändern.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="165"/>
@@ -19273,7 +19276,7 @@ Sie müssen diese Version von Audacity benutzen, um das Projekt wiederherzustell
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Synchronisiere mit audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
@@ -19386,7 +19389,7 @@ Sie müssen diese Version von Audacity benutzen, um das Projekt wiederherzustell
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1194"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
-        <translation type="unfinished"/>
+        <translation>Das Projekt beinhält eine Zeitspur, die in Audacity 4 noch nicht unterstützt wird und gelöscht werden muss. Dies hat keinen Einfluss auf das ursprüngliche Audacity-3-Projekt.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1198"/>
@@ -19618,7 +19621,7 @@ Sie müssen diese Version von Audacity benutzen, um das Projekt wiederherzustell
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="826"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
-        <translation type="unfinished"/>
+        <translation>Es konnte keine Verbindung mit audio.com hergestellt werden. Bitte überprüfen Sie ihre Internetverbindung oder versuchen Sie es später erneut.</translation>
     </message>
 </context>
 <context>
@@ -21388,7 +21391,7 @@ Bitte schließen Sie ein Eingabegerät an und suchen Sie erneut danach.</transla
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Meters &amp;&amp; monitoring</source>
-        <translation type="unfinished"/>
+        <translation>Aussteuerungsanzeigen &amp;&amp; Überwachung</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
