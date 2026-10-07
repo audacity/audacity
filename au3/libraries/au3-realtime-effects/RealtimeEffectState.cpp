@@ -13,7 +13,7 @@
 #include <wx/arrstr.h>
 
 #include <thread>
-#include <condition_variable>
+#include <chrono>
 
 #include "au3-channel/Channel.h"
 #include "au3-components/EffectInterface.h"
@@ -84,14 +84,10 @@ public:
 
     void WorkerWrite()
     {
-        {
-            std::unique_lock lk(mLockForCV);
-
-            // Worker thread avoids memory allocation.
-            mChannelToMain.Write(CounterAndOutputs {
-                mState.mWorkerSettings.counter, mState.mOutputs.get() });
-        }
-        mCV.notify_one();
+        // Worker thread avoids memory allocation and locks; the main thread
+        // polls for this answer in Flush()
+        mChannelToMain.Write(CounterAndOutputs {
+            mState.mWorkerSettings.counter, mState.mOutputs.get() });
     }
 
     struct ToMainSlot {
@@ -205,9 +201,6 @@ public:
 
     MessageBuffer<ToMainSlot> mChannelToMain;
 
-    std::mutex mLockForCV;
-    std::condition_variable mCV;
-
     std::thread::id mMainThreadId;
 };
 
@@ -309,14 +302,11 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                 assert(pAccessState->mMainThreadId == std::this_thread::get_id());
 
                 if (pAccessState->mState.mInitialized) {
-                    std::unique_lock lk(pAccessState->mLockForCV);
-                    pAccessState->mCV.wait(lk,
-                                           [&] {
-                        auto& lastSettings = pAccessState->mLastSettings;
-                        pAccessState->MainRead();
-                        return pAccessState->mCounter == lastSettings.counter;
+                    // The worker answers once per processing pass
+                    using namespace std::chrono_literals;
+                    while (pAccessState->MainRead(), pAccessState->mCounter != pAccessState->mLastSettings.counter) {
+                        std::this_thread::sleep_for(1ms);
                     }
-                                           );
                 }
 
                 // Update what GetSettings() will return, during play and before
