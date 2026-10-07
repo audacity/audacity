@@ -321,9 +321,28 @@ void DropController::handleDroppedFiles(const std::vector<trackedit::TrackId>& t
             const auto fileName = muse::io::filename(info.path, false);
             const auto title = muse::String::fromUtf8(fileName.toStdString());
 
+            const auto trackeditPrj = globalContext()->currentTrackeditProject();
+            const std::vector<trackedit::Track> trackList
+                = trackeditPrj ? trackeditPrj->trackList() : std::vector<trackedit::Track>{};
+
             for (int i = 0; i < info.trackCount; ++i) {
                 if (trackIndex < trackIds.size()) {
-                    tracksInteraction()->changeTrackTitle(trackIds[trackIndex], title);
+                    const auto trackId = trackIds[trackIndex];
+
+                    const auto it = std::find_if(
+                        trackList.begin(),
+                        trackList.end(),
+                        [trackId](const trackedit::Track& track) {
+                            return track.id == trackId;
+                        });
+
+                    if (it != trackList.end()) {
+                        const int index = static_cast<int>(std::distance(trackList.begin(), it));
+
+                        if (m_trackCountBeforeImport >= 0 && index >= m_trackCountBeforeImport) {
+                            tracksInteraction()->changeTrackTitle(trackId, title);
+                        }
+                    }
                 }
                 ++trackIndex;
             }
