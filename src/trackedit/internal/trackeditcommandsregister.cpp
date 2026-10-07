@@ -637,6 +637,205 @@ const std::vector<CommandInfo> commandInfos = {
         InputSchema(),
         Decoration()
     },
+    CommandInfo{
+        TRACKEDIT_MERGE_SELECTED_ON_TRACKS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Merge selected clips"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Merge the clips in the given time range on the given tracks"),
+        InputSchema({
+                { TRACKEDIT_TRACK_IDS_PARAM, Arg(DataType::Array, u"Track ids") },
+                { TRACKEDIT_START_PARAM, Arg(DataType::Float, u"Range start in seconds") },
+                { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Range end in seconds") },
+            }),
+        Decoration()
+    },
+    CommandInfo{
+        TRACKEDIT_DUPLICATE_SELECTED_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Duplicate selected"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Duplicate the given time range on the given tracks"),
+        InputSchema({
+                { TRACKEDIT_TRACK_IDS_PARAM, Arg(DataType::Array, u"Track ids") },
+                { TRACKEDIT_START_PARAM, Arg(DataType::Float, u"Range start in seconds") },
+                { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Range end in seconds") },
+            }),
+        Decoration()
+    },
+    CommandInfo{
+        TRACKEDIT_TRACK_DELETE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Delete"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Delete track"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACKEDIT_COPY_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Copy"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Copy"),
+        InputSchema(),
+        Decoration(IconCode::Code::COPY)
+    },
+    CommandInfo{
+        TRACKEDIT_CUT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Cut"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Cut"),
+        InputSchema(),
+        Decoration(IconCode::Code::CUT)
+    },
+    CommandInfo{
+        TRACKEDIT_DELETE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "De&lete"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Delete"),
+        InputSchema(),
+        Decoration(IconCode::Code::DELETE_TANK)
+    },
+    CommandInfo{
+        TRACKEDIT_PASTE_DEFAULT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Paste"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Paste"),
+        InputSchema(),
+        Decoration(IconCode::Code::PASTE)
+    },
+    CommandInfo{
+        TRACKEDIT_SPLIT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Split"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Split"),
+        InputSchema(),
+        Decoration(IconCode::Code::SPLIT_TOOL)
+    },
+    CommandInfo{
+        TRACKEDIT_SPLIT_INTO_NEW_TRACK_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Split into new track"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Move the selection into a new track"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACKEDIT_JOIN_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Join selected clips"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Join selected clips"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACKEDIT_DISJOIN_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Split clips at silences"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Split clips at silences"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACKEDIT_DUPLICATE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Duplicate"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Duplicate"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACKEDIT_TRACK_SPLIT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Split track"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Split the given track at the playback position"),
+        InputSchema({
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
+            }),
+        Decoration(IconCode::Code::SPLIT_TOOL)
+    },
+    CommandInfo{
+        TRACKEDIT_CUT_LEAVE_GAP_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Cut and leave gap"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Cut and leave gap"),
+        InputSchema(),
+        Decoration(IconCode::Code::CUT)
+    },
+    CommandInfo{
+        TRACKEDIT_CUT_PER_CLIP_RIPPLE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Cut and close gap (per clip)"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Cut and close gap (per clip)"),
+        InputSchema(),
+        Decoration(IconCode::Code::CUT)
+    },
+    CommandInfo{
+        TRACKEDIT_CUT_PER_TRACK_RIPPLE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Cut and close gap (per track)"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Cut and close gap (per track)"),
+        InputSchema(),
+        Decoration(IconCode::Code::CUT)
+    },
+    CommandInfo{
+        TRACKEDIT_CUT_ALL_TRACKS_RIPPLE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Cut and close gap (all tracks)"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Cut and close gap (all tracks)"),
+        InputSchema(),
+        Decoration(IconCode::Code::CUT)
+    },
+    CommandInfo{
+        TRACKEDIT_DELETE_LEAVE_GAP_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Delete and leave gap"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Delete and leave gap"),
+        InputSchema(),
+        Decoration(IconCode::Code::DELETE_TANK)
+    },
+    CommandInfo{
+        TRACKEDIT_DELETE_PER_CLIP_RIPPLE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Delete and close gap (per clip)"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Delete and close gap (per clip)"),
+        InputSchema(),
+        Decoration(IconCode::Code::DELETE_TANK)
+    },
+    CommandInfo{
+        TRACKEDIT_DELETE_PER_TRACK_RIPPLE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Delete and close gap (per track)"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Delete and close gap (per track)"),
+        InputSchema(),
+        Decoration(IconCode::Code::DELETE_TANK)
+    },
+    CommandInfo{
+        TRACKEDIT_DELETE_ALL_TRACKS_RIPPLE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Delete and close gap (all tracks)"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Delete and close gap (all tracks)"),
+        InputSchema(),
+        Decoration(IconCode::Code::DELETE_TANK)
+    },
 };
 }
 

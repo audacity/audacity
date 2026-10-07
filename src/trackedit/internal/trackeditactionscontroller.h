@@ -92,53 +92,53 @@ private:
     bool stepFocusOutOfSelection(const TrackItemKeyList& selectedItems, const TrackItemKey& focusedItem, const TrackId& currentTrack,
                                  const std::function<void()>& resetSelection);
 
-    void doGlobalCopy();
-    void doGlobalCut();
-    void doGlobalDelete();
+    muse::Ret doGlobalCopy();
+    muse::Ret doGlobalCut();
+    muse::Ret doGlobalDelete();
     muse::Ret doGlobalCancel();
-    void doGlobalSplit();
-    void doGlobalSplitIntoNewTrack();
-    void doGlobalJoin();
-    void doGlobalDisjoin();
-    void doGlobalDuplicate();
+    muse::Ret doGlobalSplit();
+    muse::Ret doGlobalSplitIntoNewTrack();
+    muse::Ret doGlobalJoin();
+    muse::Ret doGlobalDisjoin();
+    muse::Ret doGlobalDuplicate();
 
-    void doGlobalCutLeaveGap();
-    void doGlobalCutPerClipRipple();
-    void doGlobalCutPerTrackRipple();
-    void doGlobalCutAllTracksRipple();
+    muse::Ret doGlobalCutLeaveGap();
+    muse::Ret doGlobalCutPerClipRipple();
+    muse::Ret doGlobalCutPerTrackRipple();
+    muse::Ret doGlobalCutAllTracksRipple();
 
-    void pasteDefault();
+    muse::Ret pasteDefault();
     muse::Ret pasteOverlap();
     muse::Ret pasteInsert();
     muse::Ret pasteInsertRipple();
 
-    void doGlobalDeleteLeaveGap();
-    void doGlobalDeletePerClipRipple();
-    void doGlobalDeletePerTrackRipple();
-    void doGlobalDeleteAllTracksRipple();
+    muse::Ret doGlobalDeleteLeaveGap();
+    muse::Ret doGlobalDeletePerClipRipple();
+    muse::Ret doGlobalDeletePerTrackRipple();
+    muse::Ret doGlobalDeleteAllTracksRipple();
 
-    void multiClipCut(const muse::actions::ActionData& args);
-    void rangeSelectionCut(const muse::actions::ActionData& args);
+    muse::Ret multiClipCut(bool moveClips);
+    muse::Ret rangeSelectionCut(bool moveClips);
 
-    void multiClipCopy();
-    void rangeSelectionCopy();
+    muse::Ret multiClipCopy();
+    muse::Ret rangeSelectionCopy();
 
-    void multiClipDelete(const muse::actions::ActionData& args);
-    void rangeSelectionDelete(const muse::actions::ActionData& args);
+    muse::Ret multiClipDelete(bool moveClips);
+    muse::Ret rangeSelectionDelete(bool moveClips);
 
-    void trackSplit(const muse::actions::ActionData& args);
-    muse::Ret tracksSplitAt(const muse::rcommand::Params& params);
-    void splitClipsAtSilences(const muse::actions::ActionData& args);
-    void splitRangeSelectionAtSilences(const muse::actions::ActionData& args);
-    void splitRangeSelectionIntoNewTracks(const muse::actions::ActionData& args);
-    void splitClipsIntoNewTracks(const muse::actions::ActionData& args);
-    void mergeSelectedOnTrack(const muse::actions::ActionData& args);
-    void duplicateSelected(const muse::actions::ActionData& args);
-    void duplicateClips(const muse::actions::ActionData& args);
-    void splitCutSelected(const muse::actions::ActionData& args);
-    void splitDeleteSelected(const muse::actions::ActionData& args);
+    muse::Ret trackSplit(const TrackId& trackId);
+    muse::Ret tracksSplitAt(const TrackIdList& tracksIds, const std::vector<secs_t>& pivots);
+    muse::Ret splitClipsAtSilences(const ClipKeyList& clipKeys);
+    muse::Ret splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret splitClipsIntoNewTracks(const ClipKeyList& clipKeys);
+    muse::Ret mergeSelectedOnTrack(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret duplicateSelected(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret duplicateClips(const ClipKeyList& clipKeys);
+    muse::Ret splitCutSelected(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret splitDeleteSelected(const TrackIdList& tracksIds, secs_t begin, secs_t end);
 
-    void deleteTracks(const muse::actions::ActionData&);
+    muse::Ret deleteTracks();
     muse::Ret duplicateTracks();
 
     muse::Ret moveTracksUp();
@@ -184,9 +184,9 @@ private:
     muse::Ret addLabel();
     muse::Ret renameSelectedItem();
 
-    void labelDeleteMulti(const muse::actions::ActionData& args);
-    void labelCutMulti(const muse::actions::ActionData& args);
-    void labelCopyMulti();
+    muse::Ret labelDeleteMulti(bool moveLabels);
+    muse::Ret labelCutMulti(bool moveLabels);
+    muse::Ret labelCopyMulti();
 
     void moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset);
     muse::Ret extendFocusedItemBoundaryLeft();

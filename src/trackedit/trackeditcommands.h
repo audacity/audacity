@@ -97,6 +97,31 @@ inline static const muse::rcommand::Command TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_LEF
 inline static const muse::rcommand::Command TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_RIGHT_COMMAND(
     "command://trackedit/track-view-item-reduce-right");
 
+inline static const muse::rcommand::Command TRACKEDIT_MERGE_SELECTED_ON_TRACKS_COMMAND("command://trackedit/merge-selected-on-tracks");
+inline static const muse::rcommand::Command TRACKEDIT_DUPLICATE_SELECTED_COMMAND("command://trackedit/duplicate-selected");
+inline static const muse::rcommand::Command TRACKEDIT_TRACK_DELETE_COMMAND("command://trackedit/track-delete");
+
+inline static const muse::rcommand::Command TRACKEDIT_COPY_COMMAND("command://trackedit/copy");
+inline static const muse::rcommand::Command TRACKEDIT_CUT_COMMAND("command://trackedit/cut");
+inline static const muse::rcommand::Command TRACKEDIT_DELETE_COMMAND("command://trackedit/delete");
+inline static const muse::rcommand::Command TRACKEDIT_PASTE_DEFAULT_COMMAND("command://trackedit/paste-default");
+
+inline static const muse::rcommand::Command TRACKEDIT_SPLIT_COMMAND("command://trackedit/split");
+inline static const muse::rcommand::Command TRACKEDIT_SPLIT_INTO_NEW_TRACK_COMMAND("command://trackedit/split-into-new-track");
+inline static const muse::rcommand::Command TRACKEDIT_JOIN_COMMAND("command://trackedit/join");
+inline static const muse::rcommand::Command TRACKEDIT_DISJOIN_COMMAND("command://trackedit/disjoin");
+inline static const muse::rcommand::Command TRACKEDIT_DUPLICATE_COMMAND("command://trackedit/duplicate");
+inline static const muse::rcommand::Command TRACKEDIT_TRACK_SPLIT_COMMAND("command://trackedit/track-split");
+
+inline static const muse::rcommand::Command TRACKEDIT_CUT_LEAVE_GAP_COMMAND("command://trackedit/cut-leave-gap");
+inline static const muse::rcommand::Command TRACKEDIT_CUT_PER_CLIP_RIPPLE_COMMAND("command://trackedit/cut-per-clip-ripple");
+inline static const muse::rcommand::Command TRACKEDIT_CUT_PER_TRACK_RIPPLE_COMMAND("command://trackedit/cut-per-track-ripple");
+inline static const muse::rcommand::Command TRACKEDIT_CUT_ALL_TRACKS_RIPPLE_COMMAND("command://trackedit/cut-all-tracks-ripple");
+inline static const muse::rcommand::Command TRACKEDIT_DELETE_LEAVE_GAP_COMMAND("command://trackedit/delete-leave-gap");
+inline static const muse::rcommand::Command TRACKEDIT_DELETE_PER_CLIP_RIPPLE_COMMAND("command://trackedit/delete-per-clip-ripple");
+inline static const muse::rcommand::Command TRACKEDIT_DELETE_PER_TRACK_RIPPLE_COMMAND("command://trackedit/delete-per-track-ripple");
+inline static const muse::rcommand::Command TRACKEDIT_DELETE_ALL_TRACKS_RIPPLE_COMMAND("command://trackedit/delete-all-tracks-ripple");
+
 inline static const std::string TRACKEDIT_TRACK_ID_PARAM("trackId");
 inline static const std::string TRACKEDIT_CLIP_ID_PARAM("clipId");
 inline static const std::string TRACKEDIT_TRACK_IDS_PARAM("trackIds");
