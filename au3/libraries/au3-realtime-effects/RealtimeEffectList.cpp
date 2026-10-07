@@ -9,6 +9,8 @@
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
+#include <thread>
+
 #include "au3-channel/Channel.h"
 #include "au3-project/Project.h"
 #include "au3-project-history/UndoManager.h"
@@ -34,6 +36,7 @@ std::unique_ptr<ClientData::Cloneable<> > RealtimeEffectList::Clone() const
 RealtimeEffectList& RealtimeEffectList::operator=(const RealtimeEffectList& other)
 {
     mStates = other.mStates;
+    PublishToVisitors();
     SetActive(other.IsActive());
     return *this;
 }
@@ -96,6 +99,7 @@ RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
         shallowCopy.emplace_back(pState);
         // Lock for only a short time
         (LockGuard{ mLock }, swap(shallowCopy, mStates));
+        PublishToVisitors();
 
         Publisher<RealtimeEffectListMessage>::Publish({
             RealtimeEffectListMessage::Type::Insert,
@@ -132,6 +136,7 @@ RealtimeEffectList::ReplaceState(size_t index,
         swap(pState, shallowCopy[index]);
         // Lock for only a short time
         (LockGuard{ mLock }, swap(shallowCopy, mStates));
+        PublishToVisitors();
 
         Publisher<RealtimeEffectListMessage>::Publish({
             RealtimeEffectListMessage::Type::DidReplace,
@@ -159,6 +164,7 @@ void RealtimeEffectList::RemoveState(
 
         // Lock for only a short time
         (LockGuard{ mLock }, swap(shallowCopy, mStates));
+        PublishToVisitors();
 
         Publisher<RealtimeEffectListMessage>::Publish({
             RealtimeEffectListMessage::Type::Remove,
@@ -176,6 +182,7 @@ void RealtimeEffectList::Clear()
     // Swap an empty list in as a whole, not removing one at a time
     // Lock for only a short time
     (LockGuard{ mLock }, swap(temp, mStates));
+    PublishToVisitors();
 
     for (auto index = temp.size(); index--;) {
         Publisher<RealtimeEffectListMessage>::Publish(
@@ -192,6 +199,7 @@ void RealtimeEffectList::CloneStates()
     }
     // Lock for only a short time
     (LockGuard{ mLock }, swap(clones, mStates));
+    PublishToVisitors();
 }
 
 std::optional<size_t> RealtimeEffectList::FindState(
@@ -247,6 +255,7 @@ void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)
     }
     // Lock for only a short time
     (LockGuard{ mLock }, swap(shallowCopy, mStates));
+    PublishToVisitors();
 
     Publisher<RealtimeEffectListMessage>::Publish({
         RealtimeEffectListMessage::Type::Move,
@@ -282,6 +291,7 @@ XMLTagHandler* RealtimeEffectList::HandleXMLChild(const std::string_view& tag)
 {
     if (tag == RealtimeEffectState::XMLTag()) {
         mStates.push_back(RealtimeEffectState::make_shared(PluginID {}));
+        PublishToVisitors();
         return mStates.back().get();
     }
     return nullptr;
@@ -295,6 +305,20 @@ void RealtimeEffectList::WriteXML(XMLWriter& xmlFile) const
         state->WriteXML(xmlFile);
     }
     xmlFile.EndTag(XMLTag());
+}
+
+void RealtimeEffectList::PublishToVisitors()
+{
+    auto next = std::make_unique<const States>(mStates);
+    mVisible.store(next.get());
+    // A visitor that loaded the previous copy is still counted here, because it
+    // counts itself before it loads; sequentially consistent order on both sides
+    while (mVisitors.load() != 0) {
+        std::this_thread::yield();
+    }
+    // Frees the previous copy, and with it possibly the last reference to a
+    // removed state, on this thread rather than the audio thread
+    mPublished = std::move(next);
 }
 
 bool RealtimeEffectList::IsActive() const
