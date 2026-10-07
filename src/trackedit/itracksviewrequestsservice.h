@@ -27,5 +27,8 @@ public:
     virtual std::optional<LabelKey> pendingLabelTitleEdit() const = 0;
     virtual void labelTitleEditRequestHandled(const LabelKey& labelKey) = 0;
     virtual muse::async::Channel<LabelKey> labelTitleEditRequested() const = 0;
+
+    virtual void requestClipTitleEdit(const ClipKey& clipKey) = 0;
+    virtual muse::async::Channel<ClipKey> clipTitleEditRequested() const = 0;
 };
 }

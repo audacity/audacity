@@ -23,9 +23,13 @@ public:
     void labelTitleEditRequestHandled(const LabelKey& labelKey) override;
     muse::async::Channel<LabelKey> labelTitleEditRequested() const override;
 
+    void requestClipTitleEdit(const ClipKey& clipKey) override;
+    muse::async::Channel<ClipKey> clipTitleEditRequested() const override;
+
 private:
     muse::async::Channel<secs_t, int> m_itemMoveRequested;
     std::optional<LabelKey> m_pendingLabelTitleEdit;
     muse::async::Channel<LabelKey> m_labelTitleEditRequested;
+    muse::async::Channel<ClipKey> m_clipTitleEditRequested;
 };
 }
