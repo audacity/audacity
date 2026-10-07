@@ -40,7 +40,6 @@ static constexpr audio::volume_dbfs_t MIN_DISPLAYED_DBFS = -145.f; // 0%
 struct PlayTracksOptions {
     bool selectedOnly = false;
     double mixerEndTime = -1.0;  // Time at which mixer stops producing, maybe > endTime, if not set then == endTime
-    double startOffset = 0.0;
     bool isDefaultPolicy = true;
     std::optional<double> streamStartTime;
 };

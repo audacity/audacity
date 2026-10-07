@@ -65,27 +65,6 @@ private:
 
     const WaveTrack* mControlTrack {};
 
-    // The effectexecutionscenario discards everything on the track outside the selection and sets `mT0` to 0 before processing a preview.
-    // Also, auto duck has a control track, and it must undergo the same time shift for the correct processing of a preview.
-    // On the other hand, ::Init() is called by the execution scenario when
-    // 1. opening an effect
-    // 2. if preview is used, after the preview's processing has been rendered onto a temporary track for playback.
-    //
-    // In summary:
-    // 1. open effect
-    //   a. mT0 = 1.5s (for example)
-    //   b. Init()
-    // 2. preview
-    //   a. mT0 = 0
-    //   b. Process
-    //   c. mT0 = 1.5
-    //   d. Init()
-    // By 2.b., we must somehow know that `mT0` was originally 1.5.
-    //
-    // Workaround: use `Init()` to do this, and store it in a separate variable.
-    // (We really need this effect context rework ...)
-    double mSelectionT0 = 0.0;
-
 protected:
     const EffectParameterMethods& Parameters() const override;
 
