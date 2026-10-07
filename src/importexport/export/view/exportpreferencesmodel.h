@@ -66,7 +66,6 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
 
     // dynamic inputs section
     Q_PROPERTY(bool customFFmpegOptionsVisible READ customFFmpegOptionsVisible NOTIFY customFFmpegOptionsVisibleChanged)
-    Q_PROPERTY(bool oggFormatOptionsVisible READ oggFormatOptionsVisible NOTIFY oggFormatOptionsVisibleChanged)
     Q_PROPERTY(bool hasMetadata READ hasMetadata NOTIFY hasMetadataChanged)
     Q_PROPERTY(int optionsCount READ optionsCount NOTIFY optionsCountChanged)
 
@@ -128,7 +127,6 @@ public:
 
     // dynamic inputs
     bool customFFmpegOptionsVisible();
-    bool oggFormatOptionsVisible();
     bool hasMetadata();
     int optionsCount();
 
@@ -159,7 +157,6 @@ signals:
     void exportSampleRateListChanged();
 
     void customFFmpegOptionsVisibleChanged();
-    void oggFormatOptionsVisibleChanged();
     void hasMetadataChanged();
     void optionsCountChanged();
     void optionTitleListChanged();
