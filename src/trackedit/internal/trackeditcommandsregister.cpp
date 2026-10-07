@@ -836,6 +836,124 @@ const std::vector<CommandInfo> commandInfos = {
         InputSchema(),
         Decoration(IconCode::Code::DELETE_TANK)
     },
+    // Track navigation: keyboard focus and selection within the track view, handled by TrackNavigationController
+    CommandInfo{
+        TRACK_NAVIGATION_NEXT_PANEL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Next panel"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Next panel"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_PREV_PANEL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Previous panel"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Previous panel"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_FIRST_TRACK_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "First track"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "First track"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_LAST_TRACK_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Last track"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Last track"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_ABOVE_ITEM_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Above item"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Above item"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_BELOW_ITEM_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Below item"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Below item"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Select track/track item"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Select track/track item"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_TOGGLE_SELECTION_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Add track or track item to selection"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Add track or track item to selection"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_RANGE_SELECTION_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Track range selection"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Track range selection"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_PREV_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Multi track selection previous"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Multi track selection previous"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_NEXT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Multi track selection next"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Multi track selection next"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Open item context menu"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open the context menu of the focused track item"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Open ruler context menu"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open the context menu of the focused ruler"),
+        InputSchema(),
+        Decoration()
+    },
 };
 }
 

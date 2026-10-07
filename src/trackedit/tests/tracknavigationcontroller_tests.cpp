@@ -6,12 +6,14 @@
 #include <gtest/gtest.h>
 
 #include "../internal/tracknavigationcontroller.h"
+#include "../trackeditcommands.h"
 
 #include "actions/tests/mocks/actionsdispatchermock.h"
 #include "framework/ui/navigationcommands.h"
 #include "framework/ui/tests/mocks/navigationmocks.h"
 #include "mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
+#include "playback/tests/mocks/playbackcontrollermock.h"
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/trackeditprojectmock.h"
@@ -19,8 +21,6 @@
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::_;
-
-using IActionsDispatcher = muse::actions::IActionsDispatcher;
 
 namespace au::trackedit {
 /*******************************************************************************
@@ -44,6 +44,7 @@ public:
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
         m_trackeditInteraction = std::make_shared<NiceMock<TrackeditInteractionMock> >();
         m_trackeditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
+        m_playbackController = std::make_shared<NiceMock<playback::PlaybackControllerMock> >();
 
         m_testCtx = std::make_shared<muse::modularity::Context>(999);
         m_controller = std::make_shared<TrackNavigationController>(m_testCtx);
@@ -52,6 +53,10 @@ public:
         m_controller->dispatcher.set(m_dispatcher);
         m_controller->commandDispatcher.set(m_commandDispatcher);
         m_controller->navigationController.set(m_navigationController);
+        m_controller->playbackController.set(m_playbackController);
+
+        ON_CALL(*m_playbackController, lastPlaybackSeekTimeChanged())
+        .WillByDefault(Return(muse::async::Notification()));
 
         ON_CALL(*m_commandDispatcher, dispatch(_))
         .WillByDefault([](const muse::rcommand::Request& request) {
@@ -72,14 +77,14 @@ public:
         ON_CALL(*m_selectionController, tracksSelected())
         .WillByDefault(Return(muse::async::Channel<TrackIdList>()));
 
-        //! NOTE Capture registered action callbacks so we can invoke them in tests
-        ON_CALL(*m_dispatcher,
-                reg(::testing::Matcher<muse::actions::Actionable*>(_),
-                    ::testing::Matcher<const muse::actions::ActionCode&>(_),
-                    ::testing::Matcher<const IActionsDispatcher::ActionCallBackWithNameAndData&>(_)))
-        .WillByDefault([this](muse::actions::Actionable*, const muse::actions::ActionCode& code,
-                              const IActionsDispatcher::ActionCallBackWithNameAndData& cb) {
-            m_actionCallbacks[code] = cb;
+        //! NOTE Capture registered command callbacks so we can invoke them in tests
+        ON_CALL(*m_commandDispatcher,
+                onRequest(::testing::Matcher<muse::rcommand::Commandable*>(_),
+                          ::testing::Matcher<const muse::rcommand::Command&>(_),
+                          ::testing::Matcher<const muse::rcommand::ICommandDispatcher::CallBack&>(_)))
+        .WillByDefault([this](muse::rcommand::Commandable*, const muse::rcommand::Command& command,
+                              const muse::rcommand::ICommandDispatcher::CallBack& cb) {
+            m_commandCallbacks[command] = cb;
         });
     }
 
@@ -94,11 +99,11 @@ public:
         m_controller->init();
     }
 
-    void invokeAction(const muse::actions::ActionCode& code)
+    void invokeCommand(const muse::rcommand::Command& command)
     {
-        auto it = m_actionCallbacks.find(code);
-        ASSERT_NE(it, m_actionCallbacks.end()) << "Action not registered: " << code;
-        it->second(code, muse::actions::ActionData());
+        auto it = m_commandCallbacks.find(command);
+        ASSERT_NE(it, m_commandCallbacks.end()) << "Command not registered: " << command.toString();
+        it->second(muse::rcommand::make_request(command, {}));
     }
 
     static Clip makeClip(const TrackId& trackId, const TrackItemId& itemId, double startTime)
@@ -180,8 +185,9 @@ public:
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
     std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
+    std::shared_ptr<playback::PlaybackControllerMock> m_playbackController;
 
-    std::map<muse::actions::ActionCode, IActionsDispatcher::ActionCallBackWithNameAndData> m_actionCallbacks;
+    std::map<muse::rcommand::Command, muse::rcommand::ICommandDispatcher::CallBack> m_commandCallbacks;
 };
 
 /**
@@ -200,7 +206,7 @@ TEST_F(TrackNavigationControllerTests, TabOnClipStepsToNextClip)
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(0);
 
     //! [WHEN] Tab is pressed
-    invokeAction("track-view-next-panel");
+    invokeCommand(TRACK_NAVIGATION_NEXT_PANEL_COMMAND);
 
     //! [THEN] Focus moves to the next clip
     EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 200 }));
@@ -222,7 +228,7 @@ TEST_F(TrackNavigationControllerTests, TabOnLastClipHandsOverToNextPanel)
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(1);
 
     //! [WHEN] Tab is pressed
-    invokeAction("track-view-next-panel");
+    invokeCommand(TRACK_NAVIGATION_NEXT_PANEL_COMMAND);
 
     //! [THEN] Focus stays on the last clip
     EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 200 }));
@@ -244,7 +250,7 @@ TEST_F(TrackNavigationControllerTests, TabNavigatesToNextPanelWhenNoItems)
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(1);
 
     //! [WHEN] Tab is pressed
-    invokeAction("track-view-next-panel");
+    invokeCommand(TRACK_NAVIGATION_NEXT_PANEL_COMMAND);
 }
 
 /**
@@ -263,7 +269,7 @@ TEST_F(TrackNavigationControllerTests, ShiftTabOnClipStepsToPrevClip)
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND))).Times(0);
 
     //! [WHEN] Shift+Tab is pressed
-    invokeAction("track-view-prev-panel");
+    invokeCommand(TRACK_NAVIGATION_PREV_PANEL_COMMAND);
 
     //! [THEN] Focus moves to the previous clip
     EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 100 }));
@@ -285,7 +291,7 @@ TEST_F(TrackNavigationControllerTests, ShiftTabOnFirstClipHandsOverToPrevPanel)
     EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND))).Times(1);
 
     //! [WHEN] Shift+Tab is pressed
-    invokeAction("track-view-prev-panel");
+    invokeCommand(TRACK_NAVIGATION_PREV_PANEL_COMMAND);
 
     //! [THEN] Focus stays on the first clip
     EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 100 }));
@@ -304,7 +310,7 @@ TEST_F(TrackNavigationControllerTests, DownFromTrackFocusesNextTrack)
     m_controller->setFocus(TrackFocus::track(1));
 
     //! [WHEN] Down is pressed
-    invokeAction("track-view-below-item");
+    invokeCommand(TRACK_NAVIGATION_BELOW_ITEM_COMMAND);
 
     //! [THEN] The next track is focused
     EXPECT_EQ(m_controller->focusedTrack(), 2);
@@ -323,7 +329,7 @@ TEST_F(TrackNavigationControllerTests, UpFromTrackFocusesPrevTrack)
     m_controller->setFocus(TrackFocus::track(2));
 
     //! [WHEN] Up is pressed
-    invokeAction("track-view-above-item");
+    invokeCommand(TRACK_NAVIGATION_ABOVE_ITEM_COMMAND);
 
     //! [THEN] The previous track is focused
     EXPECT_EQ(m_controller->focusedTrack(), 1);
@@ -345,7 +351,7 @@ TEST_F(TrackNavigationControllerTests, DownFromClipFocusesClosestClipBelow)
     m_controller->setFocus(TrackFocus::item({ 1, 100 })); //!< start time 0.0
 
     //! [WHEN] Down is pressed
-    invokeAction("track-view-below-item");
+    invokeCommand(TRACK_NAVIGATION_BELOW_ITEM_COMMAND);
 
     //! [THEN] The clip closest to 0.0 on track 2 is focused (clip 300 at 0.1)
     EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 2, 300 }));
@@ -367,7 +373,7 @@ TEST_F(TrackNavigationControllerTests, UpFromClipFocusesClosestClipAbove)
     m_controller->setFocus(TrackFocus::item({ 2, 400 })); //!< start time 2.5
 
     //! [WHEN] Up is pressed
-    invokeAction("track-view-above-item");
+    invokeCommand(TRACK_NAVIGATION_ABOVE_ITEM_COMMAND);
 
     //! [THEN] The clip closest to 2.5 on track 1 is focused (clip 200 at 2.0)
     EXPECT_EQ(m_controller->focus(), TrackFocus::item({ 1, 200 }));
@@ -395,7 +401,7 @@ TEST_F(TrackNavigationControllerTests, ContextMenuRequestedForFocusedTrack)
     });
 
     //! [WHEN] Shift+F10 is pressed
-    invokeAction("track-view-item-context-menu");
+    invokeCommand(TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND);
 
     //! [THEN] The context menu is requested for the focused track
     EXPECT_TRUE(called);
@@ -422,7 +428,7 @@ TEST_F(TrackNavigationControllerTests, RulerContextMenuRequestedForFocusedTrack)
     });
 
     //! [WHEN] Shift+F10 is pressed
-    invokeAction("track-view-ruler-context-menu");
+    invokeCommand(TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND);
 
     //! [THEN] The ruler context menu is requested for the focused track
     EXPECT_EQ(requested, 1);
@@ -445,7 +451,7 @@ TEST_F(TrackNavigationControllerTests, ContextMenuNotRequestedWithoutFocus)
     });
 
     //! [WHEN] Shift+F10 is pressed
-    invokeAction("track-view-item-context-menu");
+    invokeCommand(TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND);
 
     //! [THEN] Nothing is requested
     EXPECT_FALSE(called);
@@ -469,7 +475,7 @@ TEST_F(TrackNavigationControllerTests, ResetNavigationRecomputesVerticalReferenc
 
     //! [GIVEN] A vertical anchor established at t=0 by moving down from the first track
     m_controller->setFocus(TrackFocus::item({ 1, 100 }));
-    invokeAction("track-view-below-item");
+    invokeCommand(TRACK_NAVIGATION_BELOW_ITEM_COMMAND);
     ASSERT_EQ(m_controller->focus(), TrackFocus::item({ 2, 200 }));
 
     //! [GIVEN] The focus is moved to an item at t=10 (the anchor is now stale at t=0)
@@ -482,7 +488,7 @@ TEST_F(TrackNavigationControllerTests, ResetNavigationRecomputesVerticalReferenc
     m_controller->resetNavigation();
 
     //! [AND] Down is pressed
-    invokeAction("track-view-below-item");
+    invokeCommand(TRACK_NAVIGATION_BELOW_ITEM_COMMAND);
 
     //! [THEN] The reference is recomputed from t=10, so the closest clip on track 3 is 310 (t=9),
     //! not the stale-anchor clip 300 (t=1)
@@ -503,7 +509,7 @@ TEST_F(TrackNavigationControllerTests, DownFromRulerSkipsLabelTracks)
     m_controller->setFocus(TrackFocus::ruler(1));
 
     //! [WHEN] Down is pressed
-    invokeAction("track-view-below-item");
+    invokeCommand(TRACK_NAVIGATION_BELOW_ITEM_COMMAND);
 
     //! [THEN] The ruler of the third track is focused
     EXPECT_EQ(m_controller->focus(), TrackFocus::ruler(3));
@@ -522,7 +528,7 @@ TEST_F(TrackNavigationControllerTests, UpFromRulerSkipsLabelTracks)
     m_controller->setFocus(TrackFocus::ruler(3));
 
     //! [WHEN] Up is pressed
-    invokeAction("track-view-above-item");
+    invokeCommand(TRACK_NAVIGATION_ABOVE_ITEM_COMMAND);
 
     //! [THEN] The ruler of the first track is focused
     EXPECT_EQ(m_controller->focus(), TrackFocus::ruler(1));
@@ -541,7 +547,7 @@ TEST_F(TrackNavigationControllerTests, DownFromRulerWithNoRulerBelowKeepsFocus)
     m_controller->setFocus(TrackFocus::ruler(1));
 
     //! [WHEN] Down is pressed
-    invokeAction("track-view-below-item");
+    invokeCommand(TRACK_NAVIGATION_BELOW_ITEM_COMMAND);
 
     //! [THEN] The focus is unchanged
     EXPECT_EQ(m_controller->focus(), TrackFocus::ruler(1));

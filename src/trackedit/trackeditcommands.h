@@ -132,4 +132,26 @@ inline static const std::string TRACKEDIT_TRACK_INDEX_PARAM("trackIndex");
 inline static const std::string TRACKEDIT_COLOR_INDEX_PARAM("colorindex");
 inline static const std::string TRACKEDIT_FORMAT_PARAM("format");
 inline static const std::string TRACKEDIT_RATE_PARAM("rate");
+
+// Track navigation: keyboard focus and selection within the track view, handled by TrackNavigationController
+inline static const muse::rcommand::Command TRACK_NAVIGATION_NEXT_PANEL_COMMAND("command://track-navigation/next-panel");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_PREV_PANEL_COMMAND("command://track-navigation/prev-panel");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_FIRST_TRACK_COMMAND("command://track-navigation/first-track");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_LAST_TRACK_COMMAND("command://track-navigation/last-track");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_ABOVE_ITEM_COMMAND("command://track-navigation/above-item");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_BELOW_ITEM_COMMAND("command://track-navigation/below-item");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND(
+    "command://track-navigation/replace-selection");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_TOGGLE_SELECTION_COMMAND(
+    "command://track-navigation/toggle-selection");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_RANGE_SELECTION_COMMAND(
+    "command://track-navigation/range-selection");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_PREV_COMMAND(
+    "command://track-navigation/extend-track-selection-prev");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_NEXT_COMMAND(
+    "command://track-navigation/extend-track-selection-next");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND(
+    "command://track-navigation/item-context-menu");
+inline static const muse::rcommand::Command TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND(
+    "command://track-navigation/ruler-context-menu");
 }
