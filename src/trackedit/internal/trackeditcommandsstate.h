@@ -43,6 +43,7 @@ private:
 
     ClipKeyList clipsForInteraction() const;
     LabelKeyList labelsForInteraction() const;
+    bool canJoin() const;
     bool canSilenceAudio() const;
 
     muse::rcommand::IModuleCommandsRegisterPtr m_moduleRegister;
