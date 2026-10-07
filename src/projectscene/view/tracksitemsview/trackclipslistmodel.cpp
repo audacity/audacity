@@ -60,8 +60,14 @@ void TrackClipsListModel::onInit()
         emit asymmetricStereoHeightsPossibleChanged();
     });
 
-    dispatcher()->reg(this, "rename-item", [this]() {
-        requestItemTitleChange();
+    tracksViewRequestsService()->clipTitleEditRequested().onReceive(this, [this](const trackedit::ClipKey& clipKey) {
+        if (clipKey.trackId != m_trackId) {
+            return;
+        }
+
+        if (ViewTrackItem* item = itemByKey(clipKey)) {
+            emit itemTitleEditRequested(item->key());
+        }
     });
 
     uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {

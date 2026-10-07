@@ -10,6 +10,7 @@
 #include "iprojectsceneconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "record/irecordcontroller.h"
+#include "trackedit/itracksviewrequestsservice.h"
 
 #include "trackitemslistmodel.h"
 #include "trackclipitem.h"
@@ -31,6 +32,7 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::ContextInject<context::IGlobalContext> globalContext { this };
     muse::ContextInject<au::record::IRecordController> recordController { this };
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
+    muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
 
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);

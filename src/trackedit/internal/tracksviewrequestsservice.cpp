@@ -37,3 +37,13 @@ muse::async::Channel<LabelKey> TracksViewRequestsService::labelTitleEditRequeste
 {
     return m_labelTitleEditRequested;
 }
+
+void TracksViewRequestsService::requestClipTitleEdit(const ClipKey& clipKey)
+{
+    m_clipTitleEditRequested.send(clipKey);
+}
+
+muse::async::Channel<ClipKey> TracksViewRequestsService::clipTitleEditRequested() const
+{
+    return m_clipTitleEditRequested;
+}

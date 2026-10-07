@@ -2236,13 +2236,23 @@ muse::Ret TrackeditActionsController::addLabel()
 
 muse::Ret TrackeditActionsController::renameSelectedItem()
 {
+    const ClipKeyList clips = clipsForInteraction();
     const LabelKeyList labels = labelsForInteraction();
-    if (labels.size() != 1 || !labels.front().isValid()) {
+    if (clips.size() + labels.size() != 1) {
         return make_ret(Ret::Code::NotSupported);
     }
 
-    tracksViewRequestsService()->requestLabelTitleEdit(labels.front());
-    return make_ok();
+    if (clips.size() == 1 && clips.front().isValid()) {
+        tracksViewRequestsService()->requestClipTitleEdit(clips.front());
+        return make_ok();
+    }
+
+    if (labels.size() == 1 && labels.front().isValid()) {
+        tracksViewRequestsService()->requestLabelTitleEdit(labels.front());
+        return make_ok();
+    }
+
+    return make_ret(Ret::Code::NotSupported);
 }
 
 muse::Ret TrackeditActionsController::makeStereoTrack()
