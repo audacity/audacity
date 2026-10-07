@@ -108,11 +108,11 @@ void RealtimeEffectManager::Finalize() noexcept
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::ProcessStart(bool suspended)
+void RealtimeEffectManager::ProcessStart(bool suspended, Lists lists)
 {
     // Can be suspended because of the audio stream being paused or because
     // effects have been suspended.
-    VisitAll([suspended](RealtimeEffectState& state, bool listIsActive){
+    VisitLists(lists, [suspended](RealtimeEffectState& state, bool listIsActive){
         state.ProcessStart(!suspended && listIsActive);
     });
 }
@@ -182,11 +182,11 @@ size_t RealtimeEffectManager::Process(bool suspended,
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
+void RealtimeEffectManager::ProcessEnd(bool suspended, Lists lists) noexcept
 {
     // Can be suspended because of the audio stream being paused or because
     // effects have been suspended.
-    VisitAll([suspended](RealtimeEffectState& state, bool){
+    VisitLists(lists, [suspended](RealtimeEffectState& state, bool){
         state.ProcessEnd();
     });
 }

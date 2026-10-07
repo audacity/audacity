@@ -48,6 +48,7 @@ typedef unsigned long PaStreamCallbackFlags;
 typedef int PaError;
 
 namespace RealtimeEffects {
+class InitializationScope;
 class ProcessingScope;
 }
 
@@ -163,7 +164,11 @@ public:
     static constexpr size_t MaxPlaybackChannels = 2;
     struct Track {
         std::shared_ptr<const PlayableSequence> mSequence;
+        //! Post-effect, pre-fader audio, one ring per channel of the sequence
         std::array<std::unique_ptr<RingBuffer>, MaxPlaybackChannels> mBuffers;
+        //! Fader gain per output channel at the end of the last callback;
+        //! negative until the first one. Callback only
+        std::array<float, MaxPlaybackChannels> mLastGains { -1.0f, -1.0f };
 
         Track(std::shared_ptr<const PlayableSequence> sequence);
         ~Track();
@@ -203,7 +208,9 @@ public:
         float* inputSamples, unsigned long framesPerBuffer);
 
     bool FillOutputBuffers(
-        float* outputFloats, unsigned long framesPerBuffer, float* outputMeterFloats);
+        float* outputFloats, unsigned long framesPerBuffer, float* outputMeterFloats, const TimePoint& meterTime);
+    //! Fader, pan, mute and solo of each track, summed into `mix`, with track meters
+    void MixTracks(float* const* mix, size_t frames, const IMeterSenderPtr& meter, const TimePoint& meterTime);
     constSamplePtr ApplyRecordGain(
         constSamplePtr inputBuffer, float gain, size_t numSamples, samplePtr scratch);
     unsigned long DrainInputBuffers(
@@ -216,7 +223,6 @@ public:
     void SendVuOutputMeterData(const float* outputMeterFloats, unsigned long framesPerBuffer, const TimePoint& dacTime);
     void PushMasterOutputMeterValues(const IMeterSenderPtr& sender, const float* values, uint8_t channels, unsigned long frames,
                                      const TimePoint& dacTime);
-    void PushTrackMeterValues(const IMeterSenderPtr& sender, unsigned long frames, const TimePoint& dacTime);
     void PushInputMeterValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames, const TimePoint& dacTime);
 
     /** \brief Get the number of audio samples ready in all of the playback
@@ -249,9 +255,21 @@ public:
     //!Buffers that hold outcome of transformations applied to each individual sample source.
     //!Number of buffers equals to the sum of number all source channels.
     std::vector<std::vector<float> > mProcessingBuffers;
-    //!These buffers are used to mix and process the result of processed source channels.
-    //!Number of buffers equals to number of output channels.
-    std::vector<std::vector<float> > mMasterBuffers;
+    //! Callback only: track input, mix, effect scratch and meter buffers,
+    //! CallbackChunk frames each; the callback works in chunks of that size
+    static constexpr size_t CallbackChunk = 4096;
+    enum CallbackBuffer : size_t {
+        TrackInput, // MaxPlaybackChannels of them
+        Mix = TrackInput + MaxPlaybackChannels,
+        EffectScratch = Mix + MaxPlaybackChannels,
+        EffectDummy = EffectScratch + MaxPlaybackChannels,
+        TrackMeter,
+        CallbackBufferCount
+    };
+    std::vector<std::vector<float> > mCallbackBuffers;
+    //! Set while a stream with realtime effects is open; the callback runs
+    //! the master effects with it
+    RealtimeEffects::InitializationScope* mCallbackRealtimeInit { nullptr };
     /*! Read by worker threads but unchanging during playback */
     RingBuffers mPlaybackBuffers;
     std::vector<Track> mPlaybackTracks;
@@ -339,6 +357,8 @@ public:
 protected:
     static size_t MinValue(
         const RingBuffers& buffers, size_t (RingBuffer::* pmf)() const);
+    //! Over the track rings when there are tracks, else over mPlaybackBuffers
+    size_t MinPlaybackValue(size_t (RingBuffer::* pmf)() const) const;
 
     float GetMixerOutputVol()
     {
