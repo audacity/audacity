@@ -10,6 +10,8 @@
 #include "framework/global/async/channel.h"
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/commandable.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/shortcuts/ishortcutsregister.h"
 
@@ -25,7 +27,8 @@
 
 namespace au::effects {
 class EffectsUiActions;
-class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
+class EffectsActionsController : public muse::actions::Actionable, public muse::rcommand::Commandable, public muse::async::Asyncable,
+    public muse::Contextable
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
@@ -33,6 +36,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
     muse::ContextInject<muse::shortcuts::IShortcutsRegister> shortcutsRegister{ this };
     muse::ContextInject<IEffectExecutionScenario> effectExecutionScenario{ this };
@@ -53,18 +57,18 @@ private:
     void registerActions();
     void notifyAboutSpectralEffectsAvailability();
 
-    void onEffectTriggered(const muse::actions::ActionQuery& q);
-    void applyEffect(const muse::actions::ActionQuery& q);
-    void repeatLastEffect();
+    muse::Ret openEffect(const EffectId& effectId);
+    muse::Ret applyEffect(const EffectId& effectId, const muse::rcommand::Params& params);
+    muse::Ret repeatLastEffect();
 
-    void applyPreset(const muse::actions::ActionQuery& q);
-    void savePreset(const muse::actions::ActionQuery& q);
-    void savePresetAs(const muse::actions::ActionQuery& q);
-    void deletePreset(const muse::actions::ActionQuery& q);
-    void importPreset(const muse::actions::ActionQuery& q);
-    void exportPreset(const muse::actions::ActionQuery& q);
-    void toggleVendorUI(const muse::actions::ActionQuery& q);
-    void openPluginManager();
+    muse::Ret applyPreset(const muse::rcommand::Params& params);
+    muse::Ret savePreset(const muse::rcommand::Params& params);
+    muse::Ret savePresetAs(const muse::rcommand::Params& params);
+    muse::Ret deletePreset(const muse::rcommand::Params& params);
+    muse::Ret importPreset(const muse::rcommand::Params& params);
+    muse::Ret exportPreset(const muse::rcommand::Params& params);
+    muse::Ret toggleVendorUI(const muse::rcommand::Params& params);
+    muse::Ret openPluginManager();
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;
