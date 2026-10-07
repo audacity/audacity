@@ -12,6 +12,10 @@ namespace au::effects::extensions {
 ExtensionEffectLoader::ExtensionEffectLoader(std::shared_ptr<ExtensionEffectsRepository> repository)
     : m_repository(std::move(repository))
 {
+    //! NOTE: effects already instantiated from an outdated manifest must not be reused
+    m_repository->changed().onNotify(this, [this]() {
+        retireAll();
+    });
 }
 
 ExtensionEffectLoader::~ExtensionEffectLoader() = default;

@@ -7,33 +7,26 @@
 #include <utility>
 
 #include "framework/audioplugins/iregisteraudiopluginsscenario.h"
-#include "framework/extensions/iextensionsprovider.h"
 #include "framework/global/log.h"
 
-#include "extensioneffectloader.h"
 #include "extensioneffectsrepository.h"
 #include "extensiontypes.h"
 
 namespace au::effects::extensions {
-ExtensionEffectsScanner::ExtensionEffectsScanner(std::shared_ptr<muse::extensions::IExtensionsProvider> extensionsProvider,
-                                                 std::shared_ptr<ExtensionEffectsRepository> repository,
-                                                 std::shared_ptr<ExtensionEffectLoader> effectLoader)
-    : m_extensionsProvider(std::move(extensionsProvider)), m_repository(std::move(repository)),
-    m_effectLoader(std::move(effectLoader))
+ExtensionEffectsScanner::ExtensionEffectsScanner(std::shared_ptr<ExtensionEffectsRepository> repository)
+    : m_repository(std::move(repository))
 {
 }
 
 muse::io::paths_t ExtensionEffectsScanner::scanPlugins(muse::Progress*) const
 {
-    m_extensionsProvider->reloadExtensions();
+    extensionsRegister()->reload();
     return updateRepository();
 }
 
 muse::io::paths_t ExtensionEffectsScanner::updateRepository() const
 {
-    if (m_repository->reload(m_extensionsProvider->manifestList(muse::extensions::Filter::Enabled))) {
-        m_effectLoader->retireAll();
-    }
+    m_repository->reload();
     return m_repository->pluginPaths();
 }
 

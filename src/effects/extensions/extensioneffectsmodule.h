@@ -8,10 +8,6 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/imodulesetup.h"
 
-namespace muse::extensions {
-class IExtensionsProvider;
-}
-
 namespace au::effects::extensions {
 class ExtensionEffectLoader;
 class ExtensionEffectsScanner;
@@ -29,7 +25,6 @@ public:
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& context) const override;
 
 private:
-    std::shared_ptr<muse::extensions::IExtensionsProvider> m_extensionsProvider;
     std::shared_ptr<ExtensionEffectsRepository> m_repository;
     std::shared_ptr<ExtensionEffectLoader> m_effectLoader;
     std::shared_ptr<ExtensionEffectsScanner> m_scanner;

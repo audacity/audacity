@@ -6,6 +6,10 @@
 #include <vector>
 
 #include "framework/extensions/extensionstypes.h"
+#include "framework/extensions/iextensionsregister.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/ioc.h"
 #include "effects/effects_base/effectstypes.h"
 
 #include "extensioneffecttypes.h"
@@ -17,11 +21,16 @@ struct ExtensionEffectEntry {
     muse::io::path_t bundlePath;
 };
 
-class ExtensionEffectsRepository
+class ExtensionEffectsRepository : public muse::async::Asyncable
 {
+    muse::GlobalInject<muse::extensions::IExtensionsRegister> extensionsRegister;
+
 public:
-    void initialize(const muse::extensions::ManifestList& manifests);
-    bool reload(const muse::extensions::ManifestList& manifests);
+    //! Loads the enabled extensions' effects and keeps them in sync with the extensions register
+    void init();
+    //! Re-reads the enabled extensions; returns true if the effect list changed
+    bool reload();
+    muse::async::Notification changed() const;
 
     const std::vector<ExtensionEffectEntry>& effects() const;
     const ExtensionEffectEntry* effect(const EffectId& id) const;
@@ -29,7 +38,10 @@ public:
     bool contains(const muse::io::path_t& path) const;
 
 private:
+    bool reload(const muse::extensions::ManifestList& manifests);
+
     bool m_initialized = false;
     std::vector<ExtensionEffectEntry> m_effects;
+    muse::async::Notification m_changed;
 };
 } // namespace au::effects::extensions
