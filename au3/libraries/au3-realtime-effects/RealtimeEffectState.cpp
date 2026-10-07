@@ -608,8 +608,17 @@ size_t RealtimeEffectState::Process(
     const float* const* inbuf, float* const* outbuf, float* const dummybuf,
     size_t numSamples)
 {
+    const auto found = mGroups.find(group);
+    if (found == mGroups.end()) {
+        // Not added to this group; pass the audio through, without inserting
+        // into the map on the audio thread
+        for (size_t ii = 0; ii < chans; ++ii) {
+            memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
+        }
+        return 0;
+    }
+    const auto& pair = found->second;
     const auto pInstance = mwInstance.lock();
-    const auto& pair = mGroups[group];
     const float** const clientIn
         =pInstance ? stackAllocate(const float*, pInstance->GetAudioInCount())
           : nullptr;
