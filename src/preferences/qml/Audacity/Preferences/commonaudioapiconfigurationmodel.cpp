@@ -480,6 +480,23 @@ void CommonAudioApiConfigurationModel::latencyCompensationSelected(
     emit latencyCompensationChanged();
 }
 
+void CommonAudioApiConfigurationModel::measureLatency()
+{
+    // The measurement uses the applied settings, not the ones staged on this page
+    const bool pendingChanges = m_pending.api || m_pending.outputDevice || m_pending.inputDevice
+                                || m_pending.inputChannels || m_pending.bufferLength || m_pending.defaultSampleRate;
+
+    muse::UriQuery query("audacity://preferences/measure_latency");
+    query.addParam("pendingChanges", muse::Val(pendingChanges));
+    const muse::RetVal<muse::Val> rv = interactive()->openSync(query);
+    if (!rv.ret.success()) {
+        return;
+    }
+
+    setAutomaticCompensationEnabled(false);
+    latencyCompensationSelected(QString::number(rv.val.toDouble(), 'f', 1));
+}
+
 QString CommonAudioApiConfigurationModel::currentInputChannelsSelected() const
 {
     return channelName(effectiveInputChannels());

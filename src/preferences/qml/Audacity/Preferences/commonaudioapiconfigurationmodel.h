@@ -101,6 +101,8 @@ public:
 
     double latencyCompensation() const;
     Q_INVOKABLE void latencyCompensationSelected(const QString& latencyCompensationStr);
+    //! Opens the measurement dialog and stages its result as manual compensation
+    Q_INVOKABLE void measureLatency();
 
     QString currentInputChannelsSelected() const;
     QVariantList inputChannelsList() const;
