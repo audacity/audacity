@@ -1,20 +1,20 @@
 {
     "folders": [
         {
-            "path": ".."
-        }
+            "path": "..",
+        },
     ],
     "settings": {
         "[cpp]": {
-            "editor.defaultFormatter": "zachflower.uncrustify"
+            "editor.defaultFormatter": "zachflower.uncrustify",
         },
         "emeraldwalk.runonsave": {
             "commands": [
                 {
                     "match": "\\.qml$",
-                    "cmd": "qmlformat -i --semicolon-rule=essential -l unix ${file}"
-                }
-            ]
+                    "cmd": "${env.QTDIR}/bin/qmlformat -i --semicolon-rule=essential -l unix ${file}",
+                },
+            ],
         },
         "C_Cpp.autoAddFileAssociations": false,
         "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
@@ -40,6 +40,6 @@
             "**/build": true,
             "**/.cache": true,
             "**/.tools": true,
-        }
-    }
+        },
+    },
 }
