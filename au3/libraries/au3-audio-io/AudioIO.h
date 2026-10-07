@@ -165,11 +165,22 @@ public:
     static constexpr size_t MaxPlaybackChannels = 2;
     struct Track {
         std::shared_ptr<const PlayableSequence> mSequence;
-        //! Post-effect, pre-fader audio, one ring per channel of the sequence
+        //! Dry audio, one ring per channel of the sequence
         std::array<std::unique_ptr<RingBuffer>, MaxPlaybackChannels> mBuffers;
         //! Fader gain per output channel at the end of the last callback;
         //! negative until the first one. Callback only
         std::array<float, MaxPlaybackChannels> mLastGains { -1.0f, -1.0f };
+        //! Callback only: audio after the track effects, not mixed yet,
+        //! CallbackChunk frames per channel. Effects drop their latency from
+        //! the start of their output, so a track with latent effects reads
+        //! its rings that much further ahead and stays aligned with the others
+        std::array<std::vector<float>, MaxPlaybackChannels> mProcessed;
+        size_t mProcessedFrames { 0 };
+        uint64_t mRingFramesRead { 0 };
+        size_t mLatencyFrames { 0 };
+        //! Callback only: after a seek the effects still hold mLatencyFrames
+        //! of the old position; this much of their output is dropped
+        size_t mDropFrames { 0 };
 
         Track(std::shared_ptr<const PlayableSequence> sequence);
         ~Track();
@@ -210,6 +221,9 @@ public:
 
     bool FillOutputBuffers(
         float* outputFloats, unsigned long framesPerBuffer, float* outputMeterFloats, const TimePoint& meterTime);
+    //! Runs the track effects until `frames` are ready to mix or the rings
+    //! run out; returns how many are ready
+    size_t ProcessTrack(Track& track, size_t frames, std::optional<RealtimeEffects::ProcessingScope>& scope);
     //! Fader, pan, mute and solo of each track, summed into `mix`, with track meters
     void MixTracks(float* const* mix, size_t frames, const IMeterSenderPtr& meter, const TimePoint& meterTime);
     constSamplePtr ApplyRecordGain(
@@ -256,12 +270,11 @@ public:
     //!Buffers that hold outcome of transformations applied to each individual sample source.
     //!Number of buffers equals to the sum of number all source channels.
     std::vector<std::vector<float> > mProcessingBuffers;
-    //! Callback only: track input, mix, effect scratch and meter buffers,
-    //! CallbackChunk frames each; the callback works in chunks of that size
+    //! Callback only: mix, effect scratch and meter buffers, CallbackChunk
+    //! frames each; the callback works in chunks of that size
     static constexpr size_t CallbackChunk = 4096;
     enum CallbackBuffer : size_t {
-        TrackInput, // MaxPlaybackChannels of them
-        Mix = TrackInput + MaxPlaybackChannels,
+        Mix, // MaxPlaybackChannels of them
         EffectScratch = Mix + MaxPlaybackChannels,
         EffectDummy = EffectScratch + MaxPlaybackChannels,
         TrackMeter,
@@ -269,7 +282,7 @@ public:
     };
     std::vector<std::vector<float> > mCallbackBuffers;
     //! Set while a stream with realtime effects is open; the callback runs
-    //! the master effects with it
+    //! the effects with it
     RealtimeEffects::InitializationScope* mCallbackRealtimeInit { nullptr };
     /*! Read by worker threads but unchanging during playback */
     RingBuffers mPlaybackBuffers;
@@ -278,9 +291,6 @@ public:
     // Old volume is used in playback in linearly interpolating
     // the volume.
     float mOldPlaybackVolume;
-    // Temporary buffers, each as large as the playback buffers
-    std::vector<SampleBuffer> mScratchBuffers;
-    std::vector<float*> mScratchPointers; //!< pointing into mScratchBuffers
 
     std::vector<std::unique_ptr<Mixer> > mPlaybackMixers;
 
@@ -308,7 +318,9 @@ public:
     uint64_t mRingFramesWritten { 0 };
     //! Callback only
     uint64_t mSeekApplied { 0 };
-    uint64_t mRingFramesRead { 0 };
+    //! The rings are empty after a seek until the producer refills them
+    bool mRefillingAfterSeek { false };
+    uint64_t mFramesMixed { 0 };
     uint64_t mFramesOutput { 0 };
     struct TimeSkip {
         uint64_t seek = 0;
@@ -335,6 +347,9 @@ public:
     double mHardwareCaptureLatencyMs{ 0 };
     /// Occupancy of the queue we try to maintain, with bigger batches if needed
     size_t mPlaybackQueueMinimum;
+    //! Largest read-ahead of a track for its latent effects, set by the
+    //! callback; the producer keeps that much more audio queued
+    std::atomic<size_t> mTrackLatencyFrames { 0 };
 
     double mMinCaptureSecsToCopy;
     /*! Read by a worker thread but unchanging during playback */
@@ -678,10 +693,10 @@ private:
     //! First part of SequenceBufferExchange
     void FillPlayBuffers();
     //! Producer: repositions for the latest seek request, see mSeekRequested
-    void HandleSeekRequest();
+    //! @return whether it repositioned
+    bool HandleSeekRequest();
 
-    bool ProcessPlaybackSlices(
-        std::optional<RealtimeEffects::ProcessingScope>& pScope, size_t available);
+    bool ProcessPlaybackSlices(size_t available);
 
     //! Second part of SequenceBufferExchange
     void DrainRecordBuffers();

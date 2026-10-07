@@ -52,14 +52,6 @@ public:
     //!to every playable track
     static constexpr ChannelGroup* MasterGroup = nullptr;
 
-    //! Which effect lists a processing scope covers; the producer thread
-    //! processes the track lists and the audio callback the master list
-    enum class Lists {
-        All,
-        Tracks,
-        Master,
-    };
-
     using Latency = std::chrono::microseconds;
 
     RealtimeEffectManager(AudacityProject& project);
@@ -143,12 +135,12 @@ private:
 
     friend RealtimeEffects::ProcessingScope;
 
-    void ProcessStart(bool suspended, Lists lists);
+    void ProcessStart(bool suspended);
 
     /*! @copydoc ProcessScope::Process */
     size_t Process(bool suspended, const ChannelGroup* group, float* const* buffers, float* const* scratch, float* dummy, unsigned nBuffers,
                    size_t numSamples);
-    void ProcessEnd(bool suspended, Lists lists) noexcept;
+    void ProcessEnd(bool suspended) noexcept;
 
     RealtimeEffectManager(const RealtimeEffectManager&) = delete;
     RealtimeEffectManager& operator=(const RealtimeEffectManager&) = delete;
@@ -181,19 +173,12 @@ private:
     template<typename StateVisitor>
     void VisitAll(const StateVisitor& func)
     {
-        VisitLists(Lists::All, func);
-    }
+        // Call the function for each effect on the master list
+        RealtimeEffectList::Get(mProject).Visit(func);
 
-    template<typename StateVisitor>
-    void VisitLists(Lists lists, const StateVisitor& func)
-    {
-        if (lists != Lists::Tracks) {
-            RealtimeEffectList::Get(mProject).Visit(func);
-        }
-        if (lists != Lists::Master) {
-            for (auto group : mGroups) {
-                RealtimeEffectList::Get(*group).Visit(func);
-            }
+        // And all group lists
+        for (auto group : mGroups) {
+            RealtimeEffectList::Get(*group).Visit(func);
         }
     }
 
@@ -263,13 +248,11 @@ class ProcessingScope
 public:
     //! Require a prior InializationScope to ensure correct nesting
     explicit ProcessingScope(InitializationScope&,
-                             std::weak_ptr<AudacityProject> wProject,
-                             RealtimeEffectManager::Lists lists = RealtimeEffectManager::Lists::All)
+                             std::weak_ptr<AudacityProject> wProject)
         : mwProject{move(wProject)}
-        , mLists{lists}
     {
         if (auto pProject = mwProject.lock()) {
-            RealtimeEffectManager::Get(*pProject).ProcessStart(mSuspended, mLists);
+            RealtimeEffectManager::Get(*pProject).ProcessStart(mSuspended);
         }
     }
 
@@ -278,7 +261,7 @@ public:
     ~ProcessingScope()
     {
         if (auto pProject = mwProject.lock()) {
-            RealtimeEffectManager::Get(*pProject).ProcessEnd(mSuspended, mLists);
+            RealtimeEffectManager::Get(*pProject).ProcessEnd(mSuspended);
         }
     }
 
@@ -302,7 +285,6 @@ public:
 
 private:
     std::weak_ptr<AudacityProject> mwProject;
-    RealtimeEffectManager::Lists mLists;
     bool mSuspended{};
 };
 }
