@@ -2247,7 +2247,8 @@ bool AudioIO::ProcessPlaybackSlices(
                 const auto silenced = SequenceShouldBeSilent(*seq);
                 for (int i = 0; i < seq->NChannels(); ++i) {
                     auto& buffer = mProcessingBuffers[bufferIndex + i];
-                    buffer.erase(buffer.begin() + offset, buffer.begin() + offset + discardable);
+                    // The output starts at offset; the last `discardable` samples are not output
+                    buffer.resize(buffer.size() - discardable);
                     if (silenced) {
                         //TODO: fade out smoothly
                         std::fill_n(buffer.data() + offset, len - discardable, 0);
@@ -2377,7 +2378,7 @@ bool AudioIO::ProcessPlaybackSlices(
         unsigned bufferIndex = 0;
         for (auto& buffer : mMasterBuffers) {
             mPlaybackBuffers[bufferIndex++]->Put(
-                reinterpret_cast<constSamplePtr>(buffer.data()) + masterBufferOffset * sizeof(float),
+                reinterpret_cast<constSamplePtr>(buffer.data()),
                 floatSample,
                 samplesAvailable,
                 0
