@@ -5,6 +5,7 @@
 
 #include "spectrogram/ispectrogramservice.h"
 #include "spectrogram/view/ispectrogramviewservice.h"
+#include "context/iglobalcontext.h"
 
 #include "shared/axis/axistypes.h"
 
@@ -33,6 +34,7 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfig;
 
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<ISpectrogramService> spectrogramService{ this };
     muse::ContextInject<ISpectrogramViewService> spectrogramViewService{ this };
 
