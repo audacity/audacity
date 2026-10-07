@@ -7,6 +7,7 @@ declare_module(audio)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/audioconfigurationtypes.h
     ${CMAKE_CURRENT_LIST_DIR}/driver/iaudiodrivercontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/driver/ilatencymeasurement.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiostreamsuspender.h
     ${CMAKE_CURRENT_LIST_DIR}/audiomodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audiomodule.h

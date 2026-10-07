@@ -62,6 +62,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "AudioIOExt.h"
 #include "AudioIOListener.h"
+#include "LoopbackLatency.h"
 
 #include "au3-math/float_cast.h"
 #include "au3-math/Resample.h"
@@ -1920,6 +1921,172 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     mCachedBestRatePlaying = playing;
     mCachedBestRateCapturing = capturing;
     return supportedRate;
+}
+
+namespace {
+struct LoopbackState {
+    std::vector<float> burst;
+    size_t periodFrames = 0;
+    size_t totalFrames = 0;
+    unsigned outputChannels = 0;
+    unsigned inputChannels = 0;
+    //! One buffer per input channel, preallocated
+    std::vector<std::vector<float> > capture;
+    //! Callback thread only
+    size_t position = 0;
+    std::atomic<bool> done { false };
+};
+
+int LoopbackCallback(const void* inputBuffer, void* outputBuffer, unsigned long frames,
+                     const PaStreamCallbackTimeInfo*, PaStreamCallbackFlags, void* userData)
+{
+    auto& s = *static_cast<LoopbackState*>(userData);
+    const auto input = static_cast<const float*>(inputBuffer);
+    const auto output = static_cast<float*>(outputBuffer);
+
+    for (unsigned long i = 0; i < frames; ++i) {
+        const size_t n = s.position + i;
+        const size_t phase = n % s.periodFrames;
+        const float value = n < s.totalFrames && phase < s.burst.size() ? s.burst[phase] : 0.0f;
+        for (unsigned ch = 0; ch < s.outputChannels; ++ch) {
+            output[i * s.outputChannels + ch] = value;
+        }
+        if (input && n < s.totalFrames) {
+            for (unsigned ch = 0; ch < s.inputChannels; ++ch) {
+                s.capture[ch][n] = input[i * s.inputChannels + ch];
+            }
+        }
+    }
+    s.position += frames;
+    if (s.position >= s.totalFrames) {
+        s.done.store(true, std::memory_order_release);
+    }
+    return paContinue;
+}
+}
+
+AudioIOLoopbackResult AudioIO::MeasureLoopbackLatency(double projectRate, double seconds, float gain)
+{
+    using Status = AudioIOLoopbackResult::Status;
+    AudioIOLoopbackResult result;
+
+    if (IsBusy() || IsStreamActive()) {
+        result.status = Status::Busy;
+        return result;
+    }
+    // Keeps StartStream away while the measurement owns the device
+    mStreamToken = -1;
+    auto releaseToken = finally([this] { mStreamToken = 0; });
+
+    const PaDeviceIndex playDevice = getPlayDevIndex();
+    const PaDeviceIndex recordDevice = getRecordDevIndex();
+    const PaDeviceInfo* playInfo = Pa_GetDeviceInfo(playDevice);
+    const PaDeviceInfo* recordInfo = Pa_GetDeviceInfo(recordDevice);
+    if (!playInfo || !recordInfo || playInfo->maxOutputChannels <= 0 || recordInfo->maxInputChannels <= 0) {
+        return result;
+    }
+    const PaHostApiInfo* playHost = Pa_GetHostApiInfo(playInfo->hostApi);
+    const PaHostApiInfo* recordHost = Pa_GetHostApiInfo(recordInfo->hostApi);
+    const bool playWASAPI = playHost && playHost->type == paWASAPI;
+    const bool recordWASAPI = recordHost && recordHost->type == paWASAPI;
+    const bool usingJack = playHost && playHost->type == paJACK;
+
+    // The same rate choice as StartPortAudioStream for a stream that records and plays
+    double rate = 0.0;
+    if (gPrefs->ReadBool(wxT("/AudioIO/ASIO/UseDeviceSampleRate"), true) && DeviceManager::IsAsioDevice(playDevice)) {
+        rate = DeviceManager::GetAsioDeviceCurrentSampleRate(playDevice);
+    }
+    if (rate == 0.0) {
+        rate = GetBestRate(true, true, projectRate);
+    }
+    const bool unsupportedRate = rate == 0.0;
+    if (unsupportedRate && recordWASAPI) {
+        rate = recordInfo->defaultSampleRate;
+    }
+    if (rate == 0.0) {
+        return result;
+    }
+
+    const double latencyDuration = AudioIOLatencyDuration.Read();
+
+    LoopbackState state;
+    state.burst = LoopbackLatency::MakeBurst(gain);
+    state.periodFrames = static_cast<size_t>(rate);
+    state.totalFrames = static_cast<size_t>(seconds * rate);
+    state.outputChannels = std::min(2, playInfo->maxOutputChannels);
+    state.inputChannels = std::clamp(AudioIORecordChannels.Read(), 1, recordInfo->maxInputChannels);
+    state.capture.assign(state.inputChannels, std::vector<float>(state.totalFrames, 0.0f));
+
+    PaStreamParameters playParameters {};
+    playParameters.device = playDevice;
+    playParameters.channelCount = static_cast<int>(state.outputChannels);
+    playParameters.sampleFormat = paFloat32;
+    // See bug 1949 in StartPortAudioStream
+    playParameters.suggestedLatency = playWASAPI ? 0.0 : latencyDuration / 1000.0;
+
+#ifdef __WXMSW__
+    PaWasapiStreamInfo wasapiStreamInfo {};
+    if (playWASAPI && unsupportedRate) {
+        wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
+        wasapiStreamInfo.hostApiType = paWASAPI;
+        wasapiStreamInfo.version = 1;
+        wasapiStreamInfo.flags = paWinWasapiAutoConvert;
+        playParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
+    }
+#endif
+
+    PaStreamParameters recordParameters {};
+    recordParameters.device = recordDevice;
+    recordParameters.channelCount = static_cast<int>(state.inputChannels);
+    recordParameters.sampleFormat = paFloat32;
+    recordParameters.suggestedLatency = latencyDuration / 1000.0;
+
+    PaStream* stream = nullptr;
+    if (Pa_OpenStream(&stream, &recordParameters, &playParameters, rate, paFramesPerBufferUnspecified,
+                      paNoFlag, LoopbackCallback, &state) != paNoError) {
+        return result;
+    }
+    auto closeStream = finally([stream] { Pa_CloseStream(stream); });
+
+    const PaStreamInfo* info = Pa_GetStreamInfo(stream);
+    result.sampleRate = info->sampleRate;
+    result.reportedInputLatencySecs = info->inputLatency;
+    // Same JACK exception as StartPortAudioStream
+    result.reportedOutputLatencySecs = usingJack ? latencyDuration / 1000.0 : info->outputLatency;
+
+    if (Pa_StartStream(stream) != paNoError) {
+        return result;
+    }
+    using namespace std::chrono;
+    const auto deadline = steady_clock::now() + duration<double>(seconds + 3.0);
+    while (!state.done.load(std::memory_order_acquire) && steady_clock::now() < deadline) {
+        std::this_thread::sleep_for(20ms);
+    }
+    Pa_StopStream(stream);
+    if (!state.done.load(std::memory_order_acquire)) {
+        return result;
+    }
+
+    LoopbackLatency::Analysis best;
+    for (unsigned ch = 0; ch < state.inputChannels; ++ch) {
+        const auto analysis = LoopbackLatency::Analyse(state.capture[ch], state.burst, state.periodFrames);
+        if (ch == 0 || analysis.burstsFound > best.burstsFound
+            || (analysis.burstsFound == best.burstsFound && analysis.minConfidence > best.minConfidence)) {
+            best = analysis;
+            result.inputChannel = static_cast<int>(ch);
+        }
+        result.inputPeak = std::max(result.inputPeak, analysis.peak);
+    }
+
+    result.roundTripFrames = best.roundTripFrames;
+    result.burstsFound = best.burstsFound;
+    result.burstsTotal = best.burstsTotal;
+    result.spreadFrames = best.spreadFrames;
+    result.minConfidence = best.minConfidence;
+    result.inverted = best.inverted;
+    result.status = best.roundTripFrames >= 0 && best.burstsFound * 2 > best.burstsTotal
+                    ? Status::Measured : Status::NoSignal;
+    return result;
 }
 
 double AudioIO::GetStreamTime()

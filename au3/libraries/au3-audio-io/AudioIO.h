@@ -102,6 +102,29 @@ int audacityAudioCallback(
 
 class AudioIOExt;
 
+//! Result of a round-trip measurement through a loopback (cable, or speaker to microphone)
+struct AudioIOLoopbackResult {
+    enum class Status {
+        Measured,
+        Busy, //!< Another stream owns the audio device
+        DeviceError,
+        NoSignal, //!< Too few bursts came back to trust the result
+    };
+    Status status = Status::DeviceError;
+    double sampleRate = 0.0;
+    long roundTripFrames = -1;
+    //! What automatic latency compensation would use for this stream
+    double reportedInputLatencySecs = 0.0;
+    double reportedOutputLatencySecs = 0.0;
+    size_t burstsFound = 0;
+    size_t burstsTotal = 0;
+    long spreadFrames = 0;
+    double minConfidence = 0.0;
+    float inputPeak = 0.0f;
+    bool inverted = false;
+    int inputChannel = -1;
+};
+
 class AUDIO_IO_API AudioIoCallback /* not final */ : public AudioIOBase
 {
 public:
@@ -651,6 +674,10 @@ public:
      * t0 and t1
      */
     double GetStreamTime();
+
+    //! Blocks for about `seconds`. Uses the recording devices, rate and buffer
+    //! settings; fails with Busy while any stream is open
+    AudioIOLoopbackResult MeasureLoopbackLatency(double projectRate, double seconds, float gain);
 
     static void AudioThread(std::atomic<bool>& finish);
 

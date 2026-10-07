@@ -13,6 +13,8 @@
 #include "framework/global/defer.h"
 #include "framework/global/log.h"
 #include "framework/global/realfn.h"
+#include "framework/global/runtime.h"
+#include "framework/global/async/async.h"
 #include "framework/global/settings.h"
 
 #include "audio/iaudiostreamsuspender.h"
@@ -23,6 +25,7 @@
 
 #include "au3-audio-devices/AudioIOBase.h"
 #include "au3-audio-devices/DeviceManager.h"
+#include "au3-audio-io/AudioIO.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
 
@@ -87,6 +90,31 @@ std::string internalSampleFormat(const std::string& display)
         }
     }
     return {};
+}
+
+LatencyMeasurement toLatencyMeasurement(const AudioIOLoopbackResult& r)
+{
+    LatencyMeasurement result;
+    switch (r.status) {
+    case AudioIOLoopbackResult::Status::Measured: result.status = LatencyMeasurement::Status::Measured;
+        break;
+    case AudioIOLoopbackResult::Status::Busy: result.status = LatencyMeasurement::Status::Busy;
+        break;
+    case AudioIOLoopbackResult::Status::DeviceError: result.status = LatencyMeasurement::Status::DeviceError;
+        break;
+    case AudioIOLoopbackResult::Status::NoSignal: result.status = LatencyMeasurement::Status::NoSignal;
+        break;
+    }
+    result.sampleRate = r.sampleRate;
+    result.roundTripFrames = r.roundTripFrames;
+    result.reportedInputLatencyMs = r.reportedInputLatencySecs * 1000.0;
+    result.reportedOutputLatencyMs = r.reportedOutputLatencySecs * 1000.0;
+    result.signalsFound = r.burstsFound;
+    result.signalsSent = r.burstsTotal;
+    result.spreadFrames = r.spreadFrames;
+    result.inputPeak = r.inputPeak;
+    result.inverted = r.inverted;
+    return result;
 }
 
 bool restoreSafely(const AudioStreamRestorer& restoreStream) noexcept
@@ -660,7 +688,7 @@ void Au3AudioDriverController::publish(const AudioConfigurationDelta& delta,
 ApplyResult Au3AudioDriverController::apply(const muse::modularity::ContextPtr& requester,
                                             const AudioConfigurationChange& change)
 {
-    if (m_applying) {
+    if (m_applying || m_measuring) {
         return { ApplyStatus::Busy };
     }
 
@@ -723,9 +751,72 @@ ApplyResult Au3AudioDriverController::apply(const muse::modularity::ContextPtr& 
     return { ApplyStatus::Applied, !restored };
 }
 
+Au3AudioDriverController::~Au3AudioDriverController()
+{
+    if (m_measureThread.joinable()) {
+        m_measureThread.join();
+    }
+}
+
+bool Au3AudioDriverController::isMeasuring() const
+{
+    return m_measuring;
+}
+
+void Au3AudioDriverController::measure(const muse::modularity::ContextPtr& requester,
+                                       std::function<void(const LatencyMeasurement&)> done)
+{
+    // Long enough for a few test signals even at a large buffer setting
+    constexpr double MEASURE_SECONDS = 4.0;
+    // About -6 dBFS: loud enough for a microphone near a speaker
+    constexpr float SIGNAL_GAIN = 0.5f;
+
+    LatencyMeasurement busy;
+    busy.status = LatencyMeasurement::Status::Busy;
+    if (m_applying || m_measuring) {
+        done(busy);
+        return;
+    }
+
+    // Input monitoring can wait; playback and recording are the user's work
+    AudioStreamRestorer restoreStream;
+    const auto stream = audioEngine() ? audioEngine()->currentStream() : std::nullopt;
+    if (stream) {
+        if (stream->kind != AudioStreamKind::Monitoring) {
+            done(busy);
+            return;
+        }
+        restoreStream = suspendOrForceStop(*stream);
+        if (!restoreStream) {
+            done(busy);
+            return;
+        }
+    }
+
+    const AudacityProject* project = projectForContext(requester);
+    const double rate = project ? ::ProjectRate::Get(*project).GetRate()
+                        : static_cast<double>(configuration().defaultSampleRate);
+
+    if (m_measureThread.joinable()) {
+        m_measureThread.join();
+    }
+    m_measuring = true;
+    m_measureThread = std::thread([this, rate, restoreStream, done]() {
+        const AudioIOLoopbackResult r = AudioIO::Get()->MeasureLoopbackLatency(rate, MEASURE_SECONDS, SIGNAL_GAIN);
+
+        const LatencyMeasurement result = toLatencyMeasurement(r);
+
+        muse::async::Async::call(this, [this, result, restoreStream, done]() {
+            m_measuring = false;
+            restoreSafely(restoreStream);
+            done(result);
+        }, muse::runtime::mainThreadId());
+    });
+}
+
 ApplyResult Au3AudioDriverController::rescan()
 {
-    if (m_applying) {
+    if (m_applying || m_measuring) {
         return { ApplyStatus::Busy };
     }
 
@@ -814,7 +905,7 @@ ApplyResult Au3AudioDriverController::reload(const muse::modularity::ContextPtr&
 
 ApplyResult Au3AudioDriverController::openAsioDriverSettings(const AudioRoutingChange& routing)
 {
-    if (m_applying) {
+    if (m_applying || m_measuring) {
         return { ApplyStatus::Busy };
     }
     AudioConfigurationChange change;
