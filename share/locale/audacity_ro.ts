@@ -4042,7 +4042,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="303"/>
         <source>&amp;Edit</source>
-        <translation>&amp;Editează</translation>
+        <translation>&amp;Editare</translation>
     </message>
 </context>
 <context>
@@ -4118,7 +4118,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="411"/>
         <source>&amp;Generate</source>
-        <translation>&amp;Generează</translation>
+        <translation>&amp;Generare</translation>
     </message>
 </context>
 <context>
@@ -4187,7 +4187,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
         <source>&amp;Record</source>
-        <translation>Înregist&amp;rează</translation>
+        <translation>Înregist&amp;rare</translation>
     </message>
 </context>
 <context>
@@ -4237,7 +4237,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="331"/>
         <source>&amp;Select</source>
-        <translation>&amp;Selectează</translation>
+        <translation>&amp;Selectare</translation>
     </message>
 </context>
 <context>
@@ -4296,7 +4296,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;View</source>
-        <translation>&amp;Vizualizează</translation>
+        <translation>&amp;Vizualizare</translation>
     </message>
 </context>
 <context>
