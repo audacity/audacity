@@ -4,6 +4,7 @@
 #include "frequencyselectioncontroller.h"
 
 #include "ifrequencyselectionrestorer.h"
+#include "spectrogramutils.h"
 #include "shared/axis/numberscale.h"
 
 #include "framework/global/log.h"
@@ -208,7 +209,9 @@ void FrequencySelectionController::setCenterFrequency(double newCenterFrequency,
         return;
     }
 
-    NumberScale numberScale(m_config->scale(), m_config->minFreq(), m_config->maxFreq());
+    const auto [minFreq, maxFreq]
+        = spectrogramBounds(*m_config, spectrogramService()->trackSampleRate(m_frequencySelection.trackId));
+    NumberScale numberScale(m_config->scale(), minFreq, maxFreq);
     const auto centerFrequencyPos = numberScale.valueToPosition(newCenterFrequency);
 
     const auto startFreqPos = numberScale.valueToPosition(m_frequencySelection.startFrequency());
