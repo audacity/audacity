@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include <algorithm>
+#include <cstdlib>
 #include <future>
 #include <string>
 #include <thread>
@@ -24,7 +25,8 @@ namespace au::au3audio {
 /**
  * @brief Fixture for testing AudioIO monitoring against a real PortAudio stream.
  *
- * @details Runs on any platform with a capture device; on headless Linux CI, ALSA's `null` device fills that role.
+ * @details Runs on any platform with a capture device; on headless Linux CI, a `test_null` ALSA device
+ * (an alias of `null`, which PortAudio ignores) is defined in the workflow to fill that role.
  * No audio needs to flow, the only hardware dependency is that Pa_OpenStream must succeed.
  */
 class AudioIOMonitoringTest : public ::testing::Test
@@ -61,7 +63,7 @@ protected:
     }
 
     //! Points the recording-device prefs at a usable capture device.
-    //! Selects ALSA "null" if available (headless CI), else tries default input device first, because likely less flaky than other random devices.
+    //! Selects ALSA "test_null" if available (headless CI), else tries default input device first, because likely less flaky than other random devices.
     //! Returns false if none exists.
     bool selectCaptureDevice()
     {
@@ -69,7 +71,7 @@ protected:
         const PaDeviceInfo* chosen = nullptr;
         for (PaDeviceIndex i = 0; i < deviceCount; ++i) {
             const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
-            if (info && info->maxInputChannels > 0 && std::string(info->name) == "null") {
+            if (info && info->maxInputChannels > 0 && std::string(info->name) == "test_null") {
                 chosen = info;
                 break;
             }
@@ -113,6 +115,9 @@ TEST_F(AudioIOMonitoringTest, MonitoringDoesNotNeedAudioThread)
 {
     AudioIO::Init();
     if (!selectCaptureDevice()) {
+        if (std::getenv("CI")) {
+            FAIL() << "no capture device available on CI";
+        }
         GTEST_SKIP() << "no capture device available";
     }
     AudioIO* audioIO = AudioIO::Get();
