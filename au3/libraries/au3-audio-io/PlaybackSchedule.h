@@ -147,6 +147,9 @@ public:
         size_t available //!< how many more samples may be buffered
         );
 
+    //! AudioIO::FillPlayBuffers calls this to move the mixers to a seek target
+    virtual void SeekMixers(PlaybackSchedule& schedule, const Mixers& playbackMixers, double time);
+
     //! @section To be removed
 
     virtual bool Looping(const PlaybackSchedule& schedule) const;

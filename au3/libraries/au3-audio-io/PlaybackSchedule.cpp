@@ -139,6 +139,14 @@ bool PlaybackPolicy::RepositionPlayback(
     return true;
 }
 
+void PlaybackPolicy::SeekMixers(
+    PlaybackSchedule&, const Mixers& playbackMixers, double time)
+{
+    for (auto& mixer : playbackMixers) {
+        mixer->Reposition(time, true);
+    }
+}
+
 bool PlaybackPolicy::Looping(const PlaybackSchedule&) const
 {
     return false;

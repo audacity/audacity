@@ -22,6 +22,7 @@
 #include <condition_variable>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <mutex>
 #include <thread>
 #include <utility>
@@ -190,8 +191,8 @@ public:
 
     AudioCallbackInfoQueue& GetAudioCallbackInfoQueue() { return mAudioCallbackInfoQueue; }
 
-    // Part of the callback
-    int CallbackDoSeek();
+    //! Callback: drops audio from before a completed seek, see HandleSeekRequest
+    void ApplyCompletedSeek();
 
     // Part of the callback
     void CallbackCheckCompletion(
@@ -291,7 +292,38 @@ public:
     /*! Read by a worker thread but unchanging during playback */
     bool mbMicroFades;
 
-    double mSeek;
+    /*! @name Seeking during playback
+     The main thread writes the target and then bumps mSeekRequested. The
+     producer repositions the mixers and publishes how many frames it had
+     written to the track rings before the new position. The callback drops
+     up to there and tells the main thread which time records to skip.
+     @{
+     */
+    std::atomic<double> mSeekTarget { 0.0 };
+    std::atomic<uint64_t> mSeekRequested { 0 };
+    std::atomic<uint64_t> mSeekDone { 0 };
+    std::atomic<uint64_t> mRingFramesAtSeek { 0 };
+    //! Producer only
+    uint64_t mSeekHandled { 0 };
+    uint64_t mRingFramesWritten { 0 };
+    //! Callback only
+    uint64_t mSeekApplied { 0 };
+    uint64_t mRingFramesRead { 0 };
+    uint64_t mFramesOutput { 0 };
+    struct TimeSkip {
+        uint64_t seek = 0;
+        //! Count of frames output before the dropped ones
+        uint64_t atOutputFrame = 0;
+        size_t frames = 0;
+    };
+    LockFreeQueue<TimeSkip> mTimeSkipQueue { 64 };
+    //! Main thread only
+    std::optional<TimeSkip> mPendingTimeSkip;
+    uint64_t mTimeConsumedFrames { 0 };
+    //! Shown as the stream time until the new position is heard
+    std::optional<double> mSeekTargetShown;
+    uint64_t mSeekTargetShownFor { 0 };
+    //! @}
     PlaybackPolicy::Duration mPlaybackRingBufferSecs;
     double mCaptureRingBufferSecs;
 
@@ -528,9 +560,8 @@ public:
      * flushing recording buffers out to RecordableSequences, and applies latency
      * correction to recorded sequences if necessary */
     void StopStream() override;
-    /** \brief Move the playback / recording position of the current stream
-     * by the specified amount from where it is now */
-    void SeekStream(double seconds);
+    //! Move the playback position of the current stream to `time`; returns at once
+    void SeekStreamTo(double time);
 
     using PostRecordingAction = std::function<void ()>;
 
@@ -646,6 +677,8 @@ private:
 
     //! First part of SequenceBufferExchange
     void FillPlayBuffers();
+    //! Producer: repositions for the latest seek request, see mSeekRequested
+    void HandleSeekRequest();
 
     bool ProcessPlaybackSlices(
         std::optional<RealtimeEffects::ProcessingScope>& pScope, size_t available);

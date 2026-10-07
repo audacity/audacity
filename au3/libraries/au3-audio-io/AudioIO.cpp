@@ -1008,7 +1008,20 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     // backlog would be misattributed to this stream's timeline.
     mAudioCallbackInfoQueue.Clear();
 
-    mSeek    = 0;
+    mSeekTarget = 0.0;
+    mSeekRequested = 0;
+    mSeekDone = 0;
+    mRingFramesAtSeek = 0;
+    mSeekHandled = 0;
+    mRingFramesWritten = 0;
+    mSeekApplied = 0;
+    mRingFramesRead = 0;
+    mFramesOutput = 0;
+    mTimeSkipQueue.Clear();
+    mPendingTimeSkip.reset();
+    mTimeConsumedFrames = 0;
+    mSeekTargetShown.reset();
+    mSeekTargetShownFor = 0;
     mLastRecordingOffset = 0;
     mCaptureSequences = sequences.captureSequences;
     mPlaybackSequences = sequences.playbackSequences;
@@ -1822,9 +1835,38 @@ void AudioIO::StopStream()
     mPlaybackSchedule.ResetMode();
 }
 
-void AudioIO::SeekStream(double seconds)
+void AudioIO::SeekStreamTo(double time)
 {
-    mSeek = seconds;
+    mSeekTarget.store(time, std::memory_order_relaxed);
+    mSeekTargetShownFor = mSeekRequested.fetch_add(1, std::memory_order_release) + 1;
+    mSeekTargetShown = time;
+}
+
+void AudioIO::HandleSeekRequest()
+{
+    const uint64_t requested = mSeekRequested.load(std::memory_order_acquire);
+    if (requested == mSeekHandled) {
+        return;
+    }
+    mSeekHandled = requested;
+
+    // A refused seek is still answered, with nothing to drop, so that the
+    // main thread stops showing the target
+    auto& policy = mPlaybackSchedule.GetPolicy();
+    if (policy.AllowSeek(mPlaybackSchedule)) {
+        const double target = mSeekTarget.load(std::memory_order_relaxed);
+        const double time = policy.OffsetSequenceTime(mPlaybackSchedule, target - mPlaybackSchedule.GetSequenceTime());
+
+        policy.SeekMixers(mPlaybackSchedule, mPlaybackMixers, time);
+        // Leftovers from latency mismatches belong to the old position
+        for (auto& buffer : mProcessingBuffers) {
+            buffer.clear();
+        }
+        mPlaybackSchedule.mTimeQueue.SetLastTime(time);
+    }
+
+    mRingFramesAtSeek.store(mRingFramesWritten, std::memory_order_relaxed);
+    mSeekDone.store(requested, std::memory_order_release);
 }
 
 void AudioIO::SetPaused(bool state, bool publish)
@@ -2034,6 +2076,8 @@ void AudioIO::SequenceBufferExchange()
 
 void AudioIO::FillPlayBuffers()
 {
+    HandleSeekRequest();
+
     std::optional<RealtimeEffects::ProcessingScope> pScope;
     if (mpTransportState && mpTransportState->mpRealtimeInitialization) {
         // The audio callback processes the master effects
@@ -2306,6 +2350,7 @@ bool AudioIO::ProcessPlaybackSlices(
             }
             bufferIndex += seq->NChannels();
         }
+        mRingFramesWritten += samplesAvailable;
     }
 
     //remove only samples that were processed in previous step
@@ -2724,14 +2769,7 @@ bool AudioIoCallback::FillOutputBuffers(
         return false;
     }
 
-    if (mSeek && !mPlaybackSchedule.GetPolicy().AllowSeek(mPlaybackSchedule)) {
-        mSeek = 0.0;
-    }
-
-    if (mSeek) {
-        mCallbackReturn = CallbackDoSeek();
-        return true;
-    }
+    ApplyCompletedSeek();
 
     // Choose a common size to take from all ring buffers
     const auto currentlyAvailableFramesAcrossBuffers = std::min<size_t>(framesPerBuffer, GetCommonlyReadyPlayback());
@@ -2810,6 +2848,7 @@ bool AudioIoCallback::FillOutputBuffers(
     }
 
     mMaxFramesOutput = produced;
+    mFramesOutput += produced;
     const auto numberOfRetrievedFrames = produced;
 
     if (numberOfRetrievedFrames > 0) {
@@ -2858,6 +2897,36 @@ bool AudioIoCallback::FillOutputBuffers(
     return false;
 }
 
+void AudioIoCallback::ApplyCompletedSeek()
+{
+    const uint64_t done = mSeekDone.load(std::memory_order_acquire);
+    if (done == mSeekApplied || mPlaybackTracks.empty()) {
+        return;
+    }
+    mSeekApplied = done;
+
+    // The rings hold every frame up to the boundary: the producer flushed them
+    // before it took the request
+    const uint64_t boundary = mRingFramesAtSeek.load(std::memory_order_relaxed);
+    size_t stale = 0;
+    if (boundary > mRingFramesRead) {
+        stale = static_cast<size_t>(boundary - mRingFramesRead);
+        for (auto& track : mPlaybackTracks) {
+            for (auto& buffer : track.mBuffers) {
+                if (buffer) {
+                    buffer->Discard(stale);
+                }
+            }
+        }
+        mRingFramesRead = boundary;
+    }
+    mTimeSkipQueue.Put({ done, mFramesOutput, stale });
+    // Fade the new position in over the first block
+    for (auto& track : mPlaybackTracks) {
+        track.mLastGains.fill(0.0f);
+    }
+}
+
 void AudioIoCallback::MixTracks(float* const* mix, size_t frames, const IMeterSenderPtr& meter, const TimePoint& meterTime)
 {
     const unsigned mixChannels = std::min<unsigned>(mNumPlaybackChannels, MaxPlaybackChannels);
@@ -2865,6 +2934,7 @@ void AudioIoCallback::MixTracks(float* const* mix, size_t frames, const IMeterSe
         std::fill_n(mix[n], frames, 0.0f);
     }
     float* const meterBuffer = mCallbackBuffers[TrackMeter].data();
+    mRingFramesRead += frames;
 
     for (auto& track : mPlaybackTracks) {
         const auto& seq = track.mSequence;
@@ -2919,9 +2989,40 @@ void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
         return;
     }
 
+    // Frames dropped at a seek were never heard: skip their time records at
+    // the point where the callback dropped them
+    auto& queue = mPlaybackSchedule.mTimeQueue;
+    size_t remaining = framesPerBuffer;
+    double time = mPlaybackSchedule.GetSequenceTime();
+    while (true) {
+        if (!mPendingTimeSkip) {
+            TimeSkip skip;
+            if (mTimeSkipQueue.Get(skip)) {
+                mPendingTimeSkip = skip;
+            }
+        }
+        if (mPendingTimeSkip && mPendingTimeSkip->atOutputFrame <= mTimeConsumedFrames) {
+            time = queue.Consumer(mPendingTimeSkip->frames, mRate);
+            if (mPendingTimeSkip->seek >= mSeekTargetShownFor) {
+                mSeekTargetShown.reset();
+            }
+            mPendingTimeSkip.reset();
+            continue;
+        }
+        if (remaining == 0) {
+            break;
+        }
+        size_t frames = remaining;
+        if (mPendingTimeSkip) {
+            frames = std::min<size_t>(frames, mPendingTimeSkip->atOutputFrame - mTimeConsumedFrames);
+        }
+        time = queue.Consumer(frames, mRate);
+        mTimeConsumedFrames += frames;
+        remaining -= frames;
+    }
+
     // Update the position seen by drawing code
-    mPlaybackSchedule.SetSequenceTime(
-        mPlaybackSchedule.mTimeQueue.Consumer(framesPerBuffer, mRate));
+    mPlaybackSchedule.SetSequenceTime(mSeekTargetShown.value_or(time));
 }
 
 constSamplePtr AudioIoCallback::ApplyRecordGain(
@@ -3441,74 +3542,6 @@ int AudioIoCallback::AudioCallback(
     SendVuOutputMeterData(outputMeterFloats, framesPerBuffer, levelDisplayTime);
 
     return mCallbackReturn;
-}
-
-int AudioIoCallback::CallbackDoSeek()
-{
-    const int token = mStreamToken;
-    wxMutexLocker locker(mSuspendAudioThread);
-    if (token != mStreamToken) {
-        // This stream got destroyed while we waited for it
-        return paAbort;
-    }
-
-    // Pause audio thread and wait for it to finish
-    //
-    // [PM] the following 8 lines of code could be probably replaced by
-    // a single call to StopAudioThreadAndWait()
-    //
-    // CAUTION: when trying the above, you must also replace the setting of the
-    // atomic before the return, with a call to StartAudioThread()
-    //
-    // If that works, then we can remove mAudioThreadSequenceBufferExchangeLoopActive,
-    // as it will become unused; consequently, the AudioThread loop would get simpler too.
-    //
-    mAudioThreadSequenceBufferExchangeLoopRunning
-    .store(false, std::memory_order_relaxed);
-
-    while (mAudioThreadSequenceBufferExchangeLoopActive
-           .load(std::memory_order_relaxed))
-    {
-        using namespace std::chrono;
-        std::this_thread::sleep_for(50ms);
-    }
-
-    // Calculate the NEW time position, in the PortAudio callback
-    const auto time
-        =mPlaybackSchedule.GetPolicy().OffsetSequenceTime(mPlaybackSchedule, mSeek);
-
-    mPlaybackSchedule.SetSequenceTime(time);
-    mSeek = 0.0;
-
-    // Reset mixer positions and flush buffers for all sequences
-    for (auto& mixer : mPlaybackMixers) {
-        mixer->Reposition(time, true);
-    }
-    for (auto& buffer : mPlaybackBuffers) {
-        const auto toDiscard = buffer->AvailForGet();
-        const auto discarded = buffer->Discard(toDiscard);
-        // wxASSERT( discarded == toDiscard );
-        // but we can't assert in this thread
-        wxUnusedVar(discarded);
-    }
-    for (auto& track : mPlaybackTracks) {
-        for (auto& buffer : track.mBuffers) {
-            if (buffer) {
-                buffer->Discard(buffer->AvailForGet());
-            }
-        }
-    }
-
-    mPlaybackSchedule.mTimeQueue.Prime(time);
-
-    // Reload the ring buffers
-    ProcessOnceAndWait();
-
-    // Reenable the audio thread
-    mAudioThreadSequenceBufferExchangeLoopRunning
-    .store(true, std::memory_order_relaxed);
-
-    return paContinue;
 }
 
 void AudioIoCallback::CallbackCheckCompletion(
