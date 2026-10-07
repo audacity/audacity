@@ -701,7 +701,6 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
 
 void EffectExecutionScenario::restoreEffectStateHack(EffectBase& effect, const EffectContext& ctx) noexcept
 {
-    effect.mT0 = ctx.t0;
     effect.mT1 = ctx.t1;
     effect.mTracks = ctx.tracks;
     effect.mProgress = ctx.preparingPreviewProgress;
@@ -745,7 +744,7 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
     //! ============================================================================
     //! NOTE Step 2 - save origin context (state)
     //! ============================================================================
-    const EffectContext originCtx = { effect.mT0, effect.mT1, effect.mTracks, effect.mProgress, effect.mIsPreview };
+    const EffectContext originCtx = { effect.mT1, effect.mTracks, effect.mProgress, effect.mIsPreview };
 
     // restore internal effect state on return (if needed)
     auto cleanup0 = effect.BeginPreview(settings);
@@ -766,7 +765,6 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
     EffectContext newCtx;
 
     //! Step 3.1 - prepare time
-    newCtx.t0 = originCtx.t0;
     if (effect.PreviewsFullSelection()) {
         newCtx.t1 = originCtx.t1;
     } else {
@@ -776,21 +774,21 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         // (Au3 used to read `previewLen` from the `/AudioIO/EffectsPreviewLen` setting.
         // There is no plan at the moment to reintroduce it in Au4.)
         const double maxPreviewLen = effectsConfiguration()->previewMaxDuration();
-        const double previewLen = std::min(originCtx.t1 - originCtx.t0, maxPreviewLen);
+        const double previewLen = std::min(originCtx.t1 - effect.mT0, maxPreviewLen);
         double previewDuration = 0.0;
         if (isNyquist && isGenerator) {
             previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
         } else {
             previewDuration = std::min(settings.extra.GetDuration(), effect.CalcPreviewInputLength(settings, previewLen));
         }
-        newCtx.t1 = originCtx.t0 + previewDuration;
+        newCtx.t1 = effect.mT0 + previewDuration;
     }
 
     if ((newCtx.t1 > originCtx.t1) && !isGenerator) {
         newCtx.t1 = originCtx.t1;
     }
 
-    if (muse::RealIsEqualOrLess(newCtx.t1, newCtx.t0)) {
+    if (muse::RealIsEqualOrLess(newCtx.t1, effect.mT0)) {
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
@@ -809,7 +807,7 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
                 originCtx.tracks->Selected<const au::au3::Au3WaveTrack>(),
                 Mixer::WarpOptions { pProject },
                 wxString {}, // Don't care about the name of the temporary tracks
-                effect.mFactory, effect.mProjectRate, floatSample, newCtx.t0, newCtx.t1);
+                effect.mFactory, effect.mProjectRate, floatSample, effect.mT0, newCtx.t1);
 
             if (!newTrack) {
                 return muse::make_ret(muse::Ret::Code::InternalError);
@@ -817,13 +815,14 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
 
             newCtx.tracks->Add(newTrack);
 
-            newTrack->MoveTo(0);
+            newTrack->MoveTo(effect.mT0);
             newTrack->SetSelected(true);
             std::static_pointer_cast<WaveTrack>(newTrack)->SetMute(false);
         } else {
             if (effect.mNumTracks > 0) {
                 for (const WaveTrack* src : originCtx.tracks->Selected<const au::au3::Au3WaveTrack>()) {
-                    const auto dest = std::static_pointer_cast<WaveTrack>(src->Copy(newCtx.t0, newCtx.t1));
+                    const auto dest = std::static_pointer_cast<WaveTrack>(src->Copy(effect.mT0, newCtx.t1));
+                    dest->ShiftBy(0, effect.mT0); // Not MoveTo: it could be that the first `Copy`d clip starts later than effect.mT0.
                     dest->SetSelected(true);
                     dest->SetMute(false);
                     newCtx.tracks->Add(dest);
@@ -839,13 +838,6 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
             }
         }
     }
-
-    // NEW tracks start at time zero.
-    // Adjust T0 and T1 to be the times to process, and to
-    // play back in these tracks
-    double startOffset = newCtx.t0;
-    newCtx.t1 -= newCtx.t0;
-    newCtx.t0 = 0.0;
 
     //! ============================================================================
     //! NOTE Step 4 - process
@@ -863,7 +855,7 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
 
         // apply new context
         {
-            effect.mT0 = newCtx.t0;
+            effect.mT0 = effect.mT0;
             effect.mT1 = newCtx.t1;
             effect.mTracks = newCtx.tracks;
             effect.mProgress = newCtx.preparingPreviewProgress;
@@ -907,7 +899,6 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
     {
         playback::PlayTracksOptions opt;
         opt.selectedOnly = true;
-        opt.startOffset = startOffset;
         opt.isDefaultPolicy = false;
 
         // Setting looping to `false` ensures that the loop region won't interfere with preview.
@@ -915,7 +906,7 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         // makes it clear to the user.
         const auto loopWasActive = player->isLoopRegionActive();
         player->setLoopRegionActive(false);
-        player->setPlaybackRegion({ startOffset + newCtx.t0, startOffset + newCtx.t1 });
+        player->setPlaybackRegion({ effect.mT0, newCtx.t1 });
 
         m_effectPreviewState.emplace(effectId, originCtx, newCtx.tracks, loopWasActive);
 
@@ -931,7 +922,7 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
             }
         });
 
-        muse::Ret ret = player->playTracks(*newCtx.tracks, newCtx.t0, newCtx.t1, opt);
+        muse::Ret ret = player->playTracks(*newCtx.tracks, effect.mT0, newCtx.t1, opt);
         if (!ret) {
             player->playbackStatusChanged().disconnect(this);
             m_effectPreviewState.reset();

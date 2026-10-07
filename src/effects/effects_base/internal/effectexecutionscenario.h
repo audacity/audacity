@@ -87,7 +87,6 @@ private:
     bool DoEffect(const EffectId& effectId, au3::Au3Project& project, unsigned flags);
 
     struct EffectContext {
-        double t0 = 0.0;
         double t1 = 0.0;
         std::shared_ptr<::TrackList> tracks;
         BasicUI::ProgressDialog* preparingPreviewProgress = nullptr;
