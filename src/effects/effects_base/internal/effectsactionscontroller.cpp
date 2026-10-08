@@ -139,7 +139,10 @@ void EffectsActionsController::registerActions()
     cd->onRequest(this, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, [this]() { return repeatLastEffect(); });
     cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_COMMAND, [this]() { return openPluginManager(); });
     cd->onRequest(this, EFFECTS_TOGGLE_VENDOR_UI_COMMAND, [this](const Params& params) { return toggleVendorUI(params); });
-    cd->onRequest(this, EFFECTS_PRESET_APPLY_COMMAND, [this](const Params& params) { return applyPreset(params); });
+    cd->onRequest<ApplyPresetCommand>(this, [this](const ApplyPresetCommand& command) {
+        presetsScenario()->loadPreset(command.instanceId, au::au3::wxFromStdString(command.presetId));
+        return make_ok();
+    });
     cd->onRequest(this, EFFECTS_PRESET_SAVE_COMMAND, [this](const Params& params) { return savePreset(params); });
     cd->onRequest(this, EFFECTS_PRESET_SAVE_AS_COMMAND, [this](const Params& params) { return savePresetAs(params); });
     cd->onRequest(this, EFFECTS_PRESET_DELETE_COMMAND, [this](const Params& params) { return deletePreset(params); });
@@ -209,18 +212,6 @@ muse::Ret EffectsActionsController::repeatLastEffect()
     playbackController()->stop();
 
     return effectExecutionScenario()->repeatLastProcessor();
-}
-
-muse::Ret EffectsActionsController::applyPreset(const Params& params)
-{
-    IF_ASSERT_FAILED(params.contains("instanceId") && params.contains("presetId")) {
-        return make_ret(Ret::Code::BadArgs);
-    }
-
-    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
-    PresetId presetId = au::au3::wxFromStdString(params.at("presetId").toString());
-    presetsScenario()->loadPreset(effectInstanceId, presetId);
-    return make_ok();
 }
 
 muse::Ret EffectsActionsController::savePresetAs(const Params& params)

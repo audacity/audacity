@@ -8,6 +8,7 @@
 
 #include "framework/global/stringutils.h"
 #include "framework/rcommand/commandtypes.h"
+#include "framework/rcommand/typedcommand.h"
 
 #include "effectstypes.h"
 
@@ -17,6 +18,23 @@ inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_COMMAND("comm
 inline static const muse::rcommand::Command EFFECTS_TOGGLE_VENDOR_UI_COMMAND("command://effects/toggle-vendor-ui");
 
 inline static const muse::rcommand::Command EFFECTS_PRESET_APPLY_COMMAND("command://effects/presets/apply");
+
+//! Typed form of EFFECTS_PRESET_APPLY_COMMAND: the parameters are declared once, here
+struct ApplyPresetCommand {
+    static inline const muse::rcommand::Command& id = EFFECTS_PRESET_APPLY_COMMAND;
+
+    EffectInstanceId instanceId = 0;
+    std::string presetId;
+
+    static constexpr auto fields()
+    {
+        using muse::rcommand::Field;
+        return std::tuple {
+            Field { "instanceId", &ApplyPresetCommand::instanceId, u"Effect instance identifier" },
+            Field { "presetId", &ApplyPresetCommand::presetId, u"Preset identifier" },
+        };
+    }
+};
 inline static const muse::rcommand::Command EFFECTS_PRESET_SAVE_COMMAND("command://effects/presets/save");
 inline static const muse::rcommand::Command EFFECTS_PRESET_SAVE_AS_COMMAND("command://effects/presets/save-as");
 inline static const muse::rcommand::Command EFFECTS_PRESET_DELETE_COMMAND("command://effects/presets/delete");

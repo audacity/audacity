@@ -3,6 +3,7 @@
 */
 #include "effectpresetsbarmodel.h"
 
+#include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/effectstypes.h"
 #include "au3-components/EffectInterface.h"
 #include "au3-effects/Effect.h"
@@ -296,10 +297,10 @@ void EffectPresetsBarModel::resetPreset()
         return;
     }
 
-    ActionQuery q("action://effects/presets/apply");
-    q.addParam("instanceId", Val(m_instanceId));
-    q.addParam("presetId", Val(m_currentPreset.toStdString()));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(ApplyPresetCommand {
+        .instanceId = m_instanceId,
+        .presetId = m_currentPreset.toStdString(),
+    });
 }
 
 void EffectPresetsBarModel::savePresetAs()

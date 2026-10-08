@@ -51,10 +51,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("action", "&Apply preset"),
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Apply preset"),
-        InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
-                { "presetId", Arg(DataType::String, u"Preset identifier") },
-            }),
+        inputSchema<ApplyPresetCommand>(),
         Decoration()
     },
     CommandInfo{

@@ -61,7 +61,6 @@ private:
     muse::Ret applyEffect(const EffectId& effectId, const muse::rcommand::Params& params);
     muse::Ret repeatLastEffect();
 
-    muse::Ret applyPreset(const muse::rcommand::Params& params);
     muse::Ret savePreset(const muse::rcommand::Params& params);
     muse::Ret savePresetAs(const muse::rcommand::Params& params);
     muse::Ret deletePreset(const muse::rcommand::Params& params);
