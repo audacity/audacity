@@ -50,6 +50,7 @@ public:
     Q_INVOKABLE void handleClipRelease(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
+    Q_INVOKABLE void titleEditRequestHandled(const ClipKey& key);
 
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
@@ -76,6 +77,7 @@ private:
     void onReload() override;
 
     void update();
+    void updatePendingTitleEdit();
     void updateItemMetrics(ViewTrackItem* item) override;
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;

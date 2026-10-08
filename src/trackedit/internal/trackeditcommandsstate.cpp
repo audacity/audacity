@@ -90,6 +90,12 @@ const std::vector<Command> labelsSelectionCommands {
 const std::vector<Command> dataSelectionCommands {
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
 };
+
+const std::vector<Command> focusCommands {
+    TRACKEDIT_GROUP_CLIPS_COMMAND,
+    TRACKEDIT_UNGROUP_CLIPS_COMMAND,
+    TRACKEDIT_RENAME_ITEM_COMMAND,
+};
 }
 
 std::string TrackeditCommandsState::moduleName() const
@@ -140,6 +146,10 @@ void TrackeditCommandsState::init()
         updateCommandStates(dataSelectionCommands);
     });
 
+    trackNavigationController()->focusChanged().onReceive(this, [this](const TrackFocus&, bool) {
+        updateCommandStates(focusCommands);
+    });
+
     updateCommandStates();
 }
 
@@ -154,6 +164,7 @@ void TrackeditCommandsState::deinit()
     selectionController()->selectedTracksChanged().disconnect(this);
     selectionController()->dataSelectedStartTimeChanged().disconnect(this);
     selectionController()->dataSelectedEndTimeChanged().disconnect(this);
+    trackNavigationController()->focusChanged().disconnect(this);
 }
 
 void TrackeditCommandsState::updateCommandStates(const std::vector<Command>& commands)
@@ -224,7 +235,8 @@ ClipKeyList TrackeditCommandsState::clipsForInteraction() const
     }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (prj && prj->track(focusedItemKey->trackId)->type != TrackType::Label) {
+    const auto track = prj ? prj->track(focusedItemKey->trackId) : std::nullopt;
+    if (track && track->type != TrackType::Label) {
         result.insert(result.cbegin(), *focusedItemKey);
     }
 
@@ -241,7 +253,8 @@ LabelKeyList TrackeditCommandsState::labelsForInteraction() const
     }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (prj && prj->track(focusedItemKey->trackId)->type == TrackType::Label) {
+    const auto track = prj ? prj->track(focusedItemKey->trackId) : std::nullopt;
+    if (track && track->type == TrackType::Label) {
         result.insert(result.cbegin(), *focusedItemKey);
     }
 

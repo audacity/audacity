@@ -40,7 +40,20 @@ muse::async::Channel<LabelKey> TracksViewRequestsService::labelTitleEditRequeste
 
 void TracksViewRequestsService::requestClipTitleEdit(const ClipKey& clipKey)
 {
+    m_pendingClipTitleEdit = clipKey;
     m_clipTitleEditRequested.send(clipKey);
+}
+
+std::optional<ClipKey> TracksViewRequestsService::pendingClipTitleEdit() const
+{
+    return m_pendingClipTitleEdit;
+}
+
+void TracksViewRequestsService::clipTitleEditRequestHandled(const ClipKey& clipKey)
+{
+    if (m_pendingClipTitleEdit == clipKey) {
+        m_pendingClipTitleEdit.reset();
+    }
 }
 
 muse::async::Channel<ClipKey> TracksViewRequestsService::clipTitleEditRequested() const
