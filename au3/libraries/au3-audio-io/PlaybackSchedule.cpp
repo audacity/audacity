@@ -339,6 +339,9 @@ void PlaybackSchedule::TimeQueue::Producer(
                 next->records.resize(node->records.size() * 2);
                 next->records[0].timeValue = time;
 
+                // Time records of this slice written to the old node so far are
+                // published only here; the consumer reads them before it moves on
+                node->tail.store(tail, std::memory_order_release);
                 node->next.store(next);//make it visible to the consumer
                 mProducerNode = node = next;
                 head = 0;
@@ -425,9 +428,15 @@ double PlaybackSchedule::TimeQueue::Consumer(size_t nSamples, double rate)
         do{
             offset = 0;
             nSamples -= available;
+            const auto next = node->next.load();
+            if (head == tail && next) {
+                // The producer published the last records of this node before
+                // the switch
+                tail = node->tail.load(std::memory_order_acquire);
+            }
             if (head == tail) {
                 //Check if circular buffer was reallocated
-                if (const auto next = node->next.load()) {
+                if (next) {
                     node->offset = 0;
                     node->active.clear();
 

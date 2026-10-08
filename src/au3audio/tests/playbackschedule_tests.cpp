@@ -55,4 +55,21 @@ TEST_F(PlaybackScheduleTimeQueueTests, ConsumerKeepsTimeWhenProducerFillsWrapped
         EXPECT_NEAR(consumeRecord(), i * RECORD_SECONDS, 1e-9) << "record " << i;
     }
 }
+
+// The producer writes the time records of a whole slice in one call; when the
+// queue grows in the middle of a call, the records already written to the old
+// node must still reach the consumer
+TEST_F(PlaybackScheduleTimeQueueTests, ConsumerKeepsTimeWhenQueueGrowsWithinOneSlice)
+{
+    m_schedule.mTimeQueue.Init(4);
+    m_schedule.mTimeQueue.Prime(0.0);
+
+    constexpr size_t records = 6;
+    constexpr size_t frames = records * TimeQueueGrainSize;
+    m_schedule.mTimeQueue.Producer(m_schedule, PlaybackSlice { frames, frames, frames });
+
+    for (size_t i = 1; i <= records; ++i) {
+        EXPECT_NEAR(consumeRecord(), i * RECORD_SECONDS, 1e-9) << "record " << i;
+    }
+}
 }
