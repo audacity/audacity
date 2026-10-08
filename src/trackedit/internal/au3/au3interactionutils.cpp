@@ -12,9 +12,12 @@
 #include "au3-wave-track/WaveClip.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
+#include "au3-exceptions/AudacityException.h"
+#include "au3-exceptions/UserException.h"
 #include "global/containers.h"
 #include "global/realfn.h"
 #include "log.h"
+#include "translation.h"
 #include <unordered_set>
 
 namespace {
@@ -45,8 +48,13 @@ au::trackedit::NeedsDownmixing addClipToTrack(const std::shared_ptr<au::au3::Au3
     // All clips in movement were removed from `copy` before the move-clip iteration began,
     // so it's using `copy` as reference that we must check whether toggling the entire track is allowed.
     const auto emptyTrackIndices = getEmptyWaveTrackIndices(copy);
-    if (muse::contains(emptyTrackIndices, dstTrackIndex) && dstWaveTrack.NChannels() != clip->NChannels()) {
+    const bool dstIsEmpty = muse::contains(emptyTrackIndices, dstTrackIndex);
+    if (dstIsEmpty && dstWaveTrack.NChannels() != clip->NChannels()) {
         ptr = toggleStereo(copy, getTrackIndex(copy, dstWaveTrack));
+    }
+    // Like paste, an empty track takes the clip rate, so that the clip needs no resampling
+    if (dstIsEmpty && ptr->GetRate() != clip->GetRate()) {
+        ptr->SetRate(clip->GetRate());
     }
 
     ptr->InsertInterval(clip, false);
@@ -292,6 +300,24 @@ muse::Ret au::trackedit::utils::withProgress(muse::IInteractive& interactive, co
     progress.finish(muse::make_ok());
 
     return result;
+}
+
+muse::Ret au::trackedit::utils::resampleWithProgress(muse::IInteractive& interactive, double numSamples, const ResampleJob& job)
+{
+    return withProgress(interactive, muse::trc("trackedit", "Resampling…"), [&](ProgressCb progressCb, CancelCb cancelCb) {
+        double consumedSamples = 0.0;
+        // Queues the message of a read or write error, so that the caller can roll back first
+        return GuardedCall<bool>([&] {
+            job([&](size_t consumed) {
+                consumedSamples += static_cast<double>(consumed);
+                progressCb(std::min(consumedSamples / std::max(numSamples, 1.0), 1.0));
+                if (cancelCb()) {
+                    throw UserException();
+                }
+            });
+            return true;
+        });
+    });
 }
 
 void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& project, au3::Au3WaveTrack* waveTrack,
