@@ -85,7 +85,6 @@ signals:
     void trackIdChanged();
     void moveControllerChanged();
     void timelineContextChanged();
-    void itemTitleEditRequested(const TrackItemKey& key);
 
     void itemContextMenuOpenRequested(const TrackItemKey& key);
 
