@@ -30,7 +30,6 @@ static const ActionCode PLUGIN_MANAGER_CODE("plugin-manager");
 static const ActionQuery EFFECT_OPEN_QUERY("action://effects/open");
 static const ActionQuery EFFECT_APPLY_QUERY("action://effects/apply");
 static const ActionQuery TOGGLE_VENDOR_UI_QUERY("action://effects/toggle_vendor_ui");
-static const ActionQuery PRESET_APPLY_QUERY("action://effects/presets/apply");
 static const ActionQuery PRESET_SAVE_QUERY("action://effects/presets/save");
 static const ActionQuery PRESET_SAVE_AS_QUERY("action://effects/presets/save_as");
 static const ActionQuery PRESET_DELETE_QUERY("action://effects/presets/delete");
@@ -159,7 +158,6 @@ void EffectsActionsController::registerActions()
         { PLUGIN_MANAGER_CODE, EFFECTS_PLUGIN_MANAGER_COMMAND, {} },
         { EFFECT_APPLY_QUERY.toString(), Command(), applyConv },
         { TOGGLE_VENDOR_UI_QUERY.toString(), EFFECTS_TOGGLE_VENDOR_UI_COMMAND, queryParamsConv },
-        { PRESET_APPLY_QUERY.toString(), ApplyPresetCommand::id, queryParamsConv },
         { PRESET_SAVE_QUERY.toString(), EFFECTS_PRESET_SAVE_COMMAND, queryParamsConv },
         { PRESET_SAVE_AS_QUERY.toString(), EFFECTS_PRESET_SAVE_AS_COMMAND, queryParamsConv },
         { PRESET_DELETE_QUERY.toString(), EFFECTS_PRESET_DELETE_COMMAND, queryParamsConv },
