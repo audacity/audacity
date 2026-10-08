@@ -494,6 +494,10 @@ TrackItemsContainer {
                                     root.clearItemGuideline()
                                 }
 
+                                onAutomationPointDragged: {
+                                    root.setHoveredItemKey(itemData.key)
+                                }
+
                                 onClipLeftTrimRequested: function (completed, action) {
                                     clipsModel.trimLeftClip(itemData.key, completed, action)
 
@@ -603,6 +607,11 @@ TrackItemsContainer {
                                     function onItemContextMenuOpenRequested(key) {
                                         if (key === item.itemData.key) {
                                             item.openContextMenu()
+                                        }
+                                    }
+                                    function onItemDragCancelled(key) {
+                                        if (key === item.itemData.key) {
+                                            item.cancelDrag()
                                         }
                                     }
                                 }

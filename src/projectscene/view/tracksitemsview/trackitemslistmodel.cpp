@@ -538,6 +538,8 @@ bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
     constexpr auto modifyState = false;
     projectHistory()->endUserInteraction(modifyState);
 
+    emit itemDragCancelled(key);
+
     return true;
 }
 
