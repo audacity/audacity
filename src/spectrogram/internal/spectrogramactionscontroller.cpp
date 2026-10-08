@@ -18,7 +18,7 @@ void SpectrogramActionsController::init()
 
 muse::Ret SpectrogramActionsController::openTrackSpectrogramSettings(const muse::rcommand::Params& params)
 {
-    if (!params.contains("trackId")) {
+    if (!params.contains(TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM)) {
         return muse::make_ret(muse::Ret::Code::BadArgs);
     }
 
@@ -27,7 +27,7 @@ muse::Ret SpectrogramActionsController::openTrackSpectrogramSettings(const muse:
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    const int trackId = params.at("trackId").toInt();
+    const int trackId = params.at(TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM).toInt();
     const auto track = project->trackeditProject()->track(trackId);
     if (!track) {
         return muse::make_ret(muse::Ret::Code::BadArgs);
