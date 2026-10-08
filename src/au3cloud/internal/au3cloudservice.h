@@ -29,6 +29,7 @@ class Au3CloudService : public QObject, public muse::async::Asyncable, public IA
 
 public:
     void init();
+    void onAllInited();
 
     void registerWithPassword(const std::string& email, const std::string& password) override;
     void signInWithPassword(const std::string& email, const std::string& password) override;

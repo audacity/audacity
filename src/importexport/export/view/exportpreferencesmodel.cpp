@@ -446,7 +446,6 @@ void ExportPreferencesModel::setCurrentFormat(const QString& format)
 
     exportConfiguration()->setCurrentFormat(format.toStdString());
     emit customFFmpegOptionsVisibleChanged();
-    emit oggFormatOptionsVisibleChanged();
     emit hasMetadataChanged();
 }
 
@@ -808,11 +807,6 @@ IExporter::Options ExportPreferencesModel::separateFilesOptions() const
 bool ExportPreferencesModel::customFFmpegOptionsVisible()
 {
     return exporter()->isCustomFFmpegExportFormat();
-}
-
-bool ExportPreferencesModel::oggFormatOptionsVisible()
-{
-    return exporter()->isOggExportFormat();
 }
 
 bool ExportPreferencesModel::hasMetadata()

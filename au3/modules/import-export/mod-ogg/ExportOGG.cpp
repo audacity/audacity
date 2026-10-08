@@ -16,6 +16,9 @@
 #include <wx/log.h>
 #include <wx/stream.h>
 
+#include <algorithm>
+#include <array>
+
 #include "au3-import-export/Export.h"
 #include "au3-import-export/ExportPluginHelpers.h"
 #include "au3-import-export/ExportPluginRegistry.h"
@@ -84,10 +87,16 @@ private:
 };
 
 namespace {
-/*: kbit/s abbreviates "thousands of bits per second" */
-TranslatableString n_kbps(int n)
+// Nominal bitrate (kbit/s) for each Ogg Vorbis quality 0-10
+constexpr std::array<int, 11> nominalBitrates { 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 500 };
+
+/*: %1 is the Ogg Vorbis quality setting (0-10); %2 is the nominal bitrate
+ (in kbit/s, "thousands of bits per second") derived from that quality, which
+ may vary from the effective bitrate depending on sample rate */
+TranslatableString qualityString(int quality)
 {
-    return TranslatableString("import-export", "%1 kbit/s").arg(n);
+    quality = std::clamp(quality, 0, static_cast<int>(nominalBitrates.size()) - 1);
+    return TranslatableString("import-export", "Quality %1 (~%2 kbit/s)").arg(quality).arg(nominalBitrates[quality]);
 }
 
 enum : int {
@@ -115,17 +124,17 @@ const PlainExportOptionsEditor::OptionDesc OGGOptionBitrate {
             10,
         },
         {
-            n_kbps(64),
-            n_kbps(80),
-            n_kbps(96),
-            n_kbps(112),
-            n_kbps(128),
-            n_kbps(160),
-            n_kbps(192),
-            n_kbps(224),
-            n_kbps(256),
-            n_kbps(320),
-            n_kbps(500),
+            qualityString(0),
+            qualityString(1),
+            qualityString(2),
+            qualityString(3),
+            qualityString(4),
+            qualityString(5),
+            qualityString(6),
+            qualityString(7),
+            qualityString(8),
+            qualityString(9),
+            qualityString(10),
         }
     }, wxT("/FileFormats/OGG/Bitrate")
 };
