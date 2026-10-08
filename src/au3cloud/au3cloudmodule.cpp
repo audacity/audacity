@@ -64,6 +64,12 @@ void Au3CloudModule::onInit(const muse::IApplication::RunMode&)
     }
 }
 
+void Au3CloudModule::onAllInited(const muse::IApplication::RunMode&)
+{
+    m_cloudConfiguration->onAllInited();
+    m_cloudService->onAllInited();
+}
+
 void Au3CloudModule::onDeinit()
 {
 }
