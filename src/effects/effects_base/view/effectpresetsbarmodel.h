@@ -41,7 +41,6 @@ class EffectPresetsBarModel : public QObject, public muse::Contextable, public m
     muse::ContextInject<IEffectPresetsProvider> presetsController { this };
     muse::ContextInject<IEffectParametersProvider> parametersProvider { this };
     muse::ContextInject<IPresetStatesRegister> presetStatesRegister { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
 
 public:

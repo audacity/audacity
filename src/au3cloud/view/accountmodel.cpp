@@ -3,6 +3,8 @@
 */
 #include "accountmodel.h"
 
+#include "au3cloud/cloudcommands.h"
+
 #include <QDateTime>
 
 #include "framework/global/io/path.h"
@@ -69,5 +71,5 @@ void AccountModel::openCreateAccountDialog() const
 
 void AccountModel::openProfile() const
 {
-    dispatcher()->dispatch(muse::actions::ActionQuery("action://cloud/open-profile-page"));
+    commandDispatcher()->dispatch(OpenProfilePageCommand {});
 }

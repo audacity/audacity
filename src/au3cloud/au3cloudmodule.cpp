@@ -19,7 +19,6 @@
 #include "internal/au3audiocomservice.h"
 #include "internal/cloudprojectsprovider.h"
 #include "internal/au3cloudactionscontroller.h"
-#include "internal/clouduiactions.h"
 
 #include "view/accountmodel.h"
 
@@ -92,7 +91,6 @@ void Au3CloudContext::registerExports()
 {
     m_audioComService = std::make_shared<Au3AudioComService>(iocContext());
     m_actionsController = std::make_shared<Au3CloudActionsController>(iocContext());
-    m_uiActions = std::make_shared<CloudUiActions>();
 
     ioc()->registerExport<au3cloud::IAu3AudioComService>(mname, m_audioComService);
 }
@@ -109,11 +107,6 @@ void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
 {
     m_audioComService->init();
     m_actionsController->init();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void Au3CloudContext::onDeinit()

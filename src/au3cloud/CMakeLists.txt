@@ -25,8 +25,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/cloudcommandsregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/cloudcommandsstate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/cloudcommandsstate.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/clouduiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/clouduiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.cpp

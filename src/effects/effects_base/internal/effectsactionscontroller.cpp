@@ -29,28 +29,10 @@ static const ActionCode REPEAT_LAST_EFFECT_CODE("repeat-last-effect");
 static const ActionCode PLUGIN_MANAGER_CODE("plugin-manager");
 static const ActionQuery EFFECT_OPEN_QUERY("action://effects/open");
 static const ActionQuery EFFECT_APPLY_QUERY("action://effects/apply");
-static const ActionQuery TOGGLE_VENDOR_UI_QUERY("action://effects/toggle_vendor_ui");
-static const ActionQuery PRESET_SAVE_QUERY("action://effects/presets/save");
-static const ActionQuery PRESET_SAVE_AS_QUERY("action://effects/presets/save_as");
-static const ActionQuery PRESET_DELETE_QUERY("action://effects/presets/delete");
-static const ActionQuery PRESET_IMPORT_QUERY("action://effects/presets/import");
-static const ActionQuery PRESET_EXPORT_QUERY("action://effects/presets/export");
 
 static const muse::Uri PLUGIN_MANAGER_URI("audacity://effects/plugin_manager");
 
 namespace {
-CommandQuery queryParamsConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.empty()) {
-        return query;
-    }
-
-    const ActionQuery legacy(args.arg<std::string>(0));
-    query.setParams(legacy.params());
-    return query;
-}
-
 CommandQuery effectOpenConv(const Command& command, const ActionData& args)
 {
     IF_ASSERT_FAILED(!args.empty()) {
@@ -174,12 +156,6 @@ void EffectsActionsController::registerActions()
         { REPEAT_LAST_EFFECT_CODE, RepeatLastEffectCommand::id, {} },
         { PLUGIN_MANAGER_CODE, PluginManagerCommand::id, {} },
         { EFFECT_APPLY_QUERY.toString(), Command(), applyConv },
-        { TOGGLE_VENDOR_UI_QUERY.toString(), ToggleVendorUiCommand::id, queryParamsConv },
-        { PRESET_SAVE_QUERY.toString(), SavePresetCommand::id, queryParamsConv },
-        { PRESET_SAVE_AS_QUERY.toString(), SavePresetAsCommand::id, queryParamsConv },
-        { PRESET_DELETE_QUERY.toString(), DeletePresetCommand::id, queryParamsConv },
-        { PRESET_IMPORT_QUERY.toString(), ImportPresetCommand::id, queryParamsConv },
-        { PRESET_EXPORT_QUERY.toString(), ExportPresetCommand::id, queryParamsConv },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 

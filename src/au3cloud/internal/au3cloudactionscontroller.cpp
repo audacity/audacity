@@ -16,23 +16,7 @@ using namespace muse::actions;
 using namespace muse::rcommand;
 
 namespace {
-const ActionQuery SHOW_TOUR_PAGE_ACTION("action://cloud/show-tour-page");
-const ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("action://cloud/open-project-page");
-const ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("action://cloud/open-audio-page");
-const ActionQuery OPEN_CLOUD_PROFILE_PAGE_ACTION("action://cloud/open-profile-page");
 const ActionCode OPEN_URL_ACTION("open-url");
-
-CommandQuery queryParamsConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.empty()) {
-        return query;
-    }
-
-    const ActionQuery legacy(args.arg<std::string>(0));
-    query.setParams(legacy.params());
-    return query;
-}
 }
 
 Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPtr ctx)
@@ -60,10 +44,6 @@ void Au3CloudActionsController::init()
     });
 
     static const std::vector<ActionToCommand> actionToCommand = {
-        { SHOW_TOUR_PAGE_ACTION.toString(), ShowTourPageCommand::id, {} },
-        { OPEN_CLOUD_PROJECT_PAGE_ACTION.toString(), OpenProjectPageCommand::id, queryParamsConv },
-        { OPEN_CLOUD_AUDIO_PAGE_ACTION.toString(), OpenAudioPageCommand::id, queryParamsConv },
-        { OPEN_CLOUD_PROFILE_PAGE_ACTION.toString(), OpenProfilePageCommand::id, {} },
         { OPEN_URL_ACTION, OpenUrlCommand::id, make_conv({ { "url", param<QString> } }) },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
