@@ -47,18 +47,24 @@ void Au3CloudActionsController::init()
     m_urlHandler = std::make_unique<CloudUrlHandler>(iocContext());
 
     auto cd = commandDispatcher();
-    cd->onRequest(this, CLOUD_SHOW_TOUR_PAGE_COMMAND, [this]() { return showTourPage(); });
-    cd->onRequest(this, CLOUD_OPEN_PROJECT_PAGE_COMMAND, [this](const Params& params) { return openCloudProjectPage(params); });
-    cd->onRequest(this, CLOUD_OPEN_AUDIO_PAGE_COMMAND, [this](const Params& params) { return openCloudAudioPage(params); });
-    cd->onRequest(this, CLOUD_OPEN_PROFILE_PAGE_COMMAND, [this]() { return openCloudProfilePage(); });
-    cd->onRequest(this, CLOUD_OPEN_URL_COMMAND, [this](const Params& params) { return openUrl(params); });
+    cd->onRequest<ShowTourPageCommand>(this, [this](const ShowTourPageCommand&) { return showTourPage(); });
+    cd->onRequest<OpenProjectPageCommand>(this, [this](const OpenProjectPageCommand& command) {
+        return openCloudProjectPage(command.projectId);
+    });
+    cd->onRequest<OpenAudioPageCommand>(this, [this](const OpenAudioPageCommand& command) {
+        return openCloudAudioPage(command.slug);
+    });
+    cd->onRequest<OpenProfilePageCommand>(this, [this](const OpenProfilePageCommand&) { return openCloudProfilePage(); });
+    cd->onRequest<OpenUrlCommand>(this, [this](const OpenUrlCommand& command) {
+        return openUrl(QString::fromStdString(command.url));
+    });
 
     static const std::vector<ActionToCommand> actionToCommand = {
-        { SHOW_TOUR_PAGE_ACTION.toString(), CLOUD_SHOW_TOUR_PAGE_COMMAND, {} },
-        { OPEN_CLOUD_PROJECT_PAGE_ACTION.toString(), CLOUD_OPEN_PROJECT_PAGE_COMMAND, queryParamsConv },
-        { OPEN_CLOUD_AUDIO_PAGE_ACTION.toString(), CLOUD_OPEN_AUDIO_PAGE_COMMAND, queryParamsConv },
-        { OPEN_CLOUD_PROFILE_PAGE_ACTION.toString(), CLOUD_OPEN_PROFILE_PAGE_COMMAND, {} },
-        { OPEN_URL_ACTION, CLOUD_OPEN_URL_COMMAND, make_conv({ { "url", param<QString> } }) },
+        { SHOW_TOUR_PAGE_ACTION.toString(), ShowTourPageCommand::id, {} },
+        { OPEN_CLOUD_PROJECT_PAGE_ACTION.toString(), OpenProjectPageCommand::id, queryParamsConv },
+        { OPEN_CLOUD_AUDIO_PAGE_ACTION.toString(), OpenAudioPageCommand::id, queryParamsConv },
+        { OPEN_CLOUD_PROFILE_PAGE_ACTION.toString(), OpenProfilePageCommand::id, {} },
+        { OPEN_URL_ACTION, OpenUrlCommand::id, make_conv({ { "url", param<QString> } }) },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
@@ -73,9 +79,8 @@ void Au3CloudActionsController::init()
     });
 }
 
-muse::Ret Au3CloudActionsController::openUrl(const Params& params)
+muse::Ret Au3CloudActionsController::openUrl(const QString& url)
 {
-    const QString url = params.at("url").toQString();
     if (url.isEmpty()) {
         return muse::make_ret(muse::Ret::Code::BadArgs);
     }
@@ -106,9 +111,8 @@ muse::Ret Au3CloudActionsController::showTourPage()
     return muse::make_ok();
 }
 
-muse::Ret Au3CloudActionsController::openCloudProjectPage(const Params& params)
+muse::Ret Au3CloudActionsController::openCloudProjectPage(const std::string& id)
 {
-    const auto id = params.at("id").toString();
     if (id.empty()) {
         LOGE() << "Cannot open cloud project page: empty id";
         return muse::make_ret(muse::Ret::Code::BadArgs);
@@ -124,9 +128,8 @@ muse::Ret Au3CloudActionsController::openCloudProjectPage(const Params& params)
     return muse::make_ok();
 }
 
-muse::Ret Au3CloudActionsController::openCloudAudioPage(const Params& params)
+muse::Ret Au3CloudActionsController::openCloudAudioPage(const std::string& slug)
 {
-    const auto slug = params.at("slug").toString();
     if (slug.empty()) {
         LOGE() << "Cannot open cloud audio page: empty slug";
         return muse::make_ret(muse::Ret::Code::BadArgs);
