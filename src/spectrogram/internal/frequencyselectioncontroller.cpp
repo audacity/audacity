@@ -70,7 +70,7 @@ FrequencySelection FrequencySelectionController::frequencySelection() const
 
 void FrequencySelectionController::setFrequencySelection(FrequencySelection frequencySelection, bool complete)
 {
-    const auto m_config = spectrogramService()->trackSpectrogramConfiguration(frequencySelection.trackId);
+    m_config = spectrogramService()->trackSpectrogramConfiguration(frequencySelection.trackId);
     if (!m_config) {
         return;
     }
