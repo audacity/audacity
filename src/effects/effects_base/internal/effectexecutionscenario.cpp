@@ -9,6 +9,7 @@
 #include "framework/global/defer.h"
 #include "framework/global/realfn.h"
 #include "framework/global/translation.h"
+#include "framework/global/types/uri.h"
 
 #include "playback/iplayer.h"
 
@@ -46,6 +47,31 @@ static const int UNDEFINED_FREQUENCY = -1;
 static bool isNyquistPrompt(const Effect& effect)
 {
     return effect.GetSymbol().Internal() == NYQUIST_PROMPT_ID;
+}
+
+//! The action that applies the effect with these settings to the selection,
+//! for another process to dispatch
+static std::string applyEffectAction(const Effect& effect, const EffectId& effectId, const EffectSettings& settings)
+{
+    // Quoted, so that values may contain '&' and '='
+    const auto quoted = [](const std::string& value) {
+        return value.empty() || value.find('\'') != std::string::npos ? value : "'" + value + "'";
+    };
+
+    muse::UriQuery query("action://effects/apply");
+    query.addParam("effectId", muse::Val(quoted(effectId.toStdString())));
+
+    wxString parms;
+    effect.SaveSettingsAsString(settings, parms);
+    CommandParameters eap(parms);
+    wxString key;
+    long index = 0;
+    for (bool more = eap.GetFirstEntry(key, index); more; more = eap.GetNextEntry(key, index)) {
+        wxString value;
+        eap.Read(key, &value);
+        query.addParam(key.ToStdString(wxConvUTF8), muse::Val(quoted(value.ToStdString(wxConvUTF8))));
+    }
+    return query.toString();
 }
 
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
@@ -344,6 +370,19 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
                 effect->SaveUserPreset(CurrentSettingsGroup(), *settings);
             } else {
                 return ret;
+            }
+
+            // Another process applies it, to a checkout of the project
+            if (effectsConfiguration()->applyInOtherCheckout()) {
+                const std::string action = applyEffectAction(*effect, effectId, *settings);
+                effect->SetTracks(nullptr);
+                effect->mPresetNames.clear();
+                effect->mUIFlags = oldFlags;
+                dispatcher()->dispatch("edit-in-other-checkout",
+                                       muse::actions::ActionData::make_arg3<std::string, std::string, bool>(
+                                           action, effectsProvider()->effectName(effectId.toStdString()),
+                                           effectsConfiguration()->otherCheckoutSkipsSave()));
+                return make_ret(muse::Ret::Code::Cancel);
             }
         }
 

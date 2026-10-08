@@ -567,6 +567,11 @@ IProjectViewStatePtr Audacity4Project::viewState() const
     return m_viewState;
 }
 
+int64_t Audacity4Project::sampleBlocksUsage(bool includeUndoHistory) const
+{
+    return m_au3Project->sampleBlocksUsage(includeUndoHistory);
+}
+
 uintptr_t Audacity4Project::au3ProjectPtr() const
 {
     return m_au3Project->au3ProjectPtr();

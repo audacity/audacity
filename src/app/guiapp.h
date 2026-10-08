@@ -15,6 +15,7 @@
 #include "muse_framework_config.h"
 
 #include "appshell/iappshellconfiguration.h"
+#include "au3cloud/iau3cloudconfiguration.h"
 
 #include "cmdoptions.h"
 
@@ -26,6 +27,7 @@ namespace au::app {
 class GuiApp : public muse::ui::GuiApplication, public muse::async::Asyncable
 {
     muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
+    muse::GlobalInject<au3cloud::IAu3CloudConfiguration> au3cloudConfiguration;
 
 public:
     GuiApp(const std::shared_ptr<AudacityCmdOptions>& options);

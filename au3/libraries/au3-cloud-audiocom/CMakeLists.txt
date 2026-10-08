@@ -24,6 +24,10 @@ set( SOURCES
 
    sync/BlockHasher.cpp
    sync/BlockHasher.h
+   sync/CheckoutRebase.cpp
+   sync/CheckoutRebase.h
+   sync/CheckoutRebaseOperation.cpp
+   sync/CheckoutRebaseOperation.h
    sync/CloudProjectsDatabase.cpp
    sync/CloudProjectsDatabase.h
    sync/CloudSyncDTO.cpp
@@ -41,6 +45,8 @@ set( SOURCES
    sync/MixdownUploader.h
    sync/ProjectCloudExtension.cpp
    sync/ProjectCloudExtension.h
+   sync/ProjectDocument.cpp
+   sync/ProjectDocument.h
    sync/ProjectUploadOperation.h
    sync/RemoteProjectSnapshot.cpp
    sync/RemoteProjectSnapshot.h

@@ -83,6 +83,11 @@ public:
     static CloudProjectsDatabase& Get();
     static bool DatabaseExists();
 
+    //! Use another database file than the one in the config directory, e.g.
+    //! so that several instances working on one project each keep their own
+    //! sync state. Must be called before the database is first used.
+    static void SetDatabasePath(std::string path);
+
     sqlite::SafeConnection::Lock GetConnection();
     const sqlite::SafeConnection::Lock GetConnection() const;
 

@@ -13,6 +13,8 @@
 #include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/SampleBlock.h"
 #include "au3-label-track/LabelTrack.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
@@ -96,6 +98,59 @@ bool Au3TracksInteraction::silenceTracksData(const std::vector<trackedit::TrackI
     }
 
     return true;
+}
+
+bool Au3TracksInteraction::lockTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
+{
+    bool changed = false;
+    for (TrackId trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        bool trackChanged = false;
+        for (const auto& clip : waveTrack->Intervals()) {
+            const double t0 = std::max(begin.to_double(), clip->GetPlayStartTime());
+            const double t1 = std::min(end.to_double(), clip->GetPlayEndTime());
+            if (t0 >= t1) {
+                continue;
+            }
+            trackChanged |= clip->LockBlocks(t0, t1);
+        }
+
+        if (trackChanged) {
+            trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+            changed = true;
+        }
+    }
+
+    return changed;
+}
+
+bool Au3TracksInteraction::unlockAllBlocks()
+{
+    bool changed = false;
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    for (Au3WaveTrack* waveTrack : Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>()) {
+        bool trackChanged = false;
+        for (const auto& clip : waveTrack->Intervals()) {
+            for (size_t ch = 0; ch < clip->NChannels(); ++ch) {
+                for (const auto& block : clip->GetSequence(ch)->GetBlockArray()) {
+                    if (block.sb->IsEditLocked()) {
+                        block.sb->SetEditLocked(false);
+                        trackChanged = true;
+                    }
+                }
+            }
+        }
+        if (trackChanged) {
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+            changed = true;
+        }
+    }
+    return changed;
 }
 
 bool Au3TracksInteraction::tracksDataIsSilent(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) const
@@ -693,6 +748,7 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
 
         if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
             dest = waveTrack->Copy(begin, end, false);
+            utils::deepCopyEditLockedBlocks(*dest);
             RealtimeEffectList::Get(*dest).CloneStates();
             dest->MoveTo(std::max(static_cast<double>(begin), waveTrack->GetStartTime()));
         } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
@@ -710,6 +766,7 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
         if (auto waveCopy = dynamic_cast<Au3WaveTrack*>(copy.get())) {
             for (const auto& clip : DomAccessor::waveClipsAsList(waveCopy)) {
                 clip->SetId(Au3WaveClip::NewID());
+                clip->SetPersistentId(NewPersistentId());
             }
             waveCopies.push_back(waveCopy);
         }
@@ -860,6 +917,7 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
         }
 
         auto au3Clone = au3Track->Duplicate();
+        utils::deepCopyEditLockedBlocks(*au3Clone);
         RealtimeEffectList::Get(*au3Clone).CloneStates();
         Au3TrackList::AssignUniqueId(au3Clone);
         clones.push_back(au3Clone);

@@ -78,6 +78,26 @@ muse::async::Channel<std::string, muse::io::path_t> Au3AudioComServiceStub::audi
     return {};
 }
 
+void Au3AudioComServiceStub::rebaseOntoHead(au::project::IAudacityProjectPtr, std::function<void(muse::Ret)> onDone)
+{
+    onDone(muse::make_ret(muse::Ret::Code::NotSupported));
+}
+
+void Au3AudioComServiceStub::lockOutsideCheckoutRegion(au::project::IAudacityProjectPtr)
+{
+}
+
+void Au3AudioComServiceStub::fetchProjectHead(const std::string&, std::function<void(std::optional<CloudProjectHead>)> onDone)
+{
+    onDone(std::nullopt);
+}
+
+void Au3AudioComServiceStub::integrateCloudHead(au::project::IAudacityProjectPtr, std::function<void()>,
+                                                std::function<void(muse::Ret)> onDone)
+{
+    onDone(muse::make_ret(muse::Ret::Code::NotSupported));
+}
+
 muse::Ret Au3AudioComServiceStub::deleteCloudProject(const muse::io::path_t&)
 {
     return muse::make_ret(muse::Ret::Code::NotSupported);

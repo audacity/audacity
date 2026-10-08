@@ -4,11 +4,16 @@
 #include "au3trackdata.h"
 
 #include "au3-track/Track.h"
+#include "au3interactionutils.h"
 
 namespace au::trackedit {
 Au3TrackData::Au3TrackData(std::shared_ptr<au3::Au3Track> track)
     : m_track{std::move(track)}
 {
+    // Clipboard contents never share locked blocks with the project
+    if (m_track) {
+        utils::deepCopyEditLockedBlocks(*m_track);
+    }
 }
 
 secs_t Au3TrackData::endTime() const

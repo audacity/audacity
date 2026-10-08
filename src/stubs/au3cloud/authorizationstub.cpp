@@ -48,3 +48,8 @@ muse::Ret AuthorizationStub::ensureAuthorized(const muse::modularity::ContextPtr
 {
     return muse::make_ret(muse::Ret::Code::NotSupported);
 }
+
+void AuthorizationStub::writeAccessTokenFile(const muse::io::path_t&, std::function<void(muse::Ret)> onDone)
+{
+    onDone(muse::make_ret(muse::Ret::Code::NotSupported));
+}

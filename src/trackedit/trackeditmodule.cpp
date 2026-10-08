@@ -121,6 +121,7 @@ void TrackeditModule::onInit(const muse::IApplication::RunMode&)
     m_configuration->init();
 
     TimeSignatureRestorer::reg();
+    registerEditLockRestorer();
 }
 
 IContextSetup* TrackeditModule::newContext(const muse::modularity::ContextPtr& ctx) const

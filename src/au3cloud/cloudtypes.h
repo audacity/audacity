@@ -83,6 +83,13 @@ struct DownloadRequest {
     muse::io::path_t localPath;
 };
 
+//! A cloud project's latest snapshot on the server
+struct CloudProjectHead {
+    std::string snapshotId;
+    //! Whether the snapshot is complete on the server
+    bool synced = false;
+};
+
 struct CloudProjectRecord {
     std::string projectId;
     std::string snapshotId;

@@ -167,6 +167,30 @@ public:
 
     /*! @excsafety{Strong} */
     void SetSilence(sampleCount s0, sampleCount len);
+
+    //! If `s` falls strictly inside a block, replaces that block with two new
+    //! blocks that meet at `s`. The samples are unchanged.
+    //! @return whether a block was split
+    bool SplitBlockAt(sampleCount s);
+
+    //! Replaces the `count` blocks starting at index `first` by `blocks`; the
+    //! starts of the following blocks are shifted if the length changes
+    void ReplaceBlocks(size_t first, size_t count, const std::vector<SeqBlock::SampleBlockPtr>& blocks);
+
+    //! Edit-locks the blocks that start in [s0, s1). Silent blocks are first
+    //! replaced by ordinary blocks of zeros, because silent blocks are shared
+    //! by all silences of the same length and have no id of their own.
+    /*!
+     @pre no block straddles `s0` or `s1` (see SplitBlockAt)
+     @return whether any block was newly locked
+     */
+    bool LockBlocks(sampleCount s0, sampleCount s1);
+
+    //! Replaces each edit-locked block by an unlocked copy of its samples, so
+    //! that a user-level copy doesn't share (and inherit the lock of) the
+    //! original. Not for undo backups, which must share the same blocks.
+    //! @return whether any block was replaced
+    bool DeepCopyEditLockedBlocks();
     /*! @excsafety{Strong} */
     void InsertSilence(sampleCount s0, sampleCount len);
 

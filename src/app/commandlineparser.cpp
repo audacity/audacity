@@ -83,6 +83,18 @@ void CommandLineParser::init()
     m_parser.addOption(internalCommandLineOption("crash-dumps-dir", "Directory the crash dumps of this process are written to", "path"));
     m_parser.addOption(internalCommandLineOption("crash-server-url", "URL the crash dumps of this process are sent to", "url"));
 
+    // Cloud
+    m_parser.addOption(internalCommandLineOption("cloud-sync-database",
+                                                 "Database file holding the cloud sync state of this process", "path"));
+    m_parser.addOption(internalCommandLineOption("cloud-auth-file",
+                                                 "File holding the audio.com access token of the process that started this one", "path"));
+    m_parser.addOption(internalCommandLineOption("checkout",
+                                                 "Edit only the selection of the opened cloud project, for the instance that shared it"));
+    m_parser.addOption(internalCommandLineOption("checkout-action",
+                                                 "Action the checkout dispatches once open, before saving to the cloud", "action"));
+    m_parser.addOption(internalCommandLineOption("checkout-skips-save",
+                                                 "The checkout doesn't save to the cloud after its action (for testing)"));
+
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
     m_parser.addOption(QCommandLineOption("test-case", "Run test case by name or file", "nameOrFile"));
@@ -178,6 +190,18 @@ void CommandLineParser::parse(int argc, char** argv)
             LOGE() << "--crash-server-url without --crash-dumps-dir, crash reporting is left unconfigured";
         }
     }
+
+    if (m_parser.isSet("cloud-sync-database")) {
+        m_options->cloud.syncDatabasePath = fromUserInputPath(m_parser.value("cloud-sync-database"));
+    }
+
+    if (m_parser.isSet("cloud-auth-file")) {
+        m_options->cloud.accessTokenFilePath = fromUserInputPath(m_parser.value("cloud-auth-file"));
+    }
+
+    m_options->cloud.isOtherCheckout = m_parser.isSet("checkout");
+    m_options->cloud.checkoutAction = m_parser.value("checkout-action").toStdString();
+    m_options->cloud.checkoutSkipsSave = m_parser.isSet("checkout-skips-save");
 
     // Audio plugin registration
     if (m_parser.isSet("register-audio-plugin")) {

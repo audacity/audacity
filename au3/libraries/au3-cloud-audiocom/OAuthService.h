@@ -84,6 +84,19 @@ public:
     //! Return the current access token, if any.
     std::string GetAccessToken() const;
 
+    //! How long the current access token remains valid
+    std::chrono::seconds GetAccessTokenTimeLeft() const;
+
+    //! Gets a new access token with the refresh token, even if the current one
+    //! is still valid. \p completedHandler gets the new token, or an empty view
+    //! on failure; it's invoked from the network thread.
+    void RefreshAccessToken(AuthSuccessCallback completedHandler);
+
+    //! Uses an access token obtained by another process sharing this account,
+    //! and never refreshes it: refreshing would invalidate that process's
+    //! tokens. Notifies about the login like an authorization does.
+    void UseAccessTokenWithoutRefresh(std::string accessToken, std::chrono::seconds validFor);
+
     //! Creates a link to authorization request dialog
     // with selected OAuth provider
     static std::string MakeOAuthRequestURL(std::string_view authClientId);
@@ -132,6 +145,7 @@ private:
 
     Clock::time_point mTokenExpirationTime;
     std::string mAccessToken;
+    bool mRefreshDisabled { false };
 };
 
 //! Returns the instance of the OAuthService

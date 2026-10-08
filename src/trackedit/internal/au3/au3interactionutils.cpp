@@ -401,3 +401,12 @@ void au::trackedit::utils::remapCopiedClipGroups(const ITrackeditProject& prj, c
         }
     }
 }
+
+void au::trackedit::utils::deepCopyEditLockedBlocks(au3::Au3Track& track)
+{
+    if (auto* waveTrack = dynamic_cast<au3::Au3WaveTrack*>(&track)) {
+        for (const auto& clip : waveTrack->Intervals()) {
+            clip->DeepCopyEditLockedBlocks();
+        }
+    }
+}

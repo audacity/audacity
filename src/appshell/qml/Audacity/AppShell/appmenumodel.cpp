@@ -252,6 +252,8 @@ MenuItem* AppMenuModel::makeFileMenu()
 
         makeMenuItem("file-save"),
         makeMenuItem("file-save-to-cloud"),
+        makeMenuItem("edit-in-other-checkout"),
+        makeMenuItem("share-checkout-link"),
         makeMenuItem("file-save-as"),
         makeMenuItem("action://cloud/update-audio-preview"),
 
@@ -536,6 +538,13 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
             makeMenuItem("diagnostic-show-actions")
         };
 
+        MenuItemList projectItems {
+            makeMenuItem("toggle-sample-blocks"),
+            makeMenuItem("lock-selection"),
+            makeMenuItem("unlock-all-blocks"),
+            makeMenuItem("toggle-history-xml-dump")
+        };
+
         MenuItemList accessibilityItems {
             makeMenuItem("diagnostic-show-navigation-tree"),
             makeMenuItem("diagnostic-show-accessible-tree"),
@@ -551,6 +560,7 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
         };
 
         items << makeMenu(TranslatableString("appshell-menu-diagnostics", "A&ctions"), actionsItems, "menu-actions")
+              << makeMenu(TranslatableString("appshell-menu-diagnostics", "&Project"), projectItems, "menu-diagnostic-project")
               << makeMenu(TranslatableString("appshell-menu-diagnostics", "&Accessibility"), accessibilityItems, "menu-accessibility")
               << makeMenu(TranslatableString("appshell-menu-diagnostics", "E&xtensions"), extensionsItems, "menu-extensions")
               << makeMenu(TranslatableString("appshell-menu-diagnostics", "Test&flow"), testflowItems, "menu-testflow");

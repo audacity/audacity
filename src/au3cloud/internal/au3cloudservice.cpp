@@ -3,6 +3,9 @@
 */
 #include "au3cloudservice.h"
 
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QTimer>
 
 #include <string>
@@ -12,6 +15,7 @@
 #include "framework/global/types/uri.h"
 #include "framework/interactive/iinteractive.h"
 
+#include "au3-basic-ui/BasicUI.h"
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/UserService.h"
 #include "au3-cloud-audiocom/ServiceConfig.h"
@@ -61,6 +65,21 @@ void Au3CloudService::init()
             service.ClearUserData();
         }
     });
+    // Started by another process sharing this account: use its token rather than
+    // refreshing the sign-in, which would invalidate that process's tokens
+    if (const auto tokenFile = configuration()->accessTokenFile(); !tokenFile.empty()) {
+        QFile file(tokenFile.toQString());
+        if (file.open(QIODevice::ReadOnly)) {
+            const QJsonObject json = QJsonDocument::fromJson(file.readAll()).object();
+            file.close();
+            oauthService.UseAccessTokenWithoutRefresh(json.value("access_token").toString().toStdString(),
+                                                      std::chrono::seconds(json.value("expires_in").toInteger()));
+        } else {
+            LOGE() << "can't read access token file " << tokenFile;
+        }
+        file.remove();
+    }
+
     oauthService.ValidateAuth(nullptr, AudiocomTrace::ignore, true);
 
     auto& userService = audacity::cloud::audiocom::GetUserService();
@@ -283,4 +302,33 @@ std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)
     }
     url.pop_back(); // Remove last '&'
     return url;
+}
+
+void Au3CloudService::writeAccessTokenFile(const muse::io::path_t& path, std::function<void(muse::Ret)> onDone)
+{
+    auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+    oauthService.RefreshAccessToken([path, onDone = std::move(onDone)](std::string_view token) {
+        BasicUI::CallAfter([path, onDone, token = std::string(token)]() {
+            onDone(token.empty() ? muse::make_ret(muse::Ret::Code::UnknownError, std::string("can't refresh the sign-in"))
+                   : doWriteAccessTokenFile(path, token));
+        });
+    });
+}
+
+muse::Ret Au3CloudService::doWriteAccessTokenFile(const muse::io::path_t& path, const std::string& token)
+{
+    const auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+
+    QFile file(path.toQString());
+    if (!file.open(QIODevice::WriteOnly | QIODevice::NewOnly)) {
+        return muse::make_ret(muse::Ret::Code::UnknownError, file.errorString().toStdString());
+    }
+    // Before anything is written: the token is as good as a password
+    file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+
+    QJsonObject json;
+    json["access_token"] = QString::fromStdString(token);
+    json["expires_in"] = static_cast<qint64>(oauthService.GetAccessTokenTimeLeft().count());
+    file.write(QJsonDocument(json).toJson(QJsonDocument::Compact));
+    return muse::make_ok();
 }

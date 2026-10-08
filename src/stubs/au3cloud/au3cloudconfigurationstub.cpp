@@ -32,3 +32,39 @@ bool Au3CloudConfigurationStub::shouldWarnOnSyncError() const
 void Au3CloudConfigurationStub::setWarnOnSyncError(bool /*warn*/)
 {
 }
+
+void Au3CloudConfigurationStub::setSyncDatabasePath(const muse::io::path_t& /*path*/)
+{
+}
+
+void Au3CloudConfigurationStub::setIsOtherCheckout(bool /*isOtherCheckout*/)
+{
+}
+
+bool Au3CloudConfigurationStub::isOtherCheckout() const
+{
+    return false;
+}
+
+void Au3CloudConfigurationStub::setCheckoutAction(const std::string& /*action*/, bool /*skipsSave*/)
+{
+}
+
+std::string Au3CloudConfigurationStub::checkoutAction() const
+{
+    return {};
+}
+
+bool Au3CloudConfigurationStub::checkoutSkipsSave() const
+{
+    return false;
+}
+
+void Au3CloudConfigurationStub::setAccessTokenFile(const muse::io::path_t& /*path*/)
+{
+}
+
+muse::io::path_t Au3CloudConfigurationStub::accessTokenFile() const
+{
+    return {};
+}

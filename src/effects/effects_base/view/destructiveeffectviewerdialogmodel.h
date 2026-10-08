@@ -25,6 +25,10 @@ class DestructiveEffectViewerDialogModel : public QObject, public muse::Contexta
     Q_PROPERTY(bool useVendorUI READ useVendorUI NOTIFY useVendorUIChanged FINAL)
     Q_PROPERTY(EffectFamily effectFamily READ effectFamily NOTIFY effectFamilyChanged FINAL)
     Q_PROPERTY(ViewerComponentType viewerComponentType READ viewerComponentType NOTIFY viewerComponentTypeChanged FINAL)
+    Q_PROPERTY(
+        bool applyInOtherCheckout READ applyInOtherCheckout WRITE setApplyInOtherCheckout NOTIFY applyInOtherCheckoutChanged FINAL)
+    Q_PROPERTY(
+        bool otherCheckoutSkipsSave READ otherCheckoutSkipsSave WRITE setOtherCheckoutSkipsSave NOTIFY otherCheckoutSkipsSaveChanged FINAL)
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<IEffectsProvider> effectsProvider;
@@ -47,6 +51,10 @@ public:
     bool useVendorUI() const;
     EffectFamily effectFamily() const;
     ViewerComponentType viewerComponentType() const;
+    bool applyInOtherCheckout() const;
+    void setApplyInOtherCheckout(bool value);
+    bool otherCheckoutSkipsSave() const;
+    void setOtherCheckoutSkipsSave(bool value);
 
 signals:
     void titleChanged();
@@ -54,6 +62,8 @@ signals:
     void useVendorUIChanged();
     void effectFamilyChanged();
     void viewerComponentTypeChanged();
+    void applyInOtherCheckoutChanged();
+    void otherCheckoutSkipsSaveChanged();
 
 private:
     void captureInitialSettings();

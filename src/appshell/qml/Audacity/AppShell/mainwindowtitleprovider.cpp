@@ -22,10 +22,28 @@
 #include "mainwindowtitleprovider.h"
 #include "translation.h"
 
+#include <QFileInfo>
+#include <QLocale>
+
 using namespace au::appshell;
 using namespace au::project;
 
 namespace {
+//! Debug info shown together with Diagnostics > Project > Show sample blocks
+static QString storageUsage(const IAudacityProject& project)
+{
+    const QLocale locale;
+    auto format = [&](qint64 bytes) {
+        return locale.formattedDataSize(bytes, 1, QLocale::DataSizeTraditionalFormat);
+    };
+
+    const QString path = project.path().toQString();
+    const qint64 fileBytes = QFileInfo(path).size() + QFileInfo(path + "-wal").size();
+
+    return QString("[blocks: %1 current, %2 incl. undo history | file: %3]")
+           .arg(format(project.sampleBlocksUsage(false)), format(project.sampleBlocksUsage(true)), format(fileBytes));
+}
+
 static QString appDisplayName()
 {
 #ifdef AU4_APP_TITLE_VERSION
@@ -57,6 +75,16 @@ void MainWindowTitleProvider::load()
 
         update();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    projectSceneConfiguration()->isSampleBlocksVisibleChanged().onReceive(this, [this](bool) {
+        update();
+    });
+
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
+        if (projectSceneConfiguration()->isSampleBlocksVisible()) {
+            update();
+        }
+    });
 }
 
 QString MainWindowTitleProvider::title() const
@@ -122,6 +150,10 @@ void MainWindowTitleProvider::update()
              //: %1 is the project title, %2 is the modified marker ("*") shown when there are unsaved changes, %3 is the app name
              : muse::qtrc("appshell", "%1 %2 - %3").arg(projectTitle, projectModified ? muse::qtrc("appshell", "*") : QString(),
                                                         appDisplayName()));
+
+    if (projectSceneConfiguration()->isSampleBlocksVisible()) {
+        setTitle(m_title + " " + storageUsage(*project));
+    }
 
     setFilePath(project->path().toQString());
     setFileModified(projectModified);

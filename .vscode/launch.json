@@ -107,6 +107,23 @@
             }
         },
         {
+            // Like "Launch (lldb - Linux)", but with a profile of its own whose cloud
+            // projects are synced with the local multi-instance server
+            // (tools/multiinstance-server), started by the preLaunchTask
+            "name": "Launch on multi-instance server (lldb - Linux)",
+            "type": "lldb",
+            "request": "launch",
+            "preLaunchTask": "multi-instance server: start",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
+            "env": {
+                "LD_LIBRARY_PATH": "${command:cmake.launchTargetDirectory}/lib",
+                "XDG_CONFIG_HOME": "${userHome}/.local/share/audacity-multiinstance-server/profile/config",
+                "XDG_DATA_HOME": "${userHome}/.local/share/audacity-multiinstance-server/profile/data",
+                "XDG_CACHE_HOME": "${userHome}/.local/share/audacity-multiinstance-server/profile/cache"
+            }
+        },
+        {
             "name": "Launch (gdb - Linux)",
             "type": "cppdbg",
             "MIMode": "gdb",

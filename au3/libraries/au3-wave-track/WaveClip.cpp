@@ -26,6 +26,7 @@
 #include "au3-exceptions/InconsistencyException.h"
 #include "au3-math/Resample.h"
 #include "Sequence.h"
+#include "SampleBlock.h"
 #include "au3-time-and-pitch/TimeAndPitchInterface.h"
 #include "au3-exceptions/UserException.h"
 
@@ -258,6 +259,7 @@ WaveClip::WaveClip(
     // from one project to another
 
     mId = orig.mId;
+    mPersistentId = orig.mPersistentId;
     mSequenceOffset = orig.mSequenceOffset;
     mTrimLeft = orig.mTrimLeft;
     mTrimRight = orig.mTrimRight;
@@ -303,6 +305,7 @@ WaveClip::WaveClip(
     assert(orig.CountSamples(t0, t1) > 0);
 
     mId = orig.mId;
+    mPersistentId = orig.mPersistentId;
     mSequenceOffset = orig.mSequenceOffset;
 
     //Adjust trim values to sample-boundary
@@ -523,6 +526,8 @@ std::shared_ptr<WaveClip> WaveClip::SplitChannels()
     // Assign new IDs from newly created clips
     SetId(NewID());
     result->SetId(NewID());
+    SetPersistentId(NewPersistentId());
+    result->SetPersistentId(NewPersistentId());
 
     // Assert postconditions
     assert(NChannels() == 1);
@@ -1034,6 +1039,7 @@ static constexpr auto Name_attr = "name";
 static constexpr auto GroupId_attr = "groupId";
 static constexpr auto ColorIndex_attr = "colorindex";
 static constexpr auto Selected_attr = "isSelected";
+static constexpr auto PersistentId_attr = "uid";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
@@ -1112,6 +1118,8 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
                 }
             } else if (attr == Selected_attr && value.TryGet(boolValue)) {
                 SetSelected(boolValue);
+            } else if (long long uid = 0; attr == PersistentId_attr && value.TryGet(uid) && uid > 0) {
+                mPersistentId = uid;
             } else if (Attachments::FindIf(
                            [&](WaveClipListener& listener){
                 return listener.HandleXMLAttribute(attr, value);
@@ -1200,6 +1208,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
     xmlFile.WriteAttr(GroupId_attr, static_cast<long>(mGroupId));
     xmlFile.WriteAttr(ColorIndex_attr, mColorIndex);
     xmlFile.WriteAttr(Selected_attr, mSelected);
+    xmlFile.WriteAttr(PersistentId_attr, static_cast<long long>(mPersistentId));
 
     Attachments::ForEach([&](const WaveClipListener& listener){
         listener.WriteXMLAttributes(xmlFile);
@@ -1690,6 +1699,56 @@ void WaveClip::SetSilence(sampleCount offset, sampleCount length)
     }
     transaction.Commit();
     MarkChanged();
+}
+
+bool WaveClip::LockBlocks(double t0, double t1)
+{
+    StrongInvariantScope scope{ *this };
+    const auto s0 = TimeToSequenceSamples(t0);
+    const auto s1 = TimeToSequenceSamples(t1);
+    bool changed = false;
+    Transaction transaction{ *this };
+    for (auto& pSequence : mSequences) {
+        changed |= pSequence->SplitBlockAt(s0);
+        changed |= pSequence->SplitBlockAt(s1);
+        changed |= pSequence->LockBlocks(s0, s1);
+    }
+    transaction.Commit();
+    if (changed) {
+        MarkChanged();
+    }
+    return changed;
+}
+
+void WaveClip::ReplaceBlocks(size_t channel, size_t first, size_t count, const std::vector<std::shared_ptr<SampleBlock> >& blocks)
+{
+    mSequences.at(channel)->ReplaceBlocks(first, count, blocks);
+    MarkChanged();
+}
+
+std::vector<long long> WaveClip::BlockIdsInRange(double t0, double t1) const
+{
+    const auto s0 = TimeToSequenceSamples(t0);
+    const auto s1 = TimeToSequenceSamples(t1);
+    std::vector<long long> ids;
+    for (const auto& pSequence : mSequences) {
+        // Same rule as Sequence::LockBlocks
+        for (const auto& block : pSequence->GetBlockArray()) {
+            if (block.start >= s0 && block.start < s1) {
+                ids.push_back(block.sb->GetBlockID());
+            }
+        }
+    }
+    return ids;
+}
+
+bool WaveClip::DeepCopyEditLockedBlocks()
+{
+    bool changed = false;
+    for (auto& pSequence : mSequences) {
+        changed |= pSequence->DeepCopyEditLockedBlocks();
+    }
+    return changed;
 }
 
 sampleCount WaveClip::GetSequenceSamplesCount() const

@@ -11,6 +11,9 @@ namespace au::trackedit {
 class TrackeditConfigurationMock : public ITrackeditConfiguration
 {
 public:
+    MOCK_METHOD(bool, historyXmlDumpEnabled, (), (const, override));
+    MOCK_METHOD(void, setHistoryXmlDumpEnabled, (bool), (override));
+    MOCK_METHOD(muse::async::Notification, historyXmlDumpEnabledChanged, (), (const, override));
     MOCK_METHOD(bool, pasteAsNewClip, (), (const, override));
     MOCK_METHOD(void, setPasteAsNewClip, (bool), (override));
     MOCK_METHOD(muse::async::Notification, pasteAsNewClipChanged, (), (const, override));

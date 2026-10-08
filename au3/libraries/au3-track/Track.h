@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_TRACK__
 #define __AUDACITY_TRACK__
 
+#include "PersistentId.h"
 #include <algorithm>
 #include <atomic>
 #include <utility>
@@ -126,6 +127,7 @@ private:
 
 private:
     TrackId mId; //!< Identifies the track only in-session, not persistently
+    PersistentId mPersistentId{ NewPersistentId() }; //!< Identifies the track persistently, see PersistentId
 
 protected:
     std::weak_ptr<TrackList> mList; //!< Back pointer to owning TrackList
@@ -138,6 +140,8 @@ public:
     using AttachedObjects = ::AttachedTrackObjects;
 
     TrackId GetId() const { return mId; }
+    PersistentId GetPersistentId() const { return mPersistentId; }
+    void SetPersistentId(PersistentId id) { mPersistentId = id; }
 private:
     void SetId(TrackId id) { mId = id; }
 public:
@@ -1026,6 +1030,7 @@ public:
 
 private:
     Track* DoAddToHead(const std::shared_ptr<Track>& t);
+    void EnsureUniquePersistentId(Track& track) const;
     Track* DoAdd(
         const std::shared_ptr<Track>& t, DoAssignId, EventPublicationSynchrony);
 

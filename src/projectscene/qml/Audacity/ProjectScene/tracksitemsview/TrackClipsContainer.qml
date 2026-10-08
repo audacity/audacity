@@ -677,6 +677,23 @@ TrackItemsContainer {
                 }
             }
 
+            // Locked audio, and with Diagnostics > Project > Show sample blocks all sample blocks
+            SampleBlocksOverlay {
+                id: sampleBlocksOverlay
+
+                visible: root.isWaveformViewVisible && !root.trackViewState.isTrackCollapsed
+
+                y: root.headerHeight
+                height: prv.viewHeight
+                anchors.left: parent.left
+                anchors.right: parent.right
+                z: 2
+
+                trackId: root.trackId
+                context: root.context
+                channelHeightRatio: channelSplitter.channelHeightRatio
+            }
+
             TrackSpectralSelectionContainer {
                 id: spectralSelectionContainer
 

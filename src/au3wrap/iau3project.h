@@ -46,6 +46,9 @@ public:
 
     virtual muse::async::Notification projectChanged() const = 0;
 
+    //! Bytes of sample blocks used by the current tracks, or by everything in the file (incl. undo history)
+    virtual int64_t sampleBlocksUsage(bool includeUndoHistory) const = 0;
+
     // internal
     virtual uintptr_t au3ProjectPtr() const = 0;
 };

@@ -12,6 +12,7 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionCode VERTICAL_RULERS_CODE("toggle-vertical-rulers");
+static const ActionCode SAMPLE_BLOCKS_CODE("toggle-sample-blocks");
 static const ActionCode RMS_IN_WAVEFORM_CODE("toggle-rms-in-waveform");
 static const ActionCode CLIPPING_IN_WAVEFORM_CODE("toggle-clipping-in-waveform");
 static const ActionCode MINUTES_SECONDS_RULER("minutes-seconds-ruler");
@@ -32,6 +33,7 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, BEATS_MEASURES_RULER, this, &ProjectSceneActionsController::toggleBeatsMeasuresRuler);
 
     dispatcher()->reg(this, VERTICAL_RULERS_CODE, this, &ProjectSceneActionsController::toggleVerticalRulers);
+    dispatcher()->reg(this, SAMPLE_BLOCKS_CODE, this, &ProjectSceneActionsController::toggleSampleBlocks);
     dispatcher()->reg(this, RMS_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleRMSInWaveform);
     dispatcher()->reg(this, CLIPPING_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleClippingInWaveform);
     dispatcher()->reg(this, TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, this,
@@ -70,6 +72,12 @@ void ProjectSceneActionsController::toggleVerticalRulers()
     bool verticalRulersVisible = configuration()->isVerticalRulersVisible();
     configuration()->setVerticalRulersVisible(!verticalRulersVisible);
     notifyActionCheckedChanged(VERTICAL_RULERS_CODE);
+}
+
+void ProjectSceneActionsController::toggleSampleBlocks()
+{
+    configuration()->setSampleBlocksVisible(!configuration()->isSampleBlocksVisible());
+    notifyActionCheckedChanged(SAMPLE_BLOCKS_CODE);
 }
 
 void ProjectSceneActionsController::toggleRMSInWaveform()
@@ -174,6 +182,7 @@ bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) 
 {
     QMap<std::string, bool> isChecked {
         { VERTICAL_RULERS_CODE, configuration()->isVerticalRulersVisible() },
+        { SAMPLE_BLOCKS_CODE, configuration()->isSampleBlocksVisible() },
         { RMS_IN_WAVEFORM_CODE, configuration()->isRMSInWaveformVisible() },
         { CLIPPING_IN_WAVEFORM_CODE, configuration()->isClippingInWaveformVisible() },
         { MINUTES_SECONDS_RULER, projectSceneUiState()->timelineRulerMode() == TimelineRulerMode::MINUTES_AND_SECONDS },

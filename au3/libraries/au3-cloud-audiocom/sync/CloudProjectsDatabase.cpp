@@ -21,6 +21,20 @@ namespace audacity::cloud::audiocom::sync {
 namespace {
 const auto databaseFileName = "/audiocom_sync.db";
 
+std::string& databasePathOverride()
+{
+    static std::string path;
+    return path;
+}
+
+wxString DatabasePath()
+{
+    if (!databasePathOverride().empty()) {
+        return audacity::ToWXString(databasePathOverride());
+    }
+    return FileNames::ConfigDir() + databaseFileName;
+}
+
 const char* createTableQuery
     =
         R"(
@@ -117,10 +131,14 @@ CloudProjectsDatabase& CloudProjectsDatabase::Get()
     return instance;
 }
 
+void CloudProjectsDatabase::SetDatabasePath(std::string path)
+{
+    databasePathOverride() = std::move(path);
+}
+
 bool CloudProjectsDatabase::DatabaseExists()
 {
-    const auto configDir  = FileNames::ConfigDir();
-    const auto configPath = configDir + databaseFileName;
+    const auto configPath = DatabasePath();
     return wxFileExists(configPath);
 }
 
@@ -913,8 +931,7 @@ bool CloudProjectsDatabase::OpenConnection()
         return true;
     }
 
-    const auto configDir  = FileNames::ConfigDir();
-    const auto configPath = configDir + databaseFileName;
+    const auto configPath = DatabasePath();
 
     mConnection = sqlite::SafeConnection::Open(audacity::ToUTF8(configPath));
 

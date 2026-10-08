@@ -562,6 +562,29 @@ void Sequence::Paste(sampleCount s, const Sequence* src)
 
     const int b = (s == mNumSamples) ? numBlocks - 1 : FindBlock(s);
     wxASSERT((b >= 0) && (b < (int)numBlocks));
+
+    // Inserting at the boundary of an edit-locked block: the cases below would
+    // rewrite that block together with the new samples. Insert the source
+    // blocks as they are instead, leaving the locked block untouched.
+    {
+        const bool atEndOfLockedLast = s == mNumSamples && mBlock[b].sb->IsEditLocked();
+        const bool atStartOfLocked = s < mNumSamples && mBlock[b].start == s && mBlock[b].sb->IsEditLocked();
+        if (atEndOfLockedLast || atStartOfLocked) {
+            const size_t insertAt = atEndOfLockedLast ? numBlocks : b;
+            BlockArray newBlock;
+            newBlock.insert(newBlock.end(), mBlock.begin(), mBlock.begin() + insertAt);
+            sampleCount samples = s;
+            for (unsigned int i = 0; i < srcNumBlocks; i++) {
+                AppendBlock(pUseFactory, format, newBlock, samples, srcBlock[i]);
+            }
+            for (size_t i = insertAt; i < numBlocks; i++) {
+                newBlock.push_back(mBlock[i].Plus(addedLen));
+            }
+            CommitChangesIfConsistent(newBlock, mNumSamples + addedLen, wxT("Paste next to locked block"));
+            mSampleFormats.UpdateEffective(src->mSampleFormats.Effective());
+            return;
+        }
+    }
     SeqBlock* const pBlock = &mBlock[b];
     const auto length = pBlock->sb->GetSampleCount();
     const auto largerBlockLen = addedLen + length;
@@ -704,6 +727,116 @@ void Sequence::SetSilence(sampleCount s0, sampleCount len)
 }
 
 /*! @excsafety{Strong} */
+bool Sequence::SplitBlockAt(sampleCount s)
+{
+    if (s <= 0 || s >= mNumSamples) {
+        return false;
+    }
+
+    const int b = FindBlock(s);
+    const SeqBlock& block = mBlock[b];
+    if (block.start == s) {
+        return false;
+    }
+
+    auto& factory = *mpFactory;
+    const auto format = mSampleFormats.Stored();
+    const auto blockLen = block.sb->GetSampleCount();
+    const auto leftLen = (s - block.start).as_size_t();
+    const auto rightLen = blockLen - leftLen;
+
+    SeqBlock::SampleBlockPtr left, right;
+    // Silent blocks have no database row and a non-positive id
+    if (block.sb->GetBlockID() <= 0) {
+        left = factory.CreateSilent(leftLen, format);
+        right = factory.CreateSilent(rightLen, format);
+    } else {
+        SampleBuffer buffer(blockLen, format);
+        Read(buffer.ptr(), format, block, 0, blockLen, true);
+        left = factory.Create(buffer.ptr(), leftLen, format);
+        right = factory.Create(buffer.ptr() + leftLen * SAMPLE_SIZE(format), rightLen, format);
+    }
+
+    BlockArray newBlock;
+    std::copy(mBlock.begin(), mBlock.begin() + b, std::back_inserter(newBlock));
+    newBlock.push_back(SeqBlock(left, block.start));
+    newBlock.push_back(SeqBlock(right, s));
+    std::copy(mBlock.begin() + b + 1, mBlock.end(), std::back_inserter(newBlock));
+
+    CommitChangesIfConsistent(newBlock, mNumSamples, wxT("SplitBlockAt"));
+    return true;
+}
+
+bool Sequence::LockBlocks(sampleCount s0, sampleCount s1)
+{
+    bool changed = false;
+    BlockArray newBlock{ mBlock };
+    for (auto& block : newBlock) {
+        if (block.start < s0 || block.start >= s1 || block.sb->IsEditLocked()) {
+            continue;
+        }
+        // Silent blocks have a non-positive id and are shared by all silences
+        // of the same length: replace this one by an ordinary block of zeros
+        if (block.sb->GetBlockID() <= 0) {
+            const auto format = mSampleFormats.Stored();
+            const auto len = block.sb->GetSampleCount();
+            SampleBuffer zeros(len, format);
+            ClearSamples(zeros.ptr(), format, 0, len);
+            block.sb = mpFactory->Create(zeros.ptr(), len, format);
+        }
+        block.sb->SetEditLocked(true);
+        changed = true;
+    }
+
+    if (changed) {
+        CommitChangesIfConsistent(newBlock, mNumSamples, wxT("LockBlocks"));
+    }
+    return changed;
+}
+
+bool Sequence::DeepCopyEditLockedBlocks()
+{
+    bool changed = false;
+    BlockArray newBlock{ mBlock };
+    const auto format = mSampleFormats.Stored();
+    for (auto& block : newBlock) {
+        if (!block.sb->IsEditLocked()) {
+            continue;
+        }
+        const auto len = block.sb->GetSampleCount();
+        SampleBuffer buffer(len, format);
+        Read(buffer.ptr(), format, block, 0, len, true);
+        block.sb = mpFactory->Create(buffer.ptr(), len, format);
+        changed = true;
+    }
+
+    if (changed) {
+        CommitChangesIfConsistent(newBlock, mNumSamples, wxT("DeepCopyEditLockedBlocks"));
+    }
+    return changed;
+}
+
+void Sequence::ReplaceBlocks(size_t first, size_t count, const std::vector<SeqBlock::SampleBlockPtr>& blocks)
+{
+    if (first + count > mBlock.size()) {
+        THROW_INCONSISTENCY_EXCEPTION;
+    }
+
+    BlockArray newBlock;
+    std::copy(mBlock.begin(), mBlock.begin() + first, std::back_inserter(newBlock));
+    sampleCount start = first < mBlock.size() ? mBlock[first].start : mNumSamples;
+    for (const auto& block : blocks) {
+        newBlock.push_back(SeqBlock(block, start));
+        start += block->GetSampleCount();
+    }
+    for (size_t i = first + count; i < mBlock.size(); ++i) {
+        newBlock.push_back(SeqBlock(mBlock[i].sb, start));
+        start += mBlock[i].sb->GetSampleCount();
+    }
+
+    CommitChangesIfConsistent(newBlock, start, wxT("ReplaceBlocks"));
+}
+
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 {
     auto& factory = *mpFactory;
@@ -1657,7 +1790,8 @@ void Sequence::Delete(sampleCount start, sampleCount len)
     // start is within preBlock
     auto preBufferLen = (start - preBlock.start).as_size_t();
     if (preBufferLen) {
-        if (preBufferLen >= mMinSamples || b0 == 0) {
+        // Never merge into an edit-locked block: keep the small piece as is
+        if (preBufferLen >= mMinSamples || b0 == 0 || mBlock[b0 - 1].sb->IsEditLocked()) {
             if (!scratch.ptr()) {
                 scratch.Allocate(scratchSize, format);
             }
@@ -1702,7 +1836,8 @@ void Sequence::Delete(sampleCount start, sampleCount len)
         (postBlock.start + postBlock.sb->GetSampleCount()) - (start + len)
         ).as_size_t();
     if (postBufferLen) {
-        if (postBufferLen >= mMinSamples || b1 == numBlocks - 1) {
+        // Never merge into an edit-locked block: keep the small piece as is
+        if (postBufferLen >= mMinSamples || b1 == numBlocks - 1 || mBlock[b1 + 1].sb->IsEditLocked()) {
             if (!scratch.ptr()) {
                 // Last use of scratch, can ask for smaller
                 scratch.Allocate(postBufferLen, format);

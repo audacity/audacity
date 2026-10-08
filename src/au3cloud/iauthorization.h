@@ -3,6 +3,11 @@
 */
 #pragma once
 
+#include <functional>
+
+#include "framework/global/types/ret.h"
+#include "framework/global/io/path.h"
+
 #include <string>
 
 #include "framework/global/modularity/imoduleinterface.h"
@@ -30,5 +35,11 @@ public:
     virtual bool isAuthorized() const = 0;
 
     virtual muse::Ret ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode = false) = 0;
+    //! Refreshes the access token, so that it lasts as long as possible, and
+    //! writes it, readable by this user only, for a process started by this one
+    //! to sign in with (IAu3CloudConfiguration::setAccessTokenFile) instead of
+    //! refreshing the shared sign-in itself, which would invalidate this
+    //! process's tokens. `onDone` runs on the main thread.
+    virtual void writeAccessTokenFile(const muse::io::path_t& path, std::function<void(muse::Ret)> onDone) = 0;
 };
 }

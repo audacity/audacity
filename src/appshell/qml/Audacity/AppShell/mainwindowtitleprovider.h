@@ -30,6 +30,8 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "trackedit/iprojecthistory.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 
 namespace au::appshell {
 class MainWindowTitleProvider : public QObject, public muse::async::Asyncable, public muse::Contextable
@@ -38,6 +40,8 @@ class MainWindowTitleProvider : public QObject, public muse::async::Asyncable, p
     QML_ELEMENT
 
     muse::ContextInject<au::context::IGlobalContext> context { this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory { this };
+    muse::GlobalInject<au::projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString filePath READ filePath NOTIFY filePathChanged)
