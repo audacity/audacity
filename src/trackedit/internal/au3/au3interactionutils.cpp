@@ -35,7 +35,8 @@ std::vector<size_t> getEmptyWaveTrackIndices(const au::au3::Au3TrackList& tracks
 
 au::trackedit::NeedsDownmixing addClipToTrack(const std::shared_ptr<au::au3::Au3WaveClip>& clip,
                                               au::au3::Au3WaveTrack& dstWaveTrack,
-                                              au::au3::Au3TrackList& copy)
+                                              au::au3::Au3TrackList& copy,
+                                              const std::function<void(size_t)>& resampleProgress)
 {
     using namespace au::trackedit::utils;
 
@@ -48,6 +49,10 @@ au::trackedit::NeedsDownmixing addClipToTrack(const std::shared_ptr<au::au3::Au3
     if (muse::contains(emptyTrackIndices, dstTrackIndex) && dstWaveTrack.NChannels() != clip->NChannels()) {
         ptr = toggleStereo(copy, getTrackIndex(copy, dstWaveTrack));
     }
+
+    // A clip keeps the sample rate of the track it came from. Convert it to the destination track's
+    // rate, otherwise the same samples are played at the wrong rate (pitch and length change).
+    clip->Resample(static_cast<int>(ptr->GetRate()), resampleProgress);
 
     ptr->InsertInterval(clip, false);
 
@@ -153,7 +158,9 @@ au::au3::Au3WaveTrack* au::trackedit::utils::appendWaveTrack(au3::Au3TrackList& 
 
 au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(int offset, const au3::Au3TrackList& orig,
                                                                          au3::Au3TrackList& copy,
-                                                                         const trackedit::ClipKeyList& selectedClips)
+                                                                         const trackedit::ClipKeyList& selectedClips,
+                                                                         const ProgressCb& progressCb,
+                                                                         const CancelCb& cancelCb)
 {
     IF_ASSERT_FAILED(offset != 0) {
         return NeedsDownmixing::No;
@@ -190,7 +197,8 @@ au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(int off
 
     const int stepsNeeded = std::abs(offset);
 
-    for (const auto& clip : movedClips) {
+    for (size_t clipIndex = 0; clipIndex < movedClips.size(); ++clipIndex) {
+        const auto& clip = movedClips[clipIndex];
         const au3::Au3WaveTrack* waveTrack = getWaveTrack(copy, TrackIndex { clip.origTrackIndex });
         IF_ASSERT_FAILED(waveTrack) {
             continue;
@@ -238,10 +246,70 @@ au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(int off
             }
         }
 
-        needsDownmixing |= addClipToTrack(clip.ptr, *dstTrack, copy);
+        // Resampling reports the number of consumed samples. Spread the overall progress evenly across the moved clips.
+        std::function<void(size_t)> resampleProgress;
+        if (progressCb) {
+            // `Resample` reports the samples consumed per channel, while `GetSequenceSamplesCount` adds up all the channels.
+            const double numSamples = std::max(1.0, clip.ptr->GetSequenceSamplesCount().as_double() / clip.ptr->NChannels());
+            resampleProgress
+                = [&progressCb, &cancelCb, clipIndex, numSamples, total = movedClips.size(), done = 0.0](size_t consumed) mutable {
+                done += static_cast<double>(consumed);
+                progressCb((static_cast<double>(clipIndex) + std::min(done / numSamples, 1.0)) / static_cast<double>(total));
+                if (cancelCb && cancelCb()) {
+                    // `WaveClip::Resample` only replaces the clip's samples once it has finished, so this leaves the clip intact.
+                    throw ResamplingCancelled {};
+                }
+            };
+        }
+
+        needsDownmixing |= addClipToTrack(clip.ptr, *dstTrack, copy, resampleProgress);
     }
 
     return needsDownmixing;
+}
+
+bool au::trackedit::utils::clipsNeedResampling(int offset, const au3::Au3TrackList& orig, const trackedit::ClipKeyList& selectedClips)
+{
+    if (offset == 0) {
+        return false;
+    }
+
+    // Non-WaveTracks (e.g. LabelTrack) are skipped when looking for the destination, same as in `moveClipsVertically`.
+    std::vector<const au3::Au3WaveTrack*> waveTracks;
+    for (const au3::Au3Track* track : orig) {
+        if (const auto waveTrack = dynamic_cast<const au3::Au3WaveTrack*>(track)) {
+            waveTracks.push_back(waveTrack);
+        }
+    }
+
+    const double projectRate = ::ProjectRate::Get(*orig.GetOwner()).GetRate();
+    const size_t stepsNeeded = static_cast<size_t>(std::abs(offset));
+
+    for (const auto& clip : selectedClips) {
+        const auto srcTrack = dynamic_cast<const au3::Au3WaveTrack*>(orig.FindById(au3::Au3TrackId { clip.trackId }));
+        const auto srcIt = std::find(waveTracks.begin(), waveTracks.end(), srcTrack);
+        if (srcIt == waveTracks.end()) {
+            continue;
+        }
+        const size_t srcPos = std::distance(waveTracks.begin(), srcIt);
+
+        double dstRate = projectRate; // Tracks appended while dragging down use the project rate.
+        if (offset > 0) {
+            if (srcPos + stepsNeeded < waveTracks.size()) {
+                dstRate = waveTracks[srcPos + stepsNeeded]->GetRate();
+            }
+        } else if (srcPos > 0) {
+            dstRate = waveTracks[srcPos > stepsNeeded ? srcPos - stepsNeeded : 0]->GetRate();
+        } else {
+            continue; // Can't move up.
+        }
+
+        if (!muse::RealIsEqual(srcTrack->GetRate(), dstRate)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool au::trackedit::utils::clipIdSetsAreEqual(const au3::Au3WaveTrack& track1, const au3::Au3WaveTrack& track2)
