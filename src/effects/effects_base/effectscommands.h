@@ -9,15 +9,53 @@
 #include "framework/global/stringutils.h"
 #include "framework/rcommand/commandtypes.h"
 #include "framework/rcommand/typedcommand.h"
+#include "framework/ui/view/iconcodes.h"
 
 #include "effectstypes.h"
 
 namespace au::effects {
-inline static const muse::rcommand::Command EFFECTS_REPEAT_LAST_EFFECT_COMMAND("command://effects/repeat-last-effect");
-inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_COMMAND("command://effects/plugin-manager");
-inline static const muse::rcommand::Command EFFECTS_TOGGLE_VENDOR_UI_COMMAND("command://effects/toggle-vendor-ui");
+//! Typed commands: the id, the texts and the parameters of a command are declared once, here
 
-//! A typed command: its id, texts and parameters are declared once, here
+struct RepeatLastEffectCommand {
+    static inline const muse::rcommand::Command id { "command://effects/repeat-last-effect" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("action", "Repeat last effect");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("action_description", "Repeat last effect");
+
+    static constexpr auto fields() { return std::tuple {}; }
+};
+
+struct PluginManagerCommand {
+    static inline const muse::rcommand::Command id { "command://effects/plugin-manager" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("action", "Plugin manager");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("action_description", "Plugin manager");
+
+    static constexpr auto fields() { return std::tuple {}; }
+};
+
+struct ToggleVendorUiCommand {
+    static inline const muse::rcommand::Command id { "command://effects/toggle-vendor-ui" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("effects", "Use vendor UI");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("effects",
+                                                                                        "Toggle between vendor UI and fallback UI");
+    static inline const muse::rcommand::Decoration decoration { muse::rcommand::Checkable::Yes };
+
+    EffectId effectId;
+
+    static constexpr auto fields()
+    {
+        using muse::rcommand::Field;
+        return std::tuple {
+            Field { "effectId", &ToggleVendorUiCommand::effectId, u"Effect identifier" },
+        };
+    }
+};
+
 struct ApplyPresetCommand {
     static inline const muse::rcommand::Command id { "command://effects/presets/apply" };
     //: Action title: shown as a menu item or a button label; keep it short
@@ -37,11 +75,100 @@ struct ApplyPresetCommand {
         };
     }
 };
-inline static const muse::rcommand::Command EFFECTS_PRESET_SAVE_COMMAND("command://effects/presets/save");
-inline static const muse::rcommand::Command EFFECTS_PRESET_SAVE_AS_COMMAND("command://effects/presets/save-as");
-inline static const muse::rcommand::Command EFFECTS_PRESET_DELETE_COMMAND("command://effects/presets/delete");
-inline static const muse::rcommand::Command EFFECTS_PRESET_IMPORT_COMMAND("command://effects/presets/import");
-inline static const muse::rcommand::Command EFFECTS_PRESET_EXPORT_COMMAND("command://effects/presets/export");
+struct SavePresetCommand {
+    static inline const muse::rcommand::Command id { "command://effects/presets/save" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("action", "&Save preset");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("action_description", "Save preset");
+
+    EffectInstanceId instanceId = 0;
+    std::string presetId;
+
+    static constexpr auto fields()
+    {
+        using muse::rcommand::Field;
+        return std::tuple {
+            Field { "instanceId", &SavePresetCommand::instanceId, u"Effect instance identifier" },
+            Field { "presetId", &SavePresetCommand::presetId, u"Preset identifier" },
+        };
+    }
+};
+
+struct SavePresetAsCommand {
+    static inline const muse::rcommand::Command id { "command://effects/presets/save-as" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("action", "Save preset as…");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("action_description", "Save preset as");
+
+    EffectInstanceId instanceId = 0;
+
+    static constexpr auto fields()
+    {
+        using muse::rcommand::Field;
+        return std::tuple {
+            Field { "instanceId", &SavePresetAsCommand::instanceId, u"Effect instance identifier" },
+        };
+    }
+};
+
+struct DeletePresetCommand {
+    static inline const muse::rcommand::Command id { "command://effects/presets/delete" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("action", "&Delete preset");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("action_description", "Delete preset");
+    static inline const muse::rcommand::Decoration decoration { muse::ui::IconCode::Code::DELETE_TANK };
+
+    EffectId effectId;
+    std::string presetId;
+
+    static constexpr auto fields()
+    {
+        using muse::rcommand::Field;
+        return std::tuple {
+            Field { "effectId", &DeletePresetCommand::effectId, u"Effect identifier" },
+            Field { "presetId", &DeletePresetCommand::presetId, u"Preset identifier" },
+        };
+    }
+};
+
+struct ImportPresetCommand {
+    static inline const muse::rcommand::Command id { "command://effects/presets/import" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("action", "&Import…");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("action_description", "Import preset");
+
+    EffectInstanceId instanceId = 0;
+
+    static constexpr auto fields()
+    {
+        using muse::rcommand::Field;
+        return std::tuple {
+            Field { "instanceId", &ImportPresetCommand::instanceId, u"Effect instance identifier" },
+        };
+    }
+};
+
+struct ExportPresetCommand {
+    static inline const muse::rcommand::Command id { "command://effects/presets/export" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("action", "&Export…");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("action_description", "Export preset");
+
+    EffectInstanceId instanceId = 0;
+
+    static constexpr auto fields()
+    {
+        using muse::rcommand::Field;
+        return std::tuple {
+            Field { "instanceId", &ExportPresetCommand::instanceId, u"Effect instance identifier" },
+        };
+    }
+};
 
 constexpr std::string_view EFFECTS_SCHEME = "effects";
 constexpr std::string_view EFFECT_OPEN_COMMAND = "open";

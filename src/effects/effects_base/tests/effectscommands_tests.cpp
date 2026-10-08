@@ -33,8 +33,31 @@ TEST(EffectsBase_EffectsCommandsTests, EffectId_IsASinglePathSegment)
 
 TEST(EffectsBase_EffectsCommandsTests, EffectIdFromCommand_IsEmptyForNonEffectCommands)
 {
-    EXPECT_TRUE(effectIdFromCommand(EFFECTS_REPEAT_LAST_EFFECT_COMMAND).empty());
+    EXPECT_TRUE(effectIdFromCommand(RepeatLastEffectCommand::id).empty());
     EXPECT_TRUE(effectIdFromCommand(ApplyPresetCommand::id).empty());
+}
+
+TEST(EffectsBase_EffectsCommandsTests, CommandInfo_ComesEntirelyFromTheStruct)
+{
+    const CommandInfo repeat = makeCommandInfo<RepeatLastEffectCommand>();
+    EXPECT_EQ(repeat.command, RepeatLastEffectCommand::id);
+    EXPECT_TRUE(repeat.inputSchema.args.empty());
+    EXPECT_EQ(repeat.decoration.iconCode, muse::ui::IconCode::Code::NONE);
+
+    const CommandInfo toggle = makeCommandInfo<ToggleVendorUiCommand>();
+    EXPECT_EQ(toggle.decoration.checkable, Checkable::Yes);
+    EXPECT_EQ(toggle.inputSchema.args.at("effectId").type, DataType::String);
+
+    const CommandInfo del = makeCommandInfo<DeletePresetCommand>();
+    EXPECT_EQ(del.decoration.iconCode, muse::ui::IconCode::Code::DELETE_TANK);
+}
+
+TEST(EffectsBase_EffectsCommandsTests, ParameterlessCommand_RejectsAnyParameter)
+{
+    RepeatLastEffectCommand command;
+    std::string err;
+    EXPECT_TRUE(fromParams(Params {}, command, err)) << err;
+    EXPECT_FALSE(fromParams(Params { { "typo", muse::Val(1) } }, command, err));
 }
 
 TEST(EffectsBase_EffectsCommandsTests, ApplyPreset_SchemaAndParamsComeFromTheStruct)
