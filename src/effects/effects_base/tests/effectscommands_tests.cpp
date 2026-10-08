@@ -34,7 +34,7 @@ TEST(EffectsBase_EffectsCommandsTests, EffectId_IsASinglePathSegment)
 TEST(EffectsBase_EffectsCommandsTests, EffectIdFromCommand_IsEmptyForNonEffectCommands)
 {
     EXPECT_TRUE(effectIdFromCommand(EFFECTS_REPEAT_LAST_EFFECT_COMMAND).empty());
-    EXPECT_TRUE(effectIdFromCommand(EFFECTS_PRESET_APPLY_COMMAND).empty());
+    EXPECT_TRUE(effectIdFromCommand(ApplyPresetCommand::id).empty());
 }
 
 TEST(EffectsBase_EffectsCommandsTests, ApplyPreset_SchemaAndParamsComeFromTheStruct)

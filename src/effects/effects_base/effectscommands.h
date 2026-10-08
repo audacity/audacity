@@ -17,11 +17,13 @@ inline static const muse::rcommand::Command EFFECTS_REPEAT_LAST_EFFECT_COMMAND("
 inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_COMMAND("command://effects/plugin-manager");
 inline static const muse::rcommand::Command EFFECTS_TOGGLE_VENDOR_UI_COMMAND("command://effects/toggle-vendor-ui");
 
-inline static const muse::rcommand::Command EFFECTS_PRESET_APPLY_COMMAND("command://effects/presets/apply");
-
-//! Typed form of EFFECTS_PRESET_APPLY_COMMAND: the parameters are declared once, here
+//! A typed command: its id, texts and parameters are declared once, here
 struct ApplyPresetCommand {
-    static inline const muse::rcommand::Command& id = EFFECTS_PRESET_APPLY_COMMAND;
+    static inline const muse::rcommand::Command id { "command://effects/presets/apply" };
+    //: Action title: shown as a menu item or a button label; keep it short
+    static inline const muse::TranslatableString title = muse::TranslatableString("action", "&Apply preset");
+    //: Action description: shown as a tooltip; can be a full sentence
+    static inline const muse::TranslatableString description = muse::TranslatableString("action_description", "Apply preset");
 
     EffectInstanceId instanceId = 0;
     std::string presetId;

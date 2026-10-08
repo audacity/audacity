@@ -159,7 +159,7 @@ void EffectsActionsController::registerActions()
         { PLUGIN_MANAGER_CODE, EFFECTS_PLUGIN_MANAGER_COMMAND, {} },
         { EFFECT_APPLY_QUERY.toString(), Command(), applyConv },
         { TOGGLE_VENDOR_UI_QUERY.toString(), EFFECTS_TOGGLE_VENDOR_UI_COMMAND, queryParamsConv },
-        { PRESET_APPLY_QUERY.toString(), EFFECTS_PRESET_APPLY_COMMAND, queryParamsConv },
+        { PRESET_APPLY_QUERY.toString(), ApplyPresetCommand::id, queryParamsConv },
         { PRESET_SAVE_QUERY.toString(), EFFECTS_PRESET_SAVE_COMMAND, queryParamsConv },
         { PRESET_SAVE_AS_QUERY.toString(), EFFECTS_PRESET_SAVE_AS_COMMAND, queryParamsConv },
         { PRESET_DELETE_QUERY.toString(), EFFECTS_PRESET_DELETE_COMMAND, queryParamsConv },
