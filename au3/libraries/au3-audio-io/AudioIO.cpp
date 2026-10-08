@@ -1158,6 +1158,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     // SequenceBufferExchange will ALWAYS get called from the Audio thread.
     mAudioThreadShouldCallSequenceBufferExchangeOnce
     .store(true, std::memory_order_release);
+    NotifyAudioThreadState();
 
     while (mAudioThreadShouldCallSequenceBufferExchangeOnce
            .load(std::memory_order_acquire)) {
@@ -1166,7 +1167,10 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         if (options.playbackStreamPrimer) {
             interval = options.playbackStreamPrimer();
         }
-        std::this_thread::sleep_for(interval);
+        std::unique_lock lock(mAudioThreadStateMutex);
+        mAudioThreadStateChanged.wait_for(lock, interval, [this] {
+            return !mAudioThreadShouldCallSequenceBufferExchangeOnce.load(std::memory_order_acquire);
+        });
     }
 
     if (mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
@@ -1917,6 +1921,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             gAudioIO->SequenceBufferExchange();
             gAudioIO->mAudioThreadShouldCallSequenceBufferExchangeOnce
             .store(false, std::memory_order_release);
+            gAudioIO->NotifyAudioThreadState();
 
             lastState = ProcessingState::ePrimeProcessing;
         } else if (gAudioIO->mAudioThreadSequenceBufferExchangeLoopRunning
@@ -1925,6 +1930,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
                 // Main thread has told us to start - acknowledge that we do
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStart,
                                                         std::memory_order_release);
+                gAudioIO->NotifyAudioThreadState();
             }
             lastState = ProcessingState::eCallbackProcessing;
 
@@ -1943,6 +1949,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
                 // acknowledge that we received the order and that no more processing will be done.
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStop,
                                                         std::memory_order_release);
+                gAudioIO->NotifyAudioThreadState();
             }
             lastState = ProcessingState::eSkipProcessing;
 
@@ -1954,7 +1961,14 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
         gAudioIO->mAudioThreadSequenceBufferExchangeLoopActive
         .store(false, std::memory_order_relaxed);
 
-        std::this_thread::sleep_until(loopPassStart + interval);
+        // Sleep until the next pass, or until the main thread asks for
+        // something this pass did not handle
+        std::unique_lock lock(gAudioIO->mAudioThreadStateMutex);
+        gAudioIO->mAudioThreadStateChanged.wait_until(lock, loopPassStart + interval, [&] {
+            return gAudioIO->mAudioThreadShouldCallSequenceBufferExchangeOnce.load(std::memory_order_acquire)
+                   || gAudioIO->mAudioThreadSequenceBufferExchangeLoopRunning.load(std::memory_order_relaxed)
+                   != (lastState == ProcessingState::eCallbackProcessing);
+        });
     }
 }
 
@@ -3572,47 +3586,52 @@ auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt
     return *static_cast<AudioIOExt*>(mIterator->get());
 }
 
+void AudioIoCallback::NotifyAudioThreadState()
+{
+    // Taking the mutex orders the flag change before a waiter's check
+    {
+        std::lock_guard lock(mAudioThreadStateMutex);
+    }
+    mAudioThreadStateChanged.notify_all();
+}
+
 void AudioIoCallback::StartAudioThread()
 {
     mAudioThreadSequenceBufferExchangeLoopRunning.store(true, std::memory_order_release);
+    NotifyAudioThreadState();
 }
 
 void AudioIoCallback::WaitForAudioThreadStarted()
 {
-    while (mAudioThreadAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStart)
-    {
-        using namespace std::chrono;
-        std::this_thread::sleep_for(50ms);
-    }
+    WaitForAudioThreadState([this] {
+        return mAudioThreadAcknowledge.load(std::memory_order_acquire) == Acknowledge::eStart;
+    });
     mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
 
 void AudioIoCallback::StopAudioThread()
 {
     mAudioThreadSequenceBufferExchangeLoopRunning.store(false, std::memory_order_release);
+    NotifyAudioThreadState();
 }
 
 void AudioIoCallback::WaitForAudioThreadStopped()
 {
-    while (mAudioThreadAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStop)
-    {
-        using namespace std::chrono;
-        std::this_thread::sleep_for(50ms);
-    }
+    WaitForAudioThreadState([this] {
+        return mAudioThreadAcknowledge.load(std::memory_order_acquire) == Acknowledge::eStop;
+    });
     mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
 
-void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
+void AudioIoCallback::ProcessOnceAndWait()
 {
     mAudioThreadShouldCallSequenceBufferExchangeOnce
     .store(true, std::memory_order_release);
+    NotifyAudioThreadState();
 
-    while (mAudioThreadShouldCallSequenceBufferExchangeOnce
-           .load(std::memory_order_acquire))
-    {
-        using namespace std::chrono;
-        std::this_thread::sleep_for(sleepTime);
-    }
+    WaitForAudioThreadState([this] {
+        return !mAudioThreadShouldCallSequenceBufferExchangeOnce.load(std::memory_order_acquire);
+    });
 }
 
 bool AudioIO::IsCapturing() const

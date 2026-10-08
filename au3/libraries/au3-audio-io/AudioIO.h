@@ -19,6 +19,7 @@
 #include "RingBuffer.h"
 #include "au3-utility/LockFreeQueue.h"
 
+#include <condition_variable>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -305,6 +306,18 @@ public:
 
     std::atomic<Acknowledge> mAudioThreadAcknowledge;
 
+    //! The flags above are set on one thread and awaited on another; whoever
+    //! sets one calls NotifyAudioThreadState()
+    std::mutex mAudioThreadStateMutex;
+    std::condition_variable mAudioThreadStateChanged;
+    void NotifyAudioThreadState();
+    template<typename Ready>
+    void WaitForAudioThreadState(const Ready& ready)
+    {
+        std::unique_lock lock(mAudioThreadStateMutex);
+        mAudioThreadStateChanged.wait(lock, ready);
+    }
+
     // Async start/stop + wait of AudioThread processing.
     // Provided to allow more flexibility, however use with caution:
     // never call Stop between Start and the wait for Started (and the converse)
@@ -313,7 +326,7 @@ public:
     void StopAudioThread();
     void WaitForAudioThreadStopped();
 
-    void ProcessOnceAndWait(std::chrono::milliseconds sleepTime = std::chrono::milliseconds(50));
+    void ProcessOnceAndWait();
 
     std::atomic<bool> mForceFadeOut{ false };
 
