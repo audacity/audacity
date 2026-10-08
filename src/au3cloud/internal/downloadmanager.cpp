@@ -51,12 +51,9 @@ void DownloadManager::startDownload(const std::string& id, const std::string& ur
     auto manager = networkManagerCreator()->makeNetworkManager();
     auto buffer = std::make_shared<QBuffer>();
 
-    muse::network::RequestHeaders headers;
-    headers.rawHeaders["User-Agent"] = "Audacity";
-
     auto retVal = manager->get(QUrl(QString::fromStdString(url)),
                                std::static_pointer_cast<QIODevice>(buffer),
-                               headers);
+                               cloudConfiguration()->headers());
 
     {
         std::lock_guard lock(m_mutex);

@@ -56,7 +56,6 @@ public:
     virtual std::vector<std::string> cloudPreferredAudioFormats(bool preferLossless = true) const = 0;
     virtual ExportParameters cloudExportParameters(const std::string& format) const = 0;
     virtual bool isCustomFFmpegExportFormat() const = 0;
-    virtual bool isOggExportFormat() const = 0;
     virtual bool hasMetadata() const = 0;
 
     virtual int maxChannels() const = 0;

@@ -14,6 +14,7 @@
 #include <QUrl>
 
 #include "../MultipartData.h"
+#include "../NetworkManager.h"
 #include "../RequestPayload.h"
 
 namespace audacity {
@@ -218,6 +219,15 @@ void Response::perform()
         request.setRawHeader(
             QByteArray::fromStdString(header.Name),
             QByteArray::fromStdString(header.Value));
+    }
+
+    if (!mRequest.getHeaders().hasHeader(common_headers::UserAgent)) {
+        const auto userAgent = NetworkManager::GetInstance().getUserAgent();
+        if (!userAgent.empty()) {
+            request.setRawHeader(
+                QByteArray::fromStdString(common_headers::UserAgent),
+                QByteArray::fromStdString(userAgent));
+        }
     }
 
     const auto& cookies = mRequest.getCookies();

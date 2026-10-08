@@ -56,28 +56,8 @@ muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
 {
-    EffectId resolved;
-    EffectId titleFallback;
-    // Search effect by id with a conviniece fallback to title for scripting
-    for (const auto& meta : effectsProvider()->effectMetaList()) {
-        if (meta.id == effectId) {
-            resolved = meta.id;
-            break;
-        }
-        if (titleFallback.empty() && meta.title == effectId) {
-            titleFallback = meta.id;
-        }
-    }
-    if (resolved.empty()) {
-        resolved = titleFallback;
-    }
-    if (resolved.empty()) {
-        LOGE() << "no effect found for symbol: " << effectId;
-        return make_ret(Err::EffectNotFound);
-    }
-
     au3::Au3Project& project = projectRef();
-    return performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
+    return performEffectWithShowError(project, effectId, EffectManager::kConfigured, params);
 }
 
 au::au3::Au3Project& EffectExecutionScenario::projectRef()
