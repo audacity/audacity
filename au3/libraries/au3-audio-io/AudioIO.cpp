@@ -664,6 +664,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         if (hostApiInfo) {
             mUsingAlsa = hostApiInfo->type == paALSA;
             mUsingJack = hostApiInfo->type == paJACK;
+            mUsingCoreAudio = hostApiInfo->type == paCoreAudio;
         }
     }
 
@@ -720,6 +721,12 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
             if (AudioIOAutomaticLatencyCompensation.Read()) {
                 mRecordingSchedule.mLatencyCompensation = -stream->inputLatency - outputLatency;
             }
+            // The reported latencies are fixed at open, but the real round trip
+            // changes with every start when input and output are separate
+            // devices; CoreAudio timestamps follow it
+            mCompensateFromStreamTimes = AudioIOAutomaticLatencyCompensation.Read() && mUsingCoreAudio
+                                         && usePlayback && useCapture;
+            mStreamRoundTrip.store(0.0, std::memory_order_relaxed);
 
             mHardwarePlaybackLatencyMs = outputLatency * 1000.0;
             mHardwareCaptureLatencyMs = stream->inputLatency * 1000.0;
@@ -2510,6 +2517,18 @@ void AudioIO::DrainRecordBuffers()
                 sampleFormat format { floatSample };
             };
 
+            // The first drain with data comes after 0.2 s of callbacks, so the
+            // stream timestamps are settled; recording without playback keeps
+            // the reported latency, which the callback's clock already uses
+            if (mCompensateFromStreamTimes && avail > 0) {
+                mCompensateFromStreamTimes = false;
+                const double roundTrip = mStreamRoundTrip.load(std::memory_order_relaxed);
+                if (!mPlaybackSequences.empty() && roundTrip > 0.0 && roundTrip < 1.0
+                    && !mRecordingSchedule.mLatencyCorrected) {
+                    mRecordingSchedule.mLatencyCompensation = -roundTrip;
+                }
+            }
+
             std::vector<CapturedChannelData> captured(hardwareChannels);
             const bool forceFloatCapture = mCaptureNeedsMixdown
                                            || !mRecordingSchedule.mCrossfadeData.empty();
@@ -3575,6 +3594,9 @@ int AudioIoCallback::AudioCallback(
     const PaStreamCallbackTimeInfo* timeInfo,
     const PaStreamCallbackFlags statusFlags, void* WXUNUSED(userData))
 {
+    if (timeInfo && timeInfo->inputBufferAdcTime > 0 && timeInfo->outputBufferDacTime > 0) {
+        mStreamRoundTrip.store(timeInfo->outputBufferDacTime - timeInfo->inputBufferAdcTime, std::memory_order_relaxed);
+    }
     // Poll sequences for change of state.
     // (User might click mute and solo buttons.)
     mbHasSoloSequences = CountSoloingSequences() > 0;

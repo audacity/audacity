@@ -457,6 +457,12 @@ protected:
 
     bool mUsingAlsa { false };
     bool mUsingJack { false };
+    bool mUsingCoreAudio { false };
+    //! Automatic compensation takes the round trip from the stream's own
+    //! timestamps; producer only after the start
+    bool mCompensateFromStreamTimes { false };
+    //! Output DAC time minus input ADC time of the last duplex callback, s
+    std::atomic<double> mStreamRoundTrip { 0.0 };
 
     // For cacheing supported sample rates
     static double mCachedBestRateOut;
