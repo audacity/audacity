@@ -213,12 +213,15 @@ jobs:
       uses: jurplel/install-qt-action@v4
       with:
         setup-python: ${{ matrix.runner != 'windows-11-arm' }}
-        version: '6.10.1'
+        version: '6.11.2'
         host: ${{ matrix.qt_host }}
         target: 'desktop'
         arch: ${{ matrix.qt_arch }}
         modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
         cache: true
+        # https://github.com/miurahr/aqtinstall/pull/1000#issuecomment-4109913885
+        aqtsource: 'git+https://github.com/miurahr/aqtinstall.git'
+        py7zrversion: '@git+https://github.com/miurahr/py7zr.git'
 
     - name: Setup environment
       if: env.DO_BUILD == 'true'
@@ -318,12 +321,15 @@ jobs:
       uses: jurplel/install-qt-action@v4
       with:
         setup-python: ${{ matrix.runner != 'windows-11-arm' }}
-        version: '6.10.1'
+        version: '6.11.2'
         host: ${{ matrix.qt_host }}
         target: 'desktop'
         arch: ${{ matrix.qt_arch }}
         modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
         cache: true
+        # https://github.com/miurahr/aqtinstall/pull/1000#issuecomment-4109913885
+        aqtsource: 'git+https://github.com/miurahr/aqtinstall.git'
+        py7zrversion: '@git+https://github.com/miurahr/py7zr.git'
 
     - name: Download build artifact
       uses: actions/download-artifact@v8
