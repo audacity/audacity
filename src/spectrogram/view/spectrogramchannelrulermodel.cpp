@@ -6,6 +6,7 @@
 #include "framework/global/types/number.h"
 #include "framework/global/log.h"
 #include "spectrogramtypes.h"
+#include "internal/spectrogramutils.h"
 #include "shared/axis/axislabel.h"
 #include "shared/axis/axisticks.h"
 
@@ -17,6 +18,17 @@ SpectrogramChannelRulerModel::SpectrogramChannelRulerModel(QObject* parent)
 
 void SpectrogramChannelRulerModel::componentComplete()
 {
+    const auto project = globalContext()->currentTrackeditProject();
+    if (project) {
+        project->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
+            if (track.id == m_trackId) {
+                updateTicks();
+                emit ticksChanged();
+                emit zoomStateChanged();
+            }
+        });
+    }
+
     spectrogramService()->trackSpectrogramConfigurationChanged().onReceive(this, [this](int trackId){
         if (trackId == m_trackId) {
             updateTicks();
@@ -49,7 +61,8 @@ void SpectrogramChannelRulerModel::updateTicks()
     IF_ASSERT_FAILED(config) {
         return;
     }
-    m_ticks = au::shared::axisTicks(config->minFreq(), config->maxFreq(), config->scale());
+    const auto [minFreq, maxFreq] = spectrogramBounds(*config, spectrogramService()->trackSampleRate(m_trackId));
+    m_ticks = au::shared::axisTicks(minFreq, maxFreq, config->scale());
 }
 
 int SpectrogramChannelRulerModel::trackId() const
