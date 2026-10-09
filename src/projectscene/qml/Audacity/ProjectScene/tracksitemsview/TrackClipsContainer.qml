@@ -506,6 +506,18 @@ TrackItemsContainer {
                                     handleClipGuideline(itemData.key, Direction.Right, completed)
                                 }
 
+                                onClipLeftRepeatRequested: function (completed, action) {
+                                    clipsModel.repeatLeftClip(itemData.key, completed, action)
+
+                                    handleClipGuideline(itemData.key, Direction.Left, completed)
+                                }
+
+                                onClipRightRepeatRequested: function (completed, action) {
+                                    clipsModel.repeatRightClip(itemData.key, completed, action)
+
+                                    handleClipGuideline(itemData.key, Direction.Right, completed)
+                                }
+
                                 onClipLeftStretchRequested: function (completed, action) {
                                     clipsModel.stretchLeftClip(itemData.key, completed, action)
 

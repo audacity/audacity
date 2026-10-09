@@ -4,6 +4,7 @@
 #pragma once
 
 #include <functional>
+#include <map>
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
@@ -74,6 +75,9 @@ public:
     bool stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
     bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
 
+    bool repeatClipsLeft(const ClipKeyList& clipKeyList, secs_t newStartTime, bool completed) override;
+    bool repeatClipsRight(const ClipKeyList& clipKeyList, secs_t newEndTime, bool completed) override;
+
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
     muse::Ret makeRoomForClips(const ClipKeyList& clipKeys) override;
 
@@ -119,6 +123,9 @@ private:
 
     //! Returns the @p edit result for the last clip.
     bool applyClipEdit(const ClipKeyList& clipKeys, bool completed, const std::function<bool(au3::Au3WaveClip&)>& edit);
+
+    bool repeatClipLeft(au3::Au3WaveTrack& waveTrack, au3::Au3WaveClip& clip, secs_t newStartTime);
+    bool repeatClipRight(au3::Au3WaveTrack& waveTrack, au3::Au3WaveClip& clip, secs_t newEndTime);
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
