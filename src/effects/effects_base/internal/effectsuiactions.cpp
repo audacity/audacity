@@ -16,7 +16,6 @@ using namespace muse::ui;
 using namespace muse::actions;
 
 static const TranslatableString REPEAT_LAST_EFFECT_DEF_TITLE("action", "Repeat last effect");
-static const TranslatableString REPEAT_LAST_EFFECT_TITLE("action", "Repeat %1");
 
 static UiActionList STATIC_ACTIONS = {
     UiAction("repeat-last-effect",
@@ -97,7 +96,7 @@ EffectsUiActions::EffectsUiActions(const muse::modularity::ContextPtr& ctx, Effe
             return;
         }
         const auto effectTitle = utils::effectDisplayTitle(effectsProvider()->meta(effectId));
-        it->title = REPEAT_LAST_EFFECT_TITLE.arg(effectTitle);
+        it->title = TranslatableString("action", "Repeat %1").arg(effectTitle);
         m_actionsChanged.send({ *it });
     });
 
