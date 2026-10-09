@@ -12,8 +12,6 @@
 #include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
-#include "framework/actions/actionable.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
 
 #include "context/iglobalcontext.h"
@@ -30,8 +28,7 @@
 #include "trackitemsmovecontroller.h"
 
 namespace au::projectscene {
-class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable,
-    public muse::Contextable
+class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
@@ -43,7 +40,6 @@ class TrackItemsListModel : public QAbstractListModel, public muse::async::Async
 protected:
     muse::GlobalInject<muse::IApplication> application;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
@@ -89,7 +85,6 @@ signals:
     void trackIdChanged();
     void moveControllerChanged();
     void timelineContextChanged();
-    void itemTitleEditRequested(const TrackItemKey& key);
 
     void itemContextMenuOpenRequested(const TrackItemKey& key);
 
@@ -112,7 +107,6 @@ protected:
     ViewTrackItem* itemByKey(const trackedit::TrackItemKey& key) const;
     int indexByKey(const trackedit::TrackItemKey& key) const;
 
-    void requestItemTitleChange();
     virtual trackedit::TrackItemKeyList getSelectedItemKeys() const = 0;
 
     virtual void onInit() = 0;

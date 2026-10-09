@@ -259,25 +259,6 @@ QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) cons
     return QVariant::fromValue(m_items[sortedIndex]);
 }
 
-void TrackItemsListModel::requestItemTitleChange()
-{
-    auto selectedItems = getSelectedItemKeys();
-
-    if (selectedItems.empty() || selectedItems.size() > 1) {
-        return;
-    }
-
-    trackedit::TrackItemKey itemKey = selectedItems.front();
-    if (!itemKey.isValid()) {
-        return;
-    }
-
-    ViewTrackItem* selectedItem = itemByKey(itemKey);
-    if (selectedItem != nullptr) {
-        emit itemTitleEditRequested(selectedItem->key());
-    }
-}
-
 int TrackItemsListModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_items.size() + m_dragGhostItems.size());

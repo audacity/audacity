@@ -60,8 +60,8 @@ void TrackClipsListModel::onInit()
         emit asymmetricStereoHeightsPossibleChanged();
     });
 
-    dispatcher()->reg(this, "rename-item", [this]() {
-        requestItemTitleChange();
+    tracksViewRequestsService()->clipTitleEditRequested().onReceive(this, [this](const trackedit::ClipKey&) {
+        updatePendingTitleEdit();
     });
 
     uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
@@ -243,9 +243,32 @@ void TrackClipsListModel::update()
         emit isStereoChanged();
     }
 
+    updatePendingTitleEdit();
+
     for (TrackClipItem* item : cleanupList) {
         item->deleteLater();
     }
+}
+
+void TrackClipsListModel::updatePendingTitleEdit()
+{
+    const std::optional<trackedit::ClipKey> pending = tracksViewRequestsService()->pendingClipTitleEdit();
+    if (!pending.has_value() || pending->trackId != m_trackId) {
+        return;
+    }
+
+    if (TrackClipItem* item = clipItemByKey(*pending)) {
+        item->setTitleEditRequested(true);
+    }
+}
+
+void TrackClipsListModel::titleEditRequestHandled(const ClipKey& key)
+{
+    if (TrackClipItem* item = clipItemByKey(key.key)) {
+        item->setTitleEditRequested(false);
+    }
+
+    tracksViewRequestsService()->clipTitleEditRequestHandled(key.key);
 }
 
 void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)

@@ -197,3 +197,18 @@ void ViewTrackItem::setFocused(bool focused)
     m_focused = focused;
     emit focusedChanged();
 }
+
+bool ViewTrackItem::titleEditRequested() const
+{
+    return m_titleEditRequested;
+}
+
+void ViewTrackItem::setTitleEditRequested(bool requested)
+{
+    if (m_titleEditRequested == requested) {
+        return;
+    }
+
+    m_titleEditRequested = requested;
+    emit titleEditRequestedChanged();
+}

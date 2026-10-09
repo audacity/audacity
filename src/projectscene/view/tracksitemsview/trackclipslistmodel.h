@@ -10,6 +10,7 @@
 #include "iprojectsceneconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "record/irecordcontroller.h"
+#include "trackedit/itracksviewrequestsservice.h"
 
 #include "trackitemslistmodel.h"
 #include "trackclipitem.h"
@@ -31,6 +32,7 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::ContextInject<context::IGlobalContext> globalContext { this };
     muse::ContextInject<au::record::IRecordController> recordController { this };
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
+    muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
 
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);
@@ -48,6 +50,7 @@ public:
     Q_INVOKABLE void handleClipRelease(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
+    Q_INVOKABLE void titleEditRequestHandled(const ClipKey& key);
 
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
@@ -74,6 +77,7 @@ private:
     void onReload() override;
 
     void update();
+    void updatePendingTitleEdit();
     void updateItemMetrics(ViewTrackItem* item) override;
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;

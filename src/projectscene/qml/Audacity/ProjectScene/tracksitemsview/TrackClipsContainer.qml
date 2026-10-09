@@ -357,6 +357,29 @@ TrackItemsContainer {
                                 property var itemData: loader.itemData
                                 property int index: loader.index
 
+                                readonly property bool titleEditRequested: Boolean(itemData) && itemData.titleEditRequested
+
+                                function startRequestedTitleEdit() {
+                                    if (!Boolean(itemData)) {
+                                        return
+                                    }
+
+                                    item.editTitle()
+                                    clipsModel.titleEditRequestHandled(itemData.key)
+                                }
+
+                                onTitleEditRequestedChanged: {
+                                    if (titleEditRequested) {
+                                        Qt.callLater(startRequestedTitleEdit)
+                                    }
+                                }
+
+                                Component.onCompleted: {
+                                    if (titleEditRequested) {
+                                        Qt.callLater(startRequestedTitleEdit)
+                                    }
+                                }
+
                                 context: root.context
                                 canvas: root.canvas
 
@@ -595,11 +618,6 @@ TrackItemsContainer {
 
                                 Connections {
                                     target: clipsModel
-                                    function onItemTitleEditRequested(key) {
-                                        if (key === item.itemData.key) {
-                                            item.editTitle()
-                                        }
-                                    }
                                     function onItemContextMenuOpenRequested(key) {
                                         if (key === item.itemData.key) {
                                             item.openContextMenu()
