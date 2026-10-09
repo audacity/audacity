@@ -16,104 +16,15 @@ using namespace muse::ui;
 
 namespace {
 const std::vector<CommandInfo> s_commandInfos = {
-    CommandInfo{
-        EFFECTS_REPEAT_LAST_EFFECT_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Repeat last effect"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Repeat last effect"),
-        InputSchema(),
-        Decoration()
-    },
-    CommandInfo{
-        EFFECTS_PLUGIN_MANAGER_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Plugin manager"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Plugin manager"),
-        InputSchema(),
-        Decoration()
-    },
-    CommandInfo{
-        EFFECTS_TOGGLE_VENDOR_UI_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("effects", "Use vendor UI"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("effects", "Toggle between vendor UI and fallback UI"),
-        InputSchema({
-                { "effectId", Arg(DataType::String, u"Effect identifier") },
-            }),
-        Decoration(rcommand::Checkable::Yes)
-    },
-    CommandInfo{
-        EFFECTS_PRESET_APPLY_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Apply preset"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Apply preset"),
-        InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
-                { "presetId", Arg(DataType::String, u"Preset identifier") },
-            }),
-        Decoration()
-    },
-    CommandInfo{
-        EFFECTS_PRESET_SAVE_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Save preset"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Save preset"),
-        InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
-                { "presetId", Arg(DataType::String, u"Preset identifier") },
-            }),
-        Decoration()
-    },
-    CommandInfo{
-        EFFECTS_PRESET_SAVE_AS_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Save preset as…"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Save preset as"),
-        InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
-            }),
-        Decoration()
-    },
-    CommandInfo{
-        EFFECTS_PRESET_DELETE_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Delete preset"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Delete preset"),
-        InputSchema({
-                { "effectId", Arg(DataType::String, u"Effect identifier") },
-                { "presetId", Arg(DataType::String, u"Preset identifier") },
-            }),
-        Decoration(IconCode::Code::DELETE_TANK)
-    },
-    CommandInfo{
-        EFFECTS_PRESET_IMPORT_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Import…"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Import preset"),
-        InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
-            }),
-        Decoration()
-    },
-    CommandInfo{
-        EFFECTS_PRESET_EXPORT_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "&Export…"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Export preset"),
-        InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
-            }),
-        Decoration()
-    },
+    makeCommandInfo<RepeatLastEffectCommand>(),
+    makeCommandInfo<PluginManagerCommand>(),
+    makeCommandInfo<ToggleVendorUiCommand>(),
+    makeCommandInfo<ApplyPresetCommand>(),
+    makeCommandInfo<SavePresetCommand>(),
+    makeCommandInfo<SavePresetAsCommand>(),
+    makeCommandInfo<DeletePresetCommand>(),
+    makeCommandInfo<ImportPresetCommand>(),
+    makeCommandInfo<ExportPresetCommand>(),
 };
 }
 

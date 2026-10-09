@@ -24,6 +24,6 @@ public:
     void init();
 
 private:
-    muse::Ret openTrackSpectrogramSettings(const muse::rcommand::Params& params);
+    muse::Ret openTrackSpectrogramSettings(int trackId);
 };
 }

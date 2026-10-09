@@ -61,13 +61,7 @@ private:
     muse::Ret applyEffect(const EffectId& effectId, const muse::rcommand::Params& params);
     muse::Ret repeatLastEffect();
 
-    muse::Ret applyPreset(const muse::rcommand::Params& params);
-    muse::Ret savePreset(const muse::rcommand::Params& params);
-    muse::Ret savePresetAs(const muse::rcommand::Params& params);
-    muse::Ret deletePreset(const muse::rcommand::Params& params);
-    muse::Ret importPreset(const muse::rcommand::Params& params);
-    muse::Ret exportPreset(const muse::rcommand::Params& params);
-    muse::Ret toggleVendorUI(const muse::rcommand::Params& params);
+    muse::Ret toggleVendorUI(const EffectId& effectId);
     muse::Ret openPluginManager();
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
