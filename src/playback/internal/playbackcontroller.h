@@ -7,6 +7,8 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/commandable.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/iuiactionsregister.h"
@@ -30,7 +32,7 @@
 namespace au::playback {
 class PlaybackUiActions;
 class PlaybackController : public IPlaybackController, public audio::IAudioStreamSuspender, public muse::actions::Actionable,
-    public muse::async::Asyncable, public muse::Contextable
+    public muse::rcommand::Commandable, public muse::async::Asyncable, public muse::Contextable
 {
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
@@ -126,51 +128,51 @@ private:
         PlayStopAndSetCursor, //!< stop and seek to the stop position while playing, so the next play continues from there; play when not
     };
 
-    void togglePlay(TogglePlayMode mode);
+    muse::Ret togglePlay(TogglePlayMode mode);
 
     void stopAndSeekToLastSeekTime();
     void stopAndSeekToPlaybackPosition();
 
-    void togglePlayPauseAction();
-    void togglePlayStopAction();
-    void togglePlayStopAndSetCursorAction();
-    void playSelectionAction();
+    muse::Ret togglePlayPauseAction();
+    muse::Ret togglePlayStopAction();
+    muse::Ret togglePlayStopAndSetCursorAction();
+    muse::Ret playSelectionAction();
     void doPlay();
-    void stopAction();
-    void playTracksAction(const muse::actions::ActionQuery& q);
-    void rewindToStartAction();
-    void rewindToEndAction();
-    void onSeekAction(const muse::actions::ActionQuery& q);
+    muse::Ret stopAction();
+    muse::Ret playTracksAction(const muse::rcommand::Params& params);
+    muse::Ret rewindToStartAction();
+    muse::Ret rewindToEndAction();
+    muse::Ret onSeekAction(const muse::rcommand::Params& params);
     void doSeek(const muse::secs_t secs, bool applyIfPlaying);
-    void onChangePlaybackRegionAction(const muse::actions::ActionQuery& q);
+    muse::Ret onChangePlaybackRegionAction(const muse::rcommand::Params& params);
     void doChangePlaybackRegion(const PlaybackRegion& region);
-    void pauseAction();
+    muse::Ret pauseAction();
     void doPause();
     void doResume();
     bool ensurePhysicalStreamStopped();
 
-    void togglePlayRepeats();
-    void toggleAutomaticallyPan();
-    void toggleMuteFocusedTrack();
-    void toggleSoloFocusedTrack();
-    void muteAllTracks();
-    void unmuteAllTracks();
-    void muteSelectedTracks();
-    void unmuteSelectedTracks();
+    muse::Ret togglePlayRepeats();
+    muse::Ret toggleAutomaticallyPan();
+    muse::Ret toggleMuteFocusedTrack();
+    muse::Ret toggleSoloFocusedTrack();
+    muse::Ret muteAllTracks();
+    muse::Ret unmuteAllTracks();
+    muse::Ret muteSelectedTracks();
+    muse::Ret unmuteSelectedTracks();
 
-    void setLoopRegionToSelection();
-    void setSelectionToLoop();
-    void setLoopRegionInOut();
-    void setSelectionFollowsLoopRegion();
+    muse::Ret setLoopRegionToSelection();
+    muse::Ret setSelectionToLoop();
+    muse::Ret setLoopRegionInOut();
+    muse::Ret setSelectionFollowsLoopRegion();
 
     void openPlaybackSetupDialog();
 
-    void setAudioApi(const muse::actions::ActionQuery& q);
-    void setAudioOutputDevice(const muse::actions::ActionQuery& q);
-    void setAudioInputDevice(const muse::actions::ActionQuery& q);
-    void setInputChannels(const muse::actions::ActionQuery& q);
-    void rescanAudioDevices();
-    void handleAudioConfigurationResult(const audio::ApplyResult& result, const muse::actions::ActionCode& actionCode);
+    muse::Ret setAudioApi(const muse::rcommand::Params& params);
+    muse::Ret setAudioOutputDevice(const muse::rcommand::Params& params);
+    muse::Ret setAudioInputDevice(const muse::rcommand::Params& params);
+    muse::Ret setInputChannels(const muse::rcommand::Params& params);
+    muse::Ret rescanAudioDevices();
+    muse::Ret handleAudioConfigurationResult(const audio::ApplyResult& result, const muse::actions::ActionCode& actionCode);
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
     void subscribeOnAudioParamsChanges();
@@ -197,6 +199,7 @@ private:
     muse::async::Notification m_isPlayingChanged;
     muse::async::Notification m_totalPlayTimeChanged;
     muse::async::Notification m_lastPlaybackSeekTimeChanged;
+    muse::async::Notification m_loopRegionChanged;
     muse::async::Notification m_currentTempoChanged;
     muse::async::Channel<uint32_t> m_tickPlayed;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;

@@ -3,8 +3,12 @@
 */
 #include "playbackcontroller.h"
 
+#include "framework/rcommand/actiontocommand.h"
+
 #include "record/recordcommands.h"
 
+#include "playbackuiactions.h"
+#include "../playbackcommands.h"
 #include "../playbacktypes.h"
 
 using namespace muse;
@@ -12,6 +16,7 @@ using namespace au::audio;
 using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;
+using namespace muse::rcommand;
 
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
 static const ActionQuery PLAYBACK_TOGGLE_PLAY_STOP_QUERY("action://playback/toggle-play-stop");
@@ -31,6 +36,19 @@ static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback
 
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
+static const ActionCode TOGGLE_LOOP_REGION_CODE("toggle-loop-region");
+static const ActionCode CLEAR_LOOP_REGION_CODE("clear-loop-region");
+static const ActionCode SET_LOOP_REGION_TO_SELECTION_CODE("set-loop-region-to-selection");
+static const ActionCode SET_SELECTION_TO_LOOP_CODE("set-selection-to-loop");
+static const ActionCode SET_LOOP_REGION_IN_OUT_CODE("set-loop-region-in-out");
+static const ActionCode TOGGLE_SELECTION_FOLLOWS_LOOP_REGION_CODE("toggle-selection-follows-loop-region");
+static const ActionCode RESCAN_DEVICES_CODE("rescan-devices");
+static const ActionCode TRACK_MUTE_CODE("track-mute");
+static const ActionCode TRACK_SOLO_CODE("track-solo");
+static const ActionCode MUTE_ALL_TRACKS_CODE("mute-all-tracks");
+static const ActionCode UNMUTE_ALL_TRACKS_CODE("unmute-all-tracks");
+static const ActionCode MUTE_TRACKS_CODE("mute-tracks");
+static const ActionCode UNMUTE_TRACKS_CODE("unmute-tracks");
 
 static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 
@@ -71,44 +89,98 @@ QString audioConfigurationMessage(const ApplyResult& result,
     }
     return message;
 }
+
+CommandQuery queryParamsConv(const Command& command, const ActionData& args)
+{
+    CommandQuery query(command);
+    if (args.empty()) {
+        return query;
+    }
+
+    const ActionQuery legacy(args.arg<std::string>(0));
+    query.setParams(legacy.params());
+    return query;
+}
 }
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY, this, &PlaybackController::togglePlayPauseAction);
-    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_QUERY, this, &PlaybackController::togglePlayStopAction);
-    dispatcher()->reg(this, PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY, this, &PlaybackController::togglePlayStopAndSetCursorAction);
-    dispatcher()->reg(this, PLAYBACK_PLAY_SELECTION_QUERY, this, &PlaybackController::playSelectionAction);
-    dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
-    dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
-    dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &PlaybackController::stopAction);
-    dispatcher()->reg(this, PLAYBACK_REWIND_START_QUERY, this, &PlaybackController::rewindToStartAction);
-    dispatcher()->reg(this, PLAYBACK_REWIND_END_QUERY, this, &PlaybackController::rewindToEndAction);
-    dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, this, &PlaybackController::onSeekAction);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAY_REGION_QUERY, this, &PlaybackController::onChangePlaybackRegionAction);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDevice);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannels);
+    auto cd = commandDispatcher();
+    cd->onRequest(this, PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND, [this]() { return togglePlayPauseAction(); });
+    cd->onRequest(this, PLAYBACK_TOGGLE_PLAY_STOP_COMMAND, [this]() { return togglePlayStopAction(); });
+    cd->onRequest(this, PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_COMMAND, [this]() { return togglePlayStopAndSetCursorAction(); });
+    cd->onRequest(this, PLAYBACK_PLAY_SELECTION_COMMAND, [this]() { return playSelectionAction(); });
+    cd->onRequest(this, PLAYBACK_PLAY_TRACKS_COMMAND, [this](const Params& params) { return playTracksAction(params); });
+    cd->onRequest(this, PLAYBACK_PAUSE_COMMAND, [this]() { return pauseAction(); });
+    cd->onRequest(this, PLAYBACK_STOP_COMMAND, [this]() { return stopAction(); });
+    cd->onRequest(this, PLAYBACK_REWIND_START_COMMAND, [this]() { return rewindToStartAction(); });
+    cd->onRequest(this, PLAYBACK_REWIND_END_COMMAND, [this]() { return rewindToEndAction(); });
+    cd->onRequest(this, PLAYBACK_SEEK_COMMAND, [this](const Params& params) { return onSeekAction(params); });
+    cd->onRequest(this, PLAYBACK_CHANGE_PLAY_REGION_COMMAND, [this](const Params& params) { return onChangePlaybackRegionAction(params); });
+    cd->onRequest(this, PLAYBACK_CHANGE_AUDIO_API_COMMAND, [this](const Params& params) { return setAudioApi(params); });
+    cd->onRequest(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND, [this](const Params& params) { return setAudioOutputDevice(params); });
+    cd->onRequest(this, PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND, [this](const Params& params) { return setAudioInputDevice(params); });
+    cd->onRequest(this, PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND, [this](const Params& params) { return setInputChannels(params); });
+    cd->onRequest(this, PLAYBACK_RESCAN_DEVICES_COMMAND, [this]() { return rescanAudioDevices(); });
 
-    dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
-    dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
+    cd->onRequest(this, PLAYBACK_TOGGLE_PLAY_REPEATS_COMMAND, [this]() { return togglePlayRepeats(); });
+    cd->onRequest(this, PLAYBACK_TOGGLE_AUTOMATIC_PAN_COMMAND, [this]() { return toggleAutomaticallyPan(); });
 
-    dispatcher()->reg(this, "toggle-loop-region", this, &PlaybackController::toggleLoopPlayback);
-    dispatcher()->reg(this, "clear-loop-region", this, &PlaybackController::clearLoopRegion);
-    dispatcher()->reg(this, "set-loop-region-to-selection", this, &PlaybackController::setLoopRegionToSelection);
-    dispatcher()->reg(this, "set-selection-to-loop", this, &PlaybackController::setSelectionToLoop);
-    dispatcher()->reg(this, "set-loop-region-in-out", this, &PlaybackController::setLoopRegionInOut);
-    dispatcher()->reg(this, "toggle-selection-follows-loop-region", this, &PlaybackController::setSelectionFollowsLoopRegion);
+    cd->onRequest(this, PLAYBACK_TOGGLE_LOOP_REGION_COMMAND, [this]() {
+        toggleLoopPlayback();
+        return make_ok();
+    });
+    cd->onRequest(this, PLAYBACK_CLEAR_LOOP_REGION_COMMAND, [this]() {
+        clearLoopRegion();
+        return make_ok();
+    });
+    cd->onRequest(this, PLAYBACK_SET_LOOP_REGION_TO_SELECTION_COMMAND, [this]() { return setLoopRegionToSelection(); });
+    cd->onRequest(this, PLAYBACK_SET_SELECTION_TO_LOOP_COMMAND, [this]() { return setSelectionToLoop(); });
+    cd->onRequest(this, PLAYBACK_SET_LOOP_REGION_IN_OUT_COMMAND, [this]() { return setLoopRegionInOut(); });
+    cd->onRequest(this, PLAYBACK_TOGGLE_SELECTION_FOLLOWS_LOOP_REGION_COMMAND, [this]() { return setSelectionFollowsLoopRegion(); });
 
-    dispatcher()->reg(this, "rescan-devices", this, &PlaybackController::rescanAudioDevices);
+    cd->onRequest(this, PLAYBACK_TOGGLE_MUTE_FOCUSED_TRACK_COMMAND, [this]() { return toggleMuteFocusedTrack(); });
+    cd->onRequest(this, PLAYBACK_TOGGLE_SOLO_FOCUSED_TRACK_COMMAND, [this]() { return toggleSoloFocusedTrack(); });
+    cd->onRequest(this, PLAYBACK_MUTE_ALL_TRACKS_COMMAND, [this]() { return muteAllTracks(); });
+    cd->onRequest(this, PLAYBACK_UNMUTE_ALL_TRACKS_COMMAND, [this]() { return unmuteAllTracks(); });
+    cd->onRequest(this, PLAYBACK_MUTE_SELECTED_TRACKS_COMMAND, [this]() { return muteSelectedTracks(); });
+    cd->onRequest(this, PLAYBACK_UNMUTE_SELECTED_TRACKS_COMMAND, [this]() { return unmuteSelectedTracks(); });
 
-    dispatcher()->reg(this, "track-mute", this, &PlaybackController::toggleMuteFocusedTrack);
-    dispatcher()->reg(this, "track-solo", this, &PlaybackController::toggleSoloFocusedTrack);
-    dispatcher()->reg(this, "mute-all-tracks", this, &PlaybackController::muteAllTracks);
-    dispatcher()->reg(this, "unmute-all-tracks", this, &PlaybackController::unmuteAllTracks);
-    dispatcher()->reg(this, "mute-tracks", this, &PlaybackController::muteSelectedTracks);
-    dispatcher()->reg(this, "unmute-tracks", this, &PlaybackController::unmuteSelectedTracks);
+    //! Note: This table won't be necessary after the actions to commands complete refactor.
+    //! It will be removed on https://github.com/audacity/audacity/issues/12321
+    static const std::vector<ActionToCommand> actionToCommand = {
+        { PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString(), PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND, {} },
+        { PLAYBACK_TOGGLE_PLAY_STOP_QUERY.toString(), PLAYBACK_TOGGLE_PLAY_STOP_COMMAND, {} },
+        { PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_QUERY.toString(), PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_COMMAND, {} },
+        { PLAYBACK_PLAY_SELECTION_QUERY.toString(), PLAYBACK_PLAY_SELECTION_COMMAND, {} },
+        { PLAYBACK_PLAY_TRACKS_QUERY.toString(), PLAYBACK_PLAY_TRACKS_COMMAND, queryParamsConv },
+        { PLAYBACK_PAUSE_QUERY.toString(), PLAYBACK_PAUSE_COMMAND, {} },
+        { PLAYBACK_STOP_QUERY.toString(), PLAYBACK_STOP_COMMAND, {} },
+        { PLAYBACK_REWIND_START_QUERY.toString(), PLAYBACK_REWIND_START_COMMAND, {} },
+        { PLAYBACK_REWIND_END_QUERY.toString(), PLAYBACK_REWIND_END_COMMAND, {} },
+        { PLAYBACK_SEEK_QUERY.toString(), PLAYBACK_SEEK_COMMAND, queryParamsConv },
+        { PLAYBACK_CHANGE_PLAY_REGION_QUERY.toString(), PLAYBACK_CHANGE_PLAY_REGION_COMMAND, queryParamsConv },
+        { PLAYBACK_CHANGE_AUDIO_API_QUERY.toString(), PLAYBACK_CHANGE_AUDIO_API_COMMAND, queryParamsConv },
+        { PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString(), PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND, queryParamsConv },
+        { PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString(), PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND, queryParamsConv },
+        { PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString(), PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND, queryParamsConv },
+        { REPEAT_CODE, PLAYBACK_TOGGLE_PLAY_REPEATS_COMMAND, {} },
+        { PAN_CODE, PLAYBACK_TOGGLE_AUTOMATIC_PAN_COMMAND, {} },
+        { TOGGLE_LOOP_REGION_CODE, PLAYBACK_TOGGLE_LOOP_REGION_COMMAND, {} },
+        { CLEAR_LOOP_REGION_CODE, PLAYBACK_CLEAR_LOOP_REGION_COMMAND, {} },
+        { SET_LOOP_REGION_TO_SELECTION_CODE, PLAYBACK_SET_LOOP_REGION_TO_SELECTION_COMMAND, {} },
+        { SET_SELECTION_TO_LOOP_CODE, PLAYBACK_SET_SELECTION_TO_LOOP_COMMAND, {} },
+        { SET_LOOP_REGION_IN_OUT_CODE, PLAYBACK_SET_LOOP_REGION_IN_OUT_COMMAND, {} },
+        { TOGGLE_SELECTION_FOLLOWS_LOOP_REGION_CODE, PLAYBACK_TOGGLE_SELECTION_FOLLOWS_LOOP_REGION_COMMAND, {} },
+        { RESCAN_DEVICES_CODE, PLAYBACK_RESCAN_DEVICES_COMMAND, {} },
+        { TRACK_MUTE_CODE, PLAYBACK_TOGGLE_MUTE_FOCUSED_TRACK_COMMAND, {} },
+        { TRACK_SOLO_CODE, PLAYBACK_TOGGLE_SOLO_FOCUSED_TRACK_COMMAND, {} },
+        { MUTE_ALL_TRACKS_CODE, PLAYBACK_MUTE_ALL_TRACKS_COMMAND, {} },
+        { UNMUTE_ALL_TRACKS_CODE, PLAYBACK_UNMUTE_ALL_TRACKS_COMMAND, {} },
+        { MUTE_TRACKS_CODE, PLAYBACK_MUTE_SELECTED_TRACKS_COMMAND, {} },
+        { UNMUTE_TRACKS_CODE, PLAYBACK_UNMUTE_SELECTED_TRACKS_COMMAND, {} },
+    };
+    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
@@ -127,14 +199,15 @@ void PlaybackController::init()
     });
 
     player()->loopRegionChanged().onNotify(this, [this](){
-        m_actionCheckedChanged.send("toggle-loop-region");
+        m_loopRegionChanged.notify();
+        m_actionCheckedChanged.send(TOGGLE_LOOP_REGION_CODE);
         if (playbackConfiguration()->selectionFollowsLoopRegion()) {
             setSelectionToLoop();
         }
     });
 
     playbackConfiguration()->selectionFollowsLoopRegionChanged().onNotify(this, [this]() {
-        m_actionCheckedChanged.send("toggle-selection-follows-loop-region");
+        m_actionCheckedChanged.send(TOGGLE_SELECTION_FOLLOWS_LOOP_REGION_CODE);
     });
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t) {
@@ -318,13 +391,12 @@ void PlaybackController::onPlaybackPositionChanged()
     }
 }
 
-void PlaybackController::togglePlayPauseAction()
+muse::Ret PlaybackController::togglePlayPauseAction()
 {
     //! NOTE: while recording, the play/pause button pauses the recorder so it stays a
     //! single action.
     if (!recordController()->isRecording()) {
-        togglePlay(TogglePlayMode::PlayPause);
-        return;
+        return togglePlay(TogglePlayMode::PlayPause);
     }
 
     if (recordController()->isLeadInRecording()) {
@@ -335,23 +407,25 @@ void PlaybackController::togglePlayPauseAction()
     } else {
         commandDispatcher()->dispatch(record::RECORD_PAUSE_COMMAND);
     }
+
+    return make_ok();
 }
 
-void PlaybackController::togglePlayStopAction()
+muse::Ret PlaybackController::togglePlayStopAction()
 {
-    togglePlay(TogglePlayMode::PlayStop);
+    return togglePlay(TogglePlayMode::PlayStop);
 }
 
-void PlaybackController::togglePlayStopAndSetCursorAction()
+muse::Ret PlaybackController::togglePlayStopAndSetCursorAction()
 {
-    togglePlay(TogglePlayMode::PlayStopAndSetCursor);
+    return togglePlay(TogglePlayMode::PlayStopAndSetCursor);
 }
 
-void PlaybackController::togglePlay(TogglePlayMode mode)
+muse::Ret PlaybackController::togglePlay(TogglePlayMode mode)
 {
     if (!isPlayAllowed()) {
         LOGW() << "playback not allowed";
-        return;
+        return make_ret(Ret::Code::Busy);
     }
 
     if (isPlaying()) {
@@ -367,12 +441,12 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
             break;
         }
 
-        return;
+        return make_ok();
     }
 
     if (isPaused()) {
         doResume();
-        return;
+        return make_ok();
     }
 
     if (isStopped()) {
@@ -388,6 +462,8 @@ void PlaybackController::togglePlay(TogglePlayMode mode)
 
         doPlay();
     }
+
+    return make_ok();
 }
 
 void PlaybackController::doPlay()
@@ -435,11 +511,11 @@ void PlaybackController::doPlay()
     }
 }
 
-void PlaybackController::playSelectionAction()
+muse::Ret PlaybackController::playSelectionAction()
 {
     if (!isPlayAllowed()) {
         LOGW() << "playback not allowed";
-        return;
+        return make_ret(Ret::Code::Busy);
     }
 
     if (!isStopped()) {
@@ -451,13 +527,13 @@ void PlaybackController::playSelectionAction()
 
     const PlaybackRegion selection = selectionPlaybackRegion();
     if (!selection.isValid()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     doChangePlaybackRegion(selection);
 
     if (!isPlaybackStartPositionValid()) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     if (isLoopRegionActive()) {
@@ -469,9 +545,10 @@ void PlaybackController::playSelectionAction()
     }
 
     m_isPlayingSelection = true;
+    return make_ok();
 }
 
-void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
+muse::Ret PlaybackController::playTracksAction(const Params&)
 {
     // this is not implemented yet
     /*
@@ -497,9 +574,10 @@ void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
         LOGE() << "playTracks failed: " << ret.toString();
     }
     */
+    return make_ret(Ret::Code::NotImplemented);
 }
 
-void PlaybackController::rewindToStartAction()
+muse::Ret PlaybackController::rewindToStartAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     stopAndSeekToLastSeekTime();
@@ -507,32 +585,34 @@ void PlaybackController::rewindToStartAction()
     doSeek(0.0, false);
 
     selectionController()->resetTimeSelection();
+    return make_ok();
 }
 
-void PlaybackController::rewindToEndAction()
+muse::Ret PlaybackController::rewindToEndAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     setLastPlaybackSeekTime(totalPlayTime());
     stopAndSeekToLastSeekTime();
 
     selectionController()->resetTimeSelection();
+    return make_ok();
 }
 
-void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
+muse::Ret PlaybackController::onSeekAction(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("seekTime")) {
-        return;
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_SEEK_TIME_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
     }
-    IF_ASSERT_FAILED(q.contains("triggerPlay")) {
-        return;
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_SEEK_TRIGGER_PLAY_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
     if (recordController()->isRecording()) {
-        return;
+        return make_ret(Ret::Code::Busy);
     }
 
-    const muse::secs_t secs = q.param("seekTime").toDouble();
-    const bool triggerPlay = q.param("triggerPlay").toBool();
+    const muse::secs_t secs = params.at(PLAYBACK_SEEK_TIME_PARAM).toDouble();
+    const bool triggerPlay = params.at(PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool();
 
     const bool isSeekStartPositionValid = isSeekPositionValid(secs);
 
@@ -542,17 +622,11 @@ void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
 
     doSeek(secs, triggerPlay);
 
-    if (triggerPlay) {
-        if (isPlaying()) {
-            return;
-        }
-
-        if (!isSeekStartPositionValid) {
-            return;
-        }
-
+    if (triggerPlay && !isPlaying() && isSeekStartPositionValid) {
         player()->play();
     }
+
+    return make_ok();
 }
 
 void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
@@ -568,19 +642,20 @@ void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
     m_isPlayingSelection = false;
 }
 
-void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionQuery& q)
+muse::Ret PlaybackController::onChangePlaybackRegionAction(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("start")) {
-        return;
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_PLAY_REGION_START_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
     }
-    IF_ASSERT_FAILED(q.contains("end")) {
-        return;
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_PLAY_REGION_END_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const muse::secs_t start = q.param("start").toDouble();
-    const muse::secs_t end = q.param("end").toDouble();
+    const muse::secs_t start = params.at(PLAYBACK_CHANGE_PLAY_REGION_START_PARAM).toDouble();
+    const muse::secs_t end = params.at(PLAYBACK_CHANGE_PLAY_REGION_END_PARAM).toDouble();
 
     doChangePlaybackRegion({ start, end });
+    return make_ok();
 }
 
 void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
@@ -596,9 +671,10 @@ void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
     }
 }
 
-void PlaybackController::pauseAction()
+muse::Ret PlaybackController::pauseAction()
 {
     doPause();
+    return make_ok();
 }
 
 void PlaybackController::doPause()
@@ -616,16 +692,17 @@ void PlaybackController::doPause()
     player()->pause();
 }
 
-void PlaybackController::stopAction()
+muse::Ret PlaybackController::stopAction()
 {
     //! NOTE: the stop button is a single action; the controller decides whether it
     //! stops the recorder or the player.
     if (recordController()->isRecording()) {
         commandDispatcher()->dispatch(record::RECORD_STOP_COMMAND);
-        return;
+        return make_ok();
     }
 
     stopAndSeekToLastSeekTime();
+    return make_ok();
 }
 
 void PlaybackController::stop()
@@ -726,70 +803,78 @@ void PlaybackController::doResume()
     player()->resume();
 }
 
-void PlaybackController::togglePlayRepeats()
+muse::Ret PlaybackController::togglePlayRepeats()
 {
     NOT_IMPLEMENTED;
 
     // configuration()->setIsPlayRepeatsEnabled(!playRepeatsEnabled);
 
     notifyActionCheckedChanged(REPEAT_CODE);
+    return make_ret(Ret::Code::NotImplemented);
 }
 
-void PlaybackController::toggleAutomaticallyPan()
+muse::Ret PlaybackController::toggleAutomaticallyPan()
 {
     NOT_IMPLEMENTED;
 
     // configuration()->setIsAutomaticallyPanEnabled(!panEnabled);
 
     notifyActionCheckedChanged(PAN_CODE);
+    return make_ret(Ret::Code::NotImplemented);
 }
 
-void PlaybackController::toggleMuteFocusedTrack()
+muse::Ret PlaybackController::toggleMuteFocusedTrack()
 {
     const trackedit::TrackId trackId = trackNavigationController()->focusedTrack();
     trackPlaybackControl()->setMuted(trackId, !trackPlaybackControl()->muted(trackId));
+    return make_ok();
 }
 
-void PlaybackController::toggleSoloFocusedTrack()
+muse::Ret PlaybackController::toggleSoloFocusedTrack()
 {
     const trackedit::TrackId trackId = trackNavigationController()->focusedTrack();
     trackPlaybackControl()->setSolo(trackId, !trackPlaybackControl()->solo(trackId));
+    return make_ok();
 }
 
-void PlaybackController::muteAllTracks()
+muse::Ret PlaybackController::muteAllTracks()
 {
     trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
     if (!project) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     trackPlaybackControl()->setMuted(project->trackIdList(), true);
+    return make_ok();
 }
 
-void PlaybackController::unmuteAllTracks()
+muse::Ret PlaybackController::unmuteAllTracks()
 {
     trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
     if (!project) {
-        return;
+        return make_ret(Ret::Code::NotSupported);
     }
 
     trackPlaybackControl()->setMuted(project->trackIdList(), false);
+    return make_ok();
 }
 
-void PlaybackController::muteSelectedTracks()
+muse::Ret PlaybackController::muteSelectedTracks()
 {
     trackPlaybackControl()->setMuted(selectionController()->selectedTracks(), true);
+    return make_ok();
 }
 
-void PlaybackController::unmuteSelectedTracks()
+muse::Ret PlaybackController::unmuteSelectedTracks()
 {
     trackPlaybackControl()->setMuted(selectionController()->selectedTracks(), false);
+    return make_ok();
 }
 
 void PlaybackController::toggleLoopPlayback()
 {
     player()->setLoopRegionActive(!isLoopRegionActive());
-    notifyActionCheckedChanged("toggle-loop-region");
+    notifyActionCheckedChanged(TOGGLE_LOOP_REGION_CODE);
 }
 
 PlaybackRegion PlaybackController::loopRegion() const
@@ -850,10 +935,10 @@ bool PlaybackController::isLoopRegionClear() const
 
 muse::async::Notification PlaybackController::loopRegionChanged() const
 {
-    return player()->loopRegionChanged();
+    return m_loopRegionChanged;
 }
 
-void PlaybackController::setLoopRegionToSelection()
+muse::Ret PlaybackController::setLoopRegionToSelection()
 {
     double start = 0;
     double end = 0;
@@ -869,14 +954,15 @@ void PlaybackController::setLoopRegionToSelection()
             end = itemEnd.value();
         } else {
             player()->clearLoopRegion();
-            return;
+            return make_ok();
         }
     }
 
     player()->setLoopRegion({ start, end });
+    return make_ok();
 }
 
-void PlaybackController::setSelectionToLoop()
+muse::Ret PlaybackController::setSelectionToLoop()
 {
     PlaybackRegion loopRegion = player()->loopRegion();
 
@@ -886,9 +972,10 @@ void PlaybackController::setSelectionToLoop()
     selectionController()->setSelectedTracks(tracks, false);
     selectionController()->setDataSelectedStartTime(loopRegion.start, false);
     selectionController()->setDataSelectedEndTime(loopRegion.end, true);
+    return make_ok();
 }
 
-void PlaybackController::setLoopRegionInOut()
+muse::Ret PlaybackController::setLoopRegionInOut()
 {
     PlaybackRegion region = player()->loopRegion();
 
@@ -899,114 +986,120 @@ void PlaybackController::setLoopRegionInOut()
 
     RetVal<Val> rv = interactive()->openSync(loopRegionInOutUri);
     if (!rv.ret.success()) {
-        return;
+        return make_ret(Ret::Code::Cancel);
     }
 
     QVariantMap vals = rv.val.toQVariant().toMap();
 
     player()->setLoopRegion({ vals["start"].toDouble(), vals["end"].toDouble() });
+    return make_ok();
 }
 
-void PlaybackController::setSelectionFollowsLoopRegion()
+muse::Ret PlaybackController::setSelectionFollowsLoopRegion()
 {
     playbackConfiguration()->setSelectionFollowsLoopRegion(!playbackConfiguration()->selectionFollowsLoopRegion());
+    return make_ok();
 }
 
-void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
+muse::Ret PlaybackController::setAudioApi(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("api_index")) {
-        return;
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM)) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const int index = q.param("api_index").toInt();
+    const int index = params.at(PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM).toInt();
     const auto values = audioDriverController()->apis();
     if (index < 0 || static_cast<size_t>(index) >= values.size()) {
-        return;
+        return make_ret(Ret::Code::BadArgs);
     }
     AudioConfigurationChange change;
     change.api = values[index];
-    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
-                                   PLAYBACK_CHANGE_AUDIO_API_QUERY.toString());
+    return handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
+                                          PLAYBACK_CHANGE_AUDIO_API_QUERY.toString());
 }
 
-void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
+muse::Ret PlaybackController::setAudioOutputDevice(const Params& params)
 {
     AudioConfigurationChange change;
-    if (q.param("is_default_device", muse::Val(false)).toBool()) {
+    if (params.at(PLAYBACK_CHANGE_PLAYBACK_DEVICE_IS_DEFAULT_PARAM, muse::Val(false)).toBool()) {
         change.outputDevice = AudioDeviceSelection {};
     } else {
-        IF_ASSERT_FAILED(q.contains("device_index")) {
-            return;
+        IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM)) {
+            return make_ret(Ret::Code::BadArgs);
         }
 
-        const int index = q.param("device_index").toInt();
+        const int index = params.at(PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM).toInt();
         const auto values = audioDriverController()->outputDevices();
         if (index < 0 || static_cast<size_t>(index) >= values.size()) {
-            return;
+            return make_ret(Ret::Code::BadArgs);
         }
         change.outputDevice = values[index];
     }
-    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
-                                   PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString());
+    return handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
+                                          PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString());
 }
 
-void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
+muse::Ret PlaybackController::setAudioInputDevice(const Params& params)
 {
     AudioConfigurationChange change;
-    if (q.param("is_default_device", muse::Val(false)).toBool()) {
+    if (params.at(PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM, muse::Val(false)).toBool()) {
         change.inputDevice = AudioDeviceSelection {};
     } else {
-        IF_ASSERT_FAILED(q.contains("device_index")) {
-            return;
+        IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM)) {
+            return make_ret(Ret::Code::BadArgs);
         }
 
-        const int index = q.param("device_index").toInt();
+        const int index = params.at(PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM).toInt();
         const auto values = audioDriverController()->inputDevices();
         if (index < 0 || static_cast<size_t>(index) >= values.size()) {
-            return;
+            return make_ret(Ret::Code::BadArgs);
         }
         change.inputDevice = values[index];
     }
-    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
-                                   PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString());
+    return handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
+                                          PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString());
 }
 
-void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
+muse::Ret PlaybackController::setInputChannels(const Params& params)
 {
-    IF_ASSERT_FAILED(q.contains("input-channels_index")) {
-        return;
+    IF_ASSERT_FAILED(params.contains("input-channels_index")) {
+        return make_ret(Ret::Code::BadArgs);
     }
 
-    const int channels = q.param("input-channels_index").toInt();
+    const int channels = params.at("input-channels_index").toInt();
     AudioConfigurationChange change;
     change.inputChannels = channels;
-    handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
-                                   PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString());
+    return handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),
+                                          PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString());
 }
 
-void PlaybackController::rescanAudioDevices()
+muse::Ret PlaybackController::rescanAudioDevices()
 {
     const auto result = audioDriverController()->rescan();
-    if (!result.succeeded() && interactive()) {
-        const auto message = audioConfigurationMessage(
-            result,
-            audioConfigurationFailureMessage(result.status),
-            muse::qtrc("playback", "The previous audio state could not be restored."));
-        interactive()->error(muse::qtrc("playback", "Unable to rescan audio devices").toStdString(),
-                             message.toStdString());
-    } else {
-        const auto notice = audioConfigurationMessage(
-            result,
-            {},
-            muse::qtrc("playback", "The audio stream could not be restored after rescanning audio devices."));
-        if (!notice.isEmpty() && interactive()) {
-            interactive()->warning(muse::qtrc("playback", "Audio devices").toStdString(),
-                                   notice.toStdString());
+    if (!result.succeeded()) {
+        if (interactive()) {
+            const auto message = audioConfigurationMessage(
+                result,
+                audioConfigurationFailureMessage(result.status),
+                muse::qtrc("playback", "The previous audio state could not be restored."));
+            interactive()->error(muse::qtrc("playback", "Unable to rescan audio devices").toStdString(),
+                                 message.toStdString());
         }
+        return make_ret(Ret::Code::UnknownError);
     }
+
+    const auto notice = audioConfigurationMessage(
+        result,
+        {},
+        muse::qtrc("playback", "The audio stream could not be restored after rescanning audio devices."));
+    if (!notice.isEmpty() && interactive()) {
+        interactive()->warning(muse::qtrc("playback", "Audio devices").toStdString(),
+                               notice.toStdString());
+    }
+    return make_ok();
 }
 
-void PlaybackController::handleAudioConfigurationResult(const ApplyResult& result, const ActionCode& actionCode)
+muse::Ret PlaybackController::handleAudioConfigurationResult(const ApplyResult& result, const ActionCode& actionCode)
 {
     if (!result.succeeded()) {
         // Restore the check state optimistically changed by the menu.
@@ -1019,7 +1112,7 @@ void PlaybackController::handleAudioConfigurationResult(const ApplyResult& resul
             interactive()->error(muse::qtrc("playback", "Unable to change audio settings").toStdString(),
                                  message.toStdString());
         }
-        return;
+        return make_ret(Ret::Code::UnknownError);
     }
 
     const auto notice = audioConfigurationMessage(
@@ -1030,6 +1123,7 @@ void PlaybackController::handleAudioConfigurationResult(const ApplyResult& resul
         interactive()->warning(muse::qtrc("playback", "Audio settings").toStdString(),
                                notice.toStdString());
     }
+    return make_ok();
 }
 
 void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -1090,8 +1184,8 @@ muse::secs_t PlaybackController::playbackPosition() const
 bool PlaybackController::actionChecked(const ActionCode& actionCode) const
 {
     QMap<std::string, bool> isChecked {
-        { "toggle-loop-region", isLoopRegionActive() },
-        { "toggle-selection-follows-loop-region", playbackConfiguration()->selectionFollowsLoopRegion() }
+        { TOGGLE_LOOP_REGION_CODE, isLoopRegionActive() },
+        { TOGGLE_SELECTION_FOLLOWS_LOOP_REGION_CODE, playbackConfiguration()->selectionFollowsLoopRegion() }
     };
 
     return isChecked[actionCode];
