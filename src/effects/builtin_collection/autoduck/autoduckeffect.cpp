@@ -2,35 +2,38 @@
 
   Audacity: A Digital Audio Editor
 
-  AutoDuckBase.cpp
+  autoduckeffect.cpp
 
   Markus Meyer
 
 *******************************************************************//**
 
-\class AutoDuckBase
+\class AutoDuckEffect
 \brief Implements the Auto Ducking effect
 
 \class AutoDuckRegion
 \brief a struct that holds a start and end time.
 
 *******************************************************************/
-#include "AutoDuckBase.h"
-#include "au3-basic-ui/BasicUI.h"
+#include "autoduckeffect.h"
+
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-wave-track/TimeStretching.h"
 #include "au3-exceptions/UserException.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+
 #include <cmath>
 
-const ComponentInterfaceSymbol AutoDuckBase::Symbol { TranslatableString("builtin-effects", "Auto Duck") };
+using namespace au::effects;
 
-const EffectParameterMethods& AutoDuckBase::Parameters() const
+const ComponentInterfaceSymbol AutoDuckEffect::Symbol { "Auto Duck", TranslatableString("effects-autoduck", "Auto duck") };
+
+const EffectParameterMethods& AutoDuckEffect::Parameters() const
 {
     static CapturedParameters<
-        AutoDuckBase, DuckAmountDb, InnerFadeDownLen, InnerFadeUpLen,
+        AutoDuckEffect, DuckAmountDb, InnerFadeDownLen, InnerFadeUpLen,
         OuterFadeDownLen, OuterFadeUpLen, ThresholdDb, MaximumPause>
     parameters;
     return parameters;
@@ -60,118 +63,143 @@ struct AutoDuckRegion
     double t1;
 };
 
-AutoDuckBase::AutoDuckBase()
+AutoDuckEffect::AutoDuckEffect()
 {
     Parameters().Reset(*this);
     SetLinearEffectFlag(true);
 }
 
-AutoDuckBase::~AutoDuckBase()
+AutoDuckEffect::~AutoDuckEffect()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol AutoDuckBase::GetSymbol() const
+ComponentInterfaceSymbol AutoDuckEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString AutoDuckBase::GetDescription() const
+TranslatableString AutoDuckEffect::GetDescription() const
 {
-    return TranslatableString("builtin-effects", "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level");
+    return TranslatableString("effects-autoduck",
+                              "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level");
 }
 
-ManualPageID AutoDuckBase::ManualPage() const
+ManualPageID AutoDuckEffect::ManualPage() const
 {
     return L"Auto_Duck";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType AutoDuckBase::GetType() const
+::EffectType AutoDuckEffect::GetType() const
 {
     return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool AutoDuckBase::Init()
+namespace {
+bool isIn(::TrackId id, const std::vector<AutoDuckEffect::ControlTrackCandidate>& candidates)
 {
-    mControlTrack = nullptr;
+    return std::ranges::any_of(candidates, [id](const AutoDuckEffect::ControlTrackCandidate& c) { return c.id == id; });
+}
+}
 
-    // Find the control track, which is the non-selected wave track immediately
-    // after the last selected wave track.  Fail if there is no such track or if
-    // any selected track is not a wave track.
+bool AutoDuckEffect::Init()
+{
+    // Any wave track that is not processed may serve as control track. The
+    // default is AU3's choice, i.e., the non-selected wave track immediately
+    // after the last selected wave track.
+    mControlTrackCandidates.clear();
+    std::optional<::TrackId> waveTrackJustBelowSelection;
     bool lastWasSelectedWaveTrack = false;
-    const WaveTrack* controlTrackCandidate = nullptr;
-    for (auto t : *inputTracks()) {
-        if (lastWasSelectedWaveTrack && !t->GetSelected()) {
-            // This could be the control track, so remember it
-            controlTrackCandidate = dynamic_cast<const WaveTrack*>(t);
-        }
-
-        lastWasSelectedWaveTrack = false;
+    for (const Track* t : *inputTracks()) {
+        const auto waveTrack = dynamic_cast<const WaveTrack*>(t);
         if (t->GetSelected()) {
-            bool ok = t->TypeSwitch<bool>(
-                [&](const WaveTrack&) {
-                lastWasSelectedWaveTrack = true;
-                controlTrackCandidate = nullptr;
-                return true;
-            },
-                [&](const Track&) {
-                using namespace BasicUI;
-                ShowMessageBox(
-                    /*: Auto duck is the name of an effect that 'ducks'
-                     (reduces the volume) of the audio automatically when there is
-                     sound on another track.  Not as in 'Donald-Duck'!*/
-                    TranslatableString("builtin-effects", "You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
-                    MessageBoxOptions {}.IconStyle(Icon::Error));
-                return false;
-            });
-            if (!ok) {
-                return false;
+            lastWasSelectedWaveTrack = waveTrack != nullptr;
+            if (waveTrack) {
+                waveTrackJustBelowSelection.reset();
+            }
+            continue;
+        }
+        if (waveTrack) {
+            mControlTrackCandidates.push_back({ waveTrack->GetId(), waveTrack->GetName().ToStdString() });
+            if (lastWasSelectedWaveTrack) {
+                waveTrackJustBelowSelection = waveTrack->GetId();
             }
         }
+        lastWasSelectedWaveTrack = false;
     }
 
-    if (!controlTrackCandidate) {
-        using namespace BasicUI;
-        ShowMessageBox(
-            /*: Auto duck is the name of an effect that 'ducks' (reduces
-             the volume) of the audio automatically when there is sound on another
-             track.  Not as in 'Donald-Duck'!*/
-            TranslatableString("builtin-effects", "Auto Duck needs a control track which must be placed below the selected track(s)."),
-            MessageBoxOptions {}.IconStyle(Icon::Error));
-        return false;
+    if (!mControlTrackId || !isIn(*mControlTrackId, mControlTrackCandidates)) {
+        // User hasn't made a choice or it doesn't apply anymore.
+        if (waveTrackJustBelowSelection) {
+            mControlTrackId = waveTrackJustBelowSelection;
+        } else if (!mControlTrackCandidates.empty()) {
+            mControlTrackId = mControlTrackCandidates.front().id;
+        } else {
+            mControlTrackId.reset();
+        }
     }
 
-    mControlTrack = controlTrackCandidate;
+    // Do not fail if there is no control track: the dialog tells the user.
     return true;
 }
 
-bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
+const std::vector<AutoDuckEffect::ControlTrackCandidate>& AutoDuckEffect::ControlTrackCandidates() const
 {
-    if (GetNumWaveTracks() == 0 || !mControlTrack) {
+    return mControlTrackCandidates;
+}
+
+std::optional<::TrackId> AutoDuckEffect::ControlTrackId() const
+{
+    return mControlTrackId;
+}
+
+void AutoDuckEffect::SetControlTrackId(::TrackId id)
+{
+    mControlTrackId = id;
+}
+
+const WaveTrack* AutoDuckEffect::FindControlTrack() const
+{
+    if (!mControlTrackId || !inputTracks()) {
+        return nullptr;
+    }
+    // During preview, inputTracks() only contains the preview tracks, but they
+    // share the owning project.
+    const auto project = inputTracks()->GetOwner();
+    if (!project) {
+        return nullptr;
+    }
+    return dynamic_cast<const WaveTrack*>(TrackList::Get(*project).FindById(*mControlTrackId));
+}
+
+bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
+{
+    const WaveTrack* controlTrack = FindControlTrack();
+    if (GetNumWaveTracks() == 0 || !controlTrack) {
         return false;
     }
 
     bool cancel = false;
 
-    auto start = mControlTrack->TimeToLongSamples(mT0 + mOuterFadeDownLen);
-    auto end = mControlTrack->TimeToLongSamples(mT1 - mOuterFadeUpLen);
+    const auto controlTrackStart = controlTrack->TimeToLongSamples(mT0 + mOuterFadeDownLen);
+    const auto controlTrackEnd = controlTrack->TimeToLongSamples(mT1 - mOuterFadeUpLen);
 
-    if (end <= start) {
+    if (controlTrackEnd <= controlTrackStart) {
         return false;
     }
 
     WaveTrack::Holder pFirstTrack;
-    auto pControlTrack = mControlTrack;
+    auto pControlTrack = controlTrack;
     // If there is any stretch in the control track, substitute a temporary
     // rendering before trying to use GetFloats
     {
-        const auto t0 = pControlTrack->LongSamplesToTime(start);
-        const auto t1 = pControlTrack->LongSamplesToTime(end);
+        const auto t0 = pControlTrack->LongSamplesToTime(controlTrackStart);
+        const auto t1 = pControlTrack->LongSamplesToTime(controlTrackEnd);
         if (TimeStretching::HasPitchOrSpeed(*pControlTrack, t0, t1)) {
             pFirstTrack = pControlTrack->Duplicate()->SharedPointer<WaveTrack>();
             if (pFirstTrack) {
@@ -181,7 +209,7 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
                         { { t0, t1 } }, reportProgress);
                 },
                     TimeStretching::defaultStretchRenderingTitle,
-                    TranslatableString("builtin-effects", "Rendering Control-Track Time-Stretched Audio"));
+                    TranslatableString("effects-autoduck", "Rendering Control-Track Time-Stretched Audio"));
                 pControlTrack = pFirstTrack.get();
             }
         }
@@ -207,7 +235,7 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
     double rmsSum = 0;
     // to make the progress bar appear more natural, we first look for all
     // duck regions and apply them all at once afterwards
-    std::vector<AutoDuckRegion> regions;
+    std::vector<AutoDuckRegion> processedTracksRegions;
     bool inDuckRegion = false;
     {
         Floats rmsWindow { kRMSWindowSize, true };
@@ -218,12 +246,12 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
         double duckRegionStart = 0;
         sampleCount curSamplesPause = 0;
 
-        auto pos = start;
+        auto pos = controlTrackStart;
 
         const auto pControlChannel = *pControlTrack->Channels().begin();
-        while (pos < end)
+        while (pos < controlTrackEnd)
         {
-            const auto len = limitSampleBufferSize(kBufSize, end - pos);
+            const auto len = limitSampleBufferSize(kBufSize, controlTrackEnd - pos);
 
             pControlChannel->GetFloats(buf.get(), pos, len);
 
@@ -258,13 +286,10 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
 
                     if (curSamplesPause >= minSamplesPause) {
                         // do the actual duck fade and reset all values
-                        double duckRegionEnd
-                            =pControlTrack->LongSamplesToTime(i - curSamplesPause);
-
-                        regions.push_back(AutoDuckRegion(
-                                              duckRegionStart - mOuterFadeDownLen,
-                                              duckRegionEnd + mOuterFadeUpLen));
-
+                        double duckRegionEnd = pControlTrack->LongSamplesToTime(i - curSamplesPause);
+                        processedTracksRegions.push_back(AutoDuckRegion(
+                                                             duckRegionStart - mOuterFadeDownLen,
+                                                             duckRegionEnd + mOuterFadeUpLen));
                         inDuckRegion = false;
                     }
                 }
@@ -273,7 +298,7 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
             pos += len;
 
             if (TotalProgress(
-                    (pos - start).as_double() / (end - start).as_double()
+                    (pos - controlTrackStart).as_double() / (controlTrackEnd - controlTrackStart).as_double()
                     / (GetNumWaveTracks() + 1))) {
                 cancel = true;
                 break;
@@ -282,11 +307,10 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
 
         // apply last duck fade, if any
         if (inDuckRegion) {
-            double duckRegionEnd
-                =pControlTrack->LongSamplesToTime(end - curSamplesPause);
-            regions.push_back(AutoDuckRegion(
-                                  duckRegionStart - mOuterFadeDownLen,
-                                  duckRegionEnd + mOuterFadeUpLen));
+            double duckRegionEnd = pControlTrack->LongSamplesToTime(controlTrackEnd - curSamplesPause);
+            processedTracksRegions.push_back(AutoDuckRegion(
+                                                 duckRegionStart - mOuterFadeDownLen,
+                                                 duckRegionEnd + mOuterFadeUpLen));
         }
     }
 
@@ -297,8 +321,8 @@ bool AutoDuckBase::Process(EffectInstance&, EffectSettings&)
 
         for (auto iterTrack : outputs.Get().Selected<WaveTrack>()) {
             for (const auto pChannel : iterTrack->Channels()) {
-                for (size_t i = 0; i < regions.size(); ++i) {
-                    const AutoDuckRegion& region = regions[i];
+                for (size_t i = 0; i < processedTracksRegions.size(); ++i) {
+                    const AutoDuckRegion& region = processedTracksRegions[i];
                     if (ApplyDuckFade(trackNum++, *pChannel, region.t0, region.t1)) {
                         cancel = true;
                         goto done;
@@ -320,10 +344,10 @@ done:
     return !cancel;
 }
 
-// AutoDuckBase implementation
+// AutoDuckEffect implementation
 
 // this currently does an exponential fade
-bool AutoDuckBase::ApplyDuckFade(
+bool AutoDuckEffect::ApplyDuckFade(
     int trackNum, WaveChannel& track, double t0, double t1)
 {
     bool cancel = false;

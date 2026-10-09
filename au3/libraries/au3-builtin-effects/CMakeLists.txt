@@ -7,8 +7,8 @@ set( TARGET au3-builtin-effects )
 set( SOURCES
 #   AmplifyBase.cpp
 #   AmplifyBase.h
-   AutoDuckBase.cpp
-   AutoDuckBase.h
+#   AutoDuckBase.cpp
+#   AutoDuckBase.h
    BassTrebleBase.cpp
    BassTrebleBase.h
    ChangePitchBase.cpp
