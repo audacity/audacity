@@ -8,6 +8,8 @@ qt_add_qml_module(appshell_qml
         aboutmodel.h
         appmenumodel.cpp
         appmenumodel.h
+        autorecoverymodel.cpp
+        autorecoverymodel.h
         DevTools/Settings/settingslistmodel.cpp
         DevTools/Settings/settingslistmodel.h
         DevTools/Table/tabletestsmodel.cpp
@@ -44,6 +46,7 @@ qt_add_qml_module(appshell_qml
         AboutDialogPrivacyTab.qml
         AlphaWelcomePopup.qml
         AppWindow.qml
+        AutoRecoveryDialog.qml
         DevTools/CrashHandler/CrashHandlerDevTools.qml
         DevTools/DevToolsMenu.qml
         DevTools/DevToolsPage.qml
