@@ -131,6 +131,15 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action_description", "Snapping"),
              IconCode::Code::MAGNET
              ),
+    UiAction("video-thumbnail",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Video"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Show the video in the toolbar"),
+             IconCode::Code::EYE_OPEN
+             ),
     UiAction("minutes-seconds-ruler",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -466,6 +475,9 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "playback-time-signature", false },
             { "", true },
             { "snap", true },
+            { "", true },
+            // Off by default: it is only meaningful once a video is attached.
+            { "video-thumbnail", false },
             { "", true },
             { "action://record/level", true },
             { "action://playback/level", true }

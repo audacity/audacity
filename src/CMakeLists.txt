@@ -67,6 +67,10 @@ if (AU_BUILD_EFFECTS_MODULE)
     add_subdirectory(effects)
 endif()
 
+if (AU_BUILD_VIDEO_MODULE)
+    add_subdirectory(video)
+endif()
+
 add_subdirectory(importexport)
 
 add_subdirectory(uicomponents)

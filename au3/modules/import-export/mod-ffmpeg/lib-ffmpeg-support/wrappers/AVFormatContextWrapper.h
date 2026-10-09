@@ -177,6 +177,14 @@ protected:
 
     std::unique_ptr<AVIOContextWrapper> mAVIOContext;
 
+    //! Whether avformat_open_input has taken ownership of the context. An
+    //! input context has to be torn down with avformat_close_input, which
+    //! runs the demuxer's own read_close hook; avformat_free_context alone
+    //! frees the private data block but not what the demuxer allocated
+    //! inside it. An output context was never opened by libavformat and is
+    //! still freed the plain way.
+    bool mIsInputContext { false };
+
     StreamsList mStreams;
     std::unique_ptr<AVInputFormatWrapper> mInputFormat;
     std::unique_ptr<AVOutputFormatWrapper> mOutputFormat;

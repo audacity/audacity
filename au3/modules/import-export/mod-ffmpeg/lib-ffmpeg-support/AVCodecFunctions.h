@@ -53,6 +53,10 @@ struct FFMPEG_SUPPORT_API AVCodecFunctions
     // New API for decoding and encoding. Audacity will preffer it when available.
     int (*avcodec_send_packet)(AVCodecContext* avctx, const AVPacket* avpkt) = nullptr;
     int (*avcodec_receive_frame)(AVCodecContext* avctx, AVFrame* frame) = nullptr;
+    //! Needed to discard decoder state after a seek. Tolerated when absent:
+    //! the video backend rebuilds the codec context instead.
+    void (*avcodec_flush_buffers)(AVCodecContext* avctx) = nullptr;
+
     int (*avcodec_send_frame)(AVCodecContext* avctx, const AVFrame* frame) = nullptr;
     int (*avcodec_receive_packet)(AVCodecContext* avctx, AVPacket* avpkt) = nullptr;
 };
