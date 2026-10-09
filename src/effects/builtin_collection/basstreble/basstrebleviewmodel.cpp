@@ -39,7 +39,12 @@ void BassTrebleViewModel::doReload()
                                     bs.mBass,
                                     BassTrebleEffect::Bass.min,
                                     BassTrebleEffect::Bass.max,
-                                    [](BassTrebleSettings& settings, double v) { settings.mBass = v; }
+                                    [](BassTrebleSettings& settings, double v) {
+        if (settings.mLink) {
+            settings.mGain = std::clamp(settings.mGain - (v - settings.mBass) / 2, BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
+        }
+        settings.mBass = v;
+    }
                                     );
 
     m_paramsList["Treble"] = makeItem("Treble",
@@ -48,7 +53,13 @@ void BassTrebleViewModel::doReload()
                                       bs.mTreble,
                                       BassTrebleEffect::Treble.min,
                                       BassTrebleEffect::Treble.max,
-                                      [](BassTrebleSettings& settings, double v) { settings.mTreble = v; }
+                                      [](BassTrebleSettings& settings, double v) {
+        if (settings.mLink) {
+            settings.mGain = std::clamp(settings.mGain - (v - settings.mTreble) / 2, BassTrebleEffect::Gain.min,
+                                        BassTrebleEffect::Gain.max);
+        }
+        settings.mTreble = v;
+    }
                                       );
 
     m_paramsList["Gain"] = makeItem("Gain",
