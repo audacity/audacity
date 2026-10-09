@@ -82,6 +82,12 @@ void TrackNavigationController::init()
 
     m_selectionStart = std::nullopt;
 
+    //! NOTE Undo and redo recreate labels under new ids and can remove the focused item altogether,
+    //! and this receiver runs before the selection is re-published from the restored project
+    projectHistory()->historyChanged().onReceive(this, [this](HistoryEvent) {
+        revalidateFocusedItem();
+    });
+
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         muse::async::Async::call(this, [this]() {
             ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -144,8 +150,12 @@ TrackFocus TrackNavigationController::focus() const
     return m_focus;
 }
 
-void TrackNavigationController::setFocus(const TrackFocus& focus, bool highlight)
+void TrackNavigationController::setFocus(const TrackFocus& requested, bool highlight)
 {
+    //! NOTE The navigation controls lag behind the project, so a control can still name an
+    //! item that has moved away; such a request focuses the item's track instead
+    const TrackFocus focus = itemExists(requested) ? requested : TrackFocus::track(requested.trackId);
+
     if (m_focus == focus) {
         return;
     }
@@ -194,11 +204,30 @@ bool TrackNavigationController::isFocusedItemValid() const
 bool TrackNavigationController::isFocusedItemLabel() const
 {
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return false;
+    const std::optional<Track> track = prj ? prj->track(m_focus.trackId) : std::nullopt;
+    return track.has_value() && track->type == TrackType::Label;
+}
+
+ItemKeys TrackNavigationController::focusedItemGroup() const
+{
+    const TrackItemKey key = focusedItemKey();
+    const int64_t groupId = trackeditInteraction()->itemGroupId(key);
+    if (groupId != -1) {
+        return trackeditInteraction()->itemsInGroup(groupId);
     }
 
-    return prj->track(m_focus.trackId)->type == TrackType::Label;
+    return isFocusedItemLabel() ? ItemKeys { {}, { key } } : ItemKeys { { key }, {} };
+}
+
+bool TrackNavigationController::isSelected(const ItemKeys& items) const
+{
+    const ClipKeyList selectedClips = selectionController()->selectedClips();
+    const LabelKeyList selectedLabels = selectionController()->selectedLabels();
+    return std::all_of(items.clips.begin(), items.clips.end(), [&selectedClips](const ClipKey& key) {
+        return muse::contains(selectedClips, key);
+    }) && std::all_of(items.labels.begin(), items.labels.end(), [&selectedLabels](const LabelKey& key) {
+        return muse::contains(selectedLabels, key);
+    });
 }
 
 TrackItemKeyList TrackNavigationController::sortedItemsKeys(const TrackId& trackId) const
@@ -590,21 +619,9 @@ void TrackNavigationController::replaceSelection()
     bool isSelect = false;
 
     if (!isTrackPanel) {
-        if (isFocusedItemLabel()) {
-            LabelKeyList selectedLabels = selectionController()->selectedLabels();
-            isSelect = !muse::contains(selectedLabels, focusedKey);
-            selectionController()->setSelectedLabels(isSelect ? LabelKeyList { focusedKey } : LabelKeyList {});
-
-            //! reset clips
-            selectionController()->setSelectedClips({ });
-        } else {
-            ClipKeyList selectedClips = selectionController()->selectedClips();
-            isSelect = !muse::contains(selectedClips, focusedKey);
-            selectionController()->setSelectedClips(isSelect ? ClipKeyList { focusedKey } : ClipKeyList {});
-
-            //! reset labels
-            selectionController()->setSelectedLabels({});
-        }
+        const ItemKeys items = focusedItemGroup();
+        isSelect = !isSelected(items);
+        selectionController()->setSelectedItems(isSelect ? items : ItemKeys {});
     } else {
         TrackIdList selectedTracks = selectionController()->selectedTracks();
         isSelect = !muse::contains(selectedTracks, focusedKey.trackId);
@@ -623,22 +640,22 @@ void TrackNavigationController::toggleSelection()
     const bool isTrackPanel = !m_focus.isItem();
 
     if (!isTrackPanel) {
-        if (isFocusedItemLabel()) {
-            LabelKeyList selectedLabels = selectionController()->selectedLabels();
-            if (muse::contains(selectedLabels, focusedKey)) {
-                selectionController()->removeLabelSelection(focusedKey);
-            } else {
-                selectionController()->addSelectedLabel(focusedKey);
-                selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
+        const ItemKeys items = focusedItemGroup();
+        if (isSelected(items)) {
+            for (const ClipKey& key : items.clips) {
+                selectionController()->removeClipSelection(key);
+            }
+            for (const LabelKey& key : items.labels) {
+                selectionController()->removeLabelSelection(key);
             }
         } else {
-            ClipKeyList selectedClips = selectionController()->selectedClips();
-            if (muse::contains(selectedClips, focusedKey)) {
-                selectionController()->removeClipSelection(focusedKey);
-            } else {
-                selectionController()->addSelectedClip(focusedKey);
-                selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
+            for (const ClipKey& key : items.clips) {
+                selectionController()->addSelectedClip(key);
             }
+            for (const LabelKey& key : items.labels) {
+                selectionController()->addSelectedLabel(key);
+            }
+            selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
         }
     } else {
         TrackIdList selectedTracks = selectionController()->selectedTracks();
@@ -826,6 +843,19 @@ void TrackNavigationController::au3SetTrackFocused(const TrackId& trackId)
         auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
         au3::DomAccessor::clearAllTrackFocus(*au3Project);
         au3::DomAccessor::setTrackFocused(*au3Project, trackId, true);
+    }
+}
+
+bool TrackNavigationController::itemExists(const TrackFocus& focus) const
+{
+    const std::optional<TrackItemKey> key = focus.itemKey();
+    return !key.has_value() || muse::contains(sortedItemsKeys(key->trackId), *key);
+}
+
+void TrackNavigationController::revalidateFocusedItem()
+{
+    if (!itemExists(m_focus)) {
+        setFocus(TrackFocus::track(m_focus.trackId));
     }
 }
 

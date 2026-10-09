@@ -480,21 +480,21 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action_description", "Silence"),
              IconCode::Code::SILENCE_AUDIO_SELECTION
              ),
-    UiAction("group-clips",
+    UiAction("group-items",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Group clips"),
+             TranslatableString("action", "Group"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Group clips")
+             TranslatableString("action_description", "Group the selected clips and labels")
              ),
-    UiAction("ungroup-clips",
+    UiAction("ungroup-items",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Ungroup clips"),
+             TranslatableString("action", "Ungroup"),
              //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Ungroup clips")
+             TranslatableString("action_description", "Ungroup the selected clips and labels")
              ),
     UiAction("track-view-item-move-left",
              au::context::UiCtxProjectFocused,

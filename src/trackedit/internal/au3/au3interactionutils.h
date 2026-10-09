@@ -57,6 +57,5 @@ muse::Ret withProgress(muse::IInteractive& interactive, const std::string& title
 void trimOrDeleteOverlapping(const ITrackeditProjectPtr& project, au3::Au3WaveTrack* waveTrack, secs_t begin, secs_t end,
                              std::shared_ptr<au3::Au3WaveClip> otherClip);
 
-void remapCopiedClipGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks,
-                           const std::vector<au3::Au3WaveTrack*>& copies);
+void remapCopiedItemGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks, const std::vector<au3::Au3Track*>& copies);
 }
