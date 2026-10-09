@@ -272,6 +272,34 @@ Rectangle {
         menuBtn.toggleMenu(menuBtn)
     }
 
+    function openContextMenuAt(x, y, modifiers) {
+        if (!root.enableCursorInteraction) {
+            return
+        }
+
+        if (root.multiClipsSelected) {
+            prv.ensureMultiMenuLoaded()
+            if (modifiers & (Qt.ShiftModifier | Qt.ControlModifier)) {
+                if (!root.clipSelected) {
+                    root.requestSelectionReset()
+                }
+                root.requestSelected()
+            }
+            multiClipContextMenuLoader.show(Qt.point(x, y), multiClipContextMenuModel.items)
+        } else if (root.isGrouped) {
+            prv.ensureMultiMenuLoaded()
+            if (!root.clipSelected) {
+                root.requestSelectionReset()
+            }
+            root.requestSelected()
+            multiClipContextMenuLoader.show(Qt.point(x, y), multiClipContextMenuModel.items)
+        } else {
+            prv.ensureSingleMenuLoaded()
+            singleClipContextMenuLoader.show(Qt.point(x, y), singleClipContextMenuModel.items)
+            root.requestSelected()
+        }
+    }
+
     function mousePositionChanged(x, y) {
         clipItemMousePositionChanged(x, y)
         waveView.onWaveViewPositionChanged(x, y - header.height)
@@ -379,36 +407,12 @@ Rectangle {
         Component.onCompleted: updateCustomCursor()
         onForbiddenChanged: updateCustomCursor()
 
-        acceptedButtons: Qt.RightButton
+        acceptedButtons: Qt.NoButton
 
         visible: root.enableCursorInteraction
 
         onVisibleChanged: {
             root.setContainsMouse(containsMouse)
-        }
-
-        onClicked: function (e) {
-            if (root.multiClipsSelected) {
-                prv.ensureMultiMenuLoaded()
-                if (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier)) {
-                    if (!root.clipSelected) {
-                        root.requestSelectionReset()
-                    }
-                    root.requestSelected()
-                }
-                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
-            } else if (root.isGrouped) {
-                prv.ensureMultiMenuLoaded()
-                if (!root.clipSelected) {
-                    root.requestSelectionReset()
-                }
-                root.requestSelected()
-                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
-            } else {
-                prv.ensureSingleMenuLoaded()
-                singleClipContextMenuLoader.show(Qt.point(e.x, e.y), singleClipContextMenuModel.items)
-                root.requestSelected()
-            }
         }
 
         onPositionChanged: function (e) {
