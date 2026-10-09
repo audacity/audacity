@@ -28,6 +28,7 @@
 #include "framework/global/settings.h"
 #include "framework/global/types/uri.h"
 
+#include "appshell/appshellcommands.h"
 #include "appshell/appshelltypes.h"
 #include "au3cloud/cloudcommands.h"
 #include "project/projectcommands.h"
@@ -43,6 +44,7 @@ static const muse::Uri ALPHA_WELCOME_POPUP("audacity://alphaWelcomePopup");
 static const muse::UriQuery WELCOME_DIALOG_URI("audacity://welcomedialog");
 static const muse::Uri HOME_URI("audacity://home");
 static const muse::Uri PROJECT_URI("audacity://project");
+static const muse::Uri AUTO_RECOVERY_URI("audacity://autorecovery");
 
 static StartupModeType modeTypeFromString(const std::string& str)
 {
@@ -312,17 +314,10 @@ void StartupScenario::openProject(const ProjectFile& file)
 
 void StartupScenario::restoreLastSession()
 {
-    auto promise = interactive()->question(muse::trc("appshell", "The previous session quit unexpectedly."),
-                                           muse::trc("appshell", "Do you want to restore the session?"),
-                                           { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes },
-                                           muse::IInteractive::Button::NoButton, {},
-                                           muse::trc("appshell", "Restore session"));
-
-    promise.onResolve(this, [this](const muse::IInteractive::Result& res) {
-        if (res.isButton(muse::IInteractive::Button::Yes)) {
-            sessionsManager()->restore();
-        } else {
-            sessionsManager()->reset();
+    auto promise = interactive()->open(AUTO_RECOVERY_URI);
+    promise.onResolve(this, [this](const muse::Val& val) {
+        if (val.toQVariant().toMap().value("action").toString() == "quit") {
+            commandDispatcher()->dispatch(APP_QUIT_COMMAND);
         }
     });
 }

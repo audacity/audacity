@@ -21,8 +21,6 @@
  */
 
 #include "sessionsmanager.h"
-
-#include "appshell/appshelltypes.h"
 #include "project/projectcommands.h"
 
 using namespace au::appshell;
@@ -30,6 +28,10 @@ using namespace muse;
 
 void SessionsManager::init()
 {
+    if (!multiwindowsProvider() || multiwindowsProvider()->isFirstWindow()) {
+        pruneOutdatedProjects();
+    }
+
     update();
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
@@ -43,18 +45,13 @@ void SessionsManager::init()
     });
 }
 
-void SessionsManager::deinit()
+void SessionsManager::pruneOutdatedProjects()
 {
-    if (!multiwindowsProvider()) {
-        return;
-    }
-
-    if (!multiwindowsProvider()->isFirstWindow()) {
-        return;
-    }
-
-    if (configuration()->startupModeType() != StartupModeType::ContinueLastSession) {
-        reset();
+    const io::paths_t projects = configuration()->sessionProjectsPaths();
+    for (const io::path_t& path : projects) {
+        if (!fileSystem()->exists(path)) {
+            removeProjectFromSession(path);
+        }
     }
 }
 
@@ -63,22 +60,28 @@ bool SessionsManager::hasProjectsForRestore()
     return !configuration()->sessionProjectsPaths().empty();
 }
 
-void SessionsManager::restore()
+io::paths_t SessionsManager::projectsForRestore() const
 {
-    io::paths_t projects = configuration()->sessionProjectsPaths();
-    if (projects.empty()) {
-        return;
-    }
+    return configuration()->sessionProjectsPaths();
+}
 
+void SessionsManager::restore(const io::paths_t& projects)
+{
     for (const io::path_t& path : projects) {
+        if (!fileSystem()->exists(path)) {
+            LOGW() << "Project does not exist: " << path;
+            continue;
+        }
         commandDispatcher()->dispatch(project::PROJECT_OPEN_COMMAND, { { project::PROJECT_URL_PARAM, Val(path.toQUrl().toString()) } });
     }
 }
 
-void SessionsManager::reset()
+void SessionsManager::discard(const io::paths_t& projects)
 {
-    removeProjectsUnsavedChanges(configuration()->sessionProjectsPaths());
-    configuration()->setSessionProjectsPaths({});
+    for (const io::path_t& path : projects) {
+        removeUnsavedChanges(path);
+        removeProjectFromSession(path);
+    }
 }
 
 void SessionsManager::update()
@@ -124,13 +127,6 @@ void SessionsManager::addProjectToSession(const io::path_t& projectPath)
     }
 
     configuration()->setSessionProjectsPaths(projects);
-}
-
-void SessionsManager::removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths)
-{
-    for (const muse::io::path_t& path : projectsPaths) {
-        removeUnsavedChanges(path);
-    }
 }
 
 void SessionsManager::removeUnsavedChanges(const muse::io::path_t& projectPath)
