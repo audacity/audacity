@@ -89,6 +89,10 @@ jobs:
           libx11-6 libx11-xcb1 libxcb1 \
           libfontconfig1 libfreetype6 libexpat1 \
           libasound2t64
+        # The runner has no sound card. PortAudio ignores ALSA's predefined "null" device, but not an alias of it.
+        # With no recording device in its (fresh) settings, the app falls back to PortAudio's default input,
+        # which is then this one, the only device ALSA can open.
+        echo 'pcm.test_null { type null }' >> ~/.asoundrc
 
     - name: Download AppImage artifact
       if: matrix.status != 'DISABLED'
