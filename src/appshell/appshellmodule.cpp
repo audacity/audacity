@@ -80,6 +80,7 @@ void AppShellModule::resolveImports()
         ir->registerPageUri(muse::Uri("audacity://devtools"));
 
         ir->registerQmlUri(muse::Uri("audacity://about/audacity"), "Audacity.AppShell", "AboutDialog");
+        ir->registerQmlUri(muse::Uri("audacity://autorecovery"), "Audacity.AppShell", "AutoRecoveryDialog");
         ir->registerQmlUri(muse::Uri("audacity://firstLaunchSetup"), "Audacity.AppShell", "FirstLaunchSetupDialog");
         ir->registerQmlUri(muse::Uri("audacity://signin/audiocom"), "Audacity.AppShell", "SigninAudiocomDialog");
         ir->registerQmlUri(muse::Uri("audacity://welcomedialog"), "Audacity.AppShell", "WelcomeDialog");
@@ -165,9 +166,4 @@ void AppShellContext::onAllInited(const muse::IApplication::RunMode& mode)
     }
 
     m_applicationActionController->processPendingEvents();
-}
-
-void AppShellContext::onDeinit()
-{
-    m_sessionsManager->deinit();
 }
