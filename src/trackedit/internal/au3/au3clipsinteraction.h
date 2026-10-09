@@ -100,7 +100,7 @@ private:
 
     au3::Au3Project& projectRef() const;
 
-    NeedsDownmixing moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset);
+    NeedsDownmixing moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset, muse::Ret& ret);
 
     muse::Ret doMakeRoomForClip(const trackedit::ClipKey& clipKey);
     bool noPlayRegionsOverlap(const trackedit::TrackId& trackId) const;
