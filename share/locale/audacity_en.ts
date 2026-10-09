@@ -56,6 +56,22 @@
         <translation>&amp;Full screen</translation>
     </message>
     <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="238"/>
+        <source>Shift+&amp;Enter</source>
+        <translation type="unfinished">Shift+&amp;Enter</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
+        <source>Trigger the focused control or make a range selection of track items</source>
+        <translation type="unfinished">Trigger the focused control or make a range selection of track items</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
+        <source>Open item context menu</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Open item context menu</translation>
+    </message>
+    <message>
         <source>Full screen</source>
         <translation type="vanished">Full screen</translation>
     </message>
@@ -180,7 +196,7 @@
         <translation>&amp;Undo</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
         <translation>Undo</translation>
@@ -193,7 +209,7 @@
         <translation>&amp;Redo</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="66"/>
         <source>Redo</source>
         <translation>Redo</translation>
@@ -243,35 +259,56 @@
         <translation type="vanished">Trigger the focused control or select the focused track item</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="198"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
         <translation>Undo ‘%1’</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="204"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
         <translation>Redo ‘%1’</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="295"/>
         <source>Silence audio</source>
         <translation>Silence audio</translation>
     </message>
     <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
+        <source>Show audio.com tour</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show audio.com tour</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="27"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>View project on audio.com</translation>
     </message>
     <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="38"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
         <source>View on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>View on audio.com</translation>
     </message>
     <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="49"/>
+        <source>View profile on audio.com</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">View profile on audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="58"/>
+        <source>Open audacity URL</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Open audacity URL</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
         <source>Repeat last effect</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -284,40 +321,52 @@
         <translation>Remove realtime effect</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="51"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="41"/>
         <source>&amp;Apply preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Apply preset</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="75"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="47"/>
         <source>Save preset as…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Save preset as…</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="63"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="53"/>
         <source>&amp;Save preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Save preset</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="86"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="59"/>
         <source>&amp;Delete preset</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Delete preset</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="98"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
         <source>&amp;Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Import…</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="159"/>
+        <source>Apply %1</source>
+        <extracomment>Action title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
+        <translation type="unfinished">Apply %1</translation>
+    </message>
+    <message>
         <source>Import preset</source>
         <translation type="vanished">Import preset</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="109"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
         <source>&amp;Export…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -340,13 +389,13 @@
         <translation>Play/Stop</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Play/Pause from cursor</translation>
+        <translation type="vanished">Play/Pause from cursor</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="67"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="65"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="66"/>
         <source>Play selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Play selection</translation>
@@ -356,14 +405,16 @@
         <translation type="vanished">Play the selected time range</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="76"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="73"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="48"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
         <source>Pause</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="82"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="57"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
         <source>Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -374,19 +425,19 @@
         <translation type="vanished">Stop playback</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="94"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="91"/>
         <source>Rewind to start</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Rewind to start</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="103"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="100"/>
         <source>Rewind to end</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Rewind to end</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="109"/>
         <source>Loop playback</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Loop playback</translation>
@@ -396,7 +447,7 @@
         <translation type="vanished">Toggle ‘Loop playback’</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="122"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
         <source>Audio setup</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Audio setup</translation>
@@ -406,7 +457,7 @@
         <translation type="vanished">Open audio setup context menu</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="131"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="128"/>
         <source>Get effects</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Get effects</translation>
@@ -416,7 +467,7 @@
         <translation type="vanished">Open Get effects dialog</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="137"/>
         <source>Audio settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Audio settings</translation>
@@ -426,13 +477,13 @@
         <translation type="vanished">Open audio setup dialog</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="145"/>
         <source>Rescan audio devices</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Rescan audio devices</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="156"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="153"/>
         <source>Metronome</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Metronome</translation>
@@ -442,7 +493,7 @@
         <translation type="vanished">Toggle metronome playback</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="166"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="163"/>
         <source>Timecode</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Timecode</translation>
@@ -452,7 +503,7 @@
         <translation type="vanished">Set playback time</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="172"/>
         <source>Tempo</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Tempo</translation>
@@ -462,7 +513,7 @@
         <translation type="vanished">Set playback tempo</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="184"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
         <source>Time signature</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Time signature</translation>
@@ -472,7 +523,7 @@
         <translation type="vanished">Set playback time signature</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="190"/>
         <source>Playback level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Playback level</translation>
@@ -482,73 +533,115 @@
         <translation type="vanished">Set playback level</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="202"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
+        <source>Play/Stop and set cursor</source>
+        <translation type="unfinished">Play/Stop and set cursor</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
         <source>Change audio host</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Change audio host</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="211"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="208"/>
         <source>Change playback device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Change playback device</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="220"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
         <source>Change recording device</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Change recording device</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="229"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="226"/>
         <source>Change input channels</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Change input channels</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="238"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="235"/>
         <source>Toggle loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Toggle loop region</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="247"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="244"/>
         <source>Clear loop region</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Clear loop region</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="255"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="252"/>
         <source>Set loop region to selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Set loop region to selection</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="263"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="260"/>
         <source>Set selection to loop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Set selection to loop</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="271"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="268"/>
         <source>Set loop region in out</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Set loop region in out</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="279"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="276"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Creating a loop also selects audio</translation>
     </message>
     <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="284"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="285"/>
+        <source>Mute/unmute focused track</source>
+        <translation type="unfinished">Mute/unmute focused track</translation>
+    </message>
+    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="292"/>
+        <source>Solo/unsolo focused track</source>
+        <translation type="unfinished">Solo/unsolo focused track</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="298"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="299"/>
+        <source>Mute all tracks</source>
+        <translation type="unfinished">Mute all tracks</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="305"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="306"/>
+        <source>Unmute all tracks</source>
+        <translation type="unfinished">Unmute all tracks</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="312"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="313"/>
+        <source>Mute selected tracks</source>
+        <translation type="unfinished">Mute selected tracks</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="319"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="320"/>
+        <source>Unmute selected tracks</source>
+        <translation type="unfinished">Unmute selected tracks</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="330"/>
         <source>Play repeats</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Play repeats</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="301"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="340"/>
         <source>Pan automatically</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Pan automatically</translation>
@@ -590,7 +683,7 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="77"/>
-        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="33"/>
+        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="32"/>
         <source>Open</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Open</translation>
@@ -679,12 +772,12 @@
         <translation>Paste new label</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="650"/>
         <source>Manage labels</source>
         <translation>Manage labels</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="296"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="297"/>
         <source>Metadata editor</source>
         <translation>Metadata editor</translation>
     </message>
@@ -834,12 +927,14 @@
         <translation>Show history</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="30"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
         <source>Record on current track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Record on current track</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="39"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
         <source>Record on new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -930,6 +1025,7 @@
         <translation>Sort by name</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="31"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Plugin manager</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1417,6 +1513,7 @@
         <translation>Change track color</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="21"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
         <source>Record</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1427,6 +1524,7 @@
         <translation type="vanished">Stop record</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="66"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
         <source>Record level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1437,18 +1535,21 @@
         <translation type="vanished">Set record level</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="75"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
         <source>Show mic metering</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Show mic metering</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="84"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="75"/>
         <source>Turn on input monitoring</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Turn on input monitoring</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="93"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="84"/>
         <source>Lead-in Recording</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1459,7 +1560,7 @@
         <translation type="vanished">Start lead-in recording</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="19"/>
+        <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="22"/>
         <source>Spectrogram settings…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Spectrogram settings…</translation>
@@ -1867,18 +1968,17 @@
         <translation>Multi track selection next</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="661"/>
         <source>Open item’s context menu</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Open item’s context menu</translation>
+        <translation type="vanished">Open item’s context menu</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="684"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="675"/>
         <source>Change track format</source>
         <translation>Change track format</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="697"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="688"/>
         <source>Change track sample rate</source>
         <translation>Change track sample rate</translation>
     </message>
@@ -2181,16 +2281,42 @@
         <translation>Trigger the focused control or select the focused track item</translation>
     </message>
     <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="247"/>
+        <source>Open the context menu of the focused item</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the context menu of the focused item</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="20"/>
+        <source>Open the audio.com tour page, signing in first if needed</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the audio.com tour page, signing in first if needed</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="29"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
         <source>View project on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>View project on audio.com</translation>
     </message>
     <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="40"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
         <source>View on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>View on audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="51"/>
+        <source>Open the signed in user’s audio.com profile page</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the signed in user’s audio.com profile page</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="60"/>
+        <source>Handle an audacity:// URL</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Handle an audacity:// URL</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
@@ -2199,16 +2325,54 @@
         <translation>Remove realtime effect</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
+        <source>Repeat last effect</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Repeat last effect</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="53"/>
+        <source>Apply preset</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Apply preset</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="65"/>
+        <source>Save preset</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Save preset</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="77"/>
+        <source>Save preset as</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Save preset as</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="88"/>
+        <source>Delete preset</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete preset</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="100"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
         <source>Import preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Import preset</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="111"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="76"/>
         <source>Export preset</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Export preset</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="161"/>
+        <source>Apply %1 with the given parameters</source>
+        <extracomment>Action description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
+        <translation type="unfinished">Apply %1 with the given parameters</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
@@ -2223,170 +2387,169 @@
         <translation>Play/Stop</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="60"/>
         <source>Play/Pause from cursor</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Play/Pause from cursor</translation>
+        <translation type="vanished">Play/Pause from cursor</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="69"/>
         <source>Play the selected time range</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Play the selected time range</translation>
+        <translation type="vanished">Play the selected time range</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="75"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="50"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
         <source>Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="87"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="84"/>
         <source>Stop playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Stop playback</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="96"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="93"/>
         <source>Rewind to start</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Rewind to start</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="102"/>
         <source>Rewind to end</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Rewind to end</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="114"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="111"/>
         <source>Toggle ‘Loop playback’</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Toggle ‘Loop playback’</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="124"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="121"/>
         <source>Open audio setup context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Open audio setup context menu</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="130"/>
         <source>Open Get effects dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Open Get effects dialog</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="142"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="139"/>
         <source>Open audio setup dialog</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Open audio setup dialog</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="150"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <source>Rescan audio devices</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Rescan audio devices</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="158"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Toggle metronome playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Toggle metronome playback</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="165"/>
         <source>Set playback time</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set playback time</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="177"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="174"/>
         <source>Set playback tempo</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set playback tempo</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="186"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="183"/>
         <source>Set playback time signature</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set playback time signature</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="195"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="192"/>
         <source>Set playback level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set playback level</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="204"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="201"/>
         <source>Change audio host</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Change audio host</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="213"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
         <source>Change playback device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Change playback device</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="222"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="219"/>
         <source>Change recording device</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Change recording device</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="231"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="228"/>
         <source>Change input channels</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Change input channels</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="240"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="237"/>
         <source>Toggle loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Toggle loop region</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="249"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="246"/>
         <source>Clear loop region</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Clear loop region</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="257"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="254"/>
         <source>Set loop region to selection</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set loop region to selection</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="265"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="262"/>
         <source>Set selection to loop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set selection to loop</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="273"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="270"/>
         <source>Set loop region in out</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set loop region in out</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="281"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="278"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Creating a loop also selects audio</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="293"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="332"/>
         <source>Play repeats</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Play repeats</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="303"/>
+        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="342"/>
         <source>Pan automatically during playback</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Pan automatically during playback</translation>
@@ -2714,6 +2877,7 @@
         <translation>Keep tracks synchronized</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="33"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="491"/>
         <source>Plugin manager</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
@@ -3163,55 +3327,63 @@
         <translation>Change track color</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="23"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
         <source>Record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Record</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="59"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
         <source>Stop record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Stop record</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="68"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="59"/>
         <source>Set record level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set record level</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="77"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="68"/>
         <source>Show mic metering</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Show mic metering</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="86"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="77"/>
         <source>Turn on input monitoring</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Turn on input monitoring</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="95"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="86"/>
         <source>Start lead-in recording</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Start lead-in recording</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="32"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="95"/>
         <source>Record on current track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Record on current track</translation>
     </message>
     <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="41"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="103"/>
         <source>Record on new track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Record on new track</translation>
     </message>
     <message>
-        <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="21"/>
+        <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="24"/>
         <source>Spectrogram settings…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Spectrogram settings…</translation>
@@ -3619,18 +3791,17 @@
         <translation>Multi track selection next</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="663"/>
         <source>Open item’s context menu</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Open item’s context menu</translation>
+        <translation type="vanished">Open item’s context menu</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="683"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="674"/>
         <source>Change track format</source>
         <translation>Change track format</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="696"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="687"/>
         <source>Change track sample rate</source>
         <translation>Change track sample rate</translation>
     </message>
@@ -3692,37 +3863,42 @@
         <translation>Application menu</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="160"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="76"/>
+        <source>Real-time effects panel</source>
+        <translation type="unfinished">Real-time effects panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="170"/>
         <source>Project toolbar</source>
         <translation>Project toolbar</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="183"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="193"/>
         <source>Workspaces toolbar</source>
         <translation>Workspaces toolbar</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="206"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="216"/>
         <source>Undo/redo toolbar</source>
         <translation>Undo/redo toolbar</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="228"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="238"/>
         <source>Play toolbar</source>
         <translation>Play toolbar</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="294"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="304"/>
         <source>Tracks</source>
         <translation>Tracks</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="397"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="405"/>
         <source>Playback meter</source>
         <translation>Playback meter</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="421"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="429"/>
         <source>History</source>
         <translation>History</translation>
     </message>
@@ -3732,12 +3908,12 @@
         <translation>Produce MIDI 2.0 output if supported by the receiver</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="432"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="445"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Are you sure you want to revert to factory settings?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="433"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="446"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -3746,32 +3922,32 @@ This action will not delete any of your projects.</source>
 This action will not delete any of your projects.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="445"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="458"/>
         <source>Revert</source>
         <translation>Revert</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
         <source>Revert to factory settings</source>
         <translation>Revert to factory settings</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="459"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="472"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Would you like to restart Audacity now?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="473"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Audacity needs to be restarted for these changes to take effect.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="466"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="479"/>
         <source>Restart</source>
         <translation>Restart</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="468"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="481"/>
         <source>Restart Audacity</source>
         <translation>Restart Audacity</translation>
     </message>
@@ -3801,42 +3977,42 @@ This action will not delete any of your projects.</translation>
         <translation>Loading project…‎</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
         <source>Validate audio plugins</source>
         <translation>Validate audio plugins</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="30"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="36"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
         <translation>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Skip this time</source>
         <translation>Skip this time</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="38"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="44"/>
         <source>Validate</source>
         <translation>Validate</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="42"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="48"/>
         <source>Audio plugin validation</source>
         <translation>Audio plugin validation</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="325"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="306"/>
         <source>The previous session quit unexpectedly.</source>
         <translation>The previous session quit unexpectedly.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="326"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="307"/>
         <source>Do you want to restore the session?</source>
         <translation>Do you want to restore the session?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="329"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="310"/>
         <source>Restore session</source>
         <translation>Restore session</translation>
     </message>
@@ -3887,7 +4063,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-analyze</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="421"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="423"/>
         <source>&amp;Analyze</source>
         <translation>&amp;Analyze</translation>
     </message>
@@ -3895,12 +4071,12 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-clip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
         <source>Clip</source>
         <translation>Clip</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="619"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="621"/>
         <source>Rename clip</source>
         <translation>Rename clip</translation>
     </message>
@@ -3908,7 +4084,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-cursor</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="480"/>
         <source>Cursor</source>
         <translation>Cursor</translation>
     </message>
@@ -3916,7 +4092,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-device</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="474"/>
         <source>Device</source>
         <translation>Device</translation>
     </message>
@@ -3924,17 +4100,17 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-diagnostic</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="786"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="788"/>
         <source>&amp;System</source>
         <translation>&amp;System</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="796"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="798"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Accessibility</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="803"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="805"/>
         <source>Test&amp;flow</source>
         <translation>Test&amp;flow</translation>
     </message>
@@ -3946,32 +4122,32 @@ This action will not delete any of your projects.</translation>
         <translation type="vanished">Diagnostics</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="529"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="531"/>
         <source>&amp;System</source>
         <translation>&amp;System</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
         <source>A&amp;ctions</source>
         <translation>A&amp;ctions</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="554"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Accessibility</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="555"/>
         <source>E&amp;xtensions</source>
         <translation>E&amp;xtensions</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="554"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
         <source>Test&amp;flow</source>
         <translation>Test&amp;flow</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="559"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="561"/>
         <source>&amp;Diagnostics</source>
         <translation>&amp;Diagnostics</translation>
     </message>
@@ -3979,7 +4155,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-edit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="303"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="304"/>
         <source>&amp;Edit</source>
         <translation>&amp;Edit</translation>
     </message>
@@ -3987,7 +4163,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-effect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="416"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="418"/>
         <source>&amp;Effect</source>
         <translation>&amp;Effect</translation>
     </message>
@@ -4002,7 +4178,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-extra</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="493"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="495"/>
         <source>&amp;Extra</source>
         <translation>&amp;Extra</translation>
     </message>
@@ -4010,7 +4186,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-extraedit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="471"/>
         <source>Edit</source>
         <translation>Edit</translation>
     </message>
@@ -4018,7 +4194,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-extraselect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="473"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="475"/>
         <source>Select</source>
         <translation>Select</translation>
     </message>
@@ -4026,7 +4202,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-extratools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
         <source>Tools</source>
         <translation>Tools</translation>
     </message>
@@ -4034,12 +4210,12 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-file</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="244"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
         <source>Open &amp;recent</source>
         <translation>Open &amp;recent</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="271"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
@@ -4047,7 +4223,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-focus</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
         <source>Focus</source>
         <translation>Focus</translation>
     </message>
@@ -4055,7 +4231,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-generate</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="411"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="413"/>
         <source>&amp;Generate</source>
         <translation>&amp;Generate</translation>
     </message>
@@ -4063,7 +4239,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="516"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="518"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
@@ -4071,7 +4247,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-images</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="484"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="486"/>
         <source>Images</source>
         <translation>Images</translation>
     </message>
@@ -4079,12 +4255,12 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-label</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="640"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="642"/>
         <source>Rename label</source>
         <translation>Rename label</translation>
     </message>
@@ -4099,7 +4275,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-mixer</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
         <source>Mixer</source>
         <translation>Mixer</translation>
     </message>
@@ -4107,7 +4283,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-play</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>Play</source>
         <extracomment>Title of the Play menu; a noun rather than a verb</extracomment>
         <translation>Play</translation>
@@ -4116,7 +4292,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-playatspeed</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
         <source>Play at speed</source>
         <translation>Play at speed</translation>
     </message>
@@ -4124,7 +4300,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-record</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="389"/>
         <source>&amp;Record</source>
         <translation>&amp;Record</translation>
     </message>
@@ -4132,7 +4308,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-scriptables1</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="480"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="482"/>
         <source>Scriptables1</source>
         <translation>Scriptables1</translation>
     </message>
@@ -4140,7 +4316,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-scriptables2</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="482"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="484"/>
         <source>Scriptables2</source>
         <translation>Scriptables2</translation>
     </message>
@@ -4148,7 +4324,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-scrubbing</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>Scrubbing</source>
         <translation>Scrubbing</translation>
     </message>
@@ -4164,17 +4340,17 @@ This action will not delete any of your projects.</translation>
         <translation type="vanished">Spectral</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="323"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="324"/>
         <source>Region</source>
         <translation>Region</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="327"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="328"/>
         <source>Looping</source>
         <translation>Looping</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="331"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="332"/>
         <source>&amp;Select</source>
         <translation>&amp;Select</translation>
     </message>
@@ -4182,7 +4358,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-settings</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="487"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="489"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
@@ -4204,7 +4380,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-tools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="426"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="428"/>
         <source>&amp;Tools</source>
         <translation>&amp;Tools</translation>
     </message>
@@ -4212,7 +4388,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-track</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="481"/>
         <source>Track</source>
         <translation>Track</translation>
     </message>
@@ -4220,7 +4396,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-tracks</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="406"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="408"/>
         <source>&amp;Tracks</source>
         <translation>&amp;Tracks</translation>
     </message>
@@ -4228,12 +4404,12 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-view</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="359"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="360"/>
         <source>W&amp;orkspaces</source>
         <translation>W&amp;orkspaces</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="374"/>
         <source>&amp;View</source>
         <translation>&amp;View</translation>
     </message>
@@ -4241,7 +4417,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-zoom</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="344"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="345"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
@@ -4367,17 +4543,17 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell/dock</name>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="65"/>
         <source>Close</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Dock</source>
         <translation>Dock</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="132"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
         <source>Undock</source>
         <translation>Undock</translation>
     </message>
@@ -4882,41 +5058,46 @@ This action will not delete any of your projects.</translation>
         <translation>Preview of the selected workspace layout showing the arrangement of interface elements</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="49"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="131"/>
         <source>Authorization failed</source>
         <translation>Authorization failed</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="62"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="42"/>
         <source>No access token</source>
         <translation>No access token</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="112"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="90"/>
         <source>Not authorized</source>
         <translation>Not authorized</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="129"/>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="136"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="152"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="159"/>
         <source>Registration failed. Please try again.</source>
         <translation>Registration failed. Please try again.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="150"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="173"/>
         <source>Incorrect email or password. Please try again.</source>
         <translation>Incorrect email or password. Please try again.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="158"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="181"/>
         <source>Authentication failed. Please try again.</source>
         <translation>Authentication failed. Please try again.</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="189"/>
+        <source>Could not start the sign-in process. Please try again.</source>
+        <translation type="unfinished">Could not start the sign-in process. Please try again.</translation>
     </message>
 </context>
 <context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="697"/>
         <source>Edit metadata</source>
         <translation>Edit metadata</translation>
     </message>
@@ -5398,7 +5579,7 @@ This action will not delete any of your projects.</translation>
         <translation>Next item</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="269"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="276"/>
         <source>Don’t show welcome dialog on startup</source>
         <translation>Don’t show welcome dialog on startup</translation>
     </message>
@@ -5474,7 +5655,7 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>audacity</name>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="712"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="717"/>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
@@ -5484,19 +5665,19 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>audio</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>Audio plugins scan completed</source>
         <translation>Audio plugins scan completed</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="68"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>All audio plugins are up to date.</source>
         <translation>All audio plugins are up to date.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="79"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="85"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
-        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="208"/>
         <source>Validating audio plugins</source>
         <translation>Validating audio plugins</translation>
     </message>
@@ -5797,20 +5978,18 @@ This action will not delete any of your projects.</translation>
         <translation>Audacity Audio</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="892"/>
         <source>Error opening recording device.
 Error code: %1</source>
-        <translation>Error opening recording device.
+        <translation type="vanished">Error opening recording device.
 Error code: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="895"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation type="vanished">Error</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1485"/>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1520"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1481"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1516"/>
         <source>Out of memory!</source>
         <translation>Out of memory!</translation>
     </message>
@@ -6033,12 +6212,12 @@ Error code: %1</translation>
         <translation>High Quality Pitch Change</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="21"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="22"/>
         <source>Change Speed and Pitch</source>
         <translation>Change Speed and Pitch</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="48"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="49"/>
         <source>Changes the speed of a track, also changing its pitch</source>
         <translation>Changes the speed of a track, also changing its pitch</translation>
     </message>
@@ -6153,7 +6332,7 @@ Please select a section of a track.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="64"/>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="202"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="203"/>
         <source>Walkie-talkie</source>
         <translation>Walkie-talkie</translation>
     </message>
@@ -6264,72 +6443,72 @@ Please select a section of a track.</translation>
         <translation>Requested value exceeds memory capacity.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="34"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="35"/>
         <source>Equalization</source>
         <translation>Equalization</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="80"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="81"/>
         <source>Adjusts the volume levels of particular frequencies</source>
         <translation>Adjusts the volume levels of particular frequencies</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="180"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="181"/>
         <source>100Hz Rumble</source>
         <translation>100Hz Rumble</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="183"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="184"/>
         <source>AM Radio</source>
         <translation>AM Radio</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="186"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="187"/>
         <source>Bass Boost</source>
         <translation>Bass Boost</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="188"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="189"/>
         <source>Bass Cut</source>
         <translation>Bass Cut</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="190"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="191"/>
         <source>Low rolloff for speech</source>
         <translation>Low rolloff for speech</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="193"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="194"/>
         <source>RIAA</source>
         <translation>RIAA</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="195"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="196"/>
         <source>Telephone</source>
         <translation>Telephone</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="198"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="199"/>
         <source>Treble Boost</source>
         <translation>Treble Boost</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="200"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="201"/>
         <source>Treble Cut</source>
         <translation>Treble Cut</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="275"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="276"/>
         <source>To apply Equalization, all selected tracks must have the same sample rate.</source>
         <translation>To apply Equalization, all selected tracks must have the same sample rate.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="280"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="281"/>
         <source>To apply Equalization, select one or more audio tracks.</source>
         <translation>To apply Equalization, select one or more audio tracks.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="291"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="292"/>
         <source>Track sample rate is too low for this effect.</source>
         <translation>Track sample rate is too low for this effect.</translation>
     </message>
@@ -6404,7 +6583,7 @@ Error message says:
         <translation>%1 of %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/Generator.cpp" line="51"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/Generator.cpp" line="52"/>
         <source>There is not enough room available to generate the audio</source>
         <translation>There is not enough room available to generate the audio</translation>
     </message>
@@ -6462,7 +6641,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Repeats the selection the specified number of times</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/SBSMSBase.h" line="38"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/SBSMSBase.h" line="48"/>
         <source>SBSMS Time / Pitch Stretch</source>
         <translation>SBSMS Time / Pitch Stretch</translation>
     </message>
@@ -6614,62 +6793,62 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>clip</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="57"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="58"/>
         <source>Cut and leave gap</source>
         <translation>Cut and leave gap</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="60"/>
         <source>Cut and close gap on this track</source>
         <translation>Cut and close gap on this track</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="61"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="62"/>
         <source>Cut and close gap on all tracks</source>
         <translation>Cut and close gap on all tracks</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="66"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="67"/>
         <source>Delete and leave gap</source>
         <translation>Delete and leave gap</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="69"/>
         <source>Delete and close gap on this track</source>
         <translation>Delete and close gap on this track</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="70"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="71"/>
         <source>Delete and close gap on all tracks</source>
         <translation>Delete and close gap on all tracks</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="76"/>
         <source>Rename clip</source>
         <translation>Rename clip</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="76"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="77"/>
         <source>Clip color</source>
         <translation>Clip color</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="83"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="84"/>
         <source>Cut and…</source>
         <translation>Cut and…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="84"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="85"/>
         <source>Delete and…</source>
         <translation>Delete and…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="87"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="88"/>
         <source>Split at silences</source>
         <translation>Split at silences</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="268"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="251"/>
         <source>Same as track color</source>
         <translation>Same as track color</translation>
     </message>
@@ -6677,12 +6856,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
         <source>Select</source>
         <translation>Select</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1117"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
         <source>Deselect</source>
         <translation>Deselect</translation>
     </message>
@@ -6739,8 +6918,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="566"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="700"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
@@ -6751,70 +6930,71 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>You are not signed in</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="401"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="470"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="487"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="565"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="413"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="482"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="499"/>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="577"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="582"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="631"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="751"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="589"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="594"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="644"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="757"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1008"/>
         <source>Invalid project</source>
         <extracomment>Error message of a failed cloud operation</extracomment>
         <translation>Invalid project</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="481"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="544"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="625"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="995"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="493"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="556"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="638"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="991"/>
         <source>Service destroyed</source>
         <extracomment>Error message shown when a cloud operation is interrupted by the application closing</extracomment>
         <translation>Service destroyed</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="500"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="512"/>
         <source>Internal error</source>
         <translation>Internal error</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="587"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="593"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="605"/>
         <source>Project is not saved to the cloud</source>
         <translation>Project is not saved to the cloud</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="611"/>
         <source>Project is not synced with the cloud</source>
         <translation>Project is not synced with the cloud</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="707"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="713"/>
         <source>Failed to get audio preview upload URLs</source>
         <translation>Failed to get audio preview upload URLs</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="857"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="853"/>
         <source>Invalid audio ID</source>
         <translation>Invalid audio ID</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="924"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="920"/>
         <source>Project not found in cloud database</source>
         <translation>Project not found in cloud database</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1007"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1003"/>
         <source>No valid current project</source>
         <translation>No valid current project</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1070"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1069"/>
         <source>Upload succeeded but payload is missing</source>
         <translation>Upload succeeded but payload is missing</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1095"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1094"/>
         <source>Failed to delete cloud project from database</source>
         <translation>Failed to delete cloud project from database</translation>
     </message>
@@ -6829,112 +7009,110 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Sign in failed. Please return to Audacity and try again.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="704"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1100"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1337"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="723"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1138"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1375"/>
         <source>View on audio.com</source>
         <translation>View on audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1309"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1347"/>
         <source>Track title</source>
         <translation>Track title</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1310"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1348"/>
         <source>Share audio</source>
         <translation>Share audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1311"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1349"/>
         <source>Share</source>
         <translation>Share</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1332"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1370"/>
         <source>Audio shared to audio.com</source>
         <translation>Audio shared to audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1352"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1390"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Sharing audio to audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1411"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
         <source>Downloading audio from cloud…</source>
         <translation>Downloading audio from cloud…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1487"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation>The project must be saved before updating the audio preview</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1450"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1488"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation>Save your changes to continue, or cancel the update.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1454"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1492"/>
         <source>Unsaved changes</source>
         <translation>Unsaved changes</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1475"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1506"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1519"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1539"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1546"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1513"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1549"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1562"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1575"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1582"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1589"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation>Generate audio preview</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1494"/>
         <source>Cloud audio preview updated</source>
-        <translation>Cloud audio preview updated</translation>
+        <translation type="vanished">Cloud audio preview updated</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1495"/>
         <source>The audio preview has been uploaded to audio.com</source>
-        <translation>The audio preview has been uploaded to audio.com</translation>
+        <translation type="vanished">The audio preview has been uploaded to audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1500"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1543"/>
         <source>Audio preview is up to date</source>
         <translation>Audio preview is up to date</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1501"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1544"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation>The audio preview already matches the latest saved version of this project.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1554"/>
         <source>Updating cloud audio preview…</source>
         <translation>Updating cloud audio preview…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1540"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1583"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation>Could not determine the local path of the downloaded project</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="615"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="736"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="749"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="561"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="682"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
         <source>Save to audio.com</source>
         <translation>Save to audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="841"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
         <source>Audio download failed</source>
         <translation>Audio download failed</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="849"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="795"/>
         <source>Open audio from cloud</source>
         <translation>Open audio from cloud</translation>
     </message>
@@ -7020,7 +7198,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Failed to deserialize the response</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="616"/>
+        <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="617"/>
         <source>Cannot proceed to upload.</source>
         <translation>Cannot proceed to upload.</translation>
     </message>
@@ -7046,97 +7224,101 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="36"/>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
         <source>Save diagnostic files</source>
         <translation>Save diagnostic files</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="43"/>
         <source>Show paths…</source>
         <translation>Show paths…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="44"/>
         <source>Show paths</source>
         <translation>Show paths</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="51"/>
         <source>Show profiler…</source>
         <translation>Show profiler…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="52"/>
         <source>Show profiler</source>
         <translation>Show profiler</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="59"/>
         <source>Show graphics info…</source>
         <translation>Show graphics info…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="60"/>
         <source>Show graphics info</source>
         <translation>Show graphics info</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="67"/>
         <source>Show navigation tree…</source>
         <translation>Show navigation tree…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="68"/>
         <source>Show navigation tree</source>
         <translation>Show navigation tree</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="75"/>
         <source>Show accessibility tree…</source>
         <translation>Show accessibility tree…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
         <source>Show accessibility tree</source>
         <translation>Show accessibility tree</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Dump accessibility tree to console</source>
         <translation>Dump accessibility tree to console</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="92"/>
         <source>Show engraving elements</source>
         <translation>Show engraving elements</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="99"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="100"/>
         <source>Show engraving undo stack</source>
         <translation>Show engraving undo stack</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="107"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="108"/>
         <source>Show engraving style options list</source>
         <translation>Show engraving style options list</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="115"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="116"/>
         <source>Show actions list</source>
         <translation>Show actions list</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="123"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="124"/>
+        <source>Show commands list</source>
+        <translation type="unfinished">Show commands list</translation>
+    </message>
+    <message>
         <source>Show rcommands list</source>
-        <translation>Show rcommands list</translation>
+        <translation type="vanished">Show rcommands list</translation>
     </message>
     <message>
         <source>Test query action</source>
@@ -7558,7 +7740,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Preset mismatch</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="412"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="393"/>
         <source>Applied effect: %1</source>
         <translation>Applied effect: %1</translation>
     </message>
@@ -7608,89 +7790,91 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>%1: is for a different Effect, Generator or Analyzer.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="649"/>
         <source>Generating %1…</source>
         <translation>Generating %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="668"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="649"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
         <translation>Applying %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="898"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="879"/>
         <source>Effect preview</source>
         <translation>Effect preview</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="40"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
         <source>Use vendor UI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Use vendor UI</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="42"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="84"/>
         <source>Toggle between vendor UI and fallback UI</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Toggle between vendor UI and fallback UI</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="241"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="242"/>
         <source>Master</source>
         <translation>Master</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="280"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="281"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
         <translation>Added %1 to %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="283"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="284"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
         <translation>Add %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="321"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="322"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
         <translation>Removed %1 from %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="324"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="325"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
         <translation>Remove %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="345"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="347"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
         <translation>Replaced %1 with %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="348"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="350"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
         <translation>Replace %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="384"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="386"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
         <translation>Moved %1 up in %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="388"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="390"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
         <translation>Moved %1 down in %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="392"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="394"/>
         <source>Change effect order</source>
         <translation>Change effect order</translation>
     </message>
@@ -7942,7 +8126,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
         <translation>Missing - “%1”</translation>
@@ -8190,7 +8374,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>effects-effects_base</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="863"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="844"/>
         <source>Preparing preview</source>
         <translation>Preparing preview</translation>
     </message>
@@ -8295,47 +8479,47 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>effects-noisereduction</name>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="69"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
         <source>Median</source>
         <translation>Median</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="71"/>
         <source>Second greatest</source>
         <translation>Second greatest</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="201"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="202"/>
         <source>Noise reduction</source>
         <translation>Noise reduction</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="221"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="222"/>
         <source>Removes background noise such as fans, tape noise, or hums</source>
         <translation>Removes background noise such as fans, tape noise, or hums</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="290"/>
         <source>No audio selected.</source>
         <translation>No audio selected.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="304"/>
         <source>You must specify the same window size for steps 1 and 2.</source>
         <translation>You must specify the same window size for steps 1 and 2.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="376"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="377"/>
         <source>All noise profile data must have the same sample rate.</source>
         <translation>All noise profile data must have the same sample rate.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="380"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="381"/>
         <source>The sample rate of the noise profile must match that of the sound to be processed.</source>
         <translation>The sample rate of the noise profile must match that of the sound to be processed.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="447"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="448"/>
         <source>Selected noise profile is too short.</source>
         <translation>Selected noise profile is too short.</translation>
     </message>
@@ -8434,51 +8618,51 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Built-in</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="104"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="106"/>
         <source>Nyquist Effects</source>
         <translation>Nyquist Effects</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="109"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="111"/>
         <source>The Audacity Team</source>
         <translation>The Audacity Team</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="120"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/LoadNyquist.cpp" line="122"/>
         <source>Provides Nyquist Effects support to Audacity</source>
         <translation>Provides Nyquist Effects support to Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="59"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="60"/>
         <source>Applying Nyquist Effect…</source>
         <translation>Applying Nyquist Effect…</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="67"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="68"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="69"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="70"/>
         <source>n/a</source>
         <translation>n/a</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="100"/>
         <source>Nyquist Worker</source>
         <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
         <translation>Nyquist Worker</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="111"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="112"/>
         <source>Ill-formed Nyquist plug-in header</source>
         <translation>Ill-formed Nyquist plug-in header</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="138"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="139"/>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="65"/>
         <source>Audacity</source>
         <translation>Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="489"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="490"/>
         <source>To use ‘Spectral effects’, enable ‘Spectral Selection’
 in the track Spectrogram settings and select the
 frequency range for the effect to act on.</source>
@@ -8487,25 +8671,25 @@ in the track Spectrogram settings and select the
 frequency range for the effect to act on.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="658"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
         <translation>error: File “%1” specified in header but not found in plug-in path.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="823"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="824"/>
         <source>Audio selection required.</source>
         <translation>Audio selection required.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1381"/>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1383"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1382"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1384"/>
         <source>Processing complete.</source>
         <translation>Processing complete.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1391"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1392"/>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don&apos;t translate &apos;;type tool&apos;.</extracomment>
@@ -8513,7 +8697,7 @@ frequency range for the effect to act on.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1400"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1401"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don&apos;t translate &apos;;type tool&apos;.</extracomment>
@@ -8521,7 +8705,7 @@ frequency range for the effect to act on.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1410"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
         <source>nyx_error returned from %1.
 </source>
         <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
@@ -8529,66 +8713,66 @@ frequency range for the effect to act on.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1412"/>
         <source>plug-in</source>
         <translation>plug-in</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1426"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1427"/>
         <source>Nyquist returned a list.</source>
         <translation>Nyquist returned a list.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1471"/>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1484"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1472"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1485"/>
         <source>Nyquist returned the value: %1</source>
         <translation>Nyquist returned the value: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1534"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1535"/>
         <source>Nyquist returned too many audio channels.
 </source>
         <translation>Nyquist returned too many audio channels.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1539"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1540"/>
         <source>Nyquist returned one audio channel as an array.
 </source>
         <translation>Nyquist returned one audio channel as an array.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1544"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1545"/>
         <source>Nyquist returned an empty array.
 </source>
         <translation>Nyquist returned an empty array.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1565"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1566"/>
         <source>Nyquist returned nil audio.
 </source>
         <translation>Nyquist returned nil audio.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1613"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1614"/>
         <source>[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]</source>
         <translation>[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2062"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2063"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
         <translation>This version of Audacity does not support Nyquist plug-in version %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2314"/>
         <source>Could not open file</source>
         <translation>Could not open file</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2388"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2385"/>
         <source>Your code looks like SAL syntax, but there is no ‘return’ statement.
 For SAL, use a return statement such as:
 	return *track* * 0.1
@@ -8603,7 +8787,7 @@ or for LISP, begin with an open parenthesis such as:
  .</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2624"/>
         <source>untitled</source>
         <translation>untitled</translation>
     </message>
@@ -10445,22 +10629,22 @@ Daulton</translation>
 <context>
     <name>effects-paulstretch</name>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="30"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="31"/>
         <source>Paulstretch</source>
         <translation>Paulstretch</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="103"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
         <translation>Paulstretch is only for an extreme time-stretch or “stasis” effect</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="187"/>
         <source>Requested value exceeds memory capacity.</source>
         <translation>Requested value exceeds memory capacity.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="223"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="224"/>
         <source>Audio selection too short to preview.
 
 Try increasing the audio selection to at least %1 seconds,
@@ -10472,7 +10656,7 @@ Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="233"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="234"/>
         <source>Unable to Preview.
 
 For the current audio selection, the maximum
@@ -10484,7 +10668,7 @@ For the current audio selection, the maximum
 ‘Time Resolution’ is %1 seconds.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="242"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="243"/>
         <source>The ‘Time Resolution’ is too long for the selection.
 
 Try increasing the audio selection to at least %1 seconds,
@@ -10959,33 +11143,33 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Duration</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="181"/>
         <source>Tone/silence ratio</source>
         <translation>Tone/silence ratio</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="230"/>
         <source>Duty cycle</source>
         <translation>Duty cycle</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="234"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="244"/>
         <source>Tone duration</source>
         <translation>Tone duration</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="271"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="248"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="262"/>
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
+        <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="258"/>
         <source>Silence duration</source>
         <translation>Silence duration</translation>
     </message>
@@ -11048,7 +11232,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <translation>Invert</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="166"/>
+        <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="205"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
@@ -11639,7 +11823,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</translation
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="388"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="443"/>
         <source>Edit mapping</source>
         <translation>Edit mapping</translation>
     </message>
@@ -11655,8 +11839,8 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</translation
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="714"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="697"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="858"/>
         <source>Export audio</source>
         <translation>Export audio</translation>
     </message>
@@ -11678,80 +11862,104 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</translation
         <translation>File</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="144"/>
+        <source>File name preview</source>
+        <translation type="unfinished">File name preview</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation>File name</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
+        <source>File name prefix</source>
+        <translation type="unfinished">File name prefix</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <source>Number files in label order</source>
+        <translation type="unfinished">Number files in label order</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <source>Number files in track order</source>
+        <translation type="unfinished">Number files in track order</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="232"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation>Folder</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="245"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="300"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="282"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="337"/>
         <source>Audio options</source>
         <translation>Audio options</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="299"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="354"/>
         <source>Channels</source>
         <translation>Channels</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="324"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="379"/>
         <source>Mono</source>
         <translation>Mono</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="342"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="397"/>
         <source>Stereo</source>
         <translation>Stereo</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="359"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="414"/>
         <source>Custom mapping</source>
         <translation>Custom mapping</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="406"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="461"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="220"/>
         <source>Sample rate</source>
         <translation>Sample rate</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="451"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="506"/>
         <source>Open custom FFmpeg format options</source>
         <translation>Open custom FFmpeg format options</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="472"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="527"/>
         <source>Format:</source>
         <translation>Format:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="496"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="551"/>
         <source>Codec:</source>
         <translation>Codec:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="588"/>
-        <source>Effective bit rate may vary</source>
-        <translation>Effective bit rate may vary</translation>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="667"/>
+        <source>Include audio before first label</source>
+        <translation type="unfinished">Include audio before first label</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="598"/>
+        <source>Effective bit rate may vary</source>
+        <translation type="vanished">Effective bit rate may vary</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
         <source>Rendering</source>
         <translation>Rendering</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="608"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="650"/>
         <source>Trim blank space before first clip</source>
         <translation>Trim blank space before first clip</translation>
     </message>
@@ -12017,82 +12225,152 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <translation>Locate existing installation</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="266"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="325"/>
         <source>All selected audio is muted</source>
         <translation>All selected audio is muted</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="454"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="530"/>
+        <source>untitled</source>
+        <translation type="unfinished">untitled</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="573"/>
+        <source>No labels to export.</source>
+        <translation type="unfinished">No labels to export.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="578"/>
+        <source>There are no tracks to export</source>
+        <translation type="unfinished">There are no tracks to export</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="44"/>
         <source>Other…</source>
         <translation>Other…</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="43"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>%1 Hz (custom)</source>
         <translation>%1 Hz (custom)</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="48"/>
         <source>Export full project audio</source>
-        <translation>Export full project audio</translation>
+        <translation type="vanished">Export full project audio</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
         <source>Export selected audio</source>
-        <translation>Export selected audio</translation>
+        <translation type="vanished">Export selected audio</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>Export audio in loop region</source>
-        <translation>Export audio in loop region</translation>
+        <translation type="vanished">Export audio in loop region</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="198"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="220"/>
         <source>No loop region</source>
         <translation>No loop region</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="199"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="221"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="210"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="232"/>
         <source>No selected audio</source>
         <translation>No selected audio</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="211"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="233"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="440"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
+        <source>No labels</source>
+        <translation type="unfinished">No labels</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="240"/>
+        <source>Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</source>
+        <translation type="unfinished">Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="334"/>
+        <source>LabelName</source>
+        <extracomment>Placeholder for a label&apos;s name in the export file name preview</extracomment>
+        <translation type="unfinished">LabelName</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="336"/>
+        <source>TrackName</source>
+        <extracomment>Placeholder for a track&apos;s name in the export file name preview</extracomment>
+        <translation type="unfinished">TrackName</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="557"/>
         <source>Set sample rate</source>
         <translation>Set sample rate</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="579"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="698"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
         <translation>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="638"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="747"/>
+        <source>Export failed</source>
+        <translation type="unfinished">Export failed</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="759"/>
         <source>Do you want to overwrite?</source>
         <translation>Do you want to overwrite?</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="639"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="780"/>
+        <source>Some of the files already exist. Do you want to overwrite them?</source>
+        <translation type="unfinished">Some of the files already exist. Do you want to overwrite them?</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="790"/>
         <source>Overwrite</source>
         <translation>Overwrite</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="651"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
         <source>Export error</source>
         <translation>Export error</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="715"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="54"/>
+        <source>Full project audio</source>
+        <translation type="unfinished">Full project audio</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="55"/>
+        <source>Selected audio</source>
+        <translation type="unfinished">Selected audio</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="56"/>
+        <source>Audio in loop region</source>
+        <translation type="unfinished">Audio in loop region</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="57"/>
+        <source>Tracks as separate audio files</source>
+        <translation type="unfinished">Tracks as separate audio files</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="58"/>
+        <source>Labeled regions as separate audio files</source>
+        <translation type="unfinished">Labeled regions as separate audio files</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="859"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -12254,9 +12532,7 @@ Master effects will be turned back on after export.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="124"/>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="133"/>
         <source>Not defined</source>
-        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
         <translation>Not defined</translation>
     </message>
     <message>
@@ -12371,56 +12647,56 @@ Perhaps %1 is not writable or the disk is full.</translation>
         <translation>File Error</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="48"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="53"/>
         <source>All files</source>
         <translation>All files</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="51"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
         <source>AUP3 project files</source>
         <extracomment>an Audacity project is the state of the program, stored as files that can be reopened to resume the session later</extracomment>
         <translation>AUP3 project files</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="54"/>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="58"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="59"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="63"/>
         <source>Dynamically Linked Libraries</source>
         <translation>Dynamically Linked Libraries</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
         <source>Dynamic Libraries</source>
         <translation>Dynamic Libraries</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="61"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="66"/>
         <source>Text files</source>
         <translation>Text files</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="62"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="67"/>
         <source>XML files</source>
         <translation>XML files</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="108"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>, </source>
         <translation>, </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="118"/>
         <source>%1 files</source>
         <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
         <translation>%1 files</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="143"/>
         <source>(%1)</source>
         <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
         <translation>(%1)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="710"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="758"/>
         <source>
 %1 does not have write permissions.</source>
         <extracomment>%1 is the folder path that is not writable</extracomment>
@@ -12428,7 +12704,7 @@ Perhaps %1 is not writable or the disk is full.</translation>
 %1 does not have write permissions.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="712"/>
+        <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="760"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -12462,11 +12738,11 @@ For tips on suitable drives, click the help button.</translation>
     <name>global</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="146"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="299"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
         <source>OK</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>OK</translation>
@@ -12500,17 +12776,17 @@ For tips on suitable drives, click the help button.</translation>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="105"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="155"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="97"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="654"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="713"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="115"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="558"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="674"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="504"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Cancel</translation>
@@ -12519,15 +12795,15 @@ For tips on suitable drives, click the help button.</translation>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="366"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="108"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="153"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
         <source>Apply</source>
         <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="672"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="731"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <extracomment>Label of the button that starts the export</extracomment>
@@ -12538,7 +12814,7 @@ For tips on suitable drives, click the help button.</translation>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
         <source>Close</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Close</translation>
@@ -12672,26 +12948,26 @@ For tips on suitable drives, click the help button.</translation>
         <translation>All files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="696"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1093"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1331"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="715"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1131"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1369"/>
         <source>Success</source>
         <translation>Success</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1336"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1374"/>
         <source>Dismiss</source>
         <translation>Dismiss</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="625"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="636"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="640"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Open</translation>
@@ -12703,8 +12979,8 @@ For tips on suitable drives, click the help button.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="727"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1119"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="746"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
@@ -12899,82 +13175,82 @@ For tips on suitable drives, click the help button.</translation>
         </translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
         <source>Save all</source>
         <translation>Save all</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
         <source>Don’t save</source>
         <translation>Don’t save</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
         <source>Yes to all</source>
         <translation>Yes to all</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
         <source>No to all</source>
         <translation>No to all</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Abort</source>
         <translation>Abort</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Retry</source>
         <translation>Retry</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
         <source>Ignore</source>
         <translation>Ignore</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
         <source>Discard</source>
         <translation>Discard</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
         <source>Help</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="139"/>
         <source>Reset</source>
         <translation>Reset</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="140"/>
         <source>Continue</source>
         <translation>Continue</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="374"/>
         <source>Checking for updates…</source>
         <translation>Checking for updates…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="527"/>
         <source>Downloading %1…</source>
         <translation>Downloading %1…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="542"/>
         <source>Unpacking %1…</source>
         <translation>Unpacking %1…</translation>
     </message>
@@ -14196,7 +14472,7 @@ For tips on suitable drives, click the help button.</translation>
     <name>import</name>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="134"/>
-        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="168"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="167"/>
         <source>Loop tempo detected at %1 BPM. What would you like to do?</source>
         <translation>Loop tempo detected at %1 BPM. What would you like to do?</translation>
     </message>
@@ -14212,18 +14488,18 @@ For tips on suitable drives, click the help button.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="140"/>
-        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="173"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="172"/>
         <source>Do nothing</source>
         <translation>Do nothing</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="144"/>
-        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="177"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="176"/>
         <source>Loop Tempo Detected</source>
         <translation>Loop Tempo Detected</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="172"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="171"/>
         <source>Stretch loop to project tempo</source>
         <translation>Stretch loop to project tempo</translation>
     </message>
@@ -14231,7 +14507,7 @@ For tips on suitable drives, click the help button.</translation>
 <context>
     <name>import-export</name>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="123"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="142"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
         <extracomment>Title of the export progress dialog</extracomment>
@@ -14579,8 +14855,8 @@ but none of them understood this file format.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="96"/>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="98"/>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="68"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="379"/>
         <source>%1 kbps</source>
         <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
 ----------
@@ -14592,9 +14868,9 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="182"/>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="223"/>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="347"/>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="73"/>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="80"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="75"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="118"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="125"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="100"/>
         <source>Bit Rate</source>
         <translation>Bit Rate</translation>
     </message>
@@ -14610,43 +14886,43 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="270"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="89"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="351"/>
         <source>Frame Duration</source>
         <translation>Frame Duration</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="282"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="101"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="363"/>
         <source>2.5 ms</source>
         <translation>2.5 ms</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="283"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="102"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="364"/>
         <source>5 ms</source>
         <translation>5 ms</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="284"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="103"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="365"/>
         <source>10 ms</source>
         <translation>10 ms</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="285"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="104"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="366"/>
         <source>20 ms</source>
         <translation>20 ms</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="286"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="105"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="367"/>
         <source>40 ms</source>
         <translation>40 ms</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="287"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="106"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="368"/>
         <source>60 ms</source>
         <translation>60 ms</translation>
     </message>
@@ -14658,19 +14934,19 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="378"/>
         <source>Off</source>
         <translation>Off</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="378"/>
         <source>On</source>
         <translation>On</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="378"/>
         <source>Constrained</source>
         <translation>Constrained</translation>
     </message>
@@ -14687,19 +14963,19 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Audio</source>
         <translation>Audio</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Low Delay</source>
         <translation>Low Delay</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="315"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="130"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="392"/>
         <source>Cutoff</source>
         <translation>Cutoff</translation>
     </message>
@@ -14710,31 +14986,31 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="328"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="143"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="405"/>
         <source>Narrowband</source>
         <translation>Narrowband</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="329"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="144"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="406"/>
         <source>Mediumband</source>
         <translation>Mediumband</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="330"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="145"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="407"/>
         <source>Wideband</source>
         <translation>Wideband</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="331"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="146"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="408"/>
         <source>Super Wideband</source>
         <translation>Super Wideband</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="332"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="147"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="409"/>
         <source>Fullband</source>
         <translation>Fullband</translation>
     </message>
@@ -14856,7 +15132,7 @@ You can configure it at Preferences &gt; General.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1454"/>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="592"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="676"/>
         <source>Exporting the audio as %1</source>
         <extracomment>%1 is format description</extracomment>
         <translation>Exporting the audio as %1</translation>
@@ -14901,289 +15177,289 @@ supported by the current output file format. </translation>
         <translation>FFmpeg library not found</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="34"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="58"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="86"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="83"/>
         <source>Bit Depth</source>
         <translation>Bit Depth</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="38"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="77"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="28"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="90"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="129"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="53"/>
         <source>16 bit</source>
         <translation>16 bit</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="38"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="77"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="29"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="90"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="129"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="54"/>
         <source>24 bit</source>
         <translation>24 bit</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="43"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="95"/>
         <source>Level</source>
         <translation>Level</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="58"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="88"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="110"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="140"/>
         <source>0 (fastest)</source>
         <translation>0 (fastest)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="59"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="89"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="111"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="141"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="60"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="90"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="112"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="142"/>
         <source>2</source>
         <translation>2</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="61"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="91"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="113"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="143"/>
         <source>3</source>
         <translation>3</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="62"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="92"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="114"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="144"/>
         <source>4</source>
         <translation>4</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="63"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="93"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="115"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="145"/>
         <source>5</source>
         <translation>5</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="64"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="94"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="116"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="146"/>
         <source>6</source>
         <translation>6</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="65"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="95"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="117"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="147"/>
         <source>7</source>
         <translation>7</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="66"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="96"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="118"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="148"/>
         <source>8 (best)</source>
         <translation>8 (best)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="159"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="211"/>
         <source>FLAC Files</source>
         <translation>FLAC Files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="303"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="355"/>
         <source>FLAC export couldn’t open %1</source>
         <extracomment>%1 is the file path</extracomment>
         <translation>FLAC export couldn’t open %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="313"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="365"/>
         <source>FLAC encoder failed to initialize
 Status: %1</source>
         <translation>FLAC encoder failed to initialize
 Status: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="326"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="378"/>
         <source>Exporting the selected audio as FLAC</source>
         <translation>Exporting the selected audio as FLAC</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="327"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="379"/>
         <source>Exporting the audio as FLAC</source>
         <translation>Exporting the audio as FLAC</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ImportFLAC.h" line="20"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ImportFLAC.cpp" line="38"/>
         <source>FLAC files</source>
         <translation>FLAC files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="161"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="297"/>
         <source>MP2 Files</source>
         <translation>MP2 Files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="220"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="356"/>
         <source>Cannot export MP2 with this sample rate and bit rate</source>
         <translation>Cannot export MP2 with this sample rate and bit rate</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="230"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1474"/>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="179"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="446"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="254"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="366"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1734"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="255"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="708"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="388"/>
         <source>Unable to open target file for writing</source>
         <translation>Unable to open target file for writing</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="245"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="381"/>
         <source>Exporting selected audio at %1 kbps</source>
         <translation>Exporting selected audio at %1 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="247"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="383"/>
         <source>Exporting the audio at %1 kbps</source>
         <translation>Exporting the audio at %1 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="66"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="111"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="70"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="115"/>
         <source>MPEG2</source>
         <translation>MPEG2</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="70"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="115"/>
         <source>MPEG1</source>
         <translation>MPEG1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="165"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="425"/>
         <source>220-260 kbps (Best Quality)</source>
         <translation>220-260 kbps (Best Quality)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="166"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="426"/>
         <source>200-250 kbps</source>
         <translation>200-250 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="167"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="427"/>
         <source>170-210 kbps</source>
         <translation>170-210 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="168"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="428"/>
         <source>155-195 kbps</source>
         <translation>155-195 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="169"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="429"/>
         <source>145-185 kbps</source>
         <translation>145-185 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="170"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="430"/>
         <source>110-150 kbps</source>
         <translation>110-150 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="171"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="431"/>
         <source>95-135 kbps</source>
         <translation>95-135 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="172"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="432"/>
         <source>80-120 kbps</source>
         <translation>80-120 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="173"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="433"/>
         <source>65-105 kbps</source>
         <translation>65-105 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="174"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="434"/>
         <source>45-85 kbps (Smaller files)</source>
         <translation>45-85 kbps (Smaller files)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="183"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="443"/>
         <source>Excessive, 320 kbps</source>
         <translation>Excessive, 320 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="184"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="444"/>
         <source>Extreme, 220-260 kbps</source>
         <translation>Extreme, 220-260 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="185"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="445"/>
         <source>Standard, 170-210 kbps</source>
         <translation>Standard, 170-210 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="186"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="446"/>
         <source>Medium, 145-185 kbps</source>
         <translation>Medium, 145-185 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="190"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="450"/>
         <source>Excessive</source>
         <translation>Excessive</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="191"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="451"/>
         <source>Extreme</source>
         <translation>Extreme</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="192"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="452"/>
         <source>Standard</source>
         <translation>Standard</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="193"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="453"/>
         <source>Medium</source>
         <translation>Medium</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="219"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="479"/>
         <source>Bit Rate Mode</source>
         <translation>Bit Rate Mode</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="231"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="491"/>
         <source>Preset</source>
         <translation>Preset</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="232"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="492"/>
         <source>Variable</source>
         <translation>Variable</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="233"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="493"/>
         <source>Average</source>
         <translation>Average</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="234"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="494"/>
         <source>Constant</source>
         <translation>Constant</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="238"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="245"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="252"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="259"/>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="34"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="46"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="51"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="498"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="505"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="512"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="519"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="110"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="308"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="76"/>
         <source>Quality</source>
         <translation>Quality</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="735"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="995"/>
         <source>You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.
 Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>%1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version</extracomment>
@@ -15191,115 +15467,115 @@ Please download the latest version of ‘LAME for Audacity’.</source>
 Please download the latest version of ‘LAME for Audacity’.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1284"/>
         <source>Only lame_enc.dll</source>
         <translation>Only lame_enc.dll</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1063"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1323"/>
         <source>Only libmp3lame64bit.dylib</source>
         <translation>Only libmp3lame64bit.dylib</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1066"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1326"/>
         <source>Only libmp3lame.dylib</source>
         <translation>Only libmp3lame.dylib</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1090"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1350"/>
         <source>Only libmp3lame.so</source>
         <translation>Only libmp3lame.so</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1091"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1114"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1351"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1374"/>
         <source>Primary shared object files</source>
         <translation>Primary shared object files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1092"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1115"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1352"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1375"/>
         <source>Extended libraries</source>
         <translation>Extended libraries</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1113"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1373"/>
         <source>Only libmp3lame.so.0</source>
         <translation>Only libmp3lame.so.0</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1234"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1494"/>
         <source>MP3 Files</source>
         <translation>MP3 Files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1334"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1373"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1594"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1633"/>
         <source>Could not open MP3 encoding library!</source>
         <translation>Could not open MP3 encoding library!</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1337"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1597"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1367"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1627"/>
         <source>Could not initialize MP3 encoding library!</source>
         <translation>Could not initialize MP3 encoding library!</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1379"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1639"/>
         <source>Not a valid or supported MP3 encoding library!</source>
         <translation>Not a valid or supported MP3 encoding library!</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1464"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1724"/>
         <source>Unable to initialize MP3 stream</source>
         <translation>Unable to initialize MP3 stream</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1498"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1758"/>
         <source>Exporting selected audio with %1 preset</source>
         <translation>Exporting selected audio with %1 preset</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1499"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1759"/>
         <source>Exporting the audio with %1 preset</source>
         <translation>Exporting the audio with %1 preset</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1503"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1763"/>
         <source>Exporting selected audio with VBR quality %1</source>
         <translation>Exporting selected audio with VBR quality %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1504"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1764"/>
         <source>Exporting the audio with VBR quality %1</source>
         <translation>Exporting the audio with VBR quality %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1508"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1768"/>
         <source>Exporting selected audio at %1 Kbps</source>
         <translation>Exporting selected audio at %1 Kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1509"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1769"/>
         <source>Exporting the audio at %1 Kbps</source>
         <translation>Exporting the audio at %1 Kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1556"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1816"/>
         <source>Error %1 returned from MP3 encoder</source>
         <translation>Error %1 returned from MP3 encoder</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1736"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1996"/>
         <source>MP3 export library not found</source>
         <translation>MP3 export library not found</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1743"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="2003"/>
         <source>(Built-in)</source>
         <translation>(Built-in)</translation>
     </message>
@@ -15309,242 +15585,244 @@ Please download the latest version of ‘LAME for Audacity’.</translation>
         <translation>MP3 files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="22"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="284"/>
         <source>%1 kbit/s</source>
-        <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
-----------
-kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
+        <extracomment>kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="128"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="99"/>
+        <source>Quality %1 (~%2 kbit/s)</source>
+        <translation type="unfinished">Quality %1 (~%2 kbit/s)</translation>
+    </message>
+    <message>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="204"/>
         <source>Ogg Vorbis Files</source>
         <translation>Ogg Vorbis Files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="173"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="249"/>
         <source>Unable to export - rate or quality problem</source>
         <translation>Unable to export - rate or quality problem</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="186"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="262"/>
         <source>Unable to export - problem initialising</source>
         <translation>Unable to export - problem initialising</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="198"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="274"/>
         <source>Unable to export - problem creating stream</source>
         <translation>Unable to export - problem creating stream</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="219"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="295"/>
         <source>Unable to export - problem with packets</source>
         <translation>Unable to export - problem with packets</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="227"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="303"/>
         <source>Unable to export - problem with file</source>
         <translation>Unable to export - problem with file</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="236"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="312"/>
         <source>Exporting the selected audio as Ogg Vorbis</source>
         <translation>Exporting the selected audio as Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="237"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="313"/>
         <source>Exporting the audio as Ogg Vorbis</source>
         <translation>Exporting the audio as Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="69"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="104"/>
         <source>Index[%1] Version[%2], Channels[%3], Rate[%4]</source>
         <translation>Index[%1] Version[%2], Channels[%3], Rate[%4]</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="353"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="388"/>
         <source>Media read error</source>
         <translation>Media read error</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="356"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="391"/>
         <source>Not an Ogg Vorbis file</source>
         <translation>Not an Ogg Vorbis file</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="359"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="394"/>
         <source>Vorbis version mismatch</source>
         <translation>Vorbis version mismatch</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="362"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="397"/>
         <source>Invalid Vorbis bitstream header</source>
         <translation>Invalid Vorbis bitstream header</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="365"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="400"/>
         <source>Internal logic fault</source>
         <translation>Internal logic fault</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.h" line="18"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="48"/>
         <source>Ogg Vorbis files</source>
         <translation>Ogg Vorbis files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="82"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="142"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="344"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="404"/>
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="83"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="345"/>
         <source>Maximum</source>
         <translation>Maximum</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="112"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="374"/>
         <source>VBR Mode</source>
         <translation>VBR Mode</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="121"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="383"/>
         <source>Optimize for</source>
         <translation>Optimize for</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Speech</source>
         <translation>Speech</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="195"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="457"/>
         <source>Opus Files</source>
         <translation>Opus Files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="316"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="578"/>
         <source>Unsupported sample rate</source>
         <translation>Unsupported sample rate</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="343"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="605"/>
         <source>Exporting selected audio as Opus</source>
         <translation>Exporting selected audio as Opus</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="344"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="606"/>
         <source>Exporting the audio as Opus</source>
         <translation>Exporting the audio as Opus</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="376"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="638"/>
         <source>Unable to create Opus encoder</source>
         <translation>Unable to create Opus encoder</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="383"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="645"/>
         <source>Unable to set bitrate</source>
         <translation>Unable to set bitrate</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="390"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="652"/>
         <source>Unable to set complexity</source>
         <translation>Unable to set complexity</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="397"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="659"/>
         <source>Unable to set bandwidth</source>
         <translation>Unable to set bandwidth</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="404"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="666"/>
         <source>Unable to set VBR mode</source>
         <translation>Unable to set VBR mode</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="412"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="674"/>
         <source>Unable to set CVBR mode</source>
         <translation>Unable to set CVBR mode</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="423"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="685"/>
         <source>Unable to get lookahead</source>
         <translation>Unable to get lookahead</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="431"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="693"/>
         <source>Failed to calculate correct preskip</source>
         <translation>Failed to calculate correct preskip</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="521"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="563"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="783"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="825"/>
         <source>Failed to encode input buffer</source>
         <translation>Failed to encode input buffer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="33"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="37"/>
         <source>no error</source>
         <translation>no error</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="35"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="293"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="39"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="350"/>
         <source>invalid argument</source>
         <translation>invalid argument</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="37"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="41"/>
         <source>buffer too small</source>
         <translation>buffer too small</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="39"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="289"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="43"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="346"/>
         <source>internal error</source>
         <translation>internal error</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="41"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="301"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="45"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="358"/>
         <source>invalid packet</source>
         <translation>invalid packet</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="43"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="291"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="47"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="348"/>
         <source>not implemented</source>
         <translation>not implemented</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="45"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="49"/>
         <source>invalid state</source>
         <translation>invalid state</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="47"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="51"/>
         <source>memory allocation has failed</source>
         <translation>memory allocation has failed</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="49"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="53"/>
         <source>Unknown error</source>
         <translation>Unknown error</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="119"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="123"/>
         <source>Buffer overflow in OGG packet</source>
         <translation>Buffer overflow in OGG packet</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="249"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="253"/>
         <source>Unable to write OGG page header</source>
         <translation>Unable to write OGG page header</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="253"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="257"/>
         <source>Unable to write OGG page</source>
         <translation>Unable to write OGG page</translation>
     </message>
@@ -15554,113 +15832,113 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <translation>Opus files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="152"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="209"/>
         <source>File has changed the number of channels in the middle.</source>
         <translation>File has changed the number of channels in the middle.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="287"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="344"/>
         <source>IO error reading from file</source>
         <translation>IO error reading from file</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="295"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="352"/>
         <source>not an Opus file</source>
         <translation>not an Opus file</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="297"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="354"/>
         <source>invalid header</source>
         <translation>invalid header</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="299"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="356"/>
         <source>unsupported version</source>
         <translation>unsupported version</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="303"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="360"/>
         <source>invalid stream structure</source>
         <translation>invalid stream structure</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="305"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="362"/>
         <source>stream is not seekable</source>
         <translation>stream is not seekable</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="307"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="364"/>
         <source>invalid timestamp</source>
         <translation>invalid timestamp</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="337"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="394"/>
         <source>Failed to decode Opus file: %1</source>
         <extracomment>%1 is the error message</extracomment>
         <translation>Failed to decode Opus file: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="57"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="141"/>
         <source>AIFF (Apple/SGI)</source>
         <translation>AIFF (Apple/SGI)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="61"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="145"/>
         <source>WAV (Microsoft)</source>
         <translation>WAV (Microsoft)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="129"/>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="219"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="213"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="303"/>
         <source>Encoding</source>
         <translation>Encoding</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="198"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="282"/>
         <source>Header</source>
         <translation>Header</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="398"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="482"/>
         <source>Other uncompressed files</source>
         <translation>Other uncompressed files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="517"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="601"/>
         <source>GSM 6.10 requires mono</source>
         <translation>GSM 6.10 requires mono</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="521"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="605"/>
         <source>WAVEX and GSM 6.10 formats are not compatible</source>
         <translation>WAVEX and GSM 6.10 formats are not compatible</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="534"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="618"/>
         <source>Cannot export audio in this format.</source>
         <translation>Cannot export audio in this format.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="548"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="632"/>
         <source>Cannot export audio to %1</source>
         <extracomment>%1 is the file path</extracomment>
         <translation>Cannot export audio to %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="581"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="665"/>
         <source>You have attempted to Export a WAV or AIFF file which would be greater than 4GB.
 Audacity cannot do this, the Export was abandoned.</source>
         <translation>You have attempted to Export a WAV or AIFF file which would be greater than 4GB.
 Audacity cannot do this, the Export was abandoned.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="590"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="674"/>
         <source>Exporting the selected audio as %1</source>
         <extracomment>%1 is a format description</extracomment>
         <translation>Exporting the selected audio as %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="740"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
         <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
@@ -15668,68 +15946,68 @@ Libsndfile says “%2”</source>
 Libsndfile says “%2”</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="57"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="84"/>
         <source>WAV, AIFF, and other uncompressed types</source>
         <translation>WAV, AIFF, and other uncompressed types</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="163"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="297"/>
         <source>WavPack Files</source>
         <translation>WavPack Files</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="316"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="450"/>
         <source>Unable to create target file for writing</source>
         <translation>Unable to create target file for writing</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="334"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="468"/>
         <source>Exporting selected audio as WavPack</source>
         <translation>Exporting selected audio as WavPack</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="335"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="469"/>
         <source>Exporting the audio as WavPack</source>
         <translation>Exporting the audio as WavPack</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="21"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="46"/>
         <source>Low Quality (Fast)</source>
         <translation>Low Quality (Fast)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="22"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="47"/>
         <source>Normal Quality</source>
         <translation>Normal Quality</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="23"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="48"/>
         <source>High Quality (Slow)</source>
         <translation>High Quality (Slow)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="24"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="49"/>
         <source>Very High Quality (Slowest)</source>
         <translation>Very High Quality (Slowest)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="30"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="55"/>
         <source>32 bit float</source>
         <translation>32 bit float</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="59"/>
         <source>%1 bps</source>
         <extracomment>bps abbreviates &quot;bits per sample&quot;</extracomment>
         <translation>%1 bps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="65"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="90"/>
         <source>Hybrid Mode</source>
         <translation>Hybrid Mode</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="70"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="95"/>
         <source>Create Correction(.wvc) File</source>
         <translation>Create Correction(.wvc) File</translation>
     </message>
@@ -15739,7 +16017,7 @@ Libsndfile says “%2”</translation>
         <translation>WavPack files</translation>
     </message>
     <message numerus="yes">
-        <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="258"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
         <translation>
@@ -16277,14 +16555,14 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <translation>COMMENTS</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="171"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="136"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="175"/>
         <source>Error loading template</source>
         <translation>Error loading template</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="133"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="172"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="137"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="176"/>
         <source>Unable to load metadata template from given file.</source>
         <translation>Unable to load metadata template from given file.</translation>
     </message>
@@ -16322,12 +16600,12 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
 <context>
     <name>module-manager</name>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="70"/>
         <source>Module Unsuitable</source>
         <translation>Module Unsuitable</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="93"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="94"/>
         <source>Unable to load the “%1” module.
 
 Error: %2</source>
@@ -16337,7 +16615,7 @@ Error: %2</source>
 Error: %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="125"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="126"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
@@ -16346,7 +16624,7 @@ It will not be loaded.</source>
 It will not be loaded.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="136"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="137"/>
         <source>The module “%1” is matched with Audacity version “%2”.
 
 It will not be loaded.</source>
@@ -16356,7 +16634,7 @@ It will not be loaded.</source>
 It will not be loaded.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="159"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="160"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
@@ -16365,12 +16643,12 @@ It will not be loaded.</source>
 It will not be loaded.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="319"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
         <source>Module “%1” found.</source>
         <translation>Module “%1” found.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="321"/>
         <source>
 
 Only use modules from trusted sources</source>
@@ -16379,27 +16657,27 @@ Only use modules from trusted sources</source>
 Only use modules from trusted sources</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="323"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="322"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="323"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="325"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="326"/>
         <source>Audacity Module Loader</source>
         <translation>Audacity Module Loader</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="328"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="329"/>
         <source>Try and load this module?</source>
         <translation>Try and load this module?</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="353"/>
+        <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="354"/>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
@@ -16408,22 +16686,22 @@ It will not be loaded.</source>
 It will not be loaded.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="421"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="414"/>
         <source>Overwrite the plug-in file %1?</source>
         <translation>Overwrite the plug-in file %1?</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="424"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="417"/>
         <source>Plug-in already exists</source>
         <translation>Plug-in already exists</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="447"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="440"/>
         <source>Plug-in file is in use. Failed to overwrite</source>
         <translation>Plug-in file is in use. Failed to overwrite</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="469"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="462"/>
         <source>Failed to register:
 %1</source>
         <extracomment>%1 is the error message explaining why registration failed</extracomment>
@@ -16431,11 +16709,12 @@ It will not be loaded.</translation>
 %1</translation>
     </message>
     <message numerus="yes">
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="471"/>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
         <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation type="vanished">
+        <translation>
             <numerusform>Enable this plug-in?
 </numerusform>
             <numerusform>Enable this plug-in?
@@ -16443,7 +16722,7 @@ It will not be loaded.</translation>
         </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="479"/>
         <source>Enable new plug-ins</source>
         <translation>Enable new plug-ins</translation>
     </message>
@@ -16523,152 +16802,152 @@ It will not be loaded.</translation>
         <translation>Navigate escape</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
         <source>Next section</source>
         <translation>Next section</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="42"/>
         <source>Navigate next section</source>
         <translation>Navigate next section</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="49"/>
         <source>Previous section</source>
         <translation>Previous section</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="50"/>
         <source>Navigate previous section</source>
         <translation>Navigate previous section</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="57"/>
         <source>Next panel</source>
         <translation>Next panel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="58"/>
         <source>Navigate next panel</source>
         <translation>Navigate next panel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="65"/>
         <source>Previous panel</source>
         <translation>Previous panel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="66"/>
         <source>Navigate previous panel</source>
         <translation>Navigate previous panel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="73"/>
         <source>Next tab</source>
         <translation>Next tab</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="74"/>
         <source>Navigate next tab</source>
         <translation>Navigate next tab</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="81"/>
         <source>Previous tab</source>
         <translation>Previous tab</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
         <source>Navigate previous tab</source>
         <translation>Navigate previous tab</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
         <source>Right</source>
         <translation>Right</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
         <source>Navigate right</source>
         <translation>Navigate right</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
         <source>Left</source>
         <translation>Left</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="98"/>
         <source>Navigate left</source>
         <translation>Navigate left</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="105"/>
         <source>Up</source>
         <translation>Up</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="106"/>
         <source>Navigate up</source>
         <translation>Navigate up</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="113"/>
         <source>Down</source>
         <translation>Down</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="114"/>
         <source>Navigate down</source>
         <translation>Navigate down</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="121"/>
         <source>First control</source>
         <translation>First control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="122"/>
         <source>Navigate first control</source>
         <translation>Navigate first control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="129"/>
         <source>Last control</source>
         <translation>Last control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="130"/>
         <source>Navigate last control</source>
         <translation>Navigate last control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="137"/>
         <source>Next row control</source>
         <translation>Next row control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
         <source>Navigate next row control</source>
         <translation>Navigate next row control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="145"/>
         <source>Previous row control</source>
         <translation>Previous row control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="146"/>
         <source>Navigate previous row control</source>
         <translation>Navigate previous row control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="153"/>
         <source>Trigger control</source>
         <translation>Trigger control</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="154"/>
         <source>Navigate trigger control</source>
         <translation>Navigate trigger control</translation>
     </message>
@@ -17174,7 +17453,7 @@ It will not be loaded.</translation>
         <translation>Moved volume slider</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="87"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VolumeSlider.qml" line="89"/>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="40"/>
         <source>Volume</source>
         <translation>Volume</translation>
@@ -17191,7 +17470,7 @@ It will not be loaded.</translation>
         <translation>Pan</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="78"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="79"/>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
         <source>Playback volume</source>
         <translation>Playback volume</translation>
@@ -17209,103 +17488,103 @@ It will not be loaded.</translation>
         <translation>Playback meter settings</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="43"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="42"/>
         <source>Audio settings are already being changed.</source>
         <translation>Audio settings are already being changed.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="45"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="44"/>
         <source>The selected audio settings are invalid.</source>
         <translation>The selected audio settings are invalid.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="47"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="46"/>
         <source>The selected audio routing is invalid.</source>
         <translation>The selected audio routing is invalid.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="49"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="48"/>
         <source>No usable audio API is available.</source>
         <translation>No usable audio API is available.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="51"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="50"/>
         <source>No ASIO device is available.</source>
         <translation>No ASIO device is available.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="53"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="52"/>
         <source>The active audio stream could not be stopped.</source>
         <translation>The active audio stream could not be stopped.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="55"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="54"/>
         <source>An internal error occurred while changing the audio settings.</source>
         <translation>An internal error occurred while changing the audio settings.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="140"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="154"/>
         <source>No playback device is available.</source>
         <translation>No playback device is available.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="155"/>
         <source>“%1” is now used for playback.</source>
         <translation>“%1” is now used for playback.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="143"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="157"/>
         <source>Playback device changed</source>
         <translation>Playback device changed</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="148"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="162"/>
         <source>No recording device is available.</source>
         <translation>No recording device is available.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="163"/>
         <source>“%1” is now used for recording.</source>
         <translation>“%1” is now used for recording.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="151"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="165"/>
         <source>Recording device changed</source>
         <translation>Recording device changed</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="959"/>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="983"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="994"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1018"/>
         <source>The previous audio state could not be restored.</source>
         <translation>The previous audio state could not be restored.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="960"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
         <source>Unable to rescan audio devices</source>
         <translation>Unable to rescan audio devices</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="966"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1001"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
         <translation>The audio stream could not be restored after rescanning audio devices.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="968"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1003"/>
         <source>Audio devices</source>
         <translation>Audio devices</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="984"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1019"/>
         <source>Unable to change audio settings</source>
         <translation>Unable to change audio settings</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="993"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1028"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
         <translation>The audio stream could not be restored after changing the audio settings.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1030"/>
         <source>Audio settings</source>
         <translation>Audio settings</translation>
     </message>
@@ -17318,7 +17597,7 @@ It will not be loaded.</translation>
         <translation>Loop in</translation>
     </message>
     <message>
-        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="110"/>
+        <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="101"/>
         <source>Loop out</source>
         <translation>Loop out</translation>
     </message>
@@ -17677,7 +17956,7 @@ It will not be loaded.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="198"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="199"/>
         <source>Appearance</source>
         <translation>Appearance</translation>
     </message>
@@ -17769,7 +18048,7 @@ It will not be loaded.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="38"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="39"/>
         <source>Audio settings are already being changed.</source>
         <translation>Audio settings are already being changed.</translation>
     </message>
@@ -17795,7 +18074,7 @@ It will not be loaded.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="42"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="43"/>
         <source>The active audio stream could not be stopped.</source>
         <translation>The active audio stream could not be stopped.</translation>
     </message>
@@ -17817,7 +18096,7 @@ It will not be loaded.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="252"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="253"/>
         <source>The previous audio state could not be restored.</source>
         <translation>The previous audio state could not be restored.</translation>
     </message>
@@ -17870,51 +18149,51 @@ It will not be loaded.</translation>
         <translation>Changes to temporary directory will not take effect until Audacity is restarted</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="195"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="196"/>
         <source>General</source>
         <translation>General</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="164"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="267"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="201"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="266"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="202"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="267"/>
         <source>Audio settings</source>
         <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
         <translation>Audio settings</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="41"/>
         <source>The default audio settings are invalid.</source>
         <translation>The default audio settings are invalid.</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="47"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="48"/>
         <source>An internal error occurred while resetting the audio settings.</source>
         <translation>An internal error occurred while resetting the audio settings.</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="204"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="205"/>
         <source>Audio editing</source>
         <translation>Audio editing</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="207"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="208"/>
         <source>Playback/Recording</source>
         <translation>Playback/Recording</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="211"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="212"/>
         <source>Spectral display</source>
         <translation>Spectral display</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="216"/>
         <source>Music</source>
         <translation>Music</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="220"/>
         <source>Export</source>
         <translation>Export</translation>
     </message>
@@ -17923,12 +18202,12 @@ It will not be loaded.</translation>
         <translation type="vanished">Cloud</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="225"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="226"/>
         <source>Shortcuts</source>
         <translation>Shortcuts</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="229"/>
         <source>Plugins</source>
         <translation>Plugins</translation>
     </message>
@@ -17937,12 +18216,12 @@ It will not be loaded.</translation>
         <translation type="vanished">Advanced options</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="255"/>
         <source>Unable to reset audio settings</source>
         <translation>Unable to reset audio settings</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="262"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
         <translation>The audio stream could not be restored after resetting the audio settings.</translation>
     </message>
@@ -18378,7 +18657,7 @@ It will not be loaded.</translation>
         <translation>Accent color</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="529"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="541"/>
         <source>Could not save project locally</source>
         <translation>Could not save project locally</translation>
     </message>
@@ -18388,9 +18667,9 @@ It will not be loaded.</translation>
         <translation>Project loading failed</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="592"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="788"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="711"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="826"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="875"/>
         <source>All supported files</source>
         <translation>All supported files</translation>
     </message>
@@ -18416,189 +18695,189 @@ It will not be loaded.</translation>
         <translation>Imported multiple files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="381"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="398"/>
         <source>Error opening file</source>
         <translation>Error opening file</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="382"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="399"/>
         <source>Could not open file: %1</source>
         <translation>Could not open file: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="703"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="726"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1099"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1118"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="745"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1137"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Dismiss</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="739"/>
         <source>Upload project to audio.com…</source>
         <translation>Upload project to audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="789"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="827"/>
         <source>Audacity project files</source>
         <translation>Audacity project files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="790"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="828"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3 files</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="791"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="829"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4 files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="603"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <source>Cloud sync failed</source>
         <translation>Cloud sync failed</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="631"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
         <source>Project unavailable</source>
         <translation>Project unavailable</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="640"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="646"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="794"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="586"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="740"/>
         <source>Access denied</source>
         <translation>Access denied</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="774"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="720"/>
         <source>Version conflict</source>
         <translation>Version conflict</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="675"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="621"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
         <source>Visit audio.com</source>
         <translation>Visit audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="623"/>
         <source>Load latest</source>
         <translation>Load latest</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="684"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="630"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
         <source>Project incomplete</source>
         <translation>Project incomplete</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="811"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="757"/>
         <source>Network error</source>
         <translation>Network error</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="697"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1094"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="716"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1132"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="792"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="830"/>
         <source>Importable audio and media files</source>
         <translation>Importable audio and media files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="806"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="856"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="844"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="894"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Open</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="838"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="876"/>
         <source>Audio files</source>
         <translation>Audio files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="839"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
         <source>Video files</source>
         <translation>Video files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="840"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
         <source>Game media files</source>
         <translation>Game media files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="841"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="879"/>
         <source>Streaming files</source>
         <translation>Streaming files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="842"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="880"/>
         <source>Animation and image files</source>
         <translation>Animation and image files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="881"/>
         <source>Raw files</source>
         <translation>Raw files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="910"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Do you want to save changes to the project before closing?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="912"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Do you want to save changes to the project “%1” before closing?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="916"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Your changes will be lost if you don’t save them.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="885"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="923"/>
         <source>Unsaved changes</source>
         <translation>Unsaved changes</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1112"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1150"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Resuming sync to audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1556"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1168"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1599"/>
         <source>Syncing project from cloud…</source>
         <translation>Syncing project from cloud…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1291"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1329"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Cannot read file %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1296"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1334"/>
         <source>An error occurred while reading this file.</source>
         <translation>An error occurred while reading this file.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="731"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="747"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="693"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="733"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Save to computer</translation>
@@ -18684,17 +18963,17 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="563"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="564"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="460"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="488"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2290"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2771"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2292"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2773"/>
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1114"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1113"/>
         <source>Progress</source>
         <extracomment>This title appears on a dialog that indicates the progress in doing something.</extracomment>
         <translation>Progress</translation>
@@ -18712,40 +18991,40 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>(%1): %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="186"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="187"/>
         <source>Failed to set page size for database %1</source>
         <translation>Failed to set page size for database %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="195"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="196"/>
         <source>Failed to set safe mode on primary connection to %1</source>
         <translation>Failed to set safe mode on primary connection to %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="213"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="214"/>
         <source>Failed to set safe mode on checkpoint connection to %1</source>
         <translation>Failed to set safe mode on checkpoint connection to %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="243"/>
         <source>Checkpointing project</source>
         <translation>Checkpointing project</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="248"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="249"/>
         <source>Checkpointing %1</source>
         <extracomment>%1 is the name of the project being checkpointed</extracomment>
         <translation>Checkpointing %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="254"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="255"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1333"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2350"/>
         <source>This may take several seconds</source>
         <translation>This may take several seconds</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="548"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="549"/>
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
@@ -18753,7 +19032,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="551"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="552"/>
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
@@ -18761,7 +19040,7 @@ Please remove the write protection by checking the file’s properties, ensuring
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="638"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="639"/>
         <source>Failed to create savepoint:
 
 %1</source>
@@ -18771,8 +19050,8 @@ Please remove the write protection by checking the file’s properties, ensuring
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="662"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="685"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="663"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="686"/>
         <source>Failed to release savepoint:
 
 %1</source>
@@ -18931,29 +19210,28 @@ File might be corrupted or read only.</translation>
         <translation>Unable to work with the blockfiles</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="948"/>
         <source>Total orphan blocks deleted %1</source>
         <extracomment>%1 is the number of deleted orphan blocks</extracomment>
-        <translation>Total orphan blocks deleted %1</translation>
+        <translation type="vanished">Total orphan blocks deleted %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1029"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1028"/>
         <source>Failed to rollback transaction during import</source>
         <translation>Failed to rollback transaction during import</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1053"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1052"/>
         <source>Unable to attach destination database</source>
         <translation>Unable to attach destination database</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1064"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1063"/>
         <source>Unable to switch to fast journaling mode</source>
         <translation>Unable to switch to fast journaling mode</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1106"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1964"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1105"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1963"/>
         <source>Unable to prepare project file command:
 
 %1</source>
@@ -18963,13 +19241,13 @@ File might be corrupted or read only.</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1139"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1138"/>
         <source>Failed to bind SQL parameter</source>
         <translation>Failed to bind SQL parameter</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1154"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1989"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1153"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1988"/>
         <source>Failed to update the project file.
 The following command failed:
 
@@ -18981,27 +19259,27 @@ The following command failed:
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1185"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1184"/>
         <source>Failed to copy the project history.</source>
         <translation>Failed to copy the project history.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1209"/>
         <source>Destination project could not be detached</source>
         <translation>Destination project could not be detached</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1333"/>
         <source>Copying Project</source>
         <translation>Copying Project</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1347"/>
         <source>Error Writing to File</source>
         <translation>Error Writing to File</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1350"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1349"/>
         <source>Audacity failed to write file %1.
 Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</source>
@@ -19011,29 +19289,29 @@ Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1583"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1582"/>
         <source>Compacting project</source>
         <translation>Compacting project</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1685"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1684"/>
         <source>[Project %1] Audacity “%2”</source>
         <extracomment>%1 is the project number, %2 is the project name.</extracomment>
         <translation>[Project %1] Audacity “%2”</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1687"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1686"/>
         <source>&lt;untitled&gt;</source>
         <translation>&lt;untitled&gt;</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1698"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1697"/>
         <source>(Recovered)</source>
         <extracomment>E.g this is recovered audio that had been lost.</extracomment>
         <translation>(Recovered)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1798"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1797"/>
         <source>This file was saved using Audacity %1.
 You are using Audacity %2. You may need to upgrade to a newer version to open this file.</source>
         <extracomment>%1 is the Audacity version that saved the file, %2 is the running version.</extracomment>
@@ -19041,58 +19319,58 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
 You are using Audacity %2. You may need to upgrade to a newer version to open this file.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1802"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1801"/>
         <source>Can’t open project file</source>
         <translation>Can’t open project file</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1918"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1917"/>
         <source>Failed to remove the autosave information from the project file.</source>
         <translation>Failed to remove the autosave information from the project file.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1982"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2032"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2042"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2055"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1981"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2031"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2041"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2054"/>
         <source>Unable to bind to blob</source>
         <translation>Unable to bind to blob</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2155"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2154"/>
         <source>The project file is read-only</source>
         <translation>The project file is read-only</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2191"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2193"/>
         <source>Unable to parse project information.</source>
         <translation>Unable to parse project information.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2291"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2293"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
         <translation>The project’s database failed to reopen, possibly because of limited space on the storage device.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2307"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2309"/>
         <source>Saving project</source>
         <translation>Saving project</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2309"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2363"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2383"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2425"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2311"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2365"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2385"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2427"/>
         <source>Error Saving Project</source>
         <translation>Error Saving Project</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2350"/>
         <source>Syncing</source>
         <translation>Syncing</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2365"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2367"/>
         <source>The project failed to open, possibly due to limited space
 on the storage device.
 
@@ -19104,7 +19382,7 @@ on the storage device.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2385"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2387"/>
         <source>Unable to remove autosave information, possibly due to limited space
 on the storage device.
 
@@ -19116,12 +19394,12 @@ on the storage device.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2451"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2453"/>
         <source>Backing up project</source>
         <translation>Backing up project</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2770"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2772"/>
         <source>Automatic database backup failed.</source>
         <translation>Automatic database backup failed.</translation>
     </message>
@@ -19250,57 +19528,57 @@ You need to run that version of Audacity to recover the project.</translation>
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="432"/>
         <source>Audacity 3 project</source>
         <translation>Audacity 3 project</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="433"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="492"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="438"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="495"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="441"/>
         <source>Save as new project</source>
         <translation>Save as new project</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="444"/>
         <source>Legacy project</source>
         <translation>Legacy project</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="469"/>
         <source>The project was saved as “%1”</source>
         <translation>The project was saved as “%1”</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="472"/>
         <source>Continue</source>
         <translation>Continue</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="475"/>
         <source>Project saved</source>
         <translation>Project saved</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1194"/>
         <source>Time Track not supported</source>
         <translation>Time Track not supported</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1195"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1161"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1199"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -19379,7 +19657,7 @@ You need to run that version of Audacity to recover the project.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="505"/>
         <source>Save to computer</source>
         <translation>Save to computer</translation>
     </message>
@@ -19407,41 +19685,40 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>selection</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="270"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
-        <translation>Log in or create a new account on Audio.com to share your music.</translation>
+        <translation type="vanished">Log in or create a new account on Audio.com to share your music.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="537"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="483"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Publish</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="541"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
         <source>Publish changes online?</source>
         <translation>Publish changes online?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="542"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="488"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="563"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="499"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="509"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Please check your internet connection or try again later.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="552"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="562"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="508"/>
         <source>Unable to connect to the cloud</source>
         <translation>Unable to connect to the cloud</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="576"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="522"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Unable to connect to Audio.com</translation>
     </message>
@@ -19501,34 +19778,34 @@ You need to run that version of Audacity to recover the project.</translation>
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="858"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="804"/>
         <source>Your audio could not be shared</source>
         <translation>Your audio could not be shared</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="866"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="872"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="818"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com returned an unknown error code: %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="875"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="821"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com returned an unknown error code.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="877"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="884"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="823"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="830"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Please try again later, or get help for this problem on audio.com.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="880"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="826"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>Could not connect to audio.com. Please check your internet connection or try again later.</translation>
     </message>
@@ -19544,22 +19821,22 @@ You need to run that version of Audacity to recover the project.</translation>
 <context>
     <name>projectscene</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="28"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="38"/>
         <source>Selection</source>
         <translation>Selection</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="50"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="61"/>
         <source>Selection start</source>
         <translation>Selection start</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="51"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="62"/>
         <source>Selection end</source>
         <translation>Selection end</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="82"/>
         <source>Duration</source>
         <translation>Duration</translation>
     </message>
@@ -19600,8 +19877,8 @@ You need to run that version of Audacity to recover the project.</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml" line="43"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="348"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="355"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="350"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="357"/>
         <source>Customize toolbar</source>
         <extracomment>Tooltip of the toolbar customization button</extracomment>
         <translation>Customize toolbar</translation>
@@ -19617,23 +19894,23 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>Playback position:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="312"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap</source>
         <extracomment>Noun: label of the snapping control in the playback toolbar</extracomment>
         <translation>Snap</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="313"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="315"/>
         <source>Snapping</source>
         <translation>Snapping</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="316"/>
         <source>Snap to</source>
         <translation>Snap to</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="349"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="351"/>
         <source>Show/hide toolbar buttons</source>
         <translation>Show/hide toolbar buttons</translation>
     </message>
@@ -19649,7 +19926,7 @@ You need to run that version of Audacity to recover the project.</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="15"/>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="434"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="438"/>
         <source>New label track</source>
         <translation>New label track</translation>
     </message>
@@ -19753,72 +20030,69 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>Label</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="20"/>
         <source>Pan: 100R</source>
-        <translation>Pan: 100R</translation>
+        <translation type="vanished">Pan: 100R</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="33"/>
         <source>Pan:</source>
-        <translation>Pan:</translation>
+        <translation type="vanished">Pan:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all master effects</source>
         <translation>Toggle all master effects</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="61"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="62"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all effects</source>
         <translation>Toggle all effects</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="132"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="136"/>
         <source>Add effect</source>
         <translation>Add effect</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="130"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
         <source>Add master effect</source>
         <translation>Add master effect</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="158"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="162"/>
         <source>Realtime effects are non-destructive and can be changed at any time.</source>
         <translation>Realtime effects are non-destructive and can be changed at any time.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="163"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="58"/>
         <source>Real-time effects panel</source>
-        <translation>Real-time effects panel</translation>
+        <translation type="vanished">Real-time effects panel</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="73"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
         <source>Realtime effects</source>
         <translation>Realtime effects</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="101"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="91"/>
         <source>Close real-time effects panel</source>
         <extracomment>Tooltip of the button that closes the panel</extracomment>
         <translation>Close real-time effects panel</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="131"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="121"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="149"/>
         <source>Add track</source>
         <translation>Add track</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="139"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="129"/>
         <source>Tracks</source>
         <translation>Tracks</translation>
     </message>
@@ -20002,7 +20276,7 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>High frequency</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="29"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="30"/>
         <source>Remove effect</source>
         <translation>Remove effect</translation>
     </message>
@@ -20022,12 +20296,12 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>Clip: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="689"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="695"/>
         <source>Clip name: %1</source>
         <translation>Clip name: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="831"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="837"/>
         <source>Clip menu</source>
         <translation>Clip menu</translation>
     </message>
@@ -20071,28 +20345,28 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>Track menu</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="198"/>
         <source>Track %1: %2, audio track, selected</source>
         <translation>Track %1: %2, audio track, selected</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="238"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="198"/>
         <source>Track %1: %2, audio track</source>
         <translation>Track %1: %2, audio track</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="239"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="304"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="199"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="266"/>
         <source>Press Enter to select or deselect</source>
         <translation>Press Enter to select or deselect</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="265"/>
         <source>Track %1: %2, label track, selected</source>
         <translation>Track %1: %2, label track, selected</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="265"/>
         <source>Track %1: %2, label track</source>
         <translation>Track %1: %2, label track</translation>
     </message>
@@ -20151,6 +20425,22 @@ You need to run that version of Audacity to recover the project.</translation>
         <source>Cyan</source>
         <translation>Cyan</translation>
     </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="55"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="66"/>
+        <source>Timeline</source>
+        <translation type="unfinished">Timeline</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml" line="93"/>
+        <source>Track %1: %2, vertical ruler</source>
+        <translation type="unfinished">Track %1: %2, vertical ruler</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
+        <source>Pan: %1</source>
+        <translation type="unfinished">Pan: %1</translation>
+    </message>
 </context>
 <context>
     <name>projectscene/silence</name>
@@ -20208,28 +20498,28 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>Show mic metering when not recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="973"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="970"/>
         <source>Record</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Record</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="971"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="968"/>
         <source>Recorded audio</source>
         <translation>Recorded audio</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="118"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="150"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="170"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="185"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="200"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="138"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="171"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="191"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="207"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="223"/>
         <source>Recording error</source>
         <extracomment>Title of an error dialog</extracomment>
         <translation>Recording error</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="223"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="247"/>
         <source>Lead-in Recording error</source>
         <translation>Lead-in Recording error</translation>
     </message>
@@ -21231,6 +21521,41 @@ Please connect an input device and rescan.</translation>
             <numerusform>%n second(s) remaining</numerusform>
         </translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="98"/>
+        <source>%1 of %2</source>
+        <translation type="unfinished">%1 of %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="264"/>
+        <source>Dismiss</source>
+        <translation type="unfinished">Dismiss</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="43"/>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="45"/>
+        <source>Warning</source>
+        <translation type="unfinished">Warning</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="47"/>
+        <source>Information</source>
+        <translation type="unfinished">Information</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="49"/>
+        <source>Success</source>
+        <translation type="unfinished">Success</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="106"/>
+        <source>Press F6 to go to the notification.</source>
+        <translation type="unfinished">Press F6 to go to the notification.</translation>
+    </message>
 </context>
 <context>
     <name>track</name>
@@ -21243,56 +21568,56 @@ Please connect an input device and rescan.</translation>
 <context>
     <name>trackcontextmenu</name>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="60"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="85"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="108"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="63"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="88"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="111"/>
         <source>Move track</source>
         <translation>Move track</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="86"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Track visualization</source>
         <translation>Track visualization</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="62"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="87"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="109"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="65"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="90"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="112"/>
         <source>Track color</source>
         <translation>Track color</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="67"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="92"/>
         <source>Meters &amp;&amp; monitoring</source>
         <translation>Meters &amp;&amp; monitoring</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="93"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="73"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="96"/>
         <source>Format:</source>
         <translation>Format:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="71"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="94"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="74"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="97"/>
         <source>Rate:</source>
         <translation>Rate:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="342"/>
         <source>Format: %1</source>
         <translation>Format: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="376"/>
         <source>Rate: %1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
         <translation>Rate: %1 Hz</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="467"/>
         <source>%1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
         <translation>%1 Hz</translation>
@@ -21341,38 +21666,38 @@ Please connect an input device and rescan.</translation>
         <translation>Dragged enveloped point</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="861"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="896"/>
         <source>Set looping region in/out</source>
         <translation>Set looping region in/out</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="41"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="42"/>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="48"/>
         <source>Mixing down to mono…</source>
         <translation>Mixing down to mono…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="277"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="278"/>
         <source>Rendering pitch and speed…</source>
         <translation>Rendering pitch and speed…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1413"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1355"/>
         <source>Mix down to mono</source>
         <translation>Mix down to mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1414"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1356"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
         <translation>This action requires one or more clips to be converted to mono. Would you like to proceed?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1573"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1583"/>
         <source>Combine mono tracks to stereo</source>
         <translation>Combine mono tracks to stereo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1574"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1584"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -21391,39 +21716,39 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="827"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="850"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="873"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="904"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="833"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="856"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="879"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="910"/>
         <source>No audio selected</source>
         <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
         <translation>No audio selected</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="828"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="851"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="874"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="905"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="834"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="857"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="880"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="911"/>
         <source>Select the audio to delete and try again.</source>
         <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Select the audio to delete and try again.</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1340"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1354"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1368"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1346"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1360"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1374"/>
         <source>Paste error</source>
         <translation>Paste error</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2091"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2097"/>
         <source>Set rate</source>
         <translation>Set rate</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2250"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2267"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resample track</source>
         <translation>Resample track</translation>
     </message>
@@ -21492,7 +21817,7 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="656"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="687"/>
         <source>Changed Speed</source>
         <translation>Changed Speed</translation>
     </message>
@@ -21541,13 +21866,13 @@ Do you wish to continue?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
         <source>Cut</source>
         <translation>Cut</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
         <source>Remove multiple items</source>
         <translation>Remove multiple items</translation>
     </message>
@@ -21558,15 +21883,15 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="976"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Remove</source>
         <translation>Remove</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1156"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1137"/>
         <source>Delete</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Delete</translation>
@@ -21577,369 +21902,374 @@ Do you wish to continue?</translation>
         <translation>Delete and close gap</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="392"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
         <source>Items moved</source>
         <translation>Items moved</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="367"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="395"/>
         <source>Clip moved</source>
         <translation>Clip moved</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="368"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="396"/>
         <source>Move clip</source>
         <translation>Move clip</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="416"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="393"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
         <source>Move items</source>
         <translation>Move items</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="437"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="398"/>
+        <source>Label moved</source>
+        <translation type="unfinished">Label moved</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="399"/>
+        <source>Move label</source>
+        <translation type="unfinished">Move label</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
         <source>Split</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Split</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
         <source>Split clips at silence</source>
         <translation>Split clips at silence</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="446"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="455"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
         <source>Split at silence</source>
         <translation>Split at silence</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="464"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="473"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="495"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="504"/>
         <source>Split into new track</source>
         <translation>Split into new track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
         <source>Split-cut to the clipboard</source>
         <translation>Split-cut to the clipboard</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="519"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
         <source>Split cut</source>
         <translation>Split cut</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
         <source>Trim items left</source>
         <translation>Trim items left</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="572"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
         <source>Trim clip left</source>
         <translation>Trim clip left</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="574"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="596"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="605"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="627"/>
         <source>Trim</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Trim</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
         <source>Trim items right</source>
         <translation>Trim items right</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="595"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
         <source>Trim clip right</source>
         <translation>Trim clip right</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="657"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="688"/>
         <source>Changed speed to: %1%</source>
         <translation>Changed speed to: %1%</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="660"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Stretch Left</source>
         <translation>Stretch Left</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
         <source>Stretch items left</source>
         <translation>Stretch items left</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="661"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
         <source>Stretch clips left</source>
         <translation>Stretch clips left</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="663"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
         <source>Stretch Right</source>
         <translation>Stretch Right</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
         <source>Stretch items right</source>
         <translation>Stretch items right</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="664"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
         <source>Stretch clips right</source>
         <translation>Stretch clips right</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
         <source>Created new mono track</source>
         <translation>Created new mono track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="685"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
         <source>New mono track</source>
         <translation>New mono track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
         <source>Created new stereo track</source>
         <translation>Created new stereo track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
         <source>New stereo track</source>
         <translation>New stereo track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
         <source>Created label track</source>
         <translation>Created label track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="704"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
         <source>New label track</source>
         <translation>New label track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="712"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="743"/>
         <source>Delete track</source>
         <translation>Delete track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="721"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
         <source>Duplicate track</source>
         <translation>Duplicate track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="730"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="737"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="761"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="768"/>
         <source>Move track</source>
         <translation>Move track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="784"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="815"/>
         <source>Insert silence</source>
         <translation>Insert silence</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="839"/>
         <source>Clips grouped</source>
         <translation>Clips grouped</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="814"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="845"/>
         <source>Clips ungrouped</source>
         <translation>Clips ungrouped</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="825"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="856"/>
         <source>Changed track format</source>
         <translation>Changed track format</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="834"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="865"/>
         <source>Changed track rate</source>
         <translation>Changed track rate</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="843"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="844"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="874"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="875"/>
         <source>Swapped stereo channels</source>
         <translation>Swapped stereo channels</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="853"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="854"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="884"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="885"/>
         <source>Split stereo tracks to L/R mono</source>
         <translation>Split stereo tracks to L/R mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="863"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="864"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="895"/>
         <source>Split stereo tracks to center mono</source>
         <translation>Split stereo tracks to center mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="873"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
         <source>Make stereo track</source>
         <translation>Make stereo track</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="882"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resampled audio track(s)</source>
         <translation>Resampled audio track(s)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Label added</source>
         <translation>Label added</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="892"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="901"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Add label</source>
         <translation>Add label</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
         <source>Label title changed</source>
         <translation>Label title changed</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
         <source>Changed label title</source>
         <translation>Changed label title</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="919"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="950"/>
         <source>Label low frequency changed</source>
         <translation>Label low frequency changed</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="920"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Change label low frequency</source>
         <translation>Change label low frequency</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="929"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="960"/>
         <source>Label high frequency changed</source>
         <translation>Label high frequency changed</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="930"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
         <source>Change label high frequency</source>
         <translation>Change label high frequency</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="944"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
         <source>Cut label</source>
         <translation>Cut label</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
         <source>Remove label</source>
         <translation>Remove label</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Remove multiple labels</source>
         <translation>Remove multiple labels</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1014"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1036"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Move labels</source>
         <translation>Move labels</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1015"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1037"/>
         <source>Move</source>
-        <translation>Move</translation>
+        <translation type="vanished">Move</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1048"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Labels moved</source>
         <translation>Labels moved</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
         <source>Label stretched</source>
         <translation>Label stretched</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1057"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
         <source>Stretch label left</source>
         <translation>Stretch label left</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1078"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
         <source>Stretch labels left</source>
         <translation>Stretch labels left</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1079"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1111"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1092"/>
         <source>Stretch</source>
         <translation>Stretch</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1089"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
         <source>Stretch label right</source>
         <translation>Stretch label right</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1109"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
         <source>Stretch labels right</source>
         <translation>Stretch labels right</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1131"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1112"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation>Joined %1 seconds at %2</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1134"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1115"/>
         <source>Join</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Join</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1139"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1120"/>
         <source>Duplicated</source>
         <translation>Duplicated</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1141"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1122"/>
         <source>Duplicate</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Duplicate</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Split-deleted clips</source>
         <translation>Split-deleted clips</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1146"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Split delete</source>
         <translation>Split delete</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1154"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1135"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation>Delete %1 seconds at %2</translation>
@@ -21950,22 +22280,22 @@ Do you wish to continue?</translation>
         <translation>Not enough space to paste clip into</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="366"/>
+        <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="373"/>
         <source>Tracks: Empty</source>
         <translation>Tracks: Empty</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="409"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="507"/>
         <source>Tempo changed</source>
         <translation>Tempo changed</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="414"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="532"/>
         <source>Upper time signature changed</source>
         <translation>Upper time signature changed</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="419"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="537"/>
         <source>Lower time signature changed</source>
         <translation>Lower time signature changed</translation>
     </message>
@@ -22097,17 +22427,32 @@ Do you wish to continue?</translation>
 <context>
     <name>trackruler</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="107"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="70"/>
+        <source>Zoom</source>
+        <translation type="unfinished">Zoom</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="88"/>
+        <source>Zoom in</source>
+        <translation type="unfinished">Zoom in</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="110"/>
+        <source>Zoom out</source>
+        <translation type="unfinished">Zoom out</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="129"/>
         <source>Reset</source>
         <translation>Reset</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="121"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="147"/>
         <source>Ruler format</source>
         <translation>Ruler format</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="137"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="180"/>
         <source>Half wave</source>
         <translation>Half wave</translation>
     </message>
@@ -22128,7 +22473,7 @@ Do you wish to continue?</translation>
 <context>
     <name>ui</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="219"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="274"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
         <source>Browse</source>
         <translation>Browse</translation>
@@ -22341,117 +22686,117 @@ Do you wish to continue?</translation>
 <context>
     <name>uicomponents</name>
     <message>
-        <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="17"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/frequencymodel.cpp" line="17"/>
         <source>Hz</source>
         <translation>Hz</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="19"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/frequencymodel.cpp" line="19"/>
         <source>kHz</source>
         <translation>kHz</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/internal/numeric/beatsformatter.cpp" line="44"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/beatsformatter.cpp" line="44"/>
         <source>bar</source>
         <translation>bar</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/internal/numeric/beatsformatter.cpp" line="49"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/beatsformatter.cpp" line="49"/>
         <source>beat</source>
         <translation>beat</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="18"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="18"/>
         <source>seconds</source>
         <translation>seconds</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="20"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="20"/>
         <source>seconds + milliseconds</source>
         <translation>seconds + milliseconds</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="23"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="23"/>
         <source>hh:mm:ss</source>
         <translation>hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="25"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="25"/>
         <source>dd:hh:mm:ss</source>
         <translation>dd:hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="28"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="28"/>
         <source>hh:mm:ss + hundredths</source>
         <translation>hh:mm:ss + hundredths</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="31"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="31"/>
         <source>hh:mm:ss + milliseconds</source>
         <translation>hh:mm:ss + milliseconds</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="35"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="35"/>
         <source>hh:mm:ss + samples</source>
         <translation>hh:mm:ss + samples</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="38"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="38"/>
         <source>samples</source>
         <translation>samples</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="41"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="41"/>
         <source>hh:mm:ss + film frames (24 fps)</source>
         <translation>hh:mm:ss + film frames (24 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="44"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="44"/>
         <source>Film frames (24 fps)</source>
         <translation>Film frames (24 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="48"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="48"/>
         <source>hh:mm:ss + NTSC drop frames</source>
         <translation>hh:mm:ss + NTSC drop frames</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="51"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="51"/>
         <source>hh:mm:ss + NTSC non-drop frames</source>
         <translation>hh:mm:ss + NTSC non-drop frames</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="54"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="54"/>
         <source>NTSC frames</source>
         <translation>NTSC frames</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="57"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="57"/>
         <source>hh:mm:ss + PAL frames (25 fps)</source>
         <translation>hh:mm:ss + PAL frames (25 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="60"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="60"/>
         <source>PAL frames (25 fps)</source>
         <translation>PAL frames (25 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="64"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="64"/>
         <source>hh:mm:ss + CDDA frames (25 fps)</source>
         <translation>hh:mm:ss + CDDA frames (25 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="67"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="67"/>
         <source>CDDA frames (75 fps)</source>
         <translation>CDDA frames (75 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="71"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="71"/>
         <source>bar:beat</source>
         <translation>bar:beat</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="74"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="74"/>
         <source>bar:beat:tick</source>
         <translation>bar:beat:tick</translation>
     </message>
@@ -22589,29 +22934,40 @@ Do you wish to continue?</translation>
 <context>
     <name>update</name>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
         <source>A new version of %1 is available!</source>
-        <translation>A new version of %1 is available!</translation>
+        <translation type="vanished">A new version of %1 is available!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="104"/>
+        <source>%1 %2 is available!</source>
+        <translation type="unfinished">%1 %2 is available!</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="120"/>
         <source>Release notes</source>
         <translation>Release notes</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="53"/>
         <source>Skip this version</source>
         <translation>Skip this version</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="70"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="74"/>
         <source>Remind me later</source>
         <translation>Remind me later</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="90"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="229"/>
         <source>Install update</source>
         <translation>Install update</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="90"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="229"/>
+        <source>Restart &amp; update</source>
+        <translation type="unfinished">Restart &amp; update</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22619,41 +22975,76 @@ Do you wish to continue?</translation>
         <translation>Read the %1 release notes</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="147"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
         <translation>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="154"/>
         <source>You’re up to date!</source>
         <translation>You’re up to date!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="210"/>
+        <source>Updated to %1 %2</source>
+        <translation type="unfinished">Updated to %1 %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="222"/>
+        <source>%1 %2 is now ready to install.</source>
+        <translation type="unfinished">%1 %2 is now ready to install.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="225"/>
+        <source>New update available</source>
+        <translation type="unfinished">New update available</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="228"/>
+        <source>See details</source>
+        <translation type="unfinished">See details</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="242"/>
         <source>Cannot connect to server</source>
         <translation>Cannot connect to server</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="243"/>
         <source>Sorry - please try again later</source>
         <translation>Sorry - please try again later</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="184"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="245"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="257"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
         <translation>Check for update</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="198"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="255"/>
+        <source>Not enough disk space</source>
+        <translation type="unfinished">Not enough disk space</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="297"/>
+        <source>Restart to finish updating</source>
+        <translation type="unfinished">Restart to finish updating</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="298"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
         <translation>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="204"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="304"/>
+        <source>Restart</source>
+        <translation type="unfinished">Restart</translation>
+    </message>
+    <message>
         <source>Close</source>
-        <translation>Close</translation>
+        <translation type="vanished">Close</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
@@ -22666,6 +23057,36 @@ Do you wish to continue?</translation>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
         <translation>Downloading %1 %2</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="46"/>
+        <source>Download and install future %1 updates automatically</source>
+        <translation type="unfinished">Download and install future %1 updates automatically</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="60"/>
+        <source>You can change this anytime in &lt;b&gt;Preferences &gt; General&lt;/b&gt;.</source>
+        <translation type="unfinished">You can change this anytime in &lt;b&gt;Preferences &gt; General&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="377"/>
+        <source>Preparing %1 %2</source>
+        <translation type="unfinished">Preparing %1 %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="481"/>
+        <source>Free up at least %1 MB of disk space and try again.</source>
+        <translation type="unfinished">Free up at least %1 MB of disk space and try again.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="647"/>
+        <source>Installing %1</source>
+        <translation type="unfinished">Installing %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="648"/>
+        <source>Installing %1 %2</source>
+        <translation type="unfinished">Installing %1 %2</translation>
+    </message>
 </context>
 <context>
     <name>vst</name>
@@ -22676,20 +23097,20 @@ Do you wish to continue?</translation>
         <translation>Use old view</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="43"/>
         <source>Use new view</source>
         <translation>Use new view</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="50"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="51"/>
         <source>Open FX editor</source>
         <translation>Open FX editor</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="64"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="65"/>
         <source>Open instrument editor</source>
         <translation>Open instrument editor</translation>
     </message>
@@ -22708,48 +23129,48 @@ Do you wish to continue?</translation>
         <translation>SubCategories: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="115"/>
         <source>Searching VST3 in: %1</source>
         <translation>Searching VST3 in: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="162"/>
         <source>VST3 Effects</source>
         <translation>VST3 Effects</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="166"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="167"/>
         <source>The Audacity Team</source>
         <translation>The Audacity Team</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="176"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="177"/>
         <source>Adds the ability to use VST3 effects in Audacity.</source>
         <translation>Adds the ability to use VST3 effects in Audacity.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="270"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="274"/>
         <source>Looking in: %1</source>
         <translation>Looking in: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="339"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="343"/>
         <source>VST3 module error: %1</source>
         <translation>VST3 module error: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="752"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="758"/>
         <source>Unable to apply VST3 preset file %1</source>
         <translation>Unable to apply VST3 preset file %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="753"/>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="770"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="759"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="776"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="769"/>
+        <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="775"/>
         <source>Failed to save VST3 preset to file</source>
         <translation>Failed to save VST3 preset to file</translation>
     </message>
@@ -22784,13 +23205,12 @@ Truncating to this maximum length.</translation>
         <translation>&amp;Multi-view</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1899"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1614"/>
         <source>Resampling failed.</source>
         <translation>Resampling failed.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1900"/>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="341"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1615"/>
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
@@ -22815,14 +23235,13 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>%1.%2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2823"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2747"/>
         <source>A track has a corrupted sample sequence.</source>
         <translation>A track has a corrupted sample sequence.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="340"/>
         <source>There is not enough room available to expand the cut line</source>
-        <translation>There is not enough room available to expand the cut line</translation>
+        <translation type="vanished">There is not enough room available to expand the cut line</translation>
     </message>
 </context>
 <context>
@@ -22846,41 +23265,49 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Linear (dB)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="211"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="227"/>
         <source>-36 dB (shallow range for high-amplitude editing)</source>
         <translation>-36 dB (shallow range for high-amplitude editing)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="213"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
         <translation>-48 dB (PCM range of 8 bit samples)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="215"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
         <translation>-60 dB (PCM range of 10 bit samples)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="217"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
         <translation>-72 dB (PCM range of 12 bit samples)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="219"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
         <translation>-84 dB (PCM range of 14 bit samples)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="221"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
         <translation>-96 dB (PCM range of 16 bit samples)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="223"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
         <source>-120 dB (approximate limit of human hearing)</source>
         <translation>-120 dB (approximate limit of human hearing)</translation>
     </message>
     <message>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="225"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
         <translation>-145 dB (PCM range of 24 bit samples)</translation>
@@ -22926,7 +23353,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="45"/>
         <source>Edit workspaces</source>
         <translation>Edit workspaces</translation>
     </message>
@@ -22996,17 +23423,17 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Select workspace</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces…</source>
-        <translation type="vanished">Edit workspaces…</translation>
+        <translation>Edit workspaces…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
         <source>Edit workspaces...</source>
-        <translation>Edit workspaces...</translation>
+        <translation type="vanished">Edit workspaces...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="52"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="53"/>
         <source>Create new workspace</source>
         <translation>Create new workspace</translation>
     </message>
