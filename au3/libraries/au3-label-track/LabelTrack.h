@@ -85,6 +85,9 @@ public:
     bool GetSelected() const;
     void SetSelected(bool selected);
 
+    int GetColorIndex() const;
+    void SetColorIndex(int colorIndex);
+
 public:
     SelectedRegion selectedRegion;
     wxString title; /// Text of the label.
@@ -101,6 +104,7 @@ public:
 private:
     int64_t mId{ 0 };
     bool mSelected{ false };
+    int mColorIndex{ 0 };
 };
 
 using LabelArray = std::vector<LabelStruct>;

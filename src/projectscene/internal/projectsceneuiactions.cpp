@@ -213,6 +213,15 @@ static UiActionList STATIC_ACTIONS = {
              IconCode::Code::DELETE_TANK,
              Checkable::Yes
              ),
+    UiAction("action://trackedit/label/change-color-auto",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Follow track color"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Follow track color"),
+             Checkable::Yes
+             ),
     UiAction("action://trackedit/clip/change-color-auto",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -359,7 +368,7 @@ void ProjectSceneUiActions::init()
 {
     const auto& colorInfos = configuration()->clipColorInfos();
     m_actions.clear();
-    m_actions.reserve(2 * colorInfos.size() + STATIC_ACTIONS.size());
+    m_actions.reserve(3 * colorInfos.size() + STATIC_ACTIONS.size());
 
     for (const auto& info : colorInfos) {
         muse::Color resolved = configuration()->clipColor(info.index);
@@ -387,6 +396,18 @@ void ProjectSceneUiActions::init()
         trackColorAction.checkable = Checkable::Yes;
 
         m_actions.push_back(std::move(trackColorAction));
+
+        UiAction labelColorAction;
+        labelColorAction.code = muse::actions::ActionQuery(makeLabelColorChangeAction(info.index)).toString();
+        labelColorAction.uiCtx = context::UiCtxProjectOpened;
+        labelColorAction.scCtx = context::CTX_DISABLED;
+        labelColorAction.description = muse::TranslatableString("action_description", "Change label color");
+        labelColorAction.title = muse::TranslatableString("action", "Change label color");
+        labelColorAction.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
+        labelColorAction.iconColor = QString::fromStdString(resolved.toString());
+        labelColorAction.checkable = Checkable::Yes;
+
+        m_actions.push_back(std::move(labelColorAction));
     }
 
     m_actions.insert(m_actions.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());
