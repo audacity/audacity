@@ -164,20 +164,6 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         if (effect->GetType() == EffectTypeGenerate && !isTimeSelection) {
             // Generate at the current playhead position.
             t0 = t1 = playback()->player()->playbackPosition();
-
-            const auto selectedTracks = selectionController()->selectedTracks();
-            const bool hasSelectedWaveTrack = std::any_of(selectedTracks.begin(), selectedTracks.end(),
-                                                          [&](const trackedit::TrackId& id) {
-                return au3::DomAccessor::findWaveTrack(project, ::TrackId(id)) != nullptr;
-            });
-
-            if (!hasSelectedWaveTrack) {
-                const trackedit::TrackId focused = trackNavigationController()->focusedTrack();
-                if (focused != trackedit::INVALID_TRACK && au3::DomAccessor::findWaveTrack(project, ::TrackId(focused))) {
-                    // No selected wave track, use focused track
-                    selectionController()->setSelectedTracks({ focused });
-                }
-            }
         }
 
         if ((!isTimeSelection || !isTrackSelection) && (effect->GetType() != EffectTypeGenerate
@@ -437,7 +423,8 @@ muse::Ret EffectExecutionScenario::performGenerator(au3::Au3Project& project, Ef
     const auto prj = globalContext()->currentTrackeditProject();
     const auto clipsBefore = getAllClips(*prj);
 
-    const auto ret = performEffectInternal(project, &effect, instance, settings);
+    const bool forceNewTrack = effect.GetType() == EffectTypeGenerate && selectionController()->selectedTracks().empty();
+    const auto ret = performEffectInternal(project, &effect, instance, settings, forceNewTrack);
 
     if (ret) {
         const auto clipsAfter = getAllClips(*prj);
@@ -600,7 +587,8 @@ void notifyIfTracksWereAdded(au::au3::Au3Project& au3Prj, const std::vector<au::
 
 muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& project, Effect* effect,
                                                          std::shared_ptr<EffectInstance> pInstanceEx,
-                                                         EffectSettings& settings)
+                                                         EffectSettings& settings,
+                                                         bool forceNewTrack)
 {
     //! ============================================================================
     //! NOTE Step 1 - add new a track if need
@@ -611,13 +599,16 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
     {
         // We don't yet know the effect type for code in the Nyquist Prompt, so
         // assume it requires a track and handle errors when the effect runs.
-        if ((effect->GetType() == EffectTypeGenerate || isNyquistPrompt(*effect)) && (effect->mNumTracks == 0)) {
+        if ((effect->GetType() == EffectTypeGenerate || isNyquistPrompt(*effect)) && (forceNewTrack || effect->mNumTracks == 0)) {
             auto track = effect->mFactory->Create();
             track->SetName(effect->mTracks->MakeUniqueTrackName(au3::Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
             // The track-added event should be issued synchronously.
             newTrack = effect->mTracks->Add(
                 track, TrackList::DoAssignId::Yes,
                 TrackList::EventPublicationSynchrony::Synchronous);
+            // Delesect eventual other tracks, so the effect will be applied only to the new one.
+            std::for_each(effect->mTracks->begin(), effect->mTracks->end(),
+                          [](const auto track) { return track->SetSelected(false); });
             newTrack->SetSelected(true);
             globalContext()->currentTrackeditProject()->notifyAboutTrackAdded(au3::DomConverter::track(newTrack));
         }
