@@ -1,0 +1,6 @@
+# TC3.2: Crash recovery of a project whose files were deleted
+#
+# Each script runs in a new app process, all sharing one profile, in this order.
+TC3.2_CrashRecoveryMissingProject/1_OpenProject.js
+TC3.2_CrashRecoveryMissingProject/2_DeleteProject.js
+TC3.2_CrashRecoveryMissingProject/3_NothingToRecover.js
