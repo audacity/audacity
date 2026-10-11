@@ -72,10 +72,6 @@
         <translation type="unfinished">Open item context menu</translation>
     </message>
     <message>
-        <source>Full screen</source>
-        <translation type="vanished">Full screen</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
         <source>About &amp;Qt…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -86,10 +82,6 @@
         <source>Online &amp;handbook</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Online &amp;handbook</translation>
-    </message>
-    <message>
-        <source>Open online handbook</source>
-        <translation type="vanished">Open online handbook</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="90"/>
@@ -104,18 +96,10 @@
         <translation>Revert to &amp;factory settings</translation>
     </message>
     <message>
-        <source>Revert to factory settings</source>
-        <translation type="vanished">Revert to factory settings</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
         <source>Restore the &amp;default layout</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Restore the &amp;default layout</translation>
-    </message>
-    <message>
-        <source>Restore the default layout</source>
-        <translation type="vanished">Restore the default layout</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
@@ -124,18 +108,10 @@
         <translation>&amp;Playback controls</translation>
     </message>
     <message>
-        <source>Show/hide playback controls</source>
-        <translation type="vanished">Show/hide playback controls</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
         <source>&amp;Tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Tracks</translation>
-    </message>
-    <message>
-        <source>Show/hide tracks</source>
-        <translation type="vanished">Show/hide tracks</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="70"/>
@@ -150,18 +126,10 @@
         <translation>&amp;Status bar</translation>
     </message>
     <message>
-        <source>Show/hide status bar</source>
-        <translation type="vanished">Show/hide status bar</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
         <source>&amp;Preferences</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Preferences</translation>
-    </message>
-    <message>
-        <source>Preferences…</source>
-        <translation type="vanished">Preferences…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
@@ -183,10 +151,6 @@
         <source>&amp;Paste</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Paste</translation>
-    </message>
-    <message>
-        <source>Paste</source>
-        <translation type="vanished">Paste</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="185"/>
@@ -235,28 +199,16 @@
         <translation>&amp;Cancel</translation>
     </message>
     <message>
-        <source>Cancel</source>
-        <translation type="vanished">Cancel</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
         <source>&amp;Trigger</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Trigger</translation>
     </message>
     <message>
-        <source>Trigger</source>
-        <translation type="vanished">Trigger</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="231"/>
         <source>&amp;Enter</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Enter</translation>
-    </message>
-    <message>
-        <source>Trigger the focused control or select the focused track item</source>
-        <translation type="vanished">Trigger the focused control or select the focused track item</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="198"/>
@@ -362,19 +314,11 @@
         <translation type="unfinished">Apply %1</translation>
     </message>
     <message>
-        <source>Import preset</source>
-        <translation type="vanished">Import preset</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="109"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
         <source>&amp;Export…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Export…</translation>
-    </message>
-    <message>
-        <source>Export preset</source>
-        <translation type="vanished">Export preset</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
@@ -389,20 +333,11 @@
         <translation>Play/Stop</translation>
     </message>
     <message>
-        <source>Play/Pause from cursor</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="vanished">Play/Pause from cursor</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="65"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="66"/>
         <source>Play selection</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Play selection</translation>
-    </message>
-    <message>
-        <source>Play the selected time range</source>
-        <translation type="vanished">Play the selected time range</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="73"/>
@@ -419,10 +354,6 @@
         <source>Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Stop</translation>
-    </message>
-    <message>
-        <source>Stop playback</source>
-        <translation type="vanished">Stop playback</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="91"/>
@@ -443,18 +374,10 @@
         <translation>Loop playback</translation>
     </message>
     <message>
-        <source>Toggle ‘Loop playback’</source>
-        <translation type="vanished">Toggle ‘Loop playback’</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
         <source>Audio setup</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Audio setup</translation>
-    </message>
-    <message>
-        <source>Open audio setup context menu</source>
-        <translation type="vanished">Open audio setup context menu</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="128"/>
@@ -463,18 +386,10 @@
         <translation>Get effects</translation>
     </message>
     <message>
-        <source>Open Get effects dialog</source>
-        <translation type="vanished">Open Get effects dialog</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="137"/>
         <source>Audio settings</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Audio settings</translation>
-    </message>
-    <message>
-        <source>Open audio setup dialog</source>
-        <translation type="vanished">Open audio setup dialog</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="145"/>
@@ -489,18 +404,10 @@
         <translation>Metronome</translation>
     </message>
     <message>
-        <source>Toggle metronome playback</source>
-        <translation type="vanished">Toggle metronome playback</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="163"/>
         <source>Timecode</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Timecode</translation>
-    </message>
-    <message>
-        <source>Set playback time</source>
-        <translation type="vanished">Set playback time</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="172"/>
@@ -509,28 +416,16 @@
         <translation>Tempo</translation>
     </message>
     <message>
-        <source>Set playback tempo</source>
-        <translation type="vanished">Set playback tempo</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
         <source>Time signature</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Time signature</translation>
     </message>
     <message>
-        <source>Set playback time signature</source>
-        <translation type="vanished">Set playback time signature</translation>
-    </message>
-    <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="190"/>
         <source>Playback level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Playback level</translation>
-    </message>
-    <message>
-        <source>Set playback level</source>
-        <translation type="vanished">Set playback level</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
@@ -647,18 +542,10 @@
         <translation>Pan automatically</translation>
     </message>
     <message>
-        <source>Pan automatically during playback</source>
-        <translation type="vanished">Pan automatically during playback</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
         <source>&amp;New…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;New…</translation>
-    </message>
-    <message>
-        <source>New…</source>
-        <translation type="vanished">New…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
@@ -667,18 +554,10 @@
         <translation>&amp;Open…</translation>
     </message>
     <message>
-        <source>Open…</source>
-        <translation type="vanished">Open…</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
         <source>Open recent</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Open recent</translation>
-    </message>
-    <message>
-        <source>Open recent project</source>
-        <translation type="vanished">Open recent project</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
@@ -695,18 +574,10 @@
         <translation>&amp;Clear recent files</translation>
     </message>
     <message>
-        <source>Clear recent files</source>
-        <translation type="vanished">Clear recent files</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
         <source>Save &amp;as…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Save &amp;as…</translation>
-    </message>
-    <message>
-        <source>Save as…</source>
-        <translation type="vanished">Save as…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="125"/>
@@ -715,28 +586,16 @@
         <translation>&amp;Export labels</translation>
     </message>
     <message>
-        <source>Export labels</source>
-        <translation type="vanished">Export labels</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
         <source>&amp;Export MIDI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Export MIDI</translation>
     </message>
     <message>
-        <source>Export MIDI</source>
-        <translation type="vanished">Export MIDI</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
         <source>&amp;Close project</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Close project</translation>
-    </message>
-    <message>
-        <source>Close project</source>
-        <translation type="vanished">Close project</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
@@ -1080,18 +939,10 @@
         <translation>&amp;Save</translation>
     </message>
     <message>
-        <source>Save</source>
-        <translation type="vanished">Save</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>&amp;Export audio…</translation>
-    </message>
-    <message>
-        <source>Export audio…</source>
-        <translation type="vanished">Export audio…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
@@ -1280,10 +1131,6 @@
         <translation>Save to clo&amp;ud…</translation>
     </message>
     <message>
-        <source>Save to cloud…</source>
-        <translation type="vanished">Save to cloud…</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="764"/>
         <source>Share audio</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1306,10 +1153,6 @@
         <source>Project propert&amp;ies…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Project propert&amp;ies…</translation>
-    </message>
-    <message>
-        <source>Project properties…</source>
-        <translation type="vanished">Project properties…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="23"/>
@@ -1395,10 +1238,6 @@
         <source>Clip properties</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Clip properties</translation>
-    </message>
-    <message>
-        <source>Show clip properties</source>
-        <translation type="vanished">Show clip properties</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
@@ -1520,19 +1359,11 @@
         <translation>Record</translation>
     </message>
     <message>
-        <source>Stop record</source>
-        <translation type="vanished">Stop record</translation>
-    </message>
-    <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="66"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
         <source>Record level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Record level</translation>
-    </message>
-    <message>
-        <source>Set record level</source>
-        <translation type="vanished">Set record level</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="75"/>
@@ -1554,10 +1385,6 @@
         <source>Lead-in Recording</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Lead-in Recording</translation>
-    </message>
-    <message>
-        <source>Start lead-in recording</source>
-        <translation type="vanished">Start lead-in recording</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="22"/>
@@ -1642,18 +1469,6 @@
         <source>Rename</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Rename</translation>
-    </message>
-    <message>
-        <source>Rename track</source>
-        <translation type="vanished">Rename track</translation>
-    </message>
-    <message>
-        <source>Duplicate track</source>
-        <translation type="vanished">Duplicate track</translation>
-    </message>
-    <message>
-        <source>Delete track</source>
-        <translation type="vanished">Delete track</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="225"/>
@@ -1966,11 +1781,6 @@
         <source>Multi track selection next</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Multi track selection next</translation>
-    </message>
-    <message>
-        <source>Open item’s context menu</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="vanished">Open item’s context menu</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="675"/>
@@ -2385,16 +2195,6 @@
         <source>Play/Stop</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Play/Stop</translation>
-    </message>
-    <message>
-        <source>Play/Pause from cursor</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="vanished">Play/Pause from cursor</translation>
-    </message>
-    <message>
-        <source>Play the selected time range</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="vanished">Play the selected time range</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="75"/>
@@ -3791,11 +3591,6 @@
         <translation>Multi track selection next</translation>
     </message>
     <message>
-        <source>Open item’s context menu</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="vanished">Open item’s context menu</translation>
-    </message>
-    <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="674"/>
         <source>Change track format</source>
         <translation>Change track format</translation>
@@ -3824,10 +3619,6 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="95"/>
         <source>Project</source>
         <translation>Project</translation>
-    </message>
-    <message>
-        <source>Learn</source>
-        <translation type="vanished">Learn</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
@@ -4054,13 +3845,6 @@ This action will not delete any of your projects.</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-align</name>
-    <message>
-        <source>Align content</source>
-        <translation type="vanished">Align content</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-analyze</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="423"/>
@@ -4118,10 +3902,6 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-diagnostics</name>
     <message>
-        <source>Diagnostics</source>
-        <translation type="vanished">Diagnostics</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="531"/>
         <source>&amp;System</source>
         <translation>&amp;System</translation>
@@ -4166,13 +3946,6 @@ This action will not delete any of your projects.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="418"/>
         <source>&amp;Effect</source>
         <translation>&amp;Effect</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-export-other</name>
-    <message>
-        <source>&amp;Export other</source>
-        <translation type="vanished">&amp;Export other</translation>
     </message>
 </context>
 <context>
@@ -4266,13 +4039,6 @@ This action will not delete any of your projects.</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-macros</name>
-    <message>
-        <source>&amp;Macros</source>
-        <translation type="vanished">&amp;Macros</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-mixer</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
@@ -4332,14 +4098,6 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell-menu-select</name>
     <message>
-        <source>Audio clips</source>
-        <translation type="vanished">Audio clips</translation>
-    </message>
-    <message>
-        <source>Spectral</source>
-        <translation type="vanished">Spectral</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="324"/>
         <source>Region</source>
         <translation>Region</translation>
@@ -4361,20 +4119,6 @@ This action will not delete any of your projects.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="489"/>
         <source>Settings</source>
         <translation>Settings</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-skip</name>
-    <message>
-        <source>Skip to</source>
-        <translation type="vanished">Skip to</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-sort</name>
-    <message>
-        <source>Sort tracks</source>
-        <translation type="vanished">Sort tracks</translation>
     </message>
 </context>
 <context>
@@ -4561,14 +4305,6 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>appshell/gettingstarted</name>
     <message>
-        <source>Preferences → Application</source>
-        <translation type="vanished">Preferences → Application</translation>
-    </message>
-    <message>
-        <source>App Updates</source>
-        <translation type="vanished">App Updates</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="39"/>
         <source>Audacity notifies you in-app when a new version is available to download.</source>
         <translation>Audacity notifies you in-app when a new version is available to download.</translation>
@@ -4578,10 +4314,6 @@ This action will not delete any of your projects.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
         <translation>You can turn this off anytime in %1.</translation>
-    </message>
-    <message>
-        <source>Usage Info</source>
-        <translation type="vanished">Usage Info</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
@@ -4672,10 +4404,6 @@ This action will not delete any of your projects.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
         <source>Continue with Google</source>
         <translation>Continue with Google</translation>
-    </message>
-    <message>
-        <source>Continue with Facebook</source>
-        <translation type="vanished">Continue with Facebook</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
@@ -5533,10 +5261,6 @@ This action will not delete any of your projects.</translation>
         <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
         <translation>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</translation>
     </message>
-    <message>
-        <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don&apos;t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="vanished">Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don&apos;t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</translation>
-    </message>
 </context>
 <context>
     <name>appshell/preferences/spectrogram</name>
@@ -5976,16 +5700,6 @@ This action will not delete any of your projects.</translation>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="775"/>
         <source>Audacity Audio</source>
         <translation>Audacity Audio</translation>
-    </message>
-    <message>
-        <source>Error opening recording device.
-Error code: %1</source>
-        <translation type="vanished">Error opening recording device.
-Error code: %1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Error</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1481"/>
@@ -7072,14 +6786,6 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Generate audio preview</translation>
     </message>
     <message>
-        <source>Cloud audio preview updated</source>
-        <translation type="vanished">Cloud audio preview updated</translation>
-    </message>
-    <message>
-        <source>The audio preview has been uploaded to audio.com</source>
-        <translation type="vanished">The audio preview has been uploaded to audio.com</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1543"/>
         <source>Audio preview is up to date</source>
         <translation>Audio preview is up to date</translation>
@@ -7315,22 +7021,6 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="124"/>
         <source>Show commands list</source>
         <translation type="unfinished">Show commands list</translation>
-    </message>
-    <message>
-        <source>Show rcommands list</source>
-        <translation type="vanished">Show rcommands list</translation>
-    </message>
-    <message>
-        <source>Test query action</source>
-        <translation type="vanished">Test query action</translation>
-    </message>
-    <message>
-        <source>Test query action with params 1</source>
-        <translation type="vanished">Test query action with params 1</translation>
-    </message>
-    <message>
-        <source>Test query action with params 2</source>
-        <translation type="vanished">Test query action with params 2</translation>
     </message>
 </context>
 <context>
@@ -11950,10 +11640,6 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</translation
         <translation type="unfinished">Include audio before first label</translation>
     </message>
     <message>
-        <source>Effective bit rate may vary</source>
-        <translation type="vanished">Effective bit rate may vary</translation>
-    </message>
-    <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
         <source>Rendering</source>
         <translation>Rendering</translation>
@@ -12256,18 +11942,6 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <translation>%1 Hz (custom)</translation>
     </message>
     <message>
-        <source>Export full project audio</source>
-        <translation type="vanished">Export full project audio</translation>
-    </message>
-    <message>
-        <source>Export selected audio</source>
-        <translation type="vanished">Export selected audio</translation>
-    </message>
-    <message>
-        <source>Export audio in loop region</source>
-        <translation type="vanished">Export audio in loop region</translation>
-    </message>
-    <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="220"/>
         <source>No loop region</source>
         <translation>No loop region</translation>
@@ -12439,10 +12113,6 @@ Master effects will be turned back on after export.</translation>
         <translation>Plugin is not in the correct format</translation>
     </message>
     <message>
-        <source>Manually</source>
-        <translation type="vanished">Manually</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
         <source>Failed to install extension</source>
@@ -12513,16 +12183,6 @@ Master effects will be turned back on after export.</translation>
         <location filename="../../muse/framework/extensions/internal/extensionsregister.cpp" line="104"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
-    </message>
-    <message>
-        <source>Run plugin %1</source>
-        <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation type="vanished">Run plugin %1</translation>
-    </message>
-    <message>
-        <source>Run plugin %1: %2</source>
-        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation type="vanished">Run plugin %1: %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="118"/>
@@ -18198,10 +17858,6 @@ It will not be loaded.</translation>
         <translation>Export</translation>
     </message>
     <message>
-        <source>Cloud</source>
-        <translation type="vanished">Cloud</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="226"/>
         <source>Shortcuts</source>
         <translation>Shortcuts</translation>
@@ -18210,10 +17866,6 @@ It will not be loaded.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="229"/>
         <source>Plugins</source>
         <translation>Plugins</translation>
-    </message>
-    <message>
-        <source>Advanced options</source>
-        <translation type="vanished">Advanced options</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="255"/>
@@ -19210,11 +18862,6 @@ File might be corrupted or read only.</translation>
         <translation>Unable to work with the blockfiles</translation>
     </message>
     <message>
-        <source>Total orphan blocks deleted %1</source>
-        <extracomment>%1 is the number of deleted orphan blocks</extracomment>
-        <translation type="vanished">Total orphan blocks deleted %1</translation>
-    </message>
-    <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1028"/>
         <source>Failed to rollback transaction during import</source>
         <translation>Failed to rollback transaction during import</translation>
@@ -19662,10 +19309,6 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>Save to computer</translation>
     </message>
     <message>
-        <source>Save on your computer</source>
-        <translation type="vanished">Save on your computer</translation>
-    </message>
-    <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>Save project</source>
@@ -19683,10 +19326,6 @@ You need to run that version of Audacity to recover the project.</translation>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>selection</translation>
-    </message>
-    <message>
-        <source>Log in or create a new account on Audio.com to share your music.</source>
-        <translation type="vanished">Log in or create a new account on Audio.com to share your music.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="483"/>
@@ -20030,14 +19669,6 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>Label</translation>
     </message>
     <message>
-        <source>Pan: 100R</source>
-        <translation type="vanished">Pan: 100R</translation>
-    </message>
-    <message>
-        <source>Pan:</source>
-        <translation type="vanished">Pan:</translation>
-    </message>
-    <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all master effects</source>
@@ -20069,10 +19700,6 @@ You need to run that version of Audacity to recover the project.</translation>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="163"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <source>Real-time effects panel</source>
-        <translation type="vanished">Real-time effects panel</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
@@ -22195,10 +21822,6 @@ Do you wish to continue?</translation>
         <translation>Move labels</translation>
     </message>
     <message>
-        <source>Move</source>
-        <translation type="vanished">Move</translation>
-    </message>
-    <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Labels moved</source>
         <translation>Labels moved</translation>
@@ -22934,10 +22557,6 @@ Do you wish to continue?</translation>
 <context>
     <name>update</name>
     <message>
-        <source>A new version of %1 is available!</source>
-        <translation type="vanished">A new version of %1 is available!</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="104"/>
         <source>%1 %2 is available!</source>
         <translation type="unfinished">%1 %2 is available!</translation>
@@ -23041,10 +22660,6 @@ Do you wish to continue?</translation>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="304"/>
         <source>Restart</source>
         <translation type="unfinished">Restart</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation type="vanished">Close</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
@@ -23239,10 +22854,6 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <source>A track has a corrupted sample sequence.</source>
         <translation>A track has a corrupted sample sequence.</translation>
     </message>
-    <message>
-        <source>There is not enough room available to expand the cut line</source>
-        <translation type="vanished">There is not enough room available to expand the cut line</translation>
-    </message>
 </context>
 <context>
     <name>wave-track-settings</name>
@@ -23426,10 +23037,6 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces…</source>
         <translation>Edit workspaces…</translation>
-    </message>
-    <message>
-        <source>Edit workspaces...</source>
-        <translation type="vanished">Edit workspaces...</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="52"/>
