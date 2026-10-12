@@ -366,6 +366,9 @@ Item {
 
                 path: parameterData ? parameterData.currentValueString : ""
 
+                buttonType: FlatButton.Horizontal
+                buttonOrientation: Qt.Horizontal
+
                 pickerType: {
                     if (!parameterData) {
                         return FilePicker.PickerType.File
