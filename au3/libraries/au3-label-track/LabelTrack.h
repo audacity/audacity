@@ -88,6 +88,9 @@ public:
     int64_t GetGroupId() const;
     void SetGroupId(int64_t id);
 
+    //! Copies per-label state (selection, group) but not identity or times
+    void CopyAttributesFrom(const LabelStruct& other);
+
 public:
     SelectedRegion selectedRegion;
     wxString title; /// Text of the label.

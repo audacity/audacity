@@ -100,6 +100,12 @@ void LabelStruct::SetGroupId(int64_t id)
     mGroupId = id;
 }
 
+void LabelStruct::CopyAttributesFrom(const LabelStruct& other)
+{
+    mSelected = other.mSelected;
+    mGroupId = other.mGroupId;
+}
+
 LabelTrack::Interval::~Interval() = default;
 
 double LabelTrack::Interval::Start() const
@@ -178,8 +184,7 @@ LabelTrack::LabelTrack(const LabelTrack& orig, ProtectedCreationArg&& a)
     for (auto& original: orig.mLabels) {
         LabelStruct l { original.selectedRegion, original.title };
         l.SetId(LabelStruct::NewID());
-        l.SetSelected(original.GetSelected());
-        l.SetGroupId(original.GetGroupId());
+        l.CopyAttributesFrom(original);
         mLabels.push_back(l);
     }
 }
@@ -925,8 +930,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 labelStruct.getT1() - t0,
                 labelStruct.title
             };
-            l.SetSelected(labelStruct.GetSelected());
-            l.SetGroupId(labelStruct.GetGroupId());
+            l.CopyAttributesFrom(labelStruct);
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::WITHIN_LABEL) {
             LabelStruct l {
@@ -935,8 +939,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 t1 - t0,
                 labelStruct.title
             };
-            l.SetSelected(labelStruct.GetSelected());
-            l.SetGroupId(labelStruct.GetGroupId());
+            l.CopyAttributesFrom(labelStruct);
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
             LabelStruct l {
@@ -945,8 +948,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 labelStruct.getT1() - t0,
                 labelStruct.title
             };
-            l.SetSelected(labelStruct.GetSelected());
-            l.SetGroupId(labelStruct.GetGroupId());
+            l.CopyAttributesFrom(labelStruct);
             lt->mLabels.push_back(l);
         } else if (relation == LabelStruct::ENDS_IN_LABEL) {
             LabelStruct l {
@@ -955,8 +957,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
                 t1 - t0,
                 labelStruct.title
             };
-            l.SetSelected(labelStruct.GetSelected());
-            l.SetGroupId(labelStruct.GetGroupId());
+            l.CopyAttributesFrom(labelStruct);
             lt->mLabels.push_back(l);
         }
     }
@@ -982,8 +983,7 @@ bool LabelTrack::PasteOver(double t, const Track& src)
                 labelStruct.getT1() + t,
                 labelStruct.title
             };
-            l.SetSelected(labelStruct.GetSelected());
-            l.SetGroupId(labelStruct.GetGroupId());
+            l.CopyAttributesFrom(labelStruct);
             mLabels.insert(mLabels.begin() + pos++, l);
         }
 
@@ -1046,7 +1046,7 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
                     label.getT1() + j * tLen,
                     label.title
                 };
-                l.SetGroupId(label.GetGroupId());
+                l.CopyAttributesFrom(label);
 
                 // Figure out where to insert
                 while (pos < mLabels.size()
@@ -1084,7 +1084,7 @@ void LabelTrack::Silence(double t0, double t1, ProgressReporter)
                 label.getT1(),
                 label.title
             };
-            l.SetGroupId(label.GetGroupId());
+            l.CopyAttributesFrom(label);
 
             mLabels[i].selectedRegion.setT1(t0);
 
