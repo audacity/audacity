@@ -670,8 +670,9 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
       #endif
 
         if (mSoftwarePlaythrough && !isMME) {
+            // The default of some interfaces is hundreds of milliseconds
             captureParameters.suggestedLatency
-                =captureDeviceInfo->defaultHighInputLatency;
+                =std::min(captureDeviceInfo->defaultHighInputLatency, latencyDuration / 1000.0);
         } else {
             captureParameters.suggestedLatency = latencyDuration / 1000.0;
         }
