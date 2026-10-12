@@ -377,9 +377,9 @@ TEST_F(Au3TracksInteractionTests, CopyNonContinuousLabelDataKeepsGroupId)
     removeTrack(labelTrackId);
 }
 
-TEST_F(Au3TracksInteractionTests, CopiedLabelsKeepTheirSelection)
+TEST_F(Au3TracksInteractionTests, CopiedLabelsKeepTheirSelectionAndGroup)
 {
-    //! [GIVEN] A label track with a selected label
+    //! [GIVEN] A label track with a selected, grouped label
     TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
     const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
             { 1.0, 2.0, "Label" }
@@ -388,6 +388,7 @@ TEST_F(Au3TracksInteractionTests, CopiedLabelsKeepTheirSelection)
     ASSERT_NE(labelTrack, nullptr);
     Au3Label label = labelTrack->GetLabels().front();
     label.SetSelected(true);
+    label.SetGroupId(4);
     labelTrack->SetLabel(0, label);
 
     //! [WHEN] The label is copied both as a selected item and as part of a time range
@@ -396,11 +397,12 @@ TEST_F(Au3TracksInteractionTests, CopiedLabelsKeepTheirSelection)
     ASSERT_NE(itemData, nullptr);
     ASSERT_NE(rangeData, nullptr);
 
-    //! [THEN] Both copies are selected, just like copied clips are
+    //! [THEN] Both copies keep the selection and the group, just like copied clips do
     for (const ITrackDataPtr& data : { itemData, rangeData }) {
         const auto copiedTrack = std::static_pointer_cast<Au3LabelTrack>(std::static_pointer_cast<Au3TrackData>(data)->track());
         ASSERT_EQ(copiedTrack->GetNumLabels(), 1);
         EXPECT_TRUE(copiedTrack->GetLabel(0)->GetSelected());
+        EXPECT_EQ(copiedTrack->GetLabel(0)->GetGroupId(), 4);
     }
 
     // Cleanup

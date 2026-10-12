@@ -102,24 +102,6 @@ TEST_F(Au3LabelsInteractionsTests, SetLabelGroupIdNotifiesAndListsTheLabelInItsG
     EXPECT_EQ(m_labelsInteraction->labelsInGroup(7), LabelKeyList { first });
 }
 
-TEST_F(Au3LabelsInteractionsTests, LabelGroupIdSurvivesTrackCopy)
-{
-    //! [GIVEN] A grouped label
-    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
-    SelectedRegion region;
-    region.setTimes(1.0, 2.0);
-    const LabelKey key { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("label")) };
-    m_labelsInteraction->setLabelGroupId(key, 5);
-
-    //! [WHEN] The track is copied
-    const auto copy = labelTrack->Copy(0.0, 10.0, false);
-    const auto labelCopy = static_cast<const Au3LabelTrack*>(copy.get());
-
-    //! [THEN] The copied label keeps the group id
-    ASSERT_EQ(labelCopy->GetLabels().size(), 1u);
-    EXPECT_EQ(labelCopy->GetLabels().front().GetGroupId(), 5);
-}
-
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneExists)
 {
     //! [GIVEN] There is a project without any label tracks
