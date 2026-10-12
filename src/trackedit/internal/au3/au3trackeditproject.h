@@ -35,7 +35,7 @@ public:
     muse::async::NotifyList<Label> labelList(const TrackId& trackId) const override;
     ItemTimeSpanList itemTimeSpansSorted(const TrackId& trackId) const override;
     std::optional<TimeSpan> itemTimeSpan(const TrackItemKey& key) const override;
-    std::vector<int64_t> groupsIdsList() const override;
+    std::set<int64_t> groupsIdsList() const override;
     std::optional<std::string> trackName(const TrackId& trackId) const override;
 
     void reload() override;
