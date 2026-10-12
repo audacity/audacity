@@ -3,9 +3,12 @@
  */
 #pragma once
 
+#include <optional>
+
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "dom/track.h"
 #include "itracksinteraction.h"
 #include "iclipsinteraction.h"
 #include "ilabelsinteraction.h"
@@ -165,7 +168,7 @@ public:
     muse::Progress progress() const override;
 
 private:
-    bool isLabelItem(const TrackItemKey& key) const;
+    std::optional<TrackType> itemTrackType(const TrackItemKey& key) const;
     void setItemGroupId(const TrackItemKey& key, int64_t id);
 
     muse::RetVal<ItemKeys> moveItems(const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset);
