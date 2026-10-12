@@ -8298,7 +8298,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Greinir: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="181"/>
@@ -8325,22 +8325,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="69"/>
         <source>Median</source>
-        <translation type="unfinished"/>
+        <translation>Miðlægt</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
         <source>Second greatest</source>
-        <translation type="unfinished"/>
+        <translation>Næstmest</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="201"/>
         <source>Noise reduction</source>
-        <translation type="unfinished"/>
+        <translation>Hávaðaminnkun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="221"/>
         <source>Removes background noise such as fans, tape noise, or hums</source>
-        <translation type="unfinished"/>
+        <translation>Fjarlægir bakgrunnshljóð á borð við viftur, spóluhljóð eða suð</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
@@ -8409,7 +8409,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="129"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Greinir: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="133"/>
@@ -10481,7 +10481,7 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
         <source>Analyzing: %1</source>
         <extracomment>%1 is the name of the track being analyzed</extracomment>
-        <translation type="unfinished"/>
+        <translation>Greinir: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="100"/>
@@ -11155,7 +11155,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="155"/>
         <source>Noise reduction</source>
-        <translation type="unfinished"/>
+        <translation>Hávaðaminnkun</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="173"/>
