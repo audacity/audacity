@@ -556,6 +556,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
    #ifdef __WXMSW__
     PaWasapiStreamInfo wasapiStreamInfo{};
+    PaWasapiStreamInfo wasapiCaptureStreamInfo{};
    #endif
 
     auto latencyDuration = AudioIOLatencyDuration.Read();
@@ -596,6 +597,17 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
             playbackParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
         }
+       #ifdef paWinWasapiSharedLowLatency
+        // The output of a stream that also records takes the engine period of its input
+        if (isWASAPI && numCaptureChannels > 0) {
+            wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
+            wasapiStreamInfo.hostApiType = paWASAPI;
+            wasapiStreamInfo.version = 1;
+            wasapiStreamInfo.flags |= paWinWasapiSharedLowLatency;
+
+            playbackParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
+        }
+       #endif
       #endif
 
         if (mSoftwarePlaythrough && !isMME) {
@@ -643,6 +655,19 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
         captureParameters.hostApiSpecificStreamInfo = NULL;
         captureParameters.channelCount = mNumCaptureChannels;
+
+      #if defined(__WXMSW__) && defined(paWinWasapiSharedLowLatency)
+        // Shared mode runs at the engine period (normally 10 ms), whatever the latency setting.
+        // Where the driver has shorter periods, the period follows the setting
+        if (isWASAPI) {
+            wasapiCaptureStreamInfo.size = sizeof(PaWasapiStreamInfo);
+            wasapiCaptureStreamInfo.hostApiType = paWASAPI;
+            wasapiCaptureStreamInfo.version = 1;
+            wasapiCaptureStreamInfo.flags = paWinWasapiSharedLowLatency;
+
+            captureParameters.hostApiSpecificStreamInfo = &wasapiCaptureStreamInfo;
+        }
+      #endif
 
         if (mSoftwarePlaythrough && !isMME) {
             captureParameters.suggestedLatency
@@ -2047,6 +2072,22 @@ AudioIOLoopbackResult AudioIO::MeasureLoopbackLatency(double projectRate, double
     recordParameters.channelCount = static_cast<int>(state.inputChannels);
     recordParameters.sampleFormat = paFloat32;
     recordParameters.suggestedLatency = latencyDuration / 1000.0;
+
+#if defined(__WXMSW__) && defined(paWinWasapiSharedLowLatency)
+    // The same engine period as a recording, see StartPortAudioStream
+    PaWasapiStreamInfo wasapiCaptureStreamInfo {};
+    if (playWASAPI && recordWASAPI) {
+        wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
+        wasapiStreamInfo.hostApiType = paWASAPI;
+        wasapiStreamInfo.version = 1;
+        wasapiStreamInfo.flags |= paWinWasapiSharedLowLatency;
+        playParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
+
+        wasapiCaptureStreamInfo = wasapiStreamInfo;
+        wasapiCaptureStreamInfo.flags = paWinWasapiSharedLowLatency;
+        recordParameters.hostApiSpecificStreamInfo = &wasapiCaptureStreamInfo;
+    }
+#endif
 
     PaStream* stream = nullptr;
     if (Pa_OpenStream(&stream, &recordParameters, &playParameters, rate, paFramesPerBufferUnspecified,
