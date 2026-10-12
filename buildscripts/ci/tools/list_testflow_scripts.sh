@@ -4,9 +4,10 @@
 #
 #   {"include":[{"script":"TC1.1_BasicTest.js"},{"script":"TC1.6_...js","status":"DISABLED"}]}
 #
-# Every top-level .js in share/testflowscripts is a test case (helpers live
-# in steps/), so new scripts fan out automatically rather than being silently
-# skipped. The output is a single line, suitable for GITHUB_OUTPUT.
+# Every top-level .js or .testflow (a series of scripts) in share/testflowscripts
+# is a test case (helpers live in steps/, the scripts of series in their own
+# directories), so new test cases fan out automatically rather than being
+# silently skipped. The output is a single line, suitable for GITHUB_OUTPUT.
 
 # Bash strict-mode: exit on error, unset variable, or failed pipe (pipeline's exit status is that of the last failing command).
 set -euo pipefail
@@ -17,8 +18,8 @@ DISABLED_FILE="$SCRIPTS_DIR/disabled.json"
 
 list_script_filenames() {
     # Bare filenames, one per line; they become the matrix values and thereby
-    # the job names. The glob does not descend into steps/.
-    (cd "$SCRIPTS_DIR" && ls -1 -- *.js)
+    # the job names. The globs do not descend into sub-directories.
+    (cd "$SCRIPTS_DIR" && shopt -s nullglob && printf '%s\n' *.js *.testflow)
 }
 
 to_json_array() {
