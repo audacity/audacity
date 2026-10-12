@@ -1166,6 +1166,7 @@ Rectangle {
         clipHeight: root.height
         headerHeight: header.height
         altPressed: root.altPressed
+        exclusionItem: root.collapsed ? menuBtn : null
 
         clipNavigationPanel: root.clipNavigationPanel
 
