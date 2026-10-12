@@ -1140,21 +1140,39 @@ bool TrackeditOperationController::cutItems(const ClipKeyList& clipKeys, const L
     return true;
 }
 
-bool TrackeditOperationController::isLabelItem(const TrackItemKey& key) const
+std::optional<TrackType> TrackeditOperationController::itemTrackType(const TrackItemKey& key) const
 {
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    const std::optional<Track> track = prj ? prj->track(key.trackId) : std::nullopt;
-    return track.has_value() && track->type == TrackType::Label;
+    if (!prj) {
+        return std::nullopt;
+    }
+
+    const std::optional<Track> track = prj->track(key.trackId);
+    if (!track) {
+        return std::nullopt;
+    }
+
+    return track->type;
 }
 
 int64_t TrackeditOperationController::itemGroupId(const TrackItemKey& key) const
 {
-    return isLabelItem(key) ? labelsInteraction()->labelGroupId(key) : clipsInteraction()->clipGroupId(key);
+    const std::optional<TrackType> type = itemTrackType(key);
+    if (!type) {
+        return -1;
+    }
+
+    return *type == TrackType::Label ? labelsInteraction()->labelGroupId(key) : clipsInteraction()->clipGroupId(key);
 }
 
 void TrackeditOperationController::setItemGroupId(const TrackItemKey& key, int64_t id)
 {
-    if (isLabelItem(key)) {
+    const std::optional<TrackType> type = itemTrackType(key);
+    if (!type) {
+        return;
+    }
+
+    if (*type == TrackType::Label) {
         labelsInteraction()->setLabelGroupId(key, id);
     } else {
         clipsInteraction()->setClipGroupId(key, id);
