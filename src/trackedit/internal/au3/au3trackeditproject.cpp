@@ -64,13 +64,13 @@ bool Au3TrackeditProject::timeTrackFound() const
     return TimeTrackDetector::Get(*m_impl->prj).found;
 }
 
-std::vector<int64_t> Au3TrackeditProject::groupsIdsList() const
+std::set<int64_t> Au3TrackeditProject::groupsIdsList() const
 {
-    std::vector<int64_t> groupsList;
+    std::set<int64_t> groupsList;
 
     const auto add = [&groupsList](int64_t groupId) {
-        if (groupId != -1 && !muse::contains(groupsList, groupId)) {
-            groupsList.push_back(groupId);
+        if (groupId != -1) {
+            groupsList.insert(groupId);
         }
     };
 
