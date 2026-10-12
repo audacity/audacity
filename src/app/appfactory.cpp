@@ -47,6 +47,7 @@
 #include "au3audio/au3audiomodule.h"
 #include "playback/playbackmodule.h"
 #include "trackedit/trackeditmodule.h"
+#include "macromanager/macromanagermodule.h"
 #include "spectrogram/spectrogrammodule.h"
 #include "record/recordmodule.h"
 #include "uicomponents/uicomponentsmodule.h"
@@ -178,6 +179,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::playback::PlaybackModule());
     app->addModule(new au::record::RecordModule());
     app->addModule(new au::trackedit::TrackeditModule());
+    app->addModule(new au::macromanager::MacroManagerModule());
     app->addModule(new au::spectrogram::SpectrogramModule());
     app->addModule(new au::project::ProjectModule());
     app->addModule(new au::importexport::ExporterModule());

@@ -32,6 +32,7 @@ using DockName = QString;
 static const DockName TRACKS_PANEL_NAME("tracksPanel");
 static const DockName HISTORY_PANEL_NAME("historyPanel");
 static const DockName PLAYBACK_METER_PANEL_NAME("playbackMeterPanel");
+static const DockName MACRO_MANAGER_PANEL_NAME("macroManagerPanel");
 
 // Toolbars:
 static const DockName PROJECT_TOOLBAR_NAME("projectToolBar");

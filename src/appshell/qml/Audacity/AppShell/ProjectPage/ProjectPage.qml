@@ -30,6 +30,7 @@ import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.TrackEdit
+import Audacity.MacroManager
 
 DockPage {
     id: root
@@ -420,6 +421,48 @@ DockPage {
             PlaybackMeterPanel {
                 navigationSection: playbackMeterPanel.navigationSection
                 navigationOrderStart: playbackMeterPanel.contentNavigationPanelOrderStart
+            }
+        },
+        DockPanel {
+            id: macroManagerPanel
+
+            readonly property int panelWidth: 280
+            readonly property int floatingMaximumWidth: 16777215
+
+            objectName: pageModel.macroManagerPanelName()
+            title: qsTrc("appshell", "Macro manager")
+
+            navigationSection: root.navigationPanelSec(macroManagerPanel.location)
+
+            titleBar: Component {
+                MacroManagerTitleBar {
+                    title: macroManagerPanel.title
+                }
+            }
+
+            floatable: true
+
+            width: panelWidth
+            minimumWidth: panelWidth
+            maximumWidth: floating ? floatingMaximumWidth : panelWidth
+
+            location: Location.Right
+
+            dropDestinations: [
+                {
+                    "dock": tracksPanel,
+                    "dropLocation": Location.Left
+                },
+                {
+                    "dock": root.centralDock,
+                    "dropLocation": Location.Right,
+                    "dropDistance": root.verticalPanelDefaultWidth
+                }
+            ]
+
+            MacroManagerPanel {
+                navigationSection: macroManagerPanel.navigationSection
+                navigationOrderStart: macroManagerPanel.contentNavigationPanelOrderStart
             }
         },
         DockPanel {
