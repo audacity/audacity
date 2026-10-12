@@ -144,12 +144,11 @@ void StartupScenario::runAfterSplashScreen()
     m_startupCompleted = true;
 
     StartupModeType modeType = resolveStartupModeType();
-    const bool canOverrideStartupMode = allowsStartupModeOverride();
-    if (canOverrideStartupMode && sessionsManager()->hasProjectsForRestore()) {
-        modeType = StartupModeType::Recovery;
-    }
-    if (canOverrideStartupMode && !configuration()->hasCompletedFirstLaunchSetup()) {
+
+    if (allowsFirstLaunchOverride() && !configuration()->hasCompletedFirstLaunchSetup()) {
         modeType = StartupModeType::FirstLaunch;
+    } else if (allowsRecoveryOverride() && sessionsManager()->hasProjectsForRestore()) {
+        modeType = StartupModeType::Recovery;
     }
 
     const muse::Uri startupUri = startupPageUri(modeType);
@@ -167,7 +166,12 @@ bool StartupScenario::startupCompleted() const
     return m_startupCompleted;
 }
 
-bool StartupScenario::allowsStartupModeOverride() const
+bool StartupScenario::allowsFirstLaunchOverride() const
+{
+    return multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
+}
+
+bool StartupScenario::allowsRecoveryOverride() const
 {
     return multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
 }
