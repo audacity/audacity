@@ -9,6 +9,8 @@
 
 #include "projectscene/types/projectscenetypes.h"
 
+#include "../timeline/timelinecontext.h"
+
 namespace au::projectscene {
 class TrackLabelsListModel;
 class TrackLabelItem;
@@ -18,10 +20,14 @@ class TrackLabelsLayoutManager : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QObject * labelsModel READ labelsModel WRITE setLabelsModel NOTIFY labelsModelChanged)
+    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
 public:
     explicit TrackLabelsLayoutManager(QObject* parent = nullptr);
     ~TrackLabelsLayoutManager();
+
+    TimelineContext* timelineContext() const;
+    void setTimelineContext(TimelineContext* context);
 
     Q_INVOKABLE void init();
 
@@ -38,6 +44,7 @@ public:
 
 signals:
     void labelsModelChanged();
+    void timelineContextChanged();
 
 private:
     friend class TrackLabelsLayoutManagerTests;
@@ -71,5 +78,7 @@ private:
 
     QMap<LabelKey, LabelKey> m_leftLinkedLabels;
     QMap<LabelKey, LabelKey> m_rightLinkedLabels;
+
+    TimelineContext* m_context = nullptr;
 };
 }
