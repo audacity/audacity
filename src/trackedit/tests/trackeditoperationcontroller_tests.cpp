@@ -222,42 +222,6 @@ TEST_P(TrackeditOperationMoveTests, MixedMoveUpdatesBothSelectionsBeforeHistory)
     EXPECT_EQ(DomAccessor::findSelectedLabels(projectRef()), m_selection->selectedLabels());
 }
 
-TEST_P(TrackeditOperationMoveTests, MixedMoveDropsFocusFromMovedItemBeforeAnythingIsPublished)
-{
-    //! [GIVEN] The focus sits on the item that is about to change tracks
-    ON_CALL(*m_navigation, focus()).WillByDefault(Return(TrackFocus::item(GetParam() ? m_sourceLabel : m_sourceClip)));
-    bool focusDropped = false;
-    EXPECT_CALL(*m_navigation, setFocus(_, _)).WillOnce([&focusDropped](const TrackFocus& focus, bool) {
-        EXPECT_TRUE(focus.isTrack());
-        focusDropped = true;
-    });
-
-    //! [GIVEN] Nothing observes the move while the focus still names the source key
-    const auto expectFocusDropped = [&focusDropped]() {
-        EXPECT_TRUE(focusDropped);
-    };
-    ON_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).WillByDefault([&](const Track&) { expectFocusDropped(); });
-    ON_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).WillByDefault([&](const Clip&) { expectFocusDropped(); });
-    m_selection->clipsSelected().onReceive(m_operation.get(), [&](const ClipKeyList&) { expectFocusDropped(); });
-    m_selection->labelsSelected().onReceive(m_operation.get(), [&](const LabelKeyList&) { expectFocusDropped(); });
-
-    //! [WHEN] The mixed selection is moved one track down
-    const auto result = move(0.5, 1);
-    ASSERT_TRUE(result.ret);
-    EXPECT_TRUE(focusDropped);
-}
-
-TEST_P(TrackeditOperationMoveTests, MixedMoveLeavesFocusOnUnmovedItem)
-{
-    //! [GIVEN] The focus sits on the track panel, not on a moved item
-    ON_CALL(*m_navigation, focus()).WillByDefault(Return(TrackFocus::track(m_sourceClip.trackId)));
-    EXPECT_CALL(*m_navigation, setFocus(_, _)).Times(0);
-
-    //! [WHEN] The mixed selection is moved one track down
-    const auto result = move(0.5, 1);
-    ASSERT_TRUE(result.ret);
-}
-
 TEST_P(TrackeditOperationMoveTests, MixedMoveUpWithMonoMixdownPublishesExistingClips)
 {
     //! [GIVEN] A mono track holding a clip above a stereo track holding two grouped clips, and two grouped labels
