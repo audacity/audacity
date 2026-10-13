@@ -11,6 +11,7 @@
 
 #include "framework/global/translation.h"
 #include "framework/global/defer.h"
+#include "framework/global/async/async.h"
 #include "framework/rcommand/actiontocommand.h"
 
 #include "../trackeditcommands.h"
@@ -580,8 +581,13 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-        notifyActionEnabledChanged(GROUP_ITEMS_CODE);
-        notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
+
+        //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
+        //! in its own history receiver, which may run after this one. Evaluate the group actions once it has.
+        muse::async::Async::call(this, [this]() {
+            notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+            notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
+        });
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {

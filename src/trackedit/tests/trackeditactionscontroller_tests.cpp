@@ -3,6 +3,7 @@
 */
 #include <gtest/gtest.h>
 
+#include "global/async/async.h"
 #include "trackedit/internal/trackeditactionscontroller.h"
 #include "trackedit/internal/tracksviewrequestsservice.h"
 
@@ -122,8 +123,24 @@ TEST_F(TrackeditActionsControllerTests, HistoryEventsRefreshTheGroupActions)
         refreshed.push_back(code);
     });
 
+    //! [GIVEN] The selection still holds keys of labels that the restored state recreated under new ids
+    const LabelKey staleLabel { 2, 20 };
+    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList { staleLabel }));
+
+    //! [EXPECT] Nothing asks for the group of an item while the history event is being delivered
+    EXPECT_CALL(*m_trackeditInteraction, itemGroupId(::testing::_)).Times(0);
+
     //! [WHEN] The history reports a restored state
     historyChanged.send(HistoryEvent::RestoredState);
+
+    //! [THEN] The group actions are not re-evaluated yet, before the selection controller resyncs its keys
+    EXPECT_FALSE(muse::contains(refreshed, muse::actions::ActionCode("group-items")));
+    EXPECT_FALSE(muse::contains(refreshed, muse::actions::ActionCode("ungroup-items")));
+    ::testing::Mock::VerifyAndClearExpectations(m_trackeditInteraction.get());
+
+    //! [WHEN] The selection was resynced and the queued refresh runs
+    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList {}));
+    kors::async::QueuePool::instance()->processMessages();
 
     //! [THEN] Both group actions are re-evaluated
     EXPECT_TRUE(muse::contains(refreshed, muse::actions::ActionCode("group-items")));

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <limits>
 
+#include "framework/global/async/async.h"
 #include "framework/global/containers.h"
 #include "framework/global/log.h"
 
@@ -69,7 +70,10 @@ const std::vector<Command> historyCommands {
     TRACKEDIT_UNDO_COMMAND,
     TRACKEDIT_REDO_COMMAND,
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
-    // Grouping changes the items' group ids, not the selection
+};
+
+//! Grouping changes the items' group ids, not the selection
+const std::vector<Command> groupCommands {
     TRACKEDIT_GROUP_ITEMS_COMMAND,
     TRACKEDIT_UNGROUP_ITEMS_COMMAND,
 };
@@ -125,6 +129,12 @@ void TrackeditCommandsState::init()
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateCommandStates(historyCommands);
+
+        //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
+        //! in its own history receiver, which may run after this one. Evaluate the group commands once it has.
+        muse::async::Async::call(this, [this]() {
+            updateCommandStates(groupCommands);
+        });
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList&) {
