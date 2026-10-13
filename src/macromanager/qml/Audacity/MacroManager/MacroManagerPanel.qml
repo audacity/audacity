@@ -105,6 +105,10 @@ Rectangle {
                     macroManagerModel.run(index)
                 }
 
+                onEditRequested: {
+                    macroManagerModel.edit(index)
+                }
+
                 onRenameRequested: {
                     macroManagerModel.rename(index)
                 }
