@@ -82,6 +82,11 @@ public:
             const auto* label = track ? DomAccessor::findLabel(track, key.itemId) : nullptr;
             return label ? DomConverter::label(track, label) : Label {};
         });
+        ON_CALL(*m_trackEditProject, clip(_)).WillByDefault([this](const ClipKey& key) {
+            auto* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(key.trackId));
+            const auto clip = track ? DomAccessor::findWaveClip(track, key.itemId) : nullptr;
+            return clip ? DomConverter::clip(track, clip.get()) : Clip {};
+        });
 
         muse::async::Notification projectChanged;
         ON_CALL(*m_globalContext, currentTrackeditProjectChanged()).WillByDefault(Return(projectChanged));
@@ -385,6 +390,30 @@ TEST_P(TrackeditOperationMoveTests, CopyItemsCopiesEachTrackOfTheItemsShiftedToT
     EXPECT_DOUBLE_EQ(startTimes.at(0), 0.0);
     EXPECT_DOUBLE_EQ(startTimes.at(1), 1.0);
     checkSelection();
+}
+
+TEST_P(TrackeditOperationMoveTests, CopyItemsShiftsToTheLeftmostCopiedItemEvenWhenNothingIsSelected)
+{
+    //! [GIVEN] Nothing is selected: the items reach copyItems only because they are focused
+    m_selection->resetSelectedClips();
+    m_selection->resetSelectedLabels();
+    m_selection->setSelectedTracks({ m_sourceClip.trackId }, true);
+
+    std::vector<ITrackDataPtr> copies;
+    ON_CALL(*m_clipboard, addTrackData(_)).WillByDefault([&copies](ITrackDataPtr data) { copies.push_back(data); });
+
+    //! [WHEN] The clip and the label are copied
+    ASSERT_TRUE(m_operation->copyItems({ m_sourceClip }, { m_sourceLabel }));
+
+    //! [THEN] The offset comes from the copied items, so the clip at 1.0 still starts the clipboard at 0.0
+    ASSERT_EQ(copies.size(), 2u);
+    std::vector<double> startTimes;
+    for (const ITrackDataPtr& data : copies) {
+        startTimes.push_back(std::static_pointer_cast<Au3TrackData>(data)->track()->GetStartTime());
+    }
+    std::sort(startTimes.begin(), startTimes.end());
+    EXPECT_DOUBLE_EQ(startTimes.at(0), 0.0);
+    EXPECT_DOUBLE_EQ(startTimes.at(1), 1.0);
 }
 
 TEST_P(TrackeditOperationMoveTests, CutItemsCopiesRemovesAndPushesOneCutState)

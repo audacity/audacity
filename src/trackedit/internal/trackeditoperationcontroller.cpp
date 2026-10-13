@@ -1092,8 +1092,22 @@ bool TrackeditOperationController::copyItems(const ClipKeyList& clipKeys, const 
 
     clipboard()->clearTrackData();
 
-    const std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
-    const secs_t offset = leftmostItemStartTime.has_value() ? -leftmostItemStartTime.value() : secs_t(0.0);
+    //! NOTE The offset comes from the copied items themselves, not from the selection:
+    //! callers may pass items that are not selected (e.g. the focused one)
+    std::optional<secs_t> leftmostItemStartTime;
+    const auto considerItem = [&leftmostItemStartTime](const auto& item) {
+        if (item.isValid() && (!leftmostItemStartTime || item.startTime < *leftmostItemStartTime)) {
+            leftmostItemStartTime = item.startTime;
+        }
+    };
+    for (const ClipKey& key : clipKeys) {
+        considerItem(project->clip(key));
+    }
+    for (const LabelKey& key : labelKeys) {
+        considerItem(project->label(key));
+    }
+
+    const secs_t offset = leftmostItemStartTime ? -*leftmostItemStartTime : secs_t(0.0);
 
     bool ok = true;
     for (const Track& track : project->trackList()) {
