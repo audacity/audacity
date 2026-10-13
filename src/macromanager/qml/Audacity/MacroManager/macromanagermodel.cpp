@@ -75,6 +75,8 @@ void MacroManagerModel::newMacro()
     endInsertRows();
 
     emit isEmptyChanged();
+
+    edit(row);
 }
 
 void MacroManagerModel::edit(int row)
