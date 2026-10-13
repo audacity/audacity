@@ -9,7 +9,9 @@ qt_add_qml_module(macromanager_qml
     QML_FILES
         MacroManagerPanel.qml
         MacroManagerTitleBar.qml
+        NewMacroDialog.qml
         internal/MacroManagerHeader.qml
+        internal/MacroItem.qml
     IMPORTS
         TARGET muse_ui_qml
         TARGET muse_uicomponents_qml
