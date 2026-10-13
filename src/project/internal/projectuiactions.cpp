@@ -281,11 +281,28 @@ const UiActionList ProjectUiActions::m_actions = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Toggle spectral selection")
              ),
+    UiAction("cursor-to-track-start",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Track Start"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Move cursor to track start")
+             ),
+    UiAction("cursor-to-track-end",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Track End"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Move cursor to track end")
+             ),
+
     UiAction("zero-cross",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Move cursor to closest zero crossing"),
+             TranslatableString("action", "Closest zero crossing"),
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Move cursor to closest zero crossing")
              ),
