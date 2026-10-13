@@ -48,9 +48,13 @@ protected:
     void addItem(trackedit::TrackItemId itemId, const muse::String& title, double startTime, double endTime, int visualWidth = -1)
     {
         trackedit::TrackItemKey key(1, itemId);
-        m_labelsModel->m_allLabelList.push_back(au::trackedit::Label { key,
-                                                                       title,
-                                                                       1, startTime, endTime });
+        au::trackedit::Label label;
+        label.key = key;
+        label.title = title;
+        label.colorIndex = 1;
+        label.startTime = startTime;
+        label.endTime = endTime;
+        m_labelsModel->m_allLabelList.push_back(label);
 
         ON_CALL(*m_trackEditProject, label(key))
         .WillByDefault(testing::Return(m_labelsModel->m_allLabelList.back()));

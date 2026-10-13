@@ -111,6 +111,7 @@ public:
     MOCK_METHOD(muse::RetVal<LabelKey>, addLabelToSelection, (), (override));
 
     MOCK_METHOD(bool, changeLabelTitle, (const LabelKey&, const muse::String&), (override));
+    MOCK_METHOD(bool, changeLabelColor, (const LabelKey&, ClipColorIndex), (override));
     MOCK_METHOD(bool, changeLabelLowFrequency, (const LabelKey&, double), (override));
     MOCK_METHOD(bool, changeLabelHighFrequency, (const LabelKey&, double), (override));
 

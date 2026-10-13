@@ -215,6 +215,12 @@ inline muse::actions::ActionQuery makeClipColorChangeAction(trackedit::ClipColor
     return muse::actions::ActionQuery(muse::String(COLOR_CHANGE_ACTION).arg(colorIndex));
 }
 
+constexpr const char16_t* LABEL_COLOR_CHANGE_ACTION = u"action://trackedit/label/change-color?colorindex=%1";
+inline muse::actions::ActionQuery makeLabelColorChangeAction(trackedit::ClipColorIndex colorIndex)
+{
+    return muse::actions::ActionQuery(muse::String(LABEL_COLOR_CHANGE_ACTION).arg(colorIndex));
+}
+
 constexpr const char16_t* TRACK_COLOR_CHANGE_ACTION = u"action://trackedit/track/change-color?colorindex=%1";
 inline muse::actions::ActionQuery makeTrackColorChangeAction(trackedit::ClipColorIndex colorIndex)
 {

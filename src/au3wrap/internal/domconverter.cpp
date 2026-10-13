@@ -148,7 +148,9 @@ au::trackedit::Label DomConverter::label(const Au3LabelTrack* labelTrack, const 
     label.lowFrequency = au3label->getLowFrequency();
     label.highFrequency = au3label->getHighFrequency();
 
-    label.colorIndex = TrackColor::Get(labelTrack).GetColorIndex();
+    const int labelColorIdx = au3label->GetColorIndex();
+    label.isAutoColor = (labelColorIdx == trackedit::CLIP_COLOR_INDEX_NONE);
+    label.colorIndex = label.isAutoColor ? TrackColor::Get(labelTrack).GetColorIndex() : labelColorIdx;
 
     return label;
 }
