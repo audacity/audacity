@@ -20,6 +20,8 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void add(const QString& code, const QString& title);
+    Q_INVOKABLE void insert(int row, const QString& code, const QString& title);
+    Q_INVOKABLE void move(int from, int to);
     Q_INVOKABLE void remove(int row);
 
 private:
@@ -35,6 +37,7 @@ private:
     };
 
     bool isRowValid(int row) const;
+    void notifyStepsChanged(int fromRow, int toRow);
 
     QList<Item> m_items;
 };
