@@ -63,13 +63,9 @@ Item {
         readonly property int handleWidth: 30
         readonly property int handleClipOverlap: 6
 
-        readonly property int animationDuration: 100
-
         // icons are centred, so that they grow around their centre when hovered
         readonly property int trimIconMargin: 2
-        readonly property int trimIconSize: 17
-        readonly property int trimIconHoveredSize: 22
-        readonly property real trimIconCenterOffset: trimIconMargin + trimIconSize / 2
+        readonly property real trimIconCenterOffset: trimIconMargin + leftArrow.iconSize / 2
 
         readonly property int clockMargin: 4
         readonly property int clockIconSize: 14
@@ -102,14 +98,14 @@ Item {
             visible: prv.debugRectsVisible
         }
 
-        StyledIconLabel {
+        ClipHandleIcon {
             id: leftArrow
             anchors.verticalCenter: leftTrimHandle.verticalCenter
             anchors.horizontalCenter: leftTrimHandle.left
             anchors.horizontalCenterOffset: prv.trimIconCenterOffset
 
+            hovered: leftTrimMa.containsMouse
             iconCode: IconCode.TRIM_HANDLE_LEFT
-            font.pixelSize: prv.trimIconSize
             color: ui.theme.extra["black_color"]
             style: Text.Outline
             styleColor: ui.theme.extra["white_color"]
@@ -260,14 +256,14 @@ Item {
             visible: prv.debugRectsVisible
         }
 
-        StyledIconLabel {
+        ClipHandleIcon {
             id: rightArrow
             anchors.verticalCenter: rightTrimHandle.verticalCenter
             anchors.horizontalCenter: rightTrimHandle.right
             anchors.horizontalCenterOffset: -prv.trimIconCenterOffset
 
+            hovered: rightTrimMa.containsMouse
             iconCode: IconCode.TRIM_HANDLE_RIGHT
-            font.pixelSize: prv.trimIconSize
             color: ui.theme.extra["black_color"]
             style: Text.Outline
             styleColor: ui.theme.extra["white_color"]
@@ -437,13 +433,15 @@ Item {
 
             color: ui.theme.extra["black_color"]
 
-            StyledIconLabel {
+            ClipHandleIcon {
                 id: leftClockIcon
 
                 anchors.centerIn: parent
 
+                hovered: leftTimeMa.containsMouse
+                iconSize: prv.clockIconSize
+                hoveredIconSize: prv.clockIconHoveredSize
                 iconCode: IconCode.CLOCK
-                font.pixelSize: prv.clockIconSize
                 color: ui.theme.extra["white_color"]
 
                 Rectangle {
@@ -600,12 +598,14 @@ Item {
 
             color: ui.theme.extra["black_color"]
 
-            StyledIconLabel {
+            ClipHandleIcon {
                 id: rightClockIcon
 
                 anchors.centerIn: parent
+                hovered: rightTimeMa.containsMouse
+                iconSize: prv.clockIconSize
+                hoveredIconSize: prv.clockIconHoveredSize
                 iconCode: IconCode.CLOCK
-                font.pixelSize: prv.clockIconSize
                 color: ui.theme.extra["white_color"]
 
                 Rectangle {
@@ -729,77 +729,4 @@ Item {
             }
         }
     }
-
-    state: "NORMAL"
-    states: [
-        State {
-            name: "NORMAL"
-            when: !leftTrimMa.containsMouse && !rightTrimMa.containsMouse && !leftTimeMa.containsMouse && !rightTimeMa.containsMouse
-        },
-        State {
-            name: "LEFT_TRIM_HOVERED"
-            when: leftTrimMa.containsMouse
-            PropertyChanges {
-                target: leftArrow
-                font.pixelSize: prv.trimIconHoveredSize
-            }
-        },
-        State {
-            name: "RIGHT_TRIM_HOVERED"
-            when: rightTrimMa.containsMouse
-            PropertyChanges {
-                target: rightArrow
-                font.pixelSize: prv.trimIconHoveredSize
-            }
-        },
-        State {
-            name: "LEFT_TIME_HOVERED"
-            when: leftTimeMa.containsMouse
-            PropertyChanges {
-                target: leftClockIcon
-                font.pixelSize: prv.clockIconHoveredSize
-            }
-        },
-        State {
-            name: "RIGHT_TIME_HOVERED"
-            when: rightTimeMa.containsMouse
-            PropertyChanges {
-                target: rightClockIcon
-                font.pixelSize: prv.clockIconHoveredSize
-            }
-        }
-    ]
-
-    transitions: [
-        Transition {
-            from: "*"
-            to: "*"
-            reversible: true
-
-            PropertyAnimation {
-                target: leftArrow
-                properties: "font.pixelSize"
-                duration: prv.animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: rightArrow
-                properties: "font.pixelSize"
-                duration: prv.animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: leftClockIcon
-                properties: "font.pixelSize"
-                duration: prv.animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: rightClockIcon
-                properties: "font.pixelSize"
-                duration: prv.animationDuration
-                easing.type: Easing.Linear
-            }
-        }
-    ]
 }
