@@ -14,6 +14,8 @@ ColumnLayout {
 
     property alias model: listView.model
 
+    readonly property string dragMimeType: "application/x-audacity-macro-command"
+
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "MacroCommandsTable"
         direction: NavigationPanel.Both
@@ -23,6 +25,8 @@ ColumnLayout {
 
     signal editRequested(int row)
     signal deleteRequested(int row)
+    signal moveRequested(int from, int to)
+    signal insertRequested(int row, string code, string title)
 
     spacing: 0
 
@@ -34,6 +38,29 @@ ColumnLayout {
         readonly property int handleWidth: 32
         readonly property int stepWidth: 64
         readonly property int actionsWidth: 80
+        readonly property int dropLineThickness: 2
+
+        property int dropIndex: -1
+
+        function dropIndexAt(y) {
+            const contentY = y + listView.contentY
+            const item = listView.itemAt(0, contentY)
+            if (!item) {
+                return y < 0 ? 0 : listView.count
+            }
+
+            const index = listView.indexAt(0, contentY)
+            return contentY - item.y > item.height / 2 ? index + 1 : index
+        }
+
+        function dropLineY(index) {
+            if (index >= 0 && index < listView.count) {
+                const item = listView.itemAtIndex(index)
+                return Boolean(item) ? item.y - listView.contentY : 0
+            }
+
+            return listView.contentHeight - listView.contentY
+        }
     }
 
     Rectangle {
@@ -109,8 +136,14 @@ ColumnLayout {
             stepWidth: prv.stepWidth
             actionsWidth: prv.actionsWidth
 
+            dragMimeType: root.dragMimeType
+            dragRow: index
+
             navigationPanel: root.navigationPanel
             navigationRow: index
+
+            canMoveUp: index > 0
+            canMoveDown: index < listView.count - 1
 
             onEditRequested: {
                 root.editRequested(index)
@@ -119,6 +152,55 @@ ColumnLayout {
             onDeleteRequested: {
                 root.deleteRequested(index)
             }
+
+            onMoveUpRequested: {
+                root.moveRequested(index, index - 1)
+            }
+
+            onMoveDownRequested: {
+                root.moveRequested(index, index + 1)
+            }
+        }
+
+        DropArea {
+            anchors.fill: parent
+
+            keys: [root.dragMimeType]
+
+            onPositionChanged: function (drag) {
+                prv.dropIndex = prv.dropIndexAt(drag.y)
+            }
+
+            onExited: {
+                prv.dropIndex = -1
+            }
+
+            onDropped: function (drop) {
+                const dropIndex = prv.dropIndex
+                prv.dropIndex = -1
+
+                if (dropIndex < 0) {
+                    return
+                }
+
+                const data = JSON.parse(drop.getDataAsString(root.dragMimeType))
+                if (data.row >= 0) {
+                    root.moveRequested(data.row, data.row < dropIndex ? dropIndex - 1 : dropIndex)
+                } else {
+                    root.insertRequested(dropIndex, data.code, data.title)
+                }
+
+                drop.accept()
+            }
+        }
+
+        Rectangle {
+            width: parent.width
+            height: prv.dropLineThickness
+            y: prv.dropLineY(prv.dropIndex)
+
+            color: ui.theme.accentColor
+            visible: prv.dropIndex >= 0
         }
     }
 }
