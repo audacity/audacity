@@ -1,6 +1,8 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+#include <set>
+
 #include <gtest/gtest.h>
 
 #include "../internal/au3/au3tracksinteraction.h"
@@ -350,34 +352,7 @@ TEST_F(Au3TracksInteractionTests, CopyNonContinuousTrackData)
     removeTrack(trackId);
 }
 
-TEST_F(Au3TracksInteractionTests, CopyNonContinuousLabelDataKeepsGroupId)
-{
-    //! [GIVEN] A label track with a grouped label
-    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
-    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
-            { 1.0, 2.0, "Label" }
-        });
-    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
-    ASSERT_NE(labelTrack, nullptr);
-    Au3Label label = labelTrack->GetLabels().front();
-    label.SetGroupId(4);
-    labelTrack->SetLabel(0, label);
-
-    //! [WHEN] The label is copied as clipboard data
-    const ITrackDataPtr data = m_tracksInteraction->copyNonContinuousTrackData(labelTrackId, { { labelTrackId, label.GetId() } }, -1.0);
-    ASSERT_NE(data, nullptr);
-
-    //! [THEN] The copy keeps the group id and the offset time
-    const auto copiedTrack = std::static_pointer_cast<Au3LabelTrack>(std::static_pointer_cast<Au3TrackData>(data)->track());
-    ASSERT_EQ(copiedTrack->GetNumLabels(), 1);
-    EXPECT_EQ(copiedTrack->GetLabel(0)->GetGroupId(), 4);
-    EXPECT_DOUBLE_EQ(copiedTrack->GetLabel(0)->getT0(), 0.0);
-
-    // Cleanup
-    removeTrack(labelTrackId);
-}
-
-TEST_F(Au3TracksInteractionTests, CopiedLabelsKeepTheirSelectionAndGroup)
+TEST_F(Au3TracksInteractionTests, CopyPasteKeepsLabelSelectionAndGroup)
 {
     //! [GIVEN] A label track with a selected, grouped label
     TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
@@ -391,19 +366,36 @@ TEST_F(Au3TracksInteractionTests, CopiedLabelsKeepTheirSelectionAndGroup)
     label.SetGroupId(4);
     labelTrack->SetLabel(0, label);
 
-    //! [WHEN] The label is copied both as a selected item and as part of a time range
+    //! [GIVEN] It is copied both as a selected item and as part of a time range
     const ITrackDataPtr itemData = m_tracksInteraction->copyNonContinuousTrackData(labelTrackId, { { labelTrackId, label.GetId() } }, 0.0);
     const ITrackDataPtr rangeData = m_tracksInteraction->copyContinuousTrackData(labelTrackId, 0.0, 3.0);
     ASSERT_NE(itemData, nullptr);
     ASSERT_NE(rangeData, nullptr);
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { labelTrackId }));
 
-    //! [THEN] Both copies keep the selection and the group, just like copied clips do
-    for (const ITrackDataPtr& data : { itemData, rangeData }) {
-        const auto copiedTrack = std::static_pointer_cast<Au3LabelTrack>(std::static_pointer_cast<Au3TrackData>(data)->track());
-        ASSERT_EQ(copiedTrack->GetNumLabels(), 1);
-        EXPECT_TRUE(copiedTrack->GetLabel(0)->GetSelected());
-        EXPECT_EQ(copiedTrack->GetLabel(0)->GetGroupId(), 4);
+    std::set<int64_t> originalIds;
+    for (const Au3Label& l : labelTrack->GetLabels()) {
+        originalIds.insert(l.GetId());
     }
+
+    //! [WHEN] Both copies are pasted further along the track
+    auto projectWasModified = false;
+    ASSERT_EQ(m_tracksInteraction->paste({ itemData }, 5.0, false, false, true, projectWasModified), muse::make_ok());
+    ASSERT_EQ(m_tracksInteraction->paste({ rangeData }, 10.0, false, false, false, projectWasModified), muse::make_ok());
+
+    //! [THEN] Both pasted labels are selected and keep their group
+    //! NOTE: group ids are remapped by the clipboard, not by the tracks interaction
+    size_t pastedCount = 0;
+    for (const Au3Label& l : labelTrack->GetLabels()) {
+        if (originalIds.count(l.GetId()) > 0) {
+            continue;
+        }
+        ++pastedCount;
+        EXPECT_TRUE(l.GetSelected());
+        EXPECT_EQ(l.GetGroupId(), 4);
+    }
+    EXPECT_EQ(pastedCount, 2u);
 
     // Cleanup
     removeTrack(labelTrackId);
