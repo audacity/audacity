@@ -12,6 +12,8 @@ import Muse.UiComponents
 StyledDialogView {
     id: root
 
+    property string macroName: ""
+
     title: qsTrc("macromanager", "New macro")
 
     contentWidth: prv.contentWidth
@@ -24,9 +26,18 @@ StyledDialogView {
         readonly property int margins: 12
         readonly property int fieldTopMargin: 4
         readonly property int buttonsTopMargin: 16
+        readonly property int buttonWidth: 64
+        readonly property int buttonHeight: 28
 
-        property string macroName: ""
-        readonly property bool isNameValid: macroName.trim().length > 0
+        readonly property bool isNameValid: root.macroName.trim().length > 0
+
+        function confirm() {
+            root.ret = {
+                errcode: 0,
+                value: root.macroName.trim()
+            }
+            root.hide()
+        }
     }
 
     onNavigationActivateRequested: {
@@ -41,7 +52,7 @@ StyledDialogView {
         spacing: 0
 
         property NavigationPanel navigationPanel: NavigationPanel {
-            name: "NewMacroPanel"
+            name: "MacroNamePanel"
             direction: NavigationPanel.Vertical
             section: root.navigationSection
             order: 1
@@ -64,20 +75,20 @@ StyledDialogView {
             navigation.row: 1
             navigation.accessible.name: nameTitle.text + " " + currentText
 
-            currentText: prv.macroName
+            currentText: root.macroName
 
             onTextChanged: function (newTextValue) {
-                prv.macroName = newTextValue
+                root.macroName = newTextValue
             }
 
             onAccepted: {
                 if (prv.isNameValid) {
-                    root.ret = {
-                        errcode: 0,
-                        value: prv.macroName.trim()
-                    }
-                    root.hide()
+                    prv.confirm()
                 }
+            }
+
+            Component.onCompleted: {
+                selectAll()
             }
         }
 
@@ -85,12 +96,26 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.topMargin: prv.buttonsTopMargin
 
-            buttons: [ButtonBoxModel.Cancel]
-
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 2
 
             FlatButton {
+                Layout.preferredWidth: prv.buttonWidth
+                Layout.preferredHeight: prv.buttonHeight
+
+                text: qsTrc("global", "Cancel")
+                buttonRole: ButtonBoxModel.RejectRole
+                buttonId: ButtonBoxModel.Cancel
+
+                onClicked: {
+                    root.reject()
+                }
+            }
+
+            FlatButton {
+                Layout.preferredWidth: prv.buttonWidth
+                Layout.preferredHeight: prv.buttonHeight
+
                 text: qsTrc("macromanager", "Confirm")
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.CustomButton + 1
@@ -98,17 +123,7 @@ StyledDialogView {
                 enabled: prv.isNameValid
 
                 onClicked: {
-                    root.ret = {
-                        errcode: 0,
-                        value: prv.macroName.trim()
-                    }
-                    root.hide()
-                }
-            }
-
-            onStandardButtonClicked: function (buttonId) {
-                if (buttonId === ButtonBoxModel.Cancel) {
-                    root.reject()
+                    prv.confirm()
                 }
             }
         }

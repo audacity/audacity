@@ -18,7 +18,8 @@ Rectangle {
     property int navigationRow: 0
 
     signal runRequested
-    signal contextMenuRequested
+    signal renameRequested
+    signal deleteRequested
 
     implicitHeight: prv.height
 
@@ -39,6 +40,48 @@ Rectangle {
 
     HoverHandler {
         id: hoverHandler
+    }
+
+    ContextMenuLoader {
+        id: contextMenuLoader
+
+        items: [
+            {
+                id: "edit",
+                title: qsTrc("macromanager", "Edit"),
+                enabled: false
+            },
+            {
+                id: "rename",
+                title: qsTrc("macromanager", "Rename")
+            },
+            {
+                id: "run-on-files",
+                title: qsTrc("macromanager", "Run on files…"),
+                enabled: false
+            },
+            {
+                id: "export",
+                title: qsTrc("macromanager", "Export"),
+                enabled: false
+            },
+            {},
+            {
+                id: "delete",
+                title: qsTrc("macromanager", "Delete")
+            }
+        ]
+
+        onHandleMenuItem: function (itemId) {
+            switch (itemId) {
+            case "rename":
+                root.renameRequested()
+                break
+            case "delete":
+                root.deleteRequested()
+                break
+            }
+        }
     }
 
     SeparatorLine {
@@ -107,6 +150,8 @@ Rectangle {
             }
 
             FlatButton {
+                id: menuButton
+
                 Layout.preferredWidth: prv.buttonSize
                 Layout.preferredHeight: prv.buttonSize
 
@@ -119,7 +164,7 @@ Rectangle {
                 navigation.accessible.name: qsTrc("macromanager", "Macro menu")
 
                 onClicked: {
-                    root.contextMenuRequested()
+                    contextMenuLoader.show(menuButton.mapToItem(root, 0, menuButton.height))
                 }
             }
         }
