@@ -12,6 +12,8 @@ import Muse.UiComponents
 StyledListView {
     id: root
 
+    property string dragMimeType: ""
+
     signal addRequested(string code, string title)
 
     QtObject {
@@ -45,12 +47,39 @@ StyledListView {
         navigation.row: item.index
         navigation.accessible.name: item.title
 
+        mouseArea.drag.target: dragTarget
+
+        Drag.dragType: Drag.Automatic
+        Drag.supportedActions: Qt.CopyAction
+        Drag.active: item.mouseArea.drag.active
+        Drag.mimeData: {
+            const data = {}
+            data[root.dragMimeType] = JSON.stringify({
+                row: -1,
+                code: item.code,
+                title: item.title
+            })
+            return data
+        }
+
         onClicked: {
             root.currentIndex = item.index
         }
 
         onDoubleClicked: {
             root.addRequested(item.code, item.title)
+        }
+
+        onPressed: function (isPressed) {
+            if (isPressed) {
+                item.grabToImage(function (result) {
+                    item.Drag.imageSource = result.url
+                })
+            }
+        }
+
+        Item {
+            id: dragTarget
         }
 
         RowLayout {
