@@ -128,6 +128,10 @@ void TrackNavigationController::init()
                 prj->trackRemoved().onReceive(this, [this](const Track&) {
                     revalidateFocusedTrack();
                 });
+
+                prj->trackChanged().onReceive(this, [this](const Track&) {
+                    revalidateFocusedItem();
+                });
             }
         });
     });

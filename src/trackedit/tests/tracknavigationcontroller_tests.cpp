@@ -8,6 +8,7 @@
 #include "../internal/tracknavigationcontroller.h"
 #include "../trackeditcommands.h"
 
+#include "global/async/async.h"
 #include "framework/actions/tests/mocks/actionsdispatchermock.h"
 #include "framework/ui/navigationcommands.h"
 #include "framework/ui/tests/mocks/navigationmocks.h"
@@ -78,7 +79,10 @@ public:
         .WillByDefault(Return(m_trackeditProject));
 
         ON_CALL(*m_globalContext, currentTrackeditProjectChanged())
-        .WillByDefault(Return(muse::async::Notification()));
+        .WillByDefault(Return(m_projectChanged));
+
+        ON_CALL(*m_trackeditProject, trackChanged())
+        .WillByDefault(Return(m_trackChanged));
 
         ON_CALL(*m_selectionController, tracksSelected())
         .WillByDefault(Return(muse::async::Channel<TrackIdList>()));
@@ -194,6 +198,8 @@ public:
     std::shared_ptr<playback::PlaybackControllerMock> m_playbackController;
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
     muse::async::Channel<HistoryEvent> m_historyChanged;
+    muse::async::Notification m_projectChanged;
+    muse::async::Channel<Track> m_trackChanged;
 
     std::map<muse::rcommand::Command, muse::rcommand::ICommandDispatcher::CallBack> m_commandCallbacks;
 };
@@ -589,6 +595,46 @@ TEST_F(TrackNavigationControllerTests, FocusFallsBackToTrackWhenItemVanishesInHi
     //! [WHEN] Undo removes the item from the project
     setupTracks({ { trackId, {} } });
     m_historyChanged.send(HistoryEvent::RestoredState);
+
+    //! [THEN] The focus falls back to the item's track
+    EXPECT_EQ(m_controller->focus(), TrackFocus::track(trackId));
+    EXPECT_EQ(published, TrackFocus::track(trackId));
+}
+
+/**
+ * Moving, cutting or deleting items reports their tracks as changed. When the focused
+ * item is gone afterwards, the focus falls back to its track; otherwise it stays.
+ */
+TEST_F(TrackNavigationControllerTests, FocusFallsBackToTrackWhenItemVanishesOnTrackChange)
+{
+    const TrackId trackId = 1;
+    const Clip clip = makeClip(trackId, 10, 0.0);
+    setupTracks({ { trackId, { clip } } });
+    initController();
+
+    //! [GIVEN] The project is open and its track changes are observed
+    m_projectChanged.notify();
+    kors::async::QueuePool::instance()->processMessages();
+    m_controller->setFocus(TrackFocus::item(clip.key));
+
+    std::optional<TrackFocus> published;
+    m_controller->focusChanged().onReceive(m_controller.get(), [&published](const TrackFocus& focus, bool) {
+        published = focus;
+    });
+
+    Track track;
+    track.id = trackId;
+
+    //! [WHEN] The track changes while the item is still on it, e.g. after a move within the track
+    m_trackChanged.send(track);
+
+    //! [THEN] The focus stays on the item
+    EXPECT_EQ(m_controller->focus(), TrackFocus::item(clip.key));
+    EXPECT_FALSE(published.has_value());
+
+    //! [WHEN] The item leaves the track, e.g. moved to another track or cut
+    setupTracks({ { trackId, {} } });
+    m_trackChanged.send(track);
 
     //! [THEN] The focus falls back to the item's track
     EXPECT_EQ(m_controller->focus(), TrackFocus::track(trackId));
