@@ -179,4 +179,86 @@ TEST_F(Au3SelectionControllerTests, ItemsTouchingRangeIsEmptyInAGap)
     // Cleanup
     removeTrack(waveTrackId);
 }
+TEST_F(Au3SelectionControllerTests, SetSelectedItemsSelectsTheItemsAndTheirTracksInOneGo)
+{
+    //! [GIVEN] A label track above a wave track, each holding an item
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const TrackId labelTrackId = factory.addLabelTrackFromTemplate("Label Track", {
+            { 0.0, 8 * SAMPLE_INTERVAL, "Label" }
+        });
+    const TrackId waveTrackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrackId));
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelTrackId));
+    ASSERT_NE(waveTrack, nullptr);
+    ASSERT_NE(labelTrack, nullptr);
+    const ItemKeys items {
+        ClipKeyList { { waveTrackId, waveTrack->GetClip(0)->GetId() } },
+        LabelKeyList { { labelTrackId, labelTrack->GetLabel(0)->GetId() } }
+    };
+
+    //! [GIVEN] Every published track list is recorded
+    std::vector<TrackIdList> publishedTracks;
+    m_selectionController->tracksSelected().onReceive(m_selectionController.get(), [&publishedTracks](const TrackIdList& tracks) {
+        publishedTracks.push_back(tracks);
+    });
+    int publishedClips = 0;
+    int publishedLabels = 0;
+    m_selectionController->clipsSelected().onReceive(m_selectionController.get(), [&publishedClips](const ClipKeyList&) {
+        ++publishedClips;
+    });
+    m_selectionController->labelsSelected().onReceive(m_selectionController.get(), [&publishedLabels](const LabelKeyList&) {
+        ++publishedLabels;
+    });
+
+    //! [WHEN] The clip and the label are selected together
+    m_selectionController->setSelectedItems(items, true);
+
+    //! [THEN] Both items and both their tracks, in project order, are selected
+    EXPECT_EQ(m_selectionController->selectedClips(), items.clips);
+    EXPECT_EQ(m_selectionController->selectedLabels(), items.labels);
+    EXPECT_EQ(m_selectionController->selectedTracks(), (TrackIdList { labelTrackId, waveTrackId }));
+    EXPECT_EQ(DomAccessor::findSelectedClips(projectRef()), items.clips);
+    EXPECT_EQ(DomAccessor::findSelectedLabels(projectRef()), items.labels);
+
+    //! [THEN] Each list was published once, and the tracks only with their final value
+    EXPECT_EQ(publishedClips, 1);
+    EXPECT_EQ(publishedLabels, 1);
+    ASSERT_EQ(publishedTracks.size(), 1u);
+    EXPECT_EQ(publishedTracks.front(), (TrackIdList { labelTrackId, waveTrackId }));
+
+    //! [WHEN] The same items are selected again
+    m_selectionController->setSelectedItems(items, true);
+
+    //! [THEN] Nothing is published
+    EXPECT_EQ(publishedClips, 1);
+    EXPECT_EQ(publishedLabels, 1);
+    EXPECT_EQ(publishedTracks.size(), 1u);
+
+    // Cleanup
+    removeTrack(waveTrackId);
+    removeTrack(labelTrackId);
+}
+
+TEST_F(Au3SelectionControllerTests, SetSelectedItemsWithOnlyClipsKeepsTheirTracksSelected)
+{
+    //! [GIVEN] A wave track with two clips
+    const TrackId waveTrackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(waveTrackId));
+    ASSERT_NE(waveTrack, nullptr);
+    const ItemKeys items {
+        ClipKeyList { { waveTrackId, waveTrack->GetClip(0)->GetId() }, { waveTrackId, waveTrack->GetClip(1)->GetId() } },
+        LabelKeyList {}
+    };
+
+    //! [WHEN] Only clips are selected, as a Shift+click range over a wave track does
+    m_selectionController->setSelectedItems(items, true);
+
+    //! [THEN] Their track stays selected rather than being cleared by the empty label list
+    EXPECT_EQ(m_selectionController->selectedClips(), items.clips);
+    EXPECT_TRUE(m_selectionController->selectedLabels().empty());
+    EXPECT_EQ(m_selectionController->selectedTracks(), (TrackIdList { waveTrackId }));
+
+    // Cleanup
+    removeTrack(waveTrackId);
+}
 }

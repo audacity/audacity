@@ -292,8 +292,7 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
                              : ItemKeys();
         if (!box.empty()) {
             selectionController()->resetDataSelection();
-            selectionController()->setSelectedClips(box.clips, true);
-            selectionController()->setSelectedLabels(box.labels, true);
+            selectionController()->setSelectedItems(box, true);
             m_needToSelectTracksData = false;
             return;
         }

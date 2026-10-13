@@ -118,9 +118,7 @@ TEST_F(MarqueeSelectionTests, CtrlDragSelectsWhatTheBoxTouchesAndDropsTheTimeSel
 
     //! [EXPECT] The touched items and their tracks become the selection and the time selection is cleared
     EXPECT_CALL(*m_selectionController, resetDataSelection()).Times(1);
-    EXPECT_CALL(*m_selectionController, setSelectedClips(m_touched.clips, true)).Times(1);
-    EXPECT_CALL(*m_selectionController, setSelectedLabels(m_touched.labels, true)).Times(1);
-    EXPECT_CALL(*m_selectionController, setSelectedTracks(trackedit::TrackIdList { 1, 2 }, true)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedItems(m_touched, true)).Times(1);
     EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(_, _)).Times(0);
     EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(_, _)).Times(0);
 
@@ -145,16 +143,52 @@ TEST_F(MarqueeSelectionTests, ContractingTheBoxDeselectsTheItemsItLeaves)
     ON_CALL(*m_selectionController, itemsTouchingRange(trackedit::TrackIdList { 1 }, trackedit::secs_t(1.0), trackedit::secs_t(5.0)))
     .WillByDefault(Return(stillTouched));
 
-    //! [EXPECT] Only that clip and its track stay selected
-    EXPECT_CALL(*m_selectionController, setSelectedClips(stillTouched.clips, true)).Times(1);
-    EXPECT_CALL(*m_selectionController, setSelectedLabels(trackedit::LabelKeyList {}, true)).Times(1);
-    EXPECT_CALL(*m_selectionController, setSelectedTracks(trackedit::TrackIdList { 1 }, true)).Times(1);
+    //! [EXPECT] Only that clip stays selected
+    EXPECT_CALL(*m_selectionController, setSelectedItems(stillTouched, true)).Times(1);
 
     //! [WHEN] The pointer moves back towards the press point
     m_controller->onPositionChanged(5.0, 15.0);
 
     //! [THEN] The box follows the pointer
     EXPECT_EQ(m_controller->marqueeRect(), QRectF(1.0, 10.0, 4.0, 5.0));
+}
+
+TEST_F(MarqueeSelectionTests, MovingTheBoxWithoutReachingNewItemsLeavesTheSelectionAlone)
+{
+    //! [GIVEN] A marquee that reaches two clips and a label
+    dragBoxOverItems();
+    ASSERT_TRUE(m_controller->marqueeActive());
+
+    //! [GIVEN] Moved a little further, as an auto-scroll frame does, the box still reaches the same items
+    ON_CALL(*m_viewState, tracksInRange(10.0, 42.0))
+    .WillByDefault(Return(trackedit::TrackIdList { 1, 2 }));
+    ON_CALL(*m_selectionController, itemsTouchingRange(trackedit::TrackIdList { 1, 2 }, trackedit::secs_t(1.0), trackedit::secs_t(22.0)))
+    .WillByDefault(Return(m_touched));
+
+    //! [EXPECT] The selection is not written again
+    EXPECT_CALL(*m_selectionController, setSelectedItems(_, _)).Times(0);
+
+    //! [WHEN] The pointer moves
+    m_controller->onPositionChanged(22.0, 42.0);
+
+    //! [THEN] The box still follows the pointer
+    EXPECT_EQ(m_controller->marqueeRect(), QRectF(1.0, 10.0, 21.0, 32.0));
+}
+
+TEST_F(MarqueeSelectionTests, AMarqueeStartedOverEmptySpaceClearsThePreviousSelection)
+{
+    //! [GIVEN] A Ctrl+press on empty track area, and a box that reaches nothing
+    ON_CALL(*m_viewState, tracksInRange(10.0, 40.0))
+    .WillByDefault(Return(trackedit::TrackIdList { 1, 2 }));
+    ON_CALL(*m_selectionController, itemsTouchingRange(_, _, _))
+    .WillByDefault(Return(trackedit::ItemKeys {}));
+    m_controller->onPressed(1.0, 10.0);
+
+    //! [EXPECT] Whatever was selected before is replaced by the empty box selection
+    EXPECT_CALL(*m_selectionController, setSelectedItems(trackedit::ItemKeys {}, true)).Times(1);
+
+    //! [WHEN] The pointer is dragged past the threshold
+    m_controller->onPositionChanged(20.0, 40.0);
 }
 
 TEST_F(MarqueeSelectionTests, ABoxDraggedLeftAndUpIsNormalised)
@@ -267,8 +301,7 @@ TEST_F(MarqueeSelectionTests, RightDragStartsAMarqueeWithoutASelectionGesture)
 
     //! [EXPECT] The touched items get selected, the time selection is dropped and never written
     EXPECT_CALL(*m_selectionController, resetDataSelection()).Times(1);
-    EXPECT_CALL(*m_selectionController, setSelectedClips(m_touched.clips, true)).Times(1);
-    EXPECT_CALL(*m_selectionController, setSelectedLabels(m_touched.labels, true)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedItems(m_touched, true)).Times(1);
     EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(_, _)).Times(0);
     EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(_, _)).Times(0);
     EXPECT_CALL(*m_selectionController, setItemSelectionAnchor(trackedit::secs_t(1.0), trackedit::TrackItemKey { 1, 11 })).Times(1);
@@ -287,8 +320,7 @@ TEST_F(MarqueeSelectionTests, RightClickWithoutADragLeavesTheSelectionAlone)
 {
     //! [EXPECT] Nothing is queried, selected or reset
     EXPECT_CALL(*m_selectionController, itemsTouchingRange(_, _, _)).Times(0);
-    EXPECT_CALL(*m_selectionController, setSelectedClips(_, _)).Times(0);
-    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setSelectedItems(_, _)).Times(0);
     EXPECT_CALL(*m_selectionController, resetDataSelection()).Times(0);
     EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(_, _)).Times(0);
     EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(_, _)).Times(0);
