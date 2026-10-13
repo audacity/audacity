@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <optional>
+#include <set>
 
 #include "modularity/imoduleinterface.h"
 
@@ -45,7 +46,7 @@ public:
     virtual muse::async::NotifyList<Label> labelList(const TrackId& trackId) const = 0;
     virtual ItemTimeSpanList itemTimeSpansSorted(const TrackId& trackId) const = 0;
     virtual std::optional<TimeSpan> itemTimeSpan(const TrackItemKey& key) const = 0;
-    virtual std::vector<int64_t> groupsIdsList() const = 0;
+    virtual std::set<int64_t> groupsIdsList() const = 0;
     virtual std::optional<std::string> trackName(const TrackId& trackId) const = 0;
 
     virtual void reload() = 0;

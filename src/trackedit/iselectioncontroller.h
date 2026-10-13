@@ -33,6 +33,8 @@ public:
     virtual void setSelectedTracks(const TrackIdList& trackIds, bool complete = true) = 0;
     virtual muse::async::Channel<TrackIdList> selectedTracksChanged() const = 0;
     virtual muse::async::Channel<TrackIdList> tracksSelected() const = 0;
+    virtual std::optional<secs_t> selectedTracksStartTime() const = 0;
+    virtual std::optional<secs_t> selectedTracksEndTime() const = 0;
 
     // clip selection
     virtual void resetSelectedClips() = 0;
@@ -51,12 +53,6 @@ public:
     virtual std::optional<secs_t> leftMostSelectedClipStartTime() const = 0;
     virtual std::optional<secs_t> rightMostSelectedClipEndTime() const = 0;
 
-    // item selection
-    // used for range/marquee-like selection
-    virtual ItemKeys itemKeysInRange(const TrackItemKey& target) const = 0;
-    virtual void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) = 0;
-    virtual ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const = 0;
-
     // label selection
     virtual void resetSelectedLabels() = 0;
     virtual bool hasSelectedLabels() const = 0;
@@ -65,6 +61,7 @@ public:
     virtual void setSelectedLabels(const LabelKeyList& labelKeys, bool complete = true) = 0;
     virtual void addSelectedLabel(const LabelKey& labelKey) = 0;
     virtual void removeLabelSelection(const LabelKey& labelKey) = 0;
+
     virtual muse::async::Channel<LabelKeyList> labelsSelected() const = 0;
 
     virtual std::optional<secs_t> selectedLabelStartTime() const = 0;
@@ -73,11 +70,14 @@ public:
     virtual std::optional<secs_t> leftMostSelectedLabelStartTime() const = 0;
     virtual std::optional<secs_t> rightMostSelectedLabelEndTime() const = 0;
 
+    // item selection
+    virtual void setSelectedItems(const ItemKeys& items, bool complete = true) = 0;
+    // used for range/marquee-like selection
+    virtual ItemKeys itemKeysInRange(const TrackItemKey& target) const = 0;
+    virtual void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) = 0;
+    virtual ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const = 0;
     virtual std::optional<secs_t> leftMostSelectedItemStartTime() const = 0;
     virtual std::optional<secs_t> rightMostSelectedItemEndTime() const = 0;
-
-    virtual std::optional<secs_t> selectedTracksStartTime() const = 0;
-    virtual std::optional<secs_t> selectedTracksEndTime() const = 0;
 
     // data selection
     virtual void setSelectedTrackAudioData(trackedit::TrackId trackId) = 0;
@@ -107,10 +107,6 @@ public:
     virtual void setSelectionStartTime(trackedit::secs_t time) = 0;
 
     virtual void initSelectionAtPlayhead() = 0;
-
-    // grouping
-    virtual bool selectionContainsGroup() const = 0;
-    virtual bool isSelectionGrouped() const = 0;
 
     virtual void resetTimeSelection() = 0;
 

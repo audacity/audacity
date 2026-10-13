@@ -47,8 +47,8 @@ public:
         .WillByDefault(Return(m_currentProject));
 
         // The testClipboard.aup4 project contains two groups, 0 and 1
-        m_oldGroupIds.push_back((0));
-        m_oldGroupIds.push_back((1));
+        m_oldGroupIds.insert(0);
+        m_oldGroupIds.insert(1);
 
         ON_CALL(*m_trackEditProject, groupsIdsList())
         .WillByDefault(Return(m_oldGroupIds));
@@ -132,7 +132,7 @@ public:
 
     std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor;
 
-    std::vector<int64_t> m_oldGroupIds;
+    std::set<int64_t> m_oldGroupIds;
 };
 
 TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)

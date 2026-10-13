@@ -92,12 +92,6 @@ public:
 
     MOCK_METHOD(bool, toggleStretchToMatchProjectTempo, (const ClipKey&), (override));
 
-    MOCK_METHOD(int64_t, clipGroupId, (const trackedit::ClipKey&), (const, override));
-    MOCK_METHOD(void, setClipGroupId, (const trackedit::ClipKey&, int64_t), (override));
-    MOCK_METHOD(void, groupClips, (const trackedit::ClipKeyList&), (override));
-    MOCK_METHOD(void, ungroupClips, (const trackedit::ClipKeyList&), (override));
-    MOCK_METHOD(ClipKeyList, clipsInGroup, (int64_t), (const, override));
-
     MOCK_METHOD(bool, changeTracksFormat, (const TrackIdList&, trackedit::TrackFormat), (override));
     MOCK_METHOD(bool, changeTracksRate, (const TrackIdList&, int), (override));
 
@@ -130,6 +124,13 @@ public:
     MOCK_METHOD(bool, stretchLabelsRight, (const LabelKeyList&, secs_t, bool), (override));
 
     MOCK_METHOD(void, resetLabelStretchState, (), (override));
+
+    MOCK_METHOD(bool, copyItems, (const ClipKeyList&, const LabelKeyList&), (override));
+    MOCK_METHOD(bool, cutItems, (const ClipKeyList&, const LabelKeyList&, bool), (override));
+    MOCK_METHOD(int64_t, itemGroupId, (const TrackItemKey&), (const, override));
+    MOCK_METHOD(void, groupItems, (const TrackItemKeyList&), (override));
+    MOCK_METHOD(void, ungroupItems, (const TrackItemKeyList&), (override));
+    MOCK_METHOD(ItemKeys, itemsInGroup, (int64_t), (const, override));
 
     MOCK_METHOD(muse::Progress, progress, (), (const, override));
 };

@@ -110,12 +110,6 @@ public:
 
     virtual bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) = 0;
 
-    virtual int64_t clipGroupId(const trackedit::ClipKey& clipKey) const = 0;
-    virtual void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) = 0;
-    virtual void groupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
-    virtual void ungroupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
-    virtual ClipKeyList clipsInGroup(int64_t id) const = 0;
-
     virtual bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) = 0;
     virtual bool changeTracksRate(const TrackIdList& tracksIds, int rate) = 0;
 
@@ -148,6 +142,13 @@ public:
     virtual bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) = 0;
 
     virtual void resetLabelStretchState() = 0;
+
+    virtual bool copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys) = 0;
+    virtual bool cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips) = 0;
+    virtual int64_t itemGroupId(const TrackItemKey& key) const = 0;
+    virtual void groupItems(const TrackItemKeyList& keys) = 0;
+    virtual void ungroupItems(const TrackItemKeyList& keys) = 0;
+    virtual ItemKeys itemsInGroup(int64_t id) const = 0;
 
     virtual muse::Progress progress() const = 0;
 };
