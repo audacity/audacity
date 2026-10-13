@@ -65,6 +65,21 @@ Item {
 
         readonly property int animationDuration: 100
 
+        // icons are centred, so that they grow around their centre when hovered
+        readonly property int trimIconMargin: 2
+        readonly property int trimIconSize: 17
+        readonly property int trimIconHoveredSize: 22
+        readonly property real trimIconCenterOffset: trimIconMargin + trimIconSize / 2
+
+        readonly property int clockMargin: 4
+        readonly property int clockIconSize: 14
+        readonly property int clockIconHoveredSize: 18
+        readonly property real clockCenterOffset: clockMargin + clockCircleSize(clockIconSize) / 2
+
+        function clockCircleSize(clockIconSize) {
+            return clockIconSize - 2
+        }
+
         readonly property bool debugRectsVisible: false
     }
 
@@ -90,11 +105,11 @@ Item {
         StyledIconLabel {
             id: leftArrow
             anchors.verticalCenter: leftTrimHandle.verticalCenter
-            anchors.left: leftTrimHandle.left
-            anchors.leftMargin: 2
+            anchors.horizontalCenter: leftTrimHandle.left
+            anchors.horizontalCenterOffset: prv.trimIconCenterOffset
 
             iconCode: IconCode.TRIM_HANDLE_LEFT
-            font.pixelSize: 17
+            font.pixelSize: prv.trimIconSize
             color: ui.theme.extra["black_color"]
             style: Text.Outline
             styleColor: ui.theme.extra["white_color"]
@@ -248,11 +263,11 @@ Item {
         StyledIconLabel {
             id: rightArrow
             anchors.verticalCenter: rightTrimHandle.verticalCenter
-            anchors.right: rightTrimHandle.right
-            anchors.rightMargin: 2
+            anchors.horizontalCenter: rightTrimHandle.right
+            anchors.horizontalCenterOffset: -prv.trimIconCenterOffset
 
             iconCode: IconCode.TRIM_HANDLE_RIGHT
-            font.pixelSize: 17
+            font.pixelSize: prv.trimIconSize
             color: ui.theme.extra["black_color"]
             style: Text.Outline
             styleColor: ui.theme.extra["white_color"]
@@ -413,12 +428,12 @@ Item {
         Rectangle {
             id: leftClock
 
-            width: leftClockIcon.font.pixelSize - 2
-            height: leftClockIcon.font.pixelSize - 2
-            radius: (leftClockIcon.font.pixelSize - 2) / 2
+            width: prv.clockCircleSize(leftClockIcon.font.pixelSize)
+            height: prv.clockCircleSize(leftClockIcon.font.pixelSize)
+            radius: prv.clockCircleSize(leftClockIcon.font.pixelSize) / 2
             anchors.verticalCenter: leftTimecode.verticalCenter
-            anchors.left: leftTimecode.left
-            anchors.leftMargin: 4
+            anchors.horizontalCenter: leftTimecode.left
+            anchors.horizontalCenterOffset: prv.clockCenterOffset
 
             color: ui.theme.extra["black_color"]
 
@@ -428,7 +443,7 @@ Item {
                 anchors.centerIn: parent
 
                 iconCode: IconCode.CLOCK
-                font.pixelSize: 14
+                font.pixelSize: prv.clockIconSize
                 color: ui.theme.extra["white_color"]
 
                 Rectangle {
@@ -576,12 +591,12 @@ Item {
         Rectangle {
             id: rightClock
 
-            width: (rightClockIcon.font.pixelSize - 2)
-            height: (rightClockIcon.font.pixelSize - 2)
-            radius: (rightClockIcon.font.pixelSize - 2) / 2
+            width: prv.clockCircleSize(rightClockIcon.font.pixelSize)
+            height: prv.clockCircleSize(rightClockIcon.font.pixelSize)
+            radius: prv.clockCircleSize(rightClockIcon.font.pixelSize) / 2
             anchors.verticalCenter: rightTimecode.verticalCenter
-            anchors.right: rightTimecode.right
-            anchors.rightMargin: 4
+            anchors.horizontalCenter: rightTimecode.right
+            anchors.horizontalCenterOffset: -prv.clockCenterOffset
 
             color: ui.theme.extra["black_color"]
 
@@ -590,7 +605,7 @@ Item {
 
                 anchors.centerIn: parent
                 iconCode: IconCode.CLOCK
-                font.pixelSize: 14
+                font.pixelSize: prv.clockIconSize
                 color: ui.theme.extra["white_color"]
 
                 Rectangle {
@@ -726,11 +741,7 @@ Item {
             when: leftTrimMa.containsMouse
             PropertyChanges {
                 target: leftArrow
-                font.pixelSize: 22
-            }
-            PropertyChanges {
-                target: leftArrow
-                anchors.leftMargin: -1
+                font.pixelSize: prv.trimIconHoveredSize
             }
         },
         State {
@@ -738,11 +749,7 @@ Item {
             when: rightTrimMa.containsMouse
             PropertyChanges {
                 target: rightArrow
-                font.pixelSize: 22
-            }
-            PropertyChanges {
-                target: rightArrow
-                anchors.rightMargin: -1
+                font.pixelSize: prv.trimIconHoveredSize
             }
         },
         State {
@@ -750,11 +757,7 @@ Item {
             when: leftTimeMa.containsMouse
             PropertyChanges {
                 target: leftClockIcon
-                font.pixelSize: 18
-            }
-            PropertyChanges {
-                target: leftClock
-                anchors.leftMargin: 2
+                font.pixelSize: prv.clockIconHoveredSize
             }
         },
         State {
@@ -762,11 +765,7 @@ Item {
             when: rightTimeMa.containsMouse
             PropertyChanges {
                 target: rightClockIcon
-                font.pixelSize: 18
-            }
-            PropertyChanges {
-                target: rightClock
-                anchors.rightMargin: 2
+                font.pixelSize: prv.clockIconHoveredSize
             }
         }
     ]
@@ -784,20 +783,8 @@ Item {
                 easing.type: Easing.Linear
             }
             PropertyAnimation {
-                target: leftArrow
-                properties: "anchors.leftMargin"
-                duration: prv.animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
                 target: rightArrow
                 properties: "font.pixelSize"
-                duration: prv.animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: rightArrow
-                properties: "anchors.rightMargin"
                 duration: prv.animationDuration
                 easing.type: Easing.Linear
             }
@@ -808,20 +795,8 @@ Item {
                 easing.type: Easing.Linear
             }
             PropertyAnimation {
-                target: leftClock
-                properties: "anchors.leftMargin"
-                duration: prv.animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
                 target: rightClockIcon
                 properties: "font.pixelSize"
-                duration: prv.animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: rightClock
-                properties: "anchors.rightMargin"
                 duration: prv.animationDuration
                 easing.type: Easing.Linear
             }
