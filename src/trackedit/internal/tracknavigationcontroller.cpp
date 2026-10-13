@@ -695,7 +695,7 @@ muse::Ret TrackNavigationController::rangeSelection()
     bool isSelect = false;
 
     if (!isTrackPanel) {
-        ItemKeys range = selectionController()->itemKeysInRange(focusedKey);
+        ItemKeys range = selectionController()->itemsWithinBoxFromAnchorTo(focusedKey);
         const bool startNewSelection = range.empty();
         if (startNewSelection) {
             if (isFocusedItemLabel()) {

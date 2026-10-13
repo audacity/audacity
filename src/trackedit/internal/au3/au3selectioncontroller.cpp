@@ -283,7 +283,7 @@ int trackIndexOf(const std::vector<au::trackedit::Track>& tracks, const au::trac
 }
 }
 
-ItemKeys Au3SelectionController::itemKeysInRange(const TrackItemKey& target) const
+ItemKeys Au3SelectionController::itemsWithinBoxFromAnchorTo(const TrackItemKey& target) const
 {
     if (!m_itemSelectionAnchor.has_value() || !target.isValid()) {
         return {};
@@ -350,7 +350,7 @@ void Au3SelectionController::resetItemSelectionAnchorIfNoSelection()
     }
 }
 
-ItemKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const
+ItemKeys Au3SelectionController::itemsTouchingBoxFromAnchor(secs_t time, const TrackId& trackId) const
 {
     if (!m_itemSelectionAnchor.has_value()) {
         return {};

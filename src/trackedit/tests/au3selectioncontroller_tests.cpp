@@ -145,14 +145,14 @@ TEST_F(Au3SelectionControllerTests, SelectionBoxFromAnchorReachesTheAnchorItemEn
     m_selectionController->setItemSelectionAnchor(TRACK_TWO_CLIPS_CLIP2_START, secondClip);
 
     //! [WHEN] The box is pulled right onto the label track, short of the second clip's end
-    const ItemKeys rightwards = m_selectionController->itemsTouchingSelectionBox(26 * SAMPLE_INTERVAL, labelTrackId);
+    const ItemKeys rightwards = m_selectionController->itemsTouchingBoxFromAnchor(26 * SAMPLE_INTERVAL, labelTrackId);
 
     //! [THEN] It reaches the anchor clip and the label beside it
     EXPECT_EQ(rightwards.clips, ClipKeyList { secondClip });
     EXPECT_EQ(rightwards.labels, LabelKeyList { secondLabel });
 
     //! [WHEN] The box is pulled left onto the label track instead
-    const ItemKeys leftwards = m_selectionController->itemsTouchingSelectionBox(2 * SAMPLE_INTERVAL, labelTrackId);
+    const ItemKeys leftwards = m_selectionController->itemsTouchingBoxFromAnchor(2 * SAMPLE_INTERVAL, labelTrackId);
 
     //! [THEN] It still ends at the anchor clip's end, so everything on both tracks is reached
     const ClipKeyList expectedClips { firstClip, secondClip };
