@@ -10,5 +10,7 @@ class MacroManagerModule : public muse::modularity::IModuleSetup
 {
 public:
     std::string moduleName() const override;
+
+    void resolveImports() override;
 };
 }
