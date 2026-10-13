@@ -7,13 +7,23 @@
 
 #include "interactive/iinteractiveuriregister.h"
 
+#include "internal/macrosrepository.h"
+
 using namespace au::macromanager;
+using namespace muse;
 
 static const std::string mname("macromanager");
 
 std::string MacroManagerModule::moduleName() const
 {
     return mname;
+}
+
+void MacroManagerModule::registerExports()
+{
+    m_repository = std::make_shared<MacrosRepository>();
+
+    globalIoc()->registerExport<IMacrosRepository>(mname, m_repository);
 }
 
 void MacroManagerModule::resolveImports()
@@ -24,4 +34,13 @@ void MacroManagerModule::resolveImports()
         ir->registerQmlUri(muse::Uri("audacity://macromanager/deletemacro"), "Audacity.MacroManager", "DeleteMacroDialog");
         ir->registerQmlUri(muse::Uri("audacity://macromanager/editmacro"), "Audacity.MacroManager", "EditMacroDialog");
     }
+}
+
+void MacroManagerModule::onInit(const IApplication::RunMode& mode)
+{
+    if (mode == IApplication::RunMode::AudioPluginRegistration) {
+        return;
+    }
+
+    m_repository->init();
 }
