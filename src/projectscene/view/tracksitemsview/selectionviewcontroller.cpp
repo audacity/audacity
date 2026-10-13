@@ -109,7 +109,7 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
             }
         }
     } else {
-        tracks = vs->tracksInRange(m_startY, y);
+        tracks = m_selectionThresholdCrossed ? tracksCoveredBySelection(vs, y) : vs->tracksInRange(m_startY, y);
     }
 
     if (!tracks.empty()) {
@@ -201,7 +201,7 @@ bool SelectionViewController::doOnPositionChanged(double time, double y)
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
     } else {
-        tracks = vs->tracksInRange(m_startY, y);
+        tracks = tracksCoveredBySelection(vs, y);
     }
     selectionController()->setSelectedTracks(tracks, false);
 
@@ -268,6 +268,8 @@ void SelectionViewController::onReleased(double time, double y)
     TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
+    } else if (m_selectionThresholdCrossed) {
+        tracks = tracksCoveredBySelection(vs, y);
     } else {
         tracks = vs->tracksInRange(m_startY, y);
     }
@@ -292,7 +294,7 @@ void SelectionViewController::onReleased(double time, double y)
 
     setSelectionActive(true);
 
-    if (m_startY < y) {
+    if (m_startY < y || isBelowAllTracks(vs, y)) {
         trackNavigationController()->setFocus(TrackFocus::track(tracks.back()));
     } else {
         trackNavigationController()->setFocus(TrackFocus::track(tracks.front()));
@@ -575,6 +577,26 @@ TrackIdList SelectionViewController::trackIdList() const
 {
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     return prj ? prj->trackIdList() : TrackIdList();
+}
+
+bool SelectionViewController::isBelowAllTracks(const IProjectViewStatePtr& vs, double y) const
+{
+    const TrackIdList tracks = trackIdList();
+    if (tracks.empty()) {
+        return false;
+    }
+
+    const TrackId lastTrack = tracks.back();
+    return y >= vs->trackVerticalPosition(lastTrack) + vs->trackHeight(lastTrack).val;
+}
+
+TrackIdList SelectionViewController::tracksCoveredBySelection(const IProjectViewStatePtr& vs, double y) const
+{
+    if (isBelowAllTracks(vs, m_startY) && isBelowAllTracks(vs, y)) {
+        return trackIdList();
+    }
+
+    return vs->tracksInRange(m_startY, y);
 }
 
 Qt::KeyboardModifiers SelectionViewController::keyboardModifiers() const

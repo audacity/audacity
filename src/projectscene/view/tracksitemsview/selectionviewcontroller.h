@@ -110,6 +110,8 @@ private:
 
     IProjectViewStatePtr viewState() const;
     trackedit::TrackIdList trackIdList() const;
+    bool isBelowAllTracks(const IProjectViewStatePtr& vs, double y) const;
+    trackedit::TrackIdList tracksCoveredBySelection(const IProjectViewStatePtr& vs, double y) const;
 
     bool doOnPositionChanged(double time, double y);
     void setSelectionTimes(double time1, double time2, bool complete);
