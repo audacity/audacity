@@ -1209,33 +1209,7 @@ void TrackeditActionsController::labelCutMulti(const muse::actions::ActionData& 
 
 void TrackeditActionsController::labelCopyMulti()
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->selectedTracks();
-    auto selectedLabels = labelsForInteraction();
-    auto tracks = project->trackeditProject()->trackList();
-
-    trackeditInteraction()->clearClipboard();
-
-    secs_t offset = 0.0;
-    std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
-    if (leftmostItemStartTime.has_value()) {
-        offset = -leftmostItemStartTime.value();
-    }
-
-    for (const auto& track : tracks) {
-        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
-            continue;
-        }
-
-        LabelKeyList selectedTrackLabels;
-        for (const auto& label : selectedLabels) {
-            if (label.trackId == track.id) {
-                selectedTrackLabels.push_back(label);
-            }
-        }
-
-        trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackLabels, offset);
-    }
+    trackeditInteraction()->copyItems({}, labelsForInteraction());
 }
 
 void TrackeditActionsController::multiClipCut(const ActionData& args)

@@ -87,6 +87,11 @@ public:
         m_controller->multiClipCopy();
     }
 
+    void copyMultiLabels()
+    {
+        m_controller->labelCopyMulti();
+    }
+
     void cutMultiItems(bool moveClips)
     {
         m_controller->multiClipCut(muse::actions::ActionData::make_arg1<bool>(moveClips));
@@ -157,6 +162,26 @@ TEST_F(TrackeditActionsControllerTests, MultiClipCopyHandsClipsAndLabelsToOneCop
 
     //! [WHEN] The multi-item copy runs
     copyMultiItems();
+}
+
+TEST_F(TrackeditActionsControllerTests, LabelCopyHandsSelectedAndFocusedLabelsToOneCopy)
+{
+    //! [GIVEN] One label is selected and another, unselected one is focused
+    const LabelKey selectedLabel { 2, 20 };
+    const LabelKey focusedLabel { 3, 30 };
+    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList { selectedLabel }));
+    ON_CALL(*m_trackNavigationController, focus()).WillByDefault(Return(TrackFocus::item(focusedLabel)));
+    Track labelTrack;
+    labelTrack.id = focusedLabel.trackId;
+    labelTrack.type = TrackType::Label;
+    ON_CALL(*m_trackeditProject, track(focusedLabel.trackId)).WillByDefault(Return(labelTrack));
+
+    //! [EXPECT] Both labels go to the same copy operation as the multi-item copy, which takes the offset from them
+    EXPECT_CALL(*m_trackeditInteraction, copyItems(ClipKeyList {}, LabelKeyList { focusedLabel, selectedLabel })).Times(1);
+    EXPECT_CALL(*m_trackeditInteraction, copyNonContinuousTrackDataIntoClipboard(::testing::_, ::testing::_, ::testing::_)).Times(0);
+
+    //! [WHEN] The label copy runs
+    copyMultiLabels();
 }
 
 TEST_F(TrackeditActionsControllerTests, MultiClipCutHandsClipsAndLabelsToOneCut)
