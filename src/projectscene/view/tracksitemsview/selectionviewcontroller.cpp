@@ -435,6 +435,7 @@ void SelectionViewController::armMarquee(double time, double y)
 
 void SelectionViewController::updateMarquee(const IProjectViewStatePtr& vs, double time, double y)
 {
+    bool activatedNow = false;
     if (!m_marquee.active) {
         const double dx = m_context->timeToPosition(time) - m_context->timeToPosition(m_marquee.anchorTime);
         const double dy = y - m_marquee.anchorY;
@@ -444,27 +445,21 @@ void SelectionViewController::updateMarquee(const IProjectViewStatePtr& vs, doub
 
         resetDataSelection();
         m_marquee.active = true;
+        activatedNow = true;
         emit marqueeActiveChanged();
     }
 
     m_marquee.time = time;
     m_marquee.y = y;
     m_marquee.tracks = vs->tracksInRange(m_marquee.anchorY, y);
-    m_marquee.items = selectionController()->itemsTouchingRange(m_marquee.tracks,
-                                                                std::min(m_marquee.anchorTime, time),
-                                                                std::max(m_marquee.anchorTime, time));
+    ItemKeys items = selectionController()->itemsTouchingRange(m_marquee.tracks,
+                                                               std::min(m_marquee.anchorTime, time),
+                                                               std::max(m_marquee.anchorTime, time));
 
-    selectionController()->setSelectedClips(m_marquee.items.clips, true);
-    selectionController()->setSelectedLabels(m_marquee.items.labels, true);
-
-    const TrackIdList itemTracks = au::trackedit::utils::itemTrackIds(m_marquee.items);
-    TrackIdList selectedTracks;
-    for (const TrackId& trackId : m_marquee.tracks) {
-        if (std::find(itemTracks.begin(), itemTracks.end(), trackId) != itemTracks.end()) {
-            selectedTracks.push_back(trackId);
-        }
+    if (activatedNow || items != m_marquee.items) {
+        m_marquee.items = std::move(items);
+        selectionController()->setSelectedItems(m_marquee.items, true);
     }
-    selectionController()->setSelectedTracks(selectedTracks, true);
 
     emit marqueeRectChanged();
 }

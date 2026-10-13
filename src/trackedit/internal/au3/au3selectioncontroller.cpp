@@ -12,6 +12,7 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "trackedit/trackeditutils.h"
 
 #include "spectrogram/spectrogramtypes.h"
 
@@ -400,6 +401,44 @@ ItemKeys Au3SelectionController::itemsTouchingRange(const TrackIdList& trackIds,
     }
 
     return items;
+}
+
+void Au3SelectionController::setSelectedItems(const ItemKeys& items, bool complete)
+{
+    au3::DomAccessor::clearAllClipSelection(projectRef());
+    for (const ClipKey& key : items.clips) {
+        au3::DomAccessor::setClipSelected(projectRef(), key, true);
+    }
+    au3::DomAccessor::clearAllLabelSelection(projectRef());
+    for (const LabelKey& key : items.labels) {
+        au3::DomAccessor::setLabelSelected(projectRef(), key, true);
+    }
+
+    const TrackIdList itemTracks = au::trackedit::utils::itemTrackIds(items);
+    TrackIdList tracks;
+    for (Au3Track* au3Track : Au3TrackList::Get(projectRef())) {
+        const TrackId trackId = TrackId(au3Track->GetId());
+        const bool selected = muse::contains(itemTracks, trackId);
+        au3Track->SetSelected(selected);
+        if (selected) {
+            tracks.push_back(trackId);
+        }
+    }
+
+    const bool clipsChanged = m_selectedClips.assign(items.clips);
+    const bool labelsChanged = m_selectedLabels.assign(items.labels);
+    const bool tracksChanged = m_selectedTracks.assign(tracks);
+    resetItemSelectionAnchorIfNoSelection();
+
+    if (clipsChanged) {
+        m_selectedClips.publish(complete);
+    }
+    if (labelsChanged) {
+        m_selectedLabels.publish(complete);
+    }
+    if (tracksChanged) {
+        m_selectedTracks.publish(complete);
+    }
 }
 
 void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)

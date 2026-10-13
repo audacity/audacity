@@ -705,8 +705,7 @@ muse::Ret TrackNavigationController::rangeSelection()
             }
         }
 
-        selectionController()->setSelectedClips(range.clips);
-        selectionController()->setSelectedLabels(range.labels);
+        selectionController()->setSelectedItems(range);
 
         if (startNewSelection) {
             selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);

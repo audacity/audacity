@@ -724,8 +724,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
             m_context->mousePositionTime(), m_trackId)
                              : ItemKeys();
         if (!box.empty()) {
-            selectionController()->setSelectedClips(box.clips, complete);
-            selectionController()->setSelectedLabels(box.labels, complete);
+            selectionController()->setSelectedItems(box, complete);
             return;
         }
 
