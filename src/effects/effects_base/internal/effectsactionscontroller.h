@@ -59,6 +59,7 @@ private:
 
     muse::Ret openEffect(const EffectId& effectId);
     muse::Ret applyEffect(const EffectId& effectId, const muse::rcommand::Params& params);
+    muse::rcommand::Response configureEffect(const muse::rcommand::Request& request, const EffectId& effectId);
     muse::Ret repeatLastEffect();
 
     muse::Ret applyPreset(const muse::rcommand::Params& params);
