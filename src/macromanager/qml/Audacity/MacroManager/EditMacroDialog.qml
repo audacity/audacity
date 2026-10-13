@@ -93,6 +93,15 @@ StyledDialogView {
                     onSearchTextChangeRequested: function (text) {
                         availableCommandsModel.setSearchText(text)
                     }
+
+                    onSearchAccepted: {
+                        if (availableCommandsModel.rowCount() !== 1) {
+                            return
+                        }
+
+                        const command = availableCommandsModel.itemAt(0)
+                        macroCommandsModel.add(command.code, command.title)
+                    }
                 }
 
                 SeparatorLine {}
