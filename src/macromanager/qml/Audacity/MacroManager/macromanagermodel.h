@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include <QAbstractListModel>
 #include <QtQml/qqmlregistration.h>
 
@@ -30,6 +32,8 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void newMacro();
+    Q_INVOKABLE void rename(int row);
+    Q_INVOKABLE void remove(int row);
     Q_INVOKABLE void run(int row);
 
 signals:
@@ -43,6 +47,9 @@ private:
     struct Item {
         QString title;
     };
+
+    bool isRowValid(int row) const;
+    std::optional<QString> requestMacroName(const muse::UriQuery& uri) const;
 
     QList<Item> m_items;
 };
