@@ -22216,7 +22216,7 @@ Esto hace que se apliquen los efectos a la forma de onda y que se eliminen los d
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="65"/>
         <source>All clips on all tracks move back to fill the gap</source>
-        <translation>Todos los clips de todas las pistas retroceden para rellenar el espacio vació</translation>
+        <translation>Todos los clips de todas las pistas retroceden para rellenar el espacio vacío</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="76"/>
