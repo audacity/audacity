@@ -69,6 +69,20 @@ void AvailableCommandsModel::setSearchText(const QString& text)
     reload();
 }
 
+QVariantMap AvailableCommandsModel::itemAt(int row) const
+{
+    if (row < 0 || row >= m_items.size()) {
+        return {};
+    }
+
+    const Item& item = m_items.at(row);
+
+    return {
+        { "code", item.code },
+        { "title", item.title }
+    };
+}
+
 void AvailableCommandsModel::reload()
 {
     beginResetModel();
