@@ -61,6 +61,75 @@ muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const
     return performEffectWithShowError(project, effectId, EffectManager::kConfigured, params);
 }
 
+muse::RetVal<std::string> EffectExecutionScenario::configureEffect(const EffectId& effectId, const std::string& params)
+{
+    au3::Au3Project& project = projectRef();
+
+    Effect* effect = effectsProvider()->effect(effectId);
+    if (!effect) {
+        return RetVal<std::string>(make_ret(Err::EffectNotFound));
+    }
+
+    EffectManager& em = EffectManager::Get();
+    EffectSettings* settings = em.GetDefaultSettings(au3::wxFromString(effectId), [&](const PluginID&) -> EffectSettingsManager* {
+        return effect;
+    });
+    IF_ASSERT_FAILED(settings) {
+        return RetVal<std::string>(make_ret(Err::UnknownError));
+    }
+
+    if (!params.empty()) {
+        CommandParameters eap(wxString::FromUTF8(params));
+        ShuttleSetAutomation shuttle;
+        shuttle.SetForValidating(&eap);
+        effect->VisitSettings(shuttle, *settings);
+        if (!shuttle.bOK) {
+            return RetVal<std::string>(make_ret(Err::UnknownError, "Failed to load effect settings from serialized params"));
+        }
+        shuttle.SetForWriting(&eap);
+        effect->VisitSettings(shuttle, *settings);
+    }
+
+    const std::shared_ptr<au3::Au3TrackList> noTracks = au3::Au3TrackList::Create(nullptr);
+
+    const unsigned oldFlags = effect->mUIFlags;
+    effect->mUIFlags = 0;
+    effect->mFactory = &WaveTrackFactory::Get(project);
+    effect->mProjectRate = ProjectRate::Get(project).GetRate();
+    effect->mT0 = 0.0;
+    effect->mT1 = 0.0;
+    effect->SetTracks(noTracks.get());
+    effect->CountWaveTracks();
+
+    DEFER {
+        effect->SetTracks(nullptr);
+        effect->mUIFlags = oldFlags;
+    };
+
+    const auto instance = std::dynamic_pointer_cast<EffectInstanceEx>(effect->MakeInstance());
+    if (!instance) {
+        return RetVal<std::string>(make_ret(Err::UnknownError));
+    }
+
+    if (effect->IsInteractive()) {
+        const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
+        const EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, instance, access);
+        const Ret ret = effectViewController()->showEffect(effectId, instanceId);
+        effectInstancesRegister()->requestUpdateSettings(instanceId);
+        effectInstancesRegister()->unregInstance(instanceId);
+        if (!ret) {
+            return RetVal<std::string>(ret);
+        }
+    }
+
+    wxString serialized;
+    if (!effect->SaveSettingsAsString(*settings, serialized)) {
+        return RetVal<std::string>(make_ret(Err::UnknownError, "Failed to serialize effect settings"));
+    }
+
+    return RetVal<std::string>::make_ok(serialized.ToStdString(wxConvUTF8));
+}
+
 au::au3::Au3Project& EffectExecutionScenario::projectRef()
 {
     return *reinterpret_cast<au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
