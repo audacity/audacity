@@ -1135,11 +1135,19 @@ bool TrackeditOperationController::cutItems(const ClipKeyList& clipKeys, const L
     selectionController()->resetSelectedClips();
     selectionController()->resetSelectedLabels();
 
-    if (!clipKeys.empty() && !clipsInteraction()->removeClips(clipKeys, moveClips)) {
+    const auto rollback = [this]() {
+        projectHistory()->rollbackState();
+        if (const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject()) {
+            project->reload();
+        }
         return false;
+    };
+
+    if (!clipKeys.empty() && !clipsInteraction()->removeClips(clipKeys, moveClips)) {
+        return rollback();
     }
     if (!labelKeys.empty() && !labelsInteraction()->removeLabels(labelKeys, moveClips)) {
-        return false;
+        return rollback();
     }
 
     std::string action;
