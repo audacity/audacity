@@ -31,6 +31,7 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void setSearchText(const QString& text);
+    Q_INVOKABLE QVariantMap itemAt(int row) const;
 
 signals:
     void searchTextChanged();
