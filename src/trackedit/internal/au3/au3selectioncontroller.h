@@ -49,9 +49,9 @@ public:
     std::optional<secs_t> selectedClipStartTime() const override;
     std::optional<secs_t> selectedClipEndTime() const override;
 
-    ItemKeys itemKeysInRange(const TrackItemKey& target) const override;
+    ItemKeys itemsWithinBoxFromAnchorTo(const TrackItemKey& target) const override;
     void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) override;
-    ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const override;
+    ItemKeys itemsTouchingBoxFromAnchor(secs_t time, const TrackId& trackId) const override;
     ItemKeys itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const override;
 
     std::optional<secs_t> leftMostSelectedClipStartTime() const override;
