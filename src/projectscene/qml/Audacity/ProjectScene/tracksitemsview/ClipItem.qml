@@ -456,9 +456,8 @@ Rectangle {
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
         z: headerDragArea.z + 1
-        height: !root.collapsed ? root.height / 3 : root.height / 2
-
-        anchors.top: root.top
+        y: clipHandles.y
+        height: clipHandles.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
@@ -514,12 +513,11 @@ Rectangle {
     MouseArea {
         id: rightTrimStretchEdgeHover
 
-        x: root.width - 5
+        x: root.width - 6
         z: headerDragArea.z + 1
         width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5) : 11
-        height: !root.collapsed ? root.height / 3 : root.height / 2
-
-        anchors.top: root.top
+        y: clipHandles.y
+        height: clipHandles.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
