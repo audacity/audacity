@@ -18,6 +18,7 @@ Rectangle {
     property int navigationRow: 0
 
     signal runRequested
+    signal editRequested
     signal renameRequested
     signal deleteRequested
 
@@ -48,8 +49,7 @@ Rectangle {
         items: [
             {
                 id: "edit",
-                title: qsTrc("macromanager", "Edit"),
-                enabled: false
+                title: qsTrc("macromanager", "Edit")
             },
             {
                 id: "rename",
@@ -74,6 +74,9 @@ Rectangle {
 
         onHandleMenuItem: function (itemId) {
             switch (itemId) {
+            case "edit":
+                root.editRequested()
+                break
             case "rename":
                 root.renameRequested()
                 break

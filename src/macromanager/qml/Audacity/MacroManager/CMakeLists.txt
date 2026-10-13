@@ -4,6 +4,10 @@ qt_add_qml_module(macromanager_qml
     URI Audacity.MacroManager
     VERSION 1.0
     SOURCES
+        availablecommandsmodel.cpp
+        availablecommandsmodel.h
+        macrocommandsmodel.cpp
+        macrocommandsmodel.h
         macromanagermodel.cpp
         macromanagermodel.h
     QML_FILES
@@ -11,8 +15,13 @@ qt_add_qml_module(macromanager_qml
         MacroManagerTitleBar.qml
         MacroNameDialog.qml
         DeleteMacroDialog.qml
+        EditMacroDialog.qml
         internal/MacroManagerHeader.qml
         internal/MacroItem.qml
+        internal/CommandsSearchBar.qml
+        internal/AvailableCommandsList.qml
+        internal/MacroCommandsTable.qml
+        internal/MacroCommandItem.qml
     IMPORTS
         TARGET muse_ui_qml
         TARGET muse_uicomponents_qml
