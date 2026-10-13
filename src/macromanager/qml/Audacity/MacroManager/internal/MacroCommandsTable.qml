@@ -39,6 +39,7 @@ ColumnLayout {
         readonly property int stepWidth: 64
         readonly property int actionsWidth: 80
         readonly property int dropLineThickness: 2
+        readonly property int emptyTextTopMargin: 24
 
         property int dropIndex: -1
 
@@ -119,6 +120,15 @@ ColumnLayout {
     }
 
     SeparatorLine {}
+
+    StyledTextLabel {
+        Layout.fillWidth: true
+        Layout.topMargin: prv.emptyTextTopMargin
+
+        visible: listView.count === 0
+
+        text: qsTrc("macromanager", "Empty state")
+    }
 
     StyledListView {
         id: listView
