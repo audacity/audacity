@@ -20,6 +20,7 @@ void MacroManagerModule::resolveImports()
 {
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
     if (ir) {
-        ir->registerQmlUri(muse::Uri("audacity://macromanager/newmacro"), "Audacity.MacroManager", "NewMacroDialog");
+        ir->registerQmlUri(muse::Uri("audacity://macromanager/macroname"), "Audacity.MacroManager", "MacroNameDialog");
+        ir->registerQmlUri(muse::Uri("audacity://macromanager/deletemacro"), "Audacity.MacroManager", "DeleteMacroDialog");
     }
 }

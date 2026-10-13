@@ -9,7 +9,8 @@ qt_add_qml_module(macromanager_qml
     QML_FILES
         MacroManagerPanel.qml
         MacroManagerTitleBar.qml
-        NewMacroDialog.qml
+        MacroNameDialog.qml
+        DeleteMacroDialog.qml
         internal/MacroManagerHeader.qml
         internal/MacroItem.qml
     IMPORTS

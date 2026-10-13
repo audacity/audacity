@@ -104,6 +104,14 @@ Rectangle {
                 onRunRequested: {
                     macroManagerModel.run(index)
                 }
+
+                onRenameRequested: {
+                    macroManagerModel.rename(index)
+                }
+
+                onDeleteRequested: {
+                    macroManagerModel.remove(index)
+                }
             }
         }
 
