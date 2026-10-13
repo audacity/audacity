@@ -102,6 +102,7 @@ StyledDialogView {
                     Layout.fillHeight: true
 
                     model: availableCommandsModel
+                    dragMimeType: commandsTable.dragMimeType
 
                     navigation.section: root.navigationSection
                     navigation.order: 2
@@ -147,6 +148,8 @@ StyledDialogView {
                     SeparatorLine {}
 
                     MacroCommandsTable {
+                        id: commandsTable
+
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
@@ -157,6 +160,14 @@ StyledDialogView {
 
                         onDeleteRequested: function (row) {
                             macroCommandsModel.remove(row)
+                        }
+
+                        onMoveRequested: function (from, to) {
+                            macroCommandsModel.move(from, to)
+                        }
+
+                        onInsertRequested: function (row, code, title) {
+                            macroCommandsModel.insert(row, code, title)
                         }
                     }
                 }
