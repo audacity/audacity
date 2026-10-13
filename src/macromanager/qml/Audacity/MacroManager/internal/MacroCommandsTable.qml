@@ -121,55 +121,61 @@ ColumnLayout {
 
     SeparatorLine {}
 
-    StyledTextLabel {
-        Layout.fillWidth: true
-        Layout.topMargin: prv.emptyTextTopMargin
-
-        visible: listView.count === 0
-
-        text: qsTrc("macromanager", "Empty state")
-    }
-
-    StyledListView {
-        id: listView
-
+    Item {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        delegate: MacroCommandItem {
-            required property int index
+        StyledListView {
+            id: listView
 
-            width: ListView.view.width
+            anchors.fill: parent
 
-            sideMargin: prv.sideMargin
-            handleWidth: prv.handleWidth
-            stepWidth: prv.stepWidth
-            actionsWidth: prv.actionsWidth
+            delegate: MacroCommandItem {
+                required property int index
 
-            dragMimeType: root.dragMimeType
-            dragRow: index
+                width: ListView.view.width
 
-            navigationPanel: root.navigationPanel
-            navigationRow: index
+                sideMargin: prv.sideMargin
+                handleWidth: prv.handleWidth
+                stepWidth: prv.stepWidth
+                actionsWidth: prv.actionsWidth
 
-            canMoveUp: index > 0
-            canMoveDown: index < listView.count - 1
+                dragMimeType: root.dragMimeType
+                dragRow: index
 
-            onEditRequested: {
-                root.editRequested(index)
+                navigationPanel: root.navigationPanel
+                navigationRow: index
+
+                canMoveUp: index > 0
+                canMoveDown: index < listView.count - 1
+
+                onEditRequested: {
+                    root.editRequested(index)
+                }
+
+                onDeleteRequested: {
+                    root.deleteRequested(index)
+                }
+
+                onMoveUpRequested: {
+                    root.moveRequested(index, index - 1)
+                }
+
+                onMoveDownRequested: {
+                    root.moveRequested(index, index + 1)
+                }
             }
+        }
 
-            onDeleteRequested: {
-                root.deleteRequested(index)
-            }
+        StyledTextLabel {
+            anchors.top: parent.top
+            anchors.topMargin: prv.emptyTextTopMargin
+            anchors.left: parent.left
+            anchors.right: parent.right
 
-            onMoveUpRequested: {
-                root.moveRequested(index, index - 1)
-            }
+            visible: listView.count === 0
 
-            onMoveDownRequested: {
-                root.moveRequested(index, index + 1)
-            }
+            text: qsTrc("macromanager", "Empty state")
         }
 
         DropArea {
