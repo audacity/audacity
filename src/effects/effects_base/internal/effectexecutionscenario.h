@@ -57,6 +57,7 @@ public:
 
     muse::Ret performEffect(const EffectId& effectId) override;
     muse::Ret performEffect(const EffectId& effectId, const std::string& params) override;
+    muse::RetVal<std::string> configureEffect(const EffectId& effectId, const std::string& params) override;
     bool lastProcessorIsAvailable() const override;
     muse::async::Notification lastProcessorIsNowAvailable() const override;
     muse::async::Channel<EffectId> lastProcessorIdChanged() const override;

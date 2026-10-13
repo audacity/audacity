@@ -148,7 +148,7 @@ void EffectsCommandsRegister::reload()
     EffectMetaList effects = effectsProvider()->effectMetaList();
     utils::replaceIdenticalTitlesWithPaths(effects);
 
-    m_commandInfos.reserve(s_commandInfos.size() + 2 * effects.size());
+    m_commandInfos.reserve(s_commandInfos.size() + 3 * effects.size());
     m_commandInfos.insert(m_commandInfos.end(), s_commandInfos.begin(), s_commandInfos.end());
 
     for (const EffectMeta& meta : effects) {
@@ -170,6 +170,17 @@ void EffectsCommandsRegister::reload()
             TranslatableString("command_description", "Apply %1 with the given parameters").arg(title),
             InputSchema(),
             Decoration()
+        });
+
+        m_commandInfos.push_back(CommandInfo {
+            makeEffectConfigureCommand(meta.id),
+            //: Command title: shown as a menu item or a button label; keep it short. %1 is the effect name
+            TranslatableString("command", "Configure %1").arg(title),
+            //: Command description: shown as a tooltip; can be a full sentence. %1 is the effect name
+            TranslatableString("command_description", "Choose the parameters of %1 without applying it").arg(title),
+            InputSchema(),
+            Decoration(),
+            Availability::Dispatch
         });
     }
 
