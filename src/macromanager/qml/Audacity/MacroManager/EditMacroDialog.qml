@@ -106,7 +106,7 @@ StyledDialogView {
                     navigation.section: root.navigationSection
                     navigation.order: 2
 
-                    onCommandClicked: function (code, title) {
+                    onAddRequested: function (code, title) {
                         macroCommandsModel.add(code, title)
                     }
                 }
