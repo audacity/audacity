@@ -11,6 +11,7 @@ using namespace muse;
 namespace {
 const Uri MACRO_NAME_URI("audacity://macromanager/macroname");
 const Uri DELETE_MACRO_URI("audacity://macromanager/deletemacro");
+const Uri EDIT_MACRO_URI("audacity://macromanager/editmacro");
 }
 
 MacroManagerModel::MacroManagerModel(QObject* parent)
@@ -74,6 +75,18 @@ void MacroManagerModel::newMacro()
     endInsertRows();
 
     emit isEmptyChanged();
+}
+
+void MacroManagerModel::edit(int row)
+{
+    if (!isRowValid(row)) {
+        return;
+    }
+
+    UriQuery uri(EDIT_MACRO_URI);
+    uri.addParam("macroName", Val(m_items.at(row).title));
+
+    interactive()->open(uri);
 }
 
 void MacroManagerModel::rename(int row)

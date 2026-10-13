@@ -32,6 +32,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void newMacro();
+    Q_INVOKABLE void edit(int row);
     Q_INVOKABLE void rename(int row);
     Q_INVOKABLE void remove(int row);
     Q_INVOKABLE void run(int row);
