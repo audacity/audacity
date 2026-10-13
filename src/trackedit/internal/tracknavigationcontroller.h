@@ -6,11 +6,13 @@
 
 #include "framework/actions/actionable.h"
 #include "framework/global/async/asyncable.h"
+#include "framework/rcommand/commandable.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/inavigationcontroller.h"
+#include "playback/iplaybackcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditinteraction.h"
@@ -23,13 +25,14 @@ enum class SelectionDirection {
     Down
 };
 
-class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Contextable
+class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::rcommand::Commandable,
+    public muse::async::Asyncable, public muse::Contextable
 {
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<au::trackedit::ITrackeditInteraction> trackeditInteraction{ this };
 
@@ -68,18 +71,18 @@ private:
     bool isFirstTrack(const TrackId& trackId) const;
     bool isLastTrack(const TrackId& trackId) const;
 
-    void navigateToNextPanel();
-    void navigateToPrevPanel();
+    muse::Ret navigateToNextPanel();
+    muse::Ret navigateToPrevPanel();
 
     bool navigateToAdjacentItem(bool next);
 
     void navigateToPrevTrack();
     void navigateToNextTrack();
-    void navigateToFirstTrack();
-    void navigateToLastTrack();
+    muse::Ret navigateToFirstTrack();
+    muse::Ret navigateToLastTrack();
 
-    void navigateToAboveItem();
-    void navigateToBelowItem();
+    muse::Ret navigateToAboveItem();
+    muse::Ret navigateToBelowItem();
     void navigateToAdjacentRuler(SelectionDirection direction);
     void navigateToFirstItem();
     void navigateToLastItem();
@@ -87,18 +90,18 @@ private:
     TrackItemKey findClosestItemOnTrack(const TrackId& trackId, double referenceStartTime) const;
     double itemStartTime(const TrackItemKey& key) const;
 
-    void replaceSelection();
-    void toggleSelection();
-    void rangeSelection();
+    muse::Ret replaceSelection();
+    muse::Ret toggleSelection();
+    muse::Ret rangeSelection();
 
-    void multiSelectionUp();
-    void multiSelectionDown();
+    muse::Ret multiSelectionUp();
+    muse::Ret multiSelectionDown();
 
     void updateSelectionStart(SelectionDirection direction);
     void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
 
-    void openContextMenuForFocusedItem();
-    void openContextMenuForFocusedRuler();
+    muse::Ret openContextMenuForFocusedItem();
+    muse::Ret openContextMenuForFocusedRuler();
 
     void au3SetTrackFocused(const TrackId& trackId);
 

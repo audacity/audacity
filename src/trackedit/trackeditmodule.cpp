@@ -28,11 +28,15 @@
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/global/api/iapiregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
 #include "api/projectapi.h"
 
 #include "internal/trackedituiactions.h"
 #include "internal/trackeditactionscontroller.h"
+#include "internal/trackeditcommandsregister.h"
+#include "internal/trackeditcommandsstate.h"
 #include "internal/trackeditinteraction.h"
 #include "internal/trackeditconfiguration.h"
 #include "internal/trackeditoperationcontroller.h"
@@ -100,6 +104,11 @@ void TrackeditModule::resolveImports()
         ar->regApiCreator(mname, "Audacity.Project", new muse::api::ApiCreator<api::ProjectApi>());
     }
 
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<TrackeditCommandsRegister>());
+    }
+
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://trackedit/custom_rate"), "Audacity/TrackEdit/CustomRateDialog.qml");
@@ -153,6 +162,14 @@ void TrackeditContext::registerExports()
     ioc()->registerExport<ITracksInteraction>(mname, new Au3TracksInteraction(iocContext()));
     ioc()->registerExport<IClipsInteraction>(mname, new Au3ClipsInteraction(iocContext()));
     ioc()->registerExport<ILabelsInteraction>(mname, new Au3LabelsInteraction(iocContext()));
+}
+
+void TrackeditContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<TrackeditCommandsState>(iocContext()));
+    }
 }
 
 void TrackeditContext::onInit(const muse::IApplication::RunMode&)
