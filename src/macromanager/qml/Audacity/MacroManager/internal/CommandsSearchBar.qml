@@ -22,6 +22,7 @@ Item {
     }
 
     signal searchTextChangeRequested(string text)
+    signal searchAccepted
 
     implicitHeight: prv.height
 
@@ -56,6 +57,10 @@ Item {
 
             onTextChanged: function (newTextValue) {
                 root.searchTextChangeRequested(newTextValue)
+            }
+
+            onAccepted: {
+                root.searchAccepted()
             }
         }
     }
