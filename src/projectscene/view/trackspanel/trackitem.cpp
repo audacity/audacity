@@ -10,10 +10,6 @@
 using namespace au::projectscene;
 using namespace au::trackedit;
 
-static const std::string TRACK_ID_KEY("trackId");
-static const std::string RESOURCE_ID_KEY("resourceId");
-static const std::string CHAIN_ORDER_KEY("chainOrder");
-
 static muse::ui::IconCode::Code iconFromTrackType(au::trackedit::TrackType type)
 {
     switch (type) {
