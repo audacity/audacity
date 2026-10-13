@@ -90,6 +90,15 @@ private:
     std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 };
 
+//! For files decoded rather than imported: no progress dialog
+class SilentImportProgress final : public ImportProgressListener
+{
+public:
+    bool OnImportFileOpened(ImportFileHandle&) override { return true; }
+    void OnImportProgress(double) override {}
+    void OnImportResult(ImportResult) override {}
+};
+
 au::importexport::Au3Importer::Au3Importer(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx)
     , m_tempoDetection(std::make_unique<TempoDetection>(ctx))
@@ -512,4 +521,54 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
             prj->notifyAboutClipAdded(clip);
         }
     }
+}
+
+muse::RetVal<au::importexport::DecodedAudio> au::importexport::Au3Importer::decode(const muse::io::path_t& filePath,
+                                                                                   const std::optional<double>& sampleRate)
+{
+    using Result = muse::RetVal<DecodedAudio>;
+    const auto currentProject = globalContext()->currentProject();
+    if (!currentProject) {
+        return Result::make_ret(muse::Ret::Code::InternalError, std::string("No project is open"));
+    }
+    // The decoded tracks borrow the project's sample block storage until they go
+    Au3Project* project = reinterpret_cast<Au3Project*>(currentProject->au3ProjectPtr());
+
+    TrackHolders tracks;
+    Tags tags;
+    std::optional<LibFileFormats::AcidizerTags> acidTags;
+    TranslatableString errorMessage;
+    SilentImportProgress progress;
+    if (!Importer::Get().Import(*project, wxFromPath(filePath), &progress, &WaveTrackFactory::Get(*project), tracks, &tags, acidTags,
+                                errorMessage)) {
+        return Result::make_ret(muse::Ret::Code::UnknownError, errorMessage.Translation().ToStdString(wxConvUTF8));
+    }
+
+    // All streams of the file are imported; the first one with audio is decoded
+    WaveTrack* track = nullptr;
+    for (auto& holder : tracks) {
+        if ((track = dynamic_cast<WaveTrack*>(holder.get()))) {
+            break;
+        }
+    }
+    if (!track) {
+        return Result::make_ret(muse::Ret::Code::UnknownError, std::string("The file has no audio"));
+    }
+    if (sampleRate > 0 && track->GetRate() != sampleRate) {
+        track->Resample(static_cast<int>(*sampleRate));
+    }
+
+    DecodedAudio audio;
+    audio.sampleRate = track->GetRate();
+    const auto start = track->TimeToLongSamples(track->GetStartTime());
+    const size_t length = (track->TimeToLongSamples(track->GetEndTime()) - start).as_size_t();
+    audio.channels.resize(track->NChannels());
+    for (size_t channel = 0; channel < audio.channels.size(); ++channel) {
+        audio.channels[channel].resize(length);
+        float* buffer = audio.channels[channel].data();
+        if (!track->GetFloats(channel, 1, &buffer, start, length)) {
+            return Result::make_ret(muse::Ret::Code::UnknownError, std::string("Could not read the decoded audio"));
+        }
+    }
+    return Result::make_ok(std::move(audio));
 }

@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <vector>
+
 #include <QObject>
 
 #include "io/path.h"
@@ -19,6 +21,13 @@ public:
     };
     Q_ENUM(TempoDetection)
 };
+//! Audio decoded from a file: one buffer of float samples per channel
+struct DecodedAudio
+{
+    double sampleRate = 0.0;
+    std::vector<std::vector<float> > channels;
+};
+
 struct FileInfo
 {
     muse::io::path_t path;

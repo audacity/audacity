@@ -35,6 +35,7 @@ public:
     bool importIntoTrack(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId, muse::secs_t startTime) override;
     bool importFromSystemClipboard(const std::vector<muse::io::path_t>& filePaths, muse::secs_t startTime) override;
     std::vector<std::string> supportedExtensions() const override;
+    muse::RetVal<DecodedAudio> decode(const muse::io::path_t& filePath, const std::optional<double>& sampleRate = {}) override;
 
 private:
     bool isProjectEmpty() const;

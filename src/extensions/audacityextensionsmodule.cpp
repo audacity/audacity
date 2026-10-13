@@ -5,6 +5,7 @@
 
 #include "framework/global/api/iapiregister.h"
 
+#include "api/audiocodecapi.h"
 #include "api/audiotransformapi.h"
 #include "api/nativeapi.h"
 #include "api/preferencesapi.h"
@@ -26,6 +27,7 @@ void AudacityExtensionsModule::registerApi()
     if (registry) {
         registry->regApiCreator(mname, "MuseApi.Native", new muse::api::ApiCreator<NativeApi>());
         registry->regApiCreator(mname, "Audacity.AudioTransform", new muse::api::ApiCreator<AudioTransformApi>());
+        registry->regApiCreator(mname, "Audacity.AudioCodec", new muse::api::ApiCreator<AudioCodecApi>());
         registry->regApiCreator(mname, "Audacity.Preferences", new muse::api::ApiCreator<PreferencesApi>());
     }
 }

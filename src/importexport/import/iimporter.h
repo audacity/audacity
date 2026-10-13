@@ -1,7 +1,10 @@
 #pragma once
 
-#include "io/path.h"
-#include "modularity/imoduleinterface.h"
+#include <optional>
+
+#include "framework/global/io/path.h"
+#include "framework/global/types/retval.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 #include "types/importtypes.h"
 #include "trackedit/trackedittypes.h"
@@ -19,5 +22,6 @@ public:
     virtual bool importIntoTrack(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId, trackedit::secs_t startTime) = 0;
     virtual bool importFromSystemClipboard(const std::vector<muse::io::path_t>& filePaths, trackedit::secs_t startTime) = 0;
     virtual std::vector<std::string> supportedExtensions() const = 0;
+    virtual muse::RetVal<DecodedAudio> decode(const muse::io::path_t& filePath, const std::optional<double>& sampleRate = {}) = 0;
 };
 }
