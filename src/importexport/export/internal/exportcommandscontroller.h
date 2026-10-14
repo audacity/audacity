@@ -6,13 +6,12 @@
 #include <optional>
 #include <string>
 
+#include "framework/rcommand/commandable.h"
+
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
-#include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
-
 #include "context/iglobalcontext.h"
-
 #include "../iexportconfiguration.h"
 #include "../iexporter.h"
 

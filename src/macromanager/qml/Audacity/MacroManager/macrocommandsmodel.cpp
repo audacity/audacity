@@ -5,7 +5,7 @@
 
 #include <algorithm>
 
-#include "global/stringutils.h"
+#include "framework/global/stringutils.h"
 
 using namespace au::macromanager;
 using namespace muse;
