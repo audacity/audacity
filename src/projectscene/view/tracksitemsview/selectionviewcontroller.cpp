@@ -291,7 +291,7 @@ void SelectionViewController::onReleased(double time, double y)
 
     setSelectionActive(true);
 
-    if (m_startY < y || isBelowAllTracks(vs, y)) {
+    if (m_startY < y || vs->isBelowAllTracks(y)) {
         trackNavigationController()->setFocus(TrackFocus::track(tracks.back()));
     } else {
         trackNavigationController()->setFocus(TrackFocus::track(tracks.front()));
@@ -598,17 +598,6 @@ TrackIdList SelectionViewController::trackIdList() const
     return prj ? prj->trackIdList() : TrackIdList();
 }
 
-std::optional<double> SelectionViewController::tracksBottomY(const IProjectViewStatePtr& vs) const
-{
-    const TrackIdList tracks = trackIdList();
-    if (tracks.empty()) {
-        return std::nullopt;
-    }
-
-    const TrackId lastTrack = tracks.back();
-    return vs->trackVerticalPosition(lastTrack) + vs->trackHeight(lastTrack).val;
-}
-
 void SelectionViewController::focusPressedTracks(const TrackIdList& tracks)
 {
     if (!tracks.empty()) {
@@ -618,16 +607,9 @@ void SelectionViewController::focusPressedTracks(const TrackIdList& tracks)
     }
 }
 
-bool SelectionViewController::isBelowAllTracks(const IProjectViewStatePtr& vs, double y) const
-{
-    const std::optional<double> bottomY = tracksBottomY(vs);
-    return bottomY.has_value() && y >= *bottomY;
-}
-
 TrackIdList SelectionViewController::tracksCoveredBySelection(const IProjectViewStatePtr& vs, double y) const
 {
-    const std::optional<double> bottomY = tracksBottomY(vs);
-    if (bottomY.has_value() && m_startY >= *bottomY && y >= *bottomY) {
+    if (vs->isBelowAllTracks(m_startY) && vs->isBelowAllTracks(y)) {
         return trackIdList();
     }
 
