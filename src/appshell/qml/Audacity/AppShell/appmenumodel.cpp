@@ -398,8 +398,8 @@ MenuItem* AppMenuModel::makeTracksMenu()
         makeSeparator(),
         makeMenuItem("track-duplicate"),
         // makeMenuItem("remove-tracks"),
-        // makeSeparator(),
-        // makeMenuItem("mixdown-to"),
+        makeSeparator(),
+        makeMenu(TranslatableString("appshell-menu-mix", "Mix"), makeMixItems(), "menu-mix"),
         // makeSeparator(),
         // makeMenu(TranslatableString("appshell-menu-align", "Align content"), makeAlignItems(), "menu-align", false),
         // makeMenu(TranslatableString("appshell-menu-sort", "Sort tracks"), makeSortItems(), "menu-sort", false),
@@ -723,6 +723,16 @@ MenuItemList AppMenuModel::makeSkipToItems()
     MenuItemList items {
         makeMenuItem("skip-to-selection-start"),
         makeMenuItem("skip-to-selection-end")
+    };
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeMixItems()
+{
+    MenuItemList items {
+        makeMenuItem("mix-and-render"),
+        makeMenuItem("mix-and-render-to-new-track"),
     };
 
     return items;

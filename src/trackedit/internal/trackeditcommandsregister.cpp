@@ -313,6 +313,24 @@ const std::vector<CommandInfo> commandInfos = {
         Decoration()
     },
     CommandInfo{
+        TRACKEDIT_MIX_AND_RENDER_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Mix and render"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Mix the selected tracks into one track that replaces them"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Mix and render to new track"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Mix the selected tracks into a new track, keeping the original tracks"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
         TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Trim"),

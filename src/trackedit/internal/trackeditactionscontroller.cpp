@@ -227,6 +227,8 @@ static const ActionCode TRACK_SPLIT_STEREO_TO_CENTER("track-split-stereo-to-cent
 static const ActionCode TRACK_CHANGE_RATE_CUSTOM("track-change-rate-custom");
 static const ActionCode TRACK_MAKE_STEREO("track-make-stereo");
 static const ActionCode TRACK_RESAMPLE("track-resample");
+static const ActionCode MIX_AND_RENDER("mix-and-render");
+static const ActionCode MIX_AND_RENDER_TO_NEW_TRACK("mix-and-render-to-new-track");
 
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
@@ -332,6 +334,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_CHANGE_RATE_CUSTOM,
     TRACK_MAKE_STEREO,
     TRACK_RESAMPLE,
+    MIX_AND_RENDER,
+    MIX_AND_RENDER_TO_NEW_TRACK,
     GROUP_ITEMS_CODE,
     UNGROUP_ITEMS_CODE,
 };
@@ -437,6 +441,8 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, [this]() { return setCustomTrackRate(); });
     cd->onRequest(this, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, [this]() { return makeStereoTrack(); });
     cd->onRequest(this, TRACKEDIT_TRACK_RESAMPLE_COMMAND, [this]() { return resampleTracks(); });
+    cd->onRequest(this, TRACKEDIT_MIX_AND_RENDER_COMMAND, [this]() { return mixAndRender(false /*toNewTrack*/); });
+    cd->onRequest(this, TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND, [this]() { return mixAndRender(true /*toNewTrack*/); });
 
     cd->onRequest(this, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, [this]() { return trimAudioOutsideSelection(); });
     cd->onRequest(this, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, [this]() { return doGlobalSilence(); });
@@ -540,6 +546,8 @@ void TrackeditActionsController::init()
         { TRACK_CHANGE_RATE_CUSTOM, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, {} },
         { TRACK_MAKE_STEREO, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, {} },
         { TRACK_RESAMPLE, TRACKEDIT_TRACK_RESAMPLE_COMMAND, {} },
+        { MIX_AND_RENDER, TRACKEDIT_MIX_AND_RENDER_COMMAND, {} },
+        { MIX_AND_RENDER_TO_NEW_TRACK, TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND, {} },
         { TRIM_AUDIO_OUTSIDE_SELECTION, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, {} },
         { SILENCE_AUDIO_SELECTION, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, {} },
         { GROUP_ITEMS_CODE, TRACKEDIT_GROUP_ITEMS_COMMAND, {} },
@@ -2305,6 +2313,13 @@ muse::Ret TrackeditActionsController::resampleTracks()
     }
 
     return Ret(trackeditInteraction()->resampleTracks(selectedTracks, customRate));
+}
+
+muse::Ret TrackeditActionsController::mixAndRender(bool /*toNewTrack*/)
+{
+    //! TODO AU4: mix the selected wave tracks
+    NOT_IMPLEMENTED;
+    return make_ret(Ret::Code::NotImplemented);
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode&) const

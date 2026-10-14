@@ -48,6 +48,7 @@ private:
     bool itemsShareOneGroup(const TrackItemKeyList& items) const;
     bool canJoin() const;
     bool canSilenceAudio() const;
+    bool hasSelectedWaveTracks() const;
 
     muse::rcommand::IModuleCommandsRegisterPtr m_moduleRegister;
     std::map<muse::rcommand::Command, muse::rcommand::CommandState> m_commandStates;
