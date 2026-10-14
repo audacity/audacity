@@ -52,6 +52,9 @@ public:
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
     Q_INVOKABLE void titleEditRequestHandled(const ClipKey& key);
 
+    Q_INVOKABLE bool changeClipFadeIn(const ClipKey& key, double duration, bool completed);
+    Q_INVOKABLE bool changeClipFadeOut(const ClipKey& key, double duration, bool completed);
+
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
 

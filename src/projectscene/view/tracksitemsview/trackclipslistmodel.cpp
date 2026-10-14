@@ -337,6 +337,16 @@ bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& new
     return trackeditInteraction()->changeClipTitle(key.key, newTitle);
 }
 
+bool TrackClipsListModel::changeClipFadeIn(const ClipKey& key, double duration, bool completed)
+{
+    return trackeditInteraction()->changeClipFadeIn(key.key, duration, completed);
+}
+
+bool TrackClipsListModel::changeClipFadeOut(const ClipKey& key, double duration, bool completed)
+{
+    return trackeditInteraction()->changeClipFadeOut(key.key, duration, completed);
+}
+
 bool TrackClipsListModel::isKeyboardTriggered() const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();

@@ -21,10 +21,13 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     m_groupId = clip.groupId;
     m_pitch = clip.pitch;
     m_speed = clip.speed;
+    m_fadeInDuration = clip.fadeInDuration;
+    m_fadeOutDuration = clip.fadeOutDuration;
 
     emit titleChanged();
     emit pitchChanged();
     emit speedPercentageChanged();
+    emit fadesChanged();
     emit colorChanged();
     emit groupIdChanged();
     emit contentChanged();
@@ -59,4 +62,14 @@ bool TrackClipItem::isSpeedModified() const
 double TrackClipItem::speed() const
 {
     return m_speed;
+}
+
+double TrackClipItem::fadeInDuration() const
+{
+    return m_fadeInDuration;
+}
+
+double TrackClipItem::fadeOutDuration() const
+{
+    return m_fadeOutDuration;
 }

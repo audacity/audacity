@@ -56,8 +56,6 @@ Item {
     QtObject {
         id: prv
 
-        property bool handlesHovered: false
-
         readonly property int handleMinH: 22
         readonly property int handleMaxH: 32
         readonly property int handleWidth: 30
@@ -213,16 +211,6 @@ Item {
                 root.clipEndEditRequested()
             }
 
-            onEntered: {
-                prv.handlesHovered = true
-            }
-
-            onExited: {
-                if (!leftTimeMa.containsMouse) {
-                    prv.handlesHovered = false
-                }
-            }
-
             onPositionChanged: function (e) {
                 clipHandlesMousePositionChanged(mouseX + leftTrimHandle.x, mouseY)
 
@@ -375,16 +363,6 @@ Item {
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
-            }
-
-            onEntered: {
-                prv.handlesHovered = true
-            }
-
-            onExited: {
-                if (!rightTimeMa.containsMouse) {
-                    prv.handlesHovered = false
-                }
             }
 
             onPositionChanged: function (e) {
@@ -543,16 +521,6 @@ Item {
                 root.clipEndEditRequested()
             }
 
-            onEntered: {
-                prv.handlesHovered = true
-            }
-
-            onExited: {
-                if (!leftTrimMa.containsMouse && mouseY > 2) {
-                    prv.handlesHovered = false
-                }
-            }
-
             onPositionChanged: {
                 clipHandlesMousePositionChanged(mouseX + leftTimecode.x, mouseY)
 
@@ -704,16 +672,6 @@ Item {
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
-            }
-
-            onEntered: {
-                prv.handlesHovered = true
-            }
-
-            onExited: {
-                if (!rightTrimMa.containsMouse && mouseY > 2) {
-                    prv.handlesHovered = false
-                }
             }
 
             onPositionChanged: {
