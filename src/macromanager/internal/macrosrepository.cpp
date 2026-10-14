@@ -52,8 +52,7 @@ Ret MacrosRepository::save(const Macro& macro)
         return make_ret(Ret::Code::BadArgs, "macro name is empty");
     }
 
-    const JsonDocument document(toJson(macro));
-    const Ret ret = fileSystem()->writeFile(userMacroFilePath(macro.name), document.toJson());
+    const Ret ret = writeMacroFile(macro, userMacroFilePath(macro.name));
     if (!ret) {
         LOGE() << "failed to save macro " << macro.name << ": " << ret.toString();
         return ret;
@@ -106,8 +105,7 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
     Macro renamed = *existing;
     renamed.name = newName;
 
-    const JsonDocument document(toJson(renamed));
-    Ret ret = fileSystem()->writeFile(userMacroFilePath(newName), document.toJson());
+    Ret ret = writeMacroFile(renamed, userMacroFilePath(newName));
     if (!ret) {
         return ret;
     }
@@ -168,24 +166,33 @@ void MacrosRepository::reload()
     std::ranges::sort(m_macros, {}, &Macro::name);
 }
 
-void MacrosRepository::loadMacroFile(const io::path_t& path, bool builtin)
+RetVal<Macro> MacrosRepository::readMacroFile(const io::path_t& path) const
 {
     const RetVal<ByteArray> data = fileSystem()->readFile(path);
     if (!data.ret) {
-        LOGW() << "failed to read macro file " << path << ": " << data.ret.toString();
-        return;
+        return RetVal<Macro>(data.ret);
     }
 
     std::string error;
     const JsonDocument document = JsonDocument::fromJson(data.val, &error);
     if (!error.empty() || !document.isObject()) {
-        LOGW() << "invalid macro file " << path << ": " << error;
-        return;
+        return RetVal<Macro>(make_ret(Ret::Code::UnknownError, "invalid macro file: " + error));
     }
 
-    RetVal<Macro> macro = macroFromJson(document.rootObject());
+    return macroFromJson(document.rootObject());
+}
+
+Ret MacrosRepository::writeMacroFile(const Macro& macro, const io::path_t& path) const
+{
+    const JsonDocument document(toJson(macro));
+    return fileSystem()->writeFile(path, document.toJson());
+}
+
+void MacrosRepository::loadMacroFile(const io::path_t& path, bool builtin)
+{
+    RetVal<Macro> macro = readMacroFile(path);
     if (!macro.ret) {
-        LOGW() << "invalid macro file " << path << ": " << macro.ret.toString();
+        LOGW() << "failed to load macro file " << path << ": " << macro.ret.toString();
         return;
     }
 

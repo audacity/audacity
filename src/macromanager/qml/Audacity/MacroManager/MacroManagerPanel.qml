@@ -64,8 +64,21 @@ Rectangle {
 
             navigationPanel: navPanel
 
+            menuModel: [
+                {
+                    id: "import",
+                    title: qsTrc("macromanager", "Import macro…")
+                }
+            ]
+
             onNewMacroRequested: {
                 macroManagerModel.newMacro()
+            }
+
+            onHandleMenuItemRequested: function (itemId) {
+                if (itemId === "import") {
+                    macroManagerModel.importMacro()
+                }
             }
         }
 
@@ -107,6 +120,10 @@ Rectangle {
 
                 onRunOnFilesRequested: {
                     macroManagerModel.runOnFiles(index)
+                }
+
+                onExportRequested: {
+                    macroManagerModel.exportMacro(index)
                 }
 
                 onEditRequested: {
