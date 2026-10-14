@@ -29,7 +29,7 @@ Command effectConfigureCommand(const Command& applyCommand)
 }
 
 MacroCommandsModel::MacroCommandsModel(QObject* parent)
-    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this)), m_runOnFilesLauncher(this)
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this)), m_actions(this), m_runOnFilesLauncher(this)
 {
 }
 
@@ -67,6 +67,16 @@ QHash<int, QByteArray> MacroCommandsModel::roleNames() const
     return roles;
 }
 
+QString MacroCommandsModel::name() const
+{
+    return QString::fromStdString(m_macro.name);
+}
+
+bool MacroCommandsModel::isBuiltin() const
+{
+    return m_macro.builtin;
+}
+
 bool MacroCommandsModel::isEmpty() const
 {
     return m_macro.steps.empty();
@@ -83,6 +93,7 @@ void MacroCommandsModel::load(const QString& macroName)
     m_macro = repository()->macro(macroName.toStdString()).value_or(Macro { macroName.toStdString(), {} });
     endResetModel();
 
+    emit nameChanged();
     emit isEmptyChanged();
 
     runner()->isRunningChanged().onNotify(this, [this]() {
@@ -168,6 +179,42 @@ void MacroCommandsModel::run()
 void MacroCommandsModel::runOnFiles()
 {
     m_runOnFilesLauncher.launch(m_macro);
+}
+
+void MacroCommandsModel::removeAllSteps()
+{
+    if (m_macro.steps.empty()) {
+        return;
+    }
+
+    beginResetModel();
+    m_macro.steps.clear();
+    endResetModel();
+
+    emit isEmptyChanged();
+}
+
+void MacroCommandsModel::rename()
+{
+    const std::optional<std::string> newName = m_actions.rename(m_macro.name);
+    if (!newName) {
+        return;
+    }
+
+    m_macro.name = *newName;
+    emit nameChanged();
+}
+
+void MacroCommandsModel::exportMacro()
+{
+    m_actions.exportMacro(m_macro);
+}
+
+void MacroCommandsModel::deleteMacro()
+{
+    if (m_actions.remove(m_macro.name)) {
+        emit macroDeleted();
+    }
 }
 
 bool MacroCommandsModel::isRowValid(int row) const

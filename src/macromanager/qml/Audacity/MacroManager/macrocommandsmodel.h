@@ -18,6 +18,7 @@
 #include "macromanager/imacrosrepository.h"
 
 #include "macromanager/macromanagertypes.h"
+#include "macroactions.h"
 #include "runonfileslauncher.h"
 
 namespace au::macromanager {
@@ -26,6 +27,8 @@ class MacroCommandsModel : public QAbstractListModel, public muse::Contextable, 
     Q_OBJECT
     QML_ELEMENT;
 
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged FINAL)
+    Q_PROPERTY(bool isBuiltin READ isBuiltin NOTIFY nameChanged FINAL)
     Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged FINAL)
     Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged FINAL)
 
@@ -43,6 +46,8 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+    QString name() const;
+    bool isBuiltin() const;
     bool isEmpty() const;
     bool isRunning() const;
 
@@ -51,14 +56,20 @@ public:
     Q_INVOKABLE void insert(int row, const QString& code);
     Q_INVOKABLE void move(int from, int to);
     Q_INVOKABLE void remove(int row);
+    Q_INVOKABLE void removeAllSteps();
     Q_INVOKABLE void editParams(int row);
     Q_INVOKABLE bool save();
     Q_INVOKABLE void run();
     Q_INVOKABLE void runOnFiles();
+    Q_INVOKABLE void rename();
+    Q_INVOKABLE void exportMacro();
+    Q_INVOKABLE void deleteMacro();
 
 signals:
+    void nameChanged();
     void isEmptyChanged();
     void isRunningChanged();
+    void macroDeleted();
 
 private:
     enum Roles {
@@ -81,6 +92,7 @@ private:
     void requestSchemaParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
 
     Macro m_macro;
+    MacroActions m_actions;
     RunOnFilesLauncher m_runOnFilesLauncher;
 };
 }

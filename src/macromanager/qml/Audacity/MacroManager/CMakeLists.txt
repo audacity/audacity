@@ -8,6 +8,8 @@ qt_add_qml_module(macromanager_qml
         availablecommandsmodel.h
         commandparamsmodel.cpp
         commandparamsmodel.h
+        macroactions.cpp
+        macroactions.h
         macrocommandsmodel.cpp
         macrocommandsmodel.h
         macromanagermodel.cpp
@@ -26,6 +28,7 @@ qt_add_qml_module(macromanager_qml
         RunOnFilesDialog.qml
         internal/MacroManagerHeader.qml
         internal/MacroItem.qml
+        internal/MacroTitleBar.qml
         internal/CommandsSearchBar.qml
         internal/AvailableCommandsList.qml
         internal/MacroCommandsTable.qml
