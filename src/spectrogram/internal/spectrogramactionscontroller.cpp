@@ -11,23 +11,18 @@
 namespace au::spectrogram {
 void SpectrogramActionsController::init()
 {
-    commandDispatcher()->onRequest(this, TRACK_SPECTROGRAM_SETTINGS_COMMAND, [this](const muse::rcommand::Params& params) {
-        return openTrackSpectrogramSettings(params);
+    commandDispatcher()->onRequest<TrackSpectrogramSettingsCommand>(this, [this](const TrackSpectrogramSettingsCommand& command) {
+        return openTrackSpectrogramSettings(command.trackId);
     });
 }
 
-muse::Ret SpectrogramActionsController::openTrackSpectrogramSettings(const muse::rcommand::Params& params)
+muse::Ret SpectrogramActionsController::openTrackSpectrogramSettings(int trackId)
 {
-    if (!params.contains("trackId")) {
-        return muse::make_ret(muse::Ret::Code::BadArgs);
-    }
-
     const auto project = globalContext()->currentProject();
     if (!project) {
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    const int trackId = params.at("trackId").toInt();
     const auto track = project->trackeditProject()->track(trackId);
     if (!track) {
         return muse::make_ret(muse::Ret::Code::BadArgs);

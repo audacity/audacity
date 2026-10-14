@@ -503,9 +503,9 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackVisualizationIt
         }
     }
 
-    items.push_back(makeMenuItem(muse::rcommand::make_query(spectrogram::TRACK_SPECTROGRAM_SETTINGS_COMMAND, {
-        { "trackId", muse::Val(static_cast<int>(m_trackId)) }
-    })));
+    items.push_back(makeMenuItem(spectrogram::TrackSpectrogramSettingsCommand {
+        .trackId = static_cast<int>(m_trackId)
+    }));
 
     return items;
 }

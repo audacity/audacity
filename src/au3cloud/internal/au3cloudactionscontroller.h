@@ -41,10 +41,10 @@ public:
 
 private:
     muse::Ret showTourPage();
-    muse::Ret openCloudProjectPage(const muse::rcommand::Params& params);
-    muse::Ret openCloudAudioPage(const muse::rcommand::Params& params);
+    muse::Ret openCloudProjectPage(const std::string& id);
+    muse::Ret openCloudAudioPage(const std::string& slug);
     muse::Ret openCloudProfilePage();
-    muse::Ret openUrl(const muse::rcommand::Params& params);
+    muse::Ret openUrl(const QString& url);
 
     std::unique_ptr<CloudUrlHandler> m_urlHandler;
     std::vector<std::string> m_pendingUrls;

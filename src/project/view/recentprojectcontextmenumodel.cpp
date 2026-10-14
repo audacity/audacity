@@ -6,13 +6,14 @@
 #include "framework/actions/actiontypes.h"
 #include "framework/global/types/translatablestring.h"
 
+#include "au3cloud/cloudcommands.h"
+
 #include <QUrl>
 
 using namespace au::project;
 
 namespace {
 constexpr const char* OPEN_PROJECT_ACTION = "file-open";
-constexpr const char* OPEN_PROJECT_PAGE_ACTION = "action://cloud/open-project-page";
 constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "action://cloud/update-audio-preview-for-project";
 constexpr const char* SHOW_IN_FOLDER_ACTION = "project-show-in-folder";
 }
@@ -33,7 +34,8 @@ void RecentProjectContextMenuModel::load()
 
     muse::uicomponents::MenuItemList items = { openItem };
     if (isCloudProject) {
-        items.append(makeMenuItem(OPEN_PROJECT_PAGE_ACTION));
+        const au3cloud::OpenProjectPageCommand openProjectPage { .projectId = m_cloudProjectId.toStdString() };
+        items.append(makeMenuItem(openProjectPage));
         items.append(makeMenuItem(UPDATE_AUDIO_PREVIEW_ACTION));
     }
 
@@ -58,17 +60,6 @@ void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
         dispatcher()->dispatch("file-open",
                                muse::actions::ActionData::make_arg2<QUrl, QString>(
                                    QUrl::fromLocalFile(m_path), m_displayNameOverride));
-        return;
-    }
-
-    if (itemId == OPEN_PROJECT_PAGE_ACTION) {
-        if (m_cloudProjectId.isEmpty()) {
-            return;
-        }
-
-        muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
-        query.addParam("id", muse::Val(m_cloudProjectId));
-        dispatchAction(query);
         return;
     }
 

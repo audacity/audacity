@@ -99,9 +99,9 @@ void ClipContextMenuModel::load()
 
         if (valCh.val == trackedit::TrackViewType::Spectrogram || valCh.val == trackedit::TrackViewType::WaveformAndSpectrogram) {
             items.push_back(makeSeparator());
-            items.push_back(makeMenuItem(muse::rcommand::make_query(spectrogram::TRACK_SPECTROGRAM_SETTINGS_COMMAND, {
-                { "trackId", muse::Val(static_cast<int>(m_clipKey.trackId())) }
-            })));
+            items.push_back(makeMenuItem(spectrogram::TrackSpectrogramSettingsCommand {
+                .trackId = static_cast<int>(m_clipKey.trackId())
+            }));
         }
 
         valCh.ch.onReceive(this, [this](auto) { load(); }, Mode::SetReplace);

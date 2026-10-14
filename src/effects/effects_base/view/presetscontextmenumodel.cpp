@@ -3,8 +3,10 @@
 */
 #include "presetscontextmenumodel.h"
 
+#include "effects/effects_base/effectscommands.h"
+
 using namespace muse;
-using namespace muse::actions;
+using namespace muse::rcommand;
 using namespace muse::uicomponents;
 using namespace au::effects;
 
@@ -60,17 +62,8 @@ void PresetsContextMenuModel::reload()
 
     MenuItemList items;
 
-    {
-        ActionQuery q("action://effects/presets/import");
-        q.addParam("instanceId", Val(m_instanceId));
-        items << makeMenuItem(q.toString());
-    }
-
-    {
-        ActionQuery q("action://effects/presets/export");
-        q.addParam("instanceId", Val(m_instanceId));
-        items << makeMenuItem(q.toString());
-    }
+    items << makeMenuItem(ImportPresetCommand { .instanceId = m_instanceId });
+    items << makeMenuItem(ExportPresetCommand { .instanceId = m_instanceId });
 
     const EffectMeta effectMeta = effectsProvider()->meta(effectId);
     const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(effectMeta.family);
@@ -81,14 +74,9 @@ void PresetsContextMenuModel::reload()
     if (hasVendorUI) {
         items << makeSeparator();
 
-        ActionQuery q("action://effects/toggle_vendor_ui");
-        q.addParam("effectId", Val(effectId.toStdString()));
-        MenuItem* item = makeMenuItem(q.toString());
-
+        MenuItem* item = makeMenuItem(ToggleVendorUiCommand { .effectId = effectId });
         if (item) {
-            ui::UiActionState state = item->state();
-            state.checked = useVendorUI();
-            item->setState(state);
+            item->setCommandState(CommandState(true, useVendorUI()));
         }
 
         items << item;

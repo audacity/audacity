@@ -32,7 +32,7 @@ void EffectsCommandsState::init()
     });
 
     effectExecutionScenario()->lastProcessorIsNowAvailable().onNotify(this, [this]() {
-        updateCommandStates({ EFFECTS_REPEAT_LAST_EFFECT_COMMAND });
+        updateCommandStates({ RepeatLastEffectCommand::id });
     });
 
     frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](bool complete) {
@@ -81,7 +81,7 @@ bool EffectsCommandsState::isSpectralEffect(const EffectId& effectId) const
 
 CommandState EffectsCommandsState::commandState(const Command& command) const
 {
-    if (command == EFFECTS_REPEAT_LAST_EFFECT_COMMAND) {
+    if (command == RepeatLastEffectCommand::id) {
         return CommandState(effectExecutionScenario()->lastProcessorIsAvailable(), false);
     }
 
