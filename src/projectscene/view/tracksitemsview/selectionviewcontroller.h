@@ -111,6 +111,7 @@ private:
 
     IProjectViewStatePtr viewState() const;
     trackedit::TrackIdList trackIdList() const;
+    std::optional<double> tracksBottomY(const IProjectViewStatePtr& vs) const;
     bool isBelowAllTracks(const IProjectViewStatePtr& vs, double y) const;
     trackedit::TrackIdList tracksCoveredBySelection(const IProjectViewStatePtr& vs, double y) const;
 
