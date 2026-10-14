@@ -1443,6 +1443,116 @@ TEST_F(Au3TracksInteractionTests, PasteOnEmptyTrack)
     removeTrack(newTrackId);
 }
 
+TEST_F(Au3TracksInteractionTests, PasteMultiSelectionCopyResamplesClipsToTheDestinationTrackRate)
+{
+    constexpr double sourceRate = 48000.0;
+    constexpr double destinationRate = 96000.0;
+    TrackTemplateFactory sourceFactory(projectRef(), sourceRate);
+    TrackTemplateFactory destinationFactory(projectRef(), destinationRate);
+
+    //! [GIVEN] A 48 kHz track whose clip is on the clipboard, and a 96 kHz track that already has a clip
+    auto source = sourceFactory.createTrackFromTemplate("source", { { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } } });
+    auto destination
+        = destinationFactory.createTrackFromTemplate("destination", { { 5.0, { { 1.0, TrackTemplateFactory::createNoise } } } });
+    sourceFactory.addTrackToProject(source);
+    const TrackId destinationId = destinationFactory.addTrackToProject(destination);
+    const Au3Track::Holder trackCopy = source->Copy(0.0, source->GetEndTime());
+    ASSERT_NE(trackCopy, nullptr);
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { destinationId }));
+
+    //! [WHEN] Pasting the copy of several selected clips
+    constexpr auto moveClips = false;
+    constexpr auto moveAllTracks = false;
+    constexpr auto isMultiSelectionCopy = true;
+    bool projectWasModified = false;
+    const muse::Ret ret
+        = m_tracksInteraction->paste({ trackData }, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy, projectWasModified);
+    ASSERT_EQ(ret, muse::make_ok());
+
+    //! [THEN] The pasted clip was resampled, keeping its duration, and the clipboard data is untouched
+    const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    ASSERT_EQ(destinationTrack->NIntervals(), 2u);
+    for (const auto& clip : destinationTrack->Intervals()) {
+        EXPECT_EQ(clip->GetRate(), static_cast<int>(destinationRate));
+        EXPECT_NEAR(clip->GetPlayDuration(), 1.0, 1.0 / sourceRate);
+    }
+    EXPECT_EQ(std::static_pointer_cast<Au3WaveTrack>(trackCopy)->GetRate(), sourceRate);
+}
+
+TEST_F(Au3TracksInteractionTests, PasteOnEmptyTrackKeepsTheTrackRateAndResamplesTheClip)
+{
+    constexpr double sourceRate = 48000.0;
+    constexpr double destinationRate = 96000.0;
+    TrackTemplateFactory sourceFactory(projectRef(), sourceRate);
+    TrackTemplateFactory destinationFactory(projectRef(), destinationRate);
+
+    //! [GIVEN] A 48 kHz clip on the clipboard and an empty 96 kHz track
+    auto source = sourceFactory.createTrackFromTemplate("source", { { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } } });
+    auto destination = destinationFactory.createTrackFromTemplate("destination", {});
+    sourceFactory.addTrackToProject(source);
+    const TrackId destinationId = destinationFactory.addTrackToProject(destination);
+    const Au3Track::Holder trackCopy = source->Copy(0.0, source->GetEndTime());
+    ASSERT_NE(trackCopy, nullptr);
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { destinationId }));
+
+    //! [WHEN] Pasting it into the empty track
+    constexpr auto moveClips = false;
+    constexpr auto moveAllTracks = false;
+    constexpr auto isMultiSelectionCopy = false;
+    bool projectWasModified = false;
+    const muse::Ret ret
+        = m_tracksInteraction->paste({ trackData }, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy, projectWasModified);
+    ASSERT_EQ(ret, muse::make_ok());
+
+    //! [THEN] The track keeps its rate and the clip was resampled to it
+    const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    EXPECT_EQ(destinationTrack->GetRate(), destinationRate);
+    ASSERT_EQ(destinationTrack->NIntervals(), 1u);
+    EXPECT_EQ(destinationTrack->GetSortedClipByIndex(0)->GetRate(), static_cast<int>(destinationRate));
+    EXPECT_NEAR(destinationTrack->GetSortedClipByIndex(0)->GetPlayDuration(), 1.0, 1.0 / sourceRate);
+}
+
+TEST_F(Au3TracksInteractionTests, CancellingResamplingOnPasteLeavesTheProjectUntouched)
+{
+    TrackTemplateFactory sourceFactory(projectRef(), 48000.0);
+    TrackTemplateFactory destinationFactory(projectRef(), 96000.0);
+
+    //! [GIVEN] A 48 kHz clip on the clipboard and a 96 kHz destination track with a clip
+    auto source = sourceFactory.createTrackFromTemplate("source", { { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } } });
+    auto destination
+        = destinationFactory.createTrackFromTemplate("destination", { { 5.0, { { 1.0, TrackTemplateFactory::createNoise } } } });
+    sourceFactory.addTrackToProject(source);
+    const TrackId destinationId = destinationFactory.addTrackToProject(destination);
+    const Au3Track::Holder trackCopy = source->Copy(0.0, source->GetEndTime());
+    ASSERT_NE(trackCopy, nullptr);
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { destinationId }));
+
+    //! [GIVEN] The user presses "Cancel" as soon as the progress dialog shows up
+    const auto interactiveMock = std::static_pointer_cast<NiceMock<muse::InteractiveMock> >(m_interactive);
+    ON_CALL(*interactiveMock, showProgress(_, _)).WillByDefault([](const std::string&, muse::Progress progress) {
+        progress.cancel();
+    });
+
+    //! [WHEN] Pasting
+    constexpr auto moveClips = false;
+    constexpr auto moveAllTracks = false;
+    constexpr auto isMultiSelectionCopy = false;
+    bool projectWasModified = false;
+    const muse::Ret ret
+        = m_tracksInteraction->paste({ trackData }, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy, projectWasModified);
+
+    //! [THEN] The paste is cancelled and the destination track is unchanged
+    EXPECT_FALSE(ret);
+    const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    EXPECT_EQ(destinationTrack->NIntervals(), 1u);
+}
+
 TEST_F(Au3TracksInteractionTests, PasteLabelsDistributesToMultipleTracks)
 {
     //! [GIVEN] There is a project with two label tracks, each containing a label

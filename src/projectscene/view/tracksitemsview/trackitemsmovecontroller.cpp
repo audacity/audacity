@@ -427,9 +427,6 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
             trackeditInteraction()->moveRangeSelection(0.0, true);
         } else {
             if (keyboard) {
-                m_moved = false;
-                emit previewChanged();
-
                 selectionController()->setSelectedClips(m_clips, false);
                 selectionController()->setSelectedLabels(m_labels, false);
             }
@@ -437,12 +434,11 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
             const auto result = isLabelTrack(m_sourceType)
                                 ? trackeditInteraction()->moveLabels(selected, m_timeOffset, m_trackOffset)
                                 : trackeditInteraction()->moveClips(selected, m_timeOffset, m_trackOffset);
-            if (!keyboard) {
-                //! NOTE: the move can take a while (e.g. resampling a clip to the destination track's sample rate),
-                //! so keep showing the preview until it's done, otherwise the clip would jump back to its original place meanwhile.
-                m_moved = false;
-                emit previewChanged();
-            }
+
+            //! NOTE: the move can take a while (e.g. resampling a clip to the destination track's sample rate),
+            //! so keep showing the preview until it's done, otherwise the clip would jump back to its original place meanwhile.
+            m_moved = false;
+            emit previewChanged();
             if (result.ret) {
                 const auto source = std::find(selected.begin(), selected.end(), m_sourceKey);
                 const auto sourceIndex = std::distance(selected.begin(), source);
