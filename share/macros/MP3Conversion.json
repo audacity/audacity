@@ -1,0 +1,13 @@
+{
+    "name": "MP3 Conversion",
+    "steps": [
+        {
+            "command": "command://effects/apply/Effect_Audacity_Audacity_Normalize_Built-in%20Effect%3A%20Normalize",
+            "params": {}
+        },
+        {
+            "command": "command://importexport/export/mp3",
+            "params": {}
+        }
+    ]
+}

@@ -324,6 +324,7 @@ if (AU_MODULE_EFFECTS_NYQUIST)
 endif()
 
 add_dependencies(audacity builtin-workspaces)
+add_dependencies(audacity builtin-macros)
 
 ###########################################
 # INSTALL
