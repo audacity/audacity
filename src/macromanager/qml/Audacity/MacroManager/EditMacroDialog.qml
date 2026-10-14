@@ -55,6 +55,7 @@ StyledDialogView {
 
     Component.onCompleted: {
         availableCommandsModel.load()
+        macroCommandsModel.load(root.macroName)
     }
 
     onNavigationActivateRequested: {
@@ -100,7 +101,7 @@ StyledDialogView {
                         }
 
                         const command = availableCommandsModel.itemAt(0)
-                        macroCommandsModel.add(command.code, command.title)
+                        macroCommandsModel.add(command.code)
                     }
                 }
 
@@ -117,7 +118,7 @@ StyledDialogView {
                     navigation.order: 2
 
                     onAddRequested: function (code, title) {
-                        macroCommandsModel.add(code, title)
+                        macroCommandsModel.add(code)
                     }
                 }
             }
@@ -167,6 +168,10 @@ StyledDialogView {
                         navigationPanel.section: root.navigationSection
                         navigationPanel.order: 3
 
+                        onEditRequested: function (row) {
+                            macroCommandsModel.editParams(row)
+                        }
+
                         onDeleteRequested: function (row) {
                             macroCommandsModel.remove(row)
                         }
@@ -176,7 +181,7 @@ StyledDialogView {
                         }
 
                         onInsertRequested: function (row, code, title) {
-                            macroCommandsModel.insert(row, code, title)
+                            macroCommandsModel.insert(row, code)
                         }
                     }
                 }
@@ -206,20 +211,28 @@ StyledDialogView {
                 Layout.preferredHeight: prv.buttonHeight
 
                 text: qsTrc("macromanager", "Run")
-                enabled: false
+                enabled: !macroCommandsModel.isEmpty && !macroCommandsModel.isRunning
 
                 navigation.panel: parent.navigationPanel
                 navigation.column: 0
+
+                onClicked: {
+                    macroCommandsModel.run()
+                }
             }
 
             FlatButton {
                 Layout.preferredHeight: prv.buttonHeight
 
                 text: qsTrc("macromanager", "Run on files")
-                enabled: false
+                enabled: !macroCommandsModel.isEmpty && !macroCommandsModel.isRunning
 
                 navigation.panel: parent.navigationPanel
                 navigation.column: 1
+
+                onClicked: {
+                    macroCommandsModel.runOnFiles()
+                }
             }
 
             Item {
@@ -235,6 +248,7 @@ StyledDialogView {
                 navigation.column: 2
 
                 onClicked: {
+                    macroCommandsModel.save()
                     root.hide()
                 }
             }

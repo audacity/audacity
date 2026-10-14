@@ -8,6 +8,36 @@
 using namespace au::macromanager;
 using namespace muse;
 
+namespace {
+const std::vector<std::string> EXCLUDED_PATH_PREFIXES {
+    "effects/open/",
+    "effects/configure/",
+    "effects/presets/",
+    "effects/plugin-manager",
+    "effects/repeat-last-effect",
+    "effects/toggle-vendor-ui",
+    "cloud/",
+    "dock/",
+    "diagnostics/",
+    "navigation/",
+    "track-navigation/",
+    "testflow/",
+    "update/",
+};
+
+bool isMacroEligible(const rcommand::CommandInfo& info)
+{
+    if (!info.availabilities.testFlag(rcommand::Availability::API)) {
+        return false;
+    }
+
+    const std::string& path = info.command.path();
+    return std::ranges::none_of(EXCLUDED_PATH_PREFIXES, [&path](const std::string& prefix) {
+        return path.starts_with(prefix);
+    });
+}
+}
+
 AvailableCommandsModel::AvailableCommandsModel(QObject* parent)
     : QAbstractListModel(parent)
 {
@@ -89,6 +119,10 @@ void AvailableCommandsModel::reload()
 
     m_allItems.clear();
     for (const rcommand::CommandInfo& info : commandsRegister()->commandInfoList()) {
+        if (!isMacroEligible(info)) {
+            continue;
+        }
+
         m_allItems.append({ QString::fromStdString(info.command.toString()), info.title.qTranslatedWithoutMnemonic() });
     }
 

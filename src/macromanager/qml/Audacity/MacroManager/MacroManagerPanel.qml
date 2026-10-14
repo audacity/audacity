@@ -105,6 +105,10 @@ Rectangle {
                     macroManagerModel.run(index)
                 }
 
+                onRunOnFilesRequested: {
+                    macroManagerModel.runOnFiles(index)
+                }
+
                 onEditRequested: {
                     macroManagerModel.edit(index)
                 }
