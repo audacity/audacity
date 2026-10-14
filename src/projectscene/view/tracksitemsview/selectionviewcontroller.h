@@ -113,6 +113,7 @@ private:
     trackedit::TrackIdList trackIdList() const;
     std::optional<double> tracksBottomY(const IProjectViewStatePtr& vs) const;
     bool isBelowAllTracks(const IProjectViewStatePtr& vs, double y) const;
+    void focusPressedTracks(const trackedit::TrackIdList& tracks);
     trackedit::TrackIdList tracksCoveredBySelection(const IProjectViewStatePtr& vs, double y) const;
 
     bool doOnPositionChanged(double time, double y);
@@ -130,6 +131,8 @@ private:
 
     bool m_selectionStarted = false;
     bool m_selectionThresholdCrossed = false;
+    //! Track selection toggled by a Ctrl press, applied on release unless the press became a marquee
+    std::optional<trackedit::TrackIdList> m_ctrlClickTracks;
     bool m_selectionActive = false;
     bool m_selectionEditInProgress = false;
     bool m_verticalSelectionEditInProgress = false;
