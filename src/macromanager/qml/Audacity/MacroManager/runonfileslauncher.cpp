@@ -5,7 +5,7 @@
 
 #include <algorithm>
 
-#include "global/translation.h"
+#include "framework/global/translation.h"
 
 using namespace au::macromanager;
 using namespace muse;

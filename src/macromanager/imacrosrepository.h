@@ -6,11 +6,11 @@
 #include <optional>
 #include <string>
 
-#include "modularity/imoduleinterface.h"
-#include "async/notification.h"
-#include "io/path.h"
-#include "types/ret.h"
-#include "types/retval.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/io/path.h"
+#include "framework/global/types/ret.h"
+#include "framework/global/types/retval.h"
 
 #include "macromanagertypes.h"
 

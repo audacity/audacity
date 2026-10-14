@@ -5,13 +5,12 @@
 
 #include <algorithm>
 
-#include "global/configreader.h"
-#include "io/path.h"
-#include "serialization/json.h"
+#include "framework/global/configreader.h"
+#include "framework/global/io/path.h"
+#include "framework/global/serialization/json.h"
+#include "framework/global/log.h"
 
 #include "macroserialization.h"
-
-#include "log.h"
 
 using namespace au::macromanager;
 using namespace muse;
