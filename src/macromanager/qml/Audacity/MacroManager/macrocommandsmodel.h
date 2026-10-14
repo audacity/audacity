@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <functional>
+
 #include <QAbstractListModel>
 #include <QtQml/qqmlregistration.h>
 
@@ -66,13 +68,17 @@ private:
         HasParamsRole
     };
 
+    using OnParams = std::function<void (const muse::rcommand::Params&)>;
+
     bool isRowValid(int row) const;
     QString titleOf(const muse::rcommand::Command& command) const;
     bool hasParams(const muse::rcommand::Command& command) const;
     void notifyStepsChanged(int fromRow, int toRow);
+    void insertStep(int row, const MacroStep& step);
     void setStepParams(int row, const muse::rcommand::Params& params);
-    void configureEffectParams(int row);
-    void editSchemaParams(int row);
+    void requestParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
+    void requestEffectParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
+    void requestSchemaParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
 
     Macro m_macro;
     RunOnFilesLauncher m_runOnFilesLauncher;
