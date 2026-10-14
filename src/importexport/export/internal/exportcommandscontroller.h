@@ -33,7 +33,7 @@ public:
     void init();
 
 private:
-    muse::Ret exportToMacroOutput(const std::string& extension);
+    muse::Ret exportToMacroOutput(const std::string& extension, const muse::rcommand::Params& params);
 
     std::optional<std::string> formatForExtension(const std::string& extension) const;
     std::string outputBaseName() const;

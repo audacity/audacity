@@ -9,7 +9,10 @@ target_sources(macromanager PRIVATE
     macromanagermodule.h
     macromanagertypes.h
     imacrosrepository.h
+    imacrorunner.h
 
+    internal/macrorunner.cpp
+    internal/macrorunner.h
     internal/macroserialization.cpp
     internal/macroserialization.h
     internal/macrosrepository.cpp
