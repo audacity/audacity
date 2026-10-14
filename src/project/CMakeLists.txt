@@ -51,6 +51,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/projecterrors.h
     ${CMAKE_CURRENT_LIST_DIR}/projecterrors.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/projectcommands.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudacityproject.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectcreator.h
@@ -75,6 +76,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectcommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectcommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectcommandsstate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.h

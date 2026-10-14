@@ -25,10 +25,14 @@
 
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
 #include "internal/projectconfiguration.h"
 #include "internal/projectcreator.h"
 #include "internal/projectuiactions.h"
+#include "internal/projectcommandsregister.h"
+#include "internal/projectcommandsstate.h"
 #include "internal/thumbnailcreator.h"
 #include "internal/projectautosaver.h"
 #include "internal/projectprovider.h"
@@ -94,6 +98,11 @@ void ProjectModule::resolveImports()
         ir->registerQmlUri(muse::Uri("audacity://project/savetocloud"), "Audacity/Project/SaveToCloudDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://project/cloudprojectsyncing"), "Audacity/Project/CloudProjectSyncDialog.qml");
     }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<ProjectCommandsRegister>());
+    }
 }
 
 void ProjectModule::registerResources()
@@ -148,6 +157,14 @@ void ProjectContext::registerExports()
     ioc()->registerExport<IOpenSaveProjectScenario>(mname, new OpenSaveProjectScenario(iocContext()));
     ioc()->registerExport<IThumbnailCreator>(mname, m_thumbnailCreator);
     ioc()->registerExport<IMetadata>(mname, m_tagsAccessor);
+}
+
+void ProjectContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<ProjectCommandsState>(iocContext()));
+    }
 }
 
 void ProjectContext::onInit(const muse::IApplication::RunMode&)

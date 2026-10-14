@@ -9,6 +9,8 @@
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/actions/actiontypes.h"
+#include "framework/rcommand/commandable.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/global/async/channel.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/interactive/iplatforminteractive.h"
@@ -33,8 +35,8 @@
 #include "multiwindows/imultiwindowsprovider.h"
 
 namespace au::project {
-class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Contextable
+class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::rcommand::Commandable,
+    public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<IProjectConfiguration> configuration;
@@ -48,6 +50,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
@@ -83,13 +86,15 @@ public:
 private:
     project::IAudacityProjectPtr currentProject() const;
 
-    void newProject();
-    void open(const muse::actions::ActionData& args);
-    void openCloudProject(const muse::actions::ActionData& args);
-    void importFiles(const muse::actions::ActionData& args);
+    muse::Ret newProject();
+    muse::Ret open(const muse::rcommand::Params& params);
+    muse::Ret openCloudProject(const muse::rcommand::Params& params);
+    muse::Ret openCloudProject(const QString& cloudProjectId, const QString& snapshotId);
+    muse::Ret importFiles(const muse::rcommand::Params& params);
 
-    void importStartupMedia(const muse::actions::ActionData& args);
+    muse::Ret importStartupMedia(const muse::rcommand::Params& params);
     muse::Ret processMediaFiles(const muse::io::paths_t& paths);
+    muse::Ret closeProject();
 
     muse::Ret openProject(const muse::io::path_t& path,
                           const muse::String& displayNameOverride = muse::String(), const muse::String& projectId = muse::String());
@@ -115,11 +120,11 @@ private:
     bool doSaveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode);
 
     RecentFile makeRecentFile(IAudacityProjectPtr project);
-    void clearRecentProjects();
+    muse::Ret clearRecentProjects();
 
-    void exportAudio();
-    void exportLabels(const muse::actions::ActionData& args);
-    void exportMIDI();
+    muse::Ret exportAudio();
+    muse::Ret exportLabels(const muse::rcommand::Params& params);
+    muse::Ret exportMIDI();
 
     void undo();
     void redo();
@@ -131,18 +136,18 @@ private:
     void handleCloudAudioOpenError(const muse::Ret& error);
     void handleCloudSaveError(const muse::Ret& error);
 
-    void shareAudio();
-    void openCloudAudioFile(const muse::actions::ActionQuery& query);
+    muse::Ret shareAudio();
+    muse::Ret openCloudAudioFile(const muse::rcommand::Params& params);
 
-    void updateCloudAudioPreview(const muse::actions::ActionQuery& query);
+    muse::Ret updateCloudAudioPreview(const muse::rcommand::Params& params);
     void doUpdateCloudAudioPreview(const IAudacityProjectPtr& project, const std::function<void()>& onFinished = nullptr);
     void downloadCloudProject(const std::string& projectId, const muse::io::path_t& localPath,
                               std::function<void(IAudacityProjectPtr)> onSuccess);
     bool dispatchAudioPreviewToWindowWithProject(const muse::io::path_t& projectPath, const std::string& projectId);
 
-    void openCustomFFmpegOptions();
-    void openMetadataDialog();
-    void openCustomMapping();
+    muse::Ret openCustomFFmpegOptions();
+    muse::Ret openMetadataDialog();
+    muse::Ret openCustomMapping();
 
     muse::Ret ensureAuthorization();
 
