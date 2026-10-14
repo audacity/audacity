@@ -51,6 +51,10 @@ StyledDialogView {
 
     MacroCommandsModel {
         id: macroCommandsModel
+
+        onMacroDeleted: {
+            root.hide()
+        }
     }
 
     Component.onCompleted: {
@@ -137,21 +141,30 @@ StyledDialogView {
 
                     spacing: 0
 
-                    Rectangle {
+                    MacroTitleBar {
                         Layout.fillWidth: true
                         Layout.preferredHeight: prv.rowHeight
 
-                        color: ui.theme.backgroundPrimaryColor
+                        title: macroCommandsModel.name
+                        isBuiltin: macroCommandsModel.isBuiltin
 
-                        StyledTextLabel {
-                            anchors.fill: parent
-                            anchors.leftMargin: prv.sideMargin
-                            anchors.rightMargin: prv.sideMargin
+                        navigationPanel: commandsTable.navigationPanel
+                        navigationOrderStart: 0
 
-                            text: root.macroName
-                            font: ui.theme.bodyBoldFont
-                            horizontalAlignment: Qt.AlignLeft
-                            elide: Text.ElideRight
+                        onRenameRequested: {
+                            macroCommandsModel.rename()
+                        }
+
+                        onExportRequested: {
+                            macroCommandsModel.exportMacro()
+                        }
+
+                        onRemoveAllStepsRequested: {
+                            macroCommandsModel.removeAllSteps()
+                        }
+
+                        onDeleteRequested: {
+                            macroCommandsModel.deleteMacro()
                         }
                     }
 
