@@ -102,14 +102,14 @@ void MacroCommandsModel::insert(int row, const QString& code)
         return;
     }
 
-    row = std::clamp(row, 0, rowCount());
+    if (!hasParams(command)) {
+        insertStep(row, MacroStep { command, {} });
+        return;
+    }
 
-    beginInsertRows(QModelIndex(), row, row);
-    m_macro.steps.insert(m_macro.steps.begin() + row, MacroStep { command, {} });
-    endInsertRows();
-
-    notifyStepsChanged(row + 1, rowCount() - 1);
-    emit isEmptyChanged();
+    requestParams(command, {}, [this, row, command](const Params& params) {
+        insertStep(row, MacroStep { command, params });
+    });
 }
 
 void MacroCommandsModel::move(int from, int to)
@@ -149,11 +149,10 @@ void MacroCommandsModel::editParams(int row)
         return;
     }
 
-    if (isEffectApplyCommand(m_macro.steps.at(row).command)) {
-        configureEffectParams(row);
-    } else {
-        editSchemaParams(row);
-    }
+    const MacroStep& step = m_macro.steps.at(row);
+    requestParams(step.command, step.params, [this, row](const Params& params) {
+        setStepParams(row, params);
+    });
 }
 
 bool MacroCommandsModel::save()
@@ -204,6 +203,18 @@ void MacroCommandsModel::notifyStepsChanged(int fromRow, int toRow)
     emit dataChanged(index(fromRow), index(toRow), { StepRole });
 }
 
+void MacroCommandsModel::insertStep(int row, const MacroStep& step)
+{
+    row = std::clamp(row, 0, rowCount());
+
+    beginInsertRows(QModelIndex(), row, row);
+    m_macro.steps.insert(m_macro.steps.begin() + row, step);
+    endInsertRows();
+
+    notifyStepsChanged(row + 1, rowCount() - 1);
+    emit isEmptyChanged();
+}
+
 void MacroCommandsModel::setStepParams(int row, const Params& params)
 {
     if (!isRowValid(row)) {
@@ -213,27 +224,32 @@ void MacroCommandsModel::setStepParams(int row, const Params& params)
     m_macro.steps[row].params = params;
 }
 
-void MacroCommandsModel::configureEffectParams(int row)
+void MacroCommandsModel::requestParams(const Command& command, const Params& current, const OnParams& onParams)
 {
-    const MacroStep& step = m_macro.steps.at(row);
+    if (isEffectApplyCommand(command)) {
+        requestEffectParams(command, current, onParams);
+    } else {
+        requestSchemaParams(command, current, onParams);
+    }
+}
 
-    commandDispatcher()->dispatch(effectConfigureCommand(step.command), step.params)
-    .onResolve(this, [this, row](const Response& response) {
+void MacroCommandsModel::requestEffectParams(const Command& command, const Params& current, const OnParams& onParams)
+{
+    commandDispatcher()->dispatch(effectConfigureCommand(command), current)
+    .onResolve(this, [onParams](const Response& response) {
         if (!response.ret) {
             return;
         }
 
-        setStepParams(row, response.val<Params>());
+        onParams(response.val<Params>());
     });
 }
 
-void MacroCommandsModel::editSchemaParams(int row)
+void MacroCommandsModel::requestSchemaParams(const Command& command, const Params& current, const OnParams& onParams)
 {
-    const MacroStep& step = m_macro.steps.at(row);
-
     UriQuery uri(COMMAND_PARAMS_URI);
-    uri.addParam("command", Val(step.command.toString()));
-    uri.addParam("params", Val(ValMap(step.params)));
+    uri.addParam("command", Val(command.toString()));
+    uri.addParam("params", Val(ValMap(current)));
 
     const RetVal<Val> result = interactive()->openSync(uri);
     if (!result.ret) {
@@ -245,5 +261,5 @@ void MacroCommandsModel::editSchemaParams(int row)
         params[key] = val;
     }
 
-    setStepParams(row, params);
+    onParams(params);
 }
