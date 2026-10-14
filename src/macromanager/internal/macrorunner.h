@@ -10,6 +10,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommanddispatcher.h"
+#include "framework/toast/itoastservice.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditclipboard.h"
@@ -19,6 +20,8 @@
 namespace au::macromanager {
 class MacroRunner : public IMacroRunner, public muse::Contextable, public muse::async::Asyncable
 {
+    muse::GlobalInject<muse::toast::IToastService> toastService;
+
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
@@ -53,6 +56,7 @@ private:
     void sendFileProgress(size_t completedOperations);
     size_t totalOperations() const;
     void undoToStartState();
+    void showCompleted();
     void showError(const muse::Ret& ret);
 
     Macro m_macro;
