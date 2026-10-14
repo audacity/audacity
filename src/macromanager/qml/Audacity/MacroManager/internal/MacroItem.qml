@@ -18,6 +18,7 @@ Rectangle {
     property int navigationRow: 0
 
     signal runRequested
+    signal runOnFilesRequested
     signal editRequested
     signal renameRequested
     signal deleteRequested
@@ -57,8 +58,7 @@ Rectangle {
             },
             {
                 id: "run-on-files",
-                title: qsTrc("macromanager", "Run on files…"),
-                enabled: false
+                title: qsTrc("macromanager", "Run on files…")
             },
             {
                 id: "export",
@@ -79,6 +79,9 @@ Rectangle {
                 break
             case "rename":
                 root.renameRequested()
+                break
+            case "run-on-files":
+                root.runOnFilesRequested()
                 break
             case "delete":
                 root.deleteRequested()

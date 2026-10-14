@@ -12,6 +12,10 @@ qt_add_qml_module(macromanager_qml
         macrocommandsmodel.h
         macromanagermodel.cpp
         macromanagermodel.h
+        runonfileslauncher.cpp
+        runonfileslauncher.h
+        runonfilesmodel.cpp
+        runonfilesmodel.h
     QML_FILES
         MacroManagerPanel.qml
         MacroManagerTitleBar.qml
@@ -19,6 +23,7 @@ qt_add_qml_module(macromanager_qml
         DeleteMacroDialog.qml
         EditMacroDialog.qml
         CommandParamsDialog.qml
+        RunOnFilesDialog.qml
         internal/MacroManagerHeader.qml
         internal/MacroItem.qml
         internal/CommandsSearchBar.qml

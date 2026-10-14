@@ -15,6 +15,7 @@ Rectangle {
     required property int step
     required property string code
     required property string title
+    required property bool hasParams
 
     property int sideMargin: 0
     property int handleWidth: 0
@@ -177,6 +178,7 @@ Rectangle {
 
                 icon: IconCode.EDIT
                 transparent: true
+                enabled: root.hasParams
 
                 navigation.panel: root.navigationPanel
                 navigation.row: root.navigationRow
