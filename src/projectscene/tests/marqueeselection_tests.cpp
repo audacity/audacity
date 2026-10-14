@@ -379,6 +379,45 @@ TEST_F(MarqueeSelectionTests, FinishingAMarqueeDuringASelectionGestureLeavesTheG
     EXPECT_FALSE(m_controller->marqueeActive());
 }
 
+TEST_F(MarqueeSelectionTests, CtrlPressThatBecomesAMarqueeNeverTogglesTheClickedTrack)
+{
+    //! [GIVEN] Track 2 is selected and the Ctrl+press lands on track 1
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(trackedit::TrackIdList { 2 }));
+    ON_CALL(*m_viewState, tracksInRange(10.0, 10.0))
+    .WillByDefault(Return(trackedit::TrackIdList { 1 }));
+
+    //! [EXPECT] Neither the track toggle nor provisional time bounds are published; the marquee selects instead
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(_, _)).Times(0);
+    EXPECT_CALL(*m_selectionController, setSelectedItems(m_touched, true)).Times(1);
+
+    //! [WHEN] The Ctrl+press is dragged into a marquee and released
+    dragBoxOverItems();
+    m_controller->onReleased(20.0, 40.0);
+}
+
+TEST_F(MarqueeSelectionTests, CtrlClickWithoutADragTogglesTheClickedTrackOnRelease)
+{
+    //! [GIVEN] Track 2 is selected and the Ctrl+press lands on track 1
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(trackedit::TrackIdList { 2 }));
+    ON_CALL(*m_viewState, tracksInRange(10.0, 10.0))
+    .WillByDefault(Return(trackedit::TrackIdList { 1 }));
+
+    //! [EXPECT] The press itself selects nothing
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(_, _)).Times(0);
+    m_controller->onPressed(1.0, 10.0);
+    ::testing::Mock::VerifyAndClearExpectations(m_selectionController.get());
+
+    //! [EXPECT] The release adds track 1 to the selected tracks
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(trackedit::TrackIdList { 2, 1 }, true)).Times(1);
+
+    //! [WHEN] The button is released without a drag
+    m_controller->onReleased(1.0, 10.0);
+}
+
 TEST_F(MarqueeSelectionTests, AnEmptyBoxLeavesFocusAndAnchorAlone)
 {
     //! [GIVEN] A marquee over track area without items

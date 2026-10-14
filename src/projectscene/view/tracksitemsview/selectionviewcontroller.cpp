@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <utility>
 
 #include "selectionviewcontroller.h"
 
@@ -74,6 +75,7 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     resetMarquee();
+    m_ctrlClickTracks.reset();
     if (modifiers.testFlag(Qt::ControlModifier)) {
         armMarquee(time, y);
     }
@@ -95,9 +97,8 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
     emit selectionInProgressChanged();
     resetDataSelection();
 
-    TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
-        tracks = selectionController()->selectedTracks();
+        TrackIdList tracks = selectionController()->selectedTracks();
         TrackIdList newTracks = vs->tracksInRange(y, y);
         if (!newTracks.empty()) {
             const TrackId clickedTrack = newTracks.at(0);
@@ -108,18 +109,17 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
                 tracks.erase(it);
             }
         }
+
+        //! NOTE A Ctrl press may turn into a marquee, so the track toggle and the time selection
+        //! are only applied on release, once it is known that no marquee was drawn
+        m_ctrlClickTracks = tracks;
     } else {
-        tracks = m_selectionThresholdCrossed ? tracksCoveredBySelection(vs, y) : vs->tracksInRange(m_startY, y);
+        const TrackIdList tracks = m_selectionThresholdCrossed ? tracksCoveredBySelection(vs, y) : vs->tracksInRange(m_startY, y);
+        focusPressedTracks(tracks);
+        selectionController()->setSelectedTracks(tracks, true);
     }
 
-    if (!tracks.empty()) {
-        trackNavigationController()->setFocus(TrackFocus::track(tracks.at(0)), false /*highlight*/);
-    } else {
-        trackNavigationController()->setFocus(TrackFocus::track(trackNavigationController()->focusedTrack()));
-    }
-    selectionController()->setSelectedTracks(tracks, true);
-
-    if (modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier)) {
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
         double time1 = m_selectionStartTime;
         double time2 = time;
         if (time1 > time2) {
@@ -238,9 +238,8 @@ void SelectionViewController::onReleased(double time, double y)
         return;
     }
 
-    Qt::KeyboardModifiers modifiers = keyboardModifiers();
-
     m_selectionStarted = false;
+    const std::optional<TrackIdList> ctrlClickTracks = std::exchange(m_ctrlClickTracks, std::nullopt);
 
     time = std::max(time, 0.0);
     m_autoScrollLastX = m_context->timeToPosition(time);
@@ -263,8 +262,9 @@ void SelectionViewController::onReleased(double time, double y)
     }
 
     TrackIdList tracks;
-    if (modifiers.testFlag(Qt::ControlModifier)) {
-        tracks = selectionController()->selectedTracks();
+    if (ctrlClickTracks.has_value()) {
+        tracks = *ctrlClickTracks;
+        focusPressedTracks(tracks);
     } else if (m_selectionThresholdCrossed) {
         tracks = tracksCoveredBySelection(vs, y);
     } else {
@@ -386,6 +386,7 @@ void SelectionViewController::cancelSelectionGesture()
     }
 
     resetMarquee();
+    m_ctrlClickTracks.reset();
     m_context->stopAutoScroll();
     disconnect(m_autoScrollConnection);
 
@@ -595,6 +596,15 @@ std::optional<double> SelectionViewController::tracksBottomY(const IProjectViewS
 
     const TrackId lastTrack = tracks.back();
     return vs->trackVerticalPosition(lastTrack) + vs->trackHeight(lastTrack).val;
+}
+
+void SelectionViewController::focusPressedTracks(const TrackIdList& tracks)
+{
+    if (!tracks.empty()) {
+        trackNavigationController()->setFocus(TrackFocus::track(tracks.at(0)), false /*highlight*/);
+    } else {
+        trackNavigationController()->setFocus(TrackFocus::track(trackNavigationController()->focusedTrack()));
+    }
 }
 
 bool SelectionViewController::isBelowAllTracks(const IProjectViewStatePtr& vs, double y) const
