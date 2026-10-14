@@ -76,7 +76,7 @@ public:
     Q_INVOKABLE void cancelSelectionGesture();
     Q_INVOKABLE void cancelMarquee();
     Q_INVOKABLE void selectTrackAudioData(double y);
-    Q_INVOKABLE void selectItemData(const TrackItemKey& key);
+    Q_INVOKABLE bool selectItemData(const TrackItemKey& key, double y);
 
     Q_INVOKABLE void resetSelectedItems();
     Q_INVOKABLE void resetSelectedClips();
