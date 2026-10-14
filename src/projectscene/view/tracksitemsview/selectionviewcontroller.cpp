@@ -505,27 +505,36 @@ void SelectionViewController::selectTrackAudioData(double y)
         return;
     }
 
-    const std::vector<TrackId> tracks = vs->tracksInRange(m_startY, y);
-    if (tracks.empty()) {
+    const TrackId track = vs->trackAtPosition(y);
+    if (track == trackedit::INVALID_TRACK) {
         return;
     }
 
     cancelSelectionGesture();
 
-    selectionController()->setSelectedTrackAudioData(tracks.at(0));
+    selectionController()->setSelectedTrackAudioData(track);
 }
 
-void SelectionViewController::selectItemData(const TrackItemKey& key)
+bool SelectionViewController::selectItemData(const TrackItemKey& key, double y)
 {
     if (!isProjectOpened()) {
-        return;
+        return false;
+    }
+
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return false;
+    }
+
+    if (!key.isValid() || key.key.trackId != vs->trackAtPosition(y)) {
+        return false;
     }
 
     auto prj = globalContext()->currentTrackeditProject();
     auto track = prj->track(key.key.trackId);
     if (!track.has_value()) {
         LOGW() << "Track not found: " << key.key.trackId;
-        return;
+        return false;
     }
 
     cancelSelectionGesture();
@@ -535,6 +544,8 @@ void SelectionViewController::selectItemData(const TrackItemKey& key)
     } else {
         selectionController()->setSelectedClips(trackedit::ClipKeyList({ key.key }));
     }
+
+    return true;
 }
 
 void SelectionViewController::resetSelectedItems()

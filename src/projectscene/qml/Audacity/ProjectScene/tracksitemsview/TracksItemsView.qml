@@ -682,8 +682,8 @@ Rectangle {
 
                 marqueeReleased = false
 
-                if (!itemWasMoved) {
-                    tracksItemsView.itemReleaseRequested(hoveredItemKey)
+                if (!itemWasMoved && lastItemClickKey) {
+                    tracksItemsView.itemReleaseRequested(lastItemClickKey)
                 }
 
                 if (itemsMoveController.active) {
@@ -745,8 +745,7 @@ Rectangle {
                     return
                 }
 
-                if (root.itemHovered) {
-                    selectionViewController.selectItemData(root.hoveredItemKey)
+                if (root.itemHovered && root.hoveredItemKey && selectionViewController.selectItemData(root.hoveredItemKey, e.y)) {
                     playCursorController.seekToTimeKeepingView(timeline.context.selectedItemStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 } else {
