@@ -6,11 +6,33 @@
 #include <QAbstractListModel>
 #include <QtQml/qqmlregistration.h>
 
+#include "modularity/ioc.h"
+#include "async/asyncable.h"
+#include "interactive/iinteractive.h"
+#include "rcommand/icommanddispatcher.h"
+#include "rcommand/icommandsregister.h"
+
+#include "macromanager/imacrorunner.h"
+#include "macromanager/imacrosrepository.h"
+#include "macromanager/macromanagertypes.h"
+
+#include "runonfileslauncher.h"
+
 namespace au::macromanager {
-class MacroCommandsModel : public QAbstractListModel
+class MacroCommandsModel : public QAbstractListModel, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     QML_ELEMENT;
+
+    Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged FINAL)
+    Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged FINAL)
+
+    muse::GlobalInject<IMacrosRepository> repository;
+    muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
+
+    muse::ContextInject<IMacroRunner> runner = { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher = { this };
+    muse::ContextInject<muse::IInteractive> interactive = { this };
 
 public:
     explicit MacroCommandsModel(QObject* parent = nullptr);
@@ -19,26 +41,40 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void add(const QString& code, const QString& title);
-    Q_INVOKABLE void insert(int row, const QString& code, const QString& title);
+    bool isEmpty() const;
+    bool isRunning() const;
+
+    Q_INVOKABLE void load(const QString& macroName);
+    Q_INVOKABLE void add(const QString& code);
+    Q_INVOKABLE void insert(int row, const QString& code);
     Q_INVOKABLE void move(int from, int to);
     Q_INVOKABLE void remove(int row);
+    Q_INVOKABLE void editParams(int row);
+    Q_INVOKABLE bool save();
+    Q_INVOKABLE void run();
+    Q_INVOKABLE void runOnFiles();
+
+signals:
+    void isEmptyChanged();
+    void isRunningChanged();
 
 private:
     enum Roles {
         StepRole = Qt::UserRole + 1,
         CodeRole,
-        TitleRole
-    };
-
-    struct Item {
-        QString code;
-        QString title;
+        TitleRole,
+        HasParamsRole
     };
 
     bool isRowValid(int row) const;
+    QString titleOf(const muse::rcommand::Command& command) const;
+    bool hasParams(const muse::rcommand::Command& command) const;
     void notifyStepsChanged(int fromRow, int toRow);
+    void setStepParams(int row, const muse::rcommand::Params& params);
+    void configureEffectParams(int row);
+    void editSchemaParams(int row);
 
-    QList<Item> m_items;
+    Macro m_macro;
+    RunOnFilesLauncher m_runOnFilesLauncher;
 };
 }
