@@ -26,7 +26,7 @@ using namespace ::testing;
 
 namespace au::projectscene {
 //! The timeline context is left at its default zoom, so one second is one pixel.
-//! Two 50px high tracks sit at the top of the view: track 1 spans 0..50px, track 2 spans 50..100px.
+//! Two tracks sit at the top of the view and end at 100px: track 1 spans 0..50px, track 2 spans 50..100px.
 class SelectionBelowTracksTests : public ::testing::Test
 {
 protected:
@@ -60,16 +60,10 @@ protected:
         ON_CALL(*m_application, keyboardModifiers())
         .WillByDefault(Return(Qt::NoModifier));
 
-        muse::ValCh<int> trackHeight;
-        trackHeight.val = 50;
         ON_CALL(*m_trackeditProject, trackIdList())
         .WillByDefault(Return(trackedit::TrackIdList { 1, 2 }));
-        ON_CALL(*m_viewState, trackVerticalPosition(trackedit::TrackId(1)))
-        .WillByDefault(Return(0));
-        ON_CALL(*m_viewState, trackVerticalPosition(trackedit::TrackId(2)))
-        .WillByDefault(Return(50));
-        ON_CALL(*m_viewState, trackHeight(_))
-        .WillByDefault(Return(trackHeight));
+        ON_CALL(*m_viewState, isBelowAllTracks(_))
+        .WillByDefault([](double y) { return y >= 100.0; });
 
         //! Any track selection and focus change is allowed unless a test expects a specific one
         EXPECT_CALL(*m_selectionController, setSelectedTracks(_, _)).Times(AnyNumber());

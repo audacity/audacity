@@ -27,6 +27,7 @@ public:
     virtual void setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio) = 0;
     virtual trackedit::TrackId trackAtPosition(double y) const = 0;
     virtual trackedit::TrackIdList tracksInRange(double y1, double y2) const = 0;
+    virtual bool isBelowAllTracks(double y) const = 0;
 
     virtual bool isSnapEnabled() const = 0;
     virtual void setIsSnapEnabled(bool enabled) = 0;

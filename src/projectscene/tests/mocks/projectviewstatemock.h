@@ -22,6 +22,7 @@ public:
     MOCK_METHOD(void, setChannelHeightRatio, (const trackedit::TrackId&, double), (override));
     MOCK_METHOD(trackedit::TrackId, trackAtPosition, (double), (const, override));
     MOCK_METHOD(trackedit::TrackIdList, tracksInRange, (double, double), (const, override));
+    MOCK_METHOD(bool, isBelowAllTracks, (double), (const, override));
 
     MOCK_METHOD(bool, isSnapEnabled, (), (const, override));
     MOCK_METHOD(void, setIsSnapEnabled, (bool), (override));
