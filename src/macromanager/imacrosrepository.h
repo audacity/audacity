@@ -8,7 +8,9 @@
 
 #include "modularity/imoduleinterface.h"
 #include "async/notification.h"
+#include "io/path.h"
 #include "types/ret.h"
+#include "types/retval.h"
 
 #include "macromanagertypes.h"
 
@@ -26,6 +28,9 @@ public:
     virtual muse::Ret save(const Macro& macro) = 0;
     virtual muse::Ret remove(const std::string& name) = 0;
     virtual muse::Ret rename(const std::string& oldName, const std::string& newName) = 0;
+
+    virtual muse::RetVal<Macro> readMacroFile(const muse::io::path_t& path) const = 0;
+    virtual muse::Ret writeMacroFile(const Macro& macro, const muse::io::path_t& path) const = 0;
 
     virtual muse::async::Notification macrosChanged() const = 0;
 };

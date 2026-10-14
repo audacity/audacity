@@ -3,6 +3,7 @@
 */
 #include "macromanagermodel.h"
 
+#include "io/path.h"
 #include "translation.h"
 
 using namespace au::macromanager;
@@ -12,6 +13,12 @@ namespace {
 const Uri MACRO_NAME_URI("audacity://macromanager/macroname");
 const Uri DELETE_MACRO_URI("audacity://macromanager/deletemacro");
 const Uri EDIT_MACRO_URI("audacity://macromanager/editmacro");
+const std::string MACRO_FILE_SUFFIX(".json");
+
+std::vector<std::string> macroFileFilter()
+{
+    return { trc("macromanager", "Macro files") + " (*" + MACRO_FILE_SUFFIX + ")" };
+}
 }
 
 MacroManagerModel::MacroManagerModel(QObject* parent)
@@ -144,9 +151,96 @@ void MacroManagerModel::runOnFiles(int row)
     m_runOnFilesLauncher.launch(m_macros.at(row));
 }
 
+void MacroManagerModel::importMacro()
+{
+    const io::path_t path = interactive()->selectOpeningFileSync(trc("macromanager", "Import macro"),
+                                                                 globalConfiguration()->userDataPath(), macroFileFilter());
+    if (path.empty()) {
+        return;
+    }
+
+    const RetVal<Macro> macro = repository()->readMacroFile(path);
+    if (!macro.ret) {
+        interactive()->error(trc("macromanager", "The macro could not be imported"), macro.ret.text());
+        return;
+    }
+
+    if (!confirmUnknownCommands(unknownCommands(macro.val))) {
+        return;
+    }
+
+    if (repository()->macro(macro.val.name) && !confirmReplace(macro.val.name)) {
+        return;
+    }
+
+    repository()->save(macro.val);
+}
+
+void MacroManagerModel::exportMacro(int row)
+{
+    if (!isRowValid(row)) {
+        return;
+    }
+
+    const Macro& macro = m_macros.at(row);
+
+    const io::path_t defaultPath = globalConfiguration()->userDataPath() + "/" + io::escapeFileName(macro.name) + MACRO_FILE_SUFFIX;
+    const io::path_t path = interactive()->selectSavingFileSync(trc("macromanager", "Export macro"), defaultPath, macroFileFilter());
+    if (path.empty()) {
+        return;
+    }
+
+    const Ret ret = repository()->writeMacroFile(macro, path);
+    if (!ret) {
+        interactive()->error(trc("macromanager", "The macro could not be exported"), ret.text());
+    }
+}
+
 bool MacroManagerModel::isRowValid(int row) const
 {
     return row >= 0 && row < rowCount();
+}
+
+std::vector<std::string> MacroManagerModel::unknownCommands(const Macro& macro) const
+{
+    std::vector<std::string> unknown;
+    for (const MacroStep& step : macro.steps) {
+        if (!commandsRegister()->commandInfo(step.command).isValid()) {
+            unknown.push_back(step.command.toString());
+        }
+    }
+
+    return unknown;
+}
+
+bool MacroManagerModel::confirmUnknownCommands(const std::vector<std::string>& commands) const
+{
+    if (commands.empty()) {
+        return true;
+    }
+
+    std::string list;
+    for (const std::string& command : commands) {
+        list += "\n" + command;
+    }
+
+    const IInteractive::Result result = interactive()->warningSync(
+        trc("macromanager", "Some commands of this macro are not available"),
+        trc("macromanager", "The macro can be imported, but it will fail at these steps:") + list,
+        { IInteractive::Button::Cancel, IInteractive::Button::Continue }, IInteractive::Button::Continue);
+
+    return result.standardButton() == IInteractive::Button::Continue;
+}
+
+bool MacroManagerModel::confirmReplace(const std::string& name) const
+{
+    const IInteractive::Result result = interactive()->questionSync(
+        trc("macromanager", "Replace macro?"),
+        qtrc("macromanager", "A macro named \"%1\" already exists. Do you want to replace it?").arg(QString::fromStdString(
+                                                                                                        name)).toStdString(),
+        { IInteractive::Button::No, IInteractive::Button::Yes }, IInteractive::Button::Yes);
+
+    return result.standardButton() == IInteractive::Button::Yes;
 }
 
 void MacroManagerModel::reload()
