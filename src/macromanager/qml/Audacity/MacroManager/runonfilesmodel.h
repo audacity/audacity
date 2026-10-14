@@ -7,9 +7,9 @@
 #include <QVariantList>
 #include <QtQml/qqmlregistration.h>
 
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
 
+#include "framework/global/modularity/ioc.h"
 #include "macromanager/imacrorunner.h"
 
 namespace au::macromanager {

@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "serialization/json.h"
-#include "types/retval.h"
+#include "framework/global/serialization/json.h"
+#include "framework/global/types/retval.h"
 
 #include "macromanager/macromanagertypes.h"
 

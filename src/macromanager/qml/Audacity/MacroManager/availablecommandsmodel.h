@@ -7,7 +7,8 @@
 #include <QtQml/qqmlregistration.h>
 
 #include "framework/global/async/asyncable.h"
-#include "modularity/ioc.h"
+
+#include "framework/global/modularity/ioc.h"
 #include "framework/rcommand/icommandsregister.h"
 
 namespace au::macromanager {

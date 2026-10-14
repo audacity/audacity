@@ -7,8 +7,8 @@
 #include <QVariantMap>
 #include <QtQml/qqmlregistration.h>
 
-#include "modularity/ioc.h"
-#include "rcommand/icommandsregister.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/rcommand/icommandsregister.h"
 
 namespace au::macromanager {
 class CommandParamsModel : public QAbstractListModel

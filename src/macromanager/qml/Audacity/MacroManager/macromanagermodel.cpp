@@ -3,8 +3,8 @@
 */
 #include "macromanagermodel.h"
 
-#include "io/path.h"
-#include "translation.h"
+#include "framework/global/io/path.h"
+#include "framework/global/translation.h"
 
 using namespace au::macromanager;
 using namespace muse;

@@ -3,10 +3,11 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
-#include "global/iglobalconfiguration.h"
-#include "global/types/config.h"
-#include "io/ifilesystem.h"
+#include "framework/global/types/config.h"
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/iglobalconfiguration.h"
+#include "framework/global/io/ifilesystem.h"
 
 #include "macromanager/imacrosrepository.h"
 

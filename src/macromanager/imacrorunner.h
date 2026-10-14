@@ -3,12 +3,12 @@
 */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
-#include "async/channel.h"
-#include "async/notification.h"
-#include "async/promise.h"
-#include "io/path.h"
-#include "types/ret.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/async/channel.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/async/promise.h"
+#include "framework/global/io/path.h"
+#include "framework/global/types/ret.h"
 
 #include "macromanagertypes.h"
 
