@@ -15,7 +15,7 @@ const Uri EDIT_MACRO_URI("audacity://macromanager/editmacro");
 }
 
 MacroManagerModel::MacroManagerModel(QObject* parent)
-    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this)), m_runOnFilesLauncher(this)
 {
 }
 
@@ -25,23 +25,25 @@ QVariant MacroManagerModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    const Item& item = m_items.at(index.row());
+    const Macro& macro = m_macros.at(index.row());
 
     switch (role) {
-    case TitleRole: return item.title;
+    case TitleRole: return QString::fromStdString(macro.name);
+    case IsBuiltinRole: return macro.builtin;
     default: return QVariant();
     }
 }
 
 int MacroManagerModel::rowCount(const QModelIndex&) const
 {
-    return m_items.size();
+    return static_cast<int>(m_macros.size());
 }
 
 QHash<int, QByteArray> MacroManagerModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles {
-        { TitleRole, "title" }
+        { TitleRole, "title" },
+        { IsBuiltinRole, "isBuiltin" }
     };
 
     return roles;
@@ -49,34 +51,31 @@ QHash<int, QByteArray> MacroManagerModel::roleNames() const
 
 bool MacroManagerModel::isEmpty() const
 {
-    return m_items.isEmpty();
+    return m_macros.empty();
 }
 
 void MacroManagerModel::init()
 {
-    beginResetModel();
-    m_items.clear();
-    endResetModel();
+    reload();
 
-    emit isEmptyChanged();
+    repository()->macrosChanged().onNotify(this, [this]() {
+        reload();
+    });
 }
 
 void MacroManagerModel::newMacro()
 {
-    const std::optional<QString> title = requestMacroName(UriQuery(MACRO_NAME_URI));
-    if (!title) {
+    const std::optional<QString> name = requestMacroName(UriQuery(MACRO_NAME_URI));
+    if (!name) {
         return;
     }
 
-    const int row = m_items.size();
+    const Macro macro { name->toStdString(), {} };
+    if (!repository()->save(macro)) {
+        return;
+    }
 
-    beginInsertRows(QModelIndex(), row, row);
-    m_items.append({ *title });
-    endInsertRows();
-
-    emit isEmptyChanged();
-
-    edit(row);
+    openEditor(macro.name);
 }
 
 void MacroManagerModel::edit(int row)
@@ -85,10 +84,7 @@ void MacroManagerModel::edit(int row)
         return;
     }
 
-    UriQuery uri(EDIT_MACRO_URI);
-    uri.addParam("macroName", Val(m_items.at(row).title));
-
-    interactive()->open(uri);
+    openEditor(m_macros.at(row).name);
 }
 
 void MacroManagerModel::rename(int row)
@@ -97,19 +93,18 @@ void MacroManagerModel::rename(int row)
         return;
     }
 
+    const std::string oldName = m_macros.at(row).name;
+
     UriQuery uri(MACRO_NAME_URI);
     uri.addParam("title", Val(qtrc("macromanager", "Rename macro")));
-    uri.addParam("macroName", Val(m_items.at(row).title));
+    uri.addParam("macroName", Val(oldName));
 
-    const std::optional<QString> title = requestMacroName(uri);
-    if (!title) {
+    const std::optional<QString> newName = requestMacroName(uri);
+    if (!newName) {
         return;
     }
 
-    m_items[row].title = *title;
-
-    const QModelIndex idx = index(row);
-    emit dataChanged(idx, idx, { TitleRole });
+    repository()->rename(oldName, newName->toStdString());
 }
 
 void MacroManagerModel::remove(int row)
@@ -118,19 +113,17 @@ void MacroManagerModel::remove(int row)
         return;
     }
 
+    const std::string name = m_macros.at(row).name;
+
     UriQuery uri(DELETE_MACRO_URI);
-    uri.addParam("macroName", Val(m_items.at(row).title));
+    uri.addParam("macroName", Val(name));
 
     const RetVal<Val> result = interactive()->openSync(uri);
     if (!result.ret) {
         return;
     }
 
-    beginRemoveRows(QModelIndex(), row, row);
-    m_items.removeAt(row);
-    endRemoveRows();
-
-    emit isEmptyChanged();
+    repository()->remove(name);
 }
 
 void MacroManagerModel::run(int row)
@@ -138,11 +131,39 @@ void MacroManagerModel::run(int row)
     if (!isRowValid(row)) {
         return;
     }
+
+    runner()->run(m_macros.at(row));
+}
+
+void MacroManagerModel::runOnFiles(int row)
+{
+    if (!isRowValid(row)) {
+        return;
+    }
+
+    m_runOnFilesLauncher.launch(m_macros.at(row));
 }
 
 bool MacroManagerModel::isRowValid(int row) const
 {
-    return row >= 0 && row < m_items.size();
+    return row >= 0 && row < rowCount();
+}
+
+void MacroManagerModel::reload()
+{
+    beginResetModel();
+    m_macros = repository()->macros();
+    endResetModel();
+
+    emit isEmptyChanged();
+}
+
+void MacroManagerModel::openEditor(const std::string& name)
+{
+    UriQuery uri(EDIT_MACRO_URI);
+    uri.addParam("macroName", Val(name));
+
+    interactive()->open(uri);
 }
 
 std::optional<QString> MacroManagerModel::requestMacroName(const UriQuery& uri) const
