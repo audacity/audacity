@@ -28,6 +28,9 @@ public:
     muse::Ret remove(const std::string& name) override;
     muse::Ret rename(const std::string& oldName, const std::string& newName) override;
 
+    muse::RetVal<Macro> readMacroFile(const muse::io::path_t& path) const override;
+    muse::Ret writeMacroFile(const Macro& macro, const muse::io::path_t& path) const override;
+
     muse::async::Notification macrosChanged() const override;
 
 private:

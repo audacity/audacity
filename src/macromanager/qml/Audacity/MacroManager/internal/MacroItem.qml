@@ -19,6 +19,7 @@ Rectangle {
 
     signal runRequested
     signal runOnFilesRequested
+    signal exportRequested
     signal editRequested
     signal renameRequested
     signal deleteRequested
@@ -62,8 +63,7 @@ Rectangle {
             },
             {
                 id: "export",
-                title: qsTrc("macromanager", "Export"),
-                enabled: false
+                title: qsTrc("macromanager", "Export…")
             },
             {},
             {
@@ -82,6 +82,9 @@ Rectangle {
                 break
             case "run-on-files":
                 root.runOnFilesRequested()
+                break
+            case "export":
+                root.exportRequested()
                 break
             case "delete":
                 root.deleteRequested()
