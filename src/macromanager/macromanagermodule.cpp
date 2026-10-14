@@ -7,10 +7,12 @@
 
 #include "interactive/iinteractiveuriregister.h"
 
+#include "internal/macrorunner.h"
 #include "internal/macrosrepository.h"
 
 using namespace au::macromanager;
 using namespace muse;
+using namespace muse::modularity;
 
 static const std::string mname("macromanager");
 
@@ -44,4 +46,16 @@ void MacroManagerModule::onInit(const IApplication::RunMode& mode)
     }
 
     m_repository->init();
+}
+
+IContextSetup* MacroManagerModule::newContext(const ContextPtr& ctx) const
+{
+    return new MacroManagerContext(ctx);
+}
+
+void MacroManagerContext::registerExports()
+{
+    m_runner = std::make_shared<MacroRunner>(iocContext());
+
+    ioc()->registerExport<IMacroRunner>(mname, m_runner);
 }
