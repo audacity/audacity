@@ -131,7 +131,7 @@ FocusScope {
 
                 function initModel() {
                     var categories = pluginsPage.categories()
-                    var result = [];
+                    var result = []
 
                     //: The title of an option to display the plugins from all categories.
                     result.push({

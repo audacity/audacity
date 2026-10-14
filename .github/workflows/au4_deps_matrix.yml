@@ -67,7 +67,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           setup-python: ${{ matrix.runner != 'windows-11-arm' }}
-          version: '6.10.1'
+          version: '6.11.2'
           host: ${{ matrix.qt_host }}
           target: 'desktop'
           arch: ${{ matrix.qt_arch }}

@@ -412,7 +412,7 @@ Rectangle {
         }
 
         onPositionChanged: function (e) {
-            clipItemMousePositionChanged(e.x, e.y);
+            clipItemMousePositionChanged(e.x, e.y)
 
             // propagate mouse position to the wave view adjusting the y position
             waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
