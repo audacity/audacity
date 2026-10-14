@@ -26,8 +26,8 @@ bool au::trackedit::utils::hasStereoTrack(const au::trackedit::TrackList& tracks
 au::trackedit::TrackIdList au::trackedit::utils::itemTrackIds(const ItemKeys& items)
 {
     TrackIdList result;
-    for (const auto& keys : { items.clips, items.labels }) {
-        for (const TrackItemKey& key : keys) {
+    for (const TrackItemKeyList* keys : { &items.clips, &items.labels }) {
+        for (const TrackItemKey& key : *keys) {
             if (std::find(result.begin(), result.end(), key.trackId) == result.end()) {
                 result.push_back(key.trackId);
             }

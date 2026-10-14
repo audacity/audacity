@@ -199,6 +199,8 @@ bool SelectionViewController::doOnPositionChanged(double time, double y)
     // tracks
     TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
+        //! TODO Ctrl+drag to expand the selection is being replaced by the marquee selection:
+        //! a Ctrl press arms the marquee, so this branch is not reached any more. TBD what to do with it
         tracks = selectionController()->selectedTracks();
     } else {
         tracks = tracksCoveredBySelection(vs, y);
@@ -584,20 +586,27 @@ TrackIdList SelectionViewController::trackIdList() const
     return prj ? prj->trackIdList() : TrackIdList();
 }
 
-bool SelectionViewController::isBelowAllTracks(const IProjectViewStatePtr& vs, double y) const
+std::optional<double> SelectionViewController::tracksBottomY(const IProjectViewStatePtr& vs) const
 {
     const TrackIdList tracks = trackIdList();
     if (tracks.empty()) {
-        return false;
+        return std::nullopt;
     }
 
     const TrackId lastTrack = tracks.back();
-    return y >= vs->trackVerticalPosition(lastTrack) + vs->trackHeight(lastTrack).val;
+    return vs->trackVerticalPosition(lastTrack) + vs->trackHeight(lastTrack).val;
+}
+
+bool SelectionViewController::isBelowAllTracks(const IProjectViewStatePtr& vs, double y) const
+{
+    const std::optional<double> bottomY = tracksBottomY(vs);
+    return bottomY.has_value() && y >= *bottomY;
 }
 
 TrackIdList SelectionViewController::tracksCoveredBySelection(const IProjectViewStatePtr& vs, double y) const
 {
-    if (isBelowAllTracks(vs, m_startY) && isBelowAllTracks(vs, y)) {
+    const std::optional<double> bottomY = tracksBottomY(vs);
+    if (bottomY.has_value() && m_startY >= *bottomY && y >= *bottomY) {
         return trackIdList();
     }
 
