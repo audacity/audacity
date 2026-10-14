@@ -240,12 +240,12 @@ Rectangle {
         playPositionActionController.init()
         tracksViewState.init()
         itemsMoveController.init()
-        project.init();
+        project.init()
 
         //! NOTE Loading tracks, or rather clips, is the most havy operation.
         // Let's make sure that everything is loaded and initialized before this,
         // to avoid double loading at the beginning, when some parameters are initialized.
-        Qt.callLater(tracksModel.load);
+        Qt.callLater(tracksModel.load)
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
@@ -667,7 +667,7 @@ Rectangle {
 
                     if (selectionViewController.selectionInProgress) {
                         let releaseTime = timeline.context.positionToTime(e.x)
-                        selectionViewController.onReleased(releaseTime, e.y);
+                        selectionViewController.onReleased(releaseTime, e.y)
 
                         // Deferred from the press. Only a plain click repositions the playhead
                         // and the next playback start; a drag selection leaves both alone —

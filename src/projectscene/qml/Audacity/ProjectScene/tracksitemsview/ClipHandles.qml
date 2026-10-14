@@ -177,7 +177,7 @@ Item {
 
             onReleased: function (e) {
                 root.trimLeftRequested(true, ClipBoundaryAction.Auto)
-                root.stopAutoScroll();
+                root.stopAutoScroll()
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
@@ -335,7 +335,7 @@ Item {
 
             onReleased: function (e) {
                 root.trimRightRequested(true, ClipBoundaryAction.Auto)
-                root.stopAutoScroll();
+                root.stopAutoScroll()
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
@@ -499,7 +499,7 @@ Item {
 
             onReleased: {
                 root.stretchLeftRequested(true, ClipBoundaryAction.Auto)
-                root.stopAutoScroll();
+                root.stopAutoScroll()
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
@@ -660,7 +660,7 @@ Item {
 
             onReleased: {
                 root.stretchRightRequested(true, ClipBoundaryAction.Auto)
-                root.stopAutoScroll();
+                root.stopAutoScroll()
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()

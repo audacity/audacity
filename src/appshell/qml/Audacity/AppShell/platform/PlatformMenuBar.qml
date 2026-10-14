@@ -55,7 +55,7 @@ Item {
             item.subitemsChanged.connect(function (subitems, menuId) {
                 for (var l in menuBar.menus) {
                     var menu = menuBar.menus[l]
-                    if (menu.id === menuId) {
+                    if (menu.menuId === menuId) {
                         menu.subitems = subitems
                         menu.load()
                     }
@@ -81,14 +81,14 @@ Item {
     }
 
     function setUpMenu(menu, menuInfo) {
-        menu.id = menuInfo.id
+        menu.menuId = menuInfo.id
         menu.title = menuInfo.title
         menu.enabled = menuInfo.enabled
         menu.subitems = menuInfo.subitems
         menu.menuItem.role = PLATFORM.MenuItem.NoRole
 
         menuInfo.subitemsChanged.connect(function (subitems, menuId) {
-            if (menu.id === menuId) {
+            if (menu.menuId === menuId) {
                 menu.subitems = subitems
                 menu.load()
             }
@@ -104,7 +104,7 @@ Item {
     }
 
     function setUpMenuItem(menuItem, itemInfo) {
-        menuItem.id = itemInfo.id
+        menuItem.itemId = itemInfo.id
         menuItem.text = itemInfo.title + "\t" + itemInfo.portableShortcuts
         menuItem.enabled = itemInfo.enabled
         menuItem.checked = itemInfo.checked
@@ -117,7 +117,7 @@ Item {
         id: menuComponent
 
         PLATFORM.Menu {
-            property string id: ""
+            property string menuId: ""
             property var subitems: []
 
             function load() {
@@ -169,10 +169,10 @@ Item {
         id: menuItemComponent
 
         PLATFORM.MenuItem {
-            property string id: ""
+            property string itemId: ""
 
             onTriggered: {
-                Qt.callLater(menuModel.handleMenuItem, id)
+                Qt.callLater(menuModel.handleMenuItem, itemId)
             }
         }
     }

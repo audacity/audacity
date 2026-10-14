@@ -553,7 +553,7 @@ TrackItemsContainer {
                                     var yWithinTrack = yWithinClip
                                     var xWithinTrack = xWithinClip + itemData.x
 
-                                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key);
+                                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
                                     // While a clip is being moved or a trim/stretch handle is held the
                                     // guideline follows the dragged clip edge (driven by handleClipGuideline),
