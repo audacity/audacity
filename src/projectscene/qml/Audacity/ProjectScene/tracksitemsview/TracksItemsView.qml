@@ -563,6 +563,8 @@ Rectangle {
             property var lastItemClickKey: null
             property bool itemWasMoved: false
             property bool marqueeReleased: false
+            property int gestureButton: Qt.NoButton
+            property int ignoredButtons: Qt.NoButton
             property point pressStartPosition: Qt.point(0, 0)
             readonly property int moveThreshold: 5
 
@@ -571,6 +573,13 @@ Rectangle {
             }
 
             onPressed: function (e) {
+                if (gestureButton !== Qt.NoButton) {
+                    ignoredButtons |= e.button
+                    return
+                }
+                gestureButton = e.button
+                ignoredButtons = Qt.NoButton
+
                 itemWasMoved = false
 
                 if (itemsMoveController.keyboardActive) {
@@ -641,9 +650,14 @@ Rectangle {
             }
 
             onReleased: function (e) {
+                if (e.button !== gestureButton) {
+                    return
+                }
+                gestureButton = Qt.NoButton
+
                 if (e.button === Qt.RightButton) {
                     const marqueeEnded = selectionViewController.marqueeActive
-                    selectionViewController.onReleased(timeline.context.positionToTime(e.x), e.y)
+                    selectionViewController.finishMarquee()
                     if (marqueeEnded) {
                         return
                     }
@@ -694,12 +708,19 @@ Rectangle {
             }
 
             onCanceled: e => {
+                gestureButton = Qt.NoButton
+                ignoredButtons = Qt.NoButton
                 playCursorController.cancelSeekGesture()
                 selectionViewController.cancelMarquee()
                 prv.cancelItemDragEdit()
             }
 
             onClicked: e => {
+                if (ignoredButtons & e.button) {
+                    ignoredButtons &= ~e.button
+                    return
+                }
+
                 if (e.button !== Qt.LeftButton) {
                     return
                 }
@@ -710,7 +731,7 @@ Rectangle {
             }
 
             onDoubleClicked: e => {
-                if (e.button !== Qt.LeftButton) {
+                if ((ignoredButtons & e.button) || e.button !== Qt.LeftButton) {
                     return
                 }
 

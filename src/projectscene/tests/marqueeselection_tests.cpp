@@ -309,7 +309,7 @@ TEST_F(MarqueeSelectionTests, RightDragStartsAMarqueeWithoutASelectionGesture)
     //! [WHEN] The pointer is dragged past the threshold and released
     m_controller->onPositionChanged(20.0, 40.0);
     EXPECT_TRUE(m_controller->marqueeActive());
-    m_controller->onReleased(20.0, 40.0);
+    m_controller->finishMarquee();
 
     //! [THEN] The marquee is over and no selection gesture was ever in progress
     EXPECT_FALSE(m_controller->marqueeActive());
@@ -328,7 +328,7 @@ TEST_F(MarqueeSelectionTests, RightClickWithoutADragLeavesTheSelectionAlone)
     //! [WHEN] A right press moves less than the drag threshold and is released
     m_controller->startMarquee(1.0, 10.0);
     m_controller->onPositionChanged(3.0, 12.0);
-    m_controller->onReleased(3.0, 12.0);
+    m_controller->finishMarquee();
 
     //! [THEN] No marquee was started
     EXPECT_FALSE(m_controller->marqueeActive());
@@ -353,6 +353,29 @@ TEST_F(MarqueeSelectionTests, ARightPressDuringASelectionGestureIsIgnored)
     //! [THEN] No marquee was started
     EXPECT_FALSE(m_controller->marqueeActive());
     EXPECT_TRUE(m_controller->selectionInProgress());
+}
+
+TEST_F(MarqueeSelectionTests, FinishingAMarqueeDuringASelectionGestureLeavesTheGestureAlone)
+{
+    //! [GIVEN] A plain left-button selection gesture is being dragged
+    ON_CALL(*m_application, keyboardModifiers())
+    .WillByDefault(Return(Qt::NoModifier));
+    m_controller->onPressed(1.0, 10.0);
+    m_controller->onPositionChanged(20.0, 40.0);
+    ASSERT_TRUE(m_controller->selectionInProgress());
+
+    //! [EXPECT] Nothing about the selection is completed
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(_, true)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(_, true)).Times(0);
+    EXPECT_CALL(*m_selectionController, setSelectedItems(_, _)).Times(0);
+
+    //! [WHEN] A right press and release arrive in the middle of the drag
+    m_controller->startMarquee(2.0, 11.0);
+    m_controller->finishMarquee();
+
+    //! [THEN] The selection gesture is still in progress
+    EXPECT_TRUE(m_controller->selectionInProgress());
+    EXPECT_FALSE(m_controller->marqueeActive());
 }
 
 TEST_F(MarqueeSelectionTests, AnEmptyBoxLeavesFocusAndAnchorAlone)
