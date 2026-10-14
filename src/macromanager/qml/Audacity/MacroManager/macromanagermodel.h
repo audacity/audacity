@@ -3,20 +3,18 @@
 */
 #pragma once
 
-#include <optional>
-
 #include <QAbstractListModel>
 #include <QtQml/qqmlregistration.h>
 
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/global/iglobalconfiguration.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommandsregister.h"
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
 
+#include "macroactions.h"
 #include "runonfileslauncher.h"
 
 namespace au::macromanager {
@@ -28,7 +26,6 @@ class MacroManagerModel : public QAbstractListModel, public muse::Contextable, p
     Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged FINAL)
 
     muse::GlobalInject<IMacrosRepository> repository;
-    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
 
     muse::ContextInject<IMacroRunner> runner = { this };
@@ -65,12 +62,12 @@ private:
     bool isRowValid(int row) const;
     void reload();
     void openEditor(const std::string& name);
-    std::optional<QString> requestMacroName(const muse::UriQuery& uri) const;
     std::vector<std::string> unknownCommands(const Macro& macro) const;
     bool confirmUnknownCommands(const std::vector<std::string>& commands) const;
     bool confirmReplace(const std::string& name) const;
 
     MacroList m_macros;
+    MacroActions m_actions;
     RunOnFilesLauncher m_runOnFilesLauncher;
 };
 }
