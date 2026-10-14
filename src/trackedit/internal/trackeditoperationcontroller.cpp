@@ -349,8 +349,7 @@ muse::RetVal<TrackeditOperationController::MovedItems> TrackeditOperationControl
     const auto selection = selectionController();
 
     // Move notifications must not expose selection keys whose items have already changed tracks.
-    selection->setSelectedClips({}, false);
-    selection->setSelectedLabels({}, false);
+    selection->setSelectedItems({}, false);
 
     const auto rollback = [&](const muse::Ret& error) {
         projectHistory()->rollbackState();
