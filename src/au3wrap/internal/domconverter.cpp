@@ -1,6 +1,9 @@
 #include "domconverter.h"
 
+#include <algorithm>
+
 #include "au3-label-track/LabelTrack.h"
+#include "au3-stretching-sequence/ClipFades.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
@@ -107,6 +110,10 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.optimizeForVoice = au3clip->GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
 
     clip.stretchToMatchTempo = au3clip->GetStretchToMatchProjectTempo();
+
+    const ClipFades& fades = ClipFades::Get(*au3clip);
+    clip.fadeInDuration = fades.fadeIn();
+    clip.fadeOutDuration = fades.fadeOut();
 
     return clip;
 }

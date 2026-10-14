@@ -29,6 +29,9 @@ struct Clip {
 
     bool stretchToMatchTempo = false;
 
+    double fadeInDuration = 0.0;
+    double fadeOutDuration = 0.0;
+
     inline bool isValid() const { return key.isValid(); }
 };
 

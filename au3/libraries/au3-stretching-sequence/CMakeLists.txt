@@ -17,6 +17,8 @@ set( SOURCES
    AudioSegmentFactoryInterface.h
    AudioSegmentSampleView.cpp
    AudioSegmentSampleView.h
+   ClipFades.cpp
+   ClipFades.h
    ClipInterface.cpp
    ClipInterface.h
    ClipSegment.cpp
@@ -41,6 +43,7 @@ PUBLIC
 PRIVATE
    au3-channel
    au3-strings
+   au3-xml
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

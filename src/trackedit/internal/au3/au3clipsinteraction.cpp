@@ -9,6 +9,7 @@
 
 #include <QCoreApplication>
 
+#include "au3-stretching-sequence/ClipFades.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
@@ -245,6 +246,47 @@ bool Au3ClipsInteraction::changeClipColor(const ClipKey& clipKey, ClipColorIndex
     }
 
     clip->SetColorIndex(colorIndex);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
+// a fade pushes the other one back when it runs into it
+bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t duration)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    ClipFades::Get(*clip).setFadeIn(duration.to_double());
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
+bool Au3ClipsInteraction::changeClipFadeOut(const ClipKey& clipKey, secs_t duration)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    ClipFades::Get(*clip).setFadeOut(duration.to_double());
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
@@ -1232,6 +1274,7 @@ bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool comple
 bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
+        ClipFades::Get(clip).setDraggingSide(ClipSide::Left);
         return clip.TrimLeft(deltaSec);
     });
 }
@@ -1239,6 +1282,7 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
 bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
+        ClipFades::Get(clip).setDraggingSide(ClipSide::Right);
         return clip.TrimRight(deltaSec);
     });
 }
@@ -1247,6 +1291,7 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
 {
     const secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
+        ClipFades::Get(clip).setDraggingSide(ClipSide::Left);
         clip.StretchLeftTo(clip.GetPlayStartTime() + adjustedDelta);
         return true;
     });
@@ -1256,6 +1301,7 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
 {
     const secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
+        ClipFades::Get(clip).setDraggingSide(ClipSide::Right);
         clip.StretchRightTo(clip.GetPlayEndTime() - adjustedDelta);
         return true;
     });
