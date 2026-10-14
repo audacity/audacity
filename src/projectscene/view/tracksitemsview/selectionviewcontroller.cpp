@@ -233,11 +233,6 @@ void SelectionViewController::onReleased(double time, double y)
     }
 
     if (!m_selectionStarted) {
-        if (m_marquee.armed) {
-            m_context->stopAutoScroll();
-            disconnect(m_autoScrollConnection);
-            endMarquee();
-        }
         return;
     }
 
@@ -412,6 +407,17 @@ void SelectionViewController::startMarquee(double time, double y)
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
         doOnPositionChanged(m_context->positionToTime(m_autoScrollLastX), m_autoScrollLastY);
     });
+}
+
+void SelectionViewController::finishMarquee()
+{
+    if (!m_marquee.armed || m_selectionStarted) {
+        return;
+    }
+
+    m_context->stopAutoScroll();
+    disconnect(m_autoScrollConnection);
+    endMarquee();
 }
 
 void SelectionViewController::cancelMarquee()
