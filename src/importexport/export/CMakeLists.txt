@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iexporter.h
     ${CMAKE_CURRENT_LIST_DIR}/iffmpegoptionsaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/iexportconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/exportcommands.h
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.h
 
@@ -24,6 +25,10 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.h

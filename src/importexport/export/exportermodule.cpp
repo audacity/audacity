@@ -5,9 +5,12 @@
 #include <QtQml/qqml.h>
 
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
 
 #include "internal/au3/au3exporter.h"
 #include "internal/au3/au3ffmpegoptionsaccessor.h"
+#include "internal/exportcommandscontroller.h"
+#include "internal/exportcommandsregister.h"
 
 #include "view/exportpreferencesmodel.h"
 #include "view/dynamicexportoptionsmodel.h"
@@ -55,6 +58,11 @@ void ExporterModule::resolveImports()
         ir->registerQmlUri(Uri("audacity://project/export/metadata"), "Export/MetadataDialog.qml");
         ir->registerQmlUri(Uri("audacity://project/export/mapping"), "Export/CustomMappingDialog.qml");
     }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<ExportCommandsRegister>());
+    }
 }
 
 void ExporterModule::registerResources()
@@ -95,6 +103,7 @@ muse::modularity::IContextSetup* ExporterModule::newContext(const muse::modulari
 void ExporterContext::registerExports()
 {
     m_exporter = std::make_shared<Au3Exporter>(iocContext());
+    m_commandsController = std::make_shared<ExportCommandsController>(iocContext());
 
     ioc()->registerExport<IExporter>(mname, m_exporter);
 }
@@ -102,6 +111,7 @@ void ExporterContext::registerExports()
 void ExporterContext::onInit(const muse::IApplication::RunMode&)
 {
     m_exporter->init();
+    m_commandsController->init();
 }
 
 void ExporterContext::onDeinit()
