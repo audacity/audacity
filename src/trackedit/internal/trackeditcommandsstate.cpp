@@ -40,6 +40,8 @@ const std::vector<Command> commandsDisabledDuringRecording {
     TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND,
     TRACKEDIT_TRACK_MAKE_STEREO_COMMAND,
     TRACKEDIT_TRACK_RESAMPLE_COMMAND,
+    TRACKEDIT_MIX_AND_RENDER_COMMAND,
+    TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND,
     TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND,
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
     TRACKEDIT_GROUP_CLIPS_COMMAND,
@@ -91,6 +93,11 @@ const std::vector<Command> dataSelectionCommands {
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
 };
 
+const std::vector<Command> waveTracksSelectionCommands {
+    TRACKEDIT_MIX_AND_RENDER_COMMAND,
+    TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND,
+};
+
 const std::vector<Command> focusCommands {
     TRACKEDIT_GROUP_CLIPS_COMMAND,
     TRACKEDIT_UNGROUP_CLIPS_COMMAND,
@@ -136,6 +143,7 @@ void TrackeditCommandsState::init()
 
     selectionController()->selectedTracksChanged().onReceive(this, [this](const TrackIdList&) {
         updateCommandStates(dataSelectionCommands);
+        updateCommandStates(waveTracksSelectionCommands);
     });
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](secs_t) {
@@ -220,6 +228,10 @@ CommandState TrackeditCommandsState::commandState(const Command& command) const
 
     if (command == TRACKEDIT_RENAME_ITEM_COMMAND) {
         return CommandState(clipsForInteraction().size() + labelsForInteraction().size() == 1);
+    }
+
+    if (muse::contains(waveTracksSelectionCommands, command)) {
+        return CommandState(hasSelectedWaveTracks());
     }
 
     return CommandState(true);
@@ -336,6 +348,20 @@ bool TrackeditCommandsState::canSilenceAudio() const
     }
 
     return false;
+}
+
+bool TrackeditCommandsState::hasSelectedWaveTracks() const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return false;
+    }
+
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    return std::any_of(selectedTracks.cbegin(), selectedTracks.cend(), [&prj](const TrackId& trackId) {
+        const std::optional<Track> track = prj->track(trackId);
+        return track && (track->type == TrackType::Mono || track->type == TrackType::Stereo);
+    });
 }
 
 async::Channel<Command, CommandState> TrackeditCommandsState::commandStateChanged() const
