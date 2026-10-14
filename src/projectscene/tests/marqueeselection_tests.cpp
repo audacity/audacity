@@ -259,9 +259,10 @@ TEST_F(MarqueeSelectionTests, CancellingTheMarqueeDropsItAndItsSelection)
     dragBoxOverItems();
     ASSERT_TRUE(m_controller->marqueeActive());
 
-    //! [EXPECT] The items it selected are deselected again
-    EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(1);
-    EXPECT_CALL(*m_selectionController, resetSelectedLabels()).Times(1);
+    //! [EXPECT] The items it selected, and their tracks, are deselected again in one go
+    EXPECT_CALL(*m_selectionController, setSelectedItems(trackedit::ItemKeys {}, true)).Times(1);
+    EXPECT_CALL(*m_selectionController, resetSelectedClips()).Times(0);
+    EXPECT_CALL(*m_selectionController, resetSelectedLabels()).Times(0);
 
     //! [WHEN] The marquee is cancelled, as Escape does
     m_controller->cancelMarquee();

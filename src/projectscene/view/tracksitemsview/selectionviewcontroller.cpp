@@ -427,8 +427,7 @@ void SelectionViewController::cancelMarquee()
     }
 
     if (m_marquee.active) {
-        selectionController()->resetSelectedClips();
-        selectionController()->resetSelectedLabels();
+        selectionController()->setSelectedItems({}, true);
     }
 
     cancelSelectionGesture();
