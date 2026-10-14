@@ -3,12 +3,11 @@
 */
 #include "macrorunner.h"
 
-#include "global/translation.h"
-#include "io/path.h"
+#include "framework/global/translation.h"
+#include "framework/global/io/path.h"
+#include "framework/global/log.h"
 
 #include "trackedit/trackeditcommands.h"
-
-#include "log.h"
 
 using namespace au::macromanager;
 using namespace muse;

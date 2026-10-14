@@ -7,11 +7,10 @@
 
 #include "framework/global/io/path.h"
 #include "framework/global/progress.h"
+#include "framework/global/log.h"
 
 #include "../exportcommands.h"
 #include "../types/exporttypes.h"
-
-#include "log.h"
 
 using namespace au::importexport;
 using namespace muse;

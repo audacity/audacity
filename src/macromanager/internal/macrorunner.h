@@ -5,11 +5,11 @@
 
 #include <functional>
 
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
-#include "interactive/iinteractive.h"
-#include "rcommand/icommanddispatcher.h"
+#include "framework/global/async/asyncable.h"
 
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditclipboard.h"

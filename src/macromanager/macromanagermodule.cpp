@@ -3,9 +3,8 @@
 */
 #include "macromanagermodule.h"
 
-#include "modularity/ioc.h"
-
-#include "interactive/iinteractiveuriregister.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/macrorunner.h"
 #include "internal/macrosrepository.h"

@@ -6,16 +6,16 @@
 #include <QAbstractListModel>
 #include <QtQml/qqmlregistration.h>
 
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
-#include "interactive/iinteractive.h"
-#include "rcommand/icommanddispatcher.h"
-#include "rcommand/icommandsregister.h"
+#include "framework/global/async/asyncable.h"
 
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/rcommand/icommanddispatcher.h"
+#include "framework/rcommand/icommandsregister.h"
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
-#include "macromanager/macromanagertypes.h"
 
+#include "macromanager/macromanagertypes.h"
 #include "runonfileslauncher.h"
 
 namespace au::macromanager {

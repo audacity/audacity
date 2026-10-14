@@ -3,13 +3,11 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
-#include "interactive/iinteractive.h"
-
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "importexport/import/iimporter.h"
 #include "project/iprojectconfiguration.h"
-
 #include "macromanager/imacrorunner.h"
 
 namespace au::macromanager {

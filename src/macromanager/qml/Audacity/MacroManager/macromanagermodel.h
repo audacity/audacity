@@ -8,12 +8,12 @@
 #include <QAbstractListModel>
 #include <QtQml/qqmlregistration.h>
 
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
-#include "global/iglobalconfiguration.h"
-#include "interactive/iinteractive.h"
-#include "rcommand/icommandsregister.h"
+#include "framework/global/async/asyncable.h"
 
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/iglobalconfiguration.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/rcommand/icommandsregister.h"
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
 

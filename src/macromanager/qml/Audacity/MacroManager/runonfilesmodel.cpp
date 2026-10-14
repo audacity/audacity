@@ -3,7 +3,7 @@
 */
 #include "runonfilesmodel.h"
 
-#include "io/path.h"
+#include "framework/global/io/path.h"
 
 using namespace au::macromanager;
 using namespace muse;

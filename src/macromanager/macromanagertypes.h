@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "rcommand/commandtypes.h"
+#include "framework/rcommand/commandtypes.h"
 
 namespace au::macromanager {
 struct MacroStep {
