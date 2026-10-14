@@ -30,6 +30,8 @@
 
 #include "record/irecordcontroller.h"
 #include "context/iuicontextresolver.h"
+#include "video/ivideoservice.h"
+#include "framework/actions/iactionsdispatcher.h"
 #include "applicationactioncontroller.h"
 
 //! TODO AU4
@@ -42,12 +44,22 @@ class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::asy
 
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
     muse::ContextInject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
+
+    //! Optional: the video module can be compiled out, so always null-checked.
+    muse::ContextInject<video::IVideoService> videoService { this };
     muse::ContextInject<record::IRecordController> recordController { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     ApplicationUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ApplicationActionController> controller);
 
     void init();
+
+private:
+    //! Opens the video dock the first time a video attaches.
+    void revealVideoPanelIfNeeded();
+
+public:
 
     const muse::ui::UiActionList& actionsList() const override;
 

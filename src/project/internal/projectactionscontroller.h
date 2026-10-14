@@ -22,6 +22,7 @@
 #include "record/irecordcontroller.h"
 #include "importexport/export/internal/exportconfiguration.h"
 #include "importexport/import/iimporter.h"
+#include "video/ivideoservice.h"
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/icloudprojectsprovider.h"
@@ -55,6 +56,10 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
     muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<importexport::IImporter> importer { this };
+
+    //! Optional: the video module can be compiled out, so this is always
+    //! null-checked before use.
+    muse::ContextInject<video::IVideoService> videoService { this };
     muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<effects::IMissingEffectChecker> missingEffectChecker { this };
 
@@ -89,6 +94,10 @@ private:
     void importFiles(const muse::actions::ActionData& args);
 
     void importStartupMedia(const muse::actions::ActionData& args);
+
+    //! Attaches the picture of a video the user just imported, when exactly
+    //! one was imported and nothing is attached yet.
+    void attachImportedVideo(const muse::io::paths_t& filePaths);
     muse::Ret processMediaFiles(const muse::io::paths_t& paths);
 
     muse::Ret openProject(const muse::io::path_t& path,

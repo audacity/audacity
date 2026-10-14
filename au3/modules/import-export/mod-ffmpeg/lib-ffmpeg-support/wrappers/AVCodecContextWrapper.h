@@ -46,6 +46,35 @@ public:
 
     std::vector<uint8_t> DecodeAudioPacket(const AVPacketWrapper* packet);
 
+    //! Makes this wrapper responsible for freeing the context it holds.
+    //!
+    //! The wrapper is built either around a context libavformat owns or
+    //! around one freshly allocated for the caller, and only the caller knows
+    //! which. Freeing a borrowed context would be a double free, so the
+    //! default is to borrow and this opts in.
+    void TakeOwnership() noexcept;
+
+    //! True when this FFmpeg build exposes the send/receive decoding API.
+    //! Video decoding requires it; it is absent on avcodec 55 (FFmpeg 2.3.6),
+    //! where audio import still works through the older call.
+    bool CanDecodeVideo() const noexcept;
+
+    //! Submits a packet to the decoder. Pass nullptr to start draining.
+    //! Returns 0, or a negative error code.
+    int SendPacket(const AVPacketWrapper* packet);
+
+    //! Retrieves one decoded frame. Returns 0 on success, or a negative error
+    //! code; AUDACITY_AVERROR(EAGAIN) means more input is needed first.
+    int ReceiveFrame(AVFrameWrapper& frame);
+
+    //! Discards buffered decoder state, which a seek requires. Does nothing
+    //! when avcodec_flush_buffers was not resolved, in which case the caller
+    //! has to rebuild the codec context instead.
+    void FlushBuffers();
+
+    //! Whether FlushBuffers() actually does anything on this build.
+    bool CanFlushBuffers() const noexcept;
+
     virtual sampleFormat GetPreferredAudacitySampleFormat() const noexcept = 0;
 
     virtual std::vector<int16_t> DecodeAudioPacketInt16(const AVPacketWrapper* packet) = 0;
@@ -95,6 +124,11 @@ public:
 
     virtual AVSampleFormatFwd GetSampleFmt() const noexcept = 0;
     virtual void SetSampleFmt(AVSampleFormatFwd value) noexcept = 0;
+
+    //! Picture dimensions. Known as soon as the codec is opened, so the
+    //! panel can size itself without waiting for a frame to be decoded.
+    virtual int GetVideoWidth() const noexcept = 0;
+    virtual int GetVideoHeight() const noexcept = 0;
 
     virtual int GetSampleRate() const noexcept = 0;
     virtual void SetSampleRate(int value) noexcept = 0;
