@@ -3,6 +3,8 @@
 */
 #include "macrorunner.h"
 
+#include <chrono>
+
 #include "framework/global/translation.h"
 #include "framework/global/io/path.h"
 #include "framework/global/log.h"
@@ -17,6 +19,7 @@ namespace {
 const std::string EXPORT_COMMAND_PATH_PREFIX("importexport/export/");
 const std::string EXPORT_NAME_PARAM("name");
 constexpr size_t IMPORT_OPERATIONS = 1;
+constexpr std::chrono::seconds COMPLETED_TOAST_TIMEOUT(5);
 
 bool isExportCommand(const Command& command)
 {
@@ -182,7 +185,9 @@ void MacroRunner::resetProject(const OnDone& onDone)
 
 void MacroRunner::finish(const Ret& ret)
 {
-    if (!ret) {
+    if (ret) {
+        showCompleted();
+    } else {
         undoToStartState();
         showError(ret);
     }
@@ -237,6 +242,18 @@ void MacroRunner::undoToStartState()
     while (projectHistory()->currentStateIndex() > m_startStateIndex && projectHistory()->undoAvailable()) {
         projectHistory()->undo();
     }
+}
+
+void MacroRunner::showCompleted()
+{
+    const QString name = QString::fromStdString(m_macro.name);
+    const QString result = m_files.empty()
+                           ? qtrc("macromanager", "%n step(s) applied to the project", nullptr, int(m_macro.steps.size()))
+                           : qtrc("macromanager", "%n file(s) processed", nullptr, int(m_files.size()));
+    const std::string message = qtrc("macromanager", "\n“%1” ran successfully\n%2\n\n").arg(name, result).toStdString();
+
+    toastService()->showWithTimeout(trc("macromanager", "Macro completed"), message, COMPLETED_TOAST_TIMEOUT,
+                                    ui::IconCode::Code::TICK);
 }
 
 void MacroRunner::showError(const Ret& ret)
