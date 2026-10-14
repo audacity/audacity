@@ -317,17 +317,32 @@ bool AutoDuckEffect::Process(::EffectInstance&, EffectSettings&)
     if (!cancel) {
         EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
 
-        int trackNum = 0;
+        int numProcessedChannels = 0;
+        const auto selectedTracks = outputs.Get().Selected<WaveTrack>();
 
-        for (auto iterTrack : outputs.Get().Selected<WaveTrack>()) {
+        const auto numChannelsToProcess = std::accumulate(selectedTracks.begin(), selectedTracks.end(), 0,
+                                                          [](int sum, const WaveTrack* track) {
+            return sum + static_cast<int>(track->Channels().size());
+        });
+
+        const auto durationToProcessPerChannel = std::accumulate(processedTracksRegions.begin(), processedTracksRegions.end(), 0.0,
+                                                                 [](double sum, const AutoDuckRegion& region) {
+            return sum + (region.t1 - region.t0);
+        });
+
+        for (auto iterTrack : selectedTracks) {
             for (const auto pChannel : iterTrack->Channels()) {
+                double channelProcessedDuration = 0.0;
                 for (size_t i = 0; i < processedTracksRegions.size(); ++i) {
                     const AutoDuckRegion& region = processedTracksRegions[i];
-                    if (ApplyDuckFade(trackNum++, *pChannel, region.t0, region.t1)) {
+                    if (ApplyDuckFade(numProcessedChannels, numChannelsToProcess, channelProcessedDuration, durationToProcessPerChannel,
+                                      *pChannel, region.t0, region.t1)) {
                         cancel = true;
                         goto done;
                     }
+                    channelProcessedDuration += (region.t1 - region.t0);
                 }
+                ++numProcessedChannels;
             }
 
 done:
@@ -347,36 +362,34 @@ done:
 // AutoDuckEffect implementation
 
 // this currently does an exponential fade
-bool AutoDuckEffect::ApplyDuckFade(
-    int trackNum, WaveChannel& track, double t0, double t1)
+bool AutoDuckEffect::ApplyDuckFade(int numProcessedChannels, int numChannelsToProcess, double channelProcessedDuration,
+                                   double durationToProcessPerChannel, WaveChannel& channel, double t0, double t1)
 {
     bool cancel = false;
 
-    auto start = track.TimeToLongSamples(t0);
-    auto end = track.TimeToLongSamples(t1);
+    auto start = channel.TimeToLongSamples(t0);
+    auto end = channel.TimeToLongSamples(t1);
 
     Floats buf { kBufSize };
     auto pos = start;
 
-    auto fadeDownSamples
-        =track.TimeToLongSamples(mOuterFadeDownLen + mInnerFadeDownLen);
+    auto fadeDownSamples = channel.TimeToLongSamples(mOuterFadeDownLen + mInnerFadeDownLen);
     if (fadeDownSamples < 1) {
         fadeDownSamples = 1;
     }
 
-    auto fadeUpSamples
-        =track.TimeToLongSamples(mOuterFadeUpLen + mInnerFadeUpLen);
+    auto fadeUpSamples = channel.TimeToLongSamples(mOuterFadeUpLen + mInnerFadeUpLen);
     if (fadeUpSamples < 1) {
         fadeUpSamples = 1;
     }
 
-    float fadeDownStep = mDuckAmountDb / fadeDownSamples.as_double();
-    float fadeUpStep = mDuckAmountDb / fadeUpSamples.as_double();
+    const float fadeDownStep = mDuckAmountDb / fadeDownSamples.as_double();
+    const float fadeUpStep = mDuckAmountDb / fadeUpSamples.as_double();
 
     while (pos < end)
     {
         const auto len = limitSampleBufferSize(kBufSize, end - pos);
-        track.GetFloats(buf.get(), pos, len);
+        channel.GetFloats(buf.get(), pos, len);
         for (auto i = pos; i < pos + len; ++i) {
             float gainDown = fadeDownStep * (i - start).as_float();
             float gainUp = fadeUpStep * (end - i).as_float();
@@ -395,17 +408,16 @@ bool AutoDuckEffect::ApplyDuckFade(
             buf[(i - pos).as_size_t()] *= DB_TO_LINEAR(gain);
         }
 
-        if (!track.SetFloats(buf.get(), pos, len)) {
+        if (!channel.SetFloats(buf.get(), pos, len)) {
             cancel = true;
             break;
         }
 
         pos += len;
 
-        float curTime = track.LongSamplesToTime(pos);
-        float fractionFinished = (curTime - mT0) / (mT1 - mT0);
-        if (TotalProgress(
-                (trackNum + 1 + fractionFinished) / (GetNumWaveTracks() + 1))) {
+        channelProcessedDuration += channel.LongSamplesToTime(len);
+        const auto fractionFinished = channelProcessedDuration / durationToProcessPerChannel;
+        if (TotalProgress((numProcessedChannels + fractionFinished) / numChannelsToProcess)) {
             cancel = true;
             break;
         }

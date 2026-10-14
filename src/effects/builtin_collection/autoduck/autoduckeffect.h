@@ -75,7 +75,8 @@ public:
     double mMaximumPause = MaximumPause.def;
 
 private:
-    bool ApplyDuckFade(int trackNum, WaveChannel& track, double t0, double t1);
+    bool ApplyDuckFade(int numProcessedChannels, int numChannelsToProcess, double processedRegionDuration, double totalRegionDuration,
+                       WaveChannel& channel, double t0, double t1);
     const WaveTrack* FindControlTrack() const;
 
     std::vector<ControlTrackCandidate> mControlTrackCandidates;
