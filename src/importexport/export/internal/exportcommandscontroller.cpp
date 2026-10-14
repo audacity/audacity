@@ -19,14 +19,17 @@ using namespace muse;
 namespace {
 const std::string MACRO_OUTPUT_DIR("macro-output");
 const std::string MP3_EXTENSION("mp3");
+const std::string NAME_PARAM("name");
 }
 
 void ExportCommandsController::init()
 {
-    commandDispatcher()->onRequest(this, EXPORT_MP3_COMMAND, [this]() { return exportToMacroOutput(MP3_EXTENSION); });
+    commandDispatcher()->onRequest(this, EXPORT_MP3_COMMAND, [this](const muse::rcommand::Params& params) {
+        return exportToMacroOutput(MP3_EXTENSION, params);
+    });
 }
 
-Ret ExportCommandsController::exportToMacroOutput(const std::string& extension)
+Ret ExportCommandsController::exportToMacroOutput(const std::string& extension, const muse::rcommand::Params& params)
 {
     if (!globalContext()->currentProject()) {
         return make_ret(Ret::Code::NotSupported, "no project is open");
@@ -43,7 +46,8 @@ Ret ExportCommandsController::exportToMacroOutput(const std::string& extension)
         return dirRet;
     }
 
-    const io::path_t outputPath = outputDir + "/" + outputBaseName() + "." + extension;
+    const std::string baseName = params.contains(NAME_PARAM) ? params.at(NAME_PARAM).toString() : outputBaseName();
+    const io::path_t outputPath = outputDir + "/" + baseName + "." + extension;
 
     const IExporter::Options options {
         { IExporter::OptionKey::Format, Val(*format) },
