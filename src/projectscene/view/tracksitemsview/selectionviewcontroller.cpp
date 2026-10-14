@@ -27,10 +27,10 @@ double clampToSpectrogram(const au::spectrogram::SpectrogramHit& hit, double y)
     return std::clamp(y, hit.spectrogramY, hit.spectrogramY + hit.spectrogramHeight);
 }
 
-std::optional<au::trackedit::TrackItemKey> firstItemOnTopmostTrack(const TrackIdList& tracks, const ItemKeys& items)
+std::optional<au::trackedit::TrackItemKey> firstItemOnTopmostTrack(const TrackIdList& tracks, const ItemKeys& timeSortedItems)
 {
     for (const TrackId& trackId : tracks) {
-        if (const std::optional<au::trackedit::TrackItemKey> item = au::trackedit::utils::firstItemOnTrack(items, trackId)) {
+        if (const std::optional<au::trackedit::TrackItemKey> item = au::trackedit::utils::firstItemOnTrack(timeSortedItems, trackId)) {
             return item;
         }
     }
