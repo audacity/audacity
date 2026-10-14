@@ -267,6 +267,11 @@ WaveClip::WaveClip(
     // Deep copy of attachments
     Attachments& attachments = *this;
     attachments = orig;
+    ClipAttachments& clipAttachments = *this;
+    clipAttachments = orig;
+    ClipAttachments::ForEach([this](ClipInterfaceAttachment& attachment) {
+        attachment.Reparent(*this);
+    });
 
     mSequences.reserve(orig.NChannels());
     if (!token.emptyCopy) {
@@ -326,6 +331,11 @@ WaveClip::WaveClip(
     // Deep copy of attachments
     Attachments& attachments = *this;
     attachments = orig;
+    ClipAttachments& clipAttachments = *this;
+    clipAttachments = orig;
+    ClipAttachments::ForEach([this](ClipInterfaceAttachment& attachment) {
+        attachment.Reparent(*this);
+    });
 
     mIsPlaceholder = orig.GetIsPlaceholder();
 
@@ -633,10 +643,10 @@ void WaveClip::OnProjectTempoChange(
     mTrimLeft *= ratioChange;
     mTrimRight *= ratioChange;
     mEnvelope->RescaleTimesBy(ratioChange);
+    const auto oldStretchRatio = mClipStretchRatio;
     mClipStretchRatio *= ratioChange;
-
     Observer::Publisher<StretchRatioChange>::Publish(
-        StretchRatioChange { GetStretchRatio() });
+        StretchRatioChange { oldStretchRatio, mClipStretchRatio });
 }
 
 void WaveClip::StretchLeftTo(double to)
@@ -651,11 +661,12 @@ void WaveClip::StretchLeftTo(double to)
     mSequenceOffset = pet - (pet - mSequenceOffset) * ratioChange;
     mTrimLeft *= ratioChange;
     mTrimRight *= ratioChange;
+    const auto oldStretchRatio = mClipStretchRatio;
     mClipStretchRatio *= ratioChange;
     mEnvelope->SetOffset(mSequenceOffset);
     mEnvelope->RescaleTimesBy(ratioChange);
     Observer::Publisher<StretchRatioChange>::Publish(
-        StretchRatioChange { GetStretchRatio() });
+        StretchRatioChange { oldStretchRatio, mClipStretchRatio });
 }
 
 void WaveClip::StretchRightTo(double to)
@@ -676,11 +687,12 @@ void WaveClip::StretchBy(double ratio)
     mSequenceOffset = pst - mTrimLeft * ratio;
     mTrimLeft *= ratio;
     mTrimRight *= ratio;
+    const auto oldStretchRatio = mClipStretchRatio;
     mClipStretchRatio *= ratio;
     mEnvelope->SetOffset(mSequenceOffset);
     mEnvelope->RescaleTimesBy(ratio);
     Observer::Publisher<StretchRatioChange>::Publish(
-        StretchRatioChange { GetStretchRatio() });
+        StretchRatioChange { oldStretchRatio, mClipStretchRatio });
 }
 
 double WaveClip::GetStretchRatio() const
@@ -701,6 +713,18 @@ WaveClip::SubscribeToCentShiftChange(std::function<void(int)> cb) const
     return const_cast<WaveClip*>(this)->
            Observer::Publisher<CentShiftChange>::Subscribe(
         [cb](const CentShiftChange& cents) { cb(cents.newValue); });
+}
+
+Observer::Subscription WaveClip::SubscribeToStretchRatioChange(
+    std::function<void(double oldRatio, double newRatio)> cb) const
+{
+    // Consider the list of subcribers as a mutable member that doesn't change
+    // real state
+    return const_cast<WaveClip*>(this)->
+           Observer::Publisher<StretchRatioChange>::Subscribe(
+        [cb](const StretchRatioChange& change) {
+        cb(change.oldValue, change.newValue);
+    });
 }
 
 Observer::Subscription WaveClip::SubscribeToPitchAndSpeedPresetChange(
@@ -1038,6 +1062,9 @@ static constexpr auto Selected_attr = "isSelected";
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
     if (tag == WaveClip_tag) {
+        // Attachments are built lazily, so we need to ensure they are all constructed before handling XML attributes.
+        ClipAttachments::BuildAll();
+
         // Tempi of clips saved before the stretch ratio became absolute; see
         // the end of this function.
         std::optional<double> legacyRawAudioTempo;
@@ -1115,6 +1142,11 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
             } else if (Attachments::FindIf(
                            [&](WaveClipListener& listener){
                 return listener.HandleXMLAttribute(attr, value);
+            }
+                           )) {
+            } else if (ClipAttachments::FindIf(
+                           [&](ClipInterfaceAttachment& attachment){
+                return attachment.HandleXMLAttribute(attr, value);
             }
                            )) {
             }
@@ -1203,6 +1235,9 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
 
     Attachments::ForEach([&](const WaveClipListener& listener){
         listener.WriteXMLAttributes(xmlFile);
+    });
+    ClipAttachments::ForEach([&](const ClipInterfaceAttachment& attachment){
+        attachment.WriteXMLAttributes(xmlFile);
     });
 
     mSequences[ii]->WriteXML(xmlFile);
@@ -1498,9 +1533,10 @@ void WaveClip::SetRate(int rate)
 
 void WaveClip::StretchToProjectTempo(double rawAudioTempo, double projectTempo)
 {
+    const auto oldStretchRatio = mClipStretchRatio;
     mClipStretchRatio = rawAudioTempo / projectTempo;
     Observer::Publisher<StretchRatioChange>::Publish(
-        StretchRatioChange { GetStretchRatio() });
+        StretchRatioChange { oldStretchRatio, mClipStretchRatio });
 }
 
 bool WaveClip::SetCentShift(int cents)
