@@ -70,6 +70,12 @@ public:
         return {};
     }
 
+    Observer::Subscription SubscribeToStretchRatioChange(
+        std::function<void(double, double)> cb) const override
+    {
+        return {};
+    }
+
 public:
     double stretchRatio = 1.;
     double playStartTime = 0.;

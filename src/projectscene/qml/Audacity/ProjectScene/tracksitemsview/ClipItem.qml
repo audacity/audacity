@@ -67,6 +67,9 @@ Rectangle {
     required property var pressedSpectrogram
     required property bool splitToolActive
 
+    property real fadeInDuration: 0
+    property real fadeOutDuration: 0
+
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
 
@@ -87,6 +90,9 @@ Rectangle {
     signal clipRightTrimRequested(bool completed, int action)
     signal clipLeftStretchRequested(bool completed, int action)
     signal clipRightStretchRequested(bool completed, int action)
+
+    signal fadeInDurationChangeRequested(real duration, bool completed)
+    signal fadeOutDurationChangeRequested(real duration, bool completed)
 
     signal requestSelected
     signal requestSelectionReset
@@ -1159,11 +1165,31 @@ Rectangle {
     ClipFades {
         id: fades
 
-        y: clipHandles.y
+        // The fades span the views, below the header
+        y: viewsColumn.y
         width: root.width
-        handleHeight: clipHandles.handleHeight
+        height: viewsColumn.height
+        handlesY: clipHandles.y - y
 
-        handlesVisible: !root.moveActive && (root.hover || fades.hovered || root.leftTrimContainsMouse || root.rightTrimContainsMouse || navCtrl.highlight)
+        clipOffset: (waveView.itemStartTime - waveView.startTime) * root.context.zoom
+        clipWidth: (waveView.endTime - waveView.startTime) * root.context.zoom
+
+        fadeInWidth: root.fadeInDuration * root.context.zoom
+        fadeOutWidth: root.fadeOutDuration * root.context.zoom
+        // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
+        handlesVisible: root.clipSelected && !root.moveActive
+
+        onFadeInWidthChangeRequested: function (width, completed) {
+            root.fadeInDurationChangeRequested(width / root.context.zoom, completed)
+        }
+
+        onFadeOutWidthChangeRequested: function (width, completed) {
+            root.fadeOutDurationChangeRequested(width / root.context.zoom, completed)
+        }
+
+        onFadeHandlesMousePositionChanged: function (xWithinFadeHandles, yWithinFadeHandles) {
+            clipItemMousePositionChanged(xWithinFadeHandles, fades.y + yWithinFadeHandles)
+        }
     }
 
     ClipHandles {

@@ -142,6 +142,30 @@ bool TrackeditOperationController::changeClipColor(const ClipKey& clipKey, ClipC
     return clipsInteraction()->changeClipColor(clipKey, colorIndex);
 }
 
+bool TrackeditOperationController::changeClipFadeIn(const ClipKey& clipKey, secs_t duration, bool completed)
+{
+    if (!clipsInteraction()->changeClipFadeIn(clipKey, duration)) {
+        return false;
+    }
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed fade in"),
+                                           muse::trc("trackedit", "Changed fade in"), UndoPushType::CONSOLIDATE);
+    }
+    return true;
+}
+
+bool TrackeditOperationController::changeClipFadeOut(const ClipKey& clipKey, secs_t duration, bool completed)
+{
+    if (!clipsInteraction()->changeClipFadeOut(clipKey, duration)) {
+        return false;
+    }
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed fade out"),
+                                           muse::trc("trackedit", "Changed fade out"), UndoPushType::CONSOLIDATE);
+    }
+    return true;
+}
+
 bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex)
 {
     if (tracksInteraction()->changeTracksColor(tracksIds, colorIndex)) {
