@@ -17,82 +17,82 @@ namespace {
 const std::vector<CommandInfo> s_commandInfos = {
     CommandInfo{
         RECORD_START_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Record"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Record"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Record"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Record"),
         InputSchema(),
         Decoration(IconCode::Code::RECORD_FILL)
     },
     CommandInfo{
         RECORD_ON_CURRENT_TRACK_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Record on current track"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Record on current track"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Record on current track"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Record on current track"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         RECORD_ON_NEW_TRACK_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Record on new track"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Record on new track"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Record on new track"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Record on new track"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
         RECORD_PAUSE_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Pause"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Pause"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Pause"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Pause"),
         InputSchema(),
         Decoration(IconCode::Code::PAUSE_FILL)
     },
     CommandInfo{
         RECORD_STOP_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Stop"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Stop record"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Stop"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Stop record"),
         InputSchema(),
         Decoration(IconCode::Code::STOP_FILL)
     },
     CommandInfo{
         RECORD_LEVEL_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Record level"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Set record level"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Record level"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Set record level"),
         InputSchema(),
         Decoration(IconCode::Code::MICROPHONE)
     },
     CommandInfo{
         RECORD_TOGGLE_MIC_METERING_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Show mic metering"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Show mic metering"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Show mic metering"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Show mic metering"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes)
     },
     CommandInfo{
         RECORD_TOGGLE_INPUT_MONITORING_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Turn on input monitoring"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Turn on input monitoring"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Turn on input monitoring"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Turn on input monitoring"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes)
     },
     CommandInfo{
         RECORD_LEAD_IN_RECORDING_COMMAND,
-        //: Action title: shown as a menu item or a button label; keep it short
-        TranslatableString("action", "Lead-in Recording"),
-        //: Action description: shown as a tooltip; can be a full sentence
-        TranslatableString("action_description", "Start lead-in recording"),
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Lead-in Recording"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Start lead-in recording"),
         InputSchema(),
         Decoration(IconCode::Code::RECORD_FILL)
     },

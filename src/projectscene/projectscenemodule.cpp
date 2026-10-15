@@ -9,9 +9,13 @@
 
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
 #include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
+#include "internal/projectscenecommandsregister.h"
+#include "internal/projectscenecommandsstate.h"
 #include "internal/projectsceneuistate.h"
 #include "internal/projectsceneconfiguration.h"
 #include "internal/projectviewstatecreator.h"
@@ -71,7 +75,6 @@
 #include "view/timeline/gridlines.h"
 
 #include "view/playcursor/playcursorcontroller.h"
-#include "view/playcursor/playpositionactioncontroller.h"
 
 #include "view/statusbar/selectionstatusmodel.h"
 
@@ -127,6 +130,11 @@ void ProjectSceneModule::resolveImports()
                            "Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://projectscene/geteffects"),
                            "Audacity/ProjectScene/toolbars/GetEffectsDialog.qml");
+    }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<ProjectSceneCommandsRegister>());
     }
 }
 
@@ -207,7 +215,6 @@ void ProjectSceneModule::registerUiTypes()
 
     // play cursor
     qmlRegisterType<PlayCursorController>("Audacity.ProjectScene", 1, 0, "PlayCursorController");
-    qmlRegisterType<PlayPositionActionController>("Audacity.ProjectScene", 1, 0, "PlayPositionActionController");
 
     // status bar
     qmlRegisterType<SelectionStatusModel>("Audacity.ProjectScene", 1, 0, "SelectionStatusModel");
@@ -247,6 +254,14 @@ void ProjectSceneContext::registerExports()
     ioc()->registerExport<IConnectingDotsPainter>(mname, std::make_shared<ConnectingDotsPainter>(iocContext()));
     ioc()->registerExport<IMinMaxRMSPainter>(mname, std::make_shared<MinMaxRMSPainter>(iocContext()));
     ioc()->registerExport<ISamplesPainter>(mname, std::make_shared<SamplesPainter>(iocContext()));
+}
+
+void ProjectSceneContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<ProjectSceneCommandsState>(iocContext()));
+    }
 }
 
 void ProjectSceneContext::onInit(const muse::IApplication::RunMode& mode)

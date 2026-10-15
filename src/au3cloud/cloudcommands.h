@@ -8,7 +8,10 @@
 namespace au::au3cloud {
 inline static const muse::rcommand::Command CLOUD_SHOW_TOUR_PAGE_COMMAND("command://cloud/show-tour-page");
 inline static const muse::rcommand::Command CLOUD_OPEN_PROJECT_PAGE_COMMAND("command://cloud/open-project-page");
+inline static const std::string CLOUD_OPEN_PROJECT_PAGE_ID_PARAM("id");
 inline static const muse::rcommand::Command CLOUD_OPEN_AUDIO_PAGE_COMMAND("command://cloud/open-audio-page");
+inline static const std::string CLOUD_OPEN_AUDIO_PAGE_SLUG_PARAM("slug");
 inline static const muse::rcommand::Command CLOUD_OPEN_PROFILE_PAGE_COMMAND("command://cloud/open-profile-page");
 inline static const muse::rcommand::Command CLOUD_OPEN_URL_COMMAND("command://cloud/open-url");
+inline static const std::string CLOUD_OPEN_URL_URL_PARAM("url");
 }
