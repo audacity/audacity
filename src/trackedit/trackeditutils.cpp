@@ -20,3 +20,18 @@ bool au::trackedit::utils::hasStereoTrack(const au::trackedit::TrackList& tracks
         return track.type == au::trackedit::TrackType::Stereo;
     });
 }
+
+au::trackedit::TrackIdList au::trackedit::utils::tracksToMixAndRender(const ITrackeditProject& project, const TrackIdList& selectedTracks)
+{
+    const TrackIdList candidates = selectedTracks.empty() ? project.trackIdList() : selectedTracks;
+
+    TrackIdList result;
+    for (const TrackId& trackId : candidates) {
+        const std::optional<Track> track = project.track(trackId);
+        if (track && (track->type == TrackType::Mono || track->type == TrackType::Stereo)) {
+            result.push_back(trackId);
+        }
+    }
+
+    return result;
+}

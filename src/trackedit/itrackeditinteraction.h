@@ -124,6 +124,7 @@ public:
     virtual bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) = 0;
     virtual bool makeStereoTrack(const TrackId left, const TrackId right) = 0;
     virtual bool resampleTracks(const TrackIdList& tracksIds, int rate) = 0;
+    virtual muse::RetVal<TrackId> mixAndRender(const TrackIdList& tracksIds, bool toNewTrack) = 0;
 
     virtual muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) = 0;
     virtual muse::RetVal<LabelKey> addLabelToSelection() = 0;

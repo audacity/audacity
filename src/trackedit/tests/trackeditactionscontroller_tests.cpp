@@ -9,7 +9,9 @@
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/tracknavigationcontrollermock.h"
 #include "mocks/trackeditinteractionmock.h"
+#include "mocks/trackeditprojectmock.h"
 #include "mocks/projecthistorymock.h"
+#include "context/tests/mocks/globalcontextmock.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -24,6 +26,10 @@ public:
         m_trackNavigationController = std::make_shared<NiceMock<TrackNavigationControllerMock> >();
         m_trackeditInteraction = std::make_shared<NiceMock<TrackeditInteractionMock> >();
         m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
+        m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
+        m_trackeditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
+        ON_CALL(*m_globalContext, currentTrackeditProject())
+        .WillByDefault(Return(m_trackeditProject));
 
         m_testCtx = std::make_shared<muse::modularity::Context>(999);
         m_controller = std::make_shared<TrackeditActionsController>(m_testCtx);
@@ -32,6 +38,7 @@ public:
         m_controller->trackNavigationController.set(m_trackNavigationController);
         m_controller->trackeditInteraction.set(m_trackeditInteraction);
         m_controller->projectHistory.set(m_projectHistory);
+        m_controller->globalContext.set(m_globalContext);
         m_requests = std::make_shared<TracksViewRequestsService>(m_testCtx);
         m_controller->tracksViewRequestsService.set(m_requests);
 
@@ -68,6 +75,20 @@ public:
         m_controller->moveFocusedItem(timeOffset, trackOffset);
     }
 
+    muse::Ret mixAndRender(bool toNewTrack)
+    {
+        return m_controller->mixAndRender(toNewTrack);
+    }
+
+    void addTrack(TrackId trackId, TrackType type)
+    {
+        Track track;
+        track.id = trackId;
+        track.type = type;
+        ON_CALL(*m_trackeditProject, track(trackId))
+        .WillByDefault(Return(track));
+    }
+
     std::shared_ptr<muse::modularity::Context> m_testCtx;
     std::shared_ptr<TrackeditActionsController> m_controller;
 
@@ -75,6 +96,8 @@ public:
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
+    std::shared_ptr<context::GlobalContextMock> m_globalContext;
+    std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<TracksViewRequestsService> m_requests;
 };
 
@@ -330,5 +353,68 @@ TEST_F(TrackeditActionsControllerTests, NoFocusNoSelection_OnlyCancelsDragEdit)
     EXPECT_CALL(*m_selectionController, resetTimeSelection()).Times(0);
 
     cancel();
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderMixesOnlyTheSelectedWaveTracks)
+{
+    //! [GIVEN] A mono, a label and a stereo track are selected
+    addTrack(1, TrackType::Mono);
+    addTrack(2, TrackType::Label);
+    addTrack(3, TrackType::Stereo);
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { 1, 2, 3 }));
+
+    //! [EXPECT] Only the wave tracks are mixed, replacing them
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(TrackIdList { 1, 3 }, false))
+    .WillOnce(Return(muse::RetVal<TrackId>::make_ok(4)));
+
+    //! [WHEN] Mix and render is triggered
+    EXPECT_TRUE(mixAndRender(false));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderToNewTrackKeepsTheOriginals)
+{
+    //! [GIVEN] A mono track is selected
+    addTrack(1, TrackType::Mono);
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { 1 }));
+
+    //! [EXPECT] The mix goes to a new track
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(TrackIdList { 1 }, true))
+    .WillOnce(Return(muse::RetVal<TrackId>::make_ok(2)));
+
+    //! [WHEN] Mix and render to new track is triggered
+    EXPECT_TRUE(mixAndRender(true));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderWithNothingSelectedMixesEveryAudioTrack)
+{
+    //! [GIVEN] No track is selected in a project with a mono, a label and a stereo track
+    addTrack(1, TrackType::Mono);
+    addTrack(2, TrackType::Label);
+    addTrack(3, TrackType::Stereo);
+    ON_CALL(*m_trackeditProject, trackIdList())
+    .WillByDefault(Return(TrackIdList { 1, 2, 3 }));
+
+    //! [EXPECT] Every audio track is mixed
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(TrackIdList { 1, 3 }, false))
+    .WillOnce(Return(muse::RetVal<TrackId>::make_ok(4)));
+
+    //! [WHEN] Mix and render is triggered
+    EXPECT_TRUE(mixAndRender(false));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderWithoutSelectedWaveTracksDoesNothing)
+{
+    //! [GIVEN] Only a label track is selected
+    addTrack(1, TrackType::Label);
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { 1 }));
+
+    //! [EXPECT] Nothing is mixed
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(::testing::_, ::testing::_)).Times(0);
+
+    //! [WHEN] Mix and render is triggered
+    EXPECT_FALSE(mixAndRender(false));
 }
 }

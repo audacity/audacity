@@ -10,6 +10,7 @@
 #include "framework/global/log.h"
 
 #include "../trackeditcommands.h"
+#include "../trackeditutils.h"
 
 using namespace au::trackedit;
 using namespace muse;
@@ -93,7 +94,7 @@ const std::vector<Command> dataSelectionCommands {
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
 };
 
-const std::vector<Command> waveTracksSelectionCommands {
+const std::vector<Command> mixAndRenderCommands {
     TRACKEDIT_MIX_AND_RENDER_COMMAND,
     TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND,
 };
@@ -118,8 +119,10 @@ void TrackeditCommandsState::init()
     }
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        listenToTrackList();
         updateCommandStates();
     });
+    listenToTrackList();
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
         updateCommandStates(commandsDisabledDuringRecording);
@@ -143,7 +146,7 @@ void TrackeditCommandsState::init()
 
     selectionController()->selectedTracksChanged().onReceive(this, [this](const TrackIdList&) {
         updateCommandStates(dataSelectionCommands);
-        updateCommandStates(waveTracksSelectionCommands);
+        updateCommandStates(mixAndRenderCommands);
     });
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](secs_t) {
@@ -230,8 +233,8 @@ CommandState TrackeditCommandsState::commandState(const Command& command) const
         return CommandState(clipsForInteraction().size() + labelsForInteraction().size() == 1);
     }
 
-    if (muse::contains(waveTracksSelectionCommands, command)) {
-        return CommandState(hasSelectedWaveTracks());
+    if (muse::contains(mixAndRenderCommands, command)) {
+        return CommandState(hasTracksToMixAndRender());
     }
 
     return CommandState(true);
@@ -350,18 +353,29 @@ bool TrackeditCommandsState::canSilenceAudio() const
     return false;
 }
 
-bool TrackeditCommandsState::hasSelectedWaveTracks() const
+bool TrackeditCommandsState::hasTracksToMixAndRender() const
 {
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return false;
     }
 
-    const TrackIdList selectedTracks = selectionController()->selectedTracks();
-    return std::any_of(selectedTracks.cbegin(), selectedTracks.cend(), [&prj](const TrackId& trackId) {
-        const std::optional<Track> track = prj->track(trackId);
-        return track && (track->type == TrackType::Mono || track->type == TrackType::Stereo);
-    });
+    return !utils::tracksToMixAndRender(*prj, selectionController()->selectedTracks()).empty();
+}
+
+void TrackeditCommandsState::listenToTrackList()
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    const auto updateMixAndRender = [this](const Track&) {
+        updateCommandStates(mixAndRenderCommands);
+    };
+    prj->trackAdded().onReceive(this, updateMixAndRender, muse::async::Asyncable::Mode::SetReplace);
+    prj->trackRemoved().onReceive(this, updateMixAndRender, muse::async::Asyncable::Mode::SetReplace);
+    prj->trackChanged().onReceive(this, updateMixAndRender, muse::async::Asyncable::Mode::SetReplace);
 }
 
 async::Channel<Command, CommandState> TrackeditCommandsState::commandStateChanged() const

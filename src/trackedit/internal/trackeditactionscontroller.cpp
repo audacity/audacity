@@ -12,6 +12,7 @@
 #include "framework/rcommand/actiontocommand.h"
 
 #include "../trackeditcommands.h"
+#include "../trackeditutils.h"
 
 using namespace muse;
 using namespace au::trackedit;
@@ -2337,11 +2338,20 @@ muse::Ret TrackeditActionsController::resampleTracks()
     return Ret(trackeditInteraction()->resampleTracks(selectedTracks, customRate));
 }
 
-muse::Ret TrackeditActionsController::mixAndRender(bool /*toNewTrack*/)
+muse::Ret TrackeditActionsController::mixAndRender(bool toNewTrack)
 {
-    //! TODO AU4: mix the selected wave tracks
-    NOT_IMPLEMENTED;
-    return make_ret(Ret::Code::NotImplemented);
+    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    //! NOTE Mute and solo are ignored on purpose: the selection alone decides what is mixed
+    const TrackIdList tracks = utils::tracksToMixAndRender(*project, selectionController()->selectedTracks());
+    if (tracks.empty()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    return trackeditInteraction()->mixAndRender(tracks, toNewTrack).ret;
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode&) const
