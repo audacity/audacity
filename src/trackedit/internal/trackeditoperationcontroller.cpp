@@ -885,6 +885,32 @@ bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, 
     return false;
 }
 
+muse::RetVal<TrackId> TrackeditOperationController::mixAndRender(const TrackIdList& tracksIds, bool toNewTrack)
+{
+    const muse::RetVal<TrackId> mix = tracksInteraction()->mixAndRender(tracksIds, toNewTrack);
+    if (!mix.ret) {
+        return mix;
+    }
+
+    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    const std::optional<Track> track = project ? project->track(mix.val) : std::nullopt;
+
+    if (tracksIds.size() == 1) {
+        const QString title = track ? track->title.toQString() : QString();
+        projectHistory()->pushHistoryState(muse::qtrc("trackedit", "Rendered all audio in track '%1'").arg(title).toStdString(),
+                                           muse::trc("trackedit", "Render"));
+    } else {
+        const bool stereo = track && track->type == TrackType::Stereo;
+        const QString longDescription = stereo
+                                        ? muse::qtrc("trackedit", "Mixed and rendered %1 tracks into one new stereo track")
+                                        : muse::qtrc("trackedit", "Mixed and rendered %1 tracks into one new mono track");
+        projectHistory()->pushHistoryState(longDescription.arg(static_cast<int>(tracksIds.size())).toStdString(),
+                                           muse::trc("trackedit", "Mix and render"));
+    }
+
+    return mix;
+}
+
 muse::RetVal<LabelKey> TrackeditOperationController::addLabel(const TrackId& toTrackId)
 {
     muse::RetVal<LabelKey> retVal = labelsInteraction()->addLabel(toTrackId);

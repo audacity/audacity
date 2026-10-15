@@ -101,6 +101,20 @@ public:
         m_controller->multiClipCut(moveClips);
     }
 
+    muse::Ret mixAndRender(bool toNewTrack)
+    {
+        return m_controller->mixAndRender(toNewTrack);
+    }
+
+    void addTrack(TrackId trackId, TrackType type)
+    {
+        Track track;
+        track.id = trackId;
+        track.type = type;
+        ON_CALL(*m_trackeditProject, track(trackId))
+        .WillByDefault(Return(track));
+    }
+
     std::shared_ptr<muse::modularity::Context> m_testCtx;
     std::shared_ptr<TrackeditActionsController> m_controller;
 
@@ -474,5 +488,68 @@ TEST_F(TrackeditActionsControllerTests, NoFocusNoSelection_OnlyCancelsDragEdit)
     EXPECT_CALL(*m_selectionController, resetTimeSelection()).Times(0);
 
     cancel();
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderMixesOnlyTheSelectedWaveTracks)
+{
+    //! [GIVEN] A mono, a label and a stereo track are selected
+    addTrack(1, TrackType::Mono);
+    addTrack(2, TrackType::Label);
+    addTrack(3, TrackType::Stereo);
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { 1, 2, 3 }));
+
+    //! [EXPECT] Only the wave tracks are mixed, replacing them
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(TrackIdList { 1, 3 }, false))
+    .WillOnce(Return(muse::RetVal<TrackId>::make_ok(4)));
+
+    //! [WHEN] Mix and render is triggered
+    EXPECT_TRUE(mixAndRender(false));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderToNewTrackKeepsTheOriginals)
+{
+    //! [GIVEN] A mono track is selected
+    addTrack(1, TrackType::Mono);
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { 1 }));
+
+    //! [EXPECT] The mix goes to a new track
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(TrackIdList { 1 }, true))
+    .WillOnce(Return(muse::RetVal<TrackId>::make_ok(2)));
+
+    //! [WHEN] Mix and render to new track is triggered
+    EXPECT_TRUE(mixAndRender(true));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderWithNothingSelectedMixesEveryAudioTrack)
+{
+    //! [GIVEN] No track is selected in a project with a mono, a label and a stereo track
+    addTrack(1, TrackType::Mono);
+    addTrack(2, TrackType::Label);
+    addTrack(3, TrackType::Stereo);
+    ON_CALL(*m_trackeditProject, trackIdList())
+    .WillByDefault(Return(TrackIdList { 1, 2, 3 }));
+
+    //! [EXPECT] Every audio track is mixed
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(TrackIdList { 1, 3 }, false))
+    .WillOnce(Return(muse::RetVal<TrackId>::make_ok(4)));
+
+    //! [WHEN] Mix and render is triggered
+    EXPECT_TRUE(mixAndRender(false));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderWithoutSelectedWaveTracksDoesNothing)
+{
+    //! [GIVEN] Only a label track is selected
+    addTrack(1, TrackType::Label);
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { 1 }));
+
+    //! [EXPECT] Nothing is mixed
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(::testing::_, ::testing::_)).Times(0);
+
+    //! [WHEN] Mix and render is triggered
+    EXPECT_FALSE(mixAndRender(false));
 }
 }
