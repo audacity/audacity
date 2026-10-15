@@ -5,12 +5,18 @@ import Muse.UiComponents
 Rectangle {
     id: root
 
+    readonly property real devicePixelRatio: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
+
     QtObject {
         id: prv
         property color borderColor: ui.theme.extra["black_color"]
         property color centerLineColor: ui.theme.extra["white_color"]
-        property int borderWidth: 1 // can be any number
-        property int centerLineWidth: 1 // must be odd number
+        property real borderWidth: toDevicePixels(1)
+        property real centerLineWidth: toDevicePixels(1)
+
+        function toDevicePixels(width) {
+            return Math.max(1, Math.round(width * root.devicePixelRatio)) / root.devicePixelRatio
+        }
     }
 
     antialiasing: true
@@ -18,7 +24,7 @@ Rectangle {
     Rectangle {
         id: cursor
 
-        x: -prv.borderWidth - Math.floor(prv.centerLineWidth / 2) // offset to align center line
+        x: -prv.borderWidth // the center line starts at the cursor position
         width: prv.centerLineWidth + (2 * prv.borderWidth) // left border width, center line width, right border width
         height: root.height
         color: prv.centerLineColor
