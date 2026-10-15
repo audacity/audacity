@@ -130,6 +130,11 @@ void TrackeditCommandsState::init()
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateCommandStates(historyCommands);
+        updateCommandStates(mixAndRenderCommands);
+    });
+
+    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this](long) {
+        updateCommandStates(mixAndRenderCommands);
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList&) {
@@ -169,6 +174,7 @@ void TrackeditCommandsState::deinit()
     globalContext()->currentProjectChanged().disconnect(this);
     globalContext()->isRecordingChanged().disconnect(this);
     projectHistory()->historyChanged().disconnect(this);
+    trackPlaybackControl()->muteOrSoloChanged().disconnect(this);
     selectionController()->clipsSelected().disconnect(this);
     selectionController()->labelsSelected().disconnect(this);
     selectionController()->clipsIntersectingRangeSelectionChanged().disconnect(this);

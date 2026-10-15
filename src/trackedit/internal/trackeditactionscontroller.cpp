@@ -587,6 +587,11 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+        notifyMixAndRenderEnabledChanged();
+    });
+
+    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this](long) {
+        notifyMixAndRenderEnabledChanged();
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -2352,7 +2357,6 @@ muse::Ret TrackeditActionsController::mixAndRender(bool toNewTrack)
         return make_ret(Ret::Code::NotSupported);
     }
 
-    //! NOTE Mute and solo are ignored on purpose: the selection alone decides what is mixed
     const TrackIdList tracks = utils::tracksToMixAndRender(*project, selectionController()->selectedTracks());
     if (tracks.empty()) {
         return make_ret(Ret::Code::NotSupported);
