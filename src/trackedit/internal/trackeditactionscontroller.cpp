@@ -590,6 +590,7 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+        notifyMixAndRenderEnabledChanged();
 
         //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
         //! in its own history receiver, which may run after this one. Evaluate the group actions once it has.
@@ -597,6 +598,10 @@ void TrackeditActionsController::init()
             notifyActionEnabledChanged(GROUP_ITEMS_CODE);
             notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
         });
+    });
+
+    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this](long) {
+        notifyMixAndRenderEnabledChanged();
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -2330,7 +2335,6 @@ muse::Ret TrackeditActionsController::mixAndRender(bool toNewTrack)
         return make_ret(Ret::Code::NotSupported);
     }
 
-    //! NOTE Mute and solo are ignored on purpose: the selection alone decides what is mixed
     const TrackIdList tracks = utils::tracksToMixAndRender(*project, selectionController()->selectedTracks());
     if (tracks.empty()) {
         return make_ret(Ret::Code::NotSupported);
