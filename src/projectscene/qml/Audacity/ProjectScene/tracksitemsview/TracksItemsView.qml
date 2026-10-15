@@ -371,6 +371,13 @@ Rectangle {
 
             property double displayedPlayCursorX: playCursorController.positionX
 
+            readonly property real devicePixelRatio: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
+            readonly property real playCursorPixelX: snapToDevicePixel(displayedPlayCursorX)
+
+            function snapToDevicePixel(x) {
+                return Math.round(x * devicePixelRatio) / devicePixelRatio
+            }
+
             function updateCursorPosition(x, y) {
                 const snappedTime = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
                 lineCursor.x = timeline.context.timeToPosition(snappedTime)
@@ -422,7 +429,7 @@ Rectangle {
                 property bool dragActive: false
                 property double dragPositionX: timeline.displayedPlayCursorX
 
-                x: timeline.displayedPlayCursorX - (width / 2)
+                x: timeline.playCursorPixelX - timeline.snapToDevicePixel(width / 2)
 
                 MouseArea {
                     anchors.fill: parent
@@ -1241,7 +1248,7 @@ Rectangle {
             anchors.top: tracksItemsViewArea.top
             anchors.bottom: parent.bottom
 
-            x: timeline.displayedPlayCursorX
+            x: timeline.playCursorPixelX
         }
 
         Rectangle {
