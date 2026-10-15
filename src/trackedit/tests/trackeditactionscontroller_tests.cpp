@@ -12,6 +12,7 @@
 #include "mocks/trackeditprojectmock.h"
 #include "mocks/projecthistorymock.h"
 #include "context/tests/mocks/globalcontextmock.h"
+#include "project/tests/mocks/audacityprojectmock.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -80,6 +81,19 @@ public:
         return m_controller->mixAndRender(toNewTrack);
     }
 
+    void openProject(const TrackIdList& tracks)
+    {
+        ON_CALL(*m_globalContext, currentProject())
+        .WillByDefault(Return(m_project));
+        ON_CALL(*m_trackeditProject, trackIdList())
+        .WillByDefault(Return(tracks));
+    }
+
+    bool canReceiveAction(const muse::actions::ActionCode& actionCode) const
+    {
+        return m_controller->canReceiveAction(actionCode);
+    }
+
     void addTrack(TrackId trackId, TrackType type)
     {
         Track track;
@@ -98,6 +112,7 @@ public:
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
+    std::shared_ptr<project::AudacityProjectMock> m_project = std::make_shared<NiceMock<project::AudacityProjectMock> >();
     std::shared_ptr<TracksViewRequestsService> m_requests;
 };
 
@@ -389,12 +404,16 @@ TEST_F(TrackeditActionsControllerTests, MixAndRenderToNewTrackKeepsTheOriginals)
 
 TEST_F(TrackeditActionsControllerTests, MixAndRenderWithNothingSelectedMixesEveryAudioTrack)
 {
-    //! [GIVEN] No track is selected in a project with a mono, a label and a stereo track
+    //! [GIVEN] A project with a mono, a label and a stereo track
     addTrack(1, TrackType::Mono);
     addTrack(2, TrackType::Label);
     addTrack(3, TrackType::Stereo);
     ON_CALL(*m_trackeditProject, trackIdList())
     .WillByDefault(Return(TrackIdList { 1, 2, 3 }));
+
+    //! [GIVEN] No track is selected
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList {}));
 
     //! [EXPECT] Every audio track is mixed
     EXPECT_CALL(*m_trackeditInteraction, mixAndRender(TrackIdList { 1, 3 }, false))
@@ -416,5 +435,31 @@ TEST_F(TrackeditActionsControllerTests, MixAndRenderWithoutSelectedWaveTracksDoe
 
     //! [WHEN] Mix and render is triggered
     EXPECT_FALSE(mixAndRender(false));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderIsDisabledWithoutAudioTracks)
+{
+    //! [GIVEN] Nothing is selected in a project that has only a label track
+    addTrack(1, TrackType::Label);
+    openProject({ 1 });
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList {}));
+
+    //! [THEN] Neither mix action can run
+    EXPECT_FALSE(canReceiveAction("mix-and-render"));
+    EXPECT_FALSE(canReceiveAction("mix-and-render-to-new-track"));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderIsEnabledWithNothingSelectedAndAnAudioTrack)
+{
+    //! [GIVEN] Nothing is selected in a project that has a mono track
+    addTrack(1, TrackType::Mono);
+    openProject({ 1 });
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList {}));
+
+    //! [THEN] Both mix actions can run, on every audio track
+    EXPECT_TRUE(canReceiveAction("mix-and-render"));
+    EXPECT_TRUE(canReceiveAction("mix-and-render-to-new-track"));
 }
 }

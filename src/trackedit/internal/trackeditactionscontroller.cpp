@@ -613,7 +613,14 @@ void TrackeditActionsController::init()
 
     selectionController()->selectedTracksChanged().onReceive(this, [this](const trackedit::TrackIdList&) {
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+        notifyMixAndRenderEnabledChanged();
     });
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        listenToTrackList();
+        notifyMixAndRenderEnabledChanged();
+    });
+    listenToTrackList();
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t) {
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
@@ -2388,9 +2395,42 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return canSilenceAudio();
     } else if (actionCode == RENAME_ITEM_CODE) {
         return clipsForInteraction().size() + labelsForInteraction().size() == 1;
+    } else if (actionCode == MIX_AND_RENDER || actionCode == MIX_AND_RENDER_TO_NEW_TRACK) {
+        return hasTracksToMixAndRender();
     }
 
     return true;
+}
+
+bool TrackeditActionsController::hasTracksToMixAndRender() const
+{
+    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return false;
+    }
+
+    return !utils::tracksToMixAndRender(*project, selectionController()->selectedTracks()).empty();
+}
+
+void TrackeditActionsController::notifyMixAndRenderEnabledChanged()
+{
+    notifyActionEnabledChanged(MIX_AND_RENDER);
+    notifyActionEnabledChanged(MIX_AND_RENDER_TO_NEW_TRACK);
+}
+
+void TrackeditActionsController::listenToTrackList()
+{
+    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
+    }
+
+    const auto onTrackListChanged = [this](const Track&) {
+        notifyMixAndRenderEnabledChanged();
+    };
+    project->trackAdded().onReceive(this, onTrackListChanged, muse::async::Asyncable::Mode::SetReplace);
+    project->trackRemoved().onReceive(this, onTrackListChanged, muse::async::Asyncable::Mode::SetReplace);
+    project->trackChanged().onReceive(this, onTrackListChanged, muse::async::Asyncable::Mode::SetReplace);
 }
 
 bool TrackeditActionsController::canSilenceAudio() const
