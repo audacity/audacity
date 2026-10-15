@@ -75,6 +75,9 @@ private:
     bool isFocusedItemClip() const;
     ClipKeyList clipsForInteraction() const;
     bool canSilenceAudio() const;
+    bool hasTracksToMixAndRender() const;
+    void notifyMixAndRenderEnabledChanged();
+    void listenToTrackList();
 
     struct ContiguousClipsSpan {
         TrackId trackId = INVALID_TRACK;
