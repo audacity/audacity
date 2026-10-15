@@ -139,12 +139,17 @@ void TrackeditCommandsState::init()
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateCommandStates(historyCommands);
+        updateCommandStates(mixAndRenderCommands);
 
         //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
         //! in its own history receiver, which may run after this one. Evaluate the group commands once it has.
         muse::async::Async::call(this, [this]() {
             updateCommandStates(groupCommands);
         });
+    });
+
+    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this](long) {
+        updateCommandStates(mixAndRenderCommands);
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList&) {
@@ -184,6 +189,7 @@ void TrackeditCommandsState::deinit()
     globalContext()->currentProjectChanged().disconnect(this);
     globalContext()->isRecordingChanged().disconnect(this);
     projectHistory()->historyChanged().disconnect(this);
+    trackPlaybackControl()->muteOrSoloChanged().disconnect(this);
     selectionController()->clipsSelected().disconnect(this);
     selectionController()->labelsSelected().disconnect(this);
     selectionController()->clipsIntersectingRangeSelectionChanged().disconnect(this);
