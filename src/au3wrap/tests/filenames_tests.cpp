@@ -89,3 +89,11 @@ TEST_F(FileNamesTests, NonexistentDirectoryIsNotMergedWithExistingOne)
     FileNames::RemoveDuplicatesFromPathList(paths);
     EXPECT_EQ(paths.size(), 2);
 }
+
+TEST_F(FileNamesTests, SingleDirectoryRemainsUnchanged)
+{
+    FilePaths paths { path("real") };
+    FileNames::RemoveDuplicatesFromPathList(paths);
+    ASSERT_EQ(paths.size(), 1);
+    EXPECT_EQ(paths[0], path("real"));
+}
