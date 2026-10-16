@@ -19,6 +19,8 @@
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
+#include "autoduck/autoduckeffect.h"
+#include "autoduck/autoduckviewmodel.h"
 #include "loudness/normalizeloudnesseffect.h"
 #include "loudness/normalizeloudnessviewmodel.h"
 #include "clickremoval/clickremovaleffect.h"
@@ -89,6 +91,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< ChangePitchEffect > regChangePitch;
 #endif
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
+    static BuiltinEffectsModule::Registration< AutoDuckEffect > regAutoDuck;
     static BuiltinEffectsModule::Registration< NormalizeLoudnessEffect > regLoudness;
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
     static BuiltinEffectsModule::Registration< FilterCurveEq > regFilterCurveEq;
@@ -117,6 +120,9 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(AmplifyViewModelFactory);
     regView(AmplifyEffect::Symbol, u"qrc:/amplify/AmplifyView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(AutoDuckViewModelFactory);
+    regView(AutoDuckEffect::Symbol, u"qrc:/autoduck/AutoDuckView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NormalizeLoudnessViewModelFactory);
     regView(NormalizeLoudnessEffect::Symbol, u"qrc:/loudness/NormalizeLoudnessView.qml");

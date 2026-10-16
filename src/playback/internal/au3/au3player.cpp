@@ -50,7 +50,6 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
         if (globalContext()->isRecording() && !m_timer.isActive()) {
             m_currentTarget.reset();
             m_consumedSamplesSoFar = 0;
-            m_startOffset = 0.0;
             m_timer.start();
         }
     });
@@ -175,7 +174,6 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
 
     muse::Ret ret;
     PlayTracksOptions opts;
-    m_startOffset = 0.0;
     if (!muse::is_equal(t1, t0)) {
         if (cutpreview) {
             const double tless = std::min(t0, t1);
@@ -248,8 +246,6 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     if (mixerEndTime < 0.0) {
         mixerEndTime = endTime;
     }
-
-    m_startOffset = options.startOffset;
 
     AudacityProject& project = projectRef();
 
@@ -546,7 +542,7 @@ void Au3Player::updateStreamState()
 
 void Au3Player::updatePlaybackState()
 {
-    const double time = std::max(0.0, audioEngine()->streamTime() + m_startOffset);
+    const double time = std::max(0.0, audioEngine()->streamTime());
 
     if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
         m_playbackPosition.set(time);
