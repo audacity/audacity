@@ -12,6 +12,7 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "trackedit/trackeditutils.h"
 
 #include "spectrogram/spectrogramtypes.h"
 
@@ -283,7 +284,7 @@ int trackIndexOf(const std::vector<au::trackedit::Track>& tracks, const au::trac
 }
 }
 
-ItemKeys Au3SelectionController::itemKeysInRange(const TrackItemKey& target) const
+ItemKeys Au3SelectionController::itemsWithinBoxFromAnchorTo(const TrackItemKey& target) const
 {
     if (!m_itemSelectionAnchor.has_value() || !target.isValid()) {
         return {};
@@ -350,7 +351,7 @@ void Au3SelectionController::resetItemSelectionAnchorIfNoSelection()
     }
 }
 
-ItemKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const
+ItemKeys Au3SelectionController::itemsTouchingBoxFromAnchor(secs_t time, const TrackId& trackId) const
 {
     if (!m_itemSelectionAnchor.has_value()) {
         return {};
@@ -383,18 +384,61 @@ ItemKeys Au3SelectionController::itemsTouchingSelectionBox(secs_t time, const Tr
     const int firstTrackIndex = std::min(anchorTrackIndex, targetTrackIndex);
     const int lastTrackIndex = std::max(anchorTrackIndex, targetTrackIndex);
 
-    //! NOTE Every item that at least touches the box joins the selection
-    ItemKeys selection;
+    TrackIdList boxTracks;
     for (int trackIndex = firstTrackIndex; trackIndex <= lastTrackIndex; ++trackIndex) {
-        const Track& track = tracks.at(trackIndex);
-        if (track.type == TrackType::Label) {
-            muse::join(selection.labels, labelKeysIntersecting(track.id, boxStartTime, boxEndTime));
-        } else {
-            muse::join(selection.clips, clipKeysIntersecting(track.id, boxStartTime, boxEndTime));
+        boxTracks.push_back(tracks.at(trackIndex).id);
+    }
+
+    return itemsTouchingRange(boxTracks, boxStartTime, boxEndTime);
+}
+
+ItemKeys Au3SelectionController::itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const
+{
+    ItemKeys items;
+    for (const TrackId& trackId : trackIds) {
+        muse::join(items.clips, clipKeysIntersecting(trackId, startTime, endTime));
+        muse::join(items.labels, labelKeysIntersecting(trackId, startTime, endTime));
+    }
+
+    return items;
+}
+
+void Au3SelectionController::setSelectedItems(const ItemKeys& items, bool complete)
+{
+    au3::DomAccessor::clearAllClipSelection(projectRef());
+    for (const ClipKey& key : items.clips) {
+        au3::DomAccessor::setClipSelected(projectRef(), key, true);
+    }
+    au3::DomAccessor::clearAllLabelSelection(projectRef());
+    for (const LabelKey& key : items.labels) {
+        au3::DomAccessor::setLabelSelected(projectRef(), key, true);
+    }
+
+    const TrackIdList itemTracks = au::trackedit::utils::itemTrackIds(items);
+    TrackIdList tracks;
+    for (Au3Track* au3Track : Au3TrackList::Get(projectRef())) {
+        const TrackId trackId = TrackId(au3Track->GetId());
+        const bool selected = muse::contains(itemTracks, trackId);
+        au3Track->SetSelected(selected);
+        if (selected) {
+            tracks.push_back(trackId);
         }
     }
 
-    return selection;
+    const bool clipsChanged = m_selectedClips.assign(items.clips);
+    const bool labelsChanged = m_selectedLabels.assign(items.labels);
+    const bool tracksChanged = m_selectedTracks.assign(tracks);
+    resetItemSelectionAnchorIfNoSelection();
+
+    if (clipsChanged) {
+        m_selectedClips.publish(complete);
+    }
+    if (labelsChanged) {
+        m_selectedLabels.publish(complete);
+    }
+    if (tracksChanged) {
+        m_selectedTracks.publish(complete);
+    }
 }
 
 void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)

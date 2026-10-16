@@ -49,9 +49,11 @@ public:
     std::optional<secs_t> selectedClipStartTime() const override;
     std::optional<secs_t> selectedClipEndTime() const override;
 
-    ItemKeys itemKeysInRange(const TrackItemKey& target) const override;
+    ItemKeys itemsWithinBoxFromAnchorTo(const TrackItemKey& target) const override;
     void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) override;
-    ItemKeys itemsTouchingSelectionBox(secs_t time, const TrackId& trackId) const override;
+    ItemKeys itemsTouchingBoxFromAnchor(secs_t time, const TrackId& trackId) const override;
+    ItemKeys itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const override;
+    void setSelectedItems(const ItemKeys& items, bool complete = true) override;
 
     std::optional<secs_t> leftMostSelectedClipStartTime() const override;
     std::optional<secs_t> rightMostSelectedClipEndTime() const override;
@@ -131,6 +133,8 @@ private:
     LabelKeyList labelKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const;
 
     au3::Au3Project& projectRef() const;
+
+    friend class Au3SelectionControllerTests;
     Observer::Subscription m_tracksSubc;
 
     template<typename T>
@@ -145,13 +149,25 @@ private:
 
         void set(const T& v, bool complete)
         {
+            if (assign(v)) {
+                publish(complete);
+            }
+        }
+
+        bool assign(const T& v)
+        {
             if (val == v) {
-                return;
+                return false;
             }
             val = v;
-            changed.send(v);
+            return true;
+        }
+
+        void publish(bool complete)
+        {
+            changed.send(val);
             if (complete) {
-                selected.send(v);
+                selected.send(val);
             }
         }
     };

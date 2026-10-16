@@ -24,9 +24,11 @@ public:
     MOCK_METHOD(ClipKeyList, selectedClipsInTrackOrder, (), (const, override));
     MOCK_METHOD(void, setSelectedClips, (const ClipKeyList&, bool), (override));
 
-    MOCK_METHOD(ItemKeys, itemKeysInRange, (const TrackItemKey&), (const, override));
+    MOCK_METHOD(ItemKeys, itemsWithinBoxFromAnchorTo, (const TrackItemKey&), (const, override));
     MOCK_METHOD(void, setItemSelectionAnchor, (secs_t, const TrackItemKey&), (override));
-    MOCK_METHOD(ItemKeys, itemsTouchingSelectionBox, (secs_t, const TrackId&), (const, override));
+    MOCK_METHOD(ItemKeys, itemsTouchingBoxFromAnchor, (secs_t, const TrackId&), (const, override));
+    MOCK_METHOD(void, setSelectedItems, (const ItemKeys&, bool), (override));
+    MOCK_METHOD(ItemKeys, itemsTouchingRange, (const TrackIdList&, secs_t, secs_t), (const, override));
     MOCK_METHOD(void, addSelectedClip, (const ClipKey& clipKey), (override));
     MOCK_METHOD(muse::async::Channel<ClipKeyList>, clipsSelected, (), (const, override));
     MOCK_METHOD(std::optional<secs_t>, selectedClipStartTime, (), (const, override));

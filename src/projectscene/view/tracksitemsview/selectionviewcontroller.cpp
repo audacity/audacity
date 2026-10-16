@@ -3,12 +3,15 @@
 */
 #include <QGuiApplication>
 
+#include <algorithm>
 #include <cmath>
+#include <utility>
 
 #include "selectionviewcontroller.h"
 
 #include "spectrogram/spectrogramtypes.h"
 #include "spectrogram/view/spectrogramhit.h"
+#include "trackedit/trackeditutils.h"
 #include "framework/global/log.h"
 
 using namespace au::projectscene;
@@ -17,6 +20,24 @@ using namespace au::trackedit;
 
 constexpr double MIN_SELECTION_PX = 1.0;
 constexpr double SELECTION_DRAG_THRESHOLD_PX = 5.0;
+
+namespace {
+double clampToSpectrogram(const au::spectrogram::SpectrogramHit& hit, double y)
+{
+    return std::clamp(y, hit.spectrogramY, hit.spectrogramY + hit.spectrogramHeight);
+}
+
+std::optional<au::trackedit::TrackItemKey> firstItemOnTopmostTrack(const TrackIdList& tracks, const ItemKeys& timeSortedItems)
+{
+    for (const TrackId& trackId : tracks) {
+        if (const std::optional<au::trackedit::TrackItemKey> item = au::trackedit::utils::firstItemOnTrack(timeSortedItems, trackId)) {
+            return item;
+        }
+    }
+
+    return std::nullopt;
+}
+}
 
 SelectionViewController::SelectionViewController(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -53,6 +74,12 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
 
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
+    resetMarquee();
+    m_ctrlClickTracks.reset();
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        armMarquee(time, y);
+    }
+
     m_selectionStarted = true;
     {
         const bool modifierHeld = modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier);
@@ -70,9 +97,8 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
     emit selectionInProgressChanged();
     resetDataSelection();
 
-    TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
-        tracks = selectionController()->selectedTracks();
+        TrackIdList tracks = selectionController()->selectedTracks();
         TrackIdList newTracks = vs->tracksInRange(y, y);
         if (!newTracks.empty()) {
             const TrackId clickedTrack = newTracks.at(0);
@@ -83,18 +109,17 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
                 tracks.erase(it);
             }
         }
+
+        //! NOTE A Ctrl press may turn into a marquee, so the track toggle and the time selection
+        //! are only applied on release, once it is known that no marquee was drawn
+        m_ctrlClickTracks = tracks;
     } else {
-        tracks = vs->tracksInRange(m_startY, y);
+        const TrackIdList tracks = m_selectionThresholdCrossed ? tracksCoveredBySelection(vs, y) : vs->tracksInRange(m_startY, y);
+        focusPressedTracks(tracks);
+        selectionController()->setSelectedTracks(tracks, true);
     }
 
-    if (!tracks.empty()) {
-        trackNavigationController()->setFocus(TrackFocus::track(tracks.at(0)), false /*highlight*/);
-    } else {
-        trackNavigationController()->setFocus(TrackFocus::track(trackNavigationController()->focusedTrack()));
-    }
-    selectionController()->setSelectedTracks(tracks, true);
-
-    if (modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier)) {
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
         double time1 = m_selectionStartTime;
         double time2 = time;
         if (time1 > time2) {
@@ -119,13 +144,6 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
         doOnPositionChanged(m_context->positionToTime(m_autoScrollLastX), m_autoScrollLastY);
     });
-}
-
-namespace {
-double clampToSpectrogram(const au::spectrogram::SpectrogramHit& hit, double y)
-{
-    return std::clamp(y, hit.spectrogramY, hit.spectrogramY + hit.spectrogramHeight);
-}
 }
 
 void SelectionViewController::onPositionChanged(double time, double y)
@@ -153,7 +171,7 @@ bool SelectionViewController::doOnPositionChanged(double time, double y)
         return false;
     }
 
-    if (!m_selectionStarted) {
+    if (!m_selectionStarted && !m_marquee.armed) {
         return false;
     }
 
@@ -163,6 +181,11 @@ bool SelectionViewController::doOnPositionChanged(double time, double y)
     m_autoScrollLastX = m_context->timeToPosition(time);
     m_autoScrollLastY = y;
     m_context->startAutoScroll(time);
+
+    if (m_marquee.armed) {
+        updateMarquee(vs, time, y);
+        return false;
+    }
 
     if (!m_selectionThresholdCrossed) {
         const double startXPx = m_context->timeToPosition(m_selectionStartTime);
@@ -176,9 +199,11 @@ bool SelectionViewController::doOnPositionChanged(double time, double y)
     // tracks
     TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
+        //! TODO Ctrl+drag to expand the selection is being replaced by the marquee selection:
+        //! a Ctrl press arms the marquee, so this branch is not reached any more. TBD what to do with it
         tracks = selectionController()->selectedTracks();
     } else {
-        tracks = vs->tracksInRange(m_startY, y);
+        tracks = tracksCoveredBySelection(vs, y);
     }
     selectionController()->setSelectedTracks(tracks, false);
 
@@ -213,9 +238,8 @@ void SelectionViewController::onReleased(double time, double y)
         return;
     }
 
-    Qt::KeyboardModifiers modifiers = keyboardModifiers();
-
     m_selectionStarted = false;
+    const std::optional<TrackIdList> ctrlClickTracks = std::exchange(m_ctrlClickTracks, std::nullopt);
 
     time = std::max(time, 0.0);
     m_autoScrollLastX = m_context->timeToPosition(time);
@@ -225,6 +249,12 @@ void SelectionViewController::onReleased(double time, double y)
 
     emit selectionInProgressChanged();
 
+    if (m_marquee.active) {
+        endMarquee();
+        return;
+    }
+    resetMarquee();
+
     double time1 = m_selectionStartTime;
     double time2 = time;
     if (time1 > time2) {
@@ -232,8 +262,11 @@ void SelectionViewController::onReleased(double time, double y)
     }
 
     TrackIdList tracks;
-    if (modifiers.testFlag(Qt::ControlModifier)) {
-        tracks = selectionController()->selectedTracks();
+    if (ctrlClickTracks.has_value()) {
+        tracks = *ctrlClickTracks;
+        focusPressedTracks(tracks);
+    } else if (m_selectionThresholdCrossed) {
+        tracks = tracksCoveredBySelection(vs, y);
     } else {
         tracks = vs->tracksInRange(m_startY, y);
     }
@@ -258,7 +291,7 @@ void SelectionViewController::onReleased(double time, double y)
 
     setSelectionActive(true);
 
-    if (m_startY < y) {
+    if (m_startY < y || vs->isBelowAllTracks(y)) {
         trackNavigationController()->setFocus(TrackFocus::track(tracks.back()));
     } else {
         trackNavigationController()->setFocus(TrackFocus::track(tracks.front()));
@@ -348,14 +381,117 @@ void SelectionViewController::cancelSpectrogramEdit()
 
 void SelectionViewController::cancelSelectionGesture()
 {
-    if (!m_selectionStarted) {
+    if (!m_selectionStarted && !m_marquee.armed) {
         return;
     }
 
-    m_selectionStarted = false;
+    resetMarquee();
+    m_ctrlClickTracks.reset();
     m_context->stopAutoScroll();
     disconnect(m_autoScrollConnection);
-    emit selectionInProgressChanged();
+
+    if (m_selectionStarted) {
+        m_selectionStarted = false;
+        emit selectionInProgressChanged();
+    }
+}
+
+void SelectionViewController::startMarquee(double time, double y)
+{
+    if (!isProjectOpened() || m_selectionStarted) {
+        return;
+    }
+
+    cancelSelectionGesture();
+    armMarquee(time, y);
+
+    m_autoScrollLastX = m_context->timeToPosition(time);
+    m_autoScrollLastY = y;
+    m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
+        doOnPositionChanged(m_context->positionToTime(m_autoScrollLastX), m_autoScrollLastY);
+    });
+}
+
+void SelectionViewController::finishMarquee()
+{
+    if (!m_marquee.armed || m_selectionStarted) {
+        return;
+    }
+
+    m_context->stopAutoScroll();
+    disconnect(m_autoScrollConnection);
+    endMarquee();
+}
+
+void SelectionViewController::cancelMarquee()
+{
+    if (!m_marquee.armed) {
+        return;
+    }
+
+    if (m_marquee.active) {
+        selectionController()->setSelectedItems({}, true);
+    }
+
+    cancelSelectionGesture();
+}
+
+void SelectionViewController::armMarquee(double time, double y)
+{
+    m_marquee.armed = true;
+    m_marquee.anchorTime = time;
+    m_marquee.anchorY = y;
+}
+
+void SelectionViewController::updateMarquee(const IProjectViewStatePtr& vs, double time, double y)
+{
+    bool activatedNow = false;
+    if (!m_marquee.active) {
+        const double dx = m_context->timeToPosition(time) - m_context->timeToPosition(m_marquee.anchorTime);
+        const double dy = y - m_marquee.anchorY;
+        if (std::abs(dx) < SELECTION_DRAG_THRESHOLD_PX && std::abs(dy) < SELECTION_DRAG_THRESHOLD_PX) {
+            return;
+        }
+
+        resetDataSelection();
+        m_marquee.active = true;
+        activatedNow = true;
+        emit marqueeActiveChanged();
+    }
+
+    m_marquee.time = time;
+    m_marquee.y = y;
+    m_marquee.tracks = vs->tracksInRange(m_marquee.anchorY, y);
+    ItemKeys items = selectionController()->itemsTouchingRange(m_marquee.tracks,
+                                                               std::min(m_marquee.anchorTime, time),
+                                                               std::max(m_marquee.anchorTime, time));
+
+    if (activatedNow || items != m_marquee.items) {
+        m_marquee.items = std::move(items);
+        selectionController()->setSelectedItems(m_marquee.items, true);
+    }
+
+    emit marqueeRectChanged();
+}
+
+void SelectionViewController::endMarquee()
+{
+    if (const std::optional<trackedit::TrackItemKey> item = firstItemOnTopmostTrack(m_marquee.tracks, m_marquee.items)) {
+        selectionController()->setItemSelectionAnchor(std::min(m_marquee.anchorTime, m_marquee.time), *item);
+        trackNavigationController()->setFocus(TrackFocus::item(*item));
+    }
+
+    resetMarquee();
+}
+
+void SelectionViewController::resetMarquee()
+{
+    const bool wasActive = m_marquee.active;
+    m_marquee = {};
+    if (wasActive) {
+        emit marqueeActiveChanged();
+        emit marqueeRectChanged();
+    }
 }
 
 void SelectionViewController::selectTrackAudioData(double y)
@@ -369,27 +505,36 @@ void SelectionViewController::selectTrackAudioData(double y)
         return;
     }
 
-    const std::vector<TrackId> tracks = vs->tracksInRange(m_startY, y);
-    if (tracks.empty()) {
+    const TrackId track = vs->trackAtPosition(y);
+    if (track == trackedit::INVALID_TRACK) {
         return;
     }
 
     cancelSelectionGesture();
 
-    selectionController()->setSelectedTrackAudioData(tracks.at(0));
+    selectionController()->setSelectedTrackAudioData(track);
 }
 
-void SelectionViewController::selectItemData(const TrackItemKey& key)
+bool SelectionViewController::selectItemData(const TrackItemKey& key, double y)
 {
     if (!isProjectOpened()) {
-        return;
+        return false;
+    }
+
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return false;
+    }
+
+    if (!key.isValid() || key.key.trackId != vs->trackAtPosition(y)) {
+        return false;
     }
 
     auto prj = globalContext()->currentTrackeditProject();
     auto track = prj->track(key.key.trackId);
     if (!track.has_value()) {
         LOGW() << "Track not found: " << key.key.trackId;
-        return;
+        return false;
     }
 
     cancelSelectionGesture();
@@ -399,6 +544,8 @@ void SelectionViewController::selectItemData(const TrackItemKey& key)
     } else {
         selectionController()->setSelectedClips(trackedit::ClipKeyList({ key.key }));
     }
+
+    return true;
 }
 
 void SelectionViewController::resetSelectedItems()
@@ -449,6 +596,24 @@ TrackIdList SelectionViewController::trackIdList() const
 {
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     return prj ? prj->trackIdList() : TrackIdList();
+}
+
+void SelectionViewController::focusPressedTracks(const TrackIdList& tracks)
+{
+    if (!tracks.empty()) {
+        trackNavigationController()->setFocus(TrackFocus::track(tracks.at(0)), false /*highlight*/);
+    } else {
+        trackNavigationController()->setFocus(TrackFocus::track(trackNavigationController()->focusedTrack()));
+    }
+}
+
+TrackIdList SelectionViewController::tracksCoveredBySelection(const IProjectViewStatePtr& vs, double y) const
+{
+    if (vs->isBelowAllTracks(m_startY) && vs->isBelowAllTracks(y)) {
+        return trackIdList();
+    }
+
+    return vs->tracksInRange(m_startY, y);
 }
 
 Qt::KeyboardModifiers SelectionViewController::keyboardModifiers() const
@@ -524,6 +689,22 @@ QVariantMap SelectionViewController::pressedSpectrogram() const
         { "trackId", trackId },
         { "channel", channel },
     };
+}
+
+bool SelectionViewController::marqueeActive() const
+{
+    return m_marquee.active;
+}
+
+QRectF SelectionViewController::marqueeRect() const
+{
+    if (!m_marquee.active || !m_context) {
+        return {};
+    }
+
+    const QPointF anchor(m_context->timeToPosition(m_marquee.anchorTime), m_marquee.anchorY);
+    const QPointF corner(m_context->timeToPosition(m_marquee.time), m_marquee.y);
+    return QRectF(anchor, corner).normalized();
 }
 
 void SelectionViewController::setSelectionActive(bool newSelectionActive)

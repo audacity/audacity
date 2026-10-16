@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include "framework/global/async/asyncable.h"
 
 #include "modularity/ioc.h"
@@ -47,6 +49,7 @@ public:
     void setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio) override;
     trackedit::TrackId trackAtPosition(double y) const override;
     trackedit::TrackIdList tracksInRange(double y1, double y2) const override;
+    bool isBelowAllTracks(double y) const override;
 
     bool isSnapEnabled() const override;
     void setIsSnapEnabled(bool enabled) override;
@@ -139,6 +142,7 @@ private:
     friend class ProjectViewStateTests;
 
     int calculateVerticalRulerWidth() const;
+    std::optional<int> tracksBottomY() const;
     float maxVerticalZoomLevel(const trackedit::TrackId& trackId) const;
 
     struct TrackData {

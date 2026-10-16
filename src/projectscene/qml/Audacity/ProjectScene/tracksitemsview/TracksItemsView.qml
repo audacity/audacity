@@ -562,6 +562,9 @@ Rectangle {
 
             property var lastItemClickKey: null
             property bool itemWasMoved: false
+            property bool marqueeReleased: false
+            property int gestureButton: Qt.NoButton
+            property int ignoredButtons: Qt.NoButton
             property point pressStartPosition: Qt.point(0, 0)
             readonly property int moveThreshold: 5
 
@@ -570,6 +573,13 @@ Rectangle {
             }
 
             onPressed: function (e) {
+                if (gestureButton !== Qt.NoButton) {
+                    ignoredButtons |= e.button
+                    return
+                }
+                gestureButton = e.button
+                ignoredButtons = Qt.NoButton
+
                 itemWasMoved = false
 
                 if (itemsMoveController.keyboardActive) {
@@ -608,11 +618,7 @@ Rectangle {
 
                     pressStartPosition = Qt.point(e.x, e.y)
                 } else if (e.button === Qt.RightButton) {
-                    if (tracksHovered)
-                    //! TODO AU4: handle context menu over empty track area
-                    {} else {
-                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
-                    }
+                    selectionViewController.startMarquee(timeline.context.positionToTime(e.x), e.y)
                 }
             }
 
@@ -644,12 +650,34 @@ Rectangle {
             }
 
             onReleased: function (e) {
+                if (e.button !== gestureButton) {
+                    return
+                }
+                gestureButton = Qt.NoButton
+
+                if (e.button === Qt.RightButton) {
+                    const marqueeEnded = selectionViewController.marqueeActive
+                    selectionViewController.finishMarquee()
+                    if (marqueeEnded) {
+                        return
+                    }
+
+                    if (root.itemHovered && root.hoveredItemKey) {
+                        tracksItemsView.itemContextMenuRequested(root.hoveredItemKey, e.x, e.y, e.modifiers)
+                    } else if (!tracksHovered) {
+                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
+                    }
+                    return
+                }
+
                 if (e.button !== Qt.LeftButton || itemsMoveController.keyboardActive) {
                     return
                 }
 
-                if (!itemWasMoved) {
-                    tracksItemsView.itemReleaseRequested(hoveredItemKey)
+                marqueeReleased = false
+
+                if (!itemWasMoved && lastItemClickKey) {
+                    tracksItemsView.itemReleaseRequested(lastItemClickKey)
                 }
 
                 if (itemsMoveController.active) {
@@ -660,6 +688,7 @@ Rectangle {
                     splitToolController.mouseUp(e.x)
 
                     if (selectionViewController.selectionInProgress) {
+                        marqueeReleased = selectionViewController.marqueeActive
                         let releaseTime = timeline.context.positionToTime(e.x)
                         selectionViewController.onReleased(releaseTime, e.y)
 
@@ -679,22 +708,30 @@ Rectangle {
             }
 
             onCanceled: e => {
+                gestureButton = Qt.NoButton
+                ignoredButtons = Qt.NoButton
                 playCursorController.cancelSeekGesture()
+                selectionViewController.cancelMarquee()
                 prv.cancelItemDragEdit()
             }
 
             onClicked: e => {
+                if (ignoredButtons & e.button) {
+                    ignoredButtons &= ~e.button
+                    return
+                }
+
                 if (e.button !== Qt.LeftButton) {
                     return
                 }
 
-                if (!root.itemHovered && !itemWasMoved) {
+                if (!root.itemHovered && !itemWasMoved && !marqueeReleased) {
                     selectionViewController.resetSelectedItems()
                 }
             }
 
             onDoubleClicked: e => {
-                if (e.button !== Qt.LeftButton) {
+                if ((ignoredButtons & e.button) || e.button !== Qt.LeftButton) {
                     return
                 }
 
@@ -702,8 +739,7 @@ Rectangle {
                     return
                 }
 
-                if (root.itemHovered) {
-                    selectionViewController.selectItemData(root.hoveredItemKey)
+                if (root.itemHovered && root.hoveredItemKey && selectionViewController.selectItemData(root.hoveredItemKey, e.y)) {
                     playCursorController.seekToTimeKeepingView(timeline.context.selectedItemStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 } else {
@@ -826,6 +862,7 @@ Rectangle {
                 }
 
                 signal itemReleaseRequested(var itemKey)
+                signal itemContextMenuRequested(var itemKey, real x, real y, int modifiers)
                 signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
                 signal stopAutoScroll
@@ -1216,6 +1253,21 @@ Rectangle {
 
             x: Math.max(timeline.context.selectionStartPosition, 0.0)
             width: timeline.context.selectionEndPosition - x
+        }
+
+        Rectangle {
+            id: marqueeSelection
+
+            visible: selectionViewController.marqueeActive
+
+            x: selectionViewController.marqueeRect.x
+            y: selectionViewController.marqueeRect.y
+            width: selectionViewController.marqueeRect.width
+            height: selectionViewController.marqueeRect.height
+
+            color: ui.colorWithAlphaF(ui.theme.extra["marquee_selection_color"], 0.12)
+            border.color: ui.theme.extra["marquee_selection_color"]
+            border.width: 1
         }
 
         PlaybackSeekLine {

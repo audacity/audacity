@@ -418,7 +418,7 @@ TEST_F(TrackItemsMoveControllerTests, KeyboardRepeatsPreviewOriginalItemsUntilMo
     const trackedit::ClipKeyList moved { { 2, 20 } };
     EXPECT_CALL(*m_interaction, moveClips(original, trackedit::secs_t(0.5), 1))
     .WillOnce(Return(muse::RetVal<trackedit::ClipKeyList>::make_ok(moved)));
-    EXPECT_CALL(*m_selection, setSelectedClips(original, false));
+    EXPECT_CALL(*m_selection, setSelectedItems(trackedit::ItemKeys { original, {} }, false));
     EXPECT_CALL(*m_navigation, setFocus(trackedit::TrackFocus::item(moved.front()), true));
     m_viewState->modifiersReleased().notify();
     expectFinished();

@@ -28,7 +28,6 @@ Rectangle {
 
     signal requestSingleSelected
 
-    signal contextMenuOpenRequested(real x, real y)
     signal mousePositionChanged(real x, real y)
     signal headerHoveredChanged(bool value)
 
@@ -59,7 +58,7 @@ Rectangle {
         property var lastClickTime: Date()
         property point doubleClickStartPosition
 
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        acceptedButtons: Qt.LeftButton
         hoverEnabled: true
         cursorShape: Qt.OpenHandCursor
 
@@ -67,10 +66,6 @@ Rectangle {
 
         onPressed: function (e) {
             var currentTime = Date.now()
-
-            if (e.button === Qt.RightButton) {
-                return
-            }
 
             if (currentTime - lastClickTime < prv.doubleClickInterval) {
                 // Double click - edit title
@@ -85,9 +80,6 @@ Rectangle {
         }
 
         onClicked: function (e) {
-            if (e.button === Qt.RightButton) {
-                root.contextMenuOpenRequested(e.x, e.y)
-            }
             e.accepted = false
         }
 
