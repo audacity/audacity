@@ -648,7 +648,8 @@ wxString VSTWrapper::GetString(int opcode, int index) const
 void VSTWrapper::SetString(int opcode, const wxString& str, int index)
 {
     char buf[256];
-    strcpy(buf, str.Left(255).ToUTF8());
+    strncpy(buf, str.Left(255).ToUTF8(), sizeof(buf) - 1);
+    buf[sizeof(buf) - 1] = '\0';
 
     callDispatcher(opcode, index, 0, buf, 0.0);
 }
