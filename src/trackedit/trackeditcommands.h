@@ -44,6 +44,8 @@ inline static const muse::rcommand::Command TRACKEDIT_TRACK_SPLIT_STEREO_TO_CENT
 inline static const muse::rcommand::Command TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND("command://trackedit/track-change-rate-custom");
 inline static const muse::rcommand::Command TRACKEDIT_TRACK_MAKE_STEREO_COMMAND("command://trackedit/track-make-stereo");
 inline static const muse::rcommand::Command TRACKEDIT_TRACK_RESAMPLE_COMMAND("command://trackedit/track-resample");
+inline static const muse::rcommand::Command TRACKEDIT_MIX_AND_RENDER_COMMAND("command://trackedit/mix-and-render");
+inline static const muse::rcommand::Command TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND("command://trackedit/mix-and-render-to-new-track");
 
 inline static const muse::rcommand::Command TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND(
     "command://trackedit/trim-audio-outside-selection");

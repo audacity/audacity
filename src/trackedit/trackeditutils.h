@@ -11,6 +11,8 @@ namespace au::trackedit::utils {
 bool hasStereoTrack(const TrackList& tracks);
 std::vector<const Clip*> clipSetDifference(const Clips& set1, const Clips& set2);
 
+TrackIdList tracksToMixAndRender(const ITrackeditProject& project, const TrackIdList& selectedTracks);
+
 template<typename Fn>
 void executeAndNotifyAboutChangedClips(ITrackeditProjectPtr prj, TrackId trackId, Fn&& fn)
 {
