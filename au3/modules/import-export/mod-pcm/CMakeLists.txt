@@ -24,9 +24,10 @@ PRIVATE
    au3-track
    au3-wave-track
    SndFile::sndfile
+   libid3tag::libid3tag
    wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "PRIVATE;-DUSE_LIBID3TAG" ""
 )

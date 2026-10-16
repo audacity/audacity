@@ -23,9 +23,10 @@ PRIVATE
    FLAC::FLAC
    FLAC::FLAC++
    rapidjson::rapidjson
+   libid3tag::libid3tag
    wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "PRIVATE;-DUSE_LIBID3TAG" ""
 )
