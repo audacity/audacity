@@ -47,6 +47,7 @@ const muse::Settings::Key DEFAULT_PROJECT_SAMPLE_FORMAT("au3audio", "SamplingRat
 const muse::Settings::Key RECORDING_SOURCE("au3audio", "AudioIO/RecordingSource");
 const muse::Settings::Key RECORDING_SOURCE_INDEX("au3audio", "AudioIO/RecordingSourceIndex");
 const muse::Settings::Key ASIO_USE_DEVICE_SAMPLE_RATE("au3audio", "AudioIO/ASIO/UseDeviceSampleRate");
+const muse::Settings::Key WASAPI_MODE("au3audio", "AudioIO/WASAPI/Mode");
 
 std::string preferredAudioHost(const std::vector<std::string>& hosts)
 {
@@ -268,6 +269,7 @@ void Au3AudioDriverController::initDefaults()
     settings()->setDefaultValue(AUTOMATIC_LATENCY_COMPENSATION, muse::Val(false));
     settings()->setDefaultValue(LATENCY_COMPENSATION, muse::Val(-130.0));
     settings()->setDefaultValue(ASIO_USE_DEVICE_SAMPLE_RATE, muse::Val(true));
+    settings()->setDefaultValue(WASAPI_MODE, muse::Val("shared-low-latency"));
     settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(AudioIOBase::GetOptimalSupportedSampleRate()));
     settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_FORMAT,
                                 muse::Val(QualitySettings::SampleFormatSetting.Default().Internal().ToStdString()));
@@ -286,6 +288,7 @@ AudioConfiguration Au3AudioDriverController::configurationFromSettings() const
     result.defaultSampleRate = settings()->value(DEFAULT_PROJECT_SAMPLE_RATE).toInt();
     result.defaultSampleFormat = displaySampleFormat(settings()->value(DEFAULT_PROJECT_SAMPLE_FORMAT).toString());
     result.asioUseDeviceSampleRate = settings()->value(ASIO_USE_DEVICE_SAMPLE_RATE).toBool();
+    result.wasapiMode = settings()->value(WASAPI_MODE).toString();
     return result;
 }
 
@@ -439,6 +442,12 @@ std::optional<AudioConfiguration> Au3AudioDriverController::normalizedConfigurat
     if (change.asioUseDeviceSampleRate) {
         result.asioUseDeviceSampleRate = *change.asioUseDeviceSampleRate;
     }
+    if (change.wasapiMode) {
+        if (*change.wasapiMode != "shared" && *change.wasapiMode != "shared-low-latency" && *change.wasapiMode != "exclusive") {
+            return std::nullopt;
+        }
+        result.wasapiMode = *change.wasapiMode;
+    }
     return result;
 }
 
@@ -477,6 +486,9 @@ AudioConfigurationDelta Au3AudioDriverController::makeDelta(const AudioConfigura
     if (before.asioUseDeviceSampleRate != after.asioUseDeviceSampleRate) {
         add(AudioConfigurationField::AsioUseDeviceSampleRate);
     }
+    if (before.wasapiMode != after.wasapiMode) {
+        add(AudioConfigurationField::WasapiMode);
+    }
     return delta;
 }
 
@@ -489,13 +501,11 @@ bool Au3AudioDriverController::streamNeedsSuspension(
         return false;
     }
 
-    // Routing and the ASIO flag invalidate the process-wide PortAudio state, so
-    // any stream must reopen. A buffer-length change would only take effect on
-    // the next stream; reopening even another window's stream is a deliberate
-    // policy so the new value is audible immediately.
+    // Routing, driver modes, and buffer length require the owning stream to reopen.
     const bool routing = changesRouting(delta);
     const bool reopenAll = routing || delta.contains(AudioConfigurationField::BufferLength)
-                           || delta.contains(AudioConfigurationField::AsioUseDeviceSampleRate);
+                           || delta.contains(AudioConfigurationField::AsioUseDeviceSampleRate)
+                           || delta.contains(AudioConfigurationField::WasapiMode);
     if (reopenAll) {
         return true;
     }
@@ -609,6 +619,10 @@ void Au3AudioDriverController::writeConfiguration(const AudioConfiguration& valu
     }
     if (delta.contains(AudioConfigurationField::AsioUseDeviceSampleRate)) {
         settings()->setLocalValue(ASIO_USE_DEVICE_SAMPLE_RATE, muse::Val(value.asioUseDeviceSampleRate));
+    }
+    if (delta.contains(AudioConfigurationField::WasapiMode)) {
+        settings()->setLocalValue(WASAPI_MODE, muse::Val(value.wasapiMode));
+        AudioIOBase::InvalidateRateCache();
     }
     if (delta.contains(AudioConfigurationField::DefaultSampleFormat)) {
         const auto internal = internalSampleFormat(value.defaultSampleFormat);
@@ -890,6 +904,7 @@ ApplyResult Au3AudioDriverController::reload(const muse::modularity::ContextPtr&
     change.defaultSampleRate = fromSettings.defaultSampleRate;
     change.defaultSampleFormat = fromSettings.defaultSampleFormat;
     change.asioUseDeviceSampleRate = fromSettings.asioUseDeviceSampleRate;
+    change.wasapiMode = fromSettings.wasapiMode;
     const auto result = apply(requester, change);
     if (!result.succeeded() && result.status != ApplyStatus::Busy) {
         // Restore persisted settings when the live configuration rejects them.

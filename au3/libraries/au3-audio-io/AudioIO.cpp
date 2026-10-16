@@ -553,6 +553,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     bool usePlayback = false, useCapture = false;
     PaStreamParameters playbackParameters{};
     PaStreamParameters captureParameters{};
+    const bool wasapiExclusive = AudioIOWasapiMode.Read() == "exclusive";
 
    #ifdef __WXMSW__
     PaWasapiStreamInfo wasapiStreamInfo{};
@@ -586,31 +587,15 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         bool isMME = (hostInfo && hostInfo->type == paMME);
 
       #ifdef __WXMSW__
-        // If the host API is WASAPI, the stream is bidirectional and there is no
-        // supported sample rate enable the WASAPI Sample Rate Conversion
-        // for the playback device.
-        if (isWASAPI && isUnsupportedSampleRate) {
-            wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
-            wasapiStreamInfo.hostApiType = paWASAPI;
-            wasapiStreamInfo.version = 1;
-            wasapiStreamInfo.flags = paWinWasapiAutoConvert;
-
+        if (isWASAPI) {
+            wasapiStreamInfo = MakeWasapiStreamInfo(isUnsupportedSampleRate);
             playbackParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
         }
-       #ifdef paWinWasapiSharedLowLatency
-        // The output of a stream that also records takes the engine period of its input
-        if (isWASAPI && numCaptureChannels > 0) {
-            wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
-            wasapiStreamInfo.hostApiType = paWASAPI;
-            wasapiStreamInfo.version = 1;
-            wasapiStreamInfo.flags |= paWinWasapiSharedLowLatency;
-
-            playbackParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
-        }
-       #endif
       #endif
 
-        if (mSoftwarePlaythrough && !isMME) {
+        if (isWASAPI && wasapiExclusive) {
+            playbackParameters.suggestedLatency = latencyDuration / 1000.0;
+        } else if (mSoftwarePlaythrough && !isMME) {
             playbackParameters.suggestedLatency
                 =playbackDeviceInfo->defaultLowOutputLatency;
         } else {
@@ -646,7 +631,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
         // If the stream is bidirectional and there is no supported sample rate
         // set mRate to the value supported by the capture device.
-        if (isWASAPI && isUnsupportedSampleRate) {
+        if (isWASAPI && isUnsupportedSampleRate && !wasapiExclusive) {
             mRate = captureDeviceInfo->defaultSampleRate;
         }
 
@@ -656,15 +641,9 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         captureParameters.hostApiSpecificStreamInfo = NULL;
         captureParameters.channelCount = mNumCaptureChannels;
 
-      #if defined(__WXMSW__) && defined(paWinWasapiSharedLowLatency)
-        // Shared mode runs at the engine period (normally 10 ms), whatever the latency setting.
-        // Where the driver has shorter periods, the period follows the setting
+      #ifdef __WXMSW__
         if (isWASAPI) {
-            wasapiCaptureStreamInfo.size = sizeof(PaWasapiStreamInfo);
-            wasapiCaptureStreamInfo.hostApiType = paWASAPI;
-            wasapiCaptureStreamInfo.version = 1;
-            wasapiCaptureStreamInfo.flags = paWinWasapiSharedLowLatency;
-
+            wasapiCaptureStreamInfo = MakeWasapiStreamInfo();
             captureParameters.hostApiSpecificStreamInfo = &wasapiCaptureStreamInfo;
         }
       #endif
@@ -2022,6 +2001,7 @@ AudioIOLoopbackResult AudioIO::MeasureLoopbackLatency(double projectRate, double
     const PaHostApiInfo* recordHost = Pa_GetHostApiInfo(recordInfo->hostApi);
     const bool playWASAPI = playHost && playHost->type == paWASAPI;
     const bool recordWASAPI = recordHost && recordHost->type == paWASAPI;
+    const bool wasapiExclusive = AudioIOWasapiMode.Read() == "exclusive";
     const bool usingJack = playHost && playHost->type == paJACK;
 
     // The same rate choice as StartPortAudioStream for a stream that records and plays
@@ -2033,7 +2013,7 @@ AudioIOLoopbackResult AudioIO::MeasureLoopbackLatency(double projectRate, double
         rate = GetBestRate(true, true, projectRate);
     }
     const bool unsupportedRate = rate == 0.0;
-    if (unsupportedRate && recordWASAPI) {
+    if (unsupportedRate && recordWASAPI && !wasapiExclusive) {
         rate = recordInfo->defaultSampleRate;
     }
     if (rate == 0.0) {
@@ -2055,15 +2035,12 @@ AudioIOLoopbackResult AudioIO::MeasureLoopbackLatency(double projectRate, double
     playParameters.channelCount = static_cast<int>(state.outputChannels);
     playParameters.sampleFormat = paFloat32;
     // See bug 1949 in StartPortAudioStream
-    playParameters.suggestedLatency = playWASAPI ? 0.0 : latencyDuration / 1000.0;
+    playParameters.suggestedLatency = playWASAPI && !wasapiExclusive ? 0.0 : latencyDuration / 1000.0;
 
 #ifdef __WXMSW__
     PaWasapiStreamInfo wasapiStreamInfo {};
-    if (playWASAPI && unsupportedRate) {
-        wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
-        wasapiStreamInfo.hostApiType = paWASAPI;
-        wasapiStreamInfo.version = 1;
-        wasapiStreamInfo.flags = paWinWasapiAutoConvert;
+    if (playWASAPI) {
+        wasapiStreamInfo = MakeWasapiStreamInfo(unsupportedRate);
         playParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
     }
 #endif
@@ -2074,18 +2051,10 @@ AudioIOLoopbackResult AudioIO::MeasureLoopbackLatency(double projectRate, double
     recordParameters.sampleFormat = paFloat32;
     recordParameters.suggestedLatency = latencyDuration / 1000.0;
 
-#if defined(__WXMSW__) && defined(paWinWasapiSharedLowLatency)
-    // The same engine period as a recording, see StartPortAudioStream
+#ifdef __WXMSW__
     PaWasapiStreamInfo wasapiCaptureStreamInfo {};
-    if (playWASAPI && recordWASAPI) {
-        wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
-        wasapiStreamInfo.hostApiType = paWASAPI;
-        wasapiStreamInfo.version = 1;
-        wasapiStreamInfo.flags |= paWinWasapiSharedLowLatency;
-        playParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
-
-        wasapiCaptureStreamInfo = wasapiStreamInfo;
-        wasapiCaptureStreamInfo.flags = paWinWasapiSharedLowLatency;
+    if (recordWASAPI) {
+        wasapiCaptureStreamInfo = MakeWasapiStreamInfo();
         recordParameters.hostApiSpecificStreamInfo = &wasapiCaptureStreamInfo;
     }
 #endif

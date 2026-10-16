@@ -90,6 +90,26 @@ PreferencesPage {
             }
         }
 
+        SeparatorLine {
+            visible: wasapiSection.visible
+        }
+
+        WasapiSection {
+            id: wasapiSection
+
+            visible: apiModel.isWasapi
+            apiModel: apiModel
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
         SeparatorLine {}
 
         SampleRateSection {

@@ -130,6 +130,9 @@ void CommonAudioApiConfigurationModel::load()
         if (delta.contains(audio::AudioConfigurationField::AsioUseDeviceSampleRate)) {
             emit asioUseDeviceSampleRateChanged();
         }
+        if (delta.contains(audio::AudioConfigurationField::WasapiMode)) {
+            emit wasapiModeChanged();
+        }
     });
     audioDriverController()->audioDeviceListChanged().onNotify(this, [this]() {
         notifyDeviceContextChanged();
@@ -148,6 +151,7 @@ void CommonAudioApiConfigurationModel::reset()
     emit defaultSampleRateValueChanged();
     emit defaultSampleFormatChanged();
     emit asioUseDeviceSampleRateChanged();
+    emit wasapiModeChanged();
 }
 
 bool CommonAudioApiConfigurationModel::apply()
@@ -227,6 +231,30 @@ void CommonAudioApiConfigurationModel::notifyDeviceContextChanged()
 bool CommonAudioApiConfigurationModel::isAsio() const
 {
     return effectiveApi() == "ASIO";
+}
+
+bool CommonAudioApiConfigurationModel::isWasapi() const
+{
+    return effectiveApi() == "Windows WASAPI";
+}
+
+QString CommonAudioApiConfigurationModel::wasapiMode() const
+{
+    return QString::fromStdString(m_pending.wasapiMode.value_or(audioDriverController()->configuration().wasapiMode));
+}
+
+void CommonAudioApiConfigurationModel::setWasapiMode(const QString& mode)
+{
+    if (mode == wasapiMode() || (mode != "shared" && mode != "shared-low-latency" && mode != "exclusive")) {
+        return;
+    }
+    const auto value = mode.toStdString();
+    if (value == audioDriverController()->configuration().wasapiMode) {
+        m_pending.wasapiMode.reset();
+    } else {
+        m_pending.wasapiMode = value;
+    }
+    emit wasapiModeChanged();
 }
 
 bool CommonAudioApiConfigurationModel::asioUseDeviceSampleRate() const
@@ -484,7 +512,8 @@ void CommonAudioApiConfigurationModel::measureLatency()
 {
     // The measurement uses the applied settings, not the ones staged on this page
     const bool pendingChanges = m_pending.api || m_pending.outputDevice || m_pending.inputDevice
-                                || m_pending.inputChannels || m_pending.bufferLength || m_pending.defaultSampleRate;
+                                || m_pending.inputChannels || m_pending.bufferLength || m_pending.defaultSampleRate
+                                || m_pending.wasapiMode;
 
     muse::UriQuery query("audacity://preferences/measure_latency");
     query.addParam("pendingChanges", muse::Val(pendingChanges));
