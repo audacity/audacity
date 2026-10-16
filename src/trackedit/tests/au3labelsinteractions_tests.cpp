@@ -196,6 +196,228 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesFocusedLabelTrack)
     ASSERT_DOUBLE_EQ(label->getT1(), selectionEnd) << "Label end time should match selection end";
 }
 
+TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackBelowSelectedTrack)
+{
+    //! [GIVEN] There is a project with two audio tracks
+    const TrackId firstAudioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    const TrackId secondAudioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(firstAudioTrackId, INVALID_TRACK) << "Failed to create first audio track";
+    ASSERT_NE(secondAudioTrackId, INVALID_TRACK) << "Failed to create second audio track";
+
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(tracks.Size(), 2) << "Precondition failed: Should have two audio tracks";
+
+    //! [GIVEN] There is a selection from 1.0 to 2.0 seconds on the first audio track
+    const double selectionStart = 1.0;
+    const double selectionEnd = 2.0;
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(selectionStart));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(selectionEnd));
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { firstAudioTrackId }));
+
+    //! [EXPECT] The project is notified about a track inserted immediately below the selection
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, 1)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
+
+    //! [WHEN] Add a label to the selection
+    bool result = m_labelsInteraction->addLabelToSelection();
+
+    //! [THEN] The operation is successful
+    ASSERT_TRUE(result) << "Adding label to selection should succeed";
+
+    //! [THEN] A new label track is created between the two audio tracks
+    ASSERT_EQ(tracks.Size(), 3) << "A label track should have been created";
+    const auto* labelTrack = dynamic_cast<const Au3LabelTrack*>(*std::next(tracks.begin(), 1));
+    ASSERT_NE(labelTrack, nullptr) << "The track immediately below the selection should be a label track";
+
+    //! [THEN] The label track contains one label with the correct time range
+    ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
+    const Au3Label* label = labelTrack->GetLabel(0);
+    ASSERT_NE(label, nullptr) << "Label should exist";
+    ASSERT_DOUBLE_EQ(label->getT0(), selectionStart) << "Label start time should match selection start";
+    ASSERT_DOUBLE_EQ(label->getT1(), selectionEnd) << "Label end time should match selection end";
+
+    // Cleanup
+    removeTrack(firstAudioTrackId);
+    removeTrack(secondAudioTrackId);
+}
+
+TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesLabelTrackImmediatelyBelowSelection)
+{
+    //! [GIVEN] There is a project with an audio track followed by a label track
+    const TrackId audioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(audioTrackId, INVALID_TRACK) << "Failed to create audio track";
+
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* existingLabelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(existingLabelTrack, nullptr) << "Failed to create label track";
+    ASSERT_EQ(tracks.Size(), 2) << "Precondition failed: Should have two tracks";
+
+    //! [GIVEN] There is a selection from 1.0 to 2.0 seconds on the audio track
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(1.0));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(2.0));
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { audioTrackId }));
+
+    //! [EXPECT] The project is notified about a new label being added but NOT about a new track
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, _)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
+
+    //! [WHEN] Add a label to the selection
+    bool result = m_labelsInteraction->addLabelToSelection();
+
+    //! [THEN] The operation is successful and no new track is created
+    ASSERT_TRUE(result) << "Adding label to selection should succeed";
+    ASSERT_EQ(tracks.Size(), 2) << "No new track should have been created";
+
+    //! [THEN] The label went to the label track immediately below the selection
+    ASSERT_EQ(existingLabelTrack->GetNumLabels(), 1) << "Label track below the selection should contain one label";
+
+    // Cleanup
+    removeTrack(audioTrackId);
+}
+
+TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionIgnoresLabelTrackNotImmediatelyBelowSelection)
+{
+    //! [GIVEN] There is a project with two audio tracks followed by a label track
+    const TrackId firstAudioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    const TrackId secondAudioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(firstAudioTrackId, INVALID_TRACK) << "Failed to create first audio track";
+    ASSERT_NE(secondAudioTrackId, INVALID_TRACK) << "Failed to create second audio track";
+
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* existingLabelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(existingLabelTrack, nullptr) << "Failed to create label track";
+    ASSERT_EQ(tracks.Size(), 3) << "Precondition failed: Should have three tracks";
+
+    //! [GIVEN] There is a selection on the first audio track only
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(1.0));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(2.0));
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { firstAudioTrackId }));
+
+    //! [EXPECT] The project is notified about a track inserted immediately below the selection
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, 1)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
+
+    //! [WHEN] Add a label to the selection
+    bool result = m_labelsInteraction->addLabelToSelection();
+
+    //! [THEN] The operation is successful
+    ASSERT_TRUE(result) << "Adding label to selection should succeed";
+
+    //! [THEN] A new label track is created between the two audio tracks
+    ASSERT_EQ(tracks.Size(), 4) << "A label track should have been created";
+    const auto* newLabelTrack = dynamic_cast<const Au3LabelTrack*>(*std::next(tracks.begin(), 1));
+    ASSERT_NE(newLabelTrack, nullptr) << "The track immediately below the selection should be a label track";
+    ASSERT_EQ(newLabelTrack->GetNumLabels(), 1) << "The new label track should contain the label";
+
+    //! [THEN] The pre-existing label track further down is left untouched
+    ASSERT_EQ(existingLabelTrack->GetNumLabels(), 0) << "The label track further down should remain empty";
+
+    // Cleanup
+    removeTrack(firstAudioTrackId);
+    removeTrack(secondAudioTrackId);
+}
+
+TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionIgnoresLabelTrackAboveSelection)
+{
+    //! [GIVEN] There is a project with a label track followed by an audio track
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* existingLabelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(existingLabelTrack, nullptr) << "Failed to create label track";
+
+    const TrackId audioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(audioTrackId, INVALID_TRACK) << "Failed to create audio track";
+    ASSERT_EQ(tracks.Size(), 2) << "Precondition failed: Should have two tracks";
+
+    //! [GIVEN] There is a selection on the audio track
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(1.0));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(2.0));
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { audioTrackId }));
+
+    //! [EXPECT] The project is notified about a track inserted below the selection
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, 2)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
+
+    //! [WHEN] Add a label to the selection
+    bool result = m_labelsInteraction->addLabelToSelection();
+
+    //! [THEN] The operation is successful
+    ASSERT_TRUE(result) << "Adding label to selection should succeed";
+
+    //! [THEN] A new label track is created below the audio track, and the label placed there
+    ASSERT_EQ(tracks.Size(), 3) << "A label track should have been created";
+    const auto* newLabelTrack = dynamic_cast<const Au3LabelTrack*>(*std::next(tracks.begin(), 2));
+    ASSERT_NE(newLabelTrack, nullptr) << "The track below the selection should be a label track";
+    ASSERT_EQ(newLabelTrack->GetNumLabels(), 1) << "The new label track should contain the label";
+
+    //! [THEN] The pre-existing label track above the selection is left untouched
+    ASSERT_EQ(existingLabelTrack->GetNumLabels(), 0) << "The label track above the selection should remain empty";
+
+    // Cleanup
+    removeTrack(audioTrackId);
+}
+
+TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesSelectedLabelTrack)
+{
+    //! [GIVEN] There is a project with an audio track followed by two label tracks
+    const TrackId audioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(audioTrackId, INVALID_TRACK) << "Failed to create audio track";
+
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* firstLabelTrack = ::LabelTrack::Create(tracks);
+    Au3LabelTrack* secondLabelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(firstLabelTrack, nullptr) << "Failed to create first label track";
+    ASSERT_NE(secondLabelTrack, nullptr) << "Failed to create second label track";
+    ASSERT_EQ(tracks.Size(), 3) << "Precondition failed: Should have three tracks";
+
+    //! [GIVEN] The selection spans the audio track and the first label track
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(1.0));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(2.0));
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { audioTrackId, firstLabelTrack->GetId() }));
+
+    //! [EXPECT] The project is notified about a new label being added but NOT about a new track
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, _)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
+
+    //! [WHEN] Add a label to the selection
+    bool result = m_labelsInteraction->addLabelToSelection();
+
+    //! [THEN] The operation is successful and no new track is created
+    ASSERT_TRUE(result) << "Adding label to selection should succeed";
+    ASSERT_EQ(tracks.Size(), 3) << "No new track should have been created";
+
+    //! [THEN] The label went to the selected label track, not the one below it
+    ASSERT_EQ(firstLabelTrack->GetNumLabels(), 1) << "The selected label track should contain the label";
+    ASSERT_EQ(secondLabelTrack->GetNumLabels(), 0) << "The unselected label track should remain empty";
+
+    // Cleanup
+    removeTrack(audioTrackId);
+}
+
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
 {
     //! [GIVEN] There is a project without any label tracks
