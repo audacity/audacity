@@ -27,11 +27,6 @@ ProjectMeta Au3Metadata::tags() const
     Tags& au3Tags = Tags::Get(*project);
 
     for (auto row : au3Tags.GetRange()) {
-        auto tag = wxToStdString(row.first);
-        if (tag == TITLE_TAG) {
-            au4Tags.trackTitle = wxToStdString(row.second);
-        }
-
         const std::string key = wxToStdString(row.first);
         const std::string val = wxToStdString(row.second);
 
