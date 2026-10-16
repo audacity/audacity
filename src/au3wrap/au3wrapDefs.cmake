@@ -34,6 +34,9 @@ set(AU3_DEF
     # FFmpeg support (not yet a library)
     -DFFMPEG_SUPPORT_API=
 
+    # ID3 tag support in mod-flac, mod-mp2, mod-mp3 and mod-pcm
+    -DUSE_LIBID3TAG
+
     # AU3 library API definitions (defined in au3defs.cmake, included above)
     # Note: AU3_API_DEFS is generated in au3defs.cmake (included above) and reused here
     # to avoid duplicating the API generation logic
@@ -77,6 +80,7 @@ set(AU3_LINK
     Ogg::ogg # transitive dependency of SndFile::sndfile
     Opus::opus # transitive dependency of SndFile::sndfile
     opusfile::opusfile # used by mod-opus no yet a library
+    libid3tag::libid3tag # used by mod-flac, mod-mp2, mod-mp3 and mod-pcm not yet libraries
 )
 
 # Platform-specific libraries for au3wrap
