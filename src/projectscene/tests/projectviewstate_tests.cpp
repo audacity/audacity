@@ -23,6 +23,12 @@
 
 #include <set>
 
+#include <context/tests/mocks/playbackstatemock.h>
+
+#include <playback/tests/mocks/playbackcontrollermock.h>
+
+#include <playback/playbacktypes.h>
+
 using namespace ::testing;
 using ::testing::_;
 
@@ -52,6 +58,15 @@ public:
 
         ON_CALL(*m_globalContextMock, currentTrackeditProject())
         .WillByDefault(Return(m_trackeditProjectMock));
+
+        m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
+
+        ON_CALL(*m_globalContextMock, playbackState())
+        .WillByDefault(Return(m_playbackState));
+
+        m_playbackController = std::make_shared<NiceMock<playback::PlaybackControllerMock> >();
+
+        m_projectViewState->playbackController.set(m_playbackController);
 
         initTestProject();
 
@@ -134,6 +149,10 @@ public:
 protected:
     std::shared_ptr<ProjectViewState> m_projectViewState = nullptr;
 
+    std::shared_ptr<context::PlaybackStateMock> m_playbackState;
+
+    std::shared_ptr<NiceMock<playback::PlaybackControllerMock> > m_playbackController;
+
     const std::shared_ptr<NiceMock<au::au3::Au3ProjectMock> > m_au3ProjectMock
         = std::make_shared<NiceMock<au::au3::Au3ProjectMock> >();
 
@@ -215,7 +234,7 @@ TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesAllClipsWhenNothingS
     m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
 
     // [THEN] Every clip edge is a snap target, even though nothing is selected.
-    const std::set<muse::secs_t> expected { 1.0, 3.0, 5.0, 8.0 };
+    const std::set<muse::secs_t> expected { 1.0, 3.0, 5.0, 8.0, 0.0 };
     EXPECT_EQ(m_projectViewState->itemsBoundaries(), expected);
 }
 
@@ -240,11 +259,11 @@ TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_RangeSelectionKeepsSelectedC
     // [WHEN/THEN] Without excluding the selection, both ends of the selected clip
     // remain snap targets (so a range selection snaps at start AND end).
     m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
-    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 2.0, 4.0, 6.0, 9.0 }));
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 2.0, 4.0, 6.0, 9.0, 0.0 }));
 
     // [WHEN/THEN] Excluding the selection drops the selected clip's edges.
     m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ true);
-    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 6.0, 9.0 }));
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 6.0, 9.0, 0.0 }));
 }
 
 TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_OmitsSpecifiedItemKey)
@@ -269,7 +288,7 @@ TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_OmitsSpecifiedItemKey)
     m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false, dragged.key);
 
     // [THEN] The dragged clip's own edges are not snap targets (no snapping to itself).
-    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 4.0, 7.0 }));
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 4.0, 7.0, 0.0 }));
 }
 
 TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesLabelBoundaries)
@@ -290,6 +309,48 @@ TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesLabelBoundaries)
 
     m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
 
-    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 1.5, 3.5 }));
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 1.5, 3.5, 0.0 }));
+}
+
+TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_ExcludeInvalidLoopRegion)
+{
+    //! [GIVEN] An invalid loop region is present.
+    const playback::PlaybackRegion region = playback::PlaybackRegion(1.0, 1.0);
+    ON_CALL(*m_playbackController, loopRegion())
+    .WillByDefault(Return(region));
+
+    // [WHEN] Boundaries are rebuilt.
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
+
+    // [THEN] The loop region start and end are not included in the boundaties.
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 0.0 }));
+}
+
+TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncluceValidLoopRegion)
+{
+    //! [GIVEN] A valid loop region is present.
+    const playback::PlaybackRegion region = playback::PlaybackRegion(1.0, 2.0);
+    ON_CALL(*m_playbackController, loopRegion())
+    .WillByDefault(Return(region));
+
+    // [WHEN] Boundaries are rebuilt.
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
+
+    // [THEN] The loop region start and end are included in the boundaties.
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 1.0, 2.0, 0.0 }));
+}
+
+TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludePlaybackPosition)
+{
+    //! [GIVEN] Playback is at position 3.5 seconds
+    const double playbackPosition = 3.5;
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(playbackPosition));
+
+    // [WHEN] Boundaries are rebuilt.
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
+
+    // [THEN] The correct playback position is included in the boundaries..
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 3.5 }));
 }
 } // namespace au::projectscene

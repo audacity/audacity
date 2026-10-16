@@ -17,6 +17,8 @@
 
 #include "../iprojectviewstate.h"
 
+#include <playback/iplaybackcontroller.h>
+
 namespace au::projectscene {
 class ProjectViewState : public QObject, public IProjectViewState, public muse::Contextable, public muse::async::Asyncable
 {
@@ -29,6 +31,7 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<playback::IPlaybackController> playbackController { this };
 
 public:
     ProjectViewState(const muse::modularity::ContextPtr& ctx);
