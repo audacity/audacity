@@ -3,6 +3,9 @@
 */
 #include "trackrulertypeattachment.h"
 
+#include "framework/global/modularity/ioc.h"
+#include "projectscene/iprojectsceneconfiguration.h"
+
 using namespace au::au3;
 using namespace au::trackedit;
 
@@ -11,6 +14,12 @@ static const AttachedTrackObjects::RegisteredFactory keyTrackRulerType{
 };
 
 static constexpr auto RulerTypeAttr = "rulerType";
+
+static TrackRulerType defaultRulerType()
+{
+    const muse::GlobalInject<au::projectscene::IProjectSceneConfiguration> configuration;
+    return configuration() ? configuration()->defaultTrackRulerType() : TrackRulerType::Linear;
+}
 
 TrackRulerTypeAttachment& TrackRulerTypeAttachment::Get(Au3Track* track)
 {
@@ -30,7 +39,7 @@ void TrackRulerTypeAttachment::CopyTo(Au3Track& track) const
 
 TrackRulerTypeAttachment::TrackRulerTypeAttachment(Au3Track& track)
     : mTrack{track.shared_from_this()}
-    , mRulerType{TrackRulerType::Linear}
+    , mRulerType{defaultRulerType()}
 {
 }
 
