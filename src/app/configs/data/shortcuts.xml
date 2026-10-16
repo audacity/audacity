@@ -837,6 +837,10 @@
         <seq>R</seq>
     </SC>
     <SC>
+        <key>record-on-new-track</key>
+        <seq>Shift+R</seq>
+    </SC>
+    <SC>
         <key>action://record/lead-in-recording</key>
         <seq>Shift+D</seq>
     </SC>
