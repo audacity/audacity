@@ -126,7 +126,7 @@ TEST_F(AudioIOMonitoringTest, MonitoringDoesNotNeedAudioThread)
     audioIO->mAudioThread.join();
     audioIO->mAudioThread = std::thread([] {});
 
-    const AudioIOStartStreamOptions options(projectRef().shared_from_this(), 44100.0);
+    const AudioIOStartTransportOptions options(projectRef().shared_from_this(), 44100.0);
     audioIO->StartMonitoring(options);
     ASSERT_TRUE(audioIO->IsMonitoring());
 

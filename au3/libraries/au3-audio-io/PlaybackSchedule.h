@@ -20,7 +20,7 @@
 #include <vector>
 
 class AudacityProject;
-struct AudioIOStartStreamOptions;
+struct AudioIOStartTransportOptions;
 class BoundedEnvelope;
 using PRCrossfadeData = std::vector< std::vector < float > >;
 
@@ -282,7 +282,7 @@ struct AUDIO_IO_API PlaybackSchedule {
     const PlaybackPolicy& GetPolicy() const;
 
     void Init(
-        double t0, double t1, const AudioIOStartStreamOptions& options, const RecordingSchedule* pRecordingSchedule);
+        double t0, double t1, const AudioIOStartTransportOptions& options, const RecordingSchedule* pRecordingSchedule);
 
     /** @brief Compute signed duration (in seconds at playback) of the specified region of the track.
      *

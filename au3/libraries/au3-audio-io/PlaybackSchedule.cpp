@@ -168,7 +168,7 @@ const PlaybackPolicy& PlaybackSchedule::GetPolicy() const
 
 void PlaybackSchedule::Init(
     const double t0, const double t1,
-    const AudioIOStartStreamOptions& options,
+    const AudioIOStartTransportOptions& options,
     const RecordingSchedule* pRecordingSchedule)
 {
     mpPlaybackPolicy.reset();
