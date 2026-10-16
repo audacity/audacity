@@ -65,6 +65,9 @@ public:
     MOCK_METHOD(bool, stretchClipsLeft, (const ClipKeyList&, secs_t, secs_t, bool, UndoPushType), (override));
     MOCK_METHOD(bool, stretchClipsRight, (const ClipKeyList&, secs_t, secs_t, bool, UndoPushType), (override));
 
+    MOCK_METHOD(bool, repeatClipsLeft, (const ClipKeyList&, secs_t, bool, UndoPushType), (override));
+    MOCK_METHOD(bool, repeatClipsRight, (const ClipKeyList&, secs_t, bool, UndoPushType), (override));
+
     MOCK_METHOD(secs_t, clipDuration, (const ClipKey&), (const, override));
     MOCK_METHOD(double, nearestZeroCrossing, (double), (const, override));
     MOCK_METHOD(muse::Ret, makeRoomForClip, (const trackedit::ClipKey&), (override));

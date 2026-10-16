@@ -629,6 +629,30 @@ bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList
     return success;
 }
 
+bool TrackeditOperationController::repeatClipsLeft(const ClipKeyList& clipKeyList, secs_t newStartTime, bool completed, UndoPushType type)
+{
+    const auto success = clipsInteraction()->repeatClipsLeft(clipKeyList, newStartTime, completed);
+    if (!success) {
+        return success;
+    }
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Repeat clip"), muse::trc("trackedit", "Repeat clip"), type);
+    }
+    return success;
+}
+
+bool TrackeditOperationController::repeatClipsRight(const ClipKeyList& clipKeyList, secs_t newEndTime, bool completed, UndoPushType type)
+{
+    const auto success = clipsInteraction()->repeatClipsRight(clipKeyList, newEndTime, completed);
+    if (!success) {
+        return success;
+    }
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Repeat clip"), muse::trc("trackedit", "Repeat clip"), type);
+    }
+    return success;
+}
+
 bool TrackeditOperationController::stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                     UndoPushType type)
 {

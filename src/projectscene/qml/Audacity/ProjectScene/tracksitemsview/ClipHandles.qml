@@ -18,7 +18,7 @@ Item {
     property int headerHeight: 20
     readonly property int handleMinH: 22
     readonly property int handleMaxH: 32
-    readonly property int handleHeight: Math.min(handleMaxH, Math.max(handleMinH, collapsed ? Math.round(clipHeight / 2) : Math.round((clipHeight - headerHeight) / 2)))
+    readonly property int handleHeight: Math.min(handleMaxH, Math.max(handleMinH, collapsed ? Math.round(clipHeight / 3) : Math.round((clipHeight - headerHeight) / 3)))
 
     property int animationDuration: 100
 
@@ -27,6 +27,8 @@ Item {
     property NavigationPanel clipNavigationPanel: null
     property bool leftTrimActive: false
     property bool rightTrimActive: false
+    property bool leftRepeatActive: false
+    property bool rightRepeatActive: false
     property bool leftStretchActive: false
     property bool rightStretchActive: false
 
@@ -43,16 +45,228 @@ Item {
     signal trimLeftRequested(bool completed, int action)
     signal trimRightRequested(bool completed, int action)
 
+    signal repeatLeftRequested(bool completed, int action)
+    signal repeatRightRequested(bool completed, int action)
+
     signal stretchLeftRequested(bool completed, int action)
     signal stretchRightRequested(bool completed, int action)
 
     //! NOTE: auto-scroll for trimming is triggered from trackclipslistmodel
     signal stopAutoScroll
 
+    //! Live preview of the tiles a repeat drag will create. Purely visual:
+    //! the actual pasting happens once, when the drag is released.
+    property int repeatGhostCount: 0
+    property bool repeatGhostLeft: false
+    property color clipColor: ui.theme.extra["clip_color_1"]
+    property string clipTitle: ""
+
+    Repeater {
+        id: repeatGhosts
+
+        model: root.repeatGhostCount
+
+        // Mimics a real clip: clip-colored body with a header strip on top,
+        // shown translucent as it is only a preview.
+        Rectangle {
+            id: ghostTile
+
+            required property int index
+
+            x: root.repeatGhostLeft ? -(index + 1) * root.width : (index + 1) * root.width
+            y: root.collapsed ? 0 : -(root.headerHeight + 1)
+            width: root.width
+            height: root.clipHeight
+
+            radius: 4
+            color: root.clipColor
+            opacity: 0.6
+            border.width: 1
+            border.color: ui.theme.extra["black_color"]
+
+            Rectangle {
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: root.collapsed ? 0 : root.headerHeight
+
+                radius: ghostTile.radius
+                color: ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3)
+
+                // square off the header's bottom corners
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: parent.radius
+                    color: parent.color
+                }
+
+                StyledTextLabel {
+                    anchors.fill: parent
+                    anchors.leftMargin: 4
+                    anchors.rightMargin: 8
+
+                    text: root.clipTitle
+                    horizontalAlignment: Qt.AlignLeft
+                    opacity: 0.7
+                }
+            }
+        }
+    }
+
+    Item {
+        id: leftRepeatHandle
+
+        x: -24
+        y: 0
+        height: root.handleHeight
+        width: 36
+
+        visible: handlesVisible
+
+        Rectangle {
+            anchors.fill: parent
+
+            color: "transparent"
+            border.width: 1
+            border.color: "blue"
+
+            visible: debugRectsVisible
+        }
+
+        Rectangle {
+            id: leftRepeat
+
+            width: 14
+            height: 14
+            radius: 7
+
+            anchors.verticalCenter: leftRepeatHandle.verticalCenter
+            anchors.left: leftRepeatHandle.left
+            anchors.leftMargin: 4
+
+            color: ui.theme.extra["black_color"]
+            border.width: 1
+            border.color: ui.theme.extra["white_color"]
+
+            StyledIconLabel {
+                id: leftRepeatIcon
+                width: 8
+                anchors.verticalCenter: leftRepeat.verticalCenter
+                anchors.horizontalCenter: leftRepeat.horizontalCenter
+
+                iconCode: IconCode.LOOP
+                font.pixelSize: 9
+                color: ui.theme.extra["white_color"]
+            }
+        }
+
+        MouseArea {
+            id: leftRepeatMa
+
+            anchors.fill: parent
+
+            hoverEnabled: true
+
+            cursorShape: Qt.BlankCursor
+
+            Component.onCompleted: {
+                CustomCursorProvider.setCursorShape(leftRepeatMa, ":/images/customCursorShapes/ClipRepeatLeft.png")
+            }
+
+            onPressed: {
+                CustomCursorProvider.overrideCursor(":/images/customCursorShapes/ClipRepeatLeft.png")
+                root.clipStartEditRequested()
+            }
+
+            onReleased: {
+                CustomCursorProvider.restoreCursor()
+                root.repeatGhostCount = 0
+                root.repeatLeftRequested(true, ClipBoundaryAction.Auto)
+                root.stopAutoScroll()
+                root.clipEndEditRequested()
+            }
+
+            onEntered: {
+                handlesHovered = true
+            }
+
+            onExited: {
+                if (!leftTrimMa.containsMouse) {
+                    handlesHovered = false
+                }
+            }
+
+            onPositionChanged: {
+                clipHandlesMousePositionChanged(mouseX + leftRepeatHandle.x, mouseY)
+                if (pressed) {
+                    root.repeatGhostLeft = true
+                    root.repeatGhostCount = Math.max(0, Math.min(100, Math.floor(-(mouseX + leftRepeatHandle.x) / root.width)))
+                    root.repeatLeftRequested(false, ClipBoundaryAction.Auto)
+                }
+            }
+
+            onCanceled: {
+                CustomCursorProvider.restoreCursor()
+                root.repeatGhostCount = 0
+                root.cancelClipDragEditRequested()
+            }
+        }
+
+        // this must be on top of mouse areas to receive mouse events first
+        NavigationControl {
+            id: leftRepeatNavCtrl
+
+            name: "LeftRepeatNavCtrl"
+            enabled: root.handlesVisible
+
+            panel: root.clipNavigationPanel
+            column: 3
+
+            onTriggered: {
+                root.leftRepeatActive = !root.leftRepeatActive
+            }
+
+            onNavigationEvent: function(event) {
+                if (!root.leftRepeatActive) {
+                    return
+                }
+
+                switch (event.type) {
+                case NavigationEvent.Left:
+                    root.repeatLeftRequested(true, ClipBoundaryAction.Expand)
+                    event.accepted = true
+                    break
+                case NavigationEvent.Right:
+                    root.repeatLeftRequested(true, ClipBoundaryAction.Shrink)
+                    event.accepted = true
+                    break
+                case NavigationEvent.Escape:
+                    root.repeatLeftRequested(true, ClipBoundaryAction.Auto)
+                    root.leftRepeatActive = false
+                    event.accepted = true
+                    break
+                default:
+                    break
+                }
+            }
+        }
+
+        NavigationFocusBorder {
+            navigationCtrl: leftRepeatNavCtrl
+
+            anchors.margins: 2
+
+            drawOutsideParent: false
+        }
+    }
+
     Item {
         id: leftTrimHandle
 
         x: -24
+        y: root.handleHeight
         height: root.handleHeight
         width: 36
 
@@ -188,7 +402,7 @@ Item {
             }
 
             onExited: {
-                if (!leftTimeMa.containsMouse) {
+                if (!leftTimeMa.containsMouse && !leftRepeatMa.containsMouse) {
                     handlesHovered = false
                 }
             }
@@ -208,9 +422,160 @@ Item {
     }
 
     Item {
+        id: rightRepeatHandle
+
+        x: parent.width - 12
+        y: 0
+        height: root.handleHeight
+        width: 36
+
+        visible: handlesVisible
+
+        Rectangle {
+            anchors.fill: parent
+
+            color: "transparent"
+            border.width: 1
+            border.color: "blue"
+
+            visible: debugRectsVisible
+        }
+
+        Rectangle {
+            id: rightRepeat
+
+            width: 14
+            height: 14
+            radius: 7
+
+            anchors.verticalCenter: rightRepeatHandle.verticalCenter
+            anchors.right: rightRepeatHandle.right
+            anchors.rightMargin: 4
+
+            color: ui.theme.extra["black_color"]
+            border.width: 1
+            border.color: ui.theme.extra["white_color"]
+
+            StyledIconLabel {
+                id: rightRepeatIcon
+                width: 8
+                anchors.verticalCenter: rightRepeat.verticalCenter
+                anchors.horizontalCenter: rightRepeat.horizontalCenter
+
+                iconCode: IconCode.LOOP
+                font.pixelSize: 9
+                color: ui.theme.extra["white_color"]
+            }
+        }
+
+        MouseArea {
+            id: rightRepeatMa
+
+            anchors.fill: parent
+
+            hoverEnabled: true
+
+            cursorShape: Qt.BlankCursor
+
+            Component.onCompleted: {
+                CustomCursorProvider.setCursorShape(rightRepeatMa, ":/images/customCursorShapes/ClipRepeatRight.png")
+            }
+
+            onPressed: function (e) {
+                CustomCursorProvider.overrideCursor(":/images/customCursorShapes/ClipRepeatRight.png")
+                root.clipStartEditRequested()
+            }
+
+            onReleased: function (e) {
+                CustomCursorProvider.restoreCursor()
+                root.repeatGhostCount = 0
+                root.repeatRightRequested(true, ClipBoundaryAction.Auto)
+                root.stopAutoScroll();
+
+                // this needs to be always at the very end
+                root.clipEndEditRequested()
+            }
+
+            onEntered: {
+                handlesHovered = true
+            }
+
+            onExited: {
+                if (!rightTrimMa.containsMouse) {
+                    handlesHovered = false
+                }
+            }
+
+            onPositionChanged: function (e) {
+                clipHandlesMousePositionChanged(mouseX + rightRepeatHandle.x, mouseY)
+
+                if (pressed) {
+                    root.repeatGhostLeft = false
+                    root.repeatGhostCount = Math.max(0, Math.min(100, Math.floor((mouseX + rightRepeatHandle.x - root.width) / root.width)))
+                    root.repeatRightRequested(false, ClipBoundaryAction.Auto)
+                }
+            }
+
+            onCanceled: function (e) {
+                CustomCursorProvider.restoreCursor()
+                root.repeatGhostCount = 0
+                cancelClipDragEditRequested()
+            }
+        }
+
+        // this must be on top of mouse areas to receive mouse events first
+        NavigationControl {
+            id: rightRepeatNavCtrl
+
+            name: "RightRepeatNavCtrl"
+            enabled: root.handlesVisible
+
+            panel: root.clipNavigationPanel
+            column: 7
+
+            onTriggered: {
+                root.rightRepeatActive = !root.rightRepeatActive
+            }
+
+            onNavigationEvent: function(event) {
+                if (!root.rightRepeatActive) {
+                    return
+                }
+
+                switch (event.type) {
+                case NavigationEvent.Left:
+                    root.repeatRightRequested(true, ClipBoundaryAction.Shrink)
+                    event.accepted = true
+                    break
+                case NavigationEvent.Right:
+                    root.repeatRightRequested(true, ClipBoundaryAction.Expand)
+                    event.accepted = true
+                    break
+                case NavigationEvent.Escape:
+                    root.repeatRightRequested(true, ClipBoundaryAction.Auto)
+                    root.rightRepeatActive = false
+                    event.accepted = true
+                    break
+                default:
+                    break
+                }
+            }
+        }
+
+        NavigationFocusBorder {
+            navigationCtrl: rightRepeatNavCtrl
+
+            anchors.margins: 2
+
+            drawOutsideParent: false
+        }
+    }
+
+    Item {
         id: rightTrimHandle
 
         x: parent.width - 12
+        y: root.handleHeight
         height: root.handleHeight
         width: 36
 
@@ -346,7 +711,7 @@ Item {
             }
 
             onExited: {
-                if (!rightTimeMa.containsMouse) {
+                if (!rightTimeMa.containsMouse && !rightRepeatMa.containsMouse) {
                     handlesHovered = false
                 }
             }
@@ -369,7 +734,7 @@ Item {
         id: leftTimecode
 
         x: -24
-        y: leftTrimHandle.height
+        y: root.handleHeight * 2
         height: root.handleHeight
         width: 36
 
@@ -533,7 +898,7 @@ Item {
         id: rightTimecode
 
         x: parent.width - 12
-        y: rightTrimHandle.height
+        y: root.handleHeight * 2
         height: root.handleHeight
         width: 36
 
@@ -694,7 +1059,23 @@ Item {
     states: [
         State {
             name: "NORMAL"
-            when: !leftTrimMa.containsMouse && !rightTrimMa.containsMouse && !leftTimeMa.containsMouse && !rightTimeMa.containsMouse
+            when: !leftTrimMa.containsMouse && !rightTrimMa.containsMouse && !leftTimeMa.containsMouse && !rightTimeMa.containsMouse && !leftRepeatMa.containsMouse && !rightRepeatMa.containsMouse
+        },
+        State {
+            name: "LEFT_REPEAT_HOVERED"
+            when: leftRepeatMa.containsMouse
+            PropertyChanges {
+                target: leftRepeat
+                scale: 1.2
+            }
+        },
+        State {
+            name: "RIGHT_REPEAT_HOVERED"
+            when: rightRepeatMa.containsMouse
+            PropertyChanges {
+                target: rightRepeat
+                scale: 1.2
+            }
         },
         State {
             name: "LEFT_TRIM_HOVERED"
@@ -797,6 +1178,18 @@ Item {
             PropertyAnimation {
                 target: rightClock
                 properties: "anchors.rightMargin"
+                duration: animationDuration
+                easing.type: Easing.Linear
+            }
+            PropertyAnimation {
+                target: leftRepeat
+                properties: "scale"
+                duration: animationDuration
+                easing.type: Easing.Linear
+            }
+            PropertyAnimation {
+                target: rightRepeat
+                properties: "scale"
                 duration: animationDuration
                 easing.type: Easing.Linear
             }
