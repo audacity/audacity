@@ -25,9 +25,10 @@ PRIVATE
    au3-utility
    libmp3lame::libmp3lame
    rapidjson::rapidjson
+   libid3tag::libid3tag
    wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "PRIVATE;-DUSE_LIBID3TAG" ""
 )
