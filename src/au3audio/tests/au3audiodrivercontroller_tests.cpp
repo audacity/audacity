@@ -188,7 +188,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_OrphanStreamIsForceStoppedInsteadOfW
     EXPECT_CALL(*m_audioEngine, currentStream())
     .WillOnce(Return(orphan))
     .WillRepeatedly(Return(std::optional<audio::AudioStreamDescriptor>()));
-    EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
+    EXPECT_CALL(*m_audioEngine, stopTransport()).Times(1);
     audio::AudioConfigurationChange change;
     change.bufferLength = 50.0;
 

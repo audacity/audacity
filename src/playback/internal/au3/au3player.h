@@ -73,7 +73,7 @@ public:
 private:
     au3::Au3Project& projectRef() const;
 
-    bool canStopAudioStream() const;
+    bool canStopTransport() const;
 
     TransportSequences makeTransportTracks(au3::Au3TrackList& trackList, bool selectedOnly);
 
