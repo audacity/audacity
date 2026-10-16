@@ -19,12 +19,12 @@ public:
     MOCK_METHOD(bool, isMonitoring, (), (const, override));
     MOCK_METHOD(std::optional<AudioStreamDescriptor>, currentStream, (), (const, override));
     MOCK_METHOD(bool, isStreamActive, (AudacityProject &), (const, override));
-    MOCK_METHOD(double, streamTime, (), (const, override));
+    MOCK_METHOD(double, transportTime, (), (const, override));
 
-    MOCK_METHOD(int, startStream, (const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
-                                   AudacityProject & project, const StartStreamOptions& options), (override));
-    MOCK_METHOD(void, stopStream, (), (override));
-    MOCK_METHOD(void, pauseStream, (bool pause), (override));
+    MOCK_METHOD(int, startTransport, (const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
+                                      AudacityProject & project, const StartTransportOptions& options), (override));
+    MOCK_METHOD(void, stopTransport, (), (override));
+    MOCK_METHOD(void, pauseTransport, (bool pause), (override));
     MOCK_METHOD(void, seekStream, (double time), (override));
 
     MOCK_METHOD(std::shared_ptr<RealtimeEffectState>, addRealtimeEffectState,
@@ -41,7 +41,7 @@ public:
     MOCK_METHOD(void, setPlaybackVolume, (float newPlaybackVolume), (override));
     MOCK_METHOD(float, getPlaybackVolume, (), (const, override));
 
-    MOCK_METHOD(bool, canStopAudioStream, (AudacityProject & project), (const, override));
+    MOCK_METHOD(bool, canStopTransport, (AudacityProject & project), (const, override));
 
     MOCK_METHOD(void, handleDeviceChange, (), (override));
 
