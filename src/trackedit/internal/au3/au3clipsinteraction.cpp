@@ -40,6 +40,7 @@ using namespace au::au3;
 
 namespace {
 static const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono…");
+static const std::string resamplingLabel = muse::trc("trackedit", "Resampling…");
 }
 
 Au3ClipsInteraction::Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx)
@@ -431,8 +432,12 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
 
     changeClipsStartTime(clipKeyList, timePositionOffset, false);
 
+    muse::Ret moveRet = muse::make_ok();
     const bool needsDownmixing = trackPositionOffset != 0
-                                 && moveSelectedClipsUpOrDown(newClipKeyList, trackPositionOffset) == NeedsDownmixing::Yes;
+                                 && moveSelectedClipsUpOrDown(newClipKeyList, trackPositionOffset, moveRet) == NeedsDownmixing::Yes;
+    if (!moveRet) {
+        return muse::RetVal<ClipKeyList>::make_ret(moveRet);
+    }
 
     const muse::Ret makeRoomRet = makeRoomForClips(newClipKeyList);
     if (!makeRoomRet) {
@@ -920,7 +925,7 @@ int64_t Au3ClipsInteraction::determineNewGroupId(const ClipKeyList& clipKeyList)
     return globalContext()->currentTrackeditProject()->createNewGroupID();
 }
 
-NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset)
+NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset, muse::Ret& ret)
 {
     // We create a temporary copy, from which we remove the moving clips.
     // This will help us decide whether the track can be toggled stereo or if it's the clips that should be converted.
@@ -943,8 +948,27 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
         return NeedsDownmixing::No;
     }
 
-    const NeedsDownmixing needsDownmixing = utils::moveClipsVertically(offset, orig,
-                                                                       *copy, clipKeyList);
+    NeedsDownmixing needsDownmixing = NeedsDownmixing::No;
+    if (utils::clipsNeedResampling(offset, orig, clipKeyList)) {
+        // Resampling a long clip takes a while, so let the user know what's going on.
+        const muse::Ret progressRet = utils::withProgress(*interactive(), resamplingLabel,
+                                                          [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
+        {
+            try {
+                needsDownmixing = utils::moveClipsVertically(offset, orig, *copy, clipKeyList, progressCb, cancelCb);
+            } catch (const utils::ResamplingCancelled&) {
+                return false;
+            }
+            return true;
+        });
+        if (!progressRet) {
+            // Only the temporary copy has been touched, so there's nothing to undo here.
+            ret = progressRet;
+            return NeedsDownmixing::No;
+        }
+    } else {
+        needsDownmixing = utils::moveClipsVertically(offset, orig, *copy, clipKeyList);
+    }
 
     // Now we can update the original with the modified copy.
     auto& mutOrig = const_cast<au3::Au3TrackList&>(orig);

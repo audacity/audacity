@@ -45,7 +45,18 @@ au3::Au3WaveTrack* appendWaveTrack(au3::Au3TrackList& tracks, size_t nChannels, 
  * @pre `offset > 0` or track indices of selected clips are not 0 (i.e. can't drag clips up past the topmost track)
  */
 NeedsDownmixing moveClipsVertically(int offset, const au3::Au3TrackList& orig, au3::Au3TrackList& copy,
-                                    const trackedit::ClipKeyList& selectedClips);
+                                    const trackedit::ClipKeyList& selectedClips, const ProgressCb& progressCb = {},
+                                    const CancelCb& cancelCb = {});
+
+//! Thrown by `moveClipsVertically` when @p cancelCb reports a cancellation while a clip is being resampled.
+//! The clip being resampled is left untouched, and so are the original tracks: only the temporary copy was modified.
+struct ResamplingCancelled {};
+
+/*!
+ * @return true if moving @p selectedClips by @p offset tracks puts any of them on a track with a different sample rate,
+ * which means that the clip will have to be resampled.
+ */
+bool clipsNeedResampling(int offset, const au3::Au3TrackList& orig, const trackedit::ClipKeyList& selectedClips);
 
 bool clipIdSetsAreEqual(const au3::Au3WaveTrack& track1, const au3::Au3WaveTrack& track2);
 

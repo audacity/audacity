@@ -46,6 +46,7 @@ using namespace au::au3;
 
 namespace {
 const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono…");
+const std::string resamplingLabel = muse::trc("trackedit", "Resampling…");
 }
 
 Au3TracksInteraction::Au3TracksInteraction(const muse::modularity::ContextPtr& ctx)
@@ -290,6 +291,55 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
         return ret;
     }
 
+    // The clipboard keeps the sample rate of the tracks it was copied from. Convert the data to the rate of the
+    // destination tracks beforehand, working on duplicates (the clipboard stays intact for pasting somewhere else),
+    // and before changing anything in the project, so that cancelling leaves it untouched.
+    std::vector<Au3TrackDataPtr> pasteData = copiedData;
+    {
+        std::vector<std::pair<size_t, int> > toResample; // index into `pasteData` and the rate to convert to
+        double totalSamples = 0.0;
+        for (size_t i = 0; i < dstTracksIds.size(); ++i) {
+            const Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
+            const auto srcWaveTrack = std::dynamic_pointer_cast<Au3WaveTrack>(copiedData.at(i)->track());
+            if (!dstWaveTrack || !srcWaveTrack || srcWaveTrack->GetRate() == dstWaveTrack->GetRate()) {
+                continue;
+            }
+            toResample.emplace_back(i, static_cast<int>(dstWaveTrack->GetRate()));
+            for (const auto& clip : srcWaveTrack->Intervals()) {
+                // `Resample` reports the samples consumed per channel
+                totalSamples += clip->GetSequenceSamplesCount().as_double() / clip->NChannels();
+            }
+        }
+
+        if (!toResample.empty()) {
+            const muse::Ret resampleRet = utils::withProgress(*interactive(), resamplingLabel,
+                                                              [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
+            {
+                double doneSamples = 0.0;
+                const auto report = [&](size_t consumed) {
+                    doneSamples += static_cast<double>(consumed);
+                    progressCb(std::min(doneSamples / std::max(totalSamples, 1.0), 1.0));
+                    if (cancelCb()) {
+                        throw utils::ResamplingCancelled {};
+                    }
+                };
+                try {
+                    for (const auto& [index, rate] : toResample) {
+                        const auto duplicate = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(index)->track()->Duplicate());
+                        duplicate->Resample(rate, report);
+                        pasteData[index] = std::make_shared<Au3TrackData>(duplicate);
+                    }
+                } catch (const utils::ResamplingCancelled&) {
+                    return false;
+                }
+                return true;
+            });
+            if (!resampleRet) {
+                return trackedit::make_ret(trackedit::Err::Cancel);
+            }
+        }
+    }
+
     muse::Ret ok { muse::make_ok() };
     projectWasModified = true;
 
@@ -312,15 +362,10 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
             clipIdsBefore.insert(clip.key.itemId);
         }
 
-        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(i)->track());
+        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(pasteData.at(i)->track());
 
         if (dstWaveTrack->IsEmpty()) {
             bool trackChanged = false;
-            // For empty tracks, adopt the sample rate from the imported audio
-            if (dstWaveTrack->GetRate() != trackToPaste->GetRate()) {
-                dstWaveTrack->SetRate(trackToPaste->GetRate());
-                trackChanged = true;
-            }
             // Handle channel mismatch
             if (trackToPaste->NChannels() != dstWaveTrack->NChannels()) {
                 auto& trackList = au3::Au3TrackList::Get(projectRef());

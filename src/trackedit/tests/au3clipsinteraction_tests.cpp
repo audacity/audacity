@@ -5,6 +5,7 @@
 #include "global/defer.h"
 
 #include "../internal/au3/au3clipsinteraction.h"
+#include "../internal/au3/au3interactionutils.h"
 #include "../internal/au3/au3trackdata.h"
 
 #include "au3-project-file-io/ProjectFileIO.h"
@@ -781,6 +782,99 @@ TEST_F(Au3ClipsInteractionTests, MoveAcrossTracksPreservesIntermediateAndEmptyTr
     EXPECT_NE(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trailingId)), nullptr);
     EXPECT_EQ(Au3TrackList::Get(projectRef()).Size(), 4u);
     EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveAcrossTracksWithDifferentSampleRateResamplesClip)
+{
+    constexpr double sourceRate = 48000.0;
+    constexpr double destinationRate = 96000.0;
+    TrackTemplateFactory sourceFactory(projectRef(), sourceRate);
+    TrackTemplateFactory destinationFactory(projectRef(), destinationRate);
+    auto source = sourceFactory.createTrackFromTemplate("source", { { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } } });
+    auto destination = destinationFactory.createTrackFromTemplate("destination", {});
+    const TrackId sourceId = sourceFactory.addTrackToProject(source);
+    const TrackId destinationId = destinationFactory.addTrackToProject(destination);
+    const ClipKey sourceKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const double durationBefore = source->GetSortedClipByIndex(0)->GetPlayDuration();
+
+    const auto moved = m_clipsInteraction->moveClips({ sourceKey }, 0.0, 1);
+
+    ASSERT_TRUE(moved.ret);
+    ASSERT_EQ(moved.val, (ClipKeyList { { destinationId, sourceKey.itemId } }));
+    const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    ASSERT_EQ(destinationTrack->NIntervals(), 1u);
+    const auto clip = destinationTrack->GetSortedClipByIndex(0);
+    EXPECT_EQ(clip->GetRate(), static_cast<int>(destinationRate));
+    EXPECT_NEAR(clip->GetPlayDuration(), durationBefore, 1.0 / sourceRate);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveOverlappingClipOntoTrackWithDifferentSampleRate)
+{
+    TrackTemplateFactory sourceFactory(projectRef(), 44100.0);
+    TrackTemplateFactory destinationFactory(projectRef(), 96000.0);
+    auto source = sourceFactory.createTrackFromTemplate("source", { { 0.0, { { 1.2345, TrackTemplateFactory::createNoise } } } });
+    auto destination
+        = destinationFactory.createTrackFromTemplate("destination", { { 1.0, { { 3.0, TrackTemplateFactory::createNoise } } } });
+    const TrackId sourceId = sourceFactory.addTrackToProject(source);
+    const TrackId destinationId = destinationFactory.addTrackToProject(destination);
+    const ClipKey sourceKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+
+    const auto moved = m_clipsInteraction->moveClips({ sourceKey }, 0.0, 1);
+
+    EXPECT_TRUE(moved.ret) << moved.ret.toString();
+    const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    EXPECT_EQ(destinationTrack->NIntervals(), 2u);
+    EXPECT_TRUE(destinationTrack->NoPlayRegionsOverlap());
+}
+
+TEST_F(Au3ClipsInteractionTests, CancellingResamplingLeavesTheMovedClipUntouched)
+{
+    TrackTemplateFactory sourceFactory(projectRef(), 48000.0);
+    TrackTemplateFactory destinationFactory(projectRef(), 96000.0);
+    auto source = sourceFactory.createTrackFromTemplate("source", { { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } } });
+    auto destination = destinationFactory.createTrackFromTemplate("destination", {});
+    const TrackId sourceId = sourceFactory.addTrackToProject(source);
+    const TrackId destinationId = destinationFactory.addTrackToProject(destination);
+    const ClipKey sourceKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+
+    // The user presses "Cancel" as soon as the progress dialog shows up.
+    const auto interactiveMock = std::static_pointer_cast<NiceMock<muse::InteractiveMock> >(m_interactive);
+    ON_CALL(*interactiveMock, showProgress(_, _)).WillByDefault([](const std::string&, muse::Progress progress) {
+        progress.cancel();
+    });
+
+    const auto moved = m_clipsInteraction->moveClips({ sourceKey }, 0.0, 1);
+
+    EXPECT_FALSE(moved.ret);
+    const auto sourceTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId));
+    const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(sourceTrack, nullptr);
+    ASSERT_NE(destinationTrack, nullptr);
+    ASSERT_EQ(sourceTrack->NIntervals(), 1u);
+    EXPECT_EQ(sourceTrack->GetSortedClipByIndex(0)->GetRate(), 48000);
+    EXPECT_TRUE(destinationTrack->IsEmpty());
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipsNeedResamplingOnlyWhenDestinationRateDiffers)
+{
+    TrackTemplateFactory factory48(projectRef(), 48000.0);
+    TrackTemplateFactory factory96(projectRef(), 96000.0);
+    const TrackId first = factory48.addTrackFromTemplate("first", { { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } } });
+    factory48.addTrackFromTemplate("second", {});
+    factory96.addTrackFromTemplate("third", {});
+    const auto& tracks = Au3TrackList::Get(projectRef());
+    const auto clipOf = [&](TrackId trackId) {
+        const auto track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        return ClipKey { trackId, track->GetSortedClipByIndex(0)->GetId() };
+    };
+
+    EXPECT_FALSE(utils::clipsNeedResampling(1, tracks, { clipOf(first) })); // 48 kHz -> 48 kHz
+    EXPECT_TRUE(utils::clipsNeedResampling(2, tracks, { clipOf(first) })); // 48 kHz -> 96 kHz
+    EXPECT_FALSE(utils::clipsNeedResampling(0, tracks, { clipOf(first) }));
+    EXPECT_FALSE(utils::clipsNeedResampling(-1, tracks, { clipOf(first) })); // Can't move up from the top
+    EXPECT_FALSE(utils::clipsNeedResampling(1, tracks, {}));
 }
 
 class Au3ClipsDropTests : public Au3ClipsInteractionTests, public testing::WithParamInterface<std::tuple<bool, bool> >
