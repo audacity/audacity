@@ -53,7 +53,7 @@ callbacks for these events.
 
 *//****************************************************************//**
 
-\class AudioIOStartStreamOptions
+\class AudioIOStartTransportOptions
 \brief struct holding stream options, including a pointer to the
 time warp info and AudioIOListener and whether the playback is looped.
 
@@ -474,7 +474,7 @@ static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
     }
 }
 
-bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
+bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
                                    unsigned int numPlaybackChannels, unsigned int numCaptureChannels)
 {
     assert(options.pProject);
@@ -875,7 +875,7 @@ void AudioIO::ConfigureCaptureRouting(size_t inputChannelsCount)
     }
 }
 
-void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
+void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)
 {
     if (IsBusy()) {
         return;
@@ -963,9 +963,9 @@ void AudioIO::WaitWhileBusy() const
     }
 }
 
-int AudioIO::StartBufferExchange(const TransportSequences& sequences,
-                                 double t0, double t1, double mixerLimit,
-                                 const AudioIOStartStreamOptions& options)
+int AudioIO::StartTransport(const TransportSequences& sequences,
+                            double t0, double t1, double mixerLimit,
+                            const AudioIOStartTransportOptions& options)
 {
     // precondition
     assert(std::all_of(
@@ -1329,7 +1329,7 @@ void AudioIO::CallAfterRecording(PostRecordingAction action)
 }
 
 bool AudioIO::AllocateBuffers(
-    const AudioIOStartStreamOptions& options,
+    const AudioIOStartTransportOptions& options,
     const TransportSequences& sequences, double t0, double t1, double sampleRate)
 {
     bool success = false;
@@ -1596,7 +1596,7 @@ bool AudioIO::IsAvailable(AudacityProject& project) const
     return !pOwningProject || pOwningProject.get() == &project;
 }
 
-void AudioIO::StopBufferExchange()
+void AudioIO::StopTransport()
 {
     if (mStreamToken == 0) {
         return;
@@ -1823,13 +1823,7 @@ void AudioIO::StopBufferExchange()
     mPlaybackSchedule.ResetMode();
 }
 
-void AudioIO::StopStream()
-{
-    StopBufferExchange();
-    StopMonitoring();
-}
-
-void AudioIO::SeekStream(double seconds)
+void AudioIO::Seek(double seconds)
 {
     mSeek = seconds;
 }
@@ -1897,7 +1891,7 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     return supportedRate;
 }
 
-double AudioIO::GetStreamTime()
+double AudioIO::GetTransportTime()
 {
     // Sequence time readout for the main thread
     return mPlaybackSchedule.GetSequenceTime();
@@ -2417,7 +2411,7 @@ void AudioIO::DrainRecordBuffers()
         // but StopStream() contains that exception, and the logic in
         // AudacityException::DelayedHandlerAction prevents redundant message
         // boxes.
-        StopBufferExchange();
+        StopTransport();
         WaitWhileBusy();
 
         DefaultDelayedHandlerAction(pException);

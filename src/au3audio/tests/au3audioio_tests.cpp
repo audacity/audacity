@@ -141,7 +141,7 @@ TEST_F(AudioIOMonitoringTest, MonitoringDoesNotNeedAudioThread)
         return hung;
     };
 
-    const AudioIOStartStreamOptions options(projectRef().shared_from_this(), 44100.0);
+    const AudioIOStartTransportOptions options(projectRef().shared_from_this(), 44100.0);
     EXPECT_FALSE(hangs([&] { audioIO->StartMonitoring(options); }, Acknowledge::eStart))
         << "StartMonitoring waits for the audio thread";
     ASSERT_TRUE(audioIO->IsMonitoring());

@@ -789,7 +789,7 @@ bool PlaybackController::ensurePhysicalStreamStopped()
         return false;
     }
     if (audioEngine()->currentStream()) {
-        audioEngine()->stopStream();
+        audioEngine()->stopTransport();
     }
     return !audioEngine()->currentStream();
 }

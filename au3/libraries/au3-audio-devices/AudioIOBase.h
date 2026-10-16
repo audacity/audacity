@@ -41,15 +41,16 @@ using PRCrossfadeData = std::vector< std::vector < float > >;
 class PlaybackPolicy;
 
 // To avoid growing the argument list of StartStream, add fields here
-struct AudioIOStartStreamOptions
+struct AudioIOStartTransportOptions
 {
     explicit
-    AudioIOStartStreamOptions(
+    AudioIOStartTransportOptions(
         const std::shared_ptr<AudacityProject>& pProject = {},
         double rate_ = 44100.0)
-        : pProject{pProject}
-        , rate(rate_)
-    {}
+        : pProject{pProject},
+        rate(rate_)
+    {
+    }
 
     std::shared_ptr<AudacityProject> pProject;
     std::weak_ptr<IMeterSender> captureMeter;
@@ -72,7 +73,7 @@ struct AudioIOStartStreamOptions
     std::function< std::chrono::milliseconds() > playbackStreamPrimer;
 
     using PolicyFactory = std::function<
-        std::unique_ptr<PlaybackPolicy>(const AudioIOStartStreamOptions&) >;
+        std::unique_ptr<PlaybackPolicy>(const AudioIOStartTransportOptions&) >;
     PolicyFactory policyFactory;
 
     bool loopEnabled{ false };
