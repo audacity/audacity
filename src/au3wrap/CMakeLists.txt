@@ -81,6 +81,11 @@ endif()
 # RapidJSON (header-only, used by au3-musehub, au3-cloud-audiocom, au3-import-export, au3-sentry-reporting)
 rapidjson_add_to_build()
 
+# Catch2 for the AU3 libraries' unit tests (see add_unit_test in au3/au3defs.cmake)
+if (MUSE_ENABLE_UNIT_TESTS)
+    catch2_add_to_build()
+endif()
+
 # Include AU3 libraries - this will add all library subdirectories
 # and set AU3_LIBRARIES_LIST in this scope
 add_subdirectory(${AU3_LIBRARIES} au3-libraries)

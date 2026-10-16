@@ -113,6 +113,12 @@ TEST_CASE("StaffPadTimeAndPitch")
         const auto outputEqualsInput = container.channelVectors == input;
         REQUIRE(outputEqualsInput);
     }
+}
+
+// Takes several minutes: hidden by default, run it with `au3-time-and-pitch_tests "[slow]"`.
+TEST_CASE("StaffPadTimeAndPitch extreme stretch ratios", "[.][slow]")
+{
+    MockedPrefs mockedPrefs;
 
     SECTION("Extreme stretch ratios")
     {
