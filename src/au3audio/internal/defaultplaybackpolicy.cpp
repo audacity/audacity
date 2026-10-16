@@ -273,6 +273,17 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
     return false;
 }
 
+void DefaultPlaybackPolicy::SeekMixers(
+    PlaybackSchedule& schedule, const Mixers& playbackMixers, double time)
+{
+    // RepositionPlayback narrows the mixer start to the play position, and
+    // Reposition alone clamps to it, so a seek back would land there instead
+    const double t0 = std::min(time, schedule.mT1);
+    for (auto& pMixer : playbackMixers) {
+        pMixer->SetTimesAndSpeed(t0, schedule.mT1, mLastPlaySpeed, true);
+    }
+}
+
 bool DefaultPlaybackPolicy::Looping(const PlaybackSchedule&) const
 {
     return mLoopEnabled;

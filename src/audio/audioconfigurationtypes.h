@@ -23,6 +23,7 @@ struct AudioConfiguration {
     uint64_t defaultSampleRate = 0;
     std::string defaultSampleFormat;
     bool asioUseDeviceSampleRate = true;
+    std::string wasapiMode = "shared-low-latency";
 };
 
 struct AudioConfigurationChange {
@@ -36,6 +37,7 @@ struct AudioConfigurationChange {
     std::optional<uint64_t> defaultSampleRate;
     std::optional<std::string> defaultSampleFormat;
     std::optional<bool> asioUseDeviceSampleRate;
+    std::optional<std::string> wasapiMode;
 };
 
 enum class AudioConfigurationField : uint32_t {
@@ -50,6 +52,7 @@ enum class AudioConfigurationField : uint32_t {
     DefaultSampleRate = 1 << 7,
     DefaultSampleFormat = 1 << 8,
     AsioUseDeviceSampleRate = 1 << 9,
+    WasapiMode = 1 << 10,
 };
 
 using AudioConfigurationFields = uint32_t;

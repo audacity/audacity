@@ -22,6 +22,10 @@ Paul Licameli split from AudioIO.cpp
 
 #include "portaudio.h"
 
+#ifdef __WXMSW__
+#include "pa_win_wasapi.h"
+#endif
+
 #if USE_PORTMIXER
 #include "portmixer.h"
 #endif
@@ -98,6 +102,39 @@ AudioIOBase* AudioIOBase::Get()
 AudioIOBase::AudioIOBase() = default;
 
 AudioIOBase::~AudioIOBase() = default;
+
+void AudioIOBase::InvalidateRateCache()
+{
+    mCachedPlaybackRates.clear();
+    mCachedCaptureRates.clear();
+    mCachedSampleRates.clear();
+    mCachedBestRateIn = 0.0;
+}
+
+#ifdef __WXMSW__
+PaWasapiStreamInfo AudioIOBase::MakeWasapiStreamInfo(bool autoConvert)
+{
+    PaWasapiStreamInfo info {};
+    info.size = sizeof(info);
+    info.hostApiType = paWASAPI;
+    info.version = 1;
+
+    const auto mode = AudioIOWasapiMode.Read();
+    if (mode == "exclusive") {
+        info.flags = paWinWasapiExclusive;
+    } else {
+        if (autoConvert) {
+            info.flags |= paWinWasapiAutoConvert;
+        }
+#ifdef paWinWasapiSharedLowLatency
+        if (mode == "shared-low-latency") {
+            info.flags |= paWinWasapiSharedLowLatency;
+        }
+#endif
+    }
+    return info;
+}
+#endif
 
 void AudioIOBase::SetMixer(int inputSource)
 {
@@ -446,6 +483,13 @@ bool AudioIOBase::IsPlaybackRateSupported(int devIndex, long rate)
     pars.suggestedLatency = devInfo->defaultHighOutputLatency;
     pars.hostApiSpecificStreamInfo = NULL;
 
+#ifdef __WXMSW__
+    auto wasapiInfo = MakeWasapiStreamInfo();
+    if (hostInfo && hostInfo->type == paWASAPI) {
+        pars.hostApiSpecificStreamInfo = &wasapiInfo;
+    }
+#endif
+
     // JKC: PortAudio Errors handled OK here.  No need to report them
 
     // LLL: Remove when a proper method of determining actual supported
@@ -494,6 +538,13 @@ bool AudioIOBase::IsCaptureRateSupported(int devIndex, long rate)
     pars.sampleFormat = paFloat32;
     pars.suggestedLatency = latencyDuration / 1000.0;
     pars.hostApiSpecificStreamInfo = NULL;
+
+#ifdef __WXMSW__
+    auto wasapiInfo = MakeWasapiStreamInfo();
+    if (hostInfo && hostInfo->type == paWASAPI) {
+        pars.hostApiSpecificStreamInfo = &wasapiInfo;
+    }
+#endif
 
     // LLL: Remove when a proper method of determining actual supported
     //      DirectSound rate is devised.
@@ -1093,6 +1144,8 @@ DoubleSetting AudioIOLatencyCompensation{
     L"/AudioIO/LatencyCompensation", -130.0 };
 DoubleSetting AudioIOLatencyDuration{
     L"/AudioIO/LatencyDuration", 100.0 };
+StringSetting AudioIOWasapiMode{
+    L"/AudioIO/WASAPI/Mode", L"shared-low-latency" };
 StringSetting AudioIOPlaybackDevice{
     L"/AudioIO/PlaybackDevice", L"" };
 StringSetting AudioIOPlaybackSource{
