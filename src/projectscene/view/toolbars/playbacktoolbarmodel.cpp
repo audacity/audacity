@@ -13,6 +13,7 @@
 #include "playback/view/toolbars/playbacktoolbarbpmitem.h"
 #include "playback/view/toolbars/playbacktoolbartimesignatureitem.h"
 #include "record/qml/Audacity/Record/playbacktoolbarrecordlevelitem.h"
+#include "record/recordcommands.h"
 #include "projectscene/view/toolbars/snaptoolbaritem.h"
 
 using namespace muse::uicomponents;
@@ -236,6 +237,8 @@ void PlaybackToolBarModel::updateRecordState()
 
     item->setIconColor(iconColor);
     item->setBackgroundColor(backgroundColor);
+
+    item->setModifierCommands({ { Qt::ShiftModifier, record::RECORD_ON_NEW_TRACK_COMMAND } });
 }
 
 void PlaybackToolBarModel::updateLoopState()
