@@ -4,6 +4,7 @@
 
 #include "exportlabelsmodel.h"
 
+#include "framework/global/io/path.h"
 #include "framework/global/translation.h"
 
 #include "trackedit/trackedittypes.h"
@@ -54,8 +55,12 @@ void ExportLabelsModel::init(const QVariant& trackId)
 
 void ExportLabelsModel::exportData()
 {
-    muse::io::path_t filePath = m_directoryPath.toStdString() + "/" + m_fileName.toStdString() + "."
-                                + fileSuffixFromType(m_currentFileType);
+    std::string fileName = m_fileName.toStdString();
+    const std::string suffix = fileSuffixFromType(m_currentFileType);
+    if (muse::io::suffix(fileName) != suffix) {
+        fileName += "." + suffix;
+    }
+    muse::io::path_t filePath = m_directoryPath.toStdString() + "/" + fileName;
 
     trackedit::TrackIdList selectedTracksIds;
     for (const QVariant& trackId : m_selectedTracks) {
