@@ -16,12 +16,14 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectrecovery_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/realtimeeffectspersistence_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cliptempopersistence_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3metadata_tests.cpp
 )
 
 set(MODULE_TEST_LINK
     project
     au3wrap
     au3-project-file-io
+    au3-tags
     trackedit
     muse::actions
     muse::draw
