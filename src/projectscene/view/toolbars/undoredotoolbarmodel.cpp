@@ -5,12 +5,11 @@
 
 #include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
+#include "trackedit/trackeditcommands.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
-using namespace muse::actions;
-
-static const muse::actions::ActionCode UNDO_ACTION_CODE("action://trackedit/undo");
-static const muse::actions::ActionCode REDO_ACTION_CODE("action://trackedit/redo");
+using namespace muse::rcommand;
 
 void UndoRedoToolBarModel::load()
 {
@@ -18,14 +17,9 @@ void UndoRedoToolBarModel::load()
         return;
     }
 
-    muse::actions::ActionCodeList itemsCodes = {
-        UNDO_ACTION_CODE,
-        REDO_ACTION_CODE,
-    };
-
     ToolBarItemList items;
-    for (const ActionCode& code : itemsCodes) {
-        ToolBarItem* item = makeItem(code);
+    for (const Command& command : { trackedit::TRACKEDIT_UNDO_COMMAND, trackedit::TRACKEDIT_REDO_COMMAND }) {
+        ToolBarItem* item = makeItem(command);
         item->setIsTransparent(true);
         items << item;
     }
@@ -45,36 +39,40 @@ void UndoRedoToolBarModel::load()
     m_loaded = true;
 }
 
-void UndoRedoToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
+void UndoRedoToolBarModel::onCommandStateChanged(const Command& command, const CommandState& state)
+{
+    updateTitle(command);
+
+    AbstractToolBarModel::onCommandStateChanged(command, state);
+}
+
+void UndoRedoToolBarModel::updateTitle(const Command& command)
 {
     auto history = projectHistory();
 
-    for (const muse::actions::ActionCode& code : codes) {
-        if (code == UNDO_ACTION_CODE) {
-            ToolBarItem* undoItem = findItemPtr(UNDO_ACTION_CODE);
-            if (undoItem) {
-                const muse::TranslatableString undoActionName = history ? history->topMostUndoActionName() : muse::TranslatableString();
-                undoItem->setTitle(undoActionName.isEmpty()
-                                   ? muse::TranslatableString("action", "Undo")
-                                   : muse::TranslatableString("action", "Undo ‘%1’").arg(undoActionName));
-            }
-        } else if (code == REDO_ACTION_CODE) {
-            ToolBarItem* redoItem = findItemPtr(REDO_ACTION_CODE);
-            if (redoItem) {
-                const muse::TranslatableString redoActionName = history ? history->topMostRedoActionName() : muse::TranslatableString();
-                redoItem->setTitle(redoActionName.isEmpty()
-                                   ? muse::TranslatableString("action", "Redo")
-                                   : muse::TranslatableString("action", "Redo ‘%1’").arg(redoActionName));
-            }
+    if (command == trackedit::TRACKEDIT_UNDO_COMMAND) {
+        ToolBarItem* undoItem = findItemPtr(trackedit::TRACKEDIT_UNDO_COMMAND);
+        if (undoItem) {
+            const muse::TranslatableString undoActionName = history ? history->topMostUndoActionName() : muse::TranslatableString();
+            undoItem->setTitle(undoActionName.isEmpty()
+                               ? muse::TranslatableString("action", "Undo")
+                               : muse::TranslatableString("action", "Undo ‘%1’").arg(undoActionName));
+        }
+    } else if (command == trackedit::TRACKEDIT_REDO_COMMAND) {
+        ToolBarItem* redoItem = findItemPtr(trackedit::TRACKEDIT_REDO_COMMAND);
+        if (redoItem) {
+            const muse::TranslatableString redoActionName = history ? history->topMostRedoActionName() : muse::TranslatableString();
+            redoItem->setTitle(redoActionName.isEmpty()
+                               ? muse::TranslatableString("action", "Redo")
+                               : muse::TranslatableString("action", "Redo ‘%1’").arg(redoActionName));
         }
     }
-
-    AbstractToolBarModel::onActionsStateChanges(codes);
 }
 
 void UndoRedoToolBarModel::updateItems()
 {
-    onActionsStateChanges({ UNDO_ACTION_CODE, REDO_ACTION_CODE });
+    updateTitle(trackedit::TRACKEDIT_UNDO_COMMAND);
+    updateTitle(trackedit::TRACKEDIT_REDO_COMMAND);
 }
 
 void UndoRedoToolBarModel::subscribeOnHistoryChanges()

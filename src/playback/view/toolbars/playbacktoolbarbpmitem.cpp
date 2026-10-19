@@ -5,21 +5,17 @@
 
 using namespace au::playback;
 
-PlaybackToolBarBPMItem::PlaybackToolBarBPMItem(const muse::ui::UiAction& action,
+PlaybackToolBarBPMItem::PlaybackToolBarBPMItem(const muse::rcommand::CommandInfo& info,
                                                muse::uicomponents::ToolBarItemType::Type type,
                                                QObject* parent)
-    : muse::uicomponents::ToolBarItem(action, type, parent)
+    : muse::uicomponents::ToolBarItem(info, type, parent)
 {
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
         onProjectChanged();
     });
 
     playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
-        if (status == PlaybackStatus::Stopped) {
-            setState(muse::ui::UiActionState::make_enabled());
-        } else {
-            setState(muse::ui::UiActionState::make_disabled());
-        }
+        setCommandState(muse::rcommand::CommandState(status == PlaybackStatus::Stopped));
     });
 
     onProjectChanged();

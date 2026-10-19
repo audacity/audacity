@@ -34,7 +34,7 @@ signals:
     void isCompactModeChanged();
 
 private:
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
 
     bool m_loaded = false;
     bool m_isCompactMode = false;

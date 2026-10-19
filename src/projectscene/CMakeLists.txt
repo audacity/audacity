@@ -96,6 +96,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/undoredotoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/undoredotoolbarmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarconfig.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarmodel.h
 

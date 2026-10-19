@@ -10,7 +10,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/ui/iuiconfiguration.h"
 #include "framework/ui/iuistate.h"
-#include "framework/ui/iuiactionsregister.h"
+#include "framework/rcommand/icommandsregister.h"
 
 #include "playback/iplaybackconfiguration.h"
 #include "record/irecordconfiguration.h"
@@ -32,8 +32,8 @@ class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemL
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<au::playback::IPlaybackConfiguration> configuration;
     muse::GlobalInject<au::record::IRecordConfiguration> recordConfiguration;
+    muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
 
-    muse::ContextInject<muse::ui::IUiActionsRegister> actionsRegister{ this };
     muse::ContextInject<muse::ui::IUiState> uiState { this };
 
     Q_PROPERTY(QItemSelectionModel * selectionModel READ selectionModel NOTIFY selectionChanged)
@@ -69,10 +69,10 @@ private:
     void updateAddSeparatorAvailability();
     void setIsAddSeparatorAvailable(bool isAddSeparatorAvailable);
 
-    PlaybackToolBarCustomiseItem* makeItem(const muse::ui::UiAction& action, bool checked);
+    PlaybackToolBarCustomiseItem* makeItem(const muse::rcommand::CommandInfo& info, bool checked);
     PlaybackToolBarCustomiseItem* makeSeparatorItem();
 
-    QColor iconColor(const muse::ui::UiAction& action) const;
+    QColor iconColor(const muse::rcommand::Command& command) const;
 
     void saveActions();
 

@@ -19,7 +19,7 @@ class PlaybackToolBarTimeSignatureItem : public muse::uicomponents::ToolBarItem
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
 public:
-    explicit PlaybackToolBarTimeSignatureItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+    explicit PlaybackToolBarTimeSignatureItem(const muse::rcommand::CommandInfo& info, muse::uicomponents::ToolBarItemType::Type type,
                                               QObject* parent = nullptr);
 
     int upper() const;

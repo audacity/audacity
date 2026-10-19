@@ -7,12 +7,11 @@
 #include "framework/global/async/async.h"
 #include "framework/dockwindow/dockcommands.h"
 
-#include "projectscene/internal/projectsceneuiactions.h"
+#include "playback/playbackcommands.h"
+#include "projectscene/view/toolbars/playbacktoolbarconfig.h"
 
 using namespace au::appshell;
 using namespace muse;
-
-static const muse::actions::ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -44,11 +43,10 @@ void ProjectPageModel::init()
 
 void ProjectPageModel::updatePlaybackMeterVisibility()
 {
-    const auto toolConfig = uiState()->toolConfig(playbackToolBarName(),
-                                                  au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    const auto toolConfig = uiState()->toolConfig(playbackToolBarName(), projectscene::defaultPlaybackToolBarConfig());
     const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
                                  [](const muse::ui::ToolConfig::Item& item) {
-        return item.intent == PLAYBACK_LEVEL_QUERY.toString();
+        return item.intent == playback::PLAYBACK_LEVEL_COMMAND.toString();
     });
 
     if (it != toolConfig.items.end()) {

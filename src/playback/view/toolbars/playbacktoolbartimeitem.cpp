@@ -12,9 +12,9 @@ static const int INVALID_FORMAT = -1;
 
 using namespace au::playback;
 
-PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::rcommand::CommandInfo& info, muse::uicomponents::ToolBarItemType::Type type,
                                                  QObject* parent)
-    : muse::uicomponents::ToolBarItem(action, type, parent)
+    : muse::uicomponents::ToolBarItem(info, type, parent)
 {
     playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t) {
         emit currentValueChanged();

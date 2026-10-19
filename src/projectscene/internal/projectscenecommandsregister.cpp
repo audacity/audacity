@@ -329,6 +329,15 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration()
     },
+    CommandInfo{
+        PROJECTSCENE_SNAP_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Snapping"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Snapping"),
+        InputSchema(),
+        Decoration(IconCode::Code::MAGNET)
+    },
 };
 }
 
