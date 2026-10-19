@@ -22,6 +22,8 @@
 #ifndef AU_APPSHELL_APPMENUMODEL_H
 #define AU_APPSHELL_APPMENUMODEL_H
 
+#include <optional>
+
 #include <QWindow>
 #include <QtQml/qqmlregistration.h>
 
@@ -33,13 +35,12 @@ Q_MOC_INCLUDE(< QWindow >)
 
 #include "modularity/ioc.h"
 #include "ui/imainwindow.h"
-#include "ui/iuiactionsregister.h"
 #include "ui/inavigationcontroller.h"
 #include "ui/iuiconfiguration.h"
-#include "actions/iactionsdispatcher.h"
 #include "iappshellconfiguration.h"
 #include "internal/iappmenumodelhook.h"
 #include "global/iglobalconfiguration.h"
+#include "effects/effects_base/ieffectexecutionscenario.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
 #include "effects/effects_base/effectstypes.h"
@@ -67,11 +68,10 @@ public:
     muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
     muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> actionsDispatcher = { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController = { this };
-    muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister = { this };
     muse::ContextInject<effects::IEffectsMenuProvider> effectsMenuProvider = { this };
+    muse::ContextInject<effects::IEffectExecutionScenario> effectExecutionScenario = { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory = { this };
     muse::ContextInject<trackedit::ISelectionController> selectionController = { this };
 
@@ -89,7 +89,7 @@ private:
     void setupConnections();
     void onEffectsChanged();
 
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
 
     // effects::IEffectMenuItemFactory
     muse::uicomponents::MenuItem* makeMenuSeparator() override { return makeSeparator(); }
@@ -97,7 +97,7 @@ private:
     muse::uicomponents::MenuItem* makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items) override;
 
     using muse::uicomponents::AbstractMenuModel::makeMenuItem;
-    muse::uicomponents::MenuItem* makeMenuItem(const muse::actions::ActionCode& actionCode, muse::uicomponents::MenuItemRole role);
+    muse::uicomponents::MenuItem* makeMenuItem(const muse::rcommand::Command& command, muse::uicomponents::MenuItemRole role);
 
     muse::uicomponents::MenuItem* makeFileMenu();
     muse::uicomponents::MenuItem* makeEditMenu();
@@ -109,43 +109,30 @@ private:
     muse::uicomponents::MenuItem* makeEffectMenu();
     muse::uicomponents::MenuItem* makeAnalyzeMenu();
     muse::uicomponents::MenuItem* makeToolsMenu();
-    muse::uicomponents::MenuItem* makeExtraMenu();
     muse::uicomponents::MenuItem* makeHelpMenu();
     muse::uicomponents::MenuItem* makeDiagnosticMenu();
 
     muse::uicomponents::MenuItemList makeRecentProjectsItems();
     muse::uicomponents::MenuItemList appendClearRecentSection(const muse::uicomponents::MenuItemList& recentScores);
 
-    muse::uicomponents::MenuItemList makeExportItems();
     muse::uicomponents::MenuItemList makeClipItems();
     muse::uicomponents::MenuItemList makeLabelItems();
     muse::uicomponents::MenuItemList makeRegionSelectionItems();
-    muse::uicomponents::MenuItemList makeAudioClipsSelectionItems();
-    muse::uicomponents::MenuItemList makeSpectralSelectionItems();
     muse::uicomponents::MenuItemList makeLoopingItems();
     muse::uicomponents::MenuItemList makeZoomItems();
-    muse::uicomponents::MenuItemList makeSkipToItems();
     muse::uicomponents::MenuItemList makeMixItems();
-    muse::uicomponents::MenuItemList makeAlignItems();
-    muse::uicomponents::MenuItemList makeSortItems();
-    muse::uicomponents::MenuItemList makeVolumeAndCompressionItems();
-    muse::uicomponents::MenuItemList makeMacrosItems();
-    muse::uicomponents::MenuItemList makeDiagnosticsItems();
-    muse::uicomponents::MenuItemList makeFramesItems();
-    muse::uicomponents::MenuItemList makeWorkspacesItems();
-    muse::uicomponents::MenuItemList makeShowItems();
     muse::uicomponents::MenuItemList makeEffectsItems();
     muse::uicomponents::MenuItemList makeGeneratorItems();
     muse::uicomponents::MenuItemList makeToolItems();
     muse::uicomponents::MenuItemList makeAnalyzeItems();
     muse::uicomponents::MenuItemList makeExtensionItems();
 
-    void setItemIsChecked(const QString& itemId, bool checked);
-
     void updateUndoRedoItems();
     void updateRenameItemsState();
+    void updateRepeatLastEffectItem();
 
     std::shared_ptr<muse::uicomponents::AbstractMenuModel> m_workspacesMenuModel;
+    std::optional<effects::EffectId> m_lastProcessorId;
 
 // Moved to the bottom of the class definition because of the code formatter bug
 #ifdef Q_OS_WIN
