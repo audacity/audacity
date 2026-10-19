@@ -12041,7 +12041,7 @@ Manche Codecs akzeptieren nur bestimmte Werte (128k, 192k, 256k, usw.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="76"/>
         <source>Set as default</source>
-        <translation>Als Standard festlegen</translation>
+        <translation>Als Standard</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="96"/>
@@ -12052,7 +12052,7 @@ Manche Codecs akzeptieren nur bestimmte Werte (128k, 192k, 256k, usw.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="111"/>
         <source>Add tag</source>
-        <translation>Tag hinzufügen</translation>
+        <translation>Neues Tag</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="37"/>
@@ -14510,7 +14510,7 @@ Try recording the file into Audacity, or burn it to audio CD then
 extract the CD track to a supported audio format such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
         <translation>„%1“ ist eine verschlüsselte Audiodatei.
-Vermutlich stammt die Datei von einer Online-Musik-Plattform.
+Vermutlich stammt die Datei von einer Online-Musikplattform.
 Wegen der Verschlüsselung kann Audacity diese Datei nicht öffnen.
 Nehmen Sie die Datei mit Hilfe von Audacity extern auf
 oder brennen Sie die Datei als Audio-CD, um diese als unterstütztes Format, wie z. B. WAV oder AIFF, zu extrahieren.</translation>
@@ -16387,13 +16387,13 @@ Darüber hinaus bietet Mastering MuseScore eine unterstützende Community von Mu
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="67"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="37"/>
         <source>TITLE</source>
-        <translation>TITEL</translation>
+        <translation>TITLE</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="68"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="38"/>
         <source>ARTIST</source>
-        <translation>KÜNSTLER</translation>
+        <translation>ARTIST</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="69"/>
@@ -16405,19 +16405,19 @@ Darüber hinaus bietet Mastering MuseScore eine unterstützende Community von Mu
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="70"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="40"/>
         <source>TRACKNUMBER</source>
-        <translation>TITELNUMMER</translation>
+        <translation>TRACKNUMBER</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="71"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="41"/>
         <source>YEAR</source>
-        <translation>JAHR</translation>
+        <translation>DATE</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
-        <translation>KOMMENTARE</translation>
+        <translation>COMMENTS</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="136"/>
@@ -16434,32 +16434,32 @@ Darüber hinaus bietet Mastering MuseScore eine unterstützende Community von Mu
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="98"/>
         <source>Artist name</source>
-        <translation>Künstlername</translation>
+        <translation>Artist</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="99"/>
         <source>Track title</source>
-        <translation>Spurtitel</translation>
+        <translation>Track Title</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="100"/>
         <source>Album title</source>
-        <translation>Albumtitel</translation>
+        <translation>Album Title</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="101"/>
         <source>Track number</source>
-        <translation>Titelnummer</translation>
+        <translation>Track Number</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="103"/>
         <source>Year</source>
-        <translation>Jahr</translation>
+        <translation>Year</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="104"/>
         <source>Comments</source>
-        <translation>Kommentare</translation>
+        <translation>Comments</translation>
     </message>
 </context>
 <context>
@@ -17578,7 +17578,7 @@ Es wird nicht geladen.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="15"/>
         <source>Move cursor along the timeline during playback</source>
-        <translation>Cursor entlang der Zeitleiste während der Wiedergabe bewegen</translation>
+        <translation>Cursor während der Wiedergabe entlang der Zeitleiste bewegen</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="23"/>
@@ -17598,7 +17598,7 @@ Es wird nicht geladen.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectBehaviorSection.qml" line="29"/>
         <source>Apply effects to all audio when no selection is made</source>
-        <translation>Effekte auf das gesamtes Audio anwenden, sofern nichts ausgewählt ist</translation>
+        <translation>Effekte auf das gesamte Audio anwenden, sofern nichts ausgewählt ist</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="14"/>
@@ -17743,7 +17743,7 @@ Es wird nicht geladen.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="110"/>
         <source>Default sample rates and formats apply to newly created tracks only. Recording into existing tracks will use the track’s sample rate and format instead.</source>
-        <translation>Standard-Abtastrate und Formate werden nur für neu erstellte Spuren angewendet. Das Aufnehmen auf bereits existierenden Spuren nutzt die Abtastrate und das Format der Spuren.</translation>
+        <translation>Die voreingestellten Abtastraten und Abtastformate werden nur für neu erstellte Spuren angewendet. Beim Aufnehmen auf bestehende Spuren werden stattdessen die Abtastrate und das Abtastformat der jeweiligen Spur verwendet.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="17"/>
@@ -18089,12 +18089,12 @@ Es wird nicht geladen.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
         <source>Recording lead-in time</source>
-        <translation>Vorlaufszeit der Aufnahme</translation>
+        <translation>Vorlaufzeit der Aufnahme</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="22"/>
         <source>Lead-in time before recording starts</source>
-        <translation>Vorlaufzeit bevor die Aufnahme startet</translation>
+        <translation>Vorlaufzeit, bevor die Aufnahme startet</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
@@ -21482,7 +21482,7 @@ Bitte schließen Sie ein Eingabegerät an und suchen Sie erneut danach.</transla
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
         <source>32-bit Float</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation>32-bit Fließkommazahl</translation>
+        <translation>32-Bit-Fließkomma</translation>
     </message>
 </context>
 <context>
