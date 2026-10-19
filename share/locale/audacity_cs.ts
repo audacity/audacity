@@ -325,7 +325,7 @@
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
         <source>&amp;Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Importovat…</translation>
+        <translation>&amp;Zavést…</translation>
     </message>
     <message>
         <source>Import preset</source>
@@ -335,11 +335,11 @@
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
         <source>&amp;Export…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Exportovat…</translation>
+        <translation>&amp;Vyvést…</translation>
     </message>
     <message>
         <source>Export preset</source>
-        <translation type="vanished">Vyvést přednastavení</translation>
+        <translation type="vanished">Exportovat přednastavení</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
@@ -685,7 +685,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
         <source>&amp;Export MIDI</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Exportovat MIDI</translation>
+        <translation>&amp;Vyvést MIDI</translation>
     </message>
     <message>
         <source>Export MIDI</source>
@@ -989,7 +989,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Plugin manager</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Správce zásuvných modulů</translation>
+        <translation>Správce modulů</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
@@ -1013,7 +1013,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="93"/>
         <source>Import…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Importovat…</translation>
+        <translation>Zavést…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="46"/>
@@ -1047,7 +1047,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
         <source>&amp;Export audio…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Exportovat zvuk…</translation>
+        <translation>&amp;Vyvést zvuk…</translation>
     </message>
     <message>
         <source>Export audio…</source>
@@ -1129,13 +1129,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
         <source>Sample data import</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Import dat vzorků</translation>
+        <translation>Zavést data vzorků</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="615"/>
         <source>Raw data import</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Import nezpracovaných dat</translation>
+        <translation>Zavedení nezpracovaných dat</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
@@ -2491,7 +2491,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
         <source>Import…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Importovat…</translation>
+        <translation>Zavést…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
@@ -2509,7 +2509,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="119"/>
         <source>Export audio…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Exportovat zvuk…</translation>
+        <translation>Vyvést zvuk…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
@@ -2860,13 +2860,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="609"/>
         <source>Sample data import</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Import dat vzorků</translation>
+        <translation>Zavedení dat vzorků</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="617"/>
         <source>Raw data import</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Import nezpracovaných dat</translation>
+        <translation>Zavedení nezpracovaných dat</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="625"/>
@@ -3699,7 +3699,7 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="65"/>
         <source>Cloud account</source>
-        <translation>Cloudový účet</translation>
+        <translation>Účet v cloudu</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="55"/>
@@ -10340,7 +10340,7 @@ Daultonem</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
         <source>Sample data Import</source>
-        <translation>Import dat vzorků</translation>
+        <translation>Zavedení dat vzorků</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
@@ -11726,7 +11726,7 @@ Dejte, prosím, vědět týmu Audacity na https://forum.audacityteam.org/.</tran
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="698"/>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="864"/>
         <source>Export audio</source>
-        <translation>Export zvuku</translation>
+        <translation>Vyvedení zvuku</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="77"/>
@@ -12142,15 +12142,15 @@ Některé kodeky mohou přijímat pouze určité hodnoty (128k, 192k, 256k atd.)
     </message>
     <message>
         <source>Export full project audio</source>
-        <translation type="vanished">Exportovat zvuk celého projektu</translation>
+        <translation type="vanished">Vyvést zvuk celého projektu</translation>
     </message>
     <message>
         <source>Export selected audio</source>
-        <translation type="vanished">Exportovat vybraný zvuk</translation>
+        <translation type="vanished">Vyvést vybraný zvuk</translation>
     </message>
     <message>
         <source>Export audio in loop region</source>
-        <translation type="vanished">Exportovat zvuk v oblasti opakování</translation>
+        <translation type="vanished">Vyvést zvuk v oblasti opakování</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="220"/>
@@ -12160,7 +12160,7 @@ Některé kodeky mohou přijímat pouze určité hodnoty (128k, 192k, 256k atd.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="221"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
-        <translation>Export zvuku v oblasti smyčky vyžaduje smyčku v projektu. Vraťte se, vytvořte smyčku a zkuste to znovu.</translation>
+        <translation>Vyvedení zvuku v oblasti smyčky vyžaduje smyčku v projektu. Vraťte se, vytvořte smyčku a zkuste to znovu.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="232"/>
@@ -12170,7 +12170,7 @@ Některé kodeky mohou přijímat pouze určité hodnoty (128k, 192k, 256k atd.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="233"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
-        <translation>Export vybraného zvuku vyžaduje výběr zvukových dat v projektu. Vraťte se do projektu, proveďte výběr a zkuste to znovu.</translation>
+        <translation>Vyvedení vybraného zvuku vyžaduje výběr zvukových dat v projektu. Vraťte se do projektu, proveďte výběr a zkuste to znovu.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
@@ -12202,7 +12202,7 @@ Některé kodeky mohou přijímat pouze určité hodnoty (128k, 192k, 256k atd.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="699"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
-        <translation>Nepodařilo se exportovat do „%1“: cílovou složku se nepodařilo vytvořit. Zkontrolujte, zda je cesta platná a zda máte oprávnění do složky zapisovat.</translation>
+        <translation>Nepodařilo se vyvést do „%1“: cílovou složku se nepodařilo vytvořit. Zkontrolujte, zda je cesta platná a zda máte oprávnění do složky zapisovat.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
@@ -12692,7 +12692,7 @@ Rady k výběru vhodné jednotky zobrazíte kliknutím na tlačítko nápovědy.
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <extracomment>Label of the button that starts the export</extracomment>
-        <translation>Exportovat</translation>
+        <translation>Vyvést</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="81"/>
@@ -14383,13 +14383,13 @@ Rady k výběru vhodné jednotky zobrazíte kliknutím na tlačítko nápovědy.
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
         <extracomment>Title of the export progress dialog</extracomment>
-        <translation>Export</translation>
+        <translation>Vyvést</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="70"/>
         <source>Importing %1</source>
         <extracomment>%1 is the description of the file format being imported</extracomment>
-        <translation>Importuje se %1</translation>
+        <translation>Zavádí se %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="485"/>
@@ -14408,7 +14408,7 @@ Rady k výběru vhodné jednotky zobrazíte kliknutím na tlačítko nápovědy.
         <location filename="../../au3/libraries/au3-import-export/ExportPlugin.cpp" line="43"/>
         <source>Unable to export.
 Error %1</source>
-        <translation>Nelze exportovat.
+        <translation>Nelze vyvést.
 Chyba %1</translation>
     </message>
     <message>
@@ -14440,13 +14440,13 @@ Audacity tento typ souboru nemůže otevřít.</translation>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="624"/>
         <source>Importing files</source>
-        <translation>Importují se soubory</translation>
+        <translation>Zavádí se soubory</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
         <source>Importing %1…</source>
         <extracomment>%1 is the name of the file being imported</extracomment>
-        <translation>Importuje se %1…</translation>
+        <translation>Zavádí se %1…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="631"/>
@@ -14469,7 +14469,7 @@ Audacity can import, such as WAV or AIFF.</source>
         <translation>„%1“ je stopa zvukového CD.
 Audacity nemůže otevřít zvuková CD přímo.
 Extrahujte (ripujte) stopy CD do zvukového formátu, který
-Audacity dokáže importovat, například WAV nebo AIFF.</translation>
+Audacity dokáže zavést, například WAV nebo AIFF.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="705"/>
@@ -14535,7 +14535,7 @@ then import it, or record it into Audacity.</source>
         <translation>„%1“ je soubor s notovými daty, nikoli zvukový soubor.
 Audacity tento typ souboru nemůže otevřít.
 Zkuste jej převést na zvukový soubor, například WAV nebo AIFF, a
-poté jej importovat nebo nahrát do Audacity.</translation>
+poté jej zavést nebo nahrát do Audacity.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="752"/>
@@ -14548,7 +14548,7 @@ format, such as WAV or AIFF.</source>
         <translation>„%1“ je zvukový soubor Musepack.
 Audacity tento typ souboru nemůže otevřít.
 Pokud se domníváte, že by mohlo jít o soubor mp3, přejmenujte jej tak, aby končil na „.mp3“,
-a zkuste jej znovu importovat. Jinak je nutné jej převést do podporovaného zvukového
+a zkuste jej znovu zavést. Jinak je nutné jej převést do podporovaného zvukového
 formátu, například WAV nebo AIFF.</translation>
     </message>
     <message>
@@ -14604,7 +14604,7 @@ Je nutné extrahovat zvuk do podporovaného formátu, například WAV nebo AIFF.
         <extracomment>%s will be the filename</extracomment>
         <translation>Audacity nerozpoznalo typ souboru „%1“.
 
-%2U nekomprimovaných souborů zkuste také Soubor &gt; Import &gt; Nezpracovaná data.</translation>
+%2U nekomprimovaných souborů zkuste také Soubor &gt; Zavést &gt; Nezpracovaná data.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
@@ -15000,14 +15000,14 @@ Nastavit jej můžete v Předvolby &gt; Obecné.</translation>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1451"/>
         <source>Exporting selected audio as %1</source>
         <extracomment>%1 is format description</extracomment>
-        <translation>Exportuje se vybraný zvuk jako %1</translation>
+        <translation>Vyvádí se vybraný zvuk jako %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1454"/>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="592"/>
         <source>Exporting the audio as %1</source>
         <extracomment>%1 is format description</extracomment>
-        <translation>Exportuje se zvuk jako %1</translation>
+        <translation>Vyvádí se zvuk jako %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1566"/>
@@ -15148,12 +15148,12 @@ Stav: %1</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="326"/>
         <source>Exporting the selected audio as FLAC</source>
-        <translation>Exportuje se vybraný zvuk jako FLAC</translation>
+        <translation>Vyvádí se vybraný zvuk jako FLAC</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="327"/>
         <source>Exporting the audio as FLAC</source>
-        <translation>Exportuje se zvuk jako FLAC</translation>
+        <translation>Vyvádí se zvuk jako FLAC</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ImportFLAC.h" line="20"/>
@@ -15168,7 +15168,7 @@ Stav: %1</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="220"/>
         <source>Cannot export MP2 with this sample rate and bit rate</source>
-        <translation>S touto vzorkovací frekvencí a datovým tokem nelze exportovat MP2</translation>
+        <translation>S touto vzorkovací frekvencí a datovým tokem nelze vyvést MP2</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="230"/>
@@ -15182,12 +15182,12 @@ Stav: %1</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="245"/>
         <source>Exporting selected audio at %1 kbps</source>
-        <translation>Exportuje se vybraný zvuk s datovým tokem %1 kb/s</translation>
+        <translation>Vyvádí se vybraný zvuk s datovým tokem %1 kb/s</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="247"/>
         <source>Exporting the audio at %1 kbps</source>
-        <translation>Exportuje se zvuk s datovým tokem %1 kb/s</translation>
+        <translation>Vyvádí se zvuk s datovým tokem %1 kb/s</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="66"/>
@@ -15409,32 +15409,32 @@ Stáhněte si prosím nejnovější verzi „LAME for Audacity“.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1498"/>
         <source>Exporting selected audio with %1 preset</source>
-        <translation>Exportuje se vybraný zvuk s přednastavením %1</translation>
+        <translation>Vyvádí se vybraný zvuk s přednastavením %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1499"/>
         <source>Exporting the audio with %1 preset</source>
-        <translation>Exportuje se zvuk s přednastavením %1</translation>
+        <translation>Vyvádí se zvuk s přednastavením %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1503"/>
         <source>Exporting selected audio with VBR quality %1</source>
-        <translation>Exportuje se vybraný zvuk s kvalitou VBR %1</translation>
+        <translation>Vyvádí se vybraný zvuk s kvalitou VBR %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1504"/>
         <source>Exporting the audio with VBR quality %1</source>
-        <translation>Exportuje se zvuk s kvalitou VBR %1</translation>
+        <translation>Vyvádí se zvuk s kvalitou VBR %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1508"/>
         <source>Exporting selected audio at %1 Kbps</source>
-        <translation>Exportuje se vybraný zvuk s datovým tokem %1 kb/s</translation>
+        <translation>Vyvádí se vybraný zvuk s datovým tokem %1 kb/s</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1509"/>
         <source>Exporting the audio at %1 Kbps</source>
-        <translation>Exportuje se zvuk s datovým tokem %1 kb/s</translation>
+        <translation>Vyvádí se zvuk s datovým tokem %1 kb/s</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1556"/>
@@ -15473,37 +15473,37 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="173"/>
         <source>Unable to export - rate or quality problem</source>
-        <translation>Nelze exportovat – problém se vzorkovací frekvencí nebo kvalitou</translation>
+        <translation>Nelze vyvést – problém se vzorkovací frekvencí nebo kvalitou</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="186"/>
         <source>Unable to export - problem initialising</source>
-        <translation>Nelze exportovat – problém s inicializací</translation>
+        <translation>Nelze vyvést – problém s inicializací</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="198"/>
         <source>Unable to export - problem creating stream</source>
-        <translation>Nelze exportovat – problém s vytvořením proudu</translation>
+        <translation>Nelze vyvést – problém s vytvořením proudu</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="219"/>
         <source>Unable to export - problem with packets</source>
-        <translation>Nelze exportovat – problém s pakety</translation>
+        <translation>Nelze vyvést – problém s pakety</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="227"/>
         <source>Unable to export - problem with file</source>
-        <translation>Nelze exportovat – problém se souborem</translation>
+        <translation>Nelze vyvést – problém se souborem</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="236"/>
         <source>Exporting the selected audio as Ogg Vorbis</source>
-        <translation>Exportuje se vybraný zvuk jako Ogg Vorbis</translation>
+        <translation>Vyvádí se vybraný zvuk jako Ogg Vorbis</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="237"/>
         <source>Exporting the audio as Ogg Vorbis</source>
-        <translation>Exportuje se zvuk jako Ogg Vorbis</translation>
+        <translation>Vyvádí se zvuk jako Ogg Vorbis</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="69"/>
@@ -15579,12 +15579,12 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="343"/>
         <source>Exporting selected audio as Opus</source>
-        <translation>Exportuje se vybraný zvuk jako Opus</translation>
+        <translation>Vyvádí se vybraný zvuk jako Opus</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="344"/>
         <source>Exporting the audio as Opus</source>
-        <translation>Exportuje se zvuk jako Opus</translation>
+        <translation>Vyvádí se zvuk jako Opus</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="376"/>
@@ -15786,13 +15786,13 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="534"/>
         <source>Cannot export audio in this format.</source>
-        <translation>Zvuk nelze exportovat v tomto formátu.</translation>
+        <translation>Zvuk nelze vyvést v tomto formátu.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="548"/>
         <source>Cannot export audio to %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation>Zvuk nelze exportovat do %1</translation>
+        <translation>Zvuk nelze vyvést do %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="581"/>
@@ -15805,7 +15805,7 @@ Audacity to nedokáže, export byl zrušen.</translation>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="590"/>
         <source>Exporting the selected audio as %1</source>
         <extracomment>%1 is a format description</extracomment>
-        <translation>Exportuje se vybraný zvuk jako %1</translation>
+        <translation>Vyvádí se vybraný zvuk jako %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
@@ -15833,12 +15833,12 @@ Libsndfile hlásí „%2“</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="334"/>
         <source>Exporting selected audio as WavPack</source>
-        <translation>Exportuje se vybraný zvuk jako WavPack</translation>
+        <translation>Vyvádí se vybraný zvuk jako WavPack</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="335"/>
         <source>Exporting the audio as WavPack</source>
-        <translation>Exportuje se zvuk jako WavPack</translation>
+        <translation>Vyvádí se zvuk jako WavPack</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="21"/>
@@ -18188,7 +18188,7 @@ Nebude načten.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation>Zobrazovat dialog „Jak chcete exportovat?“</translation>
+        <translation>Zobrazovat dialog „Jak chcete vyvést?“</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -19341,12 +19341,12 @@ Chcete-li projekt obnovit, musíte spustit tuto verzi Audacity.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
         <source>Export audio</source>
-        <translation>Export zvuku</translation>
+        <translation>Vyvedení zvuku</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
         <source>How would you like to export?</source>
-        <translation>Jak chcete exportovat?</translation>
+        <translation>Jak chcete vyvést?</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
@@ -19367,7 +19367,7 @@ Chcete-li projekt obnovit, musíte spustit tuto verzi Audacity.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation>Exportovat do počítače</translation>
+        <translation>Vyvést do počítače</translation>
     </message>
 </context>
 <context>
@@ -19820,13 +19820,13 @@ Chcete-li projekt obnovit, musíte spustit tuto verzi Audacity.</translation>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="72"/>
         <source>Import</source>
         <extracomment>Label of the button that imports labels from a file</extracomment>
-        <translation>Importovat</translation>
+        <translation>Zavést</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="90"/>
         <source>Export</source>
         <extracomment>Label of the button that exports labels to a file</extracomment>
-        <translation>Exportovat</translation>
+        <translation>Vyvést</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="110"/>
@@ -20574,12 +20574,12 @@ Připojte vstupní zařízení a znovu vyhledejte zařízení.</translation>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
         <source>Import</source>
-        <translation>Importovat</translation>
+        <translation>Zavést</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
         <source>Export</source>
-        <translation>Exportovat</translation>
+        <translation>Vyvést</translation>
     </message>
     <message>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
