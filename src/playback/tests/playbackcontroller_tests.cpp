@@ -20,6 +20,7 @@
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
 #include "../internal/playbackcontroller.h"
+#include "../playbackcommands.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -30,9 +31,6 @@ using namespace muse;
 using namespace au;
 using namespace au::playback;
 using namespace au::context;
-
-static const actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
-static const actions::ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
 
 namespace au::playback {
 class PlaybackControllerTests : public ::testing::Test
@@ -160,18 +158,18 @@ public:
 
     void changePlaybackRegion(const secs_t start, const secs_t end)
     {
-        muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_QUERY);
-        q.addParam("start", muse::Val(start));
-        q.addParam("end", muse::Val(end));
-        m_controller->onChangePlaybackRegionAction(q);
+        m_controller->onChangePlaybackRegionAction({
+                { PLAYBACK_CHANGE_PLAY_REGION_START_PARAM, muse::Val(start) },
+                { PLAYBACK_CHANGE_PLAY_REGION_END_PARAM, muse::Val(end) },
+            });
     }
 
     void seek(const secs_t seekTime, const bool triggerPlay = false)
     {
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(seekTime));
-        q.addParam("triggerPlay", muse::Val(triggerPlay));
-        m_controller->onSeekAction(q);
+        m_controller->onSeekAction({
+                { PLAYBACK_SEEK_TIME_PARAM, muse::Val(seekTime) },
+                { PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(triggerPlay) },
+            });
     }
 
     void setTimeSelection(const secs_t start, const secs_t end)
@@ -220,16 +218,12 @@ public:
 
     void changeAudioApi(int index)
     {
-        muse::actions::ActionQuery q("action://playback/change-api");
-        q.addParam("api_index", muse::Val(index));
-        m_controller->setAudioApi(q);
+        m_controller->setAudioApi({ { PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM, muse::Val(index) } });
     }
 
     void changeInputDevice(int index)
     {
-        muse::actions::ActionQuery q("action://playback/change-recording-device");
-        q.addParam("device_index", muse::Val(index));
-        m_controller->setAudioInputDevice(q);
+        m_controller->setAudioInputDevice({ { PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM, muse::Val(index) } });
     }
 
     void playFromCurrentState()
