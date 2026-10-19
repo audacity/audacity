@@ -98,6 +98,9 @@ struct ItemKeys
     LabelKeyList labels;
 
     inline bool empty() const { return clips.empty() && labels.empty(); }
+
+    inline bool operator==(const ItemKeys& other) const { return clips == other.clips && labels == other.labels; }
+    inline bool operator!=(const ItemKeys& other) const { return !operator==(other); }
 };
 
 struct ItemTimeSpan

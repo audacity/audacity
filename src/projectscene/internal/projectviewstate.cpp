@@ -575,6 +575,32 @@ au::trackedit::TrackIdList ProjectViewState::tracksInRange(double y1, double y2)
     return trackedit::TrackIdList(tracks.begin() + i, tracks.begin() + j);
 }
 
+bool ProjectViewState::isBelowAllTracks(double y) const
+{
+    const std::optional<int> bottomY = tracksBottomY();
+    return bottomY.has_value() && muse::RealIsEqualOrMore(y, *bottomY);
+}
+
+std::optional<int> ProjectViewState::tracksBottomY() const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return std::nullopt;
+    }
+
+    const trackedit::TrackIdList tracks = prj->trackIdList();
+    if (tracks.empty()) {
+        return std::nullopt;
+    }
+
+    int bottomY = -tracksVerticalOffset().val;
+    for (const trackedit::TrackId& id : tracks) {
+        bottomY += trackHeight(id).val;
+    }
+
+    return bottomY;
+}
+
 void ProjectViewState::setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio)
 {
     TrackData* d = nullptr;

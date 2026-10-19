@@ -430,8 +430,7 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
             emit previewChanged();
 
             if (keyboard) {
-                selectionController()->setSelectedClips(m_clips, false);
-                selectionController()->setSelectedLabels(m_labels, false);
+                selectionController()->setSelectedItems(ItemKeys { m_clips, m_labels }, false);
             }
             const TrackItemKeyList& selected = isLabelTrack(m_sourceType) ? m_labels : m_clips;
             const auto result = isLabelTrack(m_sourceType)
