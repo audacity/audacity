@@ -34,7 +34,7 @@ class PlaybackToolBarTimeItem : public muse::uicomponents::ToolBarItem
     muse::ContextInject<IPlayback> playback{ this };
 
 public:
-    explicit PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+    explicit PlaybackToolBarTimeItem(const muse::rcommand::CommandInfo& info, muse::uicomponents::ToolBarItemType::Type type,
                                      QObject* parent = nullptr);
 
     int currentFormat() const;

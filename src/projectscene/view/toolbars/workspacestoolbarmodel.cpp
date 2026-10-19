@@ -15,12 +15,10 @@
 
 #include "translation.h"
 
-static const muse::actions::ActionCode WORKSPACES_ACTION_CODE = "workspaces";
+static const QString WORKSPACES_ITEM_ID = "workspaces";
 
 using namespace au::projectscene;
 using namespace muse::uicomponents;
-using namespace muse::actions;
-using namespace muse::ui;
 
 WorkspacesToolBarModel::WorkspacesToolBarModel(QObject* parent)
     : muse::uicomponents::AbstractToolBarModel(parent)
@@ -37,10 +35,8 @@ void WorkspacesToolBarModel::load()
 
     ToolBarItemList items;
 
-    UiAction workspacesAction;
-    workspacesAction.code = WORKSPACES_ACTION_CODE;
-
-    ToolBarItem* item = new ToolBarItem(workspacesAction, ToolBarItemType::ACTION, this);
+    ToolBarItem* item = new ToolBarItem(ToolBarItemType::ACTION, this);
+    item->setId(WORKSPACES_ITEM_ID);
 
     items << item;
 
@@ -71,7 +67,7 @@ void WorkspacesToolBarModel::loadWorkspacesModel()
 
 void WorkspacesToolBarModel::updateState()
 {
-    ToolBarItem& item = findItem(WORKSPACES_ACTION_CODE);
+    ToolBarItem& item = findItem(WORKSPACES_ITEM_ID);
     if (!item.isValid()) {
         return;
     }
@@ -82,7 +78,7 @@ void WorkspacesToolBarModel::updateState()
 
     for (const MenuItem* menuItem : m_workspacesMenuModel->items()) {
         if (menuItem->selected()) {
-            currentWorkspaceName = menuItem->action().title.raw();
+            currentWorkspaceName = muse::TranslatableString::untranslatable(menuItem->translatedTitle());
         }
     }
 

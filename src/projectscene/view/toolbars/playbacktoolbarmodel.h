@@ -6,7 +6,6 @@
 #include "framework/uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/ui/iuiactionsregister.h"
 #include "framework/ui/iuiconfiguration.h"
 #include "framework/ui/iuistate.h"
 
@@ -32,7 +31,6 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
     muse::GlobalInject<playback::IPlaybackConfiguration> configuration;
 
     muse::ContextInject<muse::ui::IUiState> uiState { this };
-    muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
     muse::ContextInject<context::IGlobalContext> context{ this };
     muse::ContextInject<context::IUiContextResolver> uicontextResolver { this };
     muse::ContextInject<playback::IPlaybackController> playbackController{ this };
@@ -66,7 +64,7 @@ private:
     void reload();
     void setupProjectConnections(project::IAudacityProject& project);
 
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
 
     void updateStates();
     void updatePlayState();
@@ -77,13 +75,13 @@ private:
     void updateSplitState();
     void updateGlobalSpectrogramViewState();
 
-    void updateToggleState(const muse::actions::ActionCode& actionCode, bool isOn);
+    void updateToggleState(const muse::rcommand::Command& command, bool isOn);
 
     QColor themeColor(muse::ui::ThemeStyleKey key) const;
 
     void updateActions();
 
-    muse::uicomponents::ToolBarItem* makeLocalItem(const muse::actions::ActionCode& actionCode);
+    muse::uicomponents::ToolBarItem* makeLocalItem(const muse::rcommand::Command& command);
 
     bool m_inited = false;
 };

@@ -38,9 +38,9 @@ static bool isEnableTripletsAvailable(const SnapType& type)
     return muse::contains(types, type);
 }
 
-SnapToolBarItem::SnapToolBarItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+SnapToolBarItem::SnapToolBarItem(const muse::rcommand::CommandInfo& info, muse::uicomponents::ToolBarItemType::Type type,
                                  QObject* parent)
-    : muse::uicomponents::ToolBarItem(action, type, parent)
+    : muse::uicomponents::ToolBarItem(info, type, parent)
 {
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         onProjectChanged();

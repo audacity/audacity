@@ -4,8 +4,7 @@
 #include "playbacktoolbarmodel.h"
 
 #include "framework/global/containers.h"
-
-#include "internal/projectsceneuiactions.h"
+#include "framework/global/log.h"
 
 #include "playback/view/toolbars/playbacktoolbarlevelitem.h"
 #include "playback/view/toolbars/playbacktoolbarcontrolitem.h"
@@ -15,59 +14,37 @@
 #include "record/qml/Audacity/Record/playbacktoolbarrecordlevelitem.h"
 #include "projectscene/view/toolbars/snaptoolbaritem.h"
 
+#include "playbacktoolbarconfig.h"
+
 using namespace muse::uicomponents;
 using namespace muse::ui;
-using namespace muse::actions;
+using namespace muse::rcommand;
 using namespace au::projectscene;
 using namespace au::playback;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
-static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
-static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
-
-static const ActionQuery RECORD_START_QUERY("action://record/start");
-static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
-static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
-static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
-
-static const ActionQuery PLAYBACK_REWIND_START_QUERY("action://playback/rewind-start");
-static const ActionQuery PLAYBACK_REWIND_END_QUERY("action://playback/rewind-end");
-static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
-
-static const ActionCode CLIP_GAIN_AUTOMATION_CODE("clip-gain");
-static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");
-
-static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://trackedit/global-view-spectrogram");
-
-static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
-static const ActionCode PLAYBACK_TIME("playback-time");
-static const ActionCode PLAYBACK_BPM("playback-bpm");
-static const ActionCode PLAYBACK_TIME_SIGNATURE("playback-time-signature");
-
-static const ActionCode SNAP_ACTION_CODE("snap");
-
-static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
+static PlaybackToolBarModel::ItemType itemType(const Command& command)
 {
-    std::map<ActionCode, PlaybackToolBarModel::ItemType> types = {
-        { PLAYBACK_LEVEL_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_LEVEL },
-        { PLAYBACK_TIME, PlaybackToolBarModel::PLAYBACK_TIME },
-        { PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM },
-        { PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
-        { RECORD_LEVEL_QUERY.toString(), PlaybackToolBarModel::RECORD_LEVEL },
-        { PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { PLAYBACK_STOP_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { RECORD_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { PLAYBACK_REWIND_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { PLAYBACK_REWIND_END_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { CLIP_GAIN_AUTOMATION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { SPLIT_TOOL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
+    static const std::map<Command, PlaybackToolBarModel::ItemType> types = {
+        { PLAYBACK_LEVEL_COMMAND, PlaybackToolBarModel::PLAYBACK_LEVEL },
+        { PLAYBACK_TIME_COMMAND, PlaybackToolBarModel::PLAYBACK_TIME },
+        { PLAYBACK_BPM_COMMAND, PlaybackToolBarModel::PLAYBACK_BPM },
+        { PLAYBACK_TIME_SIGNATURE_COMMAND, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
+        { au::record::RECORD_LEVEL_COMMAND, PlaybackToolBarModel::RECORD_LEVEL },
+        { PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_STOP_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { au::record::RECORD_START_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_REWIND_START_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_REWIND_END_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_TOGGLE_LOOP_REGION_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { au::trackedit::TRACKEDIT_GLOBAL_VIEW_SPECTROGRAM_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PROJECTSCENE_SNAP_COMMAND, PlaybackToolBarModel::SNAP }
     };
 
-    return muse::value(types, actionCode, PlaybackToolBarModel::PROJECT_CONTROL);
+    return muse::value(types, command, PlaybackToolBarModel::PROJECT_CONTROL);
 }
 
 PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
@@ -123,30 +100,29 @@ void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& pr
     vs->globalSpectrogramToggleIsOnChanged().onNotify(this, [this] { updateGlobalSpectrogramViewState(); });
 }
 
-void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
+void PlaybackToolBarModel::onCommandStateChanged(const Command& command, const CommandState& state)
 {
     if (uicontextResolver()->currentUiContext() == context::UiCtxDialogOpened) {
         return;
     }
 
-    if (containsAction(codes, PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString())
-        || containsAction(codes, RECORD_PAUSE_QUERY.toString())) {
+    if (command == PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND || command == record::RECORD_PAUSE_COMMAND) {
         updatePlayState();
     }
 
-    if (containsAction(codes, PLAYBACK_STOP_QUERY.toString()) || containsAction(codes, RECORD_STOP_QUERY.toString())) {
+    if (command == PLAYBACK_STOP_COMMAND || command == record::RECORD_STOP_COMMAND) {
         updateStopState();
     }
 
-    if (containsAction(codes, RECORD_START_QUERY.toString())) {
+    if (command == record::RECORD_START_COMMAND) {
         updateRecordState();
     }
 
-    if (containsAction(codes, LOOP_ACTION_CODE)) {
+    if (command == PLAYBACK_TOGGLE_LOOP_REGION_COMMAND) {
         updateLoopState();
     }
 
-    AbstractToolBarModel::onActionsStateChanges(codes);
+    AbstractToolBarModel::onCommandStateChanged(command, state);
 }
 
 void PlaybackToolBarModel::updateStates()
@@ -162,7 +138,7 @@ void PlaybackToolBarModel::updateStates()
 
 void PlaybackToolBarModel::updatePlayState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString()));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND));
 
     if (item == nullptr) {
         return;
@@ -174,16 +150,16 @@ void PlaybackToolBarModel::updatePlayState()
     bool isLeadIn = recordController()->isLeadInRecording();
 
     // During recording it pauses the recorder
-    UiAction action = uiActionsRegister()->action(PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString());
+    CommandInfo info = commandsRegister()->commandInfo(PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND);
 
     // During lead-in, show as playing (green background) since audio is playing back
     bool showAsPlaying = isPlaying || isLeadIn;
 
     bool leadInPaused = isLeadIn && isPaused;
     if ((showAsPlaying && !leadInPaused) || (isRecording && !isLeadIn)) {
-        action.iconCode = IconCode::Code::PAUSE_FILL;
+        info.decoration.iconCode = IconCode::Code::PAUSE_FILL;
     }
-    item->setAction(action);
+    item->setCommandInfo(info);
     item->setSelected(showAsPlaying);
 
     QColor iconColor = themeColor(PLAY_COLOR);
@@ -201,21 +177,20 @@ void PlaybackToolBarModel::updatePlayState()
 
 void PlaybackToolBarModel::updateStopState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAYBACK_STOP_QUERY.toString()));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAYBACK_STOP_COMMAND));
 
     if (item == nullptr) {
         return;
     }
 
-    const UiAction action = uiActionsRegister()->action(PLAYBACK_STOP_QUERY.toString());
-    item->setAction(action);
+    item->setCommandInfo(commandsRegister()->commandInfo(PLAYBACK_STOP_COMMAND));
     const QColor iconColor = themeColor(FONT_PRIMARY_COLOR);
     item->setIconColor(iconColor);
 }
 
 void PlaybackToolBarModel::updateRecordState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_START_QUERY.toString()));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(record::RECORD_START_COMMAND));
 
     if (item == nullptr) {
         return;
@@ -240,7 +215,7 @@ void PlaybackToolBarModel::updateRecordState()
 
 void PlaybackToolBarModel::updateLoopState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(LOOP_ACTION_CODE));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAYBACK_TOGGLE_LOOP_REGION_COMMAND));
 
     if (item == nullptr) {
         return;
@@ -253,9 +228,9 @@ void PlaybackToolBarModel::updateLoopState()
     item->setBackgroundColor(themeColor(isLooping ? ACCENT_COLOR : BUTTON_COLOR));
 }
 
-void PlaybackToolBarModel::updateToggleState(const ActionCode& actionCode, bool isOn)
+void PlaybackToolBarModel::updateToggleState(const Command& command, bool isOn)
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(actionCode));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(command));
 
     if (item == nullptr) {
         return;
@@ -273,7 +248,7 @@ void PlaybackToolBarModel::updateClipGainAutomationState()
         return;
     }
 
-    updateToggleState(CLIP_GAIN_AUTOMATION_CODE, prj->viewState()->clipGainAutomationEnabled().val);
+    updateToggleState(PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND, prj->viewState()->clipGainAutomationEnabled().val);
 }
 
 void PlaybackToolBarModel::updateSplitState()
@@ -284,7 +259,7 @@ void PlaybackToolBarModel::updateSplitState()
         return;
     }
 
-    updateToggleState(SPLIT_TOOL_ACTION_CODE, prj->viewState()->splitToolEnabled().val);
+    updateToggleState(PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, prj->viewState()->splitToolEnabled().val);
 }
 
 void PlaybackToolBarModel::updateGlobalSpectrogramViewState()
@@ -295,7 +270,7 @@ void PlaybackToolBarModel::updateGlobalSpectrogramViewState()
         return;
     }
 
-    updateToggleState(TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE, prj->viewState()->globalSpectrogramToggleIsOn());
+    updateToggleState(trackedit::TRACKEDIT_GLOBAL_VIEW_SPECTROGRAM_COMMAND, prj->viewState()->globalSpectrogramToggleIsOn());
 }
 
 QColor PlaybackToolBarModel::themeColor(muse::ui::ThemeStyleKey key) const
@@ -307,15 +282,14 @@ void PlaybackToolBarModel::updateActions()
 {
     ToolBarItemList items;
 
-    muse::ui::ToolConfig playbackConfig = uiState()->toolConfig(TOOLBAR_NAME,
-                                                                ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    muse::ui::ToolConfig playbackConfig = uiState()->toolConfig(TOOLBAR_NAME, defaultPlaybackToolBarConfig());
 
     for (const muse::ui::ToolConfig::Item& citem : playbackConfig.items) {
         if (!citem.show) {
             continue;
         }
 
-        if (citem.intent == PLAYBACK_LEVEL_QUERY.toString()) {
+        if (citem.intent == PLAYBACK_LEVEL_COMMAND.toString()) {
             if (playbackUiState()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar) {
                 // Skip playback meter item if it is set to be displayed in the sidebar
                 continue;
@@ -327,7 +301,7 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
-        ToolBarItem* item = makeLocalItem(citem.intent);
+        ToolBarItem* item = makeLocalItem(Command(citem.intent));
         if (!item) {
             continue;
         }
@@ -340,51 +314,58 @@ void PlaybackToolBarModel::updateActions()
     setItems(items);
 }
 
-ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
+ToolBarItem* PlaybackToolBarModel::makeLocalItem(const Command& command)
 {
-    PlaybackToolBarModel::ItemType type = itemType(actionCode);
+    PlaybackToolBarModel::ItemType type = itemType(command);
 
     if (type == PlaybackToolBarModel::PROJECT_CONTROL) {
-        ToolBarItem* item = AbstractToolBarModel::makeItem(actionCode);
-        item->setType(static_cast<ToolBarItemType::Type>(type));
+        ToolBarItem* item = AbstractToolBarModel::makeItem(command);
+        if (item) {
+            item->setType(static_cast<ToolBarItemType::Type>(type));
+        }
         return item;
     }
 
+    const CommandInfo& info = commandsRegister()->commandInfo(command);
+    if (!info.isValid()) {
+        LOGW() << "not found command: " << command;
+        return nullptr;
+    }
+
     ToolBarItem* result = nullptr;
-    const UiAction& action = uiActionsRegister()->action(actionCode);
 
     switch (type) {
     case PlaybackToolBarModel::PLAYBACK_LEVEL:
-        result = new PlaybackToolBarLevelItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        result = new PlaybackToolBarLevelItem(info, static_cast<ToolBarItemType::Type>(type), this);
         break;
     case PlaybackToolBarModel::PLAYBACK_TIME:
-        result = new PlaybackToolBarTimeItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        result = new PlaybackToolBarTimeItem(info, static_cast<ToolBarItemType::Type>(type), this);
         break;
     case PlaybackToolBarModel::PLAYBACK_BPM:
-        result = new PlaybackToolBarBPMItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        result = new PlaybackToolBarBPMItem(info, static_cast<ToolBarItemType::Type>(type), this);
         break;
     case PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE:
-        result = new PlaybackToolBarTimeSignatureItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        result = new PlaybackToolBarTimeSignatureItem(info, static_cast<ToolBarItemType::Type>(type), this);
         break;
     case PlaybackToolBarModel::RECORD_LEVEL:
-        result = new record::PlaybackToolBarRecordLevelItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        result = new record::PlaybackToolBarRecordLevelItem(info, static_cast<ToolBarItemType::Type>(type), this);
         break;
     case PlaybackToolBarModel::PLAYBACK_CONTROL: {
-        PlaybackToolBarControlItem* item = new PlaybackToolBarControlItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        PlaybackToolBarControlItem* item = new PlaybackToolBarControlItem(info, static_cast<ToolBarItemType::Type>(type), this);
         item->setIconColor(themeColor(FONT_PRIMARY_COLOR));
         item->setBackgroundColor(themeColor(BUTTON_COLOR));
         result = std::move(item);
         break;
     }
     case PlaybackToolBarModel::SNAP:
-        result = new projectscene::SnapToolBarItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        result = new projectscene::SnapToolBarItem(info, static_cast<ToolBarItemType::Type>(type), this);
         break;
     default:
         break;
     }
 
     if (result) {
-        result->setState(uiActionsRegister()->actionState(actionCode));
+        result->setCommandState(commandsState()->commandState(command));
     }
 
     return result;

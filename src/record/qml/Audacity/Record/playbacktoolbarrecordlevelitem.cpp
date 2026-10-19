@@ -11,9 +11,9 @@ using namespace au::record;
 using namespace au::audio;
 using namespace au::playback;
 
-PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action,
+PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::rcommand::CommandInfo& info,
                                                                const muse::uicomponents::ToolBarItemType::Type type, QObject* parent)
-    : muse::uicomponents::ToolBarItem(action, type, parent)
+    : muse::uicomponents::ToolBarItem(info, type, parent)
 {
     record()->audioInput()->recordVolumeChanged().onReceive(this, [this](const audio::volume_dbfs_t volume){
         m_level = volume;
