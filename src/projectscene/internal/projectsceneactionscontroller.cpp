@@ -43,6 +43,8 @@ static const ActionCode SEL_CNTR_LEFT_CODE("sel-cntr-left");
 static const ActionCode SEL_CNTR_RIGHT_CODE("sel-cntr-right");
 static const ActionCode CURS_SEL_START_CODE("curs-sel-start");
 static const ActionCode CURS_SEL_END_CODE("curs-sel-end");
+static const ActionCode CURS_PAGE_UP_CODE("curs-page-up");
+static const ActionCode CURS_PAGE_DOWN_CODE("curs-page-down");
 static const ActionCode TOGGLE_EFFECTS_CODE("toggle-effects");
 static const ActionCode ADD_REALTIME_EFFECTS_CODE("add-realtime-effects");
 static const ActionCode AUDIO_SETUP_CODE("audio-setup");
@@ -132,6 +134,10 @@ void ProjectSceneActionsController::init()
                         &IPlayPositionViewController::cursorToSelectionStart);
     registerViewCommand(PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
                         &IPlayPositionViewController::cursorToSelectionEnd);
+    registerViewCommand(PROJECTSCENE_CURSOR_PAGE_UP_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::cursorPageUp);
+    registerViewCommand(PROJECTSCENE_CURSOR_PAGE_DOWN_COMMAND, &ProjectSceneActionsController::m_playPositionViewController,
+                        &IPlayPositionViewController::cursorPageDown);
 
     cd->onRequest(this, PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND, [this]() { return toggleEffectsPanel(); });
     cd->onRequest(this, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, [this]() { return toggleEffectsPanel(); });
@@ -194,6 +200,8 @@ void ProjectSceneActionsController::init()
         { SEL_CNTR_RIGHT_CODE, PROJECTSCENE_SELECTION_CONTRACT_RIGHT_COMMAND, {} },
         { CURS_SEL_START_CODE, PROJECTSCENE_CURSOR_TO_SELECTION_START_COMMAND, {} },
         { CURS_SEL_END_CODE, PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND, {} },
+        { CURS_PAGE_UP_CODE, PROJECTSCENE_CURSOR_PAGE_UP_COMMAND, {} },
+        { CURS_PAGE_DOWN_CODE, PROJECTSCENE_CURSOR_PAGE_DOWN_COMMAND, {} },
         { TOGGLE_EFFECTS_CODE, PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND, {} },
         { ADD_REALTIME_EFFECTS_CODE, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, {} },
         { AUDIO_SETUP_CODE, PROJECTSCENE_AUDIO_SETUP_COMMAND, {} },

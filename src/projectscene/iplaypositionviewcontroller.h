@@ -19,5 +19,8 @@ public:
 
     virtual void cursorToSelectionStart() = 0;
     virtual void cursorToSelectionEnd() = 0;
+
+    virtual void cursorPageUp() = 0;
+    virtual void cursorPageDown() = 0;
 };
 }
