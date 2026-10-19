@@ -23,10 +23,20 @@
 
 #include "framework/global/containers.h"
 #include "framework/global/types/translatablestring.h"
+#include "framework/diagnostics/diagnosticscommands.h"
+#include "framework/dockwindow/dockcommands.h"
 #include "framework/extensions/extensionscommands.h"
+#include "framework/testflow/testflowcommands.h"
+#include "framework/update/updatecommands.h"
 
 #include "shared/types/workspacetitles.h"
+#include "appshell/appshellcommands.h"
+#include "effects/effects_base/effectscommands.h"
+#include "playback/playbackcommands.h"
+#include "project/projectcommands.h"
+#include "projectscene/projectscenecommands.h"
 #include "record/recordcommands.h"
+#include "trackedit/trackeditcommands.h"
 
 #include "muse_framework_config.h"
 
@@ -40,19 +50,18 @@ using namespace au::appshell;
 using namespace muse;
 using namespace muse::ui;
 using namespace muse::uicomponents;
-using namespace muse::actions;
+using namespace muse::rcommand;
 
 using namespace au::project;
 //! TODO AU4
 // using namespace muse::workspace;
 using namespace muse::extensions;
 
-static QString makeId(const ActionCode& actionCode, int itemIndex)
+static QString makeId(const Command& command, int itemIndex)
 {
-    return QString::fromStdString(actionCode) + QString::number(itemIndex);
+    return QString::fromStdString(command.toString()) + QString::number(itemIndex);
 }
 
-static const ActionCode RENAME_ITEM_CODE("rename-item");
 static const QString RENAME_CLIP_ITEM_ID("rename-clip-item");
 static const QString RENAME_LABEL_ITEM_ID("rename-label-item");
 
@@ -119,10 +128,7 @@ void AppMenuModel::setupConnections()
             recentScoresList = appendClearRecentSection(recentScoresList);
         }
 
-        UiActionState state = recentScoreListItem.state();
-        state.enabled = openRecentEnabled;
-        recentScoreListItem.setState(state);
-
+        recentScoreListItem.setEnabled(openRecentEnabled);
         recentScoreListItem.setSubitems(recentScoresList);
     });
 
@@ -134,15 +140,6 @@ void AppMenuModel::setupConnections()
     });
 #endif
 
-    uiActionsRegister()->actionsChanged().onReceive(this, [this](const ui::UiActionList& acts) {
-        for (const UiAction& act : acts) {
-            MenuItem& item = findItem(act.code);
-            if (item.isValid()) {
-                item.setAction(act);
-            }
-        }
-    });
-
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
         onEffectsChanged();
     });
@@ -151,12 +148,13 @@ void AppMenuModel::setupConnections()
         onEffectsChanged();
     });
 
-    projectHistory()->historyChanged().onReceive(this, [this](auto) {
-        updateUndoRedoItems();
+    effectExecutionScenario()->lastProcessorIdChanged().onReceive(this, [this](const effects::EffectId& effectId) {
+        m_lastProcessorId = effectId;
+        updateRepeatLastEffectItem();
     });
 
-    configuration()->isEffectsPanelVisibleChanged().onNotify(this, [this]() {
-        setItemIsChecked("toggle-effects", configuration()->isEffectsPanelVisible());
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
+        updateUndoRedoItems();
     });
 
     extensionsProvider()->manifestListChanged().onNotify(this, [this]() {
@@ -170,34 +168,26 @@ void AppMenuModel::setupConnections()
     updateRenameItemsState();
 }
 
-void AppMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
+void AppMenuModel::onCommandStateChanged(const Command& command, const CommandState& state)
 {
-    AbstractMenuModel::onActionsStateChanges(codes);
+    AbstractMenuModel::onCommandStateChanged(command, state);
 
     //! NOTE "rename-item" drives both the "Rename clip" and "Rename label" items; split its
     //! state between them depending on whether a clip or a label is selected
-    if (muse::contains(codes, RENAME_ITEM_CODE)) {
+    if (command == trackedit::TRACKEDIT_RENAME_ITEM_COMMAND) {
         updateRenameItemsState();
     }
 }
 
-void AppMenuModel::setItemIsChecked(const QString& itemId, bool checked)
-{
-    MenuItem& item = findMenu(itemId);
-    auto state = item.state();
-    state.checked = checked;
-    item.setState(state);
-}
-
 void AppMenuModel::updateUndoRedoItems()
 {
-    MenuItem& undoItem = findItem(ActionCode("action://trackedit/undo"));
+    MenuItem& undoItem = findItem(trackedit::TRACKEDIT_UNDO_COMMAND);
     const TranslatableString undoActionName = projectHistory()->topMostUndoActionName();
     undoItem.setTitle(undoActionName.isEmpty()
                       ? TranslatableString("action", "Undo")
                       : TranslatableString("action", "Undo ‘%1’").arg(undoActionName));
 
-    MenuItem& redoItem = findItem(ActionCode("action://trackedit/redo"));
+    MenuItem& redoItem = findItem(trackedit::TRACKEDIT_REDO_COMMAND);
     const TranslatableString redoActionName = projectHistory()->topMostRedoActionName();
     redoItem.setTitle(redoActionName.isEmpty()
                       ? TranslatableString("action", "Redo")
@@ -206,26 +196,33 @@ void AppMenuModel::updateUndoRedoItems()
 
 void AppMenuModel::updateRenameItemsState()
 {
-    const UiActionState actionState = uiActionsRegister()->actionState(RENAME_ITEM_CODE);
+    const CommandState state = commandsState()->commandState(trackedit::TRACKEDIT_RENAME_ITEM_COMMAND);
 
     MenuItem& renameClipItem = findItem(RENAME_CLIP_ITEM_ID);
     if (renameClipItem.isValid()) {
-        UiActionState state = actionState;
-        state.enabled = state.enabled && selectionController()->selectedClips().size() == 1;
-        renameClipItem.setState(state);
+        renameClipItem.setEnabled(state.enabled && selectionController()->selectedClips().size() == 1);
     }
 
     MenuItem& renameLabelItem = findItem(RENAME_LABEL_ITEM_ID);
     if (renameLabelItem.isValid()) {
-        UiActionState state = actionState;
-        state.enabled = state.enabled && selectionController()->selectedLabels().size() == 1;
-        renameLabelItem.setState(state);
+        renameLabelItem.setEnabled(state.enabled && selectionController()->selectedLabels().size() == 1);
     }
 }
 
-MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)
+void AppMenuModel::updateRepeatLastEffectItem()
 {
-    MenuItem* item = makeMenuItem(actionCode);
+    MenuItem& item = findItem(effects::EFFECTS_REPEAT_LAST_EFFECT_COMMAND);
+    if (!item.isValid() || !m_lastProcessorId) {
+        return;
+    }
+
+    const CommandInfo& effectInfo = commandsRegister()->commandInfo(effects::makeEffectOpenCommand(*m_lastProcessorId));
+    item.setTitle(TranslatableString("action", "Repeat %1").arg(String::fromQString(effectInfo.title.qTranslatedWithoutMnemonic())));
+}
+
+MenuItem* AppMenuModel::makeMenuItem(const Command& command, MenuItemRole menuRole)
+{
+    MenuItem* item = makeMenuItem(command);
     item->setRole(menuRole);
     return item;
 }
@@ -240,32 +237,31 @@ MenuItem* AppMenuModel::makeFileMenu()
     }
 
     MenuItemList fileItems {
-        makeMenuItem("file-new"),
-        makeMenuItem("file-open"),
+        makeMenuItem(PROJECT_NEW_COMMAND),
+        makeMenuItem(PROJECT_OPEN_COMMAND),
         makeMenu(TranslatableString("appshell-menu-file", "Open &recent"), recentScoresList, "menu-file-open", openRecentEnabled),
 
         makeSeparator(),
 
-        makeMenuItem("project-import"),
+        makeMenuItem(PROJECT_IMPORT_COMMAND),
 
         makeSeparator(),
 
-        makeMenuItem("file-save"),
-        makeMenuItem("file-save-to-cloud"),
-        makeMenuItem("file-save-as"),
-        makeMenuItem("action://cloud/update-audio-preview"),
+        makeMenuItem(PROJECT_SAVE_COMMAND),
+        makeMenuItem(PROJECT_SAVE_TO_CLOUD_COMMAND),
+        makeMenuItem(PROJECT_SAVE_AS_COMMAND),
+        makeMenuItem(PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_COMMAND),
 
         makeSeparator(),
 
-        makeMenuItem("export-audio"),
-        // makeMenu(TranslatableString("appshell-menu-export-other", "&Export other"), makeExportItems(), "menu-export-other"),
-        makeMenuItem("export-labels"),
-        makeMenuItem("file-share-audio"),
+        makeMenuItem(PROJECT_EXPORT_AUDIO_COMMAND),
+        makeMenuItem(PROJECT_EXPORT_LABELS_COMMAND),
+        makeMenuItem(PROJECT_SHARE_AUDIO_COMMAND),
 
         makeSeparator(),
 
-        makeMenuItem("file-close"),
-        makeMenuItem("quit", MenuItemRole::QuitRole)
+        makeMenuItem(PROJECT_CLOSE_COMMAND),
+        makeMenuItem(APP_QUIT_COMMAND, MenuItemRole::QuitRole)
     };
 
     return makeMenu(TranslatableString("appshell-menu-file", "&File"), fileItems, "menu-file");
@@ -274,31 +270,31 @@ MenuItem* AppMenuModel::makeFileMenu()
 MenuItem* AppMenuModel::makeEditMenu()
 {
     MenuItemList editItems {
-        makeMenuItem("action://trackedit/undo"),
-        makeMenuItem("action://trackedit/redo"),
+        makeMenuItem(trackedit::TRACKEDIT_UNDO_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_REDO_COMMAND),
         makeSeparator(),
-        makeMenuItem("action://cut"),
-        makeMenuItem("action://copy"),
-        makeMenuItem("action://paste"),
-        makeMenuItem("action://delete"),
+        makeMenuItem(APP_CUT_COMMAND),
+        makeMenuItem(APP_COPY_COMMAND),
+        makeMenuItem(APP_PASTE_COMMAND),
+        makeMenuItem(APP_DELETE_COMMAND),
         makeSeparator(),
-        makeMenuItem("duplicate"),
+        makeMenuItem(trackedit::TRACKEDIT_DUPLICATE_COMMAND),
         // TODO: we should only show those trackedit actions when in the trackedit context,
         // this need some framework update to support contextual shortcuts and dynamic actions based on context
-        // makeMenuItem("action://trackedit/paste-overlap"),
-        // makeMenuItem("action://trackedit/paste-insert"),
-        // makeMenuItem("action://trackedit/paste-insert-all-tracks-ripple"),
-        makeMenuItem("delete-per-track-ripple"),
+        // makeMenuItem(trackedit::TRACKEDIT_PASTE_OVERLAP_COMMAND),
+        // makeMenuItem(trackedit::TRACKEDIT_PASTE_INSERT_COMMAND),
+        // makeMenuItem(trackedit::TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_DELETE_PER_TRACK_RIPPLE_COMMAND),
         makeSeparator(),
         makeMenu(TranslatableString("appshell-menu-clip", "Clip"), makeClipItems(), "menu-clip"),
         makeMenu(TranslatableString("appshell-menu-label", "Label"), makeLabelItems(), "menu-label"),
-        makeMenuItem("silence-audio-selection", TranslatableString("action", "Silence audio")),
+        makeMenuItem(trackedit::TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, TranslatableString("action", "Silence audio")),
         makeSeparator(),
-        makeMenuItem("open-metadata-editor", TranslatableString("action", "Metadata editor")),
+        makeMenuItem(PROJECT_OPEN_METADATA_DIALOG_COMMAND, TranslatableString("action", "Metadata editor")),
 #ifndef Q_OS_MAC
         makeSeparator(),
 #endif
-        makeMenuItem("preference-dialog", MenuItemRole::PreferencesRole)
+        makeMenuItem(APP_PREFERENCES_COMMAND, MenuItemRole::PreferencesRole)
     };
 
     return makeMenu(TranslatableString("appshell-menu-edit", "&Edit"), editItems, "menu-edit");
@@ -306,27 +302,17 @@ MenuItem* AppMenuModel::makeEditMenu()
 
 MenuItem* AppMenuModel::makeSelectMenu()
 {
-    //! NOTE: audio sub-menu to be implemented
-    // auto audioClipsMenu = makeMenu(TranslatableString("appshell-menu-select", "Audio clips"),
-    //                                makeAudioClipsSelectionItems(), "menu-selection-audio-clips");
-    // audioClipsMenu->setState(audioClipsMenu->state().make_disabled());
-
-    //! NOTE: spectral tools are not implemented yet
-    // auto spectralMenu = makeMenu(TranslatableString("appshell-menu-select", "Spectral"),
-    //                              makeSpectralSelectionItems(), "menu-selection-spectral");
-    // spectralMenu->setState(spectralMenu->state().make_disabled());
+    //! NOTE: audio sub-menu and spectral tools are not implemented yet
 
     MenuItemList selectItems {
-        makeMenuItem("select-all"),
-        makeMenuItem("clear-selection"),
-        makeMenuItem("select-all-tracks"),
+        makeMenuItem(trackedit::TRACKEDIT_SELECT_ALL_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_CLEAR_SELECTION_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_SELECT_ALL_TRACKS_COMMAND),
         makeSeparator(),
         makeMenu(TranslatableString("appshell-menu-select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),
-        // audioClipsMenu,
-        // spectralMenu,
         makeSeparator(),
         makeMenu(TranslatableString("appshell-menu-select", "Looping"), makeLoopingItems(), "menu-looping"),
-        makeMenuItem("zero-cross"),
+        makeMenuItem(trackedit::TRACKEDIT_ZERO_CROSS_COMMAND),
     };
 
     return makeMenu(TranslatableString("appshell-menu-select", "&Select"), selectItems, "menu-select");
@@ -334,16 +320,10 @@ MenuItem* AppMenuModel::makeSelectMenu()
 
 MenuItem* AppMenuModel::makeViewMenu()
 {
-    MenuItem* effectsItem = makeMenuItem("toggle-effects");
-    if (effectsItem) {
-        auto state = effectsItem->state();
-        state.checked = configuration()->isEffectsPanelVisible();
-        effectsItem->setState(state);
-    }
+    MenuItem* effectsItem = makeMenuItem(projectscene::PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND);
 
     MenuItemList viewItems {
         makeMenu(TranslatableString("appshell-menu-zoom", "Zoom"), makeZoomItems(), "menu-zoom"),
-        // makeMenu(TranslatableString("appshell-menu-skip", "Skip to"), makeSkipToItems(), "menu-skip", false),
     };
 
     if (effectsItem) {
@@ -352,9 +332,9 @@ MenuItem* AppMenuModel::makeViewMenu()
     }
 
     viewItems << makeSeparator()
-              << makeMenuItem("open-label-editor")
-              << makeMenuItem("open-metadata-editor")
-              << makeMenuItem("toggle-history")
+              << makeMenuItem(projectscene::PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND)
+              << makeMenuItem(PROJECT_OPEN_METADATA_DIALOG_COMMAND)
+              << makeMenuItem(APP_TOGGLE_HISTORY_PANEL_COMMAND)
               << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
         << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"),
@@ -362,14 +342,14 @@ MenuItem* AppMenuModel::makeViewMenu()
         << makeSeparator()
 #endif
 #ifndef Q_OS_MAC
-        << makeMenuItem("fullscreen")
+        << makeMenuItem(APP_TOGGLE_FULLSCREEN_COMMAND)
         << makeSeparator()
 #endif
-        << makeMenuItem("toggle-clipping-in-waveform")
-        << makeMenuItem("toggle-rms-in-waveform")
-        << makeMenuItem("toggle-vertical-rulers")
+        << makeMenuItem(projectscene::PROJECTSCENE_TOGGLE_CLIPPING_IN_WAVEFORM_COMMAND)
+        << makeMenuItem(projectscene::PROJECTSCENE_TOGGLE_RMS_IN_WAVEFORM_COMMAND)
+        << makeMenuItem(projectscene::PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND)
         << makeSeparator()
-        << makeMenuItem("dock-restore-default-layout");
+        << makeMenuItem(dock::DOCK_RESTORE_DEFAULT_LAYOUT_COMMAND);
 
     return makeMenu(TranslatableString("appshell-menu-view", "&View"), viewItems, "menu-view");
 }
@@ -380,8 +360,7 @@ MenuItem* AppMenuModel::makeRecordMenu()
         makeMenuItem(record::RECORD_ON_CURRENT_TRACK_COMMAND),
         makeMenuItem(record::RECORD_ON_NEW_TRACK_COMMAND),
         //! makeMenuItem("set-up-timed-recording"),
-        //! NOTE: kept as an action until shortcuts move to commands, otherwise the menu loses its Shift+D shortcut
-        makeMenuItem("action://record/lead-in-recording"),
+        makeMenuItem(record::RECORD_LEAD_IN_RECORDING_COMMAND),
         //! makeMenuItem("toggle-sound-activated-recording"),
         //! makeMenuItem("set-sound-activation-level"),
     };
@@ -392,17 +371,14 @@ MenuItem* AppMenuModel::makeRecordMenu()
 MenuItem* AppMenuModel::makeTracksMenu()
 {
     MenuItemList tracksItems {
-        makeMenuItem("new-mono-track"),
-        makeMenuItem("new-stereo-track"),
-        makeMenuItem("new-label-track"),
+        makeMenuItem(trackedit::TRACKEDIT_NEW_MONO_TRACK_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_NEW_STEREO_TRACK_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_NEW_LABEL_TRACK_COMMAND),
         makeSeparator(),
-        makeMenuItem("track-duplicate"),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
         // makeMenuItem("remove-tracks"),
         // makeSeparator(),
         // makeMenuItem("mixdown-to"),
-        // makeSeparator(),
-        // makeMenu(TranslatableString("appshell-menu-align", "Align content"), makeAlignItems(), "menu-align", false),
-        // makeMenu(TranslatableString("appshell-menu-sort", "Sort tracks"), makeSortItems(), "menu-sort", false),
     };
 
     return makeMenu(TranslatableString("appshell-menu-tracks", "&Tracks"), tracksItems, "menu-tracks");
@@ -435,7 +411,7 @@ MenuItemList AppMenuModel::makeExtensionItems()
         if (manifest.actions.size() == 1) {
             const muse::extensions::Action& action = manifest.actions.front();
             if (action.showOnAppmenu) {
-                items << makeMenuItem(makeCommand(manifest.uri, action.code).toString(),
+                items << makeMenuItem(makeCommand(manifest.uri, action.code),
                                       TranslatableString::untranslatable(action.title.empty() ? manifest.title : action.title));
             }
             continue;
@@ -444,7 +420,7 @@ MenuItemList AppMenuModel::makeExtensionItems()
         MenuItemList actions;
         for (const muse::extensions::Action& action : manifest.actions) {
             if (action.showOnAppmenu) {
-                actions << makeMenuItem(makeCommand(manifest.uri, action.code).toString(),
+                actions << makeMenuItem(makeCommand(manifest.uri, action.code),
                                         TranslatableString::untranslatable(action.title));
             }
         }
@@ -459,60 +435,22 @@ MenuItemList AppMenuModel::makeExtensionItems()
     return items;
 }
 
-MenuItem* AppMenuModel::makeExtraMenu()
-{
-    MenuItemList extraItems {
-        //! TODO AU4
-        //: Title of the Play menu; a noun rather than a verb
-        makeMenu(TranslatableString("appshell-menu-play", "Play"), makeVolumeAndCompressionItems(), "menu-play", false),
-        makeMenu(TranslatableString("appshell-menu-scrubbing", "Scrubbing"), makeVolumeAndCompressionItems(), "menu-scrubbing", false),
-        makeMenu(TranslatableString("appshell-menu-extratools", "Tools"), makeVolumeAndCompressionItems(), "menu-extra-tools", false),
-        makeMenu(TranslatableString("appshell-menu-mixer", "Mixer"), makeVolumeAndCompressionItems(), "menu-mixer", false),
-        makeMenu(TranslatableString("appshell-menu-extraedit", "Edit"), makeVolumeAndCompressionItems(), "menu-extra-edit", false),
-        makeMenu(TranslatableString("appshell-menu-playatspeed", "Play at speed"),
-                 makeVolumeAndCompressionItems(), "menu-play-at-speed", false),
-        makeMenu(TranslatableString("appshell-menu-device", "Device"), makeVolumeAndCompressionItems(), "menu-device", false),
-        makeMenu(TranslatableString("appshell-menu-extraselect", "Select"), makeVolumeAndCompressionItems(), "menu-extraselect", false),
-        makeSeparator(),
-        makeMenuItem("prev-window"),
-        makeMenuItem("next-window"),
-        makeMenu(TranslatableString("appshell-menu-focus", "Focus"), makeVolumeAndCompressionItems(), "menu-focus", false),
-        makeMenu(TranslatableString("appshell-menu-cursor", "Cursor"), makeVolumeAndCompressionItems(), "menu-cursor", false),
-        makeMenu(TranslatableString("appshell-menu-track", "Track"), makeVolumeAndCompressionItems(), "menu-track", false),
-        makeMenu(TranslatableString("appshell-menu-scriptables1", "Scriptables1"),
-                 makeVolumeAndCompressionItems(), "menu-scriptables1", false),
-        makeMenu(TranslatableString("appshell-menu-scriptables2", "Scriptables2"),
-                 makeVolumeAndCompressionItems(), "menu-scriptables2", false),
-        makeMenu(TranslatableString("appshell-menu-images", "Images"), makeVolumeAndCompressionItems(), "menu-images", false),
-
-#ifndef Q_OS_MAC
-        makeMenu(TranslatableString("appshell-menu-settings", "Settings"), makeVolumeAndCompressionItems(), "menu-settings", false),
-#endif
-        makeMenuItem("benchmark"),
-        makeMenuItem("regular-interval-labels"),
-    };
-
-    return makeMenu(TranslatableString("appshell-menu-extra", "&Extra"), extraItems, "menu-extra");
-}
-
 MenuItem* AppMenuModel::makeHelpMenu()
 {
     MenuItemList helpItems {
         // makeMenuItem("tutorials"),
-        makeMenuItem("online-handbook"),
+        makeMenuItem(APP_ONLINE_HANDBOOK_COMMAND),
         makeSeparator(),
-        // makeMenu(TranslatableString("appshell-menu-diagnostics", "Diagnostics"), makeDiagnosticsItems(), "menu-diagnostics", false),
-        // makeSeparator(),
         // makeMenuItem("link-account"),
-        makeMenuItem("about-audacity", MenuItemRole::AboutRole),
-        makeMenuItem("about-qt", MenuItemRole::AboutQtRole),
+        makeMenuItem(APP_ABOUT_COMMAND, MenuItemRole::AboutRole),
+        makeMenuItem(APP_ABOUT_QT_COMMAND, MenuItemRole::AboutQtRole),
         makeSeparator(),
-        makeMenuItem("revert-factory")
+        makeMenuItem(APP_REVERT_FACTORY_COMMAND)
     };
 
     if (updateConfiguration()->isAppUpdatable()) {
         helpItems.push_front(makeSeparator());
-        helpItems.push_front(makeMenuItem("check-update"));
+        helpItems.push_front(makeMenuItem(update::UPDATE_CHECK_COMMAND));
     }
 
     return makeMenu(TranslatableString("appshell-menu-help", "&Help"), helpItems, "menu-help");
@@ -521,33 +459,33 @@ MenuItem* AppMenuModel::makeHelpMenu()
 muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
 {
     MenuItemList systemItems {
-        makeMenuItem("diagnostic-show-paths"),
-        makeMenuItem("diagnostic-show-graphicsinfo"),
-        makeMenuItem("diagnostic-show-profiler"),
+        makeMenuItem(diagnostics::DIAGNOSTICS_SHOW_PATHS_COMMAND),
+        makeMenuItem(diagnostics::DIAGNOSTICS_SHOW_GRAPHICSINFO_COMMAND),
+        makeMenuItem(diagnostics::DIAGNOSTICS_SHOW_PROFILER_COMMAND),
     };
 
     MenuItemList items {
-        makeMenuItem("diagnostic-save-diagnostic-files"),
+        makeMenuItem(diagnostics::DIAGNOSTICS_SAVE_FILES_COMMAND),
         makeMenu(TranslatableString("appshell-menu-diagnostics", "&System"), systemItems, "menu-system")
     };
 
     if (globalConfiguration()->devModeEnabled()) {
         MenuItemList actionsItems {
-            makeMenuItem("diagnostic-show-actions")
+            makeMenuItem(diagnostics::DIAGNOSTICS_SHOW_ACTIONS_COMMAND)
         };
 
         MenuItemList accessibilityItems {
-            makeMenuItem("diagnostic-show-navigation-tree"),
-            makeMenuItem("diagnostic-show-accessible-tree"),
-            makeMenuItem("diagnostic-accessible-tree-dump"),
+            makeMenuItem(diagnostics::DIAGNOSTICS_SHOW_NAVIGATION_TREE_COMMAND),
+            makeMenuItem(diagnostics::DIAGNOSTICS_SHOW_ACCESSIBLE_TREE_COMMAND),
+            makeMenuItem(diagnostics::DIAGNOSTICS_DUMP_ACCESSIBLE_TREE_COMMAND),
         };
 
         MenuItemList testflowItems {
-            makeMenuItem("testflow-show-scripts"),
+            makeMenuItem(testflow::TESTFLOW_OPEN_SCRIPTS_COMMAND),
         };
 
         MenuItemList extensionsItems {
-            makeMenuItem("extensions-show-apidump"),
+            makeMenuItem(extensions::OPEN_APIDUMP_COMMAND),
         };
 
         items << makeMenu(TranslatableString("appshell-menu-diagnostics", "A&ctions"), actionsItems, "menu-actions")
@@ -564,26 +502,20 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
 MenuItemList AppMenuModel::makeRecentProjectsItems()
 {
     MenuItemList items;
-    //! TODO AU4
     const RecentFilesList& recentFiles = recentFilesController()->recentFilesList();
+    const CommandInfo& openInfo = commandsRegister()->commandInfo(PROJECT_OPEN_COMMAND);
 
     int index = 0;
     for (const RecentFile& file : recentFiles) {
-        MenuItem* item = new MenuItem(this);
-
-        UiAction action;
-        action.code = "file-open-recent";
-        action.title = TranslatableString::untranslatable(file.displayName(/*includingExtension*/ true));
-        item->setAction(action);
-
-        item->setId(makeId(item->action().code, index++));
-
-        UiActionState state;
-        state.enabled = true;
-        item->setState(state);
-
+        MenuItem* item = new MenuItem(openInfo, this);
+        item->setCommandQuery(make_query(PROJECT_OPEN_COMMAND, {
+            { PROJECT_URL_PARAM, Val(file.path.toQUrl().toString()) },
+            { PROJECT_DISPLAY_NAME_PARAM, Val(file.displayNameOverride) },
+        }));
+        item->setId(makeId(PROJECT_OPEN_COMMAND, index++));
+        item->setTitle(TranslatableString::untranslatable(file.displayName(/*includingExtension*/ true)));
+        item->setEnabled(true);
         item->setSelectable(true);
-        item->setArgs(ActionData::make_arg2<QUrl, QString>(file.path.toQUrl(), file.displayNameOverride));
 
         items << item;
     }
@@ -595,43 +527,28 @@ MenuItemList AppMenuModel::appendClearRecentSection(const muse::uicomponents::Me
 {
     MenuItemList result = recentScores;
     result << makeSeparator()
-           << makeMenuItem("clear-recent");
+           << makeMenuItem(PROJECT_CLEAR_RECENT_COMMAND);
 
     return result;
 }
 
-MenuItemList AppMenuModel::makeExportItems()
-{
-    MenuItemList items {
-        makeMenuItem("export-labels")
-    };
-
-    // MenuItem* exportMidi = makeMenuItem("export-midi");
-    // UiActionState exportMidiState = exportMidi->state();
-    // exportMidiState.enabled = false;
-    // exportMidi->setState(exportMidiState);
-
-    // items << exportMidi;
-
-    return items;
-}
-
 MenuItemList AppMenuModel::makeClipItems()
 {
-    MenuItem* renameClipItem = makeMenuItem(RENAME_ITEM_CODE, TranslatableString("appshell-menu-clip", "Rename clip"));
+    MenuItem* renameClipItem = makeMenuItem(trackedit::TRACKEDIT_RENAME_ITEM_COMMAND,
+                                            TranslatableString("appshell-menu-clip", "Rename clip"));
     renameClipItem->setId(RENAME_CLIP_ITEM_ID);
 
     MenuItemList items {
         renameClipItem,
         // makeMenuItem("trim-clip"),
         makeSeparator(),
-        makeMenuItem("split"),
-        makeMenuItem("split-into-new-track"),
-        makeMenuItem("disjoin"),
-        makeMenuItem("join"),
+        makeMenuItem(trackedit::TRACKEDIT_SPLIT_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_SPLIT_INTO_NEW_TRACK_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_DISJOIN_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_JOIN_COMMAND),
         makeSeparator(),
-        makeMenuItem("group-items"),
-        makeMenuItem("ungroup-items")
+        makeMenuItem(trackedit::TRACKEDIT_GROUP_ITEMS_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_UNGROUP_ITEMS_COMMAND)
     };
 
     return items;
@@ -639,36 +556,16 @@ MenuItemList AppMenuModel::makeClipItems()
 
 MenuItemList AppMenuModel::makeLabelItems()
 {
-    MenuItem* renameLabelItem = makeMenuItem(RENAME_ITEM_CODE, TranslatableString("appshell-menu-label", "Rename label"));
+    MenuItem* renameLabelItem = makeMenuItem(trackedit::TRACKEDIT_RENAME_ITEM_COMMAND,
+                                             TranslatableString("appshell-menu-label", "Rename label"));
     renameLabelItem->setId(RENAME_LABEL_ITEM_ID);
 
     MenuItemList items {
-        makeMenuItem("label-add"),
+        makeMenuItem(trackedit::TRACKEDIT_LABEL_ADD_COMMAND),
         renameLabelItem,
         // makeMenuItem("paste-new-label"),
         makeSeparator(),
-        makeMenuItem("open-label-editor", TranslatableString("action", "Manage labels")),
-    };
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeSpectralSelectionItems()
-{
-    MenuItemList items {
-        makeMenuItem("toggle-spectral-selection")
-    };
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeAudioClipsSelectionItems()
-{
-    MenuItemList items {
-        makeMenuItem("select-previous-clip-boundary-to-cursor"),
-        makeMenuItem("select-cursor-to-next-clip-boundary"),
-        makeMenuItem("select-previous-clip"),
-        makeMenuItem("select-next-clip"),
+        makeMenuItem(projectscene::PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND, TranslatableString("action", "Manage labels")),
     };
 
     return items;
@@ -677,11 +574,11 @@ MenuItemList AppMenuModel::makeAudioClipsSelectionItems()
 MenuItemList AppMenuModel::makeRegionSelectionItems()
 {
     MenuItemList items {
-        makeMenuItem("select-left-of-playback-position"),
-        makeMenuItem("select-right-of-playback-position"),
-        makeMenuItem("select-track-start-to-cursor"),
-        makeMenuItem("select-cursor-to-track-end"),
-        makeMenuItem("select-track-start-to-end"),
+        makeMenuItem(trackedit::TRACKEDIT_SELECT_LEFT_OF_PLAYBACK_POSITION_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_SELECT_RIGHT_OF_PLAYBACK_POSITION_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_SELECT_TRACK_START_TO_CURSOR_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_SELECT_CURSOR_TO_TRACK_END_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_SELECT_TRACK_START_TO_END_COMMAND),
     };
 
     return items;
@@ -690,12 +587,12 @@ MenuItemList AppMenuModel::makeRegionSelectionItems()
 MenuItemList AppMenuModel::makeLoopingItems()
 {
     MenuItemList items {
-        makeMenuItem("toggle-loop-region"),
-        makeMenuItem("clear-loop-region"),
+        makeMenuItem(playback::PLAYBACK_TOGGLE_LOOP_REGION_COMMAND),
+        makeMenuItem(playback::PLAYBACK_CLEAR_LOOP_REGION_COMMAND),
         makeSeparator(),
-        makeMenuItem("set-loop-region-to-selection"),
+        makeMenuItem(playback::PLAYBACK_SET_LOOP_REGION_TO_SELECTION_COMMAND),
         makeSeparator(),
-        makeMenuItem("set-loop-region-in-out"),
+        makeMenuItem(playback::PLAYBACK_SET_LOOP_REGION_IN_OUT_COMMAND),
     };
 
     return items;
@@ -704,13 +601,13 @@ MenuItemList AppMenuModel::makeLoopingItems()
 MenuItemList AppMenuModel::makeZoomItems()
 {
     MenuItemList items {
-        makeMenuItem("zoom-in"),
-        makeMenuItem("zoom-out"),
-        makeMenuItem("zoom-default"),
-        makeMenuItem("zoom-to-selection"),
-        makeMenuItem("zoom-toggle"),
+        makeMenuItem(projectscene::PROJECTSCENE_ZOOM_IN_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_ZOOM_OUT_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_ZOOM_DEFAULT_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_ZOOM_TOGGLE_COMMAND),
         makeSeparator(),
-        makeMenuItem("zoom-to-fit-project"),
+        makeMenuItem(projectscene::PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND),
         // makeMenuItem("collapse-all-tracks"),
         // makeMenuItem("expand-all-tracks")
     };
@@ -718,173 +615,9 @@ MenuItemList AppMenuModel::makeZoomItems()
     return items;
 }
 
-MenuItemList AppMenuModel::makeSkipToItems()
-{
-    MenuItemList items {
-        makeMenuItem("skip-to-selection-start"),
-        makeMenuItem("skip-to-selection-end")
-    };
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeAlignItems()
-{
-    MenuItemList items {
-        makeMenuItem("align-end-to-end"),
-        makeMenuItem("align-together"),
-        makeSeparator(),
-        makeMenuItem("align-start-to-zero"),
-        makeMenuItem("align-start-to-playhead"),
-        makeMenuItem("align-start-to-selection-end"),
-        makeMenuItem("align-end-to-playhead"),
-        makeMenuItem("align-end-to-selection-end")
-    };
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeSortItems()
-{
-    MenuItemList items {
-        makeMenuItem("sort-by-time"),
-        makeMenuItem("sort-by-name")
-    };
-
-    return items;
-}
-
-//! TODO AU4
-MenuItemList AppMenuModel::makeVolumeAndCompressionItems()
-{
-    MenuItemList items {
-        makeMenuItem("sort-by-time")
-    };
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeMacrosItems()
-{
-    MenuItemList items {
-        makeMenuItem("apply-macros-palette"),
-        makeSeparator(),
-        makeMenuItem("macro-fade-ends"),
-        makeMenuItem("macro-mp3-conversion")
-    };
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeDiagnosticsItems()
-{
-    MenuItemList systemItems {
-        makeMenuItem("diagnostic-show-paths"),
-        makeMenuItem("diagnostic-show-profiler"),
-    };
-
-    MenuItemList items {
-        makeMenuItem("diagnostic-save-diagnostic-files"),
-        makeMenu(TranslatableString("appshell-menu-diagnostic", "&System"), systemItems, "menu-system")
-    };
-
-    if (globalConfiguration()->devModeEnabled()) {
-#ifdef MUSE_MODULE_ACCESSIBILITY
-        MenuItemList accessibilityItems {
-            makeMenuItem("diagnostic-show-navigation-tree"),
-            makeMenuItem("diagnostic-show-accessible-tree"),
-            makeMenuItem("diagnostic-accessible-tree-dump"),
-        };
-        items << makeMenu(TranslatableString("appshell-menu-diagnostic", "&Accessibility"), accessibilityItems, "menu-accessibility");
-#endif
-
-#ifdef MUSE_MODULE_TESTFLOW
-        MenuItemList testflowItems {
-            makeMenuItem("testflow-show-scripts"),
-        };
-        items << makeMenu(TranslatableString("appshell-menu-diagnostic", "Test&flow"), testflowItems, "menu-testflow");
-#endif
-
-#ifdef MUSE_MODULE_MULTIWINDOWS
-        items << makeMenuItem("multiwindows-dev-show-info");
-#endif
-    }
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeFramesItems()
-{
-    MenuItemList items {
-        makeMenuItem("insert-hbox"),
-        makeMenuItem("insert-vbox"),
-        makeMenuItem("insert-textframe"),
-        makeSeparator(),
-        makeMenuItem("append-hbox"),
-        makeMenuItem("append-vbox"),
-        makeMenuItem("append-textframe")
-    };
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeWorkspacesItems()
-{
-    MenuItemList items;
-
-    //! TODO AU4
-    // IWorkspacePtrList workspaces = workspacesManager()->workspaces();
-    // IWorkspacePtr currentWorkspace = workspacesManager()->currentWorkspace();
-
-    // std::sort(workspaces.begin(), workspaces.end(), [](const IWorkspacePtr& workspace1, const IWorkspacePtr& workspace2) {
-    //     return workspace1->name() < workspace2->name();
-    // });
-
-    // int index = 0;
-    // for (const IWorkspacePtr& workspace : workspaces) {
-    //     MenuItem* item = new MenuItem(uiActionsRegister()->action("select-workspace"), this);
-    //     item->setId(makeId(item->action().code, index++));
-
-    //     UiAction action = item->action();
-    //     action.title = TranslatableString::untranslatable(String::fromStdString(workspace->title()));
-
-    //     item->setAction(action);
-    //     item->setArgs(ActionData::make_arg1<std::string>(workspace->name()));
-    //     item->setSelectable(true);
-    //     item->setSelected(workspace == currentWorkspace);
-
-    //     UiActionState state;
-    //     state.enabled = true;
-    //     state.checked = item->selected();
-    //     item->setState(state);
-
-    //     items << item;
-    // }
-
-    items << makeSeparator()
-          << makeMenuItem("configure-workspaces");
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeShowItems()
-{
-    MenuItemList items {
-        makeMenuItem("show-invisible"),
-        makeMenuItem("show-unprintable"),
-        makeMenuItem("show-frames"),
-        makeMenuItem("show-pageborders"),
-        makeMenuItem("show-irregular"),
-        makeMenuItem("show-soundflags"),
-    };
-
-    return items;
-}
-
 muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
 {
-    return makeMenuItem(effects::makeEffectAction(effects::EFFECT_OPEN_ACTION,
-                                                  effectId));
+    return makeMenuItem(effects::makeEffectOpenCommand(effectId));
 }
 
 muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items)
@@ -895,10 +628,10 @@ muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffect(const muse::String& t
 MenuItemList AppMenuModel::makeEffectsItems()
 {
     MenuItemList items {
-        makeMenuItem("plugin-manager"),
-        makeMenuItem("add-realtime-effects"),
+        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND),
         makeSeparator(),
-        makeMenuItem("repeat-last-effect"),
+        makeMenuItem(effects::EFFECTS_REPEAT_LAST_EFFECT_COMMAND),
     };
 
     const muse::uicomponents::MenuItemList effectMenus = effectsMenuProvider()->destructiveEffectMenu(*this,
@@ -913,7 +646,7 @@ MenuItemList AppMenuModel::makeEffectsItems()
 MenuItemList AppMenuModel::makeGeneratorItems()
 {
     MenuItemList items {
-        makeMenuItem("plugin-manager"),
+        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
         makeSeparator(),
     };
 
@@ -928,11 +661,9 @@ MenuItemList AppMenuModel::makeGeneratorItems()
 MenuItemList AppMenuModel::makeToolItems()
 {
     MenuItemList items {
-        makeMenuItem("plugin-manager"),
+        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
         makeSeparator(),
         // makeMenuItem("manage-macros"),
-        // makeMenu(TranslatableString("appshell-menu-macros", "&Macros"), makeMacrosItems(), "menu-macros", false),
-        // makeSeparator(),
     };
 
     const muse::uicomponents::MenuItemList toolMenus = effectsMenuProvider()->destructiveEffectMenu(*this,
@@ -961,7 +692,7 @@ MenuItemList AppMenuModel::makeToolItems()
 MenuItemList AppMenuModel::makeAnalyzeItems()
 {
     MenuItemList items {
-        makeMenuItem("plugin-manager"),
+        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
         makeSeparator(),
         // makeMenuItem("contrast-analyzer"),
         // makeMenuItem("plot-spectrum"),
@@ -990,4 +721,6 @@ void AppMenuModel::onEffectsChanged()
     analyzeItem.setSubitems(makeAnalyzeItems());
     MenuItem& toolsItem = findMenu("menu-tools");
     toolsItem.setSubitems(makeToolItems());
+
+    updateRepeatLastEffectItem();
 }
