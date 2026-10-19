@@ -347,7 +347,7 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
         if (!moveClips && isMultiSelectionCopy) {
             trackToPaste->MoveTo(begin + trackToPaste->GetStartTime());
             for (const auto& interval : trackToPaste->Intervals()) {
-                dstWaveTrack->InsertInterval(interval, false);
+                dstWaveTrack->InsertInterval(dstWaveTrack->CopyClip(*interval, true), false);
             }
         } else if (pasteIntoExistingClip
                    && trackToPaste->Intervals().size() == 1
