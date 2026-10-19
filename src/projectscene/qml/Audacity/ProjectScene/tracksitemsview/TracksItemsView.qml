@@ -905,6 +905,11 @@ Rectangle {
 
                 interactive: false
 
+                // Keeps tracks just outside the viewport alive, so scrolling
+                // vertically does not destroy and recreate their clips
+                // (matches the track headers in TracksPanel)
+                cacheBuffer: 3000
+
                 model: tracksModel
 
                 delegate: Loader {

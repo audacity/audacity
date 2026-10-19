@@ -314,17 +314,10 @@ TrackItemsContainer {
 
                         asynchronous: false
 
+                        //! NOTE: Clips are not unloaded outside the viewport: zooming
+                        //! moves most clips across its edges, and recreating them on
+                        //! every zoom step made zooming lag
                         sourceComponent: {
-                            if (!itemData.focused) {
-                                if ((itemData.x + itemData.width) < (0 - clipsModel.cacheBufferPx)) {
-                                    return null
-                                }
-
-                                if (itemData.x > (clipsContainer.width + clipsModel.cacheBufferPx)) {
-                                    return null
-                                }
-                            }
-
                             //! NOTE This optimization is disabled, it is probably not needed,
                             // and if it needs to be enabled, it should be modified, add handlers
 
