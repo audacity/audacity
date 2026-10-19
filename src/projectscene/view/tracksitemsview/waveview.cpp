@@ -134,8 +134,29 @@ void WaveView::storePreparedData()
     }
 }
 
+bool WaveView::releaseIfOffscreen()
+{
+    //! NOTE: Off-screen clips stay loaded but idle until setClipTime() brings them back into view
+    if (m_clipTime.itemEndTime > m_clipTime.itemStartTime) {
+        return false;
+    }
+
+    m_sceneGraph.reset();
+    if (m_sceneGraph.hasNode()) {
+        update();
+    }
+    if (m_fallback && m_fallback->isVisible()) {
+        m_fallback->setVisible(false);
+    }
+    return true;
+}
+
 void WaveView::scheduleRepaint()
 {
+    if (releaseIfOffscreen()) {
+        return;
+    }
+
     //! NOTE: polish() coalesces all repaint requests of a frame (clip time,
     //! geometry, zoom, selection...) into a single updatePolish() call right
     //! before the scene graph is synced.
@@ -144,6 +165,11 @@ void WaveView::scheduleRepaint()
 
 void WaveView::updatePolish()
 {
+    // The clip may have left the view after the repaint was requested
+    if (releaseIfOffscreen()) {
+        return;
+    }
+
     prepareSceneGraphData();
     updateDrawnSelection();
 
