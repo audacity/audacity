@@ -8,7 +8,7 @@
 #include "global/iapplication.h"
 #include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
-#include "actions/iactionsdispatcher.h"
+#include "rcommand/icommanddispatcher.h"
 
 #include "projectscene/iprojectsceneactionscontroller.h"
 #include "projectscene/iprojectsceneconfiguration.h"
@@ -71,7 +71,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
     muse::GlobalInject<muse::IApplication> application;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };

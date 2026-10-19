@@ -233,6 +233,42 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration()
     },
+    CommandInfo{
+        APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Transport toolbar"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Show or hide the transport toolbar"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes)
+    },
+    CommandInfo{
+        APP_TOGGLE_TRACKS_PANEL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Tracks"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Show or hide the tracks panel"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes)
+    },
+    CommandInfo{
+        APP_TOGGLE_HISTORY_PANEL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "History"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Show or hide the history panel"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes)
+    },
+    CommandInfo{
+        APP_TOGGLE_STATUSBAR_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Status bar"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Show or hide the status bar"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes)
+    },
 };
 }
 

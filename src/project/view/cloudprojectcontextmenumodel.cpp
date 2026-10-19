@@ -6,6 +6,8 @@
 #include "framework/actions/actiontypes.h"
 #include "framework/global/log.h"
 
+#include "../projectcommands.h"
+
 using namespace au::project;
 
 namespace {
@@ -44,7 +46,7 @@ void CloudProjectContextMenuModel::handleMenuItem(const QString& itemId)
             return;
         }
 
-        dispatcher()->dispatch("cloud-file-open", muse::actions::ActionData::make_arg1<QString>(m_projectId));
+        dispatchCommand(PROJECT_OPEN_CLOUD_COMMAND, { { PROJECT_ID_PARAM, muse::Val(m_projectId) } });
         return;
     }
 

@@ -8,6 +8,8 @@
 #include "framework/global/io/path.h"
 #include "framework/global/types/retval.h"
 
+#include "../cloudcommands.h"
+
 using namespace au::au3cloud;
 
 AccountModel::AccountModel(QObject* parent)
@@ -69,5 +71,5 @@ void AccountModel::openCreateAccountDialog() const
 
 void AccountModel::openProfile() const
 {
-    dispatcher()->dispatch(muse::actions::ActionQuery("action://cloud/open-profile-page"));
+    commandDispatcher()->dispatch(CLOUD_OPEN_PROFILE_PAGE_COMMAND);
 }

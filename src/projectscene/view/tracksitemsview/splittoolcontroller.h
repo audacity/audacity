@@ -8,6 +8,7 @@
 #include <QCursor>
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 #include "context/iuicontextresolver.h"
 #include "../timeline/timelinecontext.h"
@@ -28,7 +29,7 @@ class SplitToolController : public QObject, public muse::async::Asyncable, publi
     Q_PROPERTY(double guidelinePosition READ guidelinePosition NOTIFY guidelinePositionChanged FINAL)
     Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };

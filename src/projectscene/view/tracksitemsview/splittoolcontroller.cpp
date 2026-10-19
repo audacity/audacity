@@ -11,6 +11,7 @@
 #include "view/common/customcursor.h"
 
 #include "internal/tapholdshortcut.h"
+#include "trackedit/trackeditcommands.h"
 #include "log.h"
 
 namespace au::projectscene {
@@ -242,11 +243,16 @@ void SplitToolController::splitTracksAt(trackedit::TrackIdList ids, double t)
     if (ids.empty()) {
         return;
     }
-    std::vector<muse::secs_t> pivots { t };
+    muse::ValList trackIds;
+    for (const trackedit::TrackId& trackId : ids) {
+        trackIds.emplace_back(static_cast<int64_t>(trackId));
+    }
 
     LOGD() << "Splitting tracks at " << t;
-    dispatcher()->dispatch("track-split-at",
-                           muse::actions::ActionData::make_arg2<trackedit::TrackIdList, std::vector<muse::secs_t> >(ids, pivots));
+    commandDispatcher()->dispatch(trackedit::TRACKEDIT_TRACK_SPLIT_AT_COMMAND, {
+            { trackedit::TRACKEDIT_TRACK_IDS_PARAM, muse::Val(trackIds) },
+            { trackedit::TRACKEDIT_PIVOTS_PARAM, muse::Val(muse::ValList { muse::Val(t) }) },
+        });
 }
 
 bool SplitToolController::clipHovered() const

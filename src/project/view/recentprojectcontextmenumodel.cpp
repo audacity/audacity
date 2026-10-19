@@ -8,6 +8,8 @@
 
 #include <QUrl>
 
+#include "../projectcommands.h"
+
 using namespace au::project;
 
 namespace {
@@ -50,14 +52,14 @@ void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
 {
     if (itemId == OPEN_PROJECT_ACTION) {
         if (isCloudProject && !m_cloudProjectId.isEmpty()) {
-            dispatcher()->dispatch("cloud-file-open",
-                                   muse::actions::ActionData::make_arg1<QString>(m_cloudProjectId));
+            dispatchCommand(PROJECT_OPEN_CLOUD_COMMAND, { { PROJECT_ID_PARAM, muse::Val(m_cloudProjectId) } });
             return;
         }
 
-        dispatcher()->dispatch("file-open",
-                               muse::actions::ActionData::make_arg2<QUrl, QString>(
-                                   QUrl::fromLocalFile(m_path), m_displayNameOverride));
+        dispatchCommand(PROJECT_OPEN_COMMAND, {
+            { PROJECT_URL_PARAM, muse::Val(QUrl::fromLocalFile(m_path).toString()) },
+            { PROJECT_DISPLAY_NAME_PARAM, muse::Val(m_displayNameOverride) },
+        });
         return;
     }
 

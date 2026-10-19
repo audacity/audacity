@@ -17,7 +17,7 @@
 #include "context/iglobalcontext.h"
 #include "importexport/import/iimporter.h"
 #include "iselectioncontroller.h"
-#include "actions/iactionsdispatcher.h"
+#include "rcommand/icommanddispatcher.h"
 
 #include "itrackeditinteraction.h"
 #include "iundomanager.h"
@@ -33,7 +33,7 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<importexport::IImporter> importer { this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
 
 public:
     TrackeditOperationController(const muse::modularity::ContextPtr& ctx, std::unique_ptr<IUndoManager> undoManager);

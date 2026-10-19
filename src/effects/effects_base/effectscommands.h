@@ -24,6 +24,10 @@ inline static const muse::rcommand::Command EFFECTS_PRESET_DELETE_COMMAND("comma
 inline static const muse::rcommand::Command EFFECTS_PRESET_IMPORT_COMMAND("command://effects/presets/import");
 inline static const muse::rcommand::Command EFFECTS_PRESET_EXPORT_COMMAND("command://effects/presets/export");
 
+inline static const std::string EFFECTS_EFFECT_ID_PARAM("effectId");
+inline static const std::string EFFECTS_INSTANCE_ID_PARAM("instanceId");
+inline static const std::string EFFECTS_PRESET_ID_PARAM("presetId");
+
 constexpr std::string_view EFFECTS_SCHEME = "effects";
 constexpr std::string_view EFFECT_OPEN_COMMAND = "open";
 constexpr std::string_view EFFECT_APPLY_COMMAND = "apply";

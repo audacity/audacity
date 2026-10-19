@@ -23,6 +23,7 @@
 #include "sessionsmanager.h"
 
 #include "appshell/appshelltypes.h"
+#include "project/projectcommands.h"
 
 using namespace au::appshell;
 using namespace muse;
@@ -70,7 +71,7 @@ void SessionsManager::restore()
     }
 
     for (const io::path_t& path : projects) {
-        dispatcher()->dispatch("file-open", actions::ActionData::make_arg1<QUrl>(path.toQUrl()));
+        commandDispatcher()->dispatch(project::PROJECT_OPEN_COMMAND, { { project::PROJECT_URL_PARAM, Val(path.toQUrl().toString()) } });
     }
 }
 

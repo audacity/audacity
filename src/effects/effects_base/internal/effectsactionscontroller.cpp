@@ -83,7 +83,7 @@ CommandQuery effectApplyConv(const Command& command, const ActionData& args, con
 
     CommandQuery query(makeEffectApplyCommand(it->id));
     for (const auto& [key, val] : legacy.params()) {
-        if (key != "effectId") {
+        if (key != EFFECTS_EFFECT_ID_PARAM) {
             query.addParam(key, val);
         }
     }
@@ -217,80 +217,80 @@ muse::Ret EffectsActionsController::repeatLastEffect()
 
 muse::Ret EffectsActionsController::applyPreset(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("instanceId") && params.contains("presetId")) {
+    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM) && params.contains(EFFECTS_PRESET_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
-    PresetId presetId = au::au3::wxFromStdString(params.at("presetId").toString());
+    EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
+    PresetId presetId = au::au3::wxFromStdString(params.at(EFFECTS_PRESET_ID_PARAM).toString());
     presetsScenario()->loadPreset(effectInstanceId, presetId);
     return make_ok();
 }
 
 muse::Ret EffectsActionsController::savePresetAs(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("instanceId")) {
+    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
+    EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
     presetsScenario()->savePresetAs(effectInstanceId);
     return make_ok();
 }
 
 muse::Ret EffectsActionsController::savePreset(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("instanceId") && params.contains("presetId")) {
+    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM) && params.contains(EFFECTS_PRESET_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    const EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
-    const PresetId presetId = au::au3::wxFromStdString(params.at("presetId").toString());
+    const EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
+    const PresetId presetId = au::au3::wxFromStdString(params.at(EFFECTS_PRESET_ID_PARAM).toString());
     presetsScenario()->savePreset(effectInstanceId, presetId);
     return make_ok();
 }
 
 muse::Ret EffectsActionsController::deletePreset(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("effectId") && params.contains("presetId")) {
+    IF_ASSERT_FAILED(params.contains(EFFECTS_EFFECT_ID_PARAM) && params.contains(EFFECTS_PRESET_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectId effectId = EffectId::fromStdString(params.at("effectId").toString());
-    PresetId presetId = au::au3::wxFromStdString(params.at("presetId").toString());
+    EffectId effectId = EffectId::fromStdString(params.at(EFFECTS_EFFECT_ID_PARAM).toString());
+    PresetId presetId = au::au3::wxFromStdString(params.at(EFFECTS_PRESET_ID_PARAM).toString());
     presetsScenario()->deletePreset(effectId, presetId);
     return make_ok();
 }
 
 muse::Ret EffectsActionsController::importPreset(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("instanceId")) {
+    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
+    EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
     presetsScenario()->importPreset(effectInstanceId);
     return make_ok();
 }
 
 muse::Ret EffectsActionsController::exportPreset(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("instanceId")) {
+    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    EffectInstanceId effectInstanceId = params.at("instanceId").toInt();
+    EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
     presetsScenario()->exportPreset(effectInstanceId);
     return make_ok();
 }
 
 muse::Ret EffectsActionsController::toggleVendorUI(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("effectId")) {
+    IF_ASSERT_FAILED(params.contains(EFFECTS_EFFECT_ID_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    const EffectId effectId = EffectId::fromStdString(params.at("effectId").toString());
+    const EffectId effectId = EffectId::fromStdString(params.at(EFFECTS_EFFECT_ID_PARAM).toString());
     const EffectUIMode currentMode = configuration()->effectUIMode(effectId);
     const EffectUIMode newMode = (currentMode == EffectUIMode::VendorUI) ? EffectUIMode::FallbackUI : EffectUIMode::VendorUI;
     configuration()->setEffectUIMode(effectId, newMode);

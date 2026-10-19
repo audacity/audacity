@@ -7,8 +7,9 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#include "framework/actions/actiontypes.h"
 #include "framework/global/log.h"
+
+#include "project/projectcommands.h"
 
 using namespace au::au3cloud;
 
@@ -53,11 +54,10 @@ bool CloudUrlHandler::tryHandleProjectLink(const QUrl& parsed)
 
     const QString snapshotId = query.queryItemValue(QStringLiteral("snapshotId"));
 
-    using namespace muse::actions;
-    ActionData data;
-    data.setArg<QString>(0, projectId);
-    data.setArg<QString>(1, snapshotId);
-    dispatcher()->dispatch("cloud-file-open", data);
+    commandDispatcher()->dispatch(project::PROJECT_OPEN_CLOUD_COMMAND, {
+        { project::PROJECT_ID_PARAM, muse::Val(projectId) },
+        { project::PROJECT_SNAPSHOT_ID_PARAM, muse::Val(snapshotId) },
+    });
 
     return true;
 }
@@ -74,10 +74,9 @@ bool CloudUrlHandler::tryHandleGenerateAudioLink(const QUrl& parsed)
         return false;
     }
 
-    muse::actions::ActionQuery action("action://cloud/update-audio-preview-for-project");
-    action.addParam("id", muse::Val(projectId));
-
-    dispatcher()->dispatch(action);
+    commandDispatcher()->dispatch(project::PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_FOR_PROJECT_COMMAND, {
+        { project::PROJECT_ID_PARAM, muse::Val(projectId) },
+    });
 
     return true;
 }
@@ -94,10 +93,9 @@ bool CloudUrlHandler::tryHandleAudioLink(const QUrl& parsed)
         return false;
     }
 
-    muse::actions::ActionQuery action("action://cloud/open-audio-file");
-    action.addParam("audioId", muse::Val(audioId.toStdString()));
-
-    dispatcher()->dispatch(action);
+    commandDispatcher()->dispatch(project::PROJECT_OPEN_CLOUD_AUDIO_FILE_COMMAND, {
+        { project::PROJECT_AUDIO_ID_PARAM, muse::Val(audioId.toStdString()) },
+    });
 
     return true;
 }

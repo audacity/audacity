@@ -31,7 +31,7 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
 #include "record/irecordcontroller.h"
-#include "actions/iactionsdispatcher.h"
+#include "rcommand/icommanddispatcher.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -47,7 +47,7 @@ class PlayCursorController : public QObject, public muse::async::Asyncable, publ
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<playback::IPlaybackController> playbackController{ this };
     muse::ContextInject<record::IRecordController> recordController{ this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
 
 public:
     PlayCursorController(QObject* parent = nullptr);

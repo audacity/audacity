@@ -27,11 +27,9 @@
 
 #include "global/realfn.h"
 
-using namespace au::projectscene;
-using namespace muse::actions;
+#include "playback/playbackcommands.h"
 
-static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
-static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
+using namespace au::projectscene;
 
 static constexpr int SCROLL_SUPPRESSION_TIMEOUT_MS = 3000;
 static constexpr double ANIMATION_DURATION_SEC = TimelineContext::ANIMATION_DURATION_MS / 1000.0;
@@ -67,14 +65,17 @@ void PlayCursorController::seekToTime(double secs, bool triggerPlay)
 
     secs = snapTime(secs);
 
-    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-    q.addParam("triggerPlay", muse::Val(triggerPlay));
+    const auto seek = [this, triggerPlay](double seekTime) {
+        commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+            { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(seekTime) },
+            { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(triggerPlay) },
+        });
+    };
+
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
-        q.addParam("seekTime", muse::Val(secs));
-        dispatcher()->dispatch(q);
+        seek(secs);
     } else if (!muse::RealIsEqual(playbackState()->playbackPosition(), 0.0)) {
-        q.addParam("seekTime", muse::Val(0.0));
-        dispatcher()->dispatch(q);
+        seek(0.0);
     }
 }
 
@@ -151,10 +152,10 @@ void PlayCursorController::setPlaybackRegionByTime(double t1, double t2)
     const double start = std::max(0.0, t1);
     const double end = std::max(0.0, t2);
 
-    muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_QUERY);
-    q.addParam("start", muse::Val(start));
-    q.addParam("end", muse::Val(end));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(playback::PLAYBACK_CHANGE_PLAY_REGION_COMMAND, {
+        { playback::PLAYBACK_CHANGE_PLAY_REGION_START_PARAM, muse::Val(start) },
+        { playback::PLAYBACK_CHANGE_PLAY_REGION_END_PARAM, muse::Val(end) },
+    });
 }
 
 double PlayCursorController::snapTime(double time) const
