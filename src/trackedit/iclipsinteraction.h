@@ -60,6 +60,9 @@ public:
     virtual bool stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
     virtual bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
 
+    virtual bool repeatClipsLeft(const ClipKeyList& clipKeyList, secs_t newStartTime, bool completed) = 0;
+    virtual bool repeatClipsRight(const ClipKeyList& clipKeyList, secs_t newEndTime, bool completed) = 0;
+
     virtual muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) = 0;
     virtual muse::Ret makeRoomForClips(const ClipKeyList& clipKeys) = 0;
 
