@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include <QObject>
 
 #include "uicomponents/qml/Muse/UiComponents/internal/tableviewcell.h" // todo: public?
@@ -29,6 +31,8 @@ public:
 
     trackedit::TrackId currentTrackId() const;
     void setCurrentTrackId(const trackedit::TrackId& trackId);
+
+    static std::optional<trackedit::TrackId> itemTrackId(const muse::uicomponents::MenuItem& item);
 
 signals:
     void availableTracksChanged();

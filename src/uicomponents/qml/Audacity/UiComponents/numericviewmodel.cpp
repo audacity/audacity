@@ -7,7 +7,6 @@
 #include "framework/global/realfn.h"
 
 #include "uicomponents/qml/Muse/UiComponents/menuitem.h"
-#include "ui/uiaction.h"
 
 using namespace au::uicomponents;
 
@@ -18,11 +17,8 @@ muse::uicomponents::MenuItemList makeMenuItemList(const QList<NumericViewFormat>
     for (const NumericViewFormat& format : formats) {
         auto* item = new muse::uicomponents::MenuItem(parent);
         item->setId(QString::number(static_cast<int>(format.type)));
-
-        muse::ui::UiAction action;
-        action.title = muse::TranslatableString::untranslatable(format.title);
-        action.checkable = muse::ui::Checkable::Yes;
-        item->setAction(action);
+        item->setTitle(muse::TranslatableString::untranslatable(format.title));
+        item->setCheckable(true);
 
         list << item;
     }
@@ -174,10 +170,8 @@ muse::uicomponents::MenuItemList NumericViewModel::availableFormats()
 void NumericViewModel::updateAvailableFormatsCheckedState()
 {
     for (int i = 0; i < m_availableFormatsCache.size(); ++i) {
-        muse::ui::UiActionState state;
-        state.enabled = true;
-        state.checked = m_currentFormat == m_availableViewFormats[i].type;
-        m_availableFormatsCache[i]->setState(state);
+        m_availableFormatsCache[i]->setEnabled(true);
+        m_availableFormatsCache[i]->setChecked(m_currentFormat == m_availableViewFormats[i].type);
     }
 }
 

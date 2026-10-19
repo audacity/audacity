@@ -7,9 +7,7 @@
 
 using namespace au::projectscene;
 using namespace au::project;
-using namespace muse::ui;
 using namespace muse::uicomponents;
-using namespace muse::actions;
 
 static const QString ENABLE_TRIPLETS_ID = "enable-triplets";
 
@@ -151,7 +149,7 @@ QString SnapToolBarItem::currentValue() const
 
     MenuItem* item = findCheckedItem(m_availableSnapTypes);
 
-    return item ? item->action().title.qTranslatedWithoutMnemonic() : QString();
+    return item ? item->translatedTitle() : QString();
 }
 
 QVariantList SnapToolBarItem::availableSnapTypes() const
@@ -170,14 +168,8 @@ MenuItem* SnapToolBarItem::makeMenu(const muse::TranslatableString& title, const
     MenuItem* item = new MenuItem(this);
     item->setId(menuId);
     item->setSubitems(items);
-
-    UiAction action;
-    action.title = title;
-    item->setAction(action);
-
-    UiActionState state;
-    state.enabled = true;
-    item->setState(state);
+    item->setTitle(title);
+    item->setEnabled(true);
 
     return item;
 }
@@ -186,15 +178,8 @@ MenuItem* SnapToolBarItem::makeMenuItem(const QString& id, const muse::Translata
 {
     MenuItem* item = new MenuItem(this);
     item->setId(id);
-
-    UiAction action;
-    action.checkable = Checkable::Yes;
-    item->setAction(action);
-
-    UiActionState state;
-    state.enabled = true;
-    item->setState(state);
-
+    item->setCheckable(true);
+    item->setEnabled(true);
     item->setTitle(title);
 
     return item;
@@ -202,13 +187,7 @@ MenuItem* SnapToolBarItem::makeMenuItem(const QString& id, const muse::Translata
 
 MenuItem* SnapToolBarItem::makeSeparator()
 {
-    MenuItem* item = new MenuItem(this);
-
-    UiAction action;
-    action.title = {};
-    item->setAction(action);
-
-    return item;
+    return new MenuItem(this);
 }
 
 MenuItem* SnapToolBarItem::makeSecondsAndSamplesMenu()
@@ -256,14 +235,14 @@ MenuItem* SnapToolBarItem::findCheckedItem(const muse::uicomponents::MenuItemLis
             continue;
         }
 
-        if (menuItem->state().checked) {
+        if (menuItem->checked()) {
             return menuItem;
         }
 
         auto subitems = menuItem->subitems();
         if (!subitems.empty()) {
             MenuItem* subitem = findCheckedItem(subitems);
-            if (subitem && subitem->state().checked) {
+            if (subitem && subitem->checked()) {
                 return subitem;
             }
         }
@@ -309,9 +288,7 @@ void SnapToolBarItem::doUpdateCheckedState(muse::uicomponents::MenuItemList& ite
             checked = snapType == viewState()->snapType();
         }
 
-        UiActionState state;
-        state.enabled = true;
-        state.checked = checked;
-        menuItem->setState(state);
+        menuItem->setEnabled(true);
+        menuItem->setChecked(checked);
     }
 }

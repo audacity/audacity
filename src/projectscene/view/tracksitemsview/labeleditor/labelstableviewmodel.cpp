@@ -15,8 +15,10 @@
 #include "labelstableviewtrackcell.h"
 #include "labelstableviewtimecodecell.h"
 
-static const muse::actions::ActionCode SELECT_LABEL_TRACK_CODE("select-label-track");
-static const muse::actions::ActionCode NEW_LABEL_TRACK_CODE("new-label-track");
+#include "trackedit/trackeditcommands.h"
+
+static const QString SELECT_LABEL_TRACK_ID("select-label-track");
+static const QString NEW_LABEL_TRACK_ID("new-label-track");
 
 static const int TRACK_COLUMN = 0;
 static const int LABEL_COLUMN = 1;
@@ -190,7 +192,7 @@ void LabelsTableViewModel::handleTrackMenuItem(int row, int column, const QStrin
 
     QString labelTrackItemId = itemId;
 
-    if (labelTrackItemId == NEW_LABEL_TRACK_CODE) {
+    if (labelTrackItemId == NEW_LABEL_TRACK_ID) {
         labelTrackItemId = createNewLabelTrack(row).val;
     }
 
@@ -201,8 +203,9 @@ void LabelsTableViewModel::handleTrackMenuItem(int row, int column, const QStrin
     LabelsTableViewTrackCell* trackCell = dynamic_cast<LabelsTableViewTrackCell*>(findCell(row, column));
 
     for (const muse::uicomponents::MenuItem* item : trackCell->availableTracks()) {
-        if (item->id() == labelTrackItemId) {
-            trackCell->setCurrentTrackId(item->args().arg<trackedit::TrackId>());
+        const std::optional<trackedit::TrackId> itemTrackId = LabelsTableViewTrackCell::itemTrackId(*item);
+        if (item->id() == labelTrackItemId && itemTrackId) {
+            trackCell->setCurrentTrackId(*itemTrackId);
             trackCell->setValue_property(item->translatedTitle());
             break;
         }
@@ -365,7 +368,7 @@ TableViewCell* LabelsTableViewModel::makeTrackCell(const trackedit::TrackId& tra
     //! NOTE: Update the track title in the cell.
     //! Keep the title synchronized with the track from the list of available tracks.
     for (const MenuItem* item : result->availableTracks()) {
-        if (item->args().arg<trackedit::TrackId>() == trackId) {
+        if (LabelsTableViewTrackCell::itemTrackId(*item) == trackId) {
             result->setValue_property(item->translatedTitle());
             break;
         }
@@ -412,18 +415,12 @@ MenuItemList LabelsTableViewModel::makeAvailableTracksList()
     for (const trackedit::Track& track : labelTracks) {
         MenuItem* item = new MenuItem();
 
-        ui::UiAction action;
-        action.code = SELECT_LABEL_TRACK_CODE;
-        action.title = muse::TranslatableString::untranslatable(String::number(index) + " - " + track.title);
-        action.checkable = muse::ui::Checkable::Yes;
-        item->setAction(action);
-
-        ui::UiActionState state;
-        state.enabled = true;
-        item->setState(state);
-
-        item->setArgs(actions::ActionData::make_arg1(track.id));
-        item->setId(QString::fromStdString(action.code) + action.title.qTranslatedWithoutMnemonic());
+        const muse::TranslatableString title = muse::TranslatableString::untranslatable(String::number(index) + " - " + track.title);
+        item->setId(SELECT_LABEL_TRACK_ID + title.qTranslated());
+        item->setTitle(title);
+        item->setCheckable(true);
+        item->setEnabled(true);
+        item->setParams({ { trackedit::TRACKEDIT_TRACK_ID_PARAM, Val(static_cast<int64_t>(track.id)) } });
 
         result << item;
         index++;
@@ -432,17 +429,9 @@ MenuItemList LabelsTableViewModel::makeAvailableTracksList()
     result << makeSeparator();
 
     MenuItem* item = new MenuItem();
-
-    ui::UiAction action;
-    action.code = NEW_LABEL_TRACK_CODE;
-    action.title = muse::TranslatableString("projectscene", "New label track");
-    item->setAction(action);
-
-    ui::UiActionState state;
-    state.enabled = true;
-    item->setState(state);
-
-    item->setId(QString::fromStdString(action.code));
+    item->setId(NEW_LABEL_TRACK_ID);
+    item->setTitle(muse::TranslatableString("projectscene", "New label track"));
+    item->setEnabled(true);
 
     result << item;
 
@@ -451,13 +440,7 @@ MenuItemList LabelsTableViewModel::makeAvailableTracksList()
 
 MenuItem* LabelsTableViewModel::makeSeparator()
 {
-    MenuItem* item = new MenuItem(this);
-
-    ui::UiAction action;
-    action.title = {};
-    item->setAction(action);
-
-    return item;
+    return new MenuItem(this);
 }
 
 bool LabelsTableViewModel::moveLabel(int row, const Val& value)
@@ -603,7 +586,7 @@ muse::RetVal<QString> LabelsTableViewModel::createNewLabelTrack(int currentRow)
 
         if (currentRow == i) {
             for (const MenuItem* item : availableTracks) {
-                if (item->args().arg<trackedit::TrackId>() == newTrackId) {
+                if (LabelsTableViewTrackCell::itemTrackId(*item) == newTrackId) {
                     newLabelTrackItemId = item->id();
                     break;
                 }
