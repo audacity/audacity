@@ -228,36 +228,16 @@
         <translation>Silence audio</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
-        <source>Show audio.com tour</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished">Show audio.com tour</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="27"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
         <source>View project on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>View project on audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="38"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
         <source>View on audio.com</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>View on audio.com</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="49"/>
-        <source>View profile on audio.com</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished">View profile on audio.com</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="58"/>
-        <source>Open audacity URL</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished">Open audacity URL</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
@@ -341,7 +321,6 @@
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="73"/>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="48"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
         <source>Pause</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -349,7 +328,6 @@
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="82"/>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="57"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
         <source>Stop</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -786,14 +764,12 @@
         <translation>Show history</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="30"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
         <source>Record on current track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Record on current track</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="39"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
         <source>Record on new track</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
@@ -1352,45 +1328,34 @@
         <translation>Change track color</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="21"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
         <source>Record</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Record</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="66"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
         <source>Record level</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Record level</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="75"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
         <source>Show mic metering</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Show mic metering</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="84"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="75"/>
         <source>Turn on input monitoring</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Turn on input monitoring</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="93"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="84"/>
         <source>Lead-in Recording</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Lead-in Recording</translation>
-    </message>
-    <message>
-        <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="22"/>
-        <source>Spectrogram settings…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spectrogram settings…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
@@ -2097,36 +2062,16 @@
         <translation type="unfinished">Open the context menu of the focused item</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="20"/>
-        <source>Open the audio.com tour page, signing in first if needed</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished">Open the audio.com tour page, signing in first if needed</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="29"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
         <source>View project on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>View project on audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="40"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
         <source>View on audio.com</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>View on audio.com</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="51"/>
-        <source>Open the signed in user’s audio.com profile page</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished">Open the signed in user’s audio.com profile page</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="60"/>
-        <source>Handle an audacity:// URL</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished">Handle an audacity:// URL</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
@@ -2198,7 +2143,6 @@
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="75"/>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="50"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
         <source>Pause</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
@@ -3127,66 +3071,52 @@
         <translation>Change track color</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="23"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
         <source>Record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Record</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="59"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
         <source>Stop record</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Stop record</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="68"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="59"/>
         <source>Set record level</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Set record level</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="77"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="68"/>
         <source>Show mic metering</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Show mic metering</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="86"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="77"/>
         <source>Turn on input monitoring</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Turn on input monitoring</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="95"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="86"/>
         <source>Start lead-in recording</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Start lead-in recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="32"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="95"/>
         <source>Record on current track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Record on current track</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="41"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="103"/>
         <source>Record on new track</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Record on new track</translation>
-    </message>
-    <message>
-        <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="24"/>
-        <source>Spectrogram settings…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spectrogram settings…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="27"/>
@@ -3699,12 +3629,12 @@
         <translation>Produce MIDI 2.0 output if supported by the receiver</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="445"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="496"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Are you sure you want to revert to factory settings?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="446"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="497"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -3713,32 +3643,32 @@ This action will not delete any of your projects.</source>
 This action will not delete any of your projects.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="458"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="509"/>
         <source>Revert</source>
         <translation>Revert</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="511"/>
         <source>Revert to factory settings</source>
         <translation>Revert to factory settings</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="472"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="523"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Would you like to restart Audacity now?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="473"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="524"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Audacity needs to be restarted for these changes to take effect.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="479"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="530"/>
         <source>Restart</source>
         <translation>Restart</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="481"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="532"/>
         <source>Restart Audacity</source>
         <translation>Restart Audacity</translation>
     </message>
@@ -3826,6 +3756,7 @@ This action will not delete any of your projects.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>%1 %2 - %3</source>
+        <extracomment>%1 is the project title, %2 is the modified marker (&quot;*&quot;) shown when there are unsaved changes, %3 is the app name</extracomment>
         <translation>%1 %2 - %3</translation>
     </message>
     <message>
@@ -5874,33 +5805,6 @@ This action will not delete any of your projects.</translation>
 <context>
     <name>builtin-effects</name>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="28"/>
-        <source>Auto Duck</source>
-        <translation>Auto Duck</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="82"/>
-        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
-        <source>You selected a track which does not contain audio. AutoDuck can only process audio tracks.</source>
-        <extracomment>Auto duck is the name of an effect that &apos;ducks&apos; (reduces the volume) of the audio automatically when there is sound on another track. Not as in &apos;Donald-Duck&apos;!</extracomment>
-        <translation>You selected a track which does not contain audio. AutoDuck can only process audio tracks.</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="144"/>
-        <source>Auto Duck needs a control track which must be placed below the selected track(s).</source>
-        <extracomment>Auto duck is the name of an effect that &apos;ducks&apos; (reduces the volume) of the audio automatically when there is sound on another track. Not as in &apos;Donald-Duck&apos;!</extracomment>
-        <translation>Auto Duck needs a control track which must be placed below the selected track(s).</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="184"/>
-        <source>Rendering Control-Track Time-Stretched Audio</source>
-        <translation>Rendering Control-Track Time-Stretched Audio</translation>
-    </message>
-    <message>
         <location filename="../../au3/libraries/au3-builtin-effects/BassTrebleBase.cpp" line="21"/>
         <source>Bass and Treble</source>
         <translation>Bass and Treble</translation>
@@ -6723,85 +6627,85 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Sign in failed. Please return to Audacity and try again.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="723"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1138"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1375"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="852"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1267"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1509"/>
         <source>View on audio.com</source>
         <translation>View on audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1347"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1477"/>
         <source>Track title</source>
         <translation>Track title</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1348"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1478"/>
         <source>Share audio</source>
         <translation>Share audio</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1349"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1479"/>
         <source>Share</source>
         <translation>Share</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1370"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1504"/>
         <source>Audio shared to audio.com</source>
         <translation>Audio shared to audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1390"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1524"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Sharing audio to audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1449"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1585"/>
         <source>Downloading audio from cloud…</source>
         <translation>Downloading audio from cloud…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1487"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1625"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation>The project must be saved before updating the audio preview</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1488"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1626"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation>Save your changes to continue, or cancel the update.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1492"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1630"/>
         <source>Unsaved changes</source>
         <translation>Unsaved changes</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1513"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1549"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1562"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1575"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1582"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1589"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1651"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1687"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1700"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1713"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1720"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1727"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation>Generate audio preview</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1543"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1681"/>
         <source>Audio preview is up to date</source>
         <translation>Audio preview is up to date</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1544"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1682"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation>The audio preview already matches the latest saved version of this project.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1554"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1692"/>
         <source>Updating cloud audio preview…</source>
         <translation>Updating cloud audio preview…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1583"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1721"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation>Could not determine the local path of the downloaded project</translation>
     </message>
@@ -6915,6 +6819,2236 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="16"/>
         <source>Save to audio.com</source>
         <translation>Save to audio.com</translation>
+    </message>
+</context>
+<context>
+    <name>command</name>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="21"/>
+        <source>Exit</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Exit</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="32"/>
+        <source>Restart</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Restart</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="41"/>
+        <source>&amp;Full screen</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Full screen</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="50"/>
+        <source>&amp;About Audacity…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;About Audacity…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="59"/>
+        <source>About &amp;Qt…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">About &amp;Qt…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="68"/>
+        <source>Online &amp;handbook</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Online &amp;handbook</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="77"/>
+        <source>As&amp;k for help</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">As&amp;k for help</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="86"/>
+        <source>&amp;Preferences</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Preferences</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="95"/>
+        <source>Revert to &amp;factory settings</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Revert to &amp;factory settings</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="104"/>
+        <source>Audio settings</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Audio settings</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="113"/>
+        <source>Shortcuts</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Shortcuts</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="122"/>
+        <source>Editing</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Editing</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="131"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="531"/>
+        <source>Spectrogram</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Spectrogram</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="140"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="678"/>
+        <source>Copy</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="149"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="687"/>
+        <source>Cut</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Cut</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="158"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="705"/>
+        <source>&amp;Paste</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Paste</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="167"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="21"/>
+        <source>&amp;Undo</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Undo</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="176"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="30"/>
+        <source>&amp;Redo</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Redo</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="185"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="696"/>
+        <source>De&amp;lete</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">De&amp;lete</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="194"/>
+        <source>&amp;Cancel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Cancel</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="203"/>
+        <source>&amp;Trigger</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Trigger</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="212"/>
+        <source>&amp;Enter</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Enter</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="221"/>
+        <source>Shift+&amp;Enter</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Shift+&amp;Enter</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="230"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="942"/>
+        <source>Open item context menu</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Open item context menu</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
+        <source>Show audio.com tour</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show audio.com tour</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="27"/>
+        <source>View project on audio.com</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">View project on audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="38"/>
+        <source>View on audio.com</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">View on audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="49"/>
+        <source>View profile on audio.com</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">View profile on audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="58"/>
+        <source>Open audacity URL</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Open audacity URL</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="21"/>
+        <source>&amp;New…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;New…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="30"/>
+        <source>&amp;Open…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Open…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="42"/>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="131"/>
+        <source>Open</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Open</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="54"/>
+        <source>&amp;Clear recent files</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Clear recent files</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="63"/>
+        <source>Import…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Import…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="74"/>
+        <source>Import startup media</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Import startup media</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="86"/>
+        <source>&amp;Save</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Save</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="95"/>
+        <source>Save &amp;as…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Save &amp;as…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="104"/>
+        <source>Save to clo&amp;ud…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Save to clo&amp;ud…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="113"/>
+        <source>&amp;Close project</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Close project</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="122"/>
+        <source>Share audio</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Share audio</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="142"/>
+        <source>Update cloud audio preview</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Update cloud audio preview</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="151"/>
+        <source>Update audio preview</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Update audio preview</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="162"/>
+        <source>&amp;Export audio…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Export audio…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="171"/>
+        <source>&amp;Export labels</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Export labels</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="182"/>
+        <source>&amp;Export MIDI</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">&amp;Export MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="191"/>
+        <source>Show metadata editor</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show metadata editor</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="200"/>
+        <source>Custom FFmpeg options</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Custom FFmpeg options</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="209"/>
+        <source>Custom channel mapping</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Custom channel mapping</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="21"/>
+        <source>Minutes &amp;&amp; seconds</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Minutes &amp;&amp; seconds</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="30"/>
+        <source>Beats &amp;&amp; measures</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Beats &amp;&amp; measures</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="39"/>
+        <source>Show vertical rulers</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show vertical rulers</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="48"/>
+        <source>Show RMS in waveform</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show RMS in waveform</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="57"/>
+        <source>Show clipping in waveform</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show clipping in waveform</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="66"/>
+        <source>Update display while playing</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Update display while playing</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="75"/>
+        <source>Pinned playhead</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Pinned playhead</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="84"/>
+        <source>Click ruler to start playback</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Click ruler to start playback</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="93"/>
+        <source>Half-wave</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Half-wave</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="104"/>
+        <source>Clip gain</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Clip gain</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="113"/>
+        <source>Pitch and speed</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Pitch and speed</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="125"/>
+        <source>Show label editor</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show label editor</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="134"/>
+        <source>Zoom in</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Zoom in</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="143"/>
+        <source>Zoom out</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Zoom out</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="152"/>
+        <source>Zoom default</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Zoom default</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="161"/>
+        <source>Zoom to selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Zoom to selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="170"/>
+        <source>Zoom to fit project</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Zoom to fit project</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="179"/>
+        <source>Zoom toggle</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Zoom toggle</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="188"/>
+        <source>Center view on playhead</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Center view on playhead</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="200"/>
+        <source>Timeline context menu</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Timeline context menu</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="209"/>
+        <source>Move playhead left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move playhead left</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="218"/>
+        <source>Move playhead right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move playhead right</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="227"/>
+        <source>Extend selection left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Extend selection left</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="236"/>
+        <source>Extend selection right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Extend selection right</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="245"/>
+        <source>Contract selection from left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Contract selection from left</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="254"/>
+        <source>Contract selection from right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Contract selection from right</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="263"/>
+        <source>Move playhead to selection start</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move playhead to selection start</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="272"/>
+        <source>Move playhead to selection end</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move playhead to selection end</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="281"/>
+        <source>Show effects panel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show effects panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="290"/>
+        <source>Add track effects</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Add track effects</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="299"/>
+        <source>Audio setup</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Audio setup</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="308"/>
+        <source>Get effects</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Get effects</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="317"/>
+        <source>Split tool</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split tool</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="326"/>
+        <source>Move realtime effect up</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move realtime effect up</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="335"/>
+        <source>Move realtime effect down</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move realtime effect down</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="21"/>
+        <source>Record</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Record</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="30"/>
+        <source>Record on current track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Record on current track</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="39"/>
+        <source>Record on new track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Record on new track</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="48"/>
+        <source>Pause</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Pause</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="57"/>
+        <source>Stop</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Stop</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="66"/>
+        <source>Record level</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Record level</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="75"/>
+        <source>Show mic metering</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Show mic metering</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="84"/>
+        <source>Turn on input monitoring</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Turn on input monitoring</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="93"/>
+        <source>Lead-in Recording</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Lead-in Recording</translation>
+    </message>
+    <message>
+        <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="22"/>
+        <source>Spectrogram settings…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Spectrogram settings…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="39"/>
+        <source>Cancel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Cancel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="48"/>
+        <source>Paste (pushes clips on selected track)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Paste (pushes clips on selected track)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="57"/>
+        <source>Paste (overlaps other clips)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Paste (overlaps other clips)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="66"/>
+        <source>Paste (preserves synchronization on all tracks)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Paste (preserves synchronization on all tracks)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="75"/>
+        <source>Cut clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Cut clip</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="87"/>
+        <source>Copy clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Copy clip</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="99"/>
+        <source>Delete clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Delete clip</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="111"/>
+        <source>Split cut clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split cut clip</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="123"/>
+        <source>Split delete clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split delete clip</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="135"/>
+        <source>Open pitch and speed dialog</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Open pitch and speed dialog</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="144"/>
+        <source>Render pitch and speed</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Render pitch and speed</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="156"/>
+        <source>Reset pitch and speed</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Reset pitch and speed</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="168"/>
+        <source>Stretch with tempo changes</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Stretch with tempo changes</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="180"/>
+        <source>Split tracks at</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split tracks at</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="192"/>
+        <source>New mono track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">New mono track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="201"/>
+        <source>New stereo track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">New stereo track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="210"/>
+        <source>New label track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">New label track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="219"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="750"/>
+        <source>Duplicate</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Duplicate</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="228"/>
+        <source>Move track up</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move track up</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="237"/>
+        <source>Move track down</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move track down</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="246"/>
+        <source>Move track to top</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move track to top</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="255"/>
+        <source>Move track to bottom</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move track to bottom</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="264"/>
+        <source>Swap stereo channels</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Swap stereo channels</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="273"/>
+        <source>Split stereo to L/R mono</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split stereo to L/R mono</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="282"/>
+        <source>Split stereo to center mono</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split stereo to center mono</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="291"/>
+        <source>Other…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Other…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="300"/>
+        <source>Make stereo track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Make stereo track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="309"/>
+        <source>Resample track…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Resample track…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="318"/>
+        <source>Trim</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Trim</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="327"/>
+        <source>Silence</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Silence</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="336"/>
+        <source>Group clips</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Group clips</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="345"/>
+        <source>Ungroup clips</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Ungroup clips</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="354"/>
+        <source>Select all</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Select all</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="363"/>
+        <source>Clear selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Clear selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="372"/>
+        <source>Select all tracks</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Select all tracks</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="381"/>
+        <source>Left of playback position</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Left of playback position</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="390"/>
+        <source>Right of playback position</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Right of playback position</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="399"/>
+        <source>Track start to cursor</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Track start to cursor</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="408"/>
+        <source>Cursor to track end</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Cursor to track end</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="417"/>
+        <source>Track start to end</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Track start to end</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="426"/>
+        <source>Set selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Set selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="438"/>
+        <source>Select track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Select track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="449"/>
+        <source>At zero crossings</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">At zero crossings</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="458"/>
+        <source>Same as track color</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Same as track color</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="467"/>
+        <source>Change clip color</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Change clip color</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="478"/>
+        <source>Change track color</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Change track color</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="489"/>
+        <source>Change track format</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Change track format</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="500"/>
+        <source>Change track sample rate</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Change track sample rate</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="511"/>
+        <source>Toggle spectral view</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Toggle spectral view</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="520"/>
+        <source>Waveform</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Waveform</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="542"/>
+        <source>Multi-view</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Multi-view</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="553"/>
+        <source>Add label</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Add label</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="562"/>
+        <source>Rename item (clip/label)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Rename item (clip/label)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="571"/>
+        <source>Move item left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move item left</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="580"/>
+        <source>Move item right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move item right</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="589"/>
+        <source>Move item up</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move item up</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="598"/>
+        <source>Move item down</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Move item down</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="607"/>
+        <source>Extend item left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Extend item left</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="616"/>
+        <source>Extend item right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Extend item right</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="625"/>
+        <source>Reduce item left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Reduce item left</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="634"/>
+        <source>Reduce item right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Reduce item right</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="643"/>
+        <source>Merge selected clips</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Merge selected clips</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="656"/>
+        <source>Duplicate selected</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Duplicate selected</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="669"/>
+        <source>Delete</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="714"/>
+        <source>Split</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="723"/>
+        <source>Split into new track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split into new track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="732"/>
+        <source>Join selected clips</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Join selected clips</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="741"/>
+        <source>Split clips at silences</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split clips at silences</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="759"/>
+        <source>Split track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Split track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="770"/>
+        <source>Cut and leave gap</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Cut and leave gap</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="779"/>
+        <source>Cut and close gap (per clip)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Cut and close gap (per clip)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="788"/>
+        <source>Cut and close gap (per track)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Cut and close gap (per track)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="797"/>
+        <source>Cut and close gap (all tracks)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Cut and close gap (all tracks)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="806"/>
+        <source>Delete and leave gap</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Delete and leave gap</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="815"/>
+        <source>Delete and close gap (per clip)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Delete and close gap (per clip)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="824"/>
+        <source>Delete and close gap (per track)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Delete and close gap (per track)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="833"/>
+        <source>Delete and close gap (all tracks)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Delete and close gap (all tracks)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="843"/>
+        <source>Next panel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Next panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="852"/>
+        <source>Previous panel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Previous panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="861"/>
+        <source>First track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">First track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="870"/>
+        <source>Last track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Last track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="879"/>
+        <source>Above item</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Above item</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="888"/>
+        <source>Below item</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Below item</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="897"/>
+        <source>Select track/track item</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Select track/track item</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="906"/>
+        <source>Add track or track item to selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Add track or track item to selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="915"/>
+        <source>Track range selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Track range selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="924"/>
+        <source>Multi track selection previous</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Multi track selection previous</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="933"/>
+        <source>Multi track selection next</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Multi track selection next</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="951"/>
+        <source>Open ruler context menu</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Open ruler context menu</translation>
+    </message>
+</context>
+<context>
+    <name>command_description</name>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="23"/>
+        <source>Exit</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Exit</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="34"/>
+        <source>Restart</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Restart</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="43"/>
+        <source>Full screen</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Full screen</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="52"/>
+        <source>About Audacity</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">About Audacity</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="61"/>
+        <source>About Qt</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">About Qt</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="70"/>
+        <source>Open online handbook</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open online handbook</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="79"/>
+        <source>Ask for help</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Ask for help</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="88"/>
+        <source>Preferences…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Preferences…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="97"/>
+        <source>Revert to factory settings</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Revert to factory settings</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="106"/>
+        <source>Open audio setup dialog</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open audio setup dialog</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="115"/>
+        <source>Open shortcuts preferences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open shortcuts preferences</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="124"/>
+        <source>Open editing preferences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open editing preferences</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="133"/>
+        <source>Open spectrogram preferences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open spectrogram preferences</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="142"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="680"/>
+        <source>Copy</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="151"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="689"/>
+        <source>Cut</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cut</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="160"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="707"/>
+        <source>Paste</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Paste</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="169"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="23"/>
+        <source>Undo</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Undo</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="178"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="32"/>
+        <source>Redo</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Redo</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="187"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="698"/>
+        <source>Delete</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="196"/>
+        <source>Cancel</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cancel</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="205"/>
+        <source>Trigger</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Trigger</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="214"/>
+        <source>Trigger the focused control or select the focused track item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Trigger the focused control or select the focused track item</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="223"/>
+        <source>Trigger the focused control or make a range selection of track items</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Trigger the focused control or make a range selection of track items</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="232"/>
+        <source>Open the context menu of the focused item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the context menu of the focused item</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="20"/>
+        <source>Open the audio.com tour page, signing in first if needed</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the audio.com tour page, signing in first if needed</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="29"/>
+        <source>View project on audio.com</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">View project on audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="40"/>
+        <source>View on audio.com</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">View on audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="51"/>
+        <source>Open the signed in user’s audio.com profile page</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the signed in user’s audio.com profile page</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="60"/>
+        <source>Handle an audacity:// URL</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Handle an audacity:// URL</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="23"/>
+        <source>New…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">New…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="32"/>
+        <source>Open…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="44"/>
+        <source>Open cloud project</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open cloud project</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="56"/>
+        <source>Clear recent files</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Clear recent files</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="65"/>
+        <source>Import…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Import…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="76"/>
+        <source>Import media files into a new project</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Import media files into a new project</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="88"/>
+        <source>Save</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Save</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="97"/>
+        <source>Save as…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Save as…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="106"/>
+        <source>Save to cloud…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Save to cloud…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="115"/>
+        <source>Close project</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Close project</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="124"/>
+        <source>Share audio</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Share audio</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="133"/>
+        <source>Open cloud audio file</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open cloud audio file</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="144"/>
+        <source>Update cloud audio preview</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Update cloud audio preview</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="153"/>
+        <source>Update audio preview</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Update audio preview</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="164"/>
+        <source>Export audio…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Export audio…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="173"/>
+        <source>Export labels</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Export labels</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="184"/>
+        <source>Export MIDI</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Export MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="193"/>
+        <source>Show metadata editor</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Show metadata editor</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="202"/>
+        <source>Open the custom FFmpeg export options</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the custom FFmpeg export options</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="211"/>
+        <source>Open the custom export channel mapping</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the custom export channel mapping</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="23"/>
+        <source>Minutes &amp;&amp; seconds</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Minutes &amp;&amp; seconds</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="32"/>
+        <source>Beats &amp;&amp; measures</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Beats &amp;&amp; measures</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="41"/>
+        <source>Show vertical rulers</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Show vertical rulers</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="50"/>
+        <source>Show RMS in waveform</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Show RMS in waveform</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="59"/>
+        <source>Show clipping in waveform</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Show clipping in waveform</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="68"/>
+        <source>Update display while playing</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Update display while playing</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="77"/>
+        <source>Pinned playhead</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Pinned playhead</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="86"/>
+        <source>Click ruler to start playback</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Click ruler to start playback</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="95"/>
+        <source>Half-wave</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Half-wave</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="106"/>
+        <source>Clip gain</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Clip gain</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="115"/>
+        <source>Pitch and speed</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Pitch and speed</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="127"/>
+        <source>Show label editor</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Show label editor</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="136"/>
+        <source>Zoom in</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Zoom in</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="145"/>
+        <source>Zoom out</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Zoom out</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="154"/>
+        <source>Zoom default</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Zoom default</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="163"/>
+        <source>Zoom to selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Zoom to selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="172"/>
+        <source>Zoom to fit project</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Zoom to fit project</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="181"/>
+        <source>Zoom toggle</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Zoom toggle</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="190"/>
+        <source>Center view on playhead</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Center view on playhead</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="202"/>
+        <source>Open the timeline context menu</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the timeline context menu</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="211"/>
+        <source>Move playhead left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move playhead left</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="220"/>
+        <source>Move playhead right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move playhead right</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="229"/>
+        <source>Extend selection left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Extend selection left</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="238"/>
+        <source>Extend selection right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Extend selection right</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="247"/>
+        <source>Contract selection from left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Contract selection from left</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="256"/>
+        <source>Contract selection from right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Contract selection from right</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="265"/>
+        <source>Move playhead to selection start</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move playhead to selection start</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="274"/>
+        <source>Move playhead to selection end</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move playhead to selection end</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="283"/>
+        <source>Show effects panel</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Show effects panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="292"/>
+        <source>Add track effects</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Add track effects</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="301"/>
+        <source>Open audio setup context menu</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open audio setup context menu</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="310"/>
+        <source>Open Get effects dialog</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open Get effects dialog</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="319"/>
+        <source>Split tool</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Split tool</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="328"/>
+        <source>Move realtime effect up</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move realtime effect up</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="337"/>
+        <source>Move realtime effect down</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move realtime effect down</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="23"/>
+        <source>Record</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Record</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="32"/>
+        <source>Record on current track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Record on current track</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="41"/>
+        <source>Record on new track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Record on new track</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="50"/>
+        <source>Pause</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Pause</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="59"/>
+        <source>Stop record</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Stop record</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="68"/>
+        <source>Set record level</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Set record level</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="77"/>
+        <source>Show mic metering</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Show mic metering</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="86"/>
+        <source>Turn on input monitoring</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Turn on input monitoring</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="95"/>
+        <source>Start lead-in recording</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Start lead-in recording</translation>
+    </message>
+    <message>
+        <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="24"/>
+        <source>Spectrogram settings…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Spectrogram settings…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="41"/>
+        <source>Cancel the current interaction or clear the selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cancel the current interaction or clear the selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="50"/>
+        <source>Paste (pushes clips on selected track)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Paste (pushes clips on selected track)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="59"/>
+        <source>Paste (overlaps other clips)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Paste (overlaps other clips)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="68"/>
+        <source>Paste (preserves synchronization on all tracks)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Paste (preserves synchronization on all tracks)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="77"/>
+        <source>Cut the given clip into the clipboard</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cut the given clip into the clipboard</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="89"/>
+        <source>Copy the given clip into the clipboard</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Copy the given clip into the clipboard</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="101"/>
+        <source>Delete the given clip</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete the given clip</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="113"/>
+        <source>Cut the given clip into the clipboard and leave a gap</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cut the given clip into the clipboard and leave a gap</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="125"/>
+        <source>Delete the given clip and leave a gap</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete the given clip and leave a gap</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="137"/>
+        <source>Open pitch and speed dialog</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open pitch and speed dialog</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="146"/>
+        <source>Render pitch and speed</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Render pitch and speed</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="158"/>
+        <source>Reset pitch and speed</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Reset pitch and speed</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="170"/>
+        <source>Stretch with tempo changes</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Stretch with tempo changes</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="182"/>
+        <source>Split the given tracks at the given positions</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Split the given tracks at the given positions</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="194"/>
+        <source>New mono track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">New mono track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="203"/>
+        <source>New stereo track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">New stereo track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="212"/>
+        <source>New label track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">New label track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="221"/>
+        <source>Duplicate track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Duplicate track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="230"/>
+        <source>Move track up</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move track up</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="239"/>
+        <source>Move track down</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move track down</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="248"/>
+        <source>Move track to top</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move track to top</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="257"/>
+        <source>Move track to bottom</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move track to bottom</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="266"/>
+        <source>Swap stereo channels</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Swap stereo channels</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="275"/>
+        <source>Split stereo to L/R mono</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Split stereo to L/R mono</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="284"/>
+        <source>Split stereo to center mono</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Split stereo to center mono</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="293"/>
+        <source>Set a custom track sample rate</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Set a custom track sample rate</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="302"/>
+        <source>Make stereo track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Make stereo track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="311"/>
+        <source>Resample track…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Resample track…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="320"/>
+        <source>Trim audio outside selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Trim audio outside selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="329"/>
+        <source>Silence audio selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Silence audio selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="338"/>
+        <source>Group clips</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Group clips</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="347"/>
+        <source>Ungroup clips</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Ungroup clips</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="356"/>
+        <source>Select all</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select all</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="365"/>
+        <source>Clear selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Clear selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="374"/>
+        <source>Select all tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select all tracks</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="383"/>
+        <source>Select from a chosen time to the playback position</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select from a chosen time to the playback position</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="392"/>
+        <source>Select from the playback position to a chosen time</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select from the playback position to a chosen time</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="401"/>
+        <source>Select from the track start to the cursor</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select from the track start to the cursor</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="410"/>
+        <source>Select from the cursor to the track end</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select from the cursor to the track end</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="419"/>
+        <source>Select from the track start to the track end</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select from the track start to the track end</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="428"/>
+        <source>Set the time selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Set the time selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="440"/>
+        <source>Select the track at the given index</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select the track at the given index</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
+        <source>Move the cursor to the nearest zero crossing</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move the cursor to the nearest zero crossing</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="460"/>
+        <source>Use the track color for the selected clips</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Use the track color for the selected clips</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="469"/>
+        <source>Change clip color</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Change clip color</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="480"/>
+        <source>Change track color</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Change track color</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="491"/>
+        <source>Change track format</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Change track format</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="502"/>
+        <source>Change track sample rate</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Change track sample rate</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="513"/>
+        <source>Toggle spectral view</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Toggle spectral view</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="522"/>
+        <source>Waveform</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Waveform</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="533"/>
+        <source>Spectrogram</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Spectrogram</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="544"/>
+        <source>Multi-view</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Multi-view</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="555"/>
+        <source>Add label</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Add label</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="564"/>
+        <source>Rename item (clip/label)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Rename item (clip/label)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="573"/>
+        <source>Move item left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move item left</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="582"/>
+        <source>Move item right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move item right</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="591"/>
+        <source>Move item up</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move item up</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="600"/>
+        <source>Move item down</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move item down</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="609"/>
+        <source>Extend item left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Extend item left</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="618"/>
+        <source>Extend item right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Extend item right</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="627"/>
+        <source>Reduce item left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Reduce item left</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="636"/>
+        <source>Reduce item right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Reduce item right</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="645"/>
+        <source>Merge the clips in the given time range on the given tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Merge the clips in the given time range on the given tracks</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="658"/>
+        <source>Duplicate the given time range on the given tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Duplicate the given time range on the given tracks</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="671"/>
+        <source>Delete track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="716"/>
+        <source>Split</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Split</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="725"/>
+        <source>Move the selection into a new track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Move the selection into a new track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="734"/>
+        <source>Join selected clips</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Join selected clips</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="743"/>
+        <source>Split clips at silences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Split clips at silences</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="752"/>
+        <source>Duplicate</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Duplicate</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="761"/>
+        <source>Split the given track at the playback position</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Split the given track at the playback position</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="772"/>
+        <source>Cut and leave gap</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cut and leave gap</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="781"/>
+        <source>Cut and close gap (per clip)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cut and close gap (per clip)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="790"/>
+        <source>Cut and close gap (per track)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cut and close gap (per track)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="799"/>
+        <source>Cut and close gap (all tracks)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Cut and close gap (all tracks)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="808"/>
+        <source>Delete and leave gap</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete and leave gap</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="817"/>
+        <source>Delete and close gap (per clip)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete and close gap (per clip)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="826"/>
+        <source>Delete and close gap (per track)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete and close gap (per track)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="835"/>
+        <source>Delete and close gap (all tracks)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Delete and close gap (all tracks)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="845"/>
+        <source>Next panel</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Next panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="854"/>
+        <source>Previous panel</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Previous panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="863"/>
+        <source>First track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">First track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="872"/>
+        <source>Last track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Last track</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="881"/>
+        <source>Above item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Above item</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="890"/>
+        <source>Below item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Below item</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="899"/>
+        <source>Select track/track item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Select track/track item</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="908"/>
+        <source>Add track or track item to selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Add track or track item to selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="917"/>
+        <source>Track range selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Track range selection</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="926"/>
+        <source>Multi track selection previous</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Multi track selection previous</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="935"/>
+        <source>Multi track selection next</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Multi track selection next</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="944"/>
+        <source>Open the context menu of the focused track item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the context menu of the focused track item</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="953"/>
+        <source>Open the context menu of the focused ruler</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Open the context menu of the focused ruler</translation>
     </message>
 </context>
 <context>
@@ -7430,7 +9564,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>Preset mismatch</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="393"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="394"/>
         <source>Applied effect: %1</source>
         <translation>Applied effect: %1</translation>
     </message>
@@ -7480,19 +9614,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation>%1: is for a different Effect, Generator or Analyzer.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="649"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="650"/>
         <source>Generating %1…</source>
         <translation>Generating %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="649"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="650"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
         <translation>Applying %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="879"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="884"/>
         <source>Effect preview</source>
         <translation>Effect preview</translation>
     </message>
@@ -7995,6 +10129,24 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
 </context>
 <context>
+    <name>effects-autoduck</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="31"/>
+        <source>Auto duck</source>
+        <translation type="unfinished">Auto duck</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="85"/>
+        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
+        <translation type="unfinished">Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="212"/>
+        <source>Rendering Control-Track Time-Stretched Audio</source>
+        <translation type="unfinished">Rendering Control-Track Time-Stretched Audio</translation>
+    </message>
+</context>
+<context>
     <name>effects-changepitch</name>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitcheffect.cpp" line="10"/>
@@ -8064,7 +10216,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>effects-effects_base</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="844"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="849"/>
         <source>Preparing preview</source>
         <translation>Preparing preview</translation>
     </message>
@@ -8270,6 +10422,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="160"/>
         <source>Analyzing second track of stereo pair: %1</source>
+        <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>Analyzing second track of stereo pair: %1</translation>
     </message>
     <message>
@@ -8281,6 +10434,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="176"/>
         <source>Processing stereo channels independently: %1</source>
+        <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>Processing stereo channels independently: %1</translation>
     </message>
     <message>
@@ -8292,6 +10446,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="206"/>
         <source>Processing second track of stereo pair: %1</source>
+        <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>Processing second track of stereo pair: %1</translation>
     </message>
 </context>
@@ -10630,6 +12785,65 @@ Please select an area to repair with some audio on at least one side (the more t
     </message>
 </context>
 <context>
+    <name>effects/autoduck</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="13"/>
+        <source>Auto duck</source>
+        <translation type="unfinished">Auto duck</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="103"/>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="112"/>
+        <source>Control track</source>
+        <translation type="unfinished">Control track</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="117"/>
+        <source>No available track</source>
+        <translation type="unfinished">No available track</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="145"/>
+        <source>Threshold</source>
+        <translation type="unfinished">Threshold</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="192"/>
+        <source>Duck start</source>
+        <translation type="unfinished">Duck start</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="233"/>
+        <source>Recovery end</source>
+        <translation type="unfinished">Recovery end</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="259"/>
+        <source>Duck end</source>
+        <translation type="unfinished">Duck end</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="285"/>
+        <source>Gain reduction</source>
+        <translation type="unfinished">Gain reduction</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="311"/>
+        <source>Recovery start</source>
+        <translation type="unfinished">Recovery start</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="340"/>
+        <source>Hold</source>
+        <translation type="unfinished">Hold</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="371"/>
+        <source>Auto duck needs a second audio track to trigger the ducking. Add one to your project to continue.</source>
+        <translation type="unfinished">Auto duck needs a second audio track to trigger the ducking. Add one to your project to continue.</translation>
+    </message>
+</context>
+<context>
     <name>effects/basstreble</name>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="13"/>
@@ -12408,6 +14622,8 @@ For tips on suitable drives, click the help button.</translation>
         <translation>OK</translation>
     </message>
     <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckGraph.qml" line="67"/>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="78"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="162"/>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="79"/>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="64"/>
@@ -12418,7 +14634,9 @@ For tips on suitable drives, click the help button.</translation>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="94"/>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="103"/>
         <source>dB</source>
-        <extracomment>Abbreviation of decibels, used as a unit suffix</extracomment>
+        <extracomment>Abbreviation of &quot;decibels&quot;, used as a unit suffix
+----------
+Abbreviation of decibels, used as a unit suffix</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -12608,14 +14826,14 @@ For tips on suitable drives, click the help button.</translation>
         <translation>All files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="715"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1131"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1369"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="844"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1260"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1503"/>
         <source>Success</source>
         <translation>Success</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1374"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1508"/>
         <source>Dismiss</source>
         <translation>Dismiss</translation>
     </message>
@@ -12633,14 +14851,17 @@ For tips on suitable drives, click the help button.</translation>
         <translation>Open</translation>
     </message>
     <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckGraph.qml" line="63"/>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="76"/>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
         <source>s</source>
+        <extracomment>Abbreviation of &quot;seconds&quot;, used as a unit suffix</extracomment>
         <translation>s</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="746"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1157"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="875"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1286"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
@@ -14794,7 +17015,9 @@ You can configure it at Preferences &gt; General.</translation>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1454"/>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="676"/>
         <source>Exporting the audio as %1</source>
-        <extracomment>%1 is format description</extracomment>
+        <extracomment>%1 is format description
+----------
+%1 is a format description</extracomment>
         <translation>Exporting the audio as %1</translation>
     </message>
     <message>
@@ -18320,8 +20543,8 @@ It will not be loaded.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="711"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="826"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="875"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="955"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1004"/>
         <source>All supported files</source>
         <translation>All supported files</translation>
     </message>
@@ -18347,42 +20570,42 @@ It will not be loaded.</translation>
         <translation>Imported multiple files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="398"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="496"/>
         <source>Error opening file</source>
         <translation>Error opening file</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="399"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="497"/>
         <source>Could not open file: %1</source>
         <translation>Could not open file: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="745"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1137"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="851"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1266"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1285"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Dismiss</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="739"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="868"/>
         <source>Upload project to audio.com…</source>
         <translation>Upload project to audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="827"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="956"/>
         <source>Audacity project files</source>
         <translation>Audacity project files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="828"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="957"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3 files</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="829"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="958"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4 files</translation>
     </message>
@@ -18433,95 +20656,95 @@ It will not be loaded.</translation>
         <translation>Network error</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="716"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1132"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="845"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1261"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="830"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="959"/>
         <source>Importable audio and media files</source>
         <translation>Importable audio and media files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="844"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="894"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="973"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1023"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Open</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="876"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1005"/>
         <source>Audio files</source>
         <translation>Audio files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1006"/>
         <source>Video files</source>
         <translation>Video files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1007"/>
         <source>Game media files</source>
         <translation>Game media files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="879"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1008"/>
         <source>Streaming files</source>
         <translation>Streaming files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="880"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1009"/>
         <source>Animation and image files</source>
         <translation>Animation and image files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="881"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1010"/>
         <source>Raw files</source>
         <translation>Raw files</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="910"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1039"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Do you want to save changes to the project before closing?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="912"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1041"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Do you want to save changes to the project “%1” before closing?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="916"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1045"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Your changes will be lost if you don’t save them.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="923"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1052"/>
         <source>Unsaved changes</source>
         <translation>Unsaved changes</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1150"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1279"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Resuming sync to audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1168"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1599"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1297"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1737"/>
         <source>Syncing project from cloud…</source>
         <translation>Syncing project from cloud…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1329"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1459"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Cannot read file %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1334"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1464"/>
         <source>An error occurred while reading this file.</source>
         <translation>An error occurred while reading this file.</translation>
     </message>
@@ -19215,17 +21438,17 @@ You need to run that version of Audacity to recover the project.</translation>
         <translation>Project saved</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1194"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1323"/>
         <source>Time Track not supported</source>
         <translation>Time Track not supported</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1195"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1324"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1199"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1328"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -21337,44 +23560,44 @@ This causes any realtime effects to be applied to the waveform and hidden data t
 Do you wish to continue?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="21"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="26"/>
         <source>Playback position</source>
         <translation>Playback position</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="833"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="856"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="879"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="950"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1081"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1102"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1123"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1159"/>
         <source>No audio selected</source>
         <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
         <translation>No audio selected</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="834"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="857"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="880"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="911"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="952"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1082"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1103"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1124"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1160"/>
         <source>Select the audio to delete and try again.</source>
         <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Select the audio to delete and try again.</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1346"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1360"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1374"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1530"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1547"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1564"/>
         <source>Paste error</source>
         <translation>Paste error</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2097"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2147"/>
         <source>Set rate</source>
         <translation>Set rate</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2267"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2316"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Resample track</source>
         <translation>Resample track</translation>
@@ -21439,10 +23662,12 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="112"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="112"/>
         <source>Reset Clip Pitch</source>
         <translation>Reset Clip Pitch</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="687"/>
         <source>Changed Speed</source>
@@ -21450,10 +23675,12 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="130"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="130"/>
         <source>Reset Clip Speed</source>
         <translation>Reset Clip Speed</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
         <source>Changed track color</source>
         <translation>Changed track color</translation>
@@ -21562,6 +23789,7 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
         <source>Split</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Split</translation>
@@ -21580,6 +23808,8 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="495"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="495"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="504"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="504"/>
         <source>Split into new track</source>
         <translation>Split into new track</translation>
@@ -21692,41 +23922,50 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="743"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="743"/>
         <source>Delete track</source>
         <translation>Delete track</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
         <source>Duplicate track</source>
         <translation>Duplicate track</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="761"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="761"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="768"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="768"/>
         <source>Move track</source>
         <translation>Move track</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="815"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="815"/>
         <source>Insert silence</source>
         <translation>Insert silence</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="839"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="839"/>
         <source>Clips grouped</source>
         <translation>Clips grouped</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="845"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="845"/>
         <source>Clips ungrouped</source>
         <translation>Clips ungrouped</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="856"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="856"/>
         <source>Changed track format</source>
         <translation>Changed track format</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="865"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="865"/>
         <source>Changed track rate</source>
         <translation>Changed track rate</translation>
@@ -21750,6 +23989,7 @@ Do you wish to continue?</translation>
         <translation>Split stereo tracks to center mono</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
         <source>Make stereo track</source>
         <translation>Make stereo track</translation>
