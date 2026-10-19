@@ -13,6 +13,8 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace au::effects;
 
+static const QString REMOVE_ITEM_ID("realtimeeffect-remove");
+
 RealtimeEffectListItemMenuModel::RealtimeEffectListItemMenuModel(QObject* parent)
     : RealtimeEffectMenuModelBase(parent)
 {
@@ -27,7 +29,12 @@ void RealtimeEffectListItemMenuModel::doPopulateMenu()
 {
     MenuItemList items;
 
-    items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "Remove effect")) << makeSeparator();
+    MenuItem* removeItem = new MenuItem(this);
+    removeItem->setId(REMOVE_ITEM_ID);
+    removeItem->setTitle(muse::TranslatableString("projectscene", "Remove effect"));
+    removeItem->setEnabled(true);
+
+    items << removeItem << makeSeparator();
 
     const auto effectMenus = this->effectMenus();
     if (!effectMenus.empty()) {
@@ -46,10 +53,10 @@ void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
         return;
     }
 
-    if (menuItem.id() == "realtimeeffect-remove") {
+    if (menuItem.id() == REMOVE_ITEM_ID) {
         realtimeEffectService()->removeRealtimeEffect(*tId, m_effectState);
     } else {
-        const auto effectId = effects::effectIdFromAction(menuItem.id());
+        const EffectId effectId = EffectId::fromQString(menuItem.id());
         if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, m_effectState, effectId)) {
             effectViewController()->showEffect(newState);
         }
@@ -82,7 +89,7 @@ namespace {
 bool updateCheckmarks(MenuItem& item, const au::effects::EffectId& selectedEffectId)
 {
     if (item.subitems().empty()) {
-        const auto itemEffectId = au::effects::effectIdFromAction(item.id());
+        const au::effects::EffectId itemEffectId = au::effects::EffectId::fromQString(item.id());
         const auto checked = itemEffectId == selectedEffectId;
         item.setChecked(checked);
         return checked;
@@ -111,7 +118,7 @@ void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
 
 muse::uicomponents::MenuItem* RealtimeEffectListItemMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
 {
-    auto item = makeMenuItem(effects::makeEffectAction(effects::REALTIME_EFFECT_REPLACE_ACTION, effectId));
+    MenuItem* item = makeEffectItem(effectId);
     item->setCheckable(true);
     return item;
 }

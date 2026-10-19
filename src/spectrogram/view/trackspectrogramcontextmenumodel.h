@@ -39,7 +39,6 @@ signals:
     void trackTitleChanged();
 
 private:
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
     muse::uicomponents::MenuItem* makeSpectralEffectItem(SpectralEffectId id);
     int m_trackId = -1;
     muse::String m_trackTitle;
