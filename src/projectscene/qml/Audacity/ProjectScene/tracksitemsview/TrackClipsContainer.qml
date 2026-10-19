@@ -327,19 +327,16 @@ TrackItemsContainer {
                         visible: !itemData.dragged
                         enabled: !itemData.dragged && !itemData.isDragGhost
 
-                        asynchronous: false
+                        readonly property bool inView: (itemData.x + itemData.width) >= -clipsModel.cacheBufferPx && itemData.x <= clipsContainer.width + clipsModel.cacheBufferPx
 
+                        //! NOTE: Clips are not unloaded outside the viewport: zooming
+                        //! moves most clips across its edges, and recreating them on
+                        //! every zoom step made zooming lag. Clips outside it are created
+                        //! over several frames instead, so that opening a project with many
+                        //! clips doesn't freeze; clips in view are created at once, so that
+                        //! they never show up late (one still loading completes as it comes into view)
+                        asynchronous: !inView
                         sourceComponent: {
-                            if (!itemData.focused) {
-                                if ((itemData.x + itemData.width) < (0 - clipsModel.cacheBufferPx)) {
-                                    return null
-                                }
-
-                                if (itemData.x > (clipsContainer.width + clipsModel.cacheBufferPx)) {
-                                    return null
-                                }
-                            }
-
                             //! NOTE This optimization is disabled, it is probably not needed,
                             // and if it needs to be enabled, it should be modified, add handlers
 

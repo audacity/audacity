@@ -148,6 +148,7 @@ signals:
 private:
 
     void updateView();
+    bool releaseIfOffscreen();
     void scheduleRepaint();
     void prepareSceneGraphData();
     void storePreparedData();

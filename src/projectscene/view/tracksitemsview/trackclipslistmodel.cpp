@@ -195,7 +195,8 @@ void TrackClipsListModel::update()
         auto it = oldItems.find(c.key.itemId);
         TrackClipItem* item = nullptr;
 
-        if (it != oldItems.end()) {
+        const bool isNew = it == oldItems.end();
+        if (!isNew) {
             item = it->second;
             oldItems.erase(it);
         } else {
@@ -203,6 +204,10 @@ void TrackClipsListModel::update()
         }
 
         item->setClip(c);
+        // The delegate decides how to load the clip from its position when it is created
+        if (isNew) {
+            updateItemMetrics(item);
+        }
         newList.append(item);
     }
 
