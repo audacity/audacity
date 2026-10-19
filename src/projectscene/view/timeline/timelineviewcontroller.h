@@ -30,6 +30,9 @@ public:
 
     void centerViewOnPlayhead(bool onlyIfPlayheadNotVisible) override;
 
+    void scrollPageLeft() override;
+    void scrollPageRight() override;
+
 private:
     TimelineContext* m_context = nullptr;
 };

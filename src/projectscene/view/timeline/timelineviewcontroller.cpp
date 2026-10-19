@@ -58,3 +58,15 @@ void TimelineViewController::centerViewOnPlayhead(bool onlyIfPlayheadNotVisible)
 {
     m_context->centerViewOnPlayhead(onlyIfPlayheadNotVisible);
 }
+
+void TimelineViewController::scrollPageLeft()
+{
+    m_context->shiftFrameTime(m_context->frameStartTime() - m_context->frameEndTime());
+    emit m_context->userHorizontalScrolled();
+}
+
+void TimelineViewController::scrollPageRight()
+{
+    m_context->shiftFrameTime(m_context->frameEndTime() - m_context->frameStartTime());
+    emit m_context->userHorizontalScrolled();
+}

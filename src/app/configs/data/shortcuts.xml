@@ -643,6 +643,14 @@
         <key>curs-sel-end</key>
     </SC>
     <SC>
+        <key>scroll-page-left</key>
+        <seq>PgUp</seq>
+    </SC>
+    <SC>
+        <key>scroll-page-right</key>
+        <seq>PgDown</seq>
+    </SC>
+    <SC>
         <key>curs-track-start</key>
         <seq>J</seq>
     </SC>

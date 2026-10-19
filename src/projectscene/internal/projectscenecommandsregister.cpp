@@ -276,6 +276,24 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
+        PROJECTSCENE_SCROLL_PAGE_LEFT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Scroll one page left"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Scroll one page left"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_SCROLL_PAGE_RIGHT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Scroll one page right"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Scroll one page right"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
         PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Show effects panel"),

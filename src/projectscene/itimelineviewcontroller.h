@@ -18,5 +18,8 @@ public:
     virtual void fitProjectToWidth() = 0;
 
     virtual void centerViewOnPlayhead(bool onlyIfPlayheadNotVisible) = 0;
+
+    virtual void scrollPageLeft() = 0;
+    virtual void scrollPageRight() = 0;
 };
 }
