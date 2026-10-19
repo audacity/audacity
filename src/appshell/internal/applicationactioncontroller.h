@@ -99,6 +99,8 @@ public:
 
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
+    muse::async::Channel<DockName> dockToggleRequested() const override;
+
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
 
@@ -141,6 +143,7 @@ private:
     bool m_quiting = false;
 
     muse::async::Channel<muse::actions::ActionCodeList> m_actionsReceiveAvailableChanged;
+    muse::async::Channel<DockName> m_dockToggleRequested;
 };
 }
 

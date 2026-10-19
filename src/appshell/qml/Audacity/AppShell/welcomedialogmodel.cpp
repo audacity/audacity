@@ -22,7 +22,8 @@
 
 #include "welcomedialogmodel.h"
 
-#include "framework/actions/actiontypes.h"
+#include "au3cloud/cloudcommands.h"
+#include "projectscene/projectscenecommands.h"
 #include "translation.h"
 #include "log.h"
 
@@ -58,8 +59,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             {},
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
-                muse::actions::ActionQuery query("action://cloud/show-tour-page");
-                dispatcher()->dispatch(query);
+                commandDispatcher()->dispatch(au3cloud::CLOUD_SHOW_TOUR_PAGE_COMMAND);
             }
         },
 #ifndef Q_OS_LINUX
@@ -69,7 +69,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             {},
             muse::qtrc("appshell/welcome", "View free plugins"),
             [this]() {
-                dispatcher()->dispatch("get-effects");
+                commandDispatcher()->dispatch(projectscene::PROJECTSCENE_GET_EFFECTS_COMMAND);
             }
         },
 #endif

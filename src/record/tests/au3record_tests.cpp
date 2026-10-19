@@ -8,7 +8,7 @@
 
 #include "../internal/au3/au3record.h"
 
-#include "actions/tests/mocks/actionsdispatchermock.h"
+#include "rcommand/tests/mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "context/tests/mocks/playbackstatemock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
@@ -22,6 +22,8 @@
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/au3types.h"
+
+#include "playback/playbackcommands.h"
 
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -48,7 +50,13 @@ public:
         m_record = std::make_shared<Au3Record>(muse::modularity::globalCtx());
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
-        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
+        m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
+        ON_CALL(*m_commandDispatcher, dispatch(_))
+        .WillByDefault([](const muse::rcommand::Request& request) {
+            return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
+                return resolve(muse::rcommand::make_response(request, muse::make_ok()));
+            });
+        });
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
         m_audioEngine = std::make_shared<NiceMock<audio::AudioEngineMock> >();
@@ -58,7 +66,7 @@ public:
         m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
 
         m_record->globalContext.set(m_globalContext);
-        m_record->dispatcher.set(m_dispatcher);
+        m_record->commandDispatcher.set(m_commandDispatcher);
         m_record->selectionController.set(m_selectionController);
         m_record->audioEngine.set(m_audioEngine);
         m_record->recordConfiguration.set(m_recordConfiguration);
@@ -151,7 +159,7 @@ public:
     std::shared_ptr<Au3Record> m_record;
 
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
-    std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
+    std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
     std::shared_ptr<context::PlaybackStateMock> m_playbackState;
     std::shared_ptr<audio::AudioEngineMock> m_audioEngine;
@@ -183,11 +191,11 @@ TEST_F(Au3RecordTests, LeadInRecordingStartsAtPlayheadPosition)
     .WillOnce(DoAll(SaveArg<1>(&startedAt), SaveArg<5>(&streamOptions), Return(1)));
 
     //! [THEN] The playhead is repositioned to the start of the lead-in (8s - 2s pre-roll)
-    EXPECT_CALL(*m_dispatcher,
-                dispatch(testing::Matcher<const muse::actions::ActionQuery&>(
-                             Truly([](const muse::actions::ActionQuery& q) {
-        return q.param("seekTime").toDouble() == 6.0;
-    }))));
+    EXPECT_CALL(*m_commandDispatcher,
+                dispatch(Truly([](const muse::rcommand::Request& request) {
+        return request.command == playback::PLAYBACK_SEEK_COMMAND
+               && request.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble() == 6.0;
+    })));
 
     //! [WHEN] Lead-in recording is initiated
     muse::Ret ret = m_record->leadInRecording();

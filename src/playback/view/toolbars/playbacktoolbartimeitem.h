@@ -7,7 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "actions/iactionsdispatcher.h"
+#include "rcommand/icommanddispatcher.h"
 #include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
 
@@ -30,7 +30,7 @@ class PlaybackToolBarTimeItem : public muse::uicomponents::ToolBarItem
     muse::GlobalInject<IPlaybackConfiguration> configuration;
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<IPlayback> playback{ this };
 
 public:

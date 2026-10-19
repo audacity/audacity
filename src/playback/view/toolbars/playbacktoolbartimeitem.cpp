@@ -6,12 +6,11 @@
 #include <QVariantMap>
 
 #include "playback/iaudiooutput.h"
+#include "playback/playbackcommands.h"
 
 static const int INVALID_FORMAT = -1;
 
 using namespace au::playback;
-
-static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                                  QObject* parent)
@@ -76,10 +75,10 @@ void PlaybackToolBarTimeItem::setCurrentValue(double value)
     if (currentValue() == value) {
         return;
     }
-    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-    q.addParam("seekTime", muse::Val(value));
-    q.addParam("triggerPlay", muse::Val(false));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(PLAYBACK_SEEK_COMMAND, {
+        { PLAYBACK_SEEK_TIME_PARAM, muse::Val(value) },
+        { PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+    });
 }
 
 au::context::IPlaybackStatePtr PlaybackToolBarTimeItem::playbackState() const

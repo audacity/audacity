@@ -16,7 +16,9 @@
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/actiontocommand.h"
 
+#include "appshell/appshellcommands.h"
 #include "au3cloud/au3clouderrors.h"
+#include "au3cloud/cloudcommands.h"
 
 #include "audacityproject.h"
 #include "projecterrors.h"
@@ -755,7 +757,7 @@ bool ProjectActionsController::closeOpenedProject(const bool quitApp)
     if (quitApp) {
         //! NOTE: we need to call `quit` in the next event loop due to controlling the lifecycle of this method
         muse::async::Async::call(this, [this](){
-            dispatcher()->dispatch("quit", actions::ActionData::make_arg1<bool>(false));
+            commandDispatcher()->dispatch(appshell::APP_QUIT_COMMAND);
         });
     } else {
         Ret ret = openPageIfNeed(HOME_PAGE_URI);
@@ -1206,8 +1208,9 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
     }
 
     if (std::holds_alternative<au::au3cloud::Authorizing>(authorization()->authState().val)) {
-        dispatcher()->dispatch("open-url",
-                               muse::actions::ActionData::make_arg1<QString>(cloudProjectOpenUrl(projectId, snapshotId)));
+        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, {
+            { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(cloudProjectOpenUrl(projectId, snapshotId)) },
+        });
         return muse::make_ok();
     }
 

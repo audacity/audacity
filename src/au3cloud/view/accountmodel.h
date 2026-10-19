@@ -8,7 +8,7 @@
 #include "modularity/ioc.h"
 #include "au3cloud/iauthorization.h"
 #include "framework/interactive/iinteractive.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 namespace au::au3cloud {
 class AccountModel : public QObject, public muse::async::Asyncable, public muse::Contextable
@@ -18,7 +18,7 @@ class AccountModel : public QObject, public muse::async::Asyncable, public muse:
     muse::GlobalInject<au::au3cloud::IAuthorization> authorization;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
 
     Q_PROPERTY(bool isAuthorized READ isAuthorized NOTIFY isAuthorizedChanged)
     Q_PROPERTY(QUrl avatarPath READ avatarPath NOTIFY accountInfoChanged)

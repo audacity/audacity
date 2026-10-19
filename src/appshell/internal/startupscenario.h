@@ -29,7 +29,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
 #include "update/iappupdatescenario.h"
 #include "record/irecordcontroller.h"
@@ -46,7 +46,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<ISessionsManager> sessionsManager { this };
     muse::ContextInject<effects::IEffectsProviderInitializer> effectsProviderInitializer { this };
     muse::ContextInject<muse::update::IAppUpdateScenario> appUpdateScenario { this };

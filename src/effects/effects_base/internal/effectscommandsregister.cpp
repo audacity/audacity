@@ -41,7 +41,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("effects", "Toggle between vendor UI and fallback UI"),
         InputSchema({
-                { "effectId", Arg(DataType::String, u"Effect identifier") },
+                { EFFECTS_EFFECT_ID_PARAM, Arg(DataType::String, u"Effect identifier") },
             }),
         Decoration(rcommand::Checkable::Yes)
     },
@@ -52,8 +52,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Apply preset"),
         InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
-                { "presetId", Arg(DataType::String, u"Preset identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_PRESET_ID_PARAM, Arg(DataType::String, u"Preset identifier") },
             }),
         Decoration()
     },
@@ -64,8 +64,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Save preset"),
         InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
-                { "presetId", Arg(DataType::String, u"Preset identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_PRESET_ID_PARAM, Arg(DataType::String, u"Preset identifier") },
             }),
         Decoration()
     },
@@ -76,7 +76,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Save preset as"),
         InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
             }),
         Decoration()
     },
@@ -87,8 +87,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Delete preset"),
         InputSchema({
-                { "effectId", Arg(DataType::String, u"Effect identifier") },
-                { "presetId", Arg(DataType::String, u"Preset identifier") },
+                { EFFECTS_EFFECT_ID_PARAM, Arg(DataType::String, u"Effect identifier") },
+                { EFFECTS_PRESET_ID_PARAM, Arg(DataType::String, u"Preset identifier") },
             }),
         Decoration(IconCode::Code::DELETE_TANK)
     },
@@ -99,7 +99,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Import preset"),
         InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
             }),
         Decoration()
     },
@@ -110,7 +110,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Export preset"),
         InputSchema({
-                { "instanceId", Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
             }),
         Decoration()
     },

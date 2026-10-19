@@ -12,6 +12,7 @@
 
 #include "trackedit/trackeditutils.h"
 #include "importexport/export/exportutils.h"
+#include "project/projectcommands.h"
 
 #include <algorithm>
 #include <optional>
@@ -575,17 +576,17 @@ void ExportPreferencesModel::openCustomSampleRateDialog()
 
 void ExportPreferencesModel::openCustomFFmpegDialog()
 {
-    dispatcher()->dispatch("open-custom-ffmpeg-options");
+    commandDispatcher()->dispatch(project::PROJECT_OPEN_CUSTOM_FFMPEG_OPTIONS_COMMAND);
 }
 
 void ExportPreferencesModel::openMetadataDialog()
 {
-    dispatcher()->dispatch("open-metadata-dialog");
+    commandDispatcher()->dispatch(project::PROJECT_OPEN_METADATA_DIALOG_COMMAND);
 }
 
 void ExportPreferencesModel::openCustomMappingDialog()
 {
-    dispatcher()->dispatch("open-custom-mapping");
+    commandDispatcher()->dispatch(project::PROJECT_OPEN_CUSTOM_MAPPING_COMMAND);
 }
 
 void ExportPreferencesModel::setFilePickerPath(const QString& path)

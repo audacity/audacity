@@ -29,9 +29,11 @@
 #include "framework/global/types/uri.h"
 
 #include "appshell/appshelltypes.h"
+#include "au3cloud/cloudcommands.h"
+#include "project/projectcommands.h"
 
 using namespace au::appshell;
-using namespace muse::actions;
+using namespace muse;
 using namespace au::project;
 
 static const muse::Settings::Key LAST_UPDATE_CHECK_DAY_KEY("appshell", "application/lastUpdateCheckRequestDay");
@@ -114,7 +116,7 @@ void StartupScenario::setRemoveMediaFilesAfterImport(bool remove)
 void StartupScenario::setStartupUrl(const QString& url)
 {
     if (m_startupCompleted && !url.isEmpty()) {
-        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(url));
+        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(url) } });
         return;
     }
     m_startupUrl = url;
@@ -201,29 +203,29 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
     showStartupDialogsIfNeed(modeType);
 
     if (!m_startupMediaFiles.empty()) {
-        QStringList files;
+        ValList files;
         for (const auto& file : m_startupMediaFiles) {
-            files << file.toQString();
+            files.emplace_back(file.toQString());
         }
 
-        dispatcher()->dispatch("project-import-startup-media",
-                               ActionData::make_arg2<QStringList, bool>(files, m_removeMediaFilesAfterImport));
+        commandDispatcher()->dispatch(PROJECT_IMPORT_STARTUP_MEDIA_COMMAND, {
+            { PROJECT_FILES_PARAM, Val(files) },
+            { PROJECT_REMOVE_AFTER_IMPORT_PARAM, Val(m_removeMediaFilesAfterImport) },
+        });
         return;
     }
 
     if (!m_startupUrl.isEmpty()) {
-        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(m_startupUrl));
+        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(m_startupUrl) } });
         return;
     }
 
     switch (modeType) {
     case StartupModeType::StartEmpty:
+    case StartupModeType::ContinueLastSession:
         break;
     case StartupModeType::StartWithNewProject:
-        dispatcher()->dispatch("file-new");
-        break;
-    case StartupModeType::ContinueLastSession:
-        dispatcher()->dispatch("continue-last-session");
+        commandDispatcher()->dispatch(PROJECT_NEW_COMMAND);
         break;
     case StartupModeType::Recovery:
         restoreLastSession();
@@ -235,7 +237,7 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
         openProject(file);
     } break;
     case StartupModeType::FirstLaunch: {
-        dispatcher()->dispatch("file-new");
+        commandDispatcher()->dispatch(PROJECT_NEW_COMMAND);
     } break;
     }
 }
@@ -298,7 +300,10 @@ muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
 
 void StartupScenario::openProject(const ProjectFile& file)
 {
-    dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(file.url, file.displayNameOverride));
+    commandDispatcher()->dispatch(PROJECT_OPEN_COMMAND, {
+        { PROJECT_URL_PARAM, Val(file.url.toString()) },
+        { PROJECT_DISPLAY_NAME_PARAM, Val(file.displayNameOverride) },
+    });
 }
 
 void StartupScenario::restoreLastSession()
