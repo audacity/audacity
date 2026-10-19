@@ -6,6 +6,8 @@
 #include "actions/actiontypes.h"
 #include "framework/global/translation.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
+#include "effects/effects_base/effectscommands.h"
+#include "effects/effects_base/effectstypes.h"
 #include "spectrogramcommands.h"
 #include "spectrogramtypes.h"
 #include "types/translatablestring.h"
@@ -46,7 +48,8 @@ muse::uicomponents::MenuItem* TrackSpectrogramContextMenuModel::makeSpectralEffe
     if (!effect) {
         return nullptr;
     }
-    muse::uicomponents::MenuItem* const item = makeMenuItem(effect->action);
+    const effects::EffectId effectId = effects::effectIdFromAction(muse::actions::ActionQuery(effect->action));
+    muse::uicomponents::MenuItem* const item = makeMenuItem(effects::makeEffectOpenCommand(effectId));
     IF_ASSERT_FAILED(item) {
         return nullptr;
     }
@@ -59,7 +62,6 @@ void TrackSpectrogramContextMenuModel::load()
     AbstractMenuModel::load();
 
     using namespace muse;
-    using namespace muse::actions;
 
     muse::uicomponents::MenuItemList items;
     if (auto item = makeSpectralEffectItem(SpectralEffectId::DeleteSelection)) {
@@ -94,10 +96,5 @@ void TrackSpectrogramContextMenuModel::load()
     items.push_back(settingsItem);
 
     setItems(std::move(items));
-}
-
-void TrackSpectrogramContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
-{
-    AbstractMenuModel::onActionsStateChanges(codes);
 }
 }

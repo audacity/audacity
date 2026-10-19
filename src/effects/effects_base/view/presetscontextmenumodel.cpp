@@ -3,8 +3,10 @@
 */
 #include "presetscontextmenumodel.h"
 
+#include "../effectscommands.h"
+
 using namespace muse;
-using namespace muse::actions;
+using namespace muse::rcommand;
 using namespace muse::uicomponents;
 using namespace au::effects;
 
@@ -60,17 +62,10 @@ void PresetsContextMenuModel::reload()
 
     MenuItemList items;
 
-    {
-        ActionQuery q("action://effects/presets/import");
-        q.addParam("instanceId", Val(m_instanceId));
-        items << makeMenuItem(q.toString());
-    }
+    const Params instanceParams { { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) } };
 
-    {
-        ActionQuery q("action://effects/presets/export");
-        q.addParam("instanceId", Val(m_instanceId));
-        items << makeMenuItem(q.toString());
-    }
+    items << makeMenuItem(make_query(EFFECTS_PRESET_IMPORT_COMMAND, instanceParams));
+    items << makeMenuItem(make_query(EFFECTS_PRESET_EXPORT_COMMAND, instanceParams));
 
     const EffectMeta effectMeta = effectsProvider()->meta(effectId);
     const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(effectMeta.family);
@@ -81,14 +76,12 @@ void PresetsContextMenuModel::reload()
     if (hasVendorUI) {
         items << makeSeparator();
 
-        ActionQuery q("action://effects/toggle_vendor_ui");
-        q.addParam("effectId", Val(effectId.toStdString()));
-        MenuItem* item = makeMenuItem(q.toString());
+        MenuItem* item = makeMenuItem(make_query(EFFECTS_TOGGLE_VENDOR_UI_COMMAND, {
+            { EFFECTS_EFFECT_ID_PARAM, Val(effectId.toStdString()) },
+        }));
 
         if (item) {
-            ui::UiActionState state = item->state();
-            state.checked = useVendorUI();
-            item->setState(state);
+            item->setChecked(useVendorUI());
         }
 
         items << item;

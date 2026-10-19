@@ -162,7 +162,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change input channels"),
         InputSchema({
-                { "input-channels_index", Arg(DataType::Integer, u"Number of input channels") },
+                { PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM, Arg(DataType::Integer, u"Number of input channels") },
             }),
         Decoration(rcommand::Checkable::Yes)
     },
