@@ -735,6 +735,10 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
+    // A previous preview may still be active or not torn down yet (e.g. the dialog was applied or closed while previewing).
+    // Clean it up now, otherwise its state and playback-status receiver would be left dangling.
+    stopPreview();
+
     auto player = playback()->player();
     if (player->isBusy()) {
         LOGW() << "can't play, maybe audio is busy";
@@ -908,6 +912,9 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         const auto loopWasActive = player->isLoopRegionActive();
         player->setLoopRegionActive(false);
         player->setPlaybackRegion({ effect.mT0, newCtx.t1 });
+        // The playhead may be left anywhere by a previous (stopped) preview. Move it to the start now, otherwise
+        // the position jump after the stream has started may make the playback controller stop playback right away.
+        player->seek(effect.mT0, false);
 
         m_effectPreviewState.emplace(effectId, originCtx, newCtx.tracks, loopWasActive);
 
