@@ -368,8 +368,14 @@ Rectangle {
             readonly property real devicePixelRatio: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
             readonly property real playCursorPixelX: snapToDevicePixel(displayedPlayCursorX)
 
+            readonly property real windowOriginX: {
+                root.x
+                root.width
+                return timeline.mapToItem(null, 0, 0).x
+            }
+
             function snapToDevicePixel(x) {
-                return Math.round(x * devicePixelRatio) / devicePixelRatio
+                return Math.round((x + windowOriginX) * devicePixelRatio) / devicePixelRatio - windowOriginX
             }
 
             function updateCursorPosition(x, y) {
@@ -423,7 +429,7 @@ Rectangle {
                 property bool dragActive: false
                 property double dragPositionX: timeline.displayedPlayCursorX
 
-                x: timeline.playCursorPixelX - timeline.snapToDevicePixel(width / 2)
+                x: timeline.playCursorPixelX - lineX
 
                 MouseArea {
                     anchors.fill: parent
