@@ -51,6 +51,7 @@ public:
     MOCK_METHOD(std::optional<AudioCallbackInfo>, consumeNextCallbackInfo, (), (override));
 
     MOCK_METHOD(muse::async::Notification, recordingUpdateRequested, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, recordingNewBlocks, (), (const, override));
     MOCK_METHOD(muse::async::Notification, recordingCommitRequested, (), (const, override));
     MOCK_METHOD(muse::async::Notification, recordingFinished, (), (const, override));
     MOCK_METHOD(muse::async::Notification, streamStopped, (), (const, override));
