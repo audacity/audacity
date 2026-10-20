@@ -27,7 +27,7 @@ public:
     explicit GetEffectsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
-    Q_INVOKABLE void openEffectUrl(const QString& effectCode) const;
+    Q_INVOKABLE void openEffectUrl(const QString& effectCode, const QString& effectId) const;
     Q_INVOKABLE void openBecomeAPartnerUrl() const;
 
     QVariantList effectsGroups() const;
@@ -50,6 +50,7 @@ private:
     void setHasError(bool error);
 
     struct EffectData {
+        QString id;
         QString iconUrl;
         QString code;
         QString title;
