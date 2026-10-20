@@ -433,6 +433,15 @@ void WaveTrackUtilities::ExpandClipTillNextOne(
     }
 }
 
+void WaveTrackUtilities::RemoveEmptyClips(WaveTrack& track)
+{
+    for (const auto& clip : track.SortedIntervalArray()) {
+        if (clip->IsEmpty()) {
+            track.RemoveInterval(clip);
+        }
+    }
+}
+
 void WaveTrackUtilities::RemoveOverlaps(WaveTrack& track)
 {
     // Visit clips in play-start order; the earlier clip of any overlapping pair
@@ -451,6 +460,14 @@ void WaveTrackUtilities::RemoveOverlaps(WaveTrack& track)
             prev->TrimRight(prev->GetPlayEndTime() - cur->GetPlayStartTime());
         }
     }
+}
+
+void WaveTrackUtilities::Sanitize(WaveTrack& track)
+{
+    RemoveEmptyClips(track);
+    RemoveOverlaps(track);
+    // Second round in case RemoveOverlaps created an empty clip
+    RemoveEmptyClips(track);
 }
 
 struct WaveTrackUtilities::EmptyCopyAccess {

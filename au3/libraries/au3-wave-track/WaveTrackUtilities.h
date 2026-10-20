@@ -179,6 +179,9 @@ WAVE_TRACK_API void InspectBlocks(const TrackList& tracks, BlockInspector inspec
 WAVE_TRACK_API void
 ExpandClipTillNextOne(const WaveTrack& track, WaveTrack::Interval& interval);
 
+//! Remove clips for which `WaveClip::IsEmpty()` is true
+WAVE_TRACK_API void RemoveEmptyClips(WaveTrack& track);
+
 //! Resolve overlapping clip play regions so that no two clips overlap.
 /*!
  Clips are visited in play-start order; whenever a clip's play region overlaps
@@ -189,6 +192,9 @@ ExpandClipTillNextOne(const WaveTrack& track, WaveTrack::Interval& interval);
  @post `track.NoPlayRegionsOverlap()`
  */
 WAVE_TRACK_API void RemoveOverlaps(WaveTrack& track);
+
+//! Remove unsupported clip states that a project file can contain: empty clips, then overlaps
+WAVE_TRACK_API void Sanitize(WaveTrack& track);
 
 //! Ref: the copy keeps using the realtime effect states of the original,
 //! for a copy that replaces the original or is temporary.
