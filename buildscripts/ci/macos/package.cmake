@@ -65,7 +65,7 @@ else()
   message(STATUS "[mac signing] SIGN_CERTIFICATE_ENCRYPT_SECRET not set; skipping keychain setup")
 endif()
 
-if (BUILD_MODE STREQUAL "nightly_build")
+if (BUILD_MODE STREQUAL "nightly")
     set(LONG_NAME "AudacityNightly")
 else()
     set(LONG_NAME "Audacity")

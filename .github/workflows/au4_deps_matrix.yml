@@ -118,7 +118,7 @@ jobs:
 
       - name: Configure workflow
         shell: bash
-        run: cmake -DEVENT=workflow_dispatch -DBUILD_MODE=devel_build -DARTIFACT_INFO="deps_${{ matrix.os }}${{ matrix.arch && format('_{0}', matrix.arch) || '' }}_${{ matrix.mode }}" -P ${CI_DIR}/common/ci_configure.cmake
+        run: cmake -DEVENT=workflow_dispatch -DBUILD_MODE=devel -DARTIFACT_INFO="deps_${{ matrix.os }}${{ matrix.arch && format('_{0}', matrix.arch) || '' }}_${{ matrix.mode }}" -P ${CI_DIR}/common/ci_configure.cmake
 
       - name: Build
         shell: bash

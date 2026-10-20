@@ -30,10 +30,10 @@ endif()
 file (STRINGS "${BUILD_DIR}/PREFIX.txt" INSTALL_DIR)
 
 set(PACKTYPE "appimage")
-# if [ "$BUILD_MODE" == "devel_build" ]; then PACKTYPE=appimage; fi
-# if [ "$BUILD_MODE" == "nightly_build" ]; then PACKTYPE=appimage; fi
-# if [ "$BUILD_MODE" == "testing_build" ]; then PACKTYPE=appimage; fi
-# if [ "$BUILD_MODE" == "stable_build" ]; then PACKTYPE=appimage; fi
+# if [ "$BUILD_MODE" == "devel" ]; then PACKTYPE=appimage; fi
+# if [ "$BUILD_MODE" == "nightly" ]; then PACKTYPE=appimage; fi
+# if [ "$BUILD_MODE" == "testing" ]; then PACKTYPE=appimage; fi
+# if [ "$BUILD_MODE" == "stable" ]; then PACKTYPE=appimage; fi
 
 
 # echo "BUILD_MODE: $BUILD_MODE"
@@ -43,7 +43,7 @@ set(PACKTYPE "appimage")
 # echo "PACKARCH: $PACKARCH"
 # echo "INSTALL_DIR: $INSTALL_DIR"
 
-if (BUILD_MODE STREQUAL "nightly_build")
+if (BUILD_MODE STREQUAL "nightly")
     #   BUILD_NUMBER=$(cat $ARTIFACTS_DIR/env/build_number.env)
     #   BUILD_BRANCH=$(cat $ARTIFACTS_DIR/env/build_branch.env)
     #   BUILD_REVISION=$(cat $ARTIFACTS_DIR/env/build_revision.env)
@@ -64,8 +64,8 @@ if(PACKTYPE STREQUAL "appimage")
     # To enable automatic updates for AppImages, set UPDATE_INFORMATION according to
     # https://github.com/AppImage/AppImageSpec/blob/master/draft.md#update-information
     # case "${BUILD_MODE}" in
-    # "stable_build")  export UPDATE_INFORMATION="gh-releases-zsync|audacity|Audacity|latest|Audacity-*${PACKARCH}.AppImage.zsync";;
-    # "nightly_build") export UPDATE_INFORMATION="zsync|https://ftp.osuosl.org/pub/audacity-nightlies/linux/${MAJOR_VERSION}x/nightly/AudacityNightly-latest-${BUILD_BRANCH}-${PACKARCH}.AppImage.zsync";;
+    # "stable")  export UPDATE_INFORMATION="gh-releases-zsync|audacity|Audacity|latest|Audacity-*${PACKARCH}.AppImage.zsync";;
+    # "nightly") export UPDATE_INFORMATION="zsync|https://ftp.osuosl.org/pub/audacity-nightlies/linux/${MAJOR_VERSION}x/nightly/AudacityNightly-latest-${BUILD_BRANCH}-${PACKARCH}.AppImage.zsync";;
     # *) unset UPDATE_INFORMATION;; # disable updates for other build modes
     # esac
 
