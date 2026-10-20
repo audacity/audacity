@@ -470,7 +470,7 @@ const std::vector<CommandInfo> commandInfos = {
         InputSchema({
                 { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Integer, u"Color index") },
             }),
-        Decoration(Checkable::Yes)
+        Decoration(IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED, Checkable::Yes)
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND,
@@ -481,7 +481,7 @@ const std::vector<CommandInfo> commandInfos = {
         InputSchema({
                 { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Integer, u"Color index") },
             }),
-        Decoration(Checkable::Yes)
+        Decoration(IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED, Checkable::Yes)
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND,
@@ -512,7 +512,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Toggle spectral view"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::SPECTROGRAM)
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_WAVEFORM_COMMAND,
