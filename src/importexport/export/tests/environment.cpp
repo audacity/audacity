@@ -4,6 +4,8 @@
 
 #include "testing/environment.h"
 
+#include "framework/global/settings.h"
+
 #include "au3wrap/au3wrapmodule.h"
 
 #include "project/tests/mocks/projectconfigurationmock.h"
@@ -24,6 +26,11 @@ static muse::testing::SuiteEnvironment exporter_se
     .WillByDefault(Return(""));
 
     muse::modularity::globalIoc()->registerExport<au::project::IProjectConfiguration>("utests", projectConfigurator);
+
+    //! NOTE: Settings persist between runs, e.g. the importer order, which
+    //! is saved on first run. Start from defaults to be deterministic.
+    constexpr auto keepDefaultSettings = true;
+    muse::settings()->reset(keepDefaultSettings);
 
     //! NOTE: Au3WrapModule::onAllInited initializes the importer and exporter
     //! registries from what is registered by then
