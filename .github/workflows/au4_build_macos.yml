@@ -246,7 +246,7 @@ jobs:
       run: |
         USER=${{ secrets.APPLE_USERNAME }}; if [ -z "$USER" ]; then USER=""; fi
         PW=${{ secrets.APPLE_PASSWORD }}; if [ -z "$PW" ]; then PW=""; fi
-        bash ./buildscripts/ci/macos/notarize.sh -u $USER -p $PW
+        bash ./muse/buildscripts/ci/macos/notarize.sh -u $USER -p $PW
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
