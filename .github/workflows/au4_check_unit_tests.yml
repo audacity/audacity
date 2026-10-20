@@ -31,7 +31,7 @@ jobs:
     - name: "Configure workflow"
       run: |
         cmake -DEVENT=${{ github.event_name }} \
-              -DBUILD_MODE="devel_build" \
+              -DBUILD_MODE="devel" \
               -DARTIFACT_INFO="build.artifacts/" \
               -P ${CI_DIR}/common/ci_configure.cmake
 

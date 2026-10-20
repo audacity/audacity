@@ -11,9 +11,9 @@ on:
   workflow_dispatch:
     inputs:
       build_mode:
-        description: 'Build mode: devel_build, nightly_build, testing_build, stable_build'
+        description: 'Build mode: devel, nightly, testing, stable'
         required: true
-        default: 'devel_build'
+        default: 'devel'
       sentry_project:
         description: 'Upload symbols and dumps to Sentry (choose a project): au4(default for stable build), au4-sandbox'
         required: false
@@ -22,10 +22,10 @@ on:
   workflow_call:
     inputs:
       build_mode:
-        description: 'Build mode (devel_build, nightly_build, testing_build, stable_build)'
+        description: 'Build mode (devel, nightly, testing, stable)'
         type: string
         required: false
-        default: 'devel_build'
+        default: 'devel'
       app_repo:
         description: 'owner/repo to source Audacity from (default: this repo)'
         type: string
@@ -117,13 +117,13 @@ jobs:
         PLUGIN_KEY=""
 
         case "${SENTRY_PROJECT:-$BUILD_MODE}" in
-          au4|stable_build)
+          au4|stable)
             SENTRY_PROJECT="au4"
             PROJECT_ID=4
             APP_KEY="$SENTRY_SERVER_AU4_KEY"
             PLUGIN_KEY="$SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY"
             ;;
-          au4-sandbox|nightly_build)
+          au4-sandbox|nightly)
             SENTRY_PROJECT="au4-sandbox"
             PROJECT_ID=5
             APP_KEY="$SENTRY_SERVER_AU4_SANDBOX_KEY"
