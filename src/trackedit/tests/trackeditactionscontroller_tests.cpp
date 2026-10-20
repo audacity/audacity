@@ -124,6 +124,13 @@ public:
         ON_CALL(*m_trackeditProject, track(trackId))
         .WillByDefault(Return(track));
 
+        Clip clip;
+        clip.key = ClipKey { trackId, 1 };
+        muse::async::NotifyList<Clip> clips;
+        clips.push_back(clip);
+        ON_CALL(*m_trackeditProject, clipList(trackId))
+        .WillByDefault(Return(clips));
+
         m_tracks.push_back(track);
         ON_CALL(*m_trackeditProject, trackList())
         .WillByDefault(Return(m_tracks));
@@ -634,5 +641,23 @@ TEST_F(TrackeditActionsControllerTests, MixAndRenderWithoutAudioTracksDoesNothin
 
     //! [WHEN] Mix and render is triggered
     EXPECT_FALSE(mixAndRender(false));
+}
+
+TEST_F(TrackeditActionsControllerTests, MixAndRenderSkipsEmptyTracks)
+{
+    //! [GIVEN] Two mono tracks are selected, the second one without any clips
+    addTrack(1, TrackType::Mono);
+    addTrack(2, TrackType::Mono);
+    ON_CALL(*m_trackeditProject, clipList(TrackId(2)))
+    .WillByDefault(Return(muse::async::NotifyList<Clip> {}));
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { 1, 2 }));
+
+    //! [EXPECT] Only the track with audio is mixed
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(TrackIdList { 1 }, false))
+    .WillOnce(Return(muse::RetVal<TrackId>::make_ok(3)));
+
+    //! [WHEN] Mix and render is triggered
+    EXPECT_TRUE(mixAndRender(false));
 }
 }

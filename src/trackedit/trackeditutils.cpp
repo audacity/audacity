@@ -70,7 +70,7 @@ au::trackedit::TrackIdList au::trackedit::utils::audibleAudioTracks(const ITrack
     TrackIdList result;
     for (const TrackId& trackId : trackIds) {
         const std::optional<Track> track = project.track(trackId);
-        if (track && isAudio(*track) && isAudible(*track)) {
+        if (track && isAudio(*track) && isAudible(*track) && !project.clipList(trackId).empty()) {
             result.push_back(trackId);
         }
     }
