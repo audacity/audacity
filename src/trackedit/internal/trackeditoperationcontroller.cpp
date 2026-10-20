@@ -887,9 +887,13 @@ bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, 
 
 muse::RetVal<TrackId> TrackeditOperationController::mixAndRender(const TrackIdList& tracksIds, bool toNewTrack)
 {
-    const muse::RetVal<TrackId> mix = tracksInteraction()->mixAndRender(tracksIds, toNewTrack);
+    const muse::RetVal<TrackId> mix = tracksInteraction()->mixAndRender(tracksIds);
     if (!mix.ret) {
         return mix;
+    }
+
+    if (!toNewTrack) {
+        tracksInteraction()->deleteTracks(tracksIds);
     }
 
     const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
