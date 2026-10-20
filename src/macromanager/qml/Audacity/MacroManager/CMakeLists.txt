@@ -33,6 +33,8 @@ qt_add_qml_module(macromanager_qml
         internal/AvailableCommandsList.qml
         internal/MacroCommandsTable.qml
         internal/MacroCommandItem.qml
+        internal/RunOnFilesTable.qml
+        internal/RunOnFilesItem.qml
     IMPORTS
         TARGET muse_ui_qml
         TARGET muse_uicomponents_qml
