@@ -3,10 +3,9 @@
 */
 #include "runonfilesmodel.h"
 
-#include "framework/global/io/path.h"
+#include <QCoreApplication>
 
 using namespace au::macromanager;
-using namespace muse;
 
 RunOnFilesModel::RunOnFilesModel(QObject* parent)
     : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -19,23 +18,23 @@ QVariant RunOnFilesModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    const Item& item = m_items.at(index.row());
-
     switch (role) {
-    case FileNameRole: return item.fileName;
+    case FilePathRole: return m_filePaths.at(index.row());
+    case StatusRole: return QVariant::fromValue(status(index.row()));
     default: return QVariant();
     }
 }
 
 int RunOnFilesModel::rowCount(const QModelIndex&) const
 {
-    return m_items.size();
+    return m_filePaths.size();
 }
 
 QHash<int, QByteArray> RunOnFilesModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles {
-        { FileNameRole, "fileName" }
+        { FilePathRole, "filePath" },
+        { StatusRole, "status" }
     };
 
     return roles;
@@ -50,19 +49,67 @@ void RunOnFilesModel::load(const QVariantList& files)
 {
     beginResetModel();
 
-    m_items.clear();
+    m_filePaths.clear();
     for (const QVariant& file : files) {
-        m_items.append({ io::filename(io::path_t(file.toString())).toQString() });
+        m_filePaths.append(file.toString());
     }
 
     endResetModel();
 
     runner()->isRunningChanged().onNotify(this, [this]() {
         emit isRunningChanged();
+        updateStatuses();
+    });
+
+    runner()->currentFileChanged().onNotify(this, [this]() {
+        updateStatuses();
     });
 }
 
 void RunOnFilesModel::abort()
 {
     runner()->abort();
+}
+
+void RunOnFilesModel::closeWindow()
+{
+    if (runner()->isRunning() || multiWindowsProvider()->windowCount() <= 1) {
+        return;
+    }
+
+    if (const project::IAudacityProjectPtr project = globalContext()->currentProject()) {
+        project->close();
+        globalContext()->setCurrentProject(nullptr);
+    }
+
+    const std::shared_ptr<muse::mi::IMultiWindowsProvider> provider = multiWindowsProvider();
+    const muse::modularity::ContextPtr ctx = iocContext();
+    QMetaObject::invokeMethod(qApp, [provider, ctx]() {
+        provider->quitWindow(ctx);
+    }, Qt::QueuedConnection);
+}
+
+RunOnFilesModel::Status RunOnFilesModel::status(int row) const
+{
+    const size_t current = runner()->currentFileIndex();
+    const size_t index = static_cast<size_t>(row);
+
+    if (index < current) {
+        return Status::Complete;
+    }
+
+    if (index == current && runner()->isRunning()) {
+        return Status::Processing;
+    }
+
+    return Status::Queued;
+}
+
+void RunOnFilesModel::updateStatuses()
+{
+    if (m_filePaths.isEmpty()) {
+        return;
+    }
+
+    emit dataChanged(index(0), index(m_filePaths.size() - 1), { StatusRole });
 }

@@ -10,6 +10,7 @@ target_sources(macromanager PRIVATE
     macromanagertypes.h
     imacrosrepository.h
     imacrorunner.h
+    irunonfilesrequests.h
 
     internal/macrorunner.cpp
     internal/macrorunner.h
@@ -17,6 +18,10 @@ target_sources(macromanager PRIVATE
     internal/macroserialization.h
     internal/macrosrepository.cpp
     internal/macrosrepository.h
+    internal/runonfilesrequests.cpp
+    internal/runonfilesrequests.h
+    internal/runonfilesstarter.cpp
+    internal/runonfilesstarter.h
 )
 
 add_subdirectory(qml/Audacity/MacroManager)

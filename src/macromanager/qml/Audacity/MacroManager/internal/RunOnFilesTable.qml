@@ -12,12 +12,6 @@ import Muse.UiComponents
 ColumnLayout {
     id: root
 
-    enum Status {
-        Queued,
-        Processing,
-        Complete
-    }
-
     property alias model: listView.model
 
     spacing: 0
