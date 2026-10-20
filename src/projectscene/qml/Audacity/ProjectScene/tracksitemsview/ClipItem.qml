@@ -266,6 +266,8 @@ Rectangle {
     }
 
     function openContextMenu() {
+        navCtrl.requestActive()
+
         if (root.multiClipsSelected || root.isGrouped) {
             prv.ensureMultiMenuLoaded()
         } else {
@@ -278,6 +280,9 @@ Rectangle {
         if (!root.enableCursorInteraction) {
             return
         }
+
+        // Activate the control before it is set as parent-control of the context menu, so that the active control is set this clip.
+        navCtrl.requestActive()
 
         if (root.multiClipsSelected) {
             prv.ensureMultiMenuLoaded()
@@ -861,6 +866,8 @@ Rectangle {
                     //! NOTE: Override doClicked function from FlatButton to run clip selection logic before the base
                     //! menu button emits clicked
                     function doClicked(mouse) {
+                        navCtrl.requestActive()
+
                         if (root.multiClipsSelected || root.isGrouped) {
                             prv.ensureMultiMenuLoaded()
                         } else {
