@@ -24,6 +24,19 @@ Item {
 
     property bool debugRectsVisible: false
 
+    // Item that the trim handles should not steal input from
+    property Item exclusionItem: null
+
+    function isExcluded(mouseArea, point) {
+        const item = root.exclusionItem
+        if (!item || !item.visible) {
+            return false
+        }
+
+        const mapped = mouseArea.mapToItem(item, point.x, point.y)
+        return item.contains(mapped)
+    }
+
     property NavigationPanel clipNavigationPanel: null
     property bool leftTrimActive: false
     property bool rightTrimActive: false
@@ -314,6 +327,12 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.BlankCursor
+
+            containmentMask: QtObject {
+                function contains(point: point): bool {
+                    return point.x >= 0 && point.y >= 0 && point.x < rightTrimMa.width && point.y < rightTrimMa.height && !root.isExcluded(rightTrimMa, point)
+                }
+            }
 
             function updateCustomCursor() {
                 var src = root.altPressed ? ":/images/customCursorShapes/ClipStretchRight.png" : ":/images/customCursorShapes/ClipTrimRight.png"
