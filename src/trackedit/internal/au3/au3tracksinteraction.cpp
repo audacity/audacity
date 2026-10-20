@@ -1310,7 +1310,7 @@ bool Au3TracksInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     return true;
 }
 
-muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::mixAndRender(const TrackIdList& tracksIds, bool toNewTrack)
+muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::mixAndRender(const TrackIdList& tracksIds)
 {
     Au3TrackList& tracks = Au3TrackList::Get(projectRef());
 
@@ -1339,13 +1339,6 @@ muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::mixAndRender(const Tr
 
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
-    std::vector<std::pair<Track, muse::async::NotifyList<Clip> > > removedTracks;
-    if (!toNewTrack) {
-        for (const Au3WaveTrack* input : inputs) {
-            removedTracks.emplace_back(DomConverter::track(input), prj->clipList(input->GetId()));
-        }
-    }
-
     tracks.Append(mix, true);
     prj->notifyAboutTrackAdded(DomConverter::track(mix.get()));
     for (const auto& clip : prj->clipList(mix->GetId())) {
@@ -1354,19 +1347,6 @@ muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::mixAndRender(const Tr
 
     //! NOTE Right below the last input, so the mix ends up where the inputs were when they are removed
     moveTracksTo({ mix->GetId() }, trackPosition(lastInput) + 1);
-
-    for (const auto& [track, clips] : removedTracks) {
-        Au3Track* au3Track = DomAccessor::findTrack(projectRef(), Au3TrackId(track.id));
-        IF_ASSERT_FAILED(au3Track) {
-            continue;
-        }
-        tracks.Remove(*au3Track);
-
-        for (const auto& clip : clips) {
-            prj->notifyAboutClipRemoved(clip);
-        }
-        prj->notifyAboutTrackRemoved(track);
-    }
 
     return muse::RetVal<TrackId>::make_ok(mix->GetId());
 }
