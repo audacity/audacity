@@ -31,6 +31,13 @@ StyledListView {
     navigation.direction: NavigationPanel.Vertical
     navigation.accessible.name: qsTrc("macromanager", "Available commands")
 
+    navigation.onNavigationEvent: function (event) {
+        if (event.type === NavigationEvent.Escape && root.currentIndex !== -1) {
+            root.currentIndex = -1
+            event.accepted = true
+        }
+    }
+
     delegate: ListItemBlank {
         id: item
 
@@ -47,6 +54,12 @@ StyledListView {
         navigation.row: item.index
         navigation.accessible.name: item.title
 
+        navigation.onActiveChanged: {
+            if (item.navigation.active && root.currentIndex !== -1) {
+                root.currentIndex = item.index
+            }
+        }
+
         mouseArea.drag.target: dragTarget
 
         Drag.dragType: Drag.Automatic
@@ -62,7 +75,12 @@ StyledListView {
             return data
         }
 
-        onClicked: {
+        onClicked: function (mouse) {
+            if (!mouse && root.currentIndex === item.index) {
+                root.addRequested(item.code, item.title)
+                return
+            }
+
             root.currentIndex = item.index
         }
 
@@ -106,12 +124,6 @@ StyledListView {
 
                 icon: IconCode.PLUS
                 transparent: true
-
-                navigation.panel: root.navigation
-                navigation.row: item.index
-                navigation.column: 1
-                navigation.name: "AddCommand"
-                navigation.accessible.name: qsTrc("macromanager", "Add command")
 
                 onClicked: {
                     root.addRequested(item.code, item.title)
