@@ -13,10 +13,11 @@ Rectangle {
     property string title: ""
     property string subtitle: ""
     property string effectCode: ""
+    property string effectId: ""
 
     property alias navigation: getItButton.navigation
 
-    signal getEffectClicked(string code)
+    signal getEffectClicked(string code, string effectId)
 
     QtObject {
         id: prv
@@ -136,7 +137,7 @@ Rectangle {
                 navigation.name: root.title
                 navigation.accessible.name: root.title + ". " + root.subtitle + ". " + text
 
-                onClicked: root.getEffectClicked(root.effectCode)
+                onClicked: root.getEffectClicked(root.effectCode, root.effectId)
             }
         }
     }
