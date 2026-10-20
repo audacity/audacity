@@ -51,6 +51,16 @@ async::Notification MacroRunner::isRunningChanged() const
     return m_isRunningChanged;
 }
 
+size_t MacroRunner::currentFileIndex() const
+{
+    return m_fileIndex;
+}
+
+async::Notification MacroRunner::currentFileChanged() const
+{
+    return m_currentFileChanged;
+}
+
 async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& files)
 {
     return async::make_promise<Ret>([this, macro, files](async::Promise<Ret>::Resolve resolve, async::Promise<Ret>::Reject) {
@@ -60,10 +70,6 @@ async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& fi
 
         if (!globalContext()->currentProject()) {
             return resolve(make_ret(Ret::Code::NotSupported, "no project is open"));
-        }
-
-        if (!files.empty() && !globalContext()->currentTrackeditProject()->trackIdList().empty()) {
-            return resolve(make_ret(Ret::Code::NotSupported, trc("macromanager", "Save and close the current project first")));
         }
 
         m_macro = macro;
@@ -88,7 +94,7 @@ async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& fi
 
 void MacroRunner::runNextFile()
 {
-    if (m_abortRequested) {
+    if (m_abortRequested || !globalContext()->currentProject()) {
         finish(make_ret(Ret::Code::Cancel));
         return;
     }
@@ -97,6 +103,8 @@ void MacroRunner::runNextFile()
         finish(make_ok());
         return;
     }
+
+    m_currentFileChanged.notify();
 
     const Ret importRet = globalContext()->currentProject()->import(m_files.at(m_fileIndex));
     if (!importRet) {
@@ -175,7 +183,9 @@ void MacroRunner::resetProject(const OnDone& onDone)
 void MacroRunner::finish(const Ret& ret)
 {
     if (ret) {
-        showCompleted();
+        if (m_files.empty()) {
+            showCompleted();
+        }
     } else {
         undoToStartState();
         showError(ret);
@@ -221,9 +231,7 @@ void MacroRunner::undoToStartState()
 void MacroRunner::showCompleted()
 {
     const QString name = QString::fromStdString(m_macro.name);
-    const QString result = m_files.empty()
-                           ? qtrc("macromanager", "%n step(s) applied to the project", nullptr, int(m_macro.steps.size()))
-                           : qtrc("macromanager", "%n file(s) processed", nullptr, int(m_files.size()));
+    const QString result = qtrc("macromanager", "%n step(s) applied to the project", nullptr, int(m_macro.steps.size()));
     const std::string message = qtrc("macromanager", "\n“%1” ran successfully\n%2\n\n").arg(name, result).toStdString();
 
     toastService()->showWithTimeout(trc("macromanager", "Macro completed"), message, COMPLETED_TOAST_TIMEOUT,

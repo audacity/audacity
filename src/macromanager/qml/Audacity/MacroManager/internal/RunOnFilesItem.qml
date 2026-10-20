@@ -9,6 +9,8 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.MacroManager
+
 Rectangle {
     id: root
 
@@ -20,11 +22,11 @@ Rectangle {
 
     readonly property string statusText: {
         switch (root.status) {
-        case RunOnFilesTable.Queued:
+        case RunOnFilesModel.Queued:
             return qsTrc("macromanager", "Queued")
-        case RunOnFilesTable.Processing:
+        case RunOnFilesModel.Processing:
             return qsTrc("macromanager", "Processing")
-        case RunOnFilesTable.Complete:
+        case RunOnFilesModel.Complete:
             return qsTrc("macromanager", "Complete")
         }
 

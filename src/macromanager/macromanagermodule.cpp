@@ -8,6 +8,8 @@
 
 #include "internal/macrorunner.h"
 #include "internal/macrosrepository.h"
+#include "internal/runonfilesrequests.h"
+#include "internal/runonfilesstarter.h"
 
 using namespace au::macromanager;
 using namespace muse;
@@ -23,8 +25,10 @@ std::string MacroManagerModule::moduleName() const
 void MacroManagerModule::registerExports()
 {
     m_repository = std::make_shared<MacrosRepository>();
+    m_runOnFilesRequests = std::make_shared<RunOnFilesRequests>();
 
     globalIoc()->registerExport<IMacrosRepository>(mname, m_repository);
+    globalIoc()->registerExport<IRunOnFilesRequests>(mname, m_runOnFilesRequests);
 }
 
 void MacroManagerModule::resolveImports()
@@ -58,4 +62,14 @@ void MacroManagerContext::registerExports()
     m_runner = std::make_shared<MacroRunner>(iocContext());
 
     ioc()->registerExport<IMacroRunner>(mname, m_runner);
+}
+
+void MacroManagerContext::onAllInited(const IApplication::RunMode& mode)
+{
+    if (mode == IApplication::RunMode::AudioPluginRegistration) {
+        return;
+    }
+
+    m_runOnFilesStarter = std::make_shared<RunOnFilesStarter>(iocContext());
+    m_runOnFilesStarter->init();
 }
