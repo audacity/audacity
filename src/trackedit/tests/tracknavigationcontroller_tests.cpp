@@ -687,7 +687,7 @@ TEST_F(TrackNavigationControllerTests, EnterOnGroupedItemSelectsItsWholeGroup)
     ON_CALL(*m_trackeditInteraction, itemsInGroup(int64_t(7))).WillByDefault(Return(group));
 
     EXPECT_CALL(*m_selectionController, setSelectedItems(group, true)).Times(1);
-    invokeAction("track-view-replace-selection");
+    invokeCommand(TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND);
 }
 
 TEST_F(TrackNavigationControllerTests, EnterOnUngroupedItemSelectsItAlone)
@@ -698,7 +698,7 @@ TEST_F(TrackNavigationControllerTests, EnterOnUngroupedItemSelectsItAlone)
     ON_CALL(*m_trackeditInteraction, itemGroupId(_)).WillByDefault(Return(int64_t(-1)));
 
     EXPECT_CALL(*m_selectionController, setSelectedItems(ItemKeys { { { 1, 100 } }, {} }, true)).Times(1);
-    invokeAction("track-view-replace-selection");
+    invokeCommand(TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND);
 }
 
 TEST_F(TrackNavigationControllerTests, EnterOnSelectedGroupDeselectsIt)
@@ -713,7 +713,7 @@ TEST_F(TrackNavigationControllerTests, EnterOnSelectedGroupDeselectsIt)
     ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(group.labels));
 
     EXPECT_CALL(*m_selectionController, setSelectedItems(ItemKeys {}, true)).Times(1);
-    invokeAction("track-view-replace-selection");
+    invokeCommand(TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND);
 }
 
 TEST_F(TrackNavigationControllerTests, ToggleOnGroupedItemAddsItsWholeGroup)
@@ -728,6 +728,6 @@ TEST_F(TrackNavigationControllerTests, ToggleOnGroupedItemAddsItsWholeGroup)
     EXPECT_CALL(*m_selectionController, addSelectedClip(TrackItemKey { 1, 100 })).Times(1);
     EXPECT_CALL(*m_selectionController, addSelectedClip(TrackItemKey { 1, 200 })).Times(1);
     EXPECT_CALL(*m_selectionController, addSelectedLabel(TrackItemKey { 2, 10 })).Times(1);
-    invokeAction("track-view-toggle-selection");
+    invokeCommand(TRACK_NAVIGATION_TOGGLE_SELECTION_COMMAND);
 }
 }
