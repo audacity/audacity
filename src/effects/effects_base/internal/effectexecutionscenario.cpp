@@ -774,7 +774,8 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         // (Au3 used to read `previewLen` from the `/AudioIO/EffectsPreviewLen` setting.
         // There is no plan at the moment to reintroduce it in Au4.)
         const double maxPreviewLen = effectsConfiguration()->previewMaxDuration();
-        const double previewLen = std::min(originCtx.t1 - effect.mT0, maxPreviewLen);
+        // A generator creates audio out of nothing, so the selection length (typically 0) mustn't limit the preview.
+        const double previewLen = isGenerator ? maxPreviewLen : std::min(originCtx.t1 - effect.mT0, maxPreviewLen);
         double previewDuration = 0.0;
         if (isNyquist && isGenerator) {
             previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
