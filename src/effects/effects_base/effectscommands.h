@@ -14,6 +14,7 @@
 namespace au::effects {
 inline static const muse::rcommand::Command EFFECTS_REPEAT_LAST_EFFECT_COMMAND("command://effects/repeat-last-effect");
 inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_COMMAND("command://effects/plugin-manager");
+inline static const muse::rcommand::Command EFFECTS_GET_EFFECTS_COMMAND("command://effects/get-effects");
 inline static const muse::rcommand::Command EFFECTS_TOGGLE_VENDOR_UI_COMMAND("command://effects/toggle-vendor-ui");
 
 inline static const muse::rcommand::Command EFFECTS_PRESET_APPLY_COMMAND("command://effects/presets/apply");

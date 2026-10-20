@@ -303,15 +303,6 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::CONFIGURE)
     },
     CommandInfo{
-        PROJECTSCENE_GET_EFFECTS_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Get effects"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Open Get effects dialog"),
-        InputSchema(),
-        Decoration(IconCode::Code::PLUGIN)
-    },
-    CommandInfo{
         PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Split tool"),

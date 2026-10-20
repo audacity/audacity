@@ -85,7 +85,6 @@ private:
 
     muse::Ret toggleEffectsPanel();
     muse::Ret requestAudioSetupContextMenu();
-    muse::Ret openGetEffectsDialog();
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
