@@ -36,7 +36,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "au3-string-utils/CodeConversions.h"
 #include "DBConnection.h"
 #include "au3-files/FileNames.h"
-#include "au3-track/PendingTracks.h"
 #include "au3-project/Project.h"
 #include "ProjectFileIOExtension.h"
 #include "au3-project-history/ProjectHistory.h"
@@ -501,7 +500,7 @@ wxString ProjectFileIO::GenerateDoc()
 
     XMLStringWriter doc;
     WriteXMLHeader(doc);
-    WriteXML(doc, false, trackList.empty() ? nullptr : &trackList);
+    WriteXML(doc, trackList.empty() ? nullptr : &trackList);
     return doc;
 }
 
@@ -996,7 +995,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
     // Create the project doc
     ProjectSerializer doc;
     WriteXMLHeader(doc);
-    WriteXML(doc, false, tracks.empty() ? nullptr : tracks[0]);
+    WriteXML(doc, tracks.empty() ? nullptr : tracks[0]);
 
     auto db = DB();
     Connection destConn = nullptr;
@@ -1844,7 +1843,6 @@ void ProjectFileIO::WriteXMLHeader(XMLWriter& xmlFile) const
 }
 
 void ProjectFileIO::WriteXML(XMLWriter& xmlFile,
-                             bool recording /* = false */,
                              const TrackList* tracks /* = nullptr */)
 // may throw
 {
@@ -1864,23 +1862,14 @@ void ProjectFileIO::WriteXML(XMLWriter& xmlFile,
 
     ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
-    auto& pendingTracks = PendingTracks::Get(proj);
     tracklist.Any().Visit([&](const Track& t) {
-        auto useTrack = &t;
-        if (recording) {
-            // When append-recording, there is a temporary "shadow" track accumulating
-            // changes and displayed on the screen but it is not yet part of the
-            // regular track list.  That is the one that we want to back up.
-            // SubstitutePendingChangedTrack() fetches the shadow, if the track has
-            // one, else it gives the same track back.
-            useTrack = &pendingTracks.SubstitutePendingChangedTrack(t);
-        } else if (useTrack->GetId() == TrackId {}) {
+        if (t.GetId() == TrackId {}) {
             // This is a track added during a non-appending recording that is
             // not yet in the undo history.  The UndoManager skips backing it up
             // when pushing.  Don't auto-save it.
             return;
         }
-        useTrack->WriteXML(xmlFile);
+        t.WriteXML(xmlFile);
     });
 
     SavedMasterEffectList::Get(proj).List().WriteXML(xmlFile);
@@ -1890,11 +1879,11 @@ void ProjectFileIO::WriteXML(XMLWriter& xmlFile,
     //TIMER_STOP( xml_writer_timer );
 }
 
-bool ProjectFileIO::AutoSave(bool recording)
+bool ProjectFileIO::AutoSave()
 {
     ProjectSerializer autosave;
     WriteXMLHeader(autosave);
-    WriteXML(autosave, recording);
+    WriteXML(autosave);
 
     if (WriteDoc("autosave", autosave)) {
         mModified = true;
@@ -2240,7 +2229,7 @@ bool ProjectFileIO::UpdateSaved(const TrackList* tracks)
 {
     ProjectSerializer doc;
     WriteXMLHeader(doc);
-    WriteXML(doc, false, tracks);
+    WriteXML(doc, tracks);
 
     if (!WriteDoc("project", doc)) {
         return false;
