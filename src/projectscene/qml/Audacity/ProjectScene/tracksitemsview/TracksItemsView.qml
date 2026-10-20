@@ -367,6 +367,7 @@ Rectangle {
 
             readonly property real devicePixelRatio: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
             readonly property real playCursorPixelX: snapToDevicePixel(displayedPlayCursorX)
+            readonly property real devicePixel: Math.max(1, Math.round(devicePixelRatio)) / devicePixelRatio
 
             readonly property real windowOriginX: {
                 root.x
@@ -380,7 +381,7 @@ Rectangle {
 
             function updateCursorPosition(x, y) {
                 const snappedTime = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
-                lineCursor.x = timeline.context.timeToPosition(snappedTime)
+                lineCursor.x = timeline.snapToDevicePixel(timeline.context.timeToPosition(snappedTime))
                 timeline.context.updateMousePositionTime(x)
                 tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)))
             }
@@ -402,7 +403,7 @@ Rectangle {
 
                 y: parent.top
                 height: timeline.height
-                width: 1
+                width: timeline.devicePixel
 
                 color: ui.theme.fontPrimaryColor
             }
@@ -1287,7 +1288,7 @@ Rectangle {
             anchors.top: tracksItemsViewArea.top
             anchors.bottom: parent.bottom
 
-            x: timeline.context.lastPlaybackSeekPosition
+            x: timeline.snapToDevicePixel(timeline.context.lastPlaybackSeekPosition)
             // The seek line marks "where playback will resume" — meaningless
             // while recording (the playhead is being driven by record position),
             // so hide it to avoid showing a stale marker at the pre-record cursor.
@@ -1309,8 +1310,8 @@ Rectangle {
             anchors.top: content.top
             anchors.bottom: content.bottom
 
-            width: 1
-            x: playRegionController.guidelineVisible ? playRegionController.guidelinePosition : (root.guidelineVisible ? root.guidelinePos : -1)
+            width: timeline.devicePixel
+            x: timeline.snapToDevicePixel(playRegionController.guidelineVisible ? playRegionController.guidelinePosition : (root.guidelineVisible ? root.guidelinePos : -1))
 
             color: tracksViewState.snapEnabled ? ui.theme.extra["guideline_snap_enabled_color"] : ui.theme.extra["guideline_snap_disabled_color"]
 
@@ -1320,10 +1321,10 @@ Rectangle {
         Rectangle {
             id: splitGuideline
 
-            x: splitToolController.guidelinePosition
+            x: timeline.snapToDevicePixel(splitToolController.guidelinePosition)
             y: splitToolController.singleTrack ? hoveredTrackVerticalPosition : 0
 
-            width: 1
+            width: timeline.devicePixel
             height: splitToolController.singleTrack ? hoveredTrackHeight : content.height
 
             color: ui.theme.extra["guideline_split_color"]
@@ -1358,6 +1359,7 @@ Rectangle {
         context: timeline.context
         time: playRegionModel.start
         contentX: content.x
+        windowOriginX: timeline.windowOriginX
         visible: playRegionModel.active
     }
 
@@ -1369,6 +1371,7 @@ Rectangle {
         context: timeline.context
         time: playRegionModel.end
         contentX: content.x
+        windowOriginX: timeline.windowOriginX
         visible: playRegionModel.active
     }
 
