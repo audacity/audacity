@@ -621,12 +621,12 @@ bool Au3LabelsInteraction::stretchLabelsRight(const LabelKeyList& labelKeys, sec
 int64_t Au3LabelsInteraction::labelGroupId(const LabelKey& labelKey) const
 {
     Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
-    IF_ASSERT_FAILED(labelTrack) {
+    if (!labelTrack) {
         return -1;
     }
 
     const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
-    IF_ASSERT_FAILED(label) {
+    if (!label) {
         return -1;
     }
 

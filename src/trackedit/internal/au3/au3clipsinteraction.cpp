@@ -838,13 +838,13 @@ bool Au3ClipsInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipKe
 int64_t Au3ClipsInteraction::clipGroupId(const ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return -1.0;
+    if (!waveTrack) {
+        return -1;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return -1.0;
+    if (!clip) {
+        return -1;
     }
 
     return clip->GetGroupId();

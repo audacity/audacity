@@ -1697,4 +1697,23 @@ TEST_F(Au3ClipsInteractionTests, RemoveOverlapsClearsAlreadyOverlappingTrack)
 
     removeTrack(trackId);
 }
+
+TEST_F(Au3ClipsInteractionTests, ClipGroupIdOfAMissingClipIsNone)
+{
+    //! [GIVEN] A track with a clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3Project& project = projectRef();
+    const Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(trackId));
+    const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(project, track->GetId(), 0);
+    ASSERT_NE(clip, nullptr);
+
+    //! [THEN] Stale keys, e.g. a clip's key from before it moved to another track, are in no group
+    EXPECT_EQ(m_clipsInteraction->clipGroupId(ClipKey { track->GetId(), clip->GetId() + 1000 }), -1);
+    EXPECT_EQ(m_clipsInteraction->clipGroupId(ClipKey { trackId + 1000, clip->GetId() }), -1);
+
+    // Cleanup
+    removeTrack(trackId);
+}
 }

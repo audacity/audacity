@@ -102,6 +102,19 @@ TEST_F(Au3LabelsInteractionsTests, SetLabelGroupIdNotifiesAndListsTheLabelInItsG
     EXPECT_EQ(m_labelsInteraction->labelsInGroup(7), LabelKeyList { first });
 }
 
+TEST_F(Au3LabelsInteractionsTests, LabelGroupIdOfAMissingLabelIsNone)
+{
+    //! [GIVEN] A label track with one label
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("label")) };
+
+    //! [THEN] Stale keys, e.g. a label's key from before it moved to another track, are in no group
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(LabelKey { key.trackId, key.itemId + 1000 }), -1);
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(LabelKey { key.trackId + 1000, key.itemId }), -1);
+}
+
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneExists)
 {
     //! [GIVEN] There is a project without any label tracks
