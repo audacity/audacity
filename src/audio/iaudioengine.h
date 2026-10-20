@@ -68,6 +68,7 @@ public:
     virtual std::optional<AudioCallbackInfo> consumeNextCallbackInfo() = 0;
 
     virtual muse::async::Notification recordingUpdateRequested() const = 0;
+    virtual muse::async::Notification recordingNewBlocks() const = 0;
     virtual muse::async::Notification recordingCommitRequested() const = 0;
     virtual muse::async::Notification recordingFinished() const = 0;
     virtual muse::async::Notification streamStopped() const = 0;
