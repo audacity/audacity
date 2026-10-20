@@ -256,7 +256,7 @@ CommandState TrackeditCommandsState::commandState(const Command& command) const
     }
 
     if (muse::contains(mixAndRenderCommands, command)) {
-        return CommandState(hasTracksToMixAndRender());
+        return CommandState(hasAudibleAudioTracks());
     }
 
     return CommandState(true);
@@ -405,14 +405,15 @@ bool TrackeditCommandsState::canSilenceAudio() const
     return false;
 }
 
-bool TrackeditCommandsState::hasTracksToMixAndRender() const
+bool TrackeditCommandsState::hasAudibleAudioTracks() const
 {
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return false;
     }
 
-    return !utils::tracksToMixAndRender(*prj, selectionController()->selectedTracks()).empty();
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    return !utils::audibleAudioTracks(*prj, selectedTracks.empty() ? prj->trackIdList() : selectedTracks).empty();
 }
 
 void TrackeditCommandsState::listenToTrackList()

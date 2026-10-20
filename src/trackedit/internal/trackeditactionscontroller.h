@@ -77,7 +77,7 @@ private:
     bool isFocusedItemClip() const;
     ClipKeyList clipsForInteraction() const;
     bool canSilenceAudio() const;
-    bool hasTracksToMixAndRender() const;
+    bool hasAudibleAudioTracks() const;
     void notifyMixAndRenderEnabledChanged();
     void listenToTrackList();
 
