@@ -13,6 +13,7 @@
 #include "mocks/projecthistorymock.h"
 #include "mocks/trackeditprojectmock.h"
 #include "actions/tests/mocks/actionsdispatchermock.h"
+#include "framework/rcommand/tests/mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 
@@ -41,6 +42,8 @@ public:
         m_controller->tracksViewRequestsService.set(m_requests);
         m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
         m_controller->dispatcher.set(m_dispatcher);
+        m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
+        m_controller->commandDispatcher.set(m_commandDispatcher);
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_project = std::make_shared<NiceMock<project::AudacityProjectMock> >();
@@ -106,6 +109,7 @@ public:
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
     std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
+    std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
     std::shared_ptr<TracksViewRequestsService> m_requests;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<project::AudacityProjectMock> m_project;
