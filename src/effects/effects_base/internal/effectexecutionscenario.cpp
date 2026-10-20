@@ -1067,7 +1067,8 @@ void EffectExecutionScenario::stopPreview()
 
     player->playbackStatusChanged().disconnect(this);
 
-    if (player->playbackStatus() == playback::PlaybackStatus::Running) {
+    // Also stop a paused preview, otherwise its stream stays alive and the player remains busy.
+    if (player->playbackStatus() != playback::PlaybackStatus::Stopped) {
         player->stop();
     }
 
