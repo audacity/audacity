@@ -38,7 +38,6 @@ public:
 
     bool isRunning() const override;
     muse::async::Notification isRunningChanged() const override;
-    muse::async::Channel<MacroFileProgress> fileProgress() const override;
 
 private:
     using OnDone = std::function<void (const muse::Ret&)>;
@@ -53,8 +52,6 @@ private:
 
     void dispatch(const muse::rcommand::Command& command, const muse::rcommand::Params& params, const OnDone& onDone);
     muse::rcommand::Params stepParams(const MacroStep& step) const;
-    void sendFileProgress(size_t completedOperations);
-    size_t totalOperations() const;
     void undoToStartState();
     void showCompleted();
     void showError(const muse::Ret& ret);
@@ -68,6 +65,5 @@ private:
     muse::async::Promise<muse::Ret>::Resolve m_resolve;
 
     muse::async::Notification m_isRunningChanged;
-    muse::async::Channel<MacroFileProgress> m_fileProgress;
 };
 }
