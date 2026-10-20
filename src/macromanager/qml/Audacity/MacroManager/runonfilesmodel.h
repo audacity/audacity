@@ -10,6 +10,8 @@
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/multiwindows/imultiwindowsprovider.h"
+#include "context/iglobalcontext.h"
 #include "macromanager/imacrorunner.h"
 
 namespace au::macromanager {
@@ -20,10 +22,20 @@ class RunOnFilesModel : public QAbstractListModel, public muse::Contextable, pub
 
     Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged FINAL)
 
+    muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiWindowsProvider;
+
     muse::ContextInject<IMacroRunner> runner = { this };
+    muse::ContextInject<context::IGlobalContext> globalContext = { this };
 
 public:
     explicit RunOnFilesModel(QObject* parent = nullptr);
+
+    enum class Status {
+        Queued,
+        Processing,
+        Complete
+    };
+    Q_ENUM(Status)
 
     QVariant data(const QModelIndex& index, int role) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -33,19 +45,20 @@ public:
 
     Q_INVOKABLE void load(const QVariantList& files);
     Q_INVOKABLE void abort();
+    Q_INVOKABLE void closeWindow();
 
 signals:
     void isRunningChanged();
 
 private:
     enum Roles {
-        FileNameRole = Qt::UserRole + 1
+        FilePathRole = Qt::UserRole + 1,
+        StatusRole
     };
 
-    struct Item {
-        QString fileName;
-    };
+    Status status(int row) const;
+    void updateStatuses();
 
-    QList<Item> m_items;
+    QStringList m_filePaths;
 };
 }
