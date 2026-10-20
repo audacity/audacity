@@ -2335,7 +2335,8 @@ muse::Ret TrackeditActionsController::mixAndRender(bool toNewTrack)
         return make_ret(Ret::Code::NotSupported);
     }
 
-    const TrackIdList tracks = utils::tracksToMixAndRender(*project, selectionController()->selectedTracks());
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    const TrackIdList tracks = utils::audibleAudioTracks(*project, selectedTracks.empty() ? project->trackIdList() : selectedTracks);
     if (tracks.empty()) {
         return make_ret(Ret::Code::NotSupported);
     }
@@ -2379,20 +2380,21 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
     } else if (actionCode == RENAME_ITEM_CODE) {
         return clipsForInteraction().size() + labelsForInteraction().size() == 1;
     } else if (actionCode == MIX_AND_RENDER || actionCode == MIX_AND_RENDER_TO_NEW_TRACK) {
-        return hasTracksToMixAndRender();
+        return hasAudibleAudioTracks();
     }
 
     return true;
 }
 
-bool TrackeditActionsController::hasTracksToMixAndRender() const
+bool TrackeditActionsController::hasAudibleAudioTracks() const
 {
     const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
     if (!project) {
         return false;
     }
 
-    return !utils::tracksToMixAndRender(*project, selectionController()->selectedTracks()).empty();
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    return !utils::audibleAudioTracks(*project, selectedTracks.empty() ? project->trackIdList() : selectedTracks).empty();
 }
 
 void TrackeditActionsController::notifyMixAndRenderEnabledChanged()

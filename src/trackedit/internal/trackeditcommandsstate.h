@@ -50,7 +50,7 @@ private:
     bool itemsShareOneGroup(const TrackItemKeyList& items) const;
     bool canJoin() const;
     bool canSilenceAudio() const;
-    bool hasTracksToMixAndRender() const;
+    bool hasAudibleAudioTracks() const;
     void listenToTrackList();
 
     muse::rcommand::IModuleCommandsRegisterPtr m_moduleRegister;

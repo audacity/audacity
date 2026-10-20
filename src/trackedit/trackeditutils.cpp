@@ -53,7 +53,7 @@ std::optional<au::trackedit::TrackItemKey> au::trackedit::utils::firstItemOnTrac
     return std::nullopt;
 }
 
-au::trackedit::TrackIdList au::trackedit::utils::tracksToMixAndRender(const ITrackeditProject& project, const TrackIdList& selectedTracks)
+au::trackedit::TrackIdList au::trackedit::utils::audibleAudioTracks(const ITrackeditProject& project, const TrackIdList& trackIds)
 {
     const auto isAudio = [](const Track& track) {
         return track.type == TrackType::Mono || track.type == TrackType::Stereo;
@@ -67,10 +67,8 @@ au::trackedit::TrackIdList au::trackedit::utils::tracksToMixAndRender(const ITra
         return anySolo ? track.solo : !track.mute;
     };
 
-    const TrackIdList candidates = selectedTracks.empty() ? project.trackIdList() : selectedTracks;
-
     TrackIdList result;
-    for (const TrackId& trackId : candidates) {
+    for (const TrackId& trackId : trackIds) {
         const std::optional<Track> track = project.track(trackId);
         if (track && isAudio(*track) && isAudible(*track)) {
             result.push_back(trackId);
