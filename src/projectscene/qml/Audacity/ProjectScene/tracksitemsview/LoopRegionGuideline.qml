@@ -12,12 +12,16 @@ Rectangle {
     required property TimelineContext context
     required property real time
     required property real contentX
+    property real windowOriginX: 0
+
+    readonly property real devicePixelRatio: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
 
     function updatePosition() {
-        x = context.timeToPosition(time) + contentX
+        const position = context.timeToPosition(time) + windowOriginX
+        x = Math.round(position * devicePixelRatio) / devicePixelRatio - windowOriginX + contentX
     }
 
-    width: 1
+    width: Math.max(1, Math.round(devicePixelRatio)) / devicePixelRatio
     color: ui.theme.extra["white_color"]
     opacity: 0.8
 
@@ -33,6 +37,8 @@ Rectangle {
 
     onTimeChanged: updatePosition()
     onContentXChanged: updatePosition()
+    onWindowOriginXChanged: updatePosition()
+    onDevicePixelRatioChanged: updatePosition()
 
     Component.onCompleted: updatePosition()
 }
