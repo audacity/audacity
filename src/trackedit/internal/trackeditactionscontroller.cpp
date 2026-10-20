@@ -228,8 +228,6 @@ static const ActionCode TRACK_SPLIT_STEREO_TO_CENTER("track-split-stereo-to-cent
 static const ActionCode TRACK_CHANGE_RATE_CUSTOM("track-change-rate-custom");
 static const ActionCode TRACK_MAKE_STEREO("track-make-stereo");
 static const ActionCode TRACK_RESAMPLE("track-resample");
-static const ActionCode MIX_AND_RENDER("mix-and-render");
-static const ActionCode MIX_AND_RENDER_TO_NEW_TRACK("mix-and-render-to-new-track");
 
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
@@ -335,8 +333,6 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_CHANGE_RATE_CUSTOM,
     TRACK_MAKE_STEREO,
     TRACK_RESAMPLE,
-    MIX_AND_RENDER,
-    MIX_AND_RENDER_TO_NEW_TRACK,
     GROUP_ITEMS_CODE,
     UNGROUP_ITEMS_CODE,
 };
@@ -442,8 +438,9 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, [this]() { return setCustomTrackRate(); });
     cd->onRequest(this, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, [this]() { return makeStereoTrack(); });
     cd->onRequest(this, TRACKEDIT_TRACK_RESAMPLE_COMMAND, [this]() { return resampleTracks(); });
-    cd->onRequest(this, TRACKEDIT_MIX_AND_RENDER_COMMAND, [this]() { return mixAndRender(false /*toNewTrack*/); });
-    cd->onRequest(this, TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND, [this]() { return mixAndRender(true /*toNewTrack*/); });
+    cd->onRequest(this, TRACKEDIT_MIX_AND_RENDER_COMMAND, [this](const Params& params) {
+        return mixAndRender(params.at(TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(false)).toBool());
+    });
 
     cd->onRequest(this, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, [this]() { return trimAudioOutsideSelection(); });
     cd->onRequest(this, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, [this]() { return doGlobalSilence(); });
@@ -547,8 +544,6 @@ void TrackeditActionsController::init()
         { TRACK_CHANGE_RATE_CUSTOM, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, {} },
         { TRACK_MAKE_STEREO, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, {} },
         { TRACK_RESAMPLE, TRACKEDIT_TRACK_RESAMPLE_COMMAND, {} },
-        { MIX_AND_RENDER, TRACKEDIT_MIX_AND_RENDER_COMMAND, {} },
-        { MIX_AND_RENDER_TO_NEW_TRACK, TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND, {} },
         { TRIM_AUDIO_OUTSIDE_SELECTION, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, {} },
         { SILENCE_AUDIO_SELECTION, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, {} },
         { GROUP_ITEMS_CODE, TRACKEDIT_GROUP_ITEMS_COMMAND, {} },
@@ -590,7 +585,6 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-        notifyMixAndRenderEnabledChanged();
 
         //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
         //! in its own history receiver, which may run after this one. Evaluate the group actions once it has.
@@ -598,10 +592,6 @@ void TrackeditActionsController::init()
             notifyActionEnabledChanged(GROUP_ITEMS_CODE);
             notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
         });
-    });
-
-    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this](long) {
-        notifyMixAndRenderEnabledChanged();
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -630,14 +620,7 @@ void TrackeditActionsController::init()
 
     selectionController()->selectedTracksChanged().onReceive(this, [this](const trackedit::TrackIdList&) {
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-        notifyMixAndRenderEnabledChanged();
     });
-
-    globalContext()->currentProjectChanged().onNotify(this, [this]() {
-        listenToTrackList();
-        notifyMixAndRenderEnabledChanged();
-    });
-    listenToTrackList();
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t) {
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
@@ -2379,43 +2362,9 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return canSilenceAudio();
     } else if (actionCode == RENAME_ITEM_CODE) {
         return clipsForInteraction().size() + labelsForInteraction().size() == 1;
-    } else if (actionCode == MIX_AND_RENDER || actionCode == MIX_AND_RENDER_TO_NEW_TRACK) {
-        return hasAudibleAudioTracks();
     }
 
     return true;
-}
-
-bool TrackeditActionsController::hasAudibleAudioTracks() const
-{
-    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
-    if (!project) {
-        return false;
-    }
-
-    const TrackIdList selectedTracks = selectionController()->selectedTracks();
-    return !utils::audibleAudioTracks(*project, selectedTracks.empty() ? project->trackIdList() : selectedTracks).empty();
-}
-
-void TrackeditActionsController::notifyMixAndRenderEnabledChanged()
-{
-    notifyActionEnabledChanged(MIX_AND_RENDER);
-    notifyActionEnabledChanged(MIX_AND_RENDER_TO_NEW_TRACK);
-}
-
-void TrackeditActionsController::listenToTrackList()
-{
-    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
-    if (!project) {
-        return;
-    }
-
-    const auto onTrackListChanged = [this](const Track&) {
-        notifyMixAndRenderEnabledChanged();
-    };
-    project->trackAdded().onReceive(this, onTrackListChanged, muse::async::Asyncable::Mode::SetReplace);
-    project->trackRemoved().onReceive(this, onTrackListChanged, muse::async::Asyncable::Mode::SetReplace);
-    project->trackChanged().onReceive(this, onTrackListChanged, muse::async::Asyncable::Mode::SetReplace);
 }
 
 bool TrackeditActionsController::canSilenceAudio() const

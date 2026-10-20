@@ -27,6 +27,7 @@
 
 #include "shared/types/workspacetitles.h"
 #include "record/recordcommands.h"
+#include "trackedit/trackeditcommands.h"
 
 #include "muse_framework_config.h"
 
@@ -731,8 +732,12 @@ MenuItemList AppMenuModel::makeSkipToItems()
 MenuItemList AppMenuModel::makeMixItems()
 {
     MenuItemList items {
-        makeMenuItem("mix-and-render"),
-        makeMenuItem("mix-and-render-to-new-track"),
+        makeMenuItem(muse::rcommand::make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
+            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(false) }
+        })),
+        makeMenuItem(muse::rcommand::make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
+            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(true) }
+        }), TranslatableString("appshell-menu-mix", "Mix and render to new track")),
     };
 
     return items;

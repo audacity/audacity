@@ -43,7 +43,6 @@ const std::vector<Command> commandsDisabledDuringRecording {
     TRACKEDIT_TRACK_MAKE_STEREO_COMMAND,
     TRACKEDIT_TRACK_RESAMPLE_COMMAND,
     TRACKEDIT_MIX_AND_RENDER_COMMAND,
-    TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND,
     TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND,
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
     TRACKEDIT_GROUP_ITEMS_COMMAND,
@@ -105,7 +104,6 @@ const std::vector<Command> dataSelectionCommands {
 
 const std::vector<Command> mixAndRenderCommands {
     TRACKEDIT_MIX_AND_RENDER_COMMAND,
-    TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_COMMAND,
 };
 
 const std::vector<Command> focusCommands {

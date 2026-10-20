@@ -18,7 +18,6 @@
 
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "context/iglobalcontext.h"
-#include "playback/itrackplaybackcontrol.h"
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
 #include "spectrogram/ispectraleffectsregister.h"
@@ -53,7 +52,6 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController { this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
-    muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl { this };
 
 public:
     TrackeditActionsController(const muse::modularity::ContextPtr& ctx)
@@ -77,9 +75,6 @@ private:
     bool isFocusedItemClip() const;
     ClipKeyList clipsForInteraction() const;
     bool canSilenceAudio() const;
-    bool hasAudibleAudioTracks() const;
-    void notifyMixAndRenderEnabledChanged();
-    void listenToTrackList();
 
     struct ContiguousClipsSpan {
         TrackId trackId = INVALID_TRACK;

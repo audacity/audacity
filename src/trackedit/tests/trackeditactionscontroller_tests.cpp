@@ -114,11 +114,6 @@ public:
         .WillByDefault(Return(tracks));
     }
 
-    bool canReceiveAction(const muse::actions::ActionCode& actionCode) const
-    {
-        return m_controller->canReceiveAction(actionCode);
-    }
-
     void addTrack(TrackId trackId, TrackType type, bool mute = false, bool solo = false)
     {
         Track track;
@@ -605,12 +600,10 @@ TEST_F(TrackeditActionsControllerTests, MixAndRenderIgnoresSelectedTracksSilence
     ON_CALL(*m_selectionController, selectedTracks())
     .WillByDefault(Return(TrackIdList { 1 }));
 
-    //! [EXPECT] Nothing is mixed, and both actions are disabled
+    //! [EXPECT] Nothing is mixed
     EXPECT_CALL(*m_trackeditInteraction, mixAndRender(::testing::_, ::testing::_)).Times(0);
-    EXPECT_FALSE(canReceiveAction("mix-and-render"));
-    EXPECT_FALSE(canReceiveAction("mix-and-render-to-new-track"));
 
-    //! [WHEN] Mix and render is triggered anyway
+    //! [WHEN] Mix and render is triggered
     EXPECT_FALSE(mixAndRender(false));
 }
 
@@ -628,7 +621,7 @@ TEST_F(TrackeditActionsControllerTests, MixAndRenderWithoutSelectedWaveTracksDoe
     EXPECT_FALSE(mixAndRender(false));
 }
 
-TEST_F(TrackeditActionsControllerTests, MixAndRenderIsDisabledWithoutAudioTracks)
+TEST_F(TrackeditActionsControllerTests, MixAndRenderWithoutAudioTracksDoesNothing)
 {
     //! [GIVEN] Nothing is selected in a project that has only a label track
     addTrack(1, TrackType::Label);
@@ -636,21 +629,10 @@ TEST_F(TrackeditActionsControllerTests, MixAndRenderIsDisabledWithoutAudioTracks
     ON_CALL(*m_selectionController, selectedTracks())
     .WillByDefault(Return(TrackIdList {}));
 
-    //! [THEN] Neither mix action can run
-    EXPECT_FALSE(canReceiveAction("mix-and-render"));
-    EXPECT_FALSE(canReceiveAction("mix-and-render-to-new-track"));
-}
+    //! [EXPECT] Nothing is mixed
+    EXPECT_CALL(*m_trackeditInteraction, mixAndRender(::testing::_, ::testing::_)).Times(0);
 
-TEST_F(TrackeditActionsControllerTests, MixAndRenderIsEnabledWithNothingSelectedAndAnAudioTrack)
-{
-    //! [GIVEN] Nothing is selected in a project that has a mono track
-    addTrack(1, TrackType::Mono);
-    openProject({ 1 });
-    ON_CALL(*m_selectionController, selectedTracks())
-    .WillByDefault(Return(TrackIdList {}));
-
-    //! [THEN] Both mix actions can run, on every audio track
-    EXPECT_TRUE(canReceiveAction("mix-and-render"));
-    EXPECT_TRUE(canReceiveAction("mix-and-render-to-new-track"));
+    //! [WHEN] Mix and render is triggered
+    EXPECT_FALSE(mixAndRender(false));
 }
 }
