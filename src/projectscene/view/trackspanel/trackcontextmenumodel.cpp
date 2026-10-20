@@ -421,9 +421,11 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
     MenuItemList items;
     const auto& colorInfos = projectSceneConfiguration()->clipColorInfos();
     for (const auto& info : colorInfos) {
-        items << makeMenuItem(make_query(trackedit::TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, {
+        MenuItem* item = makeMenuItem(make_query(trackedit::TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, {
             { trackedit::TRACKEDIT_COLOR_INDEX_PARAM, Val(info.index) },
         }), info.title);
+        item->setIconColor(QString::fromStdString(projectSceneConfiguration()->clipColor(info.index).toString()));
+        items << item;
     }
 
     return items;
