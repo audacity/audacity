@@ -39,13 +39,11 @@ signals:
 
 private:
     enum Roles {
-        FileNameRole = Qt::UserRole + 1,
-        ProgressRole
+        FileNameRole = Qt::UserRole + 1
     };
 
     struct Item {
         QString fileName;
-        double progress = 0.0;
     };
 
     QList<Item> m_items;

@@ -23,7 +23,6 @@ QVariant RunOnFilesModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case FileNameRole: return item.fileName;
-    case ProgressRole: return item.progress;
     default: return QVariant();
     }
 }
@@ -36,8 +35,7 @@ int RunOnFilesModel::rowCount(const QModelIndex&) const
 QHash<int, QByteArray> RunOnFilesModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles {
-        { FileNameRole, "fileName" },
-        { ProgressRole, "progress" }
+        { FileNameRole, "fileName" }
     };
 
     return roles;
@@ -54,24 +52,13 @@ void RunOnFilesModel::load(const QVariantList& files)
 
     m_items.clear();
     for (const QVariant& file : files) {
-        m_items.append({ io::filename(io::path_t(file.toString())).toQString(), 0.0 });
+        m_items.append({ io::filename(io::path_t(file.toString())).toQString() });
     }
 
     endResetModel();
 
     runner()->isRunningChanged().onNotify(this, [this]() {
         emit isRunningChanged();
-    });
-
-    runner()->fileProgress().onReceive(this, [this](const MacroFileProgress& progress) {
-        if (progress.fileIndex >= static_cast<size_t>(m_items.size()) || progress.totalOperations == 0) {
-            return;
-        }
-
-        m_items[progress.fileIndex].progress = static_cast<double>(progress.completedOperations) / progress.totalOperations;
-
-        const QModelIndex idx = index(static_cast<int>(progress.fileIndex));
-        emit dataChanged(idx, idx, { ProgressRole });
     });
 }
 

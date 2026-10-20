@@ -237,7 +237,7 @@ StyledDialogView {
             FlatButton {
                 Layout.preferredHeight: prv.buttonHeight
 
-                text: qsTrc("macromanager", "Run on files")
+                text: qsTrc("macromanager", "Run on files…")
                 enabled: !macroCommandsModel.isEmpty && !macroCommandsModel.isRunning
 
                 navigation.panel: parent.navigationPanel

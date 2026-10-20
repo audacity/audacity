@@ -18,7 +18,6 @@ using namespace muse::rcommand;
 namespace {
 const std::string EXPORT_COMMAND_PATH_PREFIX("importexport/export/");
 const std::string EXPORT_NAME_PARAM("name");
-constexpr size_t IMPORT_OPERATIONS = 1;
 constexpr std::chrono::seconds COMPLETED_TOAST_TIMEOUT(5);
 
 bool isExportCommand(const Command& command)
@@ -50,11 +49,6 @@ bool MacroRunner::isRunning() const
 async::Notification MacroRunner::isRunningChanged() const
 {
     return m_isRunningChanged;
-}
-
-async::Channel<MacroFileProgress> MacroRunner::fileProgress() const
-{
-    return m_fileProgress;
 }
 
 async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& files)
@@ -104,15 +98,11 @@ void MacroRunner::runNextFile()
         return;
     }
 
-    sendFileProgress(0);
-
     const Ret importRet = globalContext()->currentProject()->import(m_files.at(m_fileIndex));
     if (!importRet) {
         finish(importRet);
         return;
     }
-
-    sendFileProgress(IMPORT_OPERATIONS);
 
     dispatch(trackedit::TRACKEDIT_SELECT_ALL_COMMAND, {}, [this](const Ret& selectRet) {
         if (!selectRet) {
@@ -163,7 +153,6 @@ void MacroRunner::runStep(size_t index, const OnDone& onDone)
             return;
         }
 
-        sendFileProgress(totalOperations() - m_macro.steps.size() + index + 1);
         runStep(index + 1, onDone);
     });
 }
@@ -214,21 +203,6 @@ Params MacroRunner::stepParams(const MacroStep& step) const
     }
 
     return params;
-}
-
-void MacroRunner::sendFileProgress(size_t completedOperations)
-{
-    MacroFileProgress progress;
-    progress.fileIndex = m_fileIndex;
-    progress.completedOperations = completedOperations;
-    progress.totalOperations = totalOperations();
-
-    m_fileProgress.send(progress);
-}
-
-size_t MacroRunner::totalOperations() const
-{
-    return (m_files.empty() ? 0 : IMPORT_OPERATIONS) + m_macro.steps.size();
 }
 
 void MacroRunner::undoToStartState()
