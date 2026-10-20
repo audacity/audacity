@@ -13,10 +13,12 @@
 
 #include "containers.h"
 
+#include "au3-exceptions/AudacityException.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-label-track/LabelTrack.h"
+#include "au3wrap/au3types.h"
 
 namespace {
 static std::vector<muse::io::path_t> extractLocalFilePaths(const QMimeData* md)
@@ -46,11 +48,30 @@ std::vector<ITrackDataPtr> Au3TrackeditClipboard::trackDataCopy() const
 {
     std::vector<ITrackDataPtr> sourceData = clipboardData()->trackData();
 
+    // Make sure that data copied from another project stores its samples within the project it is pasted into
+    au::au3::Au3Project* project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    const WaveTrackFactory& trackFactory = WaveTrackFactory::Get(*project);
+
     std::vector<Au3TrackDataPtr> deepCopiedTracksData;
     deepCopiedTracksData.reserve(sourceData.size());
-    for (const auto& data : sourceData) {
-        const auto& au3Data = std::static_pointer_cast<Au3TrackData>(data);
-        deepCopiedTracksData.push_back(std::make_shared<Au3TrackData>(au3Data->track()->Duplicate()));
+    const bool copied = GuardedCall<bool>([&] {
+        for (const auto& data : sourceData) {
+            const auto& track = std::static_pointer_cast<Au3TrackData>(data)->track();
+            const auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(track);
+            if (!waveTrack) {
+                deepCopiedTracksData.push_back(std::make_shared<Au3TrackData>(track->Duplicate()));
+                continue;
+            }
+            const auto copy = trackFactory.Create(waveTrack->NChannels(), *waveTrack);
+            for (const auto& clip : waveTrack->Intervals()) {
+                copy->InsertInterval(copy->CopyClip(*clip, true), false);
+            }
+            deepCopiedTracksData.push_back(std::make_shared<Au3TrackData>(copy));
+        }
+        return true;
+    });
+    if (!copied) {
+        return {};
     }
 
     std::vector<Au3TrackDataPtr> sourceAu3Data;
