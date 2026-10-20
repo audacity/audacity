@@ -39,6 +39,9 @@ public:
     bool isRunning() const override;
     muse::async::Notification isRunningChanged() const override;
 
+    size_t currentFileIndex() const override;
+    muse::async::Notification currentFileChanged() const override;
+
 private:
     using OnDone = std::function<void (const muse::Ret&)>;
 
@@ -65,5 +68,6 @@ private:
     muse::async::Promise<muse::Ret>::Resolve m_resolve;
 
     muse::async::Notification m_isRunningChanged;
+    muse::async::Notification m_currentFileChanged;
 };
 }

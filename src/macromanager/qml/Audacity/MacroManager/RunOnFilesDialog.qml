@@ -9,6 +9,8 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.MacroManager
+
 import "internal"
 
 StyledDialogView {
@@ -47,17 +49,12 @@ StyledDialogView {
         }
     }
 
-    ListModel {
-        id: filesModel
+    RunOnFilesModel {
+        id: runOnFilesModel
     }
 
     Component.onCompleted: {
-        for (const file of root.files) {
-            filesModel.append({
-                filePath: file,
-                status: RunOnFilesTable.Queued
-            })
-        }
+        runOnFilesModel.load(root.files)
     }
 
     onNavigationActivateRequested: {
@@ -73,7 +70,7 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            model: filesModel
+            model: runOnFilesModel
         }
 
         SeparatorLine {}
@@ -103,21 +100,28 @@ StyledDialogView {
                 Layout.preferredHeight: prv.buttonHeight
 
                 text: qsTrc("macromanager", "Stop")
+                enabled: runOnFilesModel.isRunning
 
                 navigation.panel: buttonsRow.navigationPanel
                 navigation.column: 0
+
+                onClicked: {
+                    runOnFilesModel.abort()
+                }
             }
 
             FlatButton {
                 Layout.preferredHeight: prv.buttonHeight
 
                 text: qsTrc("global", "Close")
+                enabled: !runOnFilesModel.isRunning
 
                 navigation.panel: buttonsRow.navigationPanel
                 navigation.column: 1
 
                 onClicked: {
                     root.hide()
+                    runOnFilesModel.closeWindow()
                 }
             }
         }

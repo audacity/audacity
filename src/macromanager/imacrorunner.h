@@ -25,5 +25,8 @@ public:
 
     virtual bool isRunning() const = 0;
     virtual muse::async::Notification isRunningChanged() const = 0;
+
+    virtual size_t currentFileIndex() const = 0;
+    virtual muse::async::Notification currentFileChanged() const = 0;
 };
 }
