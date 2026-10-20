@@ -3,12 +3,15 @@
 */
 #include "trackeditactionscontroller.h"
 
+#include "global/containers.h"
+
 #include <algorithm>
 #include <limits>
 #include <type_traits>
 
 #include "framework/global/translation.h"
 #include "framework/global/defer.h"
+#include "framework/global/async/async.h"
 #include "framework/rcommand/actiontocommand.h"
 
 #include "../trackeditcommands.h"
@@ -230,8 +233,8 @@ static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
 
 static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
-static const ActionCode GROUP_CLIPS_CODE("group-clips");
-static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
+static const ActionCode GROUP_ITEMS_CODE("group-items");
+static const ActionCode UNGROUP_ITEMS_CODE("ungroup-items");
 static const ActionCode RENAME_ITEM_CODE("rename-item");
 
 static const ActionCode SELECT_ALL("select-all");
@@ -329,8 +332,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_CHANGE_RATE_CUSTOM,
     TRACK_MAKE_STEREO,
     TRACK_RESAMPLE,
-    GROUP_CLIPS_CODE,
-    UNGROUP_CLIPS_CODE,
+    GROUP_ITEMS_CODE,
+    UNGROUP_ITEMS_CODE,
 };
 
 void TrackeditActionsController::init()
@@ -438,8 +441,8 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, [this]() { return trimAudioOutsideSelection(); });
     cd->onRequest(this, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, [this]() { return doGlobalSilence(); });
 
-    cd->onRequest(this, TRACKEDIT_GROUP_CLIPS_COMMAND, [this]() { return groupClips(); });
-    cd->onRequest(this, TRACKEDIT_UNGROUP_CLIPS_COMMAND, [this]() { return ungroupClips(); });
+    cd->onRequest(this, TRACKEDIT_GROUP_ITEMS_COMMAND, [this]() { return groupItems(); });
+    cd->onRequest(this, TRACKEDIT_UNGROUP_ITEMS_COMMAND, [this]() { return ungroupItems(); });
 
     cd->onRequest(this, TRACKEDIT_SELECT_ALL_COMMAND, apply([this]() { selectionController()->setSelectedAllAudioData(); }));
     cd->onRequest(this, TRACKEDIT_CLEAR_SELECTION_COMMAND, [this]() { return selectNone(); });
@@ -539,8 +542,8 @@ void TrackeditActionsController::init()
         { TRACK_RESAMPLE, TRACKEDIT_TRACK_RESAMPLE_COMMAND, {} },
         { TRIM_AUDIO_OUTSIDE_SELECTION, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, {} },
         { SILENCE_AUDIO_SELECTION, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, {} },
-        { GROUP_CLIPS_CODE, TRACKEDIT_GROUP_CLIPS_COMMAND, {} },
-        { UNGROUP_CLIPS_CODE, TRACKEDIT_UNGROUP_CLIPS_COMMAND, {} },
+        { GROUP_ITEMS_CODE, TRACKEDIT_GROUP_ITEMS_COMMAND, {} },
+        { UNGROUP_ITEMS_CODE, TRACKEDIT_UNGROUP_ITEMS_COMMAND, {} },
         { SELECT_ALL, TRACKEDIT_SELECT_ALL_COMMAND, {} },
         { SELECT_CLEAR, TRACKEDIT_CLEAR_SELECTION_COMMAND, {} },
         { SELECT_ALL_TRACKS, TRACKEDIT_SELECT_ALL_TRACKS_COMMAND, {} },
@@ -578,6 +581,13 @@ void TrackeditActionsController::init()
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
+
+        //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
+        //! in its own history receiver, which may run after this one. Evaluate the group actions once it has.
+        muse::async::Async::call(this, [this]() {
+            notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+            notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
+        });
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -587,14 +597,16 @@ void TrackeditActionsController::init()
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
-        notifyActionEnabledChanged(GROUP_CLIPS_CODE);
-        notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+        notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+        notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
         notifyActionEnabledChanged(JOIN_CODE);
         notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
         notifyActionEnabledChanged(RENAME_ITEM_CODE);
     });
 
     selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList&) {
+        notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+        notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
         notifyActionEnabledChanged(RENAME_ITEM_CODE);
     });
 
@@ -673,6 +685,36 @@ bool TrackeditActionsController::isFocusedItemLabel() const
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     return prj ? prj->track(focusedItemKey->trackId)->type == TrackType::Label : false;
+}
+
+bool TrackeditActionsController::anyItemGrouped(const TrackItemKeyList& items) const
+{
+    return std::any_of(items.begin(), items.end(), [this](const TrackItemKey& key) {
+        return trackeditInteraction()->itemGroupId(key) != -1;
+    });
+}
+
+bool TrackeditActionsController::itemsShareOneGroup(const TrackItemKeyList& items) const
+{
+    if (items.empty()) {
+        return false;
+    }
+
+    const int64_t groupId = trackeditInteraction()->itemGroupId(items.front());
+    if (groupId == -1) {
+        return false;
+    }
+
+    return std::all_of(items.begin(), items.end(), [this, groupId](const TrackItemKey& key) {
+        return trackeditInteraction()->itemGroupId(key) == groupId;
+    });
+}
+
+TrackItemKeyList TrackeditActionsController::itemsForInteraction() const
+{
+    TrackItemKeyList result = clipsForInteraction();
+    muse::join(result, labelsForInteraction());
+    return result;
 }
 
 LabelKeyList TrackeditActionsController::labelsForInteraction() const
@@ -1356,50 +1398,18 @@ muse::Ret TrackeditActionsController::labelCutMulti(bool moveLabels)
 
 muse::Ret TrackeditActionsController::labelCopyMulti()
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->selectedTracks();
-    auto selectedLabels = labelsForInteraction();
-    auto tracks = project->trackeditProject()->trackList();
-
-    trackeditInteraction()->clearClipboard();
-
-    bool copied = true;
-    secs_t offset = 0.0;
-    std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
-    if (leftmostItemStartTime.has_value()) {
-        offset = -leftmostItemStartTime.value();
-    }
-
-    for (const auto& track : tracks) {
-        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
-            continue;
-        }
-
-        LabelKeyList selectedTrackLabels;
-        for (const auto& label : selectedLabels) {
-            if (label.trackId == track.id) {
-                selectedTrackLabels.push_back(label);
-            }
-        }
-
-        copied = trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackLabels, offset) && copied;
-    }
-
-    return Ret(copied);
+    return Ret(trackeditInteraction()->copyItems({}, labelsForInteraction()));
 }
 
 muse::Ret TrackeditActionsController::multiClipCut(bool moveClips)
 {
-    auto selectedClips = clipsForInteraction();
-    if (selectedClips.empty()) {
+    const ClipKeyList clips = clipsForInteraction();
+    const LabelKeyList labels = labelsForInteraction();
+    if (clips.empty() && labels.empty()) {
         return make_ret(Ret::Code::NotSupported);
     }
 
-    trackeditInteraction()->clearClipboard();
-    multiClipCopy();
-    selectionController()->resetSelectedClips();
-
-    return Ret(trackeditInteraction()->removeClips(selectedClips, moveClips));
+    return Ret(trackeditInteraction()->cutItems(clips, labels, moveClips));
 }
 
 muse::Ret TrackeditActionsController::rangeSelectionCut(bool moveClips)
@@ -1422,37 +1432,7 @@ muse::Ret TrackeditActionsController::rangeSelectionCut(bool moveClips)
 
 muse::Ret TrackeditActionsController::multiClipCopy()
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->selectedTracks();
-    auto selectedClips = clipsForInteraction();
-    auto selectedLabels = labelsForInteraction();
-    auto tracks = project->trackeditProject()->trackList();
-
-    trackeditInteraction()->clearClipboard();
-
-    bool copied = true;
-    secs_t offset = 0.0;
-    std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
-    if (leftmostItemStartTime.has_value()) {
-        offset = -leftmostItemStartTime.value();
-    }
-
-    for (const auto& track : tracks) {
-        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
-            continue;
-        }
-
-        ClipKeyList selectedTrackClips;
-        for (const auto& clip : selectedClips) {
-            if (clip.trackId == track.id) {
-                selectedTrackClips.push_back(clip);
-            }
-        }
-
-        copied = trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackClips, offset) && copied;
-    }
-
-    return Ret(copied);
+    return Ret(trackeditInteraction()->copyItems(clipsForInteraction(), labelsForInteraction()));
 }
 
 muse::Ret TrackeditActionsController::rangeSelectionCopy()
@@ -1893,23 +1873,21 @@ muse::Ret TrackeditActionsController::openClipPitchAndSpeed()
     return make_ok();
 }
 
-muse::Ret TrackeditActionsController::groupClips()
+muse::Ret TrackeditActionsController::groupItems()
 {
-    const auto selectedClips = clipsForInteraction();
+    trackeditInteraction()->groupItems(itemsForInteraction());
 
-    trackeditInteraction()->groupClips(selectedClips);
-
-    notifyActionEnabledChanged(GROUP_CLIPS_CODE);
-    notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+    notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+    notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
     return make_ok();
 }
 
-muse::Ret TrackeditActionsController::ungroupClips()
+muse::Ret TrackeditActionsController::ungroupItems()
 {
-    trackeditInteraction()->ungroupClips(clipsForInteraction());
+    trackeditInteraction()->ungroupItems(itemsForInteraction());
 
-    notifyActionEnabledChanged(GROUP_CLIPS_CODE);
-    notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+    notifyActionEnabledChanged(GROUP_ITEMS_CODE);
+    notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
     return make_ok();
 }
 
@@ -2350,10 +2328,11 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return trackeditInteraction()->canUndo();
     } else if (actionCode == TRACKEDIT_REDO) {
         return trackeditInteraction()->canRedo();
-    } else if (actionCode == GROUP_CLIPS_CODE) {
-        return clipsForInteraction().size() > 1 && !selectionController()->isSelectionGrouped();
-    } else if (actionCode == UNGROUP_CLIPS_CODE) {
-        return clipsForInteraction().size() > 1 && selectionController()->selectionContainsGroup();
+    } else if (actionCode == GROUP_ITEMS_CODE) {
+        const TrackItemKeyList items = itemsForInteraction();
+        return items.size() > 1 && !itemsShareOneGroup(items);
+    } else if (actionCode == UNGROUP_ITEMS_CODE) {
+        return anyItemGrouped(itemsForInteraction());
     } else if (actionCode == JOIN_CODE) {
         if (!selectionController()->timeSelectionIsEmpty()) {
             return rangeSelectionCoversMultipleClips();

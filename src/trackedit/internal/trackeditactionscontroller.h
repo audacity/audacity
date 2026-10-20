@@ -86,6 +86,9 @@ private:
 
     bool isFocusedItemLabel() const;
     LabelKeyList labelsForInteraction() const;
+    TrackItemKeyList itemsForInteraction() const;
+    bool anyItemGrouped(const TrackItemKeyList& items) const;
+    bool itemsShareOneGroup(const TrackItemKeyList& items) const;
 
     TrackId currentFocusedOrSelectedTrack() const;
     void focusTrack(const TrackId& trackId);
@@ -159,8 +162,8 @@ private:
     muse::Ret makeStereoTrack();
     muse::Ret resampleTracks();
 
-    muse::Ret groupClips();
-    muse::Ret ungroupClips();
+    muse::Ret groupItems();
+    muse::Ret ungroupItems();
 
     muse::Ret selectNone();
     muse::Ret selectAllTracks();

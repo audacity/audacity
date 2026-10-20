@@ -506,10 +506,10 @@ ITrackDataPtr Au3TracksInteraction::copyNonContinuousTrackData(const TrackId tra
         auto clipboardTrack = ::LabelTrack::CreatePtr(trackList);
 
         for (const auto& itemKey : itemKeys) {
-            if (Au3Label* label = DomAccessor::findLabel(labelTrack, itemKey.itemId)) {
-                SelectedRegion region;
-                region.setTimes(label->getT0() + offset, label->getT1() + offset);
-                clipboardTrack->AddLabel(region, label->title);
+            if (const Au3Label* label = DomAccessor::findLabel(labelTrack, itemKey.itemId)) {
+                Au3Label copy = *label;
+                copy.selectedRegion.setTimes(label->getT0() + offset, label->getT1() + offset);
+                clipboardTrack->AddLabel(copy);
             }
         }
 
@@ -705,16 +705,16 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
         }
     }
 
-    std::vector<Au3WaveTrack*> waveCopies;
+    std::vector<Au3Track*> trackCopies;
     for (const auto& copy : copies) {
         if (auto waveCopy = dynamic_cast<Au3WaveTrack*>(copy.get())) {
             for (const auto& clip : DomAccessor::waveClipsAsList(waveCopy)) {
                 clip->SetId(Au3WaveClip::NewID());
             }
-            waveCopies.push_back(waveCopy);
         }
+        trackCopies.push_back(copy.get());
     }
-    utils::remapCopiedClipGroups(*prj, tracks, waveCopies);
+    utils::remapCopiedItemGroups(*prj, tracks, trackCopies);
 
     for (const auto& dest : copies) {
         tracks.Add(dest);
@@ -865,13 +865,11 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
         clones.push_back(au3Clone);
     }
 
-    std::vector<Au3WaveTrack*> waveClones;
+    std::vector<Au3Track*> trackClones;
     for (const auto& clone : clones) {
-        if (auto waveClone = dynamic_cast<Au3WaveTrack*>(clone.get())) {
-            waveClones.push_back(waveClone);
-        }
+        trackClones.push_back(clone.get());
     }
-    utils::remapCopiedClipGroups(*prj, tracks, waveClones);
+    utils::remapCopiedItemGroups(*prj, tracks, trackClones);
 
     for (const auto& au3Clone : clones) {
         tracks.Add(au3Clone, ::TrackList::DoAssignId::Yes);
@@ -1521,12 +1519,16 @@ TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vecto
                : trackType == TrackType::Mono || trackType == TrackType::Stereo;
     };
 
+    const size_t clipboardTracksSize = std::count_if(clipboardData.begin(), clipboardData.end(), [&matchesFilter](const auto& data) {
+        return data->track() && matchesFilter(DomConverter::track(data->track().get()).type);
+    });
+
     //! NOTE: If there's a label track in clipboard, match tracks strictly by position and type
     if (hasLabelTrack && tracks.size() == clipboardData.size()) {
         TrackIdList result;
 
         for (const auto& track : tracks) {
-            if (matchesFilter(track.type)) {
+            if (matchesFilter(track.type) && result.size() < clipboardTracksSize) {
                 result.push_back(track.id);
             }
         }
@@ -1546,7 +1548,6 @@ TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vecto
         }
     }
 
-    size_t clipboardTracksSize = clipboardData.size();
     if (filteredDestinationTrackIds.size() > clipboardTracksSize) {
         //! NOTE: more tracks selected than needed, return sub-vector
         return TrackIdList(filteredDestinationTrackIds.begin(), filteredDestinationTrackIds.begin() + clipboardTracksSize);

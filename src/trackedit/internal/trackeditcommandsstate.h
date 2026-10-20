@@ -43,6 +43,9 @@ private:
 
     ClipKeyList clipsForInteraction() const;
     LabelKeyList labelsForInteraction() const;
+    TrackItemKeyList itemsForInteraction() const;
+    bool anyItemGrouped(const TrackItemKeyList& items) const;
+    bool itemsShareOneGroup(const TrackItemKeyList& items) const;
     bool canJoin() const;
     bool canSilenceAudio() const;
 

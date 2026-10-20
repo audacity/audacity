@@ -331,20 +331,20 @@ const std::vector<CommandInfo> commandInfos = {
         Decoration(IconCode::Code::SILENCE_AUDIO_SELECTION)
     },
     CommandInfo{
-        TRACKEDIT_GROUP_CLIPS_COMMAND,
+        TRACKEDIT_GROUP_ITEMS_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Group clips"),
+        TranslatableString("command", "Group"),
         //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Group clips"),
+        TranslatableString("command_description", "Group the selected clips and labels"),
         InputSchema(),
         Decoration()
     },
     CommandInfo{
-        TRACKEDIT_UNGROUP_CLIPS_COMMAND,
+        TRACKEDIT_UNGROUP_ITEMS_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Ungroup clips"),
+        TranslatableString("command", "Ungroup"),
         //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Ungroup clips"),
+        TranslatableString("command_description", "Ungroup the selected clips and labels"),
         InputSchema(),
         Decoration()
     },

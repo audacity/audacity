@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <limits>
 
+#include "framework/global/async/async.h"
 #include "framework/global/containers.h"
 #include "framework/global/log.h"
 
@@ -42,8 +43,8 @@ const std::vector<Command> commandsDisabledDuringRecording {
     TRACKEDIT_TRACK_RESAMPLE_COMMAND,
     TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND,
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
-    TRACKEDIT_GROUP_CLIPS_COMMAND,
-    TRACKEDIT_UNGROUP_CLIPS_COMMAND,
+    TRACKEDIT_GROUP_ITEMS_COMMAND,
+    TRACKEDIT_UNGROUP_ITEMS_COMMAND,
     TRACKEDIT_MERGE_SELECTED_ON_TRACKS_COMMAND,
     TRACKEDIT_DUPLICATE_SELECTED_COMMAND,
     TRACKEDIT_TRACK_DELETE_COMMAND,
@@ -71,9 +72,15 @@ const std::vector<Command> historyCommands {
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
 };
 
+//! Grouping changes the items' group ids, not the selection
+const std::vector<Command> groupCommands {
+    TRACKEDIT_GROUP_ITEMS_COMMAND,
+    TRACKEDIT_UNGROUP_ITEMS_COMMAND,
+};
+
 const std::vector<Command> clipsSelectionCommands {
-    TRACKEDIT_GROUP_CLIPS_COMMAND,
-    TRACKEDIT_UNGROUP_CLIPS_COMMAND,
+    TRACKEDIT_GROUP_ITEMS_COMMAND,
+    TRACKEDIT_UNGROUP_ITEMS_COMMAND,
     TRACKEDIT_JOIN_COMMAND,
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
     TRACKEDIT_RENAME_ITEM_COMMAND,
@@ -84,6 +91,8 @@ const std::vector<Command> rangeSelectionCommands {
 };
 
 const std::vector<Command> labelsSelectionCommands {
+    TRACKEDIT_GROUP_ITEMS_COMMAND,
+    TRACKEDIT_UNGROUP_ITEMS_COMMAND,
     TRACKEDIT_RENAME_ITEM_COMMAND,
 };
 
@@ -92,8 +101,8 @@ const std::vector<Command> dataSelectionCommands {
 };
 
 const std::vector<Command> focusCommands {
-    TRACKEDIT_GROUP_CLIPS_COMMAND,
-    TRACKEDIT_UNGROUP_CLIPS_COMMAND,
+    TRACKEDIT_GROUP_ITEMS_COMMAND,
+    TRACKEDIT_UNGROUP_ITEMS_COMMAND,
     TRACKEDIT_RENAME_ITEM_COMMAND,
 };
 }
@@ -120,6 +129,12 @@ void TrackeditCommandsState::init()
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateCommandStates(historyCommands);
+
+        //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
+        //! in its own history receiver, which may run after this one. Evaluate the group commands once it has.
+        muse::async::Async::call(this, [this]() {
+            updateCommandStates(groupCommands);
+        });
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList&) {
@@ -202,12 +217,13 @@ CommandState TrackeditCommandsState::commandState(const Command& command) const
         return CommandState(projectHistory()->redoAvailable());
     }
 
-    if (command == TRACKEDIT_GROUP_CLIPS_COMMAND) {
-        return CommandState(clipsForInteraction().size() > 1 && !selectionController()->isSelectionGrouped());
+    if (command == TRACKEDIT_GROUP_ITEMS_COMMAND) {
+        const TrackItemKeyList items = itemsForInteraction();
+        return CommandState(items.size() > 1 && !itemsShareOneGroup(items));
     }
 
-    if (command == TRACKEDIT_UNGROUP_CLIPS_COMMAND) {
-        return CommandState(clipsForInteraction().size() > 1 && selectionController()->selectionContainsGroup());
+    if (command == TRACKEDIT_UNGROUP_ITEMS_COMMAND) {
+        return CommandState(anyItemGrouped(itemsForInteraction()));
     }
 
     if (command == TRACKEDIT_JOIN_COMMAND) {
@@ -259,6 +275,36 @@ LabelKeyList TrackeditCommandsState::labelsForInteraction() const
     }
 
     return result;
+}
+
+TrackItemKeyList TrackeditCommandsState::itemsForInteraction() const
+{
+    TrackItemKeyList result = clipsForInteraction();
+    muse::join(result, labelsForInteraction());
+    return result;
+}
+
+bool TrackeditCommandsState::anyItemGrouped(const TrackItemKeyList& items) const
+{
+    return std::any_of(items.begin(), items.end(), [this](const TrackItemKey& key) {
+        return trackeditInteraction()->itemGroupId(key) != -1;
+    });
+}
+
+bool TrackeditCommandsState::itemsShareOneGroup(const TrackItemKeyList& items) const
+{
+    if (items.empty()) {
+        return false;
+    }
+
+    const int64_t groupId = trackeditInteraction()->itemGroupId(items.front());
+    if (groupId == -1) {
+        return false;
+    }
+
+    return std::all_of(items.begin(), items.end(), [this, groupId](const TrackItemKey& key) {
+        return trackeditInteraction()->itemGroupId(key) == groupId;
+    });
 }
 
 bool TrackeditCommandsState::canJoin() const
