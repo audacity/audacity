@@ -78,6 +78,19 @@ void PlaybackToolBarModel::load()
             reload();
         });
 
+        playbackController()->isPlayingChanged().onNotify(this, [this]() {
+            updatePlayState();
+        });
+
+        playbackController()->loopRegionChanged().onNotify(this, [this]() {
+            updateLoopState();
+        });
+
+        recordController()->isRecordingChanged().onNotify(this, [this]() {
+            updatePlayState();
+            updateRecordState();
+        });
+
         m_inited = true;
     }
 
@@ -104,22 +117,6 @@ void PlaybackToolBarModel::onCommandStateChanged(const Command& command, const C
 {
     if (uicontextResolver()->currentUiContext() == context::UiCtxDialogOpened) {
         return;
-    }
-
-    if (command == PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND || command == record::RECORD_PAUSE_COMMAND) {
-        updatePlayState();
-    }
-
-    if (command == PLAYBACK_STOP_COMMAND || command == record::RECORD_STOP_COMMAND) {
-        updateStopState();
-    }
-
-    if (command == record::RECORD_START_COMMAND) {
-        updateRecordState();
-    }
-
-    if (command == PLAYBACK_TOGGLE_LOOP_REGION_COMMAND) {
-        updateLoopState();
     }
 
     AbstractToolBarModel::onCommandStateChanged(command, state);
