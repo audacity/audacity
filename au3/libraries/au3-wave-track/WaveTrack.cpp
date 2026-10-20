@@ -609,17 +609,6 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
     // This implies satisfaction of the precondition of SetRate()
     assert(!doFix || IsLeader());
 
-    const auto removeZeroClips = [](WaveClipHolders& clips) {
-        // Check for zero-length clips and remove them
-        for (auto it = clips.begin(); it != clips.end();) {
-            if ((*it)->IsEmpty()) {
-                it = clips.erase(it);
-            } else {
-                ++it;
-            }
-        }
-    };
-
     auto err = !WritableSampleTrack::LinkConsistencyFix(doFix);
 
     auto linkType = GetLinkType();
@@ -641,12 +630,6 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
                 SetLinkType(linkType = LinkType::None);
             } else {
                 SetLinkType(linkType = LinkType::Aligned);
-                //clean up zero clips only after alignment check has completed
-                //this can't break alignment as there should be a "twin"
-                //in the right channel which will also be removed, otherwise
-                //track will be unlinked because AreAligned returned false
-                removeZeroClips(NarrowClips());
-                removeZeroClips(next->NarrowClips());
             }
         }
     }
@@ -671,10 +654,7 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
                 WaveTrackData::Get(*next).SetSampleFormat(mLegacyFormat);
             }
         }
-        if (linkType == LinkType::None) {
-            // Did not visit the other call to removeZeroClips, do it now
-            removeZeroClips(NarrowClips());
-        } else {
+        if (linkType != LinkType::None) {
             // Make a real wide wave track from two deserialized narrow tracks
             ZipClips();
         }
