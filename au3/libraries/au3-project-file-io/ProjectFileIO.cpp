@@ -45,6 +45,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "au3-wave-track/SampleBlock.h"
 #include "au3-files/TempDirectory.h"
 #include "au3-transactions/TransactionScope.h"
+#include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-basic-ui/BasicUI.h"
@@ -1847,6 +1848,9 @@ void ProjectFileIO::WriteXML(XMLWriter& xmlFile,
                              const TrackList* tracks /* = nullptr */)
 // may throw
 {
+    // Prevent the recording from changing the sequences during serialization
+    std::lock_guard recordingLock(Sequence::RecordingMutex());
+
     auto& proj = mProject;
     auto& tracklist = tracks ? *tracks : TrackList::Get(proj);
 
