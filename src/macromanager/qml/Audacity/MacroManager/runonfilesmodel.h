@@ -34,7 +34,8 @@ public:
         Queued,
         Processing,
         Complete,
-        Failed
+        Failed,
+        Stopped
     };
     Q_ENUM(Status)
 

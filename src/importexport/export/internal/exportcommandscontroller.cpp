@@ -45,7 +45,12 @@ Ret ExportCommandsController::exportToMacroOutput(const std::string& extension, 
         return dirRet;
     }
 
-    const std::string baseName = params.contains(NAME_PARAM) ? params.at(NAME_PARAM).toString() : outputBaseName();
+    std::string baseName = params.contains(NAME_PARAM) ? params.at(NAME_PARAM).toString() : outputBaseName();
+    baseName = io::escapeFileName(baseName).toStdString();
+    if (baseName.empty() || baseName == "." || baseName == "..") {
+        return make_ret(Ret::Code::BadArgs, "invalid export name");
+    }
+
     const io::path_t outputPath = outputDir + "/" + baseName + "." + extension;
 
     const IExporter::Options options {
