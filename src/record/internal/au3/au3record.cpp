@@ -17,7 +17,7 @@
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-stretching-sequence/FadingSequence.h"
 #include "au3-project-rate/ProjectRate.h"
 
 #include "au3wrap/internal/domconverter.h"
@@ -175,7 +175,7 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+                FadingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     if (nonWaveToo) {

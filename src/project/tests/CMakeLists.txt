@@ -17,6 +17,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/realtimeeffectspersistence_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cliptempopersistence_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/clipfadespersistence_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/fadingsequence_tests.cpp
 )
 
 set(MODULE_TEST_LINK

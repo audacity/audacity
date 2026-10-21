@@ -31,9 +31,9 @@ std::unique_ptr<ClipInterfaceAttachment> ClipFades::Clone() const
 {
     // Still refers to our clip: the copy of the clip reparents it.
     auto clone = std::make_unique<ClipFades>(*m_clip);
-    clone->m_fadeIn = m_fadeIn;
-    clone->m_fadeOut = m_fadeOut;
-    clone->m_draggingSide = m_draggingSide;
+    clone->m_fadeIn = m_fadeIn.load();
+    clone->m_fadeOut = m_fadeOut.load();
+    clone->m_draggingSide = m_draggingSide.load();
     return clone;
 }
 
@@ -43,8 +43,8 @@ void ClipFades::Reparent(ClipInterface& clip)
     mStretchChangedSubscription = clip.SubscribeToStretchRatioChange(
         [this](double oldRatio, double newRatio) {
         const auto ratioChange = newRatio / oldRatio;
-        m_fadeIn *= ratioChange;
-        m_fadeOut *= ratioChange;
+        m_fadeIn = m_fadeIn * ratioChange;
+        m_fadeOut = m_fadeOut * ratioChange;
     });
 }
 
@@ -62,11 +62,20 @@ void ClipFades::WriteXMLAttributes(XMLWriter& writer) const
 
 bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
+    double value;
     if (attr == FadeIn_attr) {
-        return valueView.TryGet(m_fadeIn);
+        if (!valueView.TryGet(value)) {
+            return false;
+        }
+        m_fadeIn = value;
+        return true;
     }
     if (attr == FadeOut_attr) {
-        return valueView.TryGet(m_fadeOut);
+        if (!valueView.TryGet(value)) {
+            return false;
+        }
+        m_fadeOut = value;
+        return true;
     }
     return false;
 }
@@ -74,10 +83,10 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
 double ClipFades::fadeIn() const
 {
     if (m_draggingSide == ClipSide::Left) {
-        return std::clamp(m_fadeIn, 0., playDuration());
+        return std::clamp(m_fadeIn.load(), 0., playDuration());
     } else {
         // Leave room for the effective fade-out, not the raw one, which may exceed the clip, e.g. after trimming.
-        return std::clamp(m_fadeIn, 0., playDuration() - fadeOut());
+        return std::clamp(m_fadeIn.load(), 0., playDuration() - fadeOut());
     }
 }
 
@@ -90,10 +99,10 @@ void ClipFades::setFadeIn(double value)
 double ClipFades::fadeOut() const
 {
     if (m_draggingSide == ClipSide::Right) {
-        return std::clamp(m_fadeOut, 0., playDuration());
+        return std::clamp(m_fadeOut.load(), 0., playDuration());
     } else {
         // Leave room for the effective fade-in, not the raw one, which may exceed the clip, e.g. after trimming.
-        return std::clamp(m_fadeOut, 0., playDuration() - fadeIn());
+        return std::clamp(m_fadeOut.load(), 0., playDuration() - fadeIn());
     }
 }
 

@@ -3,6 +3,8 @@
 #include "ClipInterface.h"
 #include "au3-utility/Observer.h"
 
+#include <atomic>
+
 enum class ClipSide {
     Left,
     Right
@@ -38,9 +40,10 @@ private:
 
     ClipInterface* m_clip = nullptr;
 
-    double m_fadeIn = 0.0;
-    double m_fadeOut = 0.0;
-    ClipSide m_draggingSide = static_cast<ClipSide>(0);
+    // Atomic: written by the main thread, read by the audio thread, e.g. when the fades are dragged during playback.
+    std::atomic<double> m_fadeIn = 0.0;
+    std::atomic<double> m_fadeOut = 0.0;
+    std::atomic<ClipSide> m_draggingSide = static_cast<ClipSide>(0);
 
     Observer::Subscription mStretchChangedSubscription;
 };

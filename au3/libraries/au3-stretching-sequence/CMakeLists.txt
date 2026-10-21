@@ -21,6 +21,8 @@ set( SOURCES
    ClipFades.h
    ClipInterface.cpp
    ClipInterface.h
+   FadingSequence.cpp
+   FadingSequence.h
    ClipSegment.cpp
    ClipSegment.h
    PlaybackDirection.h
