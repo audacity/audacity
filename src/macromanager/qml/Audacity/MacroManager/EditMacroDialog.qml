@@ -148,8 +148,8 @@ StyledDialogView {
                         title: macroCommandsModel.name
                         isBuiltin: macroCommandsModel.isBuiltin
 
-                        navigationPanel: commandsTable.navigationPanel
-                        navigationOrderStart: 0
+                        navigationPanel.section: root.navigationSection
+                        navigationPanel.order: 3
 
                         onRenameRequested: {
                             macroCommandsModel.rename()
@@ -179,7 +179,7 @@ StyledDialogView {
                         model: macroCommandsModel
 
                         navigationPanel.section: root.navigationSection
-                        navigationPanel.order: 3
+                        navigationPanel.order: 4
 
                         onEditRequested: function (row) {
                             macroCommandsModel.editParams(row)
@@ -215,7 +215,7 @@ StyledDialogView {
                 name: "EditMacroButtons"
                 direction: NavigationPanel.Horizontal
                 section: root.navigationSection
-                order: 4
+                order: 5
             }
 
             FlatButton {

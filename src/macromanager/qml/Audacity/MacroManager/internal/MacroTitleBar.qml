@@ -15,8 +15,12 @@ Rectangle {
     property string title: ""
     property bool isBuiltin: false
 
-    property NavigationPanel navigationPanel: null
-    property int navigationOrderStart: 0
+    property NavigationPanel navigationPanel: NavigationPanel {
+        name: "MacroTitleBar"
+        direction: NavigationPanel.Horizontal
+        enabled: root.enabled && root.visible
+        accessible.name: root.title
+    }
 
     signal renameRequested
     signal exportRequested
@@ -105,7 +109,7 @@ Rectangle {
             normalColor: root.color
 
             navigation.panel: root.navigationPanel
-            navigation.order: root.navigationOrderStart
+            navigation.order: 0
             navigation.name: "MacroMenu"
             navigation.accessible.name: qsTrc("macromanager", "Macro menu")
 
