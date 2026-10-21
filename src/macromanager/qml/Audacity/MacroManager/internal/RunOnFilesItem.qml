@@ -28,6 +28,8 @@ Rectangle {
             return qsTrc("macromanager", "Processing")
         case RunOnFilesModel.Complete:
             return qsTrc("macromanager", "Complete")
+        case RunOnFilesModel.Failed:
+            return qsTrc("macromanager", "Failed")
         }
 
         return ""

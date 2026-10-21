@@ -56,6 +56,11 @@ size_t MacroRunner::currentFileIndex() const
     return m_fileIndex;
 }
 
+std::vector<Ret> MacroRunner::fileResults() const
+{
+    return m_fileResults;
+}
+
 async::Notification MacroRunner::currentFileChanged() const
 {
     return m_currentFileChanged;
@@ -75,6 +80,7 @@ async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& fi
         m_macro = macro;
         m_files = files;
         m_fileIndex = 0;
+        m_fileResults.clear();
         m_abortRequested = false;
         m_resolve = resolve;
         m_startStateIndex = projectHistory()->currentStateIndex();
@@ -108,33 +114,37 @@ void MacroRunner::runNextFile()
 
     const Ret importRet = globalContext()->currentProject()->import(m_files.at(m_fileIndex));
     if (!importRet) {
-        finish(importRet);
+        resetProject([this, importRet](const Ret&) {
+            finishFile(importRet);
+        });
         return;
     }
 
     dispatch(trackedit::TRACKEDIT_SELECT_ALL_COMMAND, {}, [this](const Ret& selectRet) {
         if (!selectRet) {
-            finish(selectRet);
+            resetProject([this, selectRet](const Ret&) {
+                finishFile(selectRet);
+            });
             return;
         }
 
         runSteps([this](const Ret& stepsRet) {
             resetProject([this, stepsRet](const Ret& resetRet) {
-                if (!stepsRet) {
-                    finish(stepsRet);
-                    return;
-                }
-
-                if (!resetRet) {
-                    finish(resetRet);
-                    return;
-                }
-
-                ++m_fileIndex;
-                runNextFile();
+                finishFile(stepsRet ? resetRet : stepsRet);
             });
         });
     });
+}
+
+void MacroRunner::finishFile(const Ret& ret)
+{
+    if (!ret) {
+        LOGE() << "macro failed on file " << m_files.at(m_fileIndex) << ": " << ret.toString();
+    }
+
+    m_fileResults.push_back(ret);
+    ++m_fileIndex;
+    runNextFile();
 }
 
 void MacroRunner::runSteps(const OnDone& onDone)

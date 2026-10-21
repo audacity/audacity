@@ -33,7 +33,8 @@ public:
     enum class Status {
         Queued,
         Processing,
-        Complete
+        Complete,
+        Failed
     };
     Q_ENUM(Status)
 
