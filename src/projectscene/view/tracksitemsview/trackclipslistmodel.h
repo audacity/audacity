@@ -105,6 +105,7 @@ private:
     trackedit::ClipKeyList clipsForFadeEdit(const ClipKey& key) const;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
+    std::optional<trackedit::Clip> currentClip(const trackedit::ClipKey& key) const;
 
     bool isKeyboardTriggered() const;
 
