@@ -38,6 +38,12 @@ void AppShellCommandsState::init()
 
     dockWindowProvider()->windowChanged().onNotify(this, [this]() {
         listenOpenedDocksChanged(dockWindowProvider()->window());
+
+        std::vector<Command> dockCommands;
+        for (const auto& [command, dockName] : toggleDockCommands()) {
+            dockCommands.push_back(command);
+        }
+        updateCommandStates(dockCommands);
     });
     listenOpenedDocksChanged(dockWindowProvider()->window());
 
