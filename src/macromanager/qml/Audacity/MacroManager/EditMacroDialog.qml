@@ -32,6 +32,7 @@ StyledDialogView {
         readonly property int minimumWidth: 560
         readonly property int height: 480
         readonly property int leftColumnWidth: 280
+        readonly property int maxLeftColumnWidth: 400
         readonly property int rightColumnWidth: 440
         readonly property int rowHeight: 44
         readonly property int sideMargin: 8
@@ -79,6 +80,7 @@ StyledDialogView {
 
             ColumnLayout {
                 Layout.preferredWidth: prv.leftColumnWidth
+                Layout.maximumWidth: prv.maxLeftColumnWidth
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
