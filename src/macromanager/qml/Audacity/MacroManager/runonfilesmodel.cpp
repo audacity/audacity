@@ -91,14 +91,14 @@ void RunOnFilesModel::closeWindow()
 
 RunOnFilesModel::Status RunOnFilesModel::status(int row) const
 {
-    const size_t current = runner()->currentFileIndex();
+    const std::vector<muse::Ret> results = runner()->fileResults();
     const size_t index = static_cast<size_t>(row);
 
-    if (index < current) {
-        return Status::Complete;
+    if (index < results.size()) {
+        return results.at(index) ? Status::Complete : Status::Failed;
     }
 
-    if (index == current && runner()->isRunning()) {
+    if (index == runner()->currentFileIndex() && runner()->isRunning()) {
         return Status::Processing;
     }
 
