@@ -4,6 +4,7 @@
 #pragma once
 
 #include <string>
+#include <variant>
 #include <vector>
 
 #include "framework/rcommand/commandtypes.h"
@@ -14,9 +15,15 @@ struct MacroStep {
     muse::rcommand::Params params;
 };
 
+struct MacroReference {
+    std::string name;
+};
+
+using MacroItem = std::variant<MacroStep, MacroReference>;
+
 struct Macro {
     std::string name;
-    std::vector<MacroStep> steps;
+    std::vector<MacroItem> steps;
     bool builtin = false;
 };
 

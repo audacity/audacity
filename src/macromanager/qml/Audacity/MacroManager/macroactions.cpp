@@ -42,8 +42,14 @@ std::optional<std::string> MacroActions::rename(const std::string& name) const
 
 bool MacroActions::remove(const std::string& name) const
 {
+    ValList dependents;
+    for (const std::string& dependent : repository()->dependentMacros(name)) {
+        dependents.push_back(Val(dependent));
+    }
+
     UriQuery uri(DELETE_MACRO_URI);
     uri.addParam("macroName", Val(name));
+    uri.addParam("dependents", Val(dependents));
 
     const RetVal<Val> result = interactive()->openSync(uri);
     if (!result.ret) {

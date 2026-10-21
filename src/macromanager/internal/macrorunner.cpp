@@ -3,6 +3,7 @@
 */
 #include "macrorunner.h"
 
+#include <algorithm>
 #include <chrono>
 
 #include "framework/global/translation.h"
@@ -78,6 +79,7 @@ async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& fi
         }
 
         m_macro = macro;
+        m_macroStack = { macro.name };
         m_files = files;
         m_fileIndex = 0;
         m_fileResults.clear();
@@ -89,7 +91,7 @@ async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& fi
         m_isRunningChanged.notify();
 
         if (m_files.empty()) {
-            runSteps([this](const Ret& ret) { finish(ret); });
+            runSteps(m_macro.steps, [this](const Ret& ret) { finish(ret); });
         } else {
             runNextFile();
         }
@@ -120,7 +122,7 @@ void MacroRunner::runNextFile()
         return;
     }
 
-    runSteps([this](const Ret& stepsRet) {
+    runSteps(m_macro.steps, [this](const Ret& stepsRet) {
         resetProject([this, stepsRet](const Ret& resetRet) {
             finishFile(stepsRet ? resetRet : stepsRet);
         });
@@ -138,31 +140,59 @@ void MacroRunner::finishFile(const Ret& ret)
     runNextFile();
 }
 
-void MacroRunner::runSteps(const OnDone& onDone)
+void MacroRunner::runSteps(const std::vector<MacroItem>& steps, const OnDone& onDone)
 {
-    runStep(0, onDone);
+    runStep(std::make_shared<const std::vector<MacroItem> >(steps), 0, onDone);
 }
 
-void MacroRunner::runStep(size_t index, const OnDone& onDone)
+void MacroRunner::runStep(const Steps& steps, size_t index, const OnDone& onDone)
 {
     if (m_abortRequested) {
         onDone(make_ret(Ret::Code::Cancel));
         return;
     }
 
-    if (index >= m_macro.steps.size()) {
+    if (index >= steps->size()) {
         onDone(make_ok());
         return;
     }
 
-    const MacroStep& step = m_macro.steps.at(index);
-    dispatch(step.command, stepParams(step), [this, index, onDone](const Ret& ret) {
+    const OnDone next = [this, steps, index, onDone](const Ret& ret) {
         if (!ret) {
             onDone(ret);
             return;
         }
 
-        runStep(index + 1, onDone);
+        runStep(steps, index + 1, onDone);
+    };
+
+    const MacroItem& item = steps->at(index);
+    if (const MacroStep* step = std::get_if<MacroStep>(&item)) {
+        dispatch(step->command, stepParams(*step), next);
+    } else {
+        runMacro(std::get<MacroReference>(item), next);
+    }
+}
+
+void MacroRunner::runMacro(const MacroReference& reference, const OnDone& onDone)
+{
+    const QString name = QString::fromStdString(reference.name);
+
+    if (std::ranges::find(m_macroStack, reference.name) != m_macroStack.end()) {
+        onDone(make_ret(Ret::Code::NotSupported, qtrc("macromanager", "Macro “%1” calls itself").arg(name).toStdString()));
+        return;
+    }
+
+    const std::optional<Macro> macro = repository()->macro(reference.name);
+    if (!macro) {
+        onDone(make_ret(Ret::Code::NotSupported, qtrc("macromanager", "Macro “%1” not found").arg(name).toStdString()));
+        return;
+    }
+
+    m_macroStack.push_back(reference.name);
+    runSteps(macro->steps, [this, onDone](const Ret& ret) {
+        m_macroStack.pop_back();
+        onDone(ret);
     });
 }
 
@@ -192,6 +222,7 @@ void MacroRunner::finish(const Ret& ret)
         showError(ret);
     }
 
+    m_macroStack.clear();
     m_running = false;
     m_isRunningChanged.notify();
 

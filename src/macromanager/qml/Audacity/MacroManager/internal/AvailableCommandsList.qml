@@ -14,7 +14,7 @@ StyledListView {
 
     property string dragMimeType: ""
 
-    signal addRequested(string code, string title)
+    signal addRequested(string code, string title, bool isMacro)
 
     QtObject {
         id: prv
@@ -35,6 +35,7 @@ StyledListView {
         required property int index
         required property string code
         required property string title
+        required property bool isMacro
 
         width: ListView.view.width
         height: prv.rowHeight
@@ -55,19 +56,20 @@ StyledListView {
             data[root.dragMimeType] = JSON.stringify({
                 row: -1,
                 code: item.code,
-                title: item.title
+                title: item.title,
+                isMacro: item.isMacro
             })
             return data
         }
 
         onClicked: function (mouse) {
             if (!mouse) {
-                root.addRequested(item.code, item.title)
+                root.addRequested(item.code, item.title, item.isMacro)
             }
         }
 
         onDoubleClicked: {
-            root.addRequested(item.code, item.title)
+            root.addRequested(item.code, item.title, item.isMacro)
         }
 
         onPressed: function (isPressed) {
@@ -89,6 +91,12 @@ StyledListView {
 
             spacing: prv.titleButtonSpacing
 
+            StyledIconLabel {
+                visible: item.isMacro
+
+                iconCode: IconCode.ACCOUNT
+            }
+
             StyledTextLabel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -108,7 +116,7 @@ StyledListView {
                 transparent: true
 
                 onClicked: {
-                    root.addRequested(item.code, item.title)
+                    root.addRequested(item.code, item.title, item.isMacro)
                 }
             }
         }
