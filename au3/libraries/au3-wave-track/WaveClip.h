@@ -513,6 +513,8 @@ public:
     /*! @excsafety{No-fail} */
     void ShiftBy(double delta) noexcept;
 
+    double SnapToTrackSample(double time) const noexcept;
+
     //! The play region is an open-closed interval, [...), where "[ =
     //! GetPlayStartTime()", and ") = GetPlayEndTime()."
 
@@ -937,7 +939,6 @@ private:
     const SampleBlockFactoryPtr& GetFactory() const;
 
     std::vector<std::shared_ptr<Sequence> > GetEmptySequenceCopies() const;
-    double SnapToTrackSample(double time) const noexcept;
 
     //! Fix consistency of envelope after deleting from Sequences
     /*!
