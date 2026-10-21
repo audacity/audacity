@@ -29,9 +29,10 @@ void ProjectToolBarModel::load()
         commands.push_back(project::PROJECT_SHARE_AUDIO_COMMAND);
     }
 
-#ifndef Q_OS_LINUX
-    commands.push_back(effects::EFFECTS_GET_EFFECTS_COMMAND);
-#endif
+    const bool canGetEffects = commandsRegister()->commandInfo(effects::EFFECTS_GET_EFFECTS_COMMAND).isValid();
+    if (canGetEffects) {
+        commands.push_back(effects::EFFECTS_GET_EFFECTS_COMMAND);
+    }
 
     ToolBarItemList items;
     for (const Command& command : commands) {

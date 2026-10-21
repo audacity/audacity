@@ -44,7 +44,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                               ? "qrc:/resources/welcomedialog/AudioDotCom_Dark.png"
                               : "qrc:/resources/welcomedialog/AudioDotCom_Light.png";
 
-    return {
+    std::vector<Item> items = {
         {
             muse::qtrc("appshell/welcome", "Video: find out what’s new in Audacity 4"),
             "qrc:/resources/welcomedialog/YT_Release_Video_Thumb_v1.png",
@@ -63,8 +63,11 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                 commandDispatcher()->dispatch(au3cloud::CLOUD_SHOW_TOUR_PAGE_COMMAND);
             }
         },
-#ifndef Q_OS_LINUX
-        {
+    };
+
+    const bool canGetEffects = commandsRegister()->commandInfo(effects::EFFECTS_GET_EFFECTS_COMMAND).isValid();
+    if (canGetEffects) {
+        items.push_back({
             muse::qtrc("appshell/welcome", "Explore free plugins for sculpting your audio"),
             "qrc:/resources/welcomedialog/MuseHubPromo.jpg",
             {},
@@ -72,8 +75,10 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             [this]() {
                 commandDispatcher()->dispatch(effects::EFFECTS_GET_EFFECTS_COMMAND);
             }
-        },
-#endif
+        });
+    }
+
+    items.insert(items.end(), {
         {
             muse::qtrc("appshell/welcome", "Help us decide the future of Audacity"),
             "qrc:/resources/welcomedialog/Audacity_Feature_Survey.png",
@@ -92,7 +97,8 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                 platformInteractive()->openUrl(SOAP_VOICE_CLEANER_URL);
             }
         }
-    };
+    });
+    return items;
 }
 
 WelcomeDialogModel::WelcomeDialogModel()

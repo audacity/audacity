@@ -4,16 +4,18 @@
 #pragma once
 
 #include <QObject>
+#include <qqmlintegration.h>
 
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
 #include "interactive/iplatforminteractive.h"
 
-namespace au::projectscene {
+namespace au::musehub {
 class GetEffectsModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
+    QML_ELEMENT
 
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 

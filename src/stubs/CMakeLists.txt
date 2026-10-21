@@ -14,6 +14,10 @@ if (NOT AU_BUILD_CLOUD_AUDIOCOM)
     add_subdirectory(au3cloud)
 endif()
 
+if (NOT AU_BUILD_MUSEHUB_MODULE)
+    add_subdirectory(musehub)
+endif()
+
 if (NOT AU_BUILD_USAGEINFO_MODULE)
     add_subdirectory(usageinfo)
 endif()

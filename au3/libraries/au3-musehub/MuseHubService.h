@@ -30,6 +30,7 @@ struct EffectsGroup {
 
 std::string MUSEHUB_API GetBecomeAPartnerUrl();
 std::string MUSEHUB_API GetMusehubAPIEndpoint();
+std::string MUSEHUB_API GetPluginsUrl();
 std::string MUSEHUB_API GetEffectUrl(const std::string& effectCode);
 std::string MUSEHUB_API GetProductUrl(const std::string& webUrl, const std::string& productId);
 bool MUSEHUB_API IsMuseHubRegistered();

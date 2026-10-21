@@ -89,7 +89,6 @@ set( LIBRARIES
    au3-builtin-effects
    au3-label-track
    au3-wave-track-fft
-   au3-musehub
 )
 
 # Conditional libraries based on AU4 build options
@@ -117,6 +116,10 @@ list( APPEND LIBRARIES au3-network-manager)
 
 if (AU_BUILD_CLOUD_AUDIOCOM)
    list( APPEND LIBRARIES au3-url-schemes au3-cloud-audiocom)
+endif()
+
+if (AU_BUILD_MUSEHUB_MODULE)
+   list( APPEND LIBRARIES au3-musehub)
 endif()
 
 if( DEFINED ${_OPT}has_crashreports AND ${_OPT}has_crashreports )

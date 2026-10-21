@@ -61,6 +61,11 @@
 #else
 #include "stubs/au3cloud/au3cloudstubmodule.h"
 #endif
+#ifdef AU_BUILD_MUSEHUB_MODULE
+#include "musehub/musehubmodule.h"
+#else
+#include "stubs/musehub/musehubstubmodule.h"
+#endif
 #ifdef AU_BUILD_USAGEINFO_MODULE
 #include "usageinfo/usageinfomodule.h"
 #else
@@ -172,6 +177,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::effects::NyquistEffectsModule());
     app->addModule(new au::effects::extensions::ExtensionEffectsModule());
     app->addModule(new au::context::ContextModule());
+    app->addModule(new au::musehub::MuseHubModule());
     app->addModule(new au::audio::AudioModule());
     app->addModule(new au::au3audio::Au3AudioModule());
     app->addModule(new au::projectscene::ProjectSceneModule());
