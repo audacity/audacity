@@ -120,18 +120,9 @@ void MacroRunner::runNextFile()
         return;
     }
 
-    dispatch(trackedit::TRACKEDIT_SELECT_ALL_COMMAND, {}, [this](const Ret& selectRet) {
-        if (!selectRet) {
-            resetProject([this, selectRet](const Ret&) {
-                finishFile(selectRet);
-            });
-            return;
-        }
-
-        runSteps([this](const Ret& stepsRet) {
-            resetProject([this, stepsRet](const Ret& resetRet) {
-                finishFile(stepsRet ? resetRet : stepsRet);
-            });
+    runSteps([this](const Ret& stepsRet) {
+        resetProject([this, stepsRet](const Ret& resetRet) {
+            finishFile(stepsRet ? resetRet : stepsRet);
         });
     });
 }
