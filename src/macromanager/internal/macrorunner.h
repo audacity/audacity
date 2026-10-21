@@ -40,6 +40,7 @@ public:
     muse::async::Notification isRunningChanged() const override;
 
     size_t currentFileIndex() const override;
+    std::vector<muse::Ret> fileResults() const override;
     muse::async::Notification currentFileChanged() const override;
 
 private:
@@ -48,6 +49,7 @@ private:
     muse::async::Promise<muse::Ret> start(const Macro& macro, const muse::io::paths_t& files);
 
     void runNextFile();
+    void finishFile(const muse::Ret& ret);
     void runSteps(const OnDone& onDone);
     void runStep(size_t index, const OnDone& onDone);
     void resetProject(const OnDone& onDone);
@@ -62,6 +64,7 @@ private:
     Macro m_macro;
     muse::io::paths_t m_files;
     size_t m_fileIndex = 0;
+    std::vector<muse::Ret> m_fileResults;
     size_t m_startStateIndex = 0;
     bool m_running = false;
     bool m_abortRequested = false;
