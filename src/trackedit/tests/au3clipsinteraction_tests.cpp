@@ -1087,6 +1087,110 @@ TEST_F(Au3ClipsInteractionTests, TrimSingleClipRight)
     removeTrack(trackId);
 }
 
+TEST_F(Au3ClipsInteractionTests, RepeatedSubSampleTrimsDoNotAccumulate)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    const double startBefore = clip->GetPlayStartTime();
+    const double endBefore = clip->GetPlayEndTime();
+
+    //! [WHEN] Both edges are trimmed three times by less than half a sample, each step measured from the shown edge
+    const secs_t deltaSec = 0.4 * SAMPLE_INTERVAL;
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    for (int i = 0; i < 3; ++i) {
+        m_clipsInteraction->trimClipsLeft({ { trackId, clip->GetId() } }, deltaSec, minClipDuration, false);
+        m_clipsInteraction->trimClipsRight({ { trackId, clip->GetId() } }, deltaSec, minClipDuration, false);
+    }
+
+    //! [THEN] The edges stay on their samples instead of drifting by the summed steps
+    EXPECT_DOUBLE_EQ(clip->GetPlayStartTime(), startBefore);
+    EXPECT_DOUBLE_EQ(clip->GetPlayEndTime(), endBefore);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ExpandingATrimBackToItsAudioStartsNoEarlier)
+{
+    //! [GIVEN] A clip whose audio starts a quarter sample past a track sample, trimmed at its start
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(track, track->GetSortedClipByIndex(0)->GetId());
+    clip->ShiftBy(0.25 * SAMPLE_INTERVAL);
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    m_clipsInteraction->trimClipsLeft({ { trackId, clip->GetId() } }, 3 * SAMPLE_INTERVAL, minClipDuration, false);
+
+    //! [WHEN] The trim is expanded back to the audio's start
+    m_clipsInteraction->trimClipsLeft({ { trackId, clip->GetId() } }, -3 * SAMPLE_INTERVAL, minClipDuration, false);
+
+    //! [THEN] The clip doesn't start before its audio
+    EXPECT_GE(clip->GetTrimLeft(), 0.0);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrimEditsThatDoNotMoveTheEdgeKeepTheTrim)
+{
+    //! [GIVEN] A clip with trims that are fractions of a sample
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(track, track->GetSortedClipByIndex(0)->GetId());
+    clip->SetTrimLeft(2.6 * SAMPLE_INTERVAL);
+    clip->SetTrimRight(2.6 * SAMPLE_INTERVAL);
+    const double trimLeftBefore = clip->GetTrimLeft();
+    const double trimRightBefore = clip->GetTrimRight();
+
+    //! [WHEN] Both edges get an edit that doesn't move them
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    const bool leftChanged = m_clipsInteraction->trimClipsLeft({ { trackId, clip->GetId() } }, 0.0, minClipDuration, false);
+    const bool rightChanged = m_clipsInteraction->trimClipsRight({ { trackId, clip->GetId() } }, 0.0, minClipDuration, false);
+
+    //! [THEN] The trims are kept, and no change is reported
+    EXPECT_DOUBLE_EQ(clip->GetTrimLeft(), trimLeftBefore);
+    EXPECT_DOUBLE_EQ(clip->GetTrimRight(), trimRightBefore);
+    EXPECT_FALSE(leftChanged);
+    EXPECT_FALSE(rightChanged);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrimmingAStretchedClipKeepsItsMinimumDuration)
+{
+    //! [GIVEN] A clip stretched so that each of its samples spans eight track samples
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(track, track->GetSortedClipByIndex(0)->GetId());
+    clip->StretchBy(8.0);
+
+    //! [WHEN] Each edge is trimmed to just above the minimum duration, which lies between the clip's samples
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    const double duration = clip->GetPlayEndTime() - clip->GetPlayStartTime();
+    m_clipsInteraction->trimClipsLeft({ { trackId, clip->GetId() } }, duration - minClipDuration.to_double(), minClipDuration, false);
+    const double leftTrimmedDuration = clip->GetPlayEndTime() - clip->GetPlayStartTime();
+    clip->SetTrimLeft(0.0);
+    m_clipsInteraction->trimClipsRight({ { trackId, clip->GetId() } }, duration - minClipDuration.to_double(), minClipDuration, false);
+    const double rightTrimmedDuration = clip->GetPlayEndTime() - clip->GetPlayStartTime();
+
+    //! [THEN] The clip keeps at least the minimum duration instead of collapsing to nothing
+    EXPECT_GE(leftTrimmedDuration, minClipDuration.to_double());
+    EXPECT_GE(rightTrimmedDuration, minClipDuration.to_double());
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
 TEST_F(Au3ClipsInteractionTests, TrimTwoClipsLeftShouldConsiderMinClipDuration)
 {
     //! [GIVEN] There is a project with a track and two clips
@@ -1214,6 +1318,33 @@ TEST_F(Au3ClipsInteractionTests, StretchSingleClipRight)
     //! [THEN] The clip is stretched
     const WaveTrack::IntervalConstHolder stretchedClip = track->GetSortedClipByIndex(0);
     ValidateClipProperties(stretchedClip, TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END - deltaSec);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RepeatedSubSampleStretchesDoNotAccumulate)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    const double startBefore = clip->GetPlayStartTime();
+    const double endBefore = clip->GetPlayEndTime();
+
+    //! [WHEN] Both edges are stretched three times by less than half a sample, each step measured from the shown edge
+    const secs_t deltaSec = 0.4 * SAMPLE_INTERVAL;
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    for (int i = 0; i < 3; ++i) {
+        m_clipsInteraction->stretchClipsLeft({ { trackId, clip->GetId() } }, deltaSec, minClipDuration, false);
+        m_clipsInteraction->stretchClipsRight({ { trackId, clip->GetId() } }, deltaSec, minClipDuration, false);
+    }
+
+    //! [THEN] The edges stay on their samples instead of drifting by the summed steps
+    EXPECT_DOUBLE_EQ(clip->GetPlayStartTime(), startBefore);
+    EXPECT_DOUBLE_EQ(clip->GetPlayEndTime(), endBefore);
 
     // Cleanup
     removeTrack(trackId);
