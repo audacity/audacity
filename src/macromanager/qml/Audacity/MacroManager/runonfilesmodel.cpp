@@ -95,14 +95,19 @@ RunOnFilesModel::Status RunOnFilesModel::status(int row) const
     const size_t index = static_cast<size_t>(row);
 
     if (index < results.size()) {
-        return results.at(index) ? Status::Complete : Status::Failed;
+        const muse::Ret& ret = results.at(index);
+        if (ret) {
+            return Status::Complete;
+        }
+
+        return muse::Ret::Code(ret.code()) == muse::Ret::Code::Cancel ? Status::Stopped : Status::Failed;
     }
 
-    if (index == runner()->currentFileIndex() && runner()->isRunning()) {
-        return Status::Processing;
+    if (!runner()->isRunning()) {
+        return Status::Stopped;
     }
 
-    return Status::Queued;
+    return index == runner()->currentFileIndex() ? Status::Processing : Status::Queued;
 }
 
 void RunOnFilesModel::updateStatuses()

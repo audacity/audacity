@@ -13,6 +13,7 @@ Rectangle {
     id: root
 
     required property string title
+    required property bool isBuiltin
 
     property NavigationPanel navigationPanel: null
     property int navigationRow: 0
@@ -55,7 +56,8 @@ Rectangle {
             },
             {
                 id: "rename",
-                title: qsTrc("macromanager", "Rename")
+                title: qsTrc("macromanager", "Rename"),
+                enabled: !root.isBuiltin
             },
             {
                 id: "run-on-files",
@@ -68,7 +70,8 @@ Rectangle {
             {},
             {
                 id: "delete",
-                title: qsTrc("macromanager", "Delete")
+                title: qsTrc("macromanager", "Delete"),
+                enabled: !root.isBuiltin
             }
         ]
 
