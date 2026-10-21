@@ -5,6 +5,8 @@
 #include "au3clipsinteraction.h"
 
 #include <algorithm>
+#include <cmath>
+#include <limits>
 #include <set>
 
 #include <QCoreApplication>
@@ -40,6 +42,37 @@ using namespace au::au3;
 
 namespace {
 static const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono…");
+
+//! NOTE The clip edge and the audio it shows round a fractional trim to different samples
+double wholeSamples(const Au3WaveClip& clip, double duration)
+{
+    const double sampleDuration = clip.GetStretchRatio() / clip.GetRate();
+    return std::round(duration / sampleDuration) * sampleDuration;
+}
+
+double unroundedDuration(const Au3WaveClip& clip)
+{
+    return (clip.GetSequenceEndTime() - clip.GetTrimRight()) - (clip.GetSequenceStartTime() + clip.GetTrimLeft());
+}
+
+//! NOTE The edge is then rounded to the track's samples, which the clip's own samples need not line up with
+//! (a stretched clip, or one between samples), so of the trims around nearestTo the one landing nearest is kept
+template<typename TrimTo, typename Edge>
+void trimToNearestEdge(const Au3WaveClip& clip, double target, double nearestTo, TrimTo trimTo, Edge edge)
+{
+    const double sampleDuration = clip.GetStretchRatio() / clip.GetRate();
+    double bestTo = nearestTo;
+    double bestError = std::numeric_limits<double>::infinity();
+    for (const double to : { nearestTo - sampleDuration, nearestTo, nearestTo + sampleDuration }) {
+        trimTo(to);
+        const double error = std::abs(edge() - target);
+        if (error < bestError) {
+            bestError = error;
+            bestTo = to;
+        }
+    }
+    trimTo(bestTo);
+}
 }
 
 Au3ClipsInteraction::Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx)
@@ -1232,14 +1265,24 @@ bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool comple
 bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
-        return clip.TrimLeft(deltaSec);
+        const double trimBefore = clip.GetTrimLeft();
+        const double sequenceStart = clip.GetSequenceStartTime();
+        const double target = clip.GetPlayStartTime() + deltaSec;
+        trimToNearestEdge(clip, target, sequenceStart + wholeSamples(clip, target - sequenceStart),
+                          [&clip](double to) { clip.TrimLeftTo(to); }, [&clip]() { return clip.GetPlayStartTime(); });
+        return clip.GetTrimLeft() != trimBefore;
     });
 }
 
 bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
-        return clip.TrimRight(deltaSec);
+        const double trimBefore = clip.GetTrimRight();
+        const double sequenceEnd = clip.SnapToTrackSample(clip.GetSequenceEndTime());
+        const double target = clip.GetPlayEndTime() - deltaSec;
+        trimToNearestEdge(clip, target, sequenceEnd - wholeSamples(clip, sequenceEnd - target),
+                          [&clip](double to) { clip.TrimRightTo(to); }, [&clip]() { return clip.GetPlayEndTime(); });
+        return clip.GetTrimRight() != trimBefore;
     });
 }
 
@@ -1247,7 +1290,16 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
 {
     const secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
-        clip.StretchLeftTo(clip.GetPlayStartTime() + adjustedDelta);
+        const double end = clip.GetPlayEndTime();
+        const double target = clip.SnapToTrackSample(clip.GetPlayStartTime() + adjustedDelta.to_double());
+        const double duration = unroundedDuration(clip);
+        if (target >= end || duration <= 0.0) {
+            return true;
+        }
+
+        // Stretched from the start and shifted back, so that both edges land exactly on samples
+        clip.StretchBy((end - target) / duration);
+        clip.ShiftBy(target - clip.GetPlayStartTime());
         return true;
     });
 }
@@ -1256,7 +1308,14 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
 {
     const secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
-        clip.StretchRightTo(clip.GetPlayEndTime() - adjustedDelta);
+        const double start = clip.GetPlayStartTime();
+        const double target = clip.SnapToTrackSample(clip.GetPlayEndTime() - adjustedDelta.to_double());
+        const double duration = unroundedDuration(clip);
+        if (target <= start || duration <= 0.0) {
+            return true;
+        }
+
+        clip.StretchBy((target - start) / duration);
         return true;
     });
 }
