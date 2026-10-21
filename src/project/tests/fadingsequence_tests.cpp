@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QTemporaryDir>
 
+#include <cmath>
 #include <vector>
 
 #include "au3wrap/internal/au3project.h"
@@ -109,5 +110,29 @@ TEST_F(FadingSequenceTests, FadeChangesApplyToTheNextRead)
     //! [THEN] the next read has it
     EXPECT_NEAR(read(*sequence, 1000, 1000, false)[0], 1.f, 1e-6); // sample 1000, after the new fade-in
     EXPECT_NEAR(read(*sequence, 0, 1000, false)[700], 0.5f, 1e-6); // sample 700, halfway through it
+}
+
+TEST_F(FadingSequenceTests, FadeChangesDuringPlaybackDontMakeTheGainJump)
+{
+    const auto sequence = FadingSequence::Create(*m_track, m_track->GetClipInterfaces());
+
+    //! [GIVEN] a read ending in the middle of the fade-in
+    const auto before = read(*sequence, 0, 600, false);
+    EXPECT_NEAR(before[599], 0.495f, 1e-6);
+
+    //! [WHEN] the fade-in is lengthened, and the next read continues the previous one
+    ClipFades::Get(*m_clip).setFadeIn(0.4);
+    const auto after = read(*sequence, 600, 100, false);
+
+    //! [THEN] the gain goes on from where it was, rather than jumping to the new fade's 0.25
+    EXPECT_NEAR(after[0], 0.5f, 1e-6);
+    auto previous = before.back();
+    for (const auto sample : after) {
+        EXPECT_LT(std::abs(sample - previous), 0.02f);
+        previous = sample;
+    }
+
+    //! [THEN] once the change is ramped in, the new fade applies
+    EXPECT_NEAR(after[50], 0.375f, 1e-6); // sample 650
 }
 }

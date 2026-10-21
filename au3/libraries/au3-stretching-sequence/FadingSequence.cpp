@@ -87,6 +87,58 @@ bool FadingSequence::DoGet(
     return true;
 }
 
+namespace {
+//! Duration over which fade length changes are applied, to avoid clicks when fades are dragged during playback
+constexpr auto fadeLengthRampDuration = 0.02;
+
+//! Linear fades, for now
+double FadeGain(double t, double clipStart, double clipEnd, double fadeIn, double fadeOut)
+{
+    auto gain = 1.0;
+    if (fadeIn > 0 && t < clipStart + fadeIn) {
+        gain *= (t - clipStart) / fadeIn;
+    }
+    if (fadeOut > 0 && t > clipEnd - fadeOut) {
+        gain *= (clipEnd - t) / fadeOut;
+    }
+    // Sample times may be marginally outside of the clip
+    return std::clamp(gain, 0.0, 1.0);
+}
+}
+
+double FadingSequence::FadeLengthRamp::At(size_t i) const
+{
+    return i < remaining ? value + step * i : target;
+}
+
+void FadingSequence::FadeLengthRamp::Retarget(double newTarget, size_t rampLength)
+{
+    if (newTarget == target) {
+        return;
+    }
+    // Ramp from where we are, which may be in the middle of a previous ramp
+    target = newTarget;
+    remaining = std::max<size_t>(rampLength, 1);
+    step = (target - value) / remaining;
+}
+
+void FadingSequence::FadeLengthRamp::Advance(size_t numSamples)
+{
+    if (numSamples >= remaining) {
+        value = target;
+        remaining = 0;
+    } else {
+        value += step * numSamples;
+        remaining -= numSamples;
+    }
+}
+
+void FadingSequence::FadeLengthRamp::Snap(double newTarget)
+{
+    value = target = newTarget;
+    remaining = 0;
+}
+
 void FadingSequence::ApplyFades(
     size_t nBuffers, const samplePtr buffers[], sampleCount start, size_t len, bool backwards) const
 {
@@ -96,33 +148,38 @@ void FadingSequence::ApplyFades(
     const auto first = backwards ? start - static_cast<sampleCount::type>(len) : start;
     const auto end = first + static_cast<sampleCount::type>(len);
 
-    // Multiplies the samples whose times lie in [t0, t1) by `gain(t)`
-    const auto applyGain = [&](double t0, double t1, const auto& gain) {
-        const auto n0 = std::max(sampleCount { std::ceil(t0 * rate) }, first);
-        const auto n1 = std::min(sampleCount { std::ceil(t1 * rate) }, end);
-        for (auto n = n0; n < n1; ++n) {
-            const auto i = (backwards ? start - 1 - n : n - start).as_size_t();
-            const auto g = static_cast<float>(gain(n.as_double() / rate));
-            for (size_t c = 0; c < nBuffers; ++c) {
-                reinterpret_cast<float*>(buffers[c])[i] *= g;
-            }
-        }
-    };
+    const auto continuesPreviousRead = mExpectedStart == start && mExpectedBackwards == backwards;
+    mExpectedStart = backwards ? first : end;
+    mExpectedBackwards = backwards;
+    const auto rampLength = static_cast<size_t>(fadeLengthRampDuration * rate);
 
-    for (const auto& [clip, fades] : mClips) {
+    for (auto& [clip, fades, fadeIn, fadeOut] : mClips) {
+        if (continuesPreviousRead) {
+            fadeIn.Retarget(fades.fadeIn(), rampLength);
+            fadeOut.Retarget(fades.fadeOut(), rampLength);
+        } else {
+            fadeIn.Snap(fades.fadeIn());
+            fadeOut.Snap(fades.fadeOut());
+        }
+
         const auto clipStart = clip->GetPlayStartTime();
         const auto clipEnd = clip->GetPlayEndTime();
-        if (clipEnd <= first.as_double() / rate || clipStart >= end.as_double() / rate) {
-            continue;
+        const auto n0 = std::max(sampleCount { std::ceil(clipStart * rate) }, first);
+        const auto n1 = std::min(sampleCount { std::ceil(clipEnd * rate) }, end);
+        for (auto n = n0; n < n1; ++n) {
+            // Index in the buffers, which is also the number of samples read so far
+            const auto i = (backwards ? start - 1 - n : n - start).as_size_t();
+            const auto gain = FadeGain(n.as_double() / rate, clipStart, clipEnd, fadeIn.At(i), fadeOut.At(i));
+            if (gain == 1.0) {
+                continue;
+            }
+            for (size_t c = 0; c < nBuffers; ++c) {
+                reinterpret_cast<float*>(buffers[c])[i] *= static_cast<float>(gain);
+            }
         }
 
-        // Linear fades for now
-        if (const auto fadeIn = fades.fadeIn(); fadeIn > 0) {
-            applyGain(clipStart, clipStart + fadeIn, [&](double t) { return (t - clipStart) / fadeIn; });
-        }
-        if (const auto fadeOut = fades.fadeOut(); fadeOut > 0) {
-            applyGain(clipEnd - fadeOut, clipEnd, [&](double t) { return (clipEnd - t) / fadeOut; });
-        }
+        fadeIn.Advance(len);
+        fadeOut.Advance(len);
     }
 }
 

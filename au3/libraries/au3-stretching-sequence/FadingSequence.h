@@ -12,6 +12,7 @@
 #include "ClipInterface.h"
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 class ClipFades;
@@ -55,14 +56,35 @@ public:
     AudioGraph::ChannelType GetChannelType() const override;
 
 private:
+    //! A fade length moving linearly to its latest value, so that changes during playback don't click
+    struct FadeLengthRamp {
+        //! The length at the `i`-th sample from where the ramp was last advanced to
+        double At(size_t i) const;
+        void Retarget(double target, size_t rampLength);
+        void Advance(size_t numSamples);
+        void Snap(double target);
+
+        double value = 0.0;
+        double target = 0.0;
+        double step = 0.0;
+        size_t remaining = 0;
+    };
+
     struct FadedClip {
         std::shared_ptr<const ClipInterface> clip;
         const ClipFades& fades;
+        FadeLengthRamp fadeIn;
+        FadeLengthRamp fadeOut;
     };
 
     void ApplyFades(
         size_t nBuffers, const samplePtr buffers[], sampleCount start, size_t len, bool backwards) const;
 
     const std::shared_ptr<const PlayableSequence> mSequence;
-    std::vector<FadedClip> mClips;
+
+    // Mutable: reading the sequence advances the fade-length ramps
+    mutable std::vector<FadedClip> mClips;
+    //! Where the next read continues the previous one; another read jumps to the latest fades
+    mutable std::optional<sampleCount> mExpectedStart;
+    mutable bool mExpectedBackwards = false;
 };
