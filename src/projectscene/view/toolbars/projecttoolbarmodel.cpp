@@ -25,15 +25,19 @@ void ProjectToolBarModel::load()
         itemsCodes.push_back("file-share-audio");
     }
 
-#ifndef Q_OS_LINUX
-    itemsCodes.push_back("get-effects");
-#endif
-
     ToolBarItemList items;
     for (const ActionCode& code : itemsCodes) {
         ToolBarItem* item = makeItem(code);
         item->setShowTitle(true);
 
+        items << item;
+    }
+
+    const muse::rcommand::Command getEffectsCommand("command://projectscene/get-effects");
+    const bool canGetEffects = commandsRegister()->commandInfo(getEffectsCommand).isValid();
+    if (canGetEffects) {
+        ToolBarItem* item = makeItem(getEffectsCommand);
+        item->setShowTitle(true);
         items << item;
     }
 

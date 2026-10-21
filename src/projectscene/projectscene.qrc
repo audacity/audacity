@@ -32,10 +32,6 @@
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumePressureRuler.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeSlider.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/GetEffectsMenu.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayCursorLine.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlaybackSeekLine.qml</file>

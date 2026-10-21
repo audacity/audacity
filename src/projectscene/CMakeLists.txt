@@ -113,9 +113,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/geteffectsmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/geteffectsmodel.h
-
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/isamplespainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.cpp
@@ -269,7 +266,6 @@ set(MODULE_LINK
         au3-track
         au3-project
         au3-wave-track-paint
-        au3-musehub
         Qt::Quick
 )
 
