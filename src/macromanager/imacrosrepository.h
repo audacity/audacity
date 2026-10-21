@@ -5,6 +5,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/notification.h"
@@ -24,6 +25,7 @@ public:
 
     virtual const MacroList& macros() const = 0;
     virtual std::optional<Macro> macro(const std::string& name) const = 0;
+    virtual std::vector<std::string> dependentMacros(const std::string& name) const = 0;
 
     virtual muse::Ret save(const Macro& macro) = 0;
     virtual muse::Ret remove(const std::string& name) = 0;

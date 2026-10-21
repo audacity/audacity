@@ -16,6 +16,7 @@ Rectangle {
     required property string code
     required property string title
     required property bool hasParams
+    required property bool isMacro
 
     property int sideMargin: 0
     property int handleWidth: 0
@@ -90,6 +91,7 @@ Rectangle {
         readonly property int height: 44
         readonly property int buttonSize: 28
         readonly property int buttonsSpacing: 4
+        readonly property int iconTitleSpacing: 6
     }
 
     HoverHandler {
@@ -184,14 +186,27 @@ Rectangle {
 
         SeparatorLine {}
 
-        StyledTextLabel {
+        RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.leftMargin: root.sideMargin
 
-            text: root.title
-            horizontalAlignment: Qt.AlignLeft
-            elide: Text.ElideRight
-            leftPadding: root.sideMargin
+            spacing: prv.iconTitleSpacing
+
+            StyledIconLabel {
+                visible: root.isMacro
+
+                iconCode: IconCode.ACCOUNT
+            }
+
+            StyledTextLabel {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                text: root.title
+                horizontalAlignment: Qt.AlignLeft
+                elide: Text.ElideRight
+            }
         }
 
         SeparatorLine {}
