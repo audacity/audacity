@@ -1312,7 +1312,8 @@ bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool comple
             continue;
         }
 
-        ok = edit(*clip);
+        const bool clipChanged = edit(*clip);
+        ok = ok || clipChanged;
 
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
@@ -1360,10 +1361,11 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
         ClipFades::Get(clip).setDraggingSide(ClipSide::Left);
         const double end = clip.GetPlayEndTime();
-        const double target = clip.SnapToTrackSample(clip.GetPlayStartTime() + adjustedDelta.to_double());
+        const double startBefore = clip.GetPlayStartTime();
+        const double target = clip.SnapToTrackSample(startBefore + adjustedDelta.to_double());
         const double duration = unroundedDuration(clip);
-        if (target >= end || duration <= 0.0) {
-            return true;
+        if (target >= end || duration <= 0.0 || target == startBefore) {
+            return false;
         }
 
         // Stretched from the start and shifted back, so that both edges land exactly on samples
@@ -1379,10 +1381,11 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
         ClipFades::Get(clip).setDraggingSide(ClipSide::Right);
         const double start = clip.GetPlayStartTime();
-        const double target = clip.SnapToTrackSample(clip.GetPlayEndTime() - adjustedDelta.to_double());
+        const double endBefore = clip.GetPlayEndTime();
+        const double target = clip.SnapToTrackSample(endBefore - adjustedDelta.to_double());
         const double duration = unroundedDuration(clip);
-        if (target <= start || duration <= 0.0) {
-            return true;
+        if (target <= start || duration <= 0.0 || target == endBefore) {
+            return false;
         }
 
         clip.StretchBy((target - start) / duration);
