@@ -25,18 +25,9 @@ StyledListView {
         readonly property int titleButtonSpacing: 10
     }
 
-    currentIndex: -1
-
     navigation.name: "AvailableCommandsList"
     navigation.direction: NavigationPanel.Vertical
     navigation.accessible.name: qsTrc("macromanager", "Available commands")
-
-    navigation.onNavigationEvent: function (event) {
-        if (event.type === NavigationEvent.Escape && root.currentIndex !== -1) {
-            root.currentIndex = -1
-            event.accepted = true
-        }
-    }
 
     delegate: ListItemBlank {
         id: item
@@ -48,17 +39,11 @@ StyledListView {
         width: ListView.view.width
         height: prv.rowHeight
 
-        isSelected: ListView.isCurrentItem
+        isSelected: item.navigation.active
 
         navigation.panel: root.navigation
         navigation.row: item.index
         navigation.accessible.name: item.title
-
-        navigation.onActiveChanged: {
-            if (item.navigation.active && root.currentIndex !== -1) {
-                root.currentIndex = item.index
-            }
-        }
 
         mouseArea.drag.target: dragTarget
 
@@ -76,12 +61,9 @@ StyledListView {
         }
 
         onClicked: function (mouse) {
-            if (!mouse && root.currentIndex === item.index) {
+            if (!mouse) {
                 root.addRequested(item.code, item.title)
-                return
             }
-
-            root.currentIndex = item.index
         }
 
         onDoubleClicked: {
