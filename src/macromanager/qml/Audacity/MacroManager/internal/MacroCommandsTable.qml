@@ -26,7 +26,7 @@ ColumnLayout {
     signal editRequested(int row)
     signal deleteRequested(int row)
     signal moveRequested(int from, int to)
-    signal insertRequested(int row, string code, string title)
+    signal insertRequested(int row, string code, string title, bool isMacro)
 
     spacing: 0
 
@@ -203,7 +203,7 @@ ColumnLayout {
                 if (data.row >= 0) {
                     root.moveRequested(data.row, data.row < dropIndex ? dropIndex - 1 : dropIndex)
                 } else {
-                    root.insertRequested(dropIndex, data.code, data.title)
+                    root.insertRequested(dropIndex, data.code, data.title, Boolean(data.isMacro))
                 }
 
                 drop.accept()

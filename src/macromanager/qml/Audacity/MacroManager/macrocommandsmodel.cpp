@@ -39,13 +39,16 @@ QVariant MacroCommandsModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    const MacroStep& step = m_macro.steps.at(index.row());
+    const MacroItem& item = m_macro.steps.at(index.row());
+    const MacroStep* step = std::get_if<MacroStep>(&item);
+    const QString macroName = step ? QString() : QString::fromStdString(std::get<MacroReference>(item).name);
 
     switch (role) {
     case StepRole: return index.row() + 1;
-    case CodeRole: return QString::fromStdString(step.command.toString());
-    case TitleRole: return titleOf(step.command);
-    case HasParamsRole: return hasParams(step.command);
+    case CodeRole: return step ? QString::fromStdString(step->command.toString()) : macroName;
+    case TitleRole: return step ? titleOf(step->command) : macroName;
+    case HasParamsRole: return step && hasParams(step->command);
+    case IsMacroRole: return !step;
     default: return QVariant();
     }
 }
@@ -61,7 +64,8 @@ QHash<int, QByteArray> MacroCommandsModel::roleNames() const
         { StepRole, "step" },
         { CodeRole, "code" },
         { TitleRole, "title" },
-        { HasParamsRole, "hasParams" }
+        { HasParamsRole, "hasParams" },
+        { IsMacroRole, "isMacro" }
     };
 
     return roles;
@@ -123,6 +127,20 @@ void MacroCommandsModel::insert(int row, const QString& code)
     });
 }
 
+void MacroCommandsModel::addMacro(const QString& name)
+{
+    insertMacro(rowCount(), name);
+}
+
+void MacroCommandsModel::insertMacro(int row, const QString& name)
+{
+    if (name.isEmpty()) {
+        return;
+    }
+
+    insertStep(row, MacroReference { name.toStdString() });
+}
+
 void MacroCommandsModel::move(int from, int to)
 {
     to = std::clamp(to, 0, rowCount() - 1);
@@ -132,9 +150,9 @@ void MacroCommandsModel::move(int from, int to)
     }
 
     beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to + 1 : to);
-    MacroStep step = std::move(m_macro.steps.at(from));
+    MacroItem item = std::move(m_macro.steps.at(from));
     m_macro.steps.erase(m_macro.steps.begin() + from);
-    m_macro.steps.insert(m_macro.steps.begin() + to, std::move(step));
+    m_macro.steps.insert(m_macro.steps.begin() + to, std::move(item));
     endMoveRows();
 
     notifyStepsChanged(std::min(from, to), std::max(from, to));
@@ -160,8 +178,12 @@ void MacroCommandsModel::editParams(int row)
         return;
     }
 
-    const MacroStep& step = m_macro.steps.at(row);
-    requestParams(step.command, step.params, [this, row](const Params& params) {
+    const MacroStep* step = std::get_if<MacroStep>(&m_macro.steps.at(row));
+    if (!step) {
+        return;
+    }
+
+    requestParams(step->command, step->params, [this, row](const Params& params) {
         setStepParams(row, params);
     });
 }
@@ -250,12 +272,12 @@ void MacroCommandsModel::notifyStepsChanged(int fromRow, int toRow)
     emit dataChanged(index(fromRow), index(toRow), { StepRole });
 }
 
-void MacroCommandsModel::insertStep(int row, const MacroStep& step)
+void MacroCommandsModel::insertStep(int row, const MacroItem& item)
 {
     row = std::clamp(row, 0, rowCount());
 
     beginInsertRows(QModelIndex(), row, row);
-    m_macro.steps.insert(m_macro.steps.begin() + row, step);
+    m_macro.steps.insert(m_macro.steps.begin() + row, item);
     endInsertRows();
 
     notifyStepsChanged(row + 1, rowCount() - 1);
@@ -268,7 +290,9 @@ void MacroCommandsModel::setStepParams(int row, const Params& params)
         return;
     }
 
-    m_macro.steps[row].params = params;
+    if (MacroStep* step = std::get_if<MacroStep>(&m_macro.steps[row])) {
+        step->params = params;
+    }
 }
 
 void MacroCommandsModel::requestParams(const Command& command, const Params& current, const OnParams& onParams)

@@ -54,6 +54,7 @@ QVariant AvailableCommandsModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case CodeRole: return item.code;
     case TitleRole: return item.title;
+    case IsMacroRole: return item.isMacro;
     default: return QVariant();
     }
 }
@@ -67,7 +68,8 @@ QHash<int, QByteArray> AvailableCommandsModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles {
         { CodeRole, "code" },
-        { TitleRole, "title" }
+        { TitleRole, "title" },
+        { IsMacroRole, "isMacro" }
     };
 
     return roles;
@@ -78,9 +80,15 @@ QString AvailableCommandsModel::searchText() const
     return m_searchText;
 }
 
-void AvailableCommandsModel::load()
+void AvailableCommandsModel::load(const QString& editedMacroName)
 {
+    m_editedMacroName = editedMacroName;
+
     commandsRegister()->commandInfoListChanged().onNotify(this, [this]() {
+        reload();
+    });
+
+    repository()->macrosChanged().onNotify(this, [this]() {
         reload();
     });
 
@@ -109,7 +117,8 @@ QVariantMap AvailableCommandsModel::itemAt(int row) const
 
     return {
         { "code", item.code },
-        { "title", item.title }
+        { "title", item.title },
+        { "isMacro", item.isMacro }
     };
 }
 
@@ -118,13 +127,8 @@ void AvailableCommandsModel::reload()
     beginResetModel();
 
     m_allItems.clear();
-    for (const rcommand::CommandInfo& info : commandsRegister()->commandInfoList()) {
-        if (!isMacroEligible(info)) {
-            continue;
-        }
-
-        m_allItems.append({ QString::fromStdString(info.command.toString()), info.title.qTranslatedWithoutMnemonic() });
-    }
+    appendCommands();
+    appendMacros();
 
     std::ranges::sort(m_allItems, [](const Item& a, const Item& b) {
         return QString::localeAwareCompare(a.title, b.title) < 0;
@@ -136,6 +140,32 @@ void AvailableCommandsModel::reload()
     });
 
     endResetModel();
+}
+
+void AvailableCommandsModel::appendCommands()
+{
+    for (const rcommand::CommandInfo& info : commandsRegister()->commandInfoList()) {
+        if (!isMacroEligible(info)) {
+            continue;
+        }
+
+        m_allItems.append({ QString::fromStdString(info.command.toString()), info.title.qTranslatedWithoutMnemonic(), false });
+    }
+}
+
+void AvailableCommandsModel::appendMacros()
+{
+    const std::string edited = m_editedMacroName.toStdString();
+    const std::vector<std::string> dependents = repository()->dependentMacros(edited);
+
+    for (const Macro& macro : repository()->macros()) {
+        if (macro.name == edited || std::ranges::find(dependents, macro.name) != dependents.end()) {
+            continue;
+        }
+
+        const QString name = QString::fromStdString(macro.name);
+        m_allItems.append({ name, name, true });
+    }
 }
 
 bool AvailableCommandsModel::matchesSearch(const Item& item) const

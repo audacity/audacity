@@ -59,7 +59,7 @@ StyledDialogView {
     }
 
     Component.onCompleted: {
-        availableCommandsModel.load()
+        availableCommandsModel.load(root.macroName)
         macroCommandsModel.load(root.macroName)
     }
 
@@ -107,7 +107,11 @@ StyledDialogView {
                         }
 
                         const command = availableCommandsModel.itemAt(0)
-                        macroCommandsModel.add(command.code)
+                        if (command.isMacro) {
+                            macroCommandsModel.addMacro(command.code)
+                        } else {
+                            macroCommandsModel.add(command.code)
+                        }
                     }
                 }
 
@@ -123,8 +127,12 @@ StyledDialogView {
                     navigation.section: root.navigationSection
                     navigation.order: 2
 
-                    onAddRequested: function (code, title) {
-                        macroCommandsModel.add(code)
+                    onAddRequested: function (code, title, isMacro) {
+                        if (isMacro) {
+                            macroCommandsModel.addMacro(code)
+                        } else {
+                            macroCommandsModel.add(code)
+                        }
                     }
                 }
             }
@@ -195,8 +203,12 @@ StyledDialogView {
                             macroCommandsModel.move(from, to)
                         }
 
-                        onInsertRequested: function (row, code, title) {
-                            macroCommandsModel.insert(row, code)
+                        onInsertRequested: function (row, code, title, isMacro) {
+                            if (isMacro) {
+                                macroCommandsModel.insertMacro(row, code)
+                            } else {
+                                macroCommandsModel.insert(row, code)
+                            }
                         }
                     }
                 }

@@ -24,6 +24,7 @@ public:
 
     const MacroList& macros() const override;
     std::optional<Macro> macro(const std::string& name) const override;
+    std::vector<std::string> dependentMacros(const std::string& name) const override;
 
     muse::Ret save(const Macro& macro) override;
     muse::Ret remove(const std::string& name) override;
