@@ -185,9 +185,13 @@ private:
     LabelKeyList selectedLabels() const;
 
     std::pair<std::string, std::string> stretchHistoryDescriptions(const ClipKeyList& clipKeyList, bool hasLabels, bool isLeft) const;
+    //! A boundary drag reports each step; the step that completes it is often unchanged
+    //! (released where the last move left it), so what counts is whether the whole drag changed anything
+    bool accumulateBoundaryEdit(bool changed, bool completed);
 
     const std::unique_ptr<IUndoManager> m_undoManager;
     bool m_movingItems = false;
+    bool m_boundaryEditChanged = false;
     muse::async::Notification m_cancelDragEditRequested;
 };
 }

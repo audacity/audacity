@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include "framework/global/modularity/ioc.h"
 
 #include "ui/iuiconfiguration.h"
@@ -85,6 +87,7 @@ private:
     trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
+    std::optional<trackedit::Clip> currentClip(const trackedit::ClipKey& key) const;
 
     bool isKeyboardTriggered() const;
 
