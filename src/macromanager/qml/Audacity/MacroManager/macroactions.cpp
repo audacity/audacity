@@ -79,8 +79,15 @@ io::path_t MacroActions::selectImportFile() const
                                                 macroFileFilter());
 }
 
-std::optional<std::string> MacroActions::requestName(const UriQuery& uri) const
+std::optional<std::string> MacroActions::requestName(UriQuery uri) const
 {
+    ValList existingNames;
+    for (const Macro& macro : repository()->macros()) {
+        existingNames.push_back(Val(macro.name));
+    }
+
+    uri.addParam("existingNames", Val(existingNames));
+
     const RetVal<Val> result = interactive()->openSync(uri);
     if (!result.ret) {
         return std::nullopt;

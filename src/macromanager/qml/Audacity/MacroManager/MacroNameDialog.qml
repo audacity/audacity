@@ -13,6 +13,7 @@ StyledDialogView {
     id: root
 
     property string macroName: ""
+    property var existingNames: []
 
     title: qsTrc("macromanager", "New macro")
 
@@ -25,19 +26,30 @@ StyledDialogView {
         readonly property int contentWidth: 320
         readonly property int margins: 12
         readonly property int fieldTopMargin: 4
+        readonly property int errorTopMargin: 6
         readonly property int buttonsTopMargin: 16
         readonly property int buttonWidth: 64
         readonly property int buttonHeight: 28
 
-        readonly property bool isNameValid: root.macroName.trim().length > 0
+        property string initialName: ""
+
+        readonly property string trimmedName: root.macroName.trim()
+        readonly property bool nameExists: prv.trimmedName !== prv.initialName && root.existingNames.includes(prv.trimmedName)
+        readonly property bool isNameValid: prv.trimmedName.length > 0 && !prv.nameExists
+
+        readonly property color errorColor: ui.theme.extra["error_text_color"]
 
         function confirm() {
             root.ret = {
                 errcode: 0,
-                value: root.macroName.trim()
+                value: prv.trimmedName
             }
             root.hide()
         }
+    }
+
+    Component.onCompleted: {
+        prv.initialName = root.macroName.trim()
     }
 
     onNavigationActivateRequested: {
@@ -90,6 +102,28 @@ StyledDialogView {
             Component.onCompleted: {
                 selectAll()
             }
+
+            Rectangle {
+                anchors.fill: parent
+
+                visible: prv.nameExists
+
+                color: "transparent"
+                radius: nameField.background.radius
+                border.color: prv.errorColor
+                border.width: nameField.background.border.width
+            }
+        }
+
+        StyledTextLabel {
+            Layout.topMargin: prv.errorTopMargin
+            Layout.fillWidth: true
+
+            visible: prv.nameExists
+
+            text: qsTrc("macromanager", "A macro with this name already exists")
+            color: prv.errorColor
+            horizontalAlignment: Qt.AlignLeft
         }
 
         ButtonBox {
