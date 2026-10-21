@@ -27,6 +27,36 @@ Rectangle {
 
     property NavigationPanel navigationPanel: null
     property int navigationRow: 0
+    property bool innerNavigationActive: false
+
+    property NavigationPanel innerNavigationPanel: NavigationPanel {
+        name: "CommandActions"
+        enabled: root.enabled && root.visible && root.innerNavigationActive
+        section: root.navigationPanel ? root.navigationPanel.section : null
+        direction: NavigationPanel.Horizontal
+        order: root.navigationPanel ? root.navigationPanel.order : 0
+        accessible.name: root.title
+
+        onActiveChanged: {
+            if (root.innerNavigationPanel.active) {
+                return
+            }
+
+            Qt.callLater(function () {
+                if (!root.innerNavigationPanel.active) {
+                    root.innerNavigationActive = false
+                }
+            })
+        }
+
+        onNavigationEvent: function (event) {
+            if (event.type === NavigationEvent.Escape) {
+                root.innerNavigationActive = false
+                actionsNavCtrl.requestActive()
+                event.accepted = true
+            }
+        }
+    }
 
     property bool canMoveUp: false
     property bool canMoveDown: false
@@ -166,48 +196,83 @@ Rectangle {
 
         SeparatorLine {}
 
-        RowLayout {
+        Item {
             Layout.preferredWidth: root.actionsWidth
+            Layout.fillHeight: true
 
-            spacing: prv.buttonsSpacing
+            NavigationControl {
+                id: actionsNavCtrl
 
-            FlatButton {
-                Layout.preferredWidth: prv.buttonSize
-                Layout.preferredHeight: prv.buttonSize
-                Layout.leftMargin: root.sideMargin
+                name: "CommandRow"
+                panel: root.navigationPanel
+                row: root.navigationRow
+                column: 0
+                enabled: root.enabled && root.visible
 
-                icon: IconCode.EDIT
-                transparent: true
-                enabled: root.hasParams
+                accessible.role: MUAccessible.ListItem
+                accessible.name: root.title
 
-                navigation.panel: root.navigationPanel
-                navigation.row: root.navigationRow
-                navigation.column: 0
-                navigation.name: "EditCommand"
-                navigation.accessible.name: qsTrc("macromanager", "Edit command")
+                onTriggered: {
+                    root.innerNavigationActive = true
+                    const firstButton = editButton.enabled ? editButton : menuButton
+                    firstButton.navigation.requestActive()
+                }
 
-                onClicked: {
-                    root.editRequested()
+                onActiveChanged: {
+                    if (actionsNavCtrl.active) {
+                        root.innerNavigationActive = false
+                    }
                 }
             }
 
-            FlatButton {
-                id: menuButton
+            NavigationFocusBorder {
+                navigationCtrl: actionsNavCtrl
+                drawOutsideParent: false
+            }
 
-                Layout.preferredWidth: prv.buttonSize
-                Layout.preferredHeight: prv.buttonSize
+            RowLayout {
+                anchors.fill: parent
 
-                icon: IconCode.MENU_THREE_DOTS
-                transparent: true
+                spacing: prv.buttonsSpacing
 
-                navigation.panel: root.navigationPanel
-                navigation.row: root.navigationRow
-                navigation.column: 1
-                navigation.name: "CommandContextMenu"
-                navigation.accessible.name: qsTrc("macromanager", "Command menu")
+                FlatButton {
+                    id: editButton
 
-                onClicked: {
-                    contextMenuLoader.show(menuButton.mapToItem(root, 0, menuButton.height))
+                    Layout.preferredWidth: prv.buttonSize
+                    Layout.preferredHeight: prv.buttonSize
+                    Layout.leftMargin: root.sideMargin
+
+                    icon: IconCode.EDIT
+                    transparent: true
+                    enabled: root.hasParams
+
+                    navigation.panel: root.innerNavigationPanel
+                    navigation.order: 0
+                    navigation.name: "EditCommand"
+                    navigation.accessible.name: qsTrc("macromanager", "Edit command")
+
+                    onClicked: {
+                        root.editRequested()
+                    }
+                }
+
+                FlatButton {
+                    id: menuButton
+
+                    Layout.preferredWidth: prv.buttonSize
+                    Layout.preferredHeight: prv.buttonSize
+
+                    icon: IconCode.MENU_THREE_DOTS
+                    transparent: true
+
+                    navigation.panel: root.innerNavigationPanel
+                    navigation.order: 1
+                    navigation.name: "CommandContextMenu"
+                    navigation.accessible.name: qsTrc("macromanager", "Command menu")
+
+                    onClicked: {
+                        contextMenuLoader.show(menuButton.mapToItem(root, 0, menuButton.height))
+                    }
                 }
             }
         }
