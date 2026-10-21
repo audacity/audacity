@@ -32,7 +32,7 @@ public:
     muse::io::path_t selectImportFile() const;
 
 private:
-    std::optional<std::string> requestName(const muse::UriQuery& uri) const;
+    std::optional<std::string> requestName(muse::UriQuery uri) const;
     std::vector<std::string> macroFileFilter() const;
 };
 }
