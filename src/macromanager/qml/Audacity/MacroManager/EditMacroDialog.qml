@@ -24,7 +24,6 @@ StyledDialogView {
     contentHeight: prv.height
     resizable: true
     margins: 0
-    closeOnEscape: availableCommandsList.currentIndex === -1
 
     QtObject {
         id: prv
@@ -113,8 +112,6 @@ StyledDialogView {
                 SeparatorLine {}
 
                 AvailableCommandsList {
-                    id: availableCommandsList
-
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
