@@ -4,6 +4,7 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 
 #include "framework/global/async/asyncable.h"
 
@@ -16,11 +17,13 @@
 #include "trackedit/itrackeditclipboard.h"
 
 #include "macromanager/imacrorunner.h"
+#include "macromanager/imacrosrepository.h"
 
 namespace au::macromanager {
 class MacroRunner : public IMacroRunner, public muse::Contextable, public muse::async::Asyncable
 {
     muse::GlobalInject<muse::toast::IToastService> toastService;
+    muse::GlobalInject<IMacrosRepository> repository;
 
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
@@ -45,13 +48,15 @@ public:
 
 private:
     using OnDone = std::function<void (const muse::Ret&)>;
+    using Steps = std::shared_ptr<const std::vector<MacroItem> >;
 
     muse::async::Promise<muse::Ret> start(const Macro& macro, const muse::io::paths_t& files);
 
     void runNextFile();
     void finishFile(const muse::Ret& ret);
-    void runSteps(const OnDone& onDone);
-    void runStep(size_t index, const OnDone& onDone);
+    void runSteps(const std::vector<MacroItem>& steps, const OnDone& onDone);
+    void runStep(const Steps& steps, size_t index, const OnDone& onDone);
+    void runMacro(const MacroReference& reference, const OnDone& onDone);
     void resetProject(const OnDone& onDone);
     void finish(const muse::Ret& ret);
 
@@ -62,6 +67,7 @@ private:
     void showError(const muse::Ret& ret);
 
     Macro m_macro;
+    std::vector<std::string> m_macroStack;
     muse::io::paths_t m_files;
     size_t m_fileIndex = 0;
     std::vector<muse::Ret> m_fileResults;

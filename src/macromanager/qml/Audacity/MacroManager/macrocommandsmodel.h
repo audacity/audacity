@@ -54,6 +54,8 @@ public:
     Q_INVOKABLE void load(const QString& macroName);
     Q_INVOKABLE void add(const QString& code);
     Q_INVOKABLE void insert(int row, const QString& code);
+    Q_INVOKABLE void addMacro(const QString& name);
+    Q_INVOKABLE void insertMacro(int row, const QString& name);
     Q_INVOKABLE void move(int from, int to);
     Q_INVOKABLE void remove(int row);
     Q_INVOKABLE void removeAllSteps();
@@ -76,7 +78,8 @@ private:
         StepRole = Qt::UserRole + 1,
         CodeRole,
         TitleRole,
-        HasParamsRole
+        HasParamsRole,
+        IsMacroRole
     };
 
     using OnParams = std::function<void (const muse::rcommand::Params&)>;
@@ -85,7 +88,7 @@ private:
     QString titleOf(const muse::rcommand::Command& command) const;
     bool hasParams(const muse::rcommand::Command& command) const;
     void notifyStepsChanged(int fromRow, int toRow);
-    void insertStep(int row, const MacroStep& step);
+    void insertStep(int row, const MacroItem& item);
     void setStepParams(int row, const muse::rcommand::Params& params);
     void requestParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
     void requestEffectParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);

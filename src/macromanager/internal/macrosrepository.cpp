@@ -19,6 +19,14 @@ namespace {
 const std::string MACROS_DIR("macros");
 const std::string MACRO_FILE_SUFFIX(".json");
 const std::string BUILTIN_MACRO_FILES_KEY("builtin_macro_files");
+
+bool references(const Macro& macro, const std::string& name)
+{
+    return std::ranges::any_of(macro.steps, [&name](const MacroItem& item) {
+        const MacroReference* reference = std::get_if<MacroReference>(&item);
+        return reference && reference->name == name;
+    });
+}
 }
 
 void MacrosRepository::init()
@@ -45,6 +53,30 @@ std::optional<Macro> MacrosRepository::macro(const std::string& name) const
     return *it;
 }
 
+std::vector<std::string> MacrosRepository::dependentMacros(const std::string& name) const
+{
+    std::vector<std::string> dependents;
+    std::vector<std::string> pending { name };
+
+    while (!pending.empty()) {
+        const std::string current = std::move(pending.back());
+        pending.pop_back();
+
+        for (const Macro& macro : m_macros) {
+            if (macro.name == name || std::ranges::find(dependents, macro.name) != dependents.end()) {
+                continue;
+            }
+
+            if (references(macro, current)) {
+                dependents.push_back(macro.name);
+                pending.push_back(macro.name);
+            }
+        }
+    }
+
+    return dependents;
+}
+
 Ret MacrosRepository::save(const Macro& macro)
 {
     if (macro.name.empty()) {
@@ -65,15 +97,21 @@ Ret MacrosRepository::save(const Macro& macro)
 
 Ret MacrosRepository::remove(const std::string& name)
 {
-    const io::path_t path = userMacroFilePath(name);
-    if (!fileSystem()->exists(path)) {
-        return make_ret(Ret::Code::NotSupported, "built-in macros cannot be removed");
+    std::vector<std::string> names = dependentMacros(name);
+    names.insert(names.begin(), name);
+
+    for (const std::string& macroName : names) {
+        if (!fileSystem()->exists(userMacroFilePath(macroName))) {
+            return make_ret(Ret::Code::NotSupported, "built-in macros cannot be removed");
+        }
     }
 
-    const Ret ret = fileSystem()->remove(path);
-    if (!ret) {
-        LOGE() << "failed to remove macro " << name << ": " << ret.toString();
-        return ret;
+    for (const std::string& macroName : names) {
+        const Ret ret = fileSystem()->remove(userMacroFilePath(macroName));
+        if (!ret) {
+            LOGE() << "failed to remove macro " << macroName << ": " << ret.toString();
+            return ret;
+        }
     }
 
     reload();
@@ -112,6 +150,25 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
     ret = fileSystem()->remove(userMacroFilePath(oldName));
     if (!ret) {
         return ret;
+    }
+
+    for (const Macro& dependent : m_macros) {
+        if (dependent.builtin || dependent.name == oldName || !references(dependent, oldName)) {
+            continue;
+        }
+
+        Macro updated = dependent;
+        for (MacroItem& item : updated.steps) {
+            MacroReference* reference = std::get_if<MacroReference>(&item);
+            if (reference && reference->name == oldName) {
+                reference->name = newName;
+            }
+        }
+
+        ret = writeMacroFile(updated, userMacroFilePath(updated.name));
+        if (!ret) {
+            return ret;
+        }
     }
 
     reload();

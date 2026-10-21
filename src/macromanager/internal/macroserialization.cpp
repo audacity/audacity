@@ -15,6 +15,7 @@ const std::string NAME_KEY("name");
 const std::string STEPS_KEY("steps");
 const std::string COMMAND_KEY("command");
 const std::string PARAMS_KEY("params");
+const std::string MACRO_KEY("macro");
 
 JsonObject paramsToJson(const Params& params)
 {
@@ -69,10 +70,16 @@ Params paramsFromJson(const JsonObject& object)
 JsonObject au::macromanager::toJson(const Macro& macro)
 {
     JsonArray steps;
-    for (const MacroStep& step : macro.steps) {
+    for (const MacroItem& item : macro.steps) {
         JsonObject stepObject;
-        stepObject.set(COMMAND_KEY, step.command.toString());
-        stepObject.set(PARAMS_KEY, paramsToJson(step.params));
+
+        if (const MacroStep* step = std::get_if<MacroStep>(&item)) {
+            stepObject.set(COMMAND_KEY, step->command.toString());
+            stepObject.set(PARAMS_KEY, paramsToJson(step->params));
+        } else {
+            stepObject.set(MACRO_KEY, std::get<MacroReference>(item).name);
+        }
+
         steps << stepObject;
     }
 
@@ -97,12 +104,22 @@ RetVal<Macro> au::macromanager::macroFromJson(const JsonObject& object)
     for (size_t i = 0; i < steps.size(); ++i) {
         const JsonObject stepObject = steps.at(i).toObject();
 
+        if (stepObject.contains(MACRO_KEY)) {
+            const std::string macroName = stepObject.value(MACRO_KEY).toStdString();
+            if (macroName.empty()) {
+                return RetVal<Macro>(make_ret(Ret::Code::UnknownError, "macro step has no macro name"));
+            }
+
+            macro.steps.push_back(MacroReference { macroName });
+            continue;
+        }
+
         const Command command(stepObject.value(COMMAND_KEY).toStdString());
         if (!command.isValid()) {
             return RetVal<Macro>(make_ret(Ret::Code::UnknownError, "macro step has an invalid command"));
         }
 
-        macro.steps.push_back({ command, paramsFromJson(stepObject.value(PARAMS_KEY).toObject()) });
+        macro.steps.push_back(MacroStep { command, paramsFromJson(stepObject.value(PARAMS_KEY).toObject()) });
     }
 
     return RetVal<Macro>::make_ok(macro);
