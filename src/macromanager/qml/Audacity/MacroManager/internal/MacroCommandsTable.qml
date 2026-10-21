@@ -18,7 +18,7 @@ ColumnLayout {
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "MacroCommandsTable"
-        direction: NavigationPanel.Both
+        direction: NavigationPanel.Vertical
         enabled: root.enabled && root.visible
         accessible.name: qsTrc("macromanager", "Macro commands")
     }
