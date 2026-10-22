@@ -31,9 +31,14 @@ void AutoRecoveryModel::componentComplete()
     //: Column header of the automatic crash recovery dialog. Here "Name" is a noun.
     const QString nameTitle = muse::qtrc("appshell/autorecovery", "Name");
 
+    TableViewHeader* const selectHeader = makeHorizontalHeader(selectTitle,
+                                                                static_cast<TableViewCellType::Type>(AutoRecoveryTableViewCellType::Type::Selected),
+                                                                TableViewCellEditMode::Mode::StartInEdit, selectedColumnWidth);
+    // The title and the checkboxes
+    selectHeader->setAlignment(Qt::AlignHCenter);
+
     setHorizontalHeaders({
-        makeHorizontalHeader(selectTitle, static_cast<TableViewCellType::Type>(AutoRecoveryTableViewCellType::Type::Selected),
-                             TableViewCellEditMode::Mode::StartInEdit, selectedColumnWidth),
+        selectHeader,
         makeHorizontalHeader(nameTitle, TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, nameColumnWidth),
     });
 
