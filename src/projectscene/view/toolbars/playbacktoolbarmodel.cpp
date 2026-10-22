@@ -97,12 +97,12 @@ void PlaybackToolBarModel::load()
     updateActions();
 
     AbstractToolBarModel::load();
+    updateStates();
 }
 
 void PlaybackToolBarModel::reload()
 {
     load();
-    updateStates();
 }
 
 void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& project)
