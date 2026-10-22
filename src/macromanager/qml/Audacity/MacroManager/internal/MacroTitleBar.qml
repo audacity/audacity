@@ -40,49 +40,6 @@ Rectangle {
         readonly property int buttonSize: 28
     }
 
-    ContextMenuLoader {
-        id: contextMenuLoader
-
-        items: [
-            {
-                id: "rename",
-                title: qsTrc("macromanager", "Rename macro"),
-                enabled: !root.isBuiltin
-            },
-            {
-                id: "export",
-                title: qsTrc("macromanager", "Export macro…")
-            },
-            {},
-            {
-                id: "remove-all-steps",
-                title: qsTrc("macromanager", "Remove all steps")
-            },
-            {
-                id: "delete",
-                title: qsTrc("macromanager", "Delete macro"),
-                enabled: !root.isBuiltin
-            }
-        ]
-
-        onHandleMenuItem: function (itemId) {
-            switch (itemId) {
-            case "rename":
-                root.renameRequested()
-                break
-            case "export":
-                root.exportRequested()
-                break
-            case "remove-all-steps":
-                root.removeAllStepsRequested()
-                break
-            case "delete":
-                root.deleteRequested()
-                break
-            }
-        }
-    }
-
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: prv.sideMargin
@@ -99,22 +56,56 @@ Rectangle {
             elide: Text.ElideRight
         }
 
-        FlatButton {
+        MenuButton {
             id: menuButton
 
             Layout.preferredWidth: prv.buttonSize
             Layout.preferredHeight: prv.buttonSize
 
-            icon: IconCode.MENU_THREE_DOTS
             normalColor: root.color
+
+            menuModel: [
+                {
+                    id: "rename",
+                    title: qsTrc("macromanager", "Rename macro"),
+                    enabled: !root.isBuiltin
+                },
+                {
+                    id: "export",
+                    title: qsTrc("macromanager", "Export macro…")
+                },
+                {},
+                {
+                    id: "remove-all-steps",
+                    title: qsTrc("macromanager", "Remove all steps")
+                },
+                {
+                    id: "delete",
+                    title: qsTrc("macromanager", "Delete macro"),
+                    enabled: !root.isBuiltin
+                }
+            ]
 
             navigation.panel: root.navigationPanel
             navigation.order: 0
             navigation.name: "MacroMenu"
             navigation.accessible.name: qsTrc("macromanager", "Macro menu")
 
-            onClicked: {
-                contextMenuLoader.show(menuButton.mapToItem(root, 0, menuButton.height))
+            onHandleMenuItem: function (itemId) {
+                switch (itemId) {
+                case "rename":
+                    root.renameRequested()
+                    break
+                case "export":
+                    root.exportRequested()
+                    break
+                case "remove-all-steps":
+                    root.removeAllStepsRequested()
+                    break
+                case "delete":
+                    root.deleteRequested()
+                    break
+                }
             }
         }
     }

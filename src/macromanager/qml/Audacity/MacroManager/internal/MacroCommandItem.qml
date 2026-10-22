@@ -98,6 +98,24 @@ Rectangle {
         id: hoverHandler
     }
 
+    MouseArea {
+        anchors.fill: parent
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        onClicked: function (mouse) {
+            if (mouse.button === Qt.RightButton) {
+                menuButton.toggleMenu(root, mouse.x, mouse.y)
+            }
+        }
+
+        onDoubleClicked: function (mouse) {
+            if (mouse.button === Qt.LeftButton && root.hasParams) {
+                root.editRequested()
+            }
+        }
+    }
+
     Item {
         id: dragTarget
     }
@@ -106,42 +124,6 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-    }
-
-    ContextMenuLoader {
-        id: contextMenuLoader
-
-        items: [
-            {
-                id: "move-up",
-                title: qsTrc("macromanager", "Move up"),
-                enabled: root.canMoveUp
-            },
-            {
-                id: "move-down",
-                title: qsTrc("macromanager", "Move down"),
-                enabled: root.canMoveDown
-            },
-            {},
-            {
-                id: "delete",
-                title: qsTrc("macromanager", "Delete")
-            }
-        ]
-
-        onHandleMenuItem: function (itemId) {
-            switch (itemId) {
-            case "move-up":
-                root.moveUpRequested()
-                break
-            case "move-down":
-                root.moveDownRequested()
-                break
-            case "delete":
-                root.deleteRequested()
-                break
-            }
-        }
     }
 
     RowLayout {
@@ -271,22 +253,47 @@ Rectangle {
                     }
                 }
 
-                FlatButton {
+                MenuButton {
                     id: menuButton
 
                     Layout.preferredWidth: prv.buttonSize
                     Layout.preferredHeight: prv.buttonSize
 
-                    icon: IconCode.MENU_THREE_DOTS
-                    transparent: true
+                    menuModel: [
+                        {
+                            id: "move-up",
+                            title: qsTrc("macromanager", "Move up"),
+                            enabled: root.canMoveUp
+                        },
+                        {
+                            id: "move-down",
+                            title: qsTrc("macromanager", "Move down"),
+                            enabled: root.canMoveDown
+                        },
+                        {},
+                        {
+                            id: "delete",
+                            title: qsTrc("macromanager", "Delete")
+                        }
+                    ]
 
                     navigation.panel: root.innerNavigationPanel
                     navigation.order: 1
                     navigation.name: "CommandContextMenu"
                     navigation.accessible.name: qsTrc("macromanager", "Command menu")
 
-                    onClicked: {
-                        contextMenuLoader.show(menuButton.mapToItem(root, 0, menuButton.height))
+                    onHandleMenuItem: function (itemId) {
+                        switch (itemId) {
+                        case "move-up":
+                            root.moveUpRequested()
+                            break
+                        case "move-down":
+                            root.moveDownRequested()
+                            break
+                        case "delete":
+                            root.deleteRequested()
+                            break
+                        }
                     }
                 }
             }
