@@ -292,34 +292,24 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
 
     // A destination with clips keeps its rate: convert the pasted data before the project is changed
     std::vector<std::pair<Au3WaveTrack*, int> > tracksToResample;
-    double samplesToResample = 0.0;
+    std::vector<std::pair<std::shared_ptr<Au3WaveClip>, int> > clipsToResample;
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         const Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
         const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(i)->track());
         if (dstWaveTrack && !dstWaveTrack->IsEmpty() && trackToPaste->GetRate() != dstWaveTrack->GetRate()) {
-            tracksToResample.emplace_back(trackToPaste.get(), static_cast<int>(dstWaveTrack->GetRate()));
-            samplesToResample += WaveTrackUtilities::GetSequenceSamplesCount(*trackToPaste).as_double() / trackToPaste->NChannels();
+            const int rate = static_cast<int>(dstWaveTrack->GetRate());
+            tracksToResample.emplace_back(trackToPaste.get(), rate);
+            for (const auto& clip : trackToPaste->Intervals()) {
+                clipsToResample.emplace_back(clip, rate);
+            }
         }
     }
-    if (!tracksToResample.empty()) {
-        ret = utils::resampleWithProgress(*interactive(), samplesToResample, [&](const std::function<void(size_t)>& progressReport) {
-            for (const auto& [track, rate] : tracksToResample) {
-                track->Resample(rate, progressReport);
-                // Rounds the trims to the new sample grid, as loading the project does
-                track->SetRate(rate);
-            }
-        });
-        if (!ret) {
-            return ret;
-        }
-        // A clip shorter than two samples cannot be inserted
-        for (const auto& job : tracksToResample) {
-            for (const auto& clip : job.first->Intervals()) {
-                if (!clip->GetIsPlaceholder() && clip->IsEmpty()) {
-                    return make_ret(trackedit::Err::UnknownError);
-                }
-            }
-        }
+    ret = utils::resampleClips(*interactive(), clipsToResample);
+    if (!ret) {
+        return ret;
+    }
+    for (const auto& [track, rate] : tracksToResample) {
+        track->SetRate(rate);
     }
 
     muse::Ret ok { muse::make_ok() };

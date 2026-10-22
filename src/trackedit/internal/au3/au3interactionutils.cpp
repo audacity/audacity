@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 
 #include "../../trackedittypes.h"
+#include "../../trackediterrors.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -302,22 +303,49 @@ muse::Ret au::trackedit::utils::withProgress(muse::IInteractive& interactive, co
     return result;
 }
 
-muse::Ret au::trackedit::utils::resampleWithProgress(muse::IInteractive& interactive, double numSamples, const ResampleJob& job)
+muse::Ret au::trackedit::utils::resampleClips(muse::IInteractive& interactive,
+                                              const std::vector<std::pair<std::shared_ptr<au3::Au3WaveClip>, int> >& clips)
 {
-    return withProgress(interactive, muse::trc("trackedit", "Resampling…"), [&](ProgressCb progressCb, CancelCb cancelCb) {
+    if (clips.empty()) {
+        return muse::make_ok();
+    }
+
+    double numSamples = 0.0;
+    for (const auto& [clip, rate] : clips) {
+        numSamples += clip->GetSequenceSamplesCount().as_double() / clip->NChannels();
+    }
+
+    const muse::Ret ret = withProgress(interactive, muse::trc("trackedit", "Resampling…"), [&](ProgressCb progressCb, CancelCb cancelCb) {
         double consumedSamples = 0.0;
+        const auto progressReport = [&](size_t consumed) {
+            consumedSamples += static_cast<double>(consumed);
+            progressCb(std::min(consumedSamples / std::max(numSamples, 1.0), 1.0));
+            if (cancelCb()) {
+                throw UserException();
+            }
+        };
         // Queues the message of a read or write error, so that the caller can roll back first
         return GuardedCall<bool>([&] {
-            job([&](size_t consumed) {
-                consumedSamples += static_cast<double>(consumed);
-                progressCb(std::min(consumedSamples / std::max(numSamples, 1.0), 1.0));
-                if (cancelCb()) {
-                    throw UserException();
-                }
-            });
+            for (const auto& [clip, rate] : clips) {
+                clip->Resample(rate, progressReport);
+                // Round the trims to the new sample grid
+                clip->SetRate(rate);
+            }
             return true;
         });
     });
+    if (!ret) {
+        return ret;
+    }
+
+    // Prevent resampling from erasing clips. If a clip becomes Empty after resampling, then cancel the action
+    for (const auto& [clip, rate] : clips) {
+        if (!clip->GetIsPlaceholder() && clip->IsEmpty()) {
+            return make_ret(Err::UnknownError);
+        }
+    }
+
+    return muse::make_ok();
 }
 
 void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& project, au3::Au3WaveTrack* waveTrack,

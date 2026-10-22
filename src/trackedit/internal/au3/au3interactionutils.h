@@ -51,9 +51,8 @@ bool clipIdSetsAreEqual(const au3::Au3WaveTrack& track1, const au3::Au3WaveTrack
 
 muse::Ret withProgress(muse::IInteractive& interactive, const std::string& title, const std::function<bool(ProgressCb, CancelCb)>& action);
 
-//! @p job resamples and reports the consumed samples per channel, out of @p numSamples in total
-using ResampleJob = std::function<void (const std::function<void (size_t)>& progressReport)>;
-muse::Ret resampleWithProgress(muse::IInteractive& interactive, double numSamples, const ResampleJob& job);
+//! Resamples each clip to the paired sample rate
+muse::Ret resampleClips(muse::IInteractive& interactive, const std::vector<std::pair<std::shared_ptr<au3::Au3WaveClip>, int> >& clips);
 
 //! Trim/split/remove @p otherClip so it no longer occupies the [begin, end)
 //! region (e.g. to make room for another clip on the same track), emitting the

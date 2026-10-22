@@ -965,7 +965,6 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
 
     // A moved clip keeps the rate of its source track: convert it before the original is changed
     std::vector<std::pair<std::shared_ptr<Au3WaveClip>, int> > clipsToResample;
-    double samplesToResample = 0.0;
     for (Au3Track* track : *copy) {
         Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track);
         if (!waveTrack) {
@@ -975,26 +974,12 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
             const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
             if (clip && clip->GetRate() != waveTrack->GetRate()) {
                 clipsToResample.emplace_back(clip, static_cast<int>(waveTrack->GetRate()));
-                samplesToResample += clip->GetSequenceSamplesCount().as_double() / clip->NChannels();
             }
         }
     }
-    if (!clipsToResample.empty()) {
-        ret = utils::resampleWithProgress(*interactive(), samplesToResample, [&](const std::function<void(size_t)>& progressReport) {
-            for (const auto& [clip, rate] : clipsToResample) {
-                clip->Resample(rate, progressReport);
-                // Rounds the trims to the new sample grid, as loading the project does
-                clip->SetRate(rate);
-            }
-        });
-        if (!ret) {
-            return NeedsDownmixing::No;
-        }
-        // Loading the project would remove a clip shorter than two samples
-        if (std::any_of(clipsToResample.begin(), clipsToResample.end(), [](const auto& job) { return job.first->IsEmpty(); })) {
-            ret = make_ret(Err::UnknownError);
-            return NeedsDownmixing::No;
-        }
+    ret = utils::resampleClips(*interactive(), clipsToResample);
+    if (!ret) {
+        return NeedsDownmixing::No;
     }
 
     // Now we can update the original with the modified copy.
