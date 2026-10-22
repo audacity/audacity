@@ -72,6 +72,12 @@ Item {
         })
     }
 
+    //! NOTE A submenu may be empty at creation time (e.g. "Open recent" with no recent files),
+    //! it still has to be created as a menu, otherwise it can't be populated later
+    function isSubmenu(item) {
+        return (Boolean(item.subitems) && item.subitems.length > 0) || String(item.id).startsWith("menu-")
+    }
+
     function makeMenu(menuInfo) {
         var menu = menuComponent.createObject(menuBar)
 
@@ -129,7 +135,7 @@ Item {
                         continue
                     }
 
-                    var isMenu = Boolean(item.subitems) && item.subitems.length > 0
+                    var isMenu = root.isSubmenu(item)
 
                     if (isMenu) {
                         let menu = root.makeMenu(item)
@@ -149,7 +155,7 @@ Item {
                         continue
                     }
 
-                    let isMenu = Boolean(item.subitems) && item.subitems.length > 0
+                    let isMenu = root.isSubmenu(item)
 
                     if (isMenu) {
                         root.setUpMenu(items[i].subMenu, item)
