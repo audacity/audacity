@@ -21555,7 +21555,7 @@ Please connect an input device and rescan.</source>
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
 
 Do you wish to continue?</source>
-        <translation>ステレオに結合しようとしているトラックには、異なる位置にあるクリップか、一致していないクリップが含まれています。これらを結合する場合には、トラックがレンダリングされます。
+        <translation>ステレオに結合しようとしているトラックには、クリップが異なる位置にあるか、クリップに不一致があります。これらを結合する場合には、トラックがレンダリングされます。
 
 これにより、波形にリアルタイムエフェクトが適用され、非表示のデータが削除されます。さらに、トラック全体が1つの大きなクリップになります。
 
@@ -21625,7 +21625,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
         <source>Silence</source>
-        <translation>無音部分</translation>
+        <translation>消音</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
@@ -21635,7 +21635,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
         <source>Track Title</source>
-        <translation>トラック名</translation>
+        <translation>トラックタイトル</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
@@ -21778,12 +21778,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="398"/>
         <source>Label moved</source>
-        <translation>移動ラベル</translation>
+        <translation>ラベルを移動</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="399"/>
         <source>Move label</source>
-        <translation>ラベルの移動</translation>
+        <translation>ラベルを移動</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
@@ -22009,22 +22009,22 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="950"/>
         <source>Label low frequency changed</source>
-        <translation>低域周波数ラベルを変更</translation>
+        <translation>ラベルの低域周波数を変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Change label low frequency</source>
-        <translation>低域周波数ラベルを変更</translation>
+        <translation>ラベルの低域周波数を変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="960"/>
         <source>Label high frequency changed</source>
-        <translation>高域周波数ラベルを変更</translation>
+        <translation>ラベルの高域周波数を変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
         <source>Change label high frequency</source>
-        <translation>高域周波数ラベルを変更</translation>
+        <translation>ラベルの高域周波数を変更</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
