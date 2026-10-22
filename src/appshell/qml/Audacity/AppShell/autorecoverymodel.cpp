@@ -55,7 +55,7 @@ void AutoRecoveryModel::rebuildTable()
 
         QVector<TableViewCell*> row;
         row.append(makeCell(muse::Val(item.selected)));
-        row.append(makeCell(muse::Val(muse::io::completeBasename(item.path).toQString())));
+        row.append(makeCell(muse::Val(name(item))));
         table.append(row);
     }
     setVerticalHeaders(verticalHeaders);
@@ -63,6 +63,14 @@ void AutoRecoveryModel::rebuildTable()
 
     emit selectionChanged();
 }
+
+QString AutoRecoveryModel::name(const Item& item)
+{
+    // A project never saved lives among the app's data, where its location tells nothing
+    const muse::io::path_t name = project::isAudacityUnsavedFile(item.path) ? muse::io::completeBasename(item.path) : item.path;
+    return name.toQString();
+}
+
 
 bool AutoRecoveryModel::hasSelection() const
 {

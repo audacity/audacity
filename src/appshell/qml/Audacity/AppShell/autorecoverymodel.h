@@ -66,6 +66,8 @@ private:
         bool selected = true;
     };
 
+    static QString name(const Item& item);
+
     std::vector<Item> m_items;
 };
 }
