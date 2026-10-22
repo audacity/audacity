@@ -322,15 +322,12 @@ void MacroCommandsModel::requestSchemaParams(const Command& command, const Param
     uri.addParam("command", Val(command.toString()));
     uri.addParam("params", Val(ValMap(current)));
 
-    const RetVal<Val> result = interactive()->openSync(uri);
-    if (!result.ret) {
-        return;
-    }
+    interactive()->open(uri).onResolve(this, [onParams](const Val& result) {
+        Params params;
+        for (const auto& [key, val] : result.toMap()) {
+            params[key] = val;
+        }
 
-    Params params;
-    for (const auto& [key, val] : result.val.toMap()) {
-        params[key] = val;
-    }
-
-    onParams(params);
+        onParams(params);
+    });
 }
