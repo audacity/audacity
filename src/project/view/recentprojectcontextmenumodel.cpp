@@ -43,10 +43,11 @@ void RecentProjectContextMenuModel::load()
     if (isCloudProject && !m_cloudProjectId.isEmpty()) {
         openItem = makeMenuItem(make_query(PROJECT_OPEN_CLOUD_COMMAND, { { PROJECT_ID_PARAM, muse::Val(m_cloudProjectId) } }));
     } else {
-        openItem = makeMenuItem(make_query(PROJECT_OPEN_COMMAND, {
+        openItem = makeMenuItem(PROJECT_OPEN_COMMAND);
+        openItem->setParams({
             { PROJECT_URL_PARAM, muse::Val(QUrl::fromLocalFile(m_path).toString()) },
             { PROJECT_DISPLAY_NAME_PARAM, muse::Val(m_displayNameOverride) },
-        }));
+        });
     }
     openItem->setTitle(muse::TranslatableString("action", "Open"));
 
