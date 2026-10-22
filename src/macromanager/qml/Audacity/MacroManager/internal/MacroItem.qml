@@ -46,52 +46,20 @@ Rectangle {
         id: hoverHandler
     }
 
-    ContextMenuLoader {
-        id: contextMenuLoader
+    MouseArea {
+        anchors.fill: parent
 
-        items: [
-            {
-                id: "edit",
-                title: qsTrc("macromanager", "Edit")
-            },
-            {
-                id: "rename",
-                title: qsTrc("macromanager", "Rename"),
-                enabled: !root.isBuiltin
-            },
-            {
-                id: "run-on-files",
-                title: qsTrc("macromanager", "Run on files…")
-            },
-            {
-                id: "export",
-                title: qsTrc("macromanager", "Export…")
-            },
-            {},
-            {
-                id: "delete",
-                title: qsTrc("macromanager", "Delete"),
-                enabled: !root.isBuiltin
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        onClicked: function (mouse) {
+            if (mouse.button === Qt.RightButton) {
+                menuButton.toggleMenu(root, mouse.x, mouse.y)
             }
-        ]
+        }
 
-        onHandleMenuItem: function (itemId) {
-            switch (itemId) {
-            case "edit":
+        onDoubleClicked: function (mouse) {
+            if (mouse.button === Qt.LeftButton) {
                 root.editRequested()
-                break
-            case "rename":
-                root.renameRequested()
-                break
-            case "run-on-files":
-                root.runOnFilesRequested()
-                break
-            case "export":
-                root.exportRequested()
-                break
-            case "delete":
-                root.deleteRequested()
-                break
             }
         }
     }
@@ -161,13 +129,39 @@ Rectangle {
                 }
             }
 
-            FlatButton {
+            MenuButton {
                 id: menuButton
 
                 Layout.preferredWidth: prv.buttonSize
                 Layout.preferredHeight: prv.buttonSize
 
-                icon: IconCode.MENU_THREE_DOTS
+                transparent: false
+
+                menuModel: [
+                    {
+                        id: "edit",
+                        title: qsTrc("macromanager", "Edit")
+                    },
+                    {
+                        id: "rename",
+                        title: qsTrc("macromanager", "Rename"),
+                        enabled: !root.isBuiltin
+                    },
+                    {
+                        id: "run-on-files",
+                        title: qsTrc("macromanager", "Run on files…")
+                    },
+                    {
+                        id: "export",
+                        title: qsTrc("macromanager", "Export…")
+                    },
+                    {},
+                    {
+                        id: "delete",
+                        title: qsTrc("macromanager", "Delete"),
+                        enabled: !root.isBuiltin
+                    }
+                ]
 
                 navigation.panel: root.navigationPanel
                 navigation.row: root.navigationRow
@@ -175,8 +169,24 @@ Rectangle {
                 navigation.name: "MacroContextMenu"
                 navigation.accessible.name: qsTrc("macromanager", "Macro menu")
 
-                onClicked: {
-                    contextMenuLoader.show(menuButton.mapToItem(root, 0, menuButton.height))
+                onHandleMenuItem: function (itemId) {
+                    switch (itemId) {
+                    case "edit":
+                        root.editRequested()
+                        break
+                    case "rename":
+                        root.renameRequested()
+                        break
+                    case "run-on-files":
+                        root.runOnFilesRequested()
+                        break
+                    case "export":
+                        root.exportRequested()
+                        break
+                    case "delete":
+                        root.deleteRequested()
+                        break
+                    }
                 }
             }
         }
