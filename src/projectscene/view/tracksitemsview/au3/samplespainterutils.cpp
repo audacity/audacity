@@ -1,6 +1,7 @@
 #include "samplespainterutils.h"
 
 #include "au3-mixer/Envelope.h"
+#include "au3-stretching-sequence/ClipFades.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveClipUtilities.h"
 #include "au3-wave-track/WaveChannelUtilities.h"
@@ -258,13 +259,15 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     auto ypos = std::vector<double>(slen);
     auto clippedX = std::vector<double>();
     const auto invRate = 1.0 / rate;
+    const auto& fades = ClipFades::Get(clip);
 
     for (size_t s = 0; s < slen; s++) {
         const double time = (s + s0).as_double() / rate;
         const double xx = zoomInfo.TimeToPositionF(time);
         xpos[s] = xx;
 
-        const double value = clip.GetEnvelope().GetValue(time, invRate);
+        // `time` is relative to the clip's play start
+        const double value = clip.GetEnvelope().GetValue(time, invRate) * fades.gainAt(time);
         const double tt = buffer[s] * value;
 
         if ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)) {
@@ -348,7 +351,8 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
             continue;
         }
 
-        const double value = waveClip->GetEnvelope().GetValue(adjustedTime, (1 / waveClip->GetRate()));
+        const double value = waveClip->GetEnvelope().GetValue(adjustedTime, (1 / waveClip->GetRate()))
+                             * ClipFades::Get(*waveClip).gainAt(adjustedTime);
         const auto tt = oneSample * value;
 
         const auto adjustedYPos = position.y() - top;

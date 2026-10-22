@@ -10,10 +10,13 @@ enum class ClipSide {
     Right
 };
 
+//! Published whenever the fades of a clip change
+struct ClipFadesChange {};
+
 //! Fade lengths of a clip, in seconds of play time
 //! As a clip attachment, it is copied along with the clip (split, paste, undo history)
 //! and saved as attributes of the clip in the project file.
-class STRETCHING_SEQUENCE_API ClipFades final : public ClipInterfaceAttachment
+class STRETCHING_SEQUENCE_API ClipFades final : public ClipInterfaceAttachment, public Observer::Publisher<ClipFadesChange>
 {
 public:
     explicit ClipFades(ClipInterface& clip);
@@ -34,6 +37,14 @@ public:
     void setFadeOut(double);
 
     void setDraggingSide(ClipSide);
+
+    //! The gain of linear fades (for now) at `t`, for a clip from `clipStart` to `clipEnd`
+    static double gain(double t, double clipStart, double clipEnd, double fadeIn, double fadeOut);
+
+    //! The gain of the fades at `timeFromPlayStart`, in seconds from the clip's play start
+    double gainAt(double timeFromPlayStart) const;
+
+    [[nodiscard]] Observer::Subscription SubscribeToChanges(std::function<void()> cb) const;
 
 private:
     double playDuration() const;

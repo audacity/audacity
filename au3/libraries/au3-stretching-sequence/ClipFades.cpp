@@ -45,6 +45,7 @@ void ClipFades::Reparent(ClipInterface& clip)
         const auto ratioChange = newRatio / oldRatio;
         m_fadeIn = m_fadeIn * ratioChange;
         m_fadeOut = m_fadeOut * ratioChange;
+        Publish(ClipFadesChange {});
     });
 }
 
@@ -68,6 +69,7 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
             return false;
         }
         m_fadeIn = value;
+        Publish(ClipFadesChange {});
         return true;
     }
     if (attr == FadeOut_attr) {
@@ -75,6 +77,7 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
             return false;
         }
         m_fadeOut = value;
+        Publish(ClipFadesChange {});
         return true;
     }
     return false;
@@ -94,6 +97,7 @@ void ClipFades::setFadeIn(double value)
 {
     m_fadeIn = std::clamp(value, 0., playDuration());
     m_draggingSide = ClipSide::Left;
+    Publish(ClipFadesChange {});
 }
 
 double ClipFades::fadeOut() const
@@ -110,6 +114,7 @@ void ClipFades::setFadeOut(double value)
 {
     m_fadeOut = std::clamp(value, 0., playDuration());
     m_draggingSide = ClipSide::Right;
+    Publish(ClipFadesChange {});
 }
 
 void ClipFades::setDraggingSide(ClipSide side)
@@ -120,4 +125,29 @@ void ClipFades::setDraggingSide(ClipSide side)
     m_fadeIn = fadeIn();
     m_fadeOut = fadeOut();
     m_draggingSide = side;
+    Publish(ClipFadesChange {});
+}
+
+double ClipFades::gain(double t, double clipStart, double clipEnd, double fadeIn, double fadeOut)
+{
+    auto gain = 1.0;
+    if (fadeIn > 0 && t < clipStart + fadeIn) {
+        gain *= (t - clipStart) / fadeIn;
+    }
+    if (fadeOut > 0 && t > clipEnd - fadeOut) {
+        gain *= (clipEnd - t) / fadeOut;
+    }
+    // Sample times may be marginally outside of the clip
+    return std::clamp(gain, 0.0, 1.0);
+}
+
+double ClipFades::gainAt(double timeFromPlayStart) const
+{
+    return gain(timeFromPlayStart, 0.0, playDuration(), fadeIn(), fadeOut());
+}
+
+Observer::Subscription ClipFades::SubscribeToChanges(std::function<void()> cb) const
+{
+    // Consider the list of subscribers as a mutable member that doesn't change real state
+    return const_cast<ClipFades*>(this)->Subscribe([cb](const ClipFadesChange&) { cb(); });
 }

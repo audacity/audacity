@@ -90,20 +90,6 @@ bool FadingSequence::DoGet(
 namespace {
 //! Duration over which fade length changes are applied, to avoid clicks when fades are dragged during playback
 constexpr auto fadeLengthRampDuration = 0.02;
-
-//! Linear fades, for now
-double FadeGain(double t, double clipStart, double clipEnd, double fadeIn, double fadeOut)
-{
-    auto gain = 1.0;
-    if (fadeIn > 0 && t < clipStart + fadeIn) {
-        gain *= (t - clipStart) / fadeIn;
-    }
-    if (fadeOut > 0 && t > clipEnd - fadeOut) {
-        gain *= (clipEnd - t) / fadeOut;
-    }
-    // Sample times may be marginally outside of the clip
-    return std::clamp(gain, 0.0, 1.0);
-}
 }
 
 double FadingSequence::FadeLengthRamp::At(size_t i) const
@@ -169,7 +155,7 @@ void FadingSequence::ApplyFades(
         for (auto n = n0; n < n1; ++n) {
             // Index in the buffers, which is also the number of samples read so far
             const auto i = (backwards ? start - 1 - n : n - start).as_size_t();
-            const auto gain = FadeGain(n.as_double() / rate, clipStart, clipEnd, fadeIn.At(i), fadeOut.At(i));
+            const auto gain = ClipFades::gain(n.as_double() / rate, clipStart, clipEnd, fadeIn.At(i), fadeOut.At(i));
             if (gain == 1.0) {
                 continue;
             }
