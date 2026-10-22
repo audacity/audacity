@@ -32,6 +32,7 @@ StyledDialogView {
         readonly property int buttonsTopMargin: 16
         readonly property int buttonWidth: 64
         readonly property int buttonHeight: 28
+        readonly property int buttonsNavigationOrder: 1000
 
         function confirm() {
             root.ret = {
@@ -50,23 +51,12 @@ StyledDialogView {
         paramsModel.load(root.command, root.params)
     }
 
-    onNavigationActivateRequested: {
-        buttons.navigationPanel.requestActive()
-    }
-
     ColumnLayout {
         id: content
 
         width: parent.width
 
         spacing: 0
-
-        property NavigationPanel navigationPanel: NavigationPanel {
-            name: "CommandParamsPanel"
-            direction: NavigationPanel.Vertical
-            section: root.navigationSection
-            order: 1
-        }
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -86,6 +76,14 @@ StyledDialogView {
                     required property var min
                     required property var max
                     required property var value
+
+                    property NavigationPanel navigationPanel: NavigationPanel {
+                        name: "CommandParam" + row.index
+                        direction: NavigationPanel.Horizontal
+                        section: root.navigationSection
+                        order: row.index + 1
+                        accessible.name: row.description.length > 0 ? row.description : row.key
+                    }
 
                     Layout.fillWidth: true
 
@@ -120,8 +118,8 @@ StyledDialogView {
                         TextInputField {
                             currentText: row.value
 
-                            navigation.panel: content.navigationPanel
-                            navigation.row: row.index
+                            navigation.panel: row.navigationPanel
+                            navigation.order: 0
 
                             onTextChanged: function (newTextValue) {
                                 paramsModel.setValue(row.index, newTextValue)
@@ -139,8 +137,8 @@ StyledDialogView {
                             decimals: row.type === CommandParamsModel.Float ? 2 : 0
                             step: 1
 
-                            navigation.panel: content.navigationPanel
-                            navigation.row: row.index
+                            navigation.panel: row.navigationPanel
+                            navigation.order: 0
 
                             onValueEdited: function (newValue) {
                                 paramsModel.setValue(row.index, newValue)
@@ -154,8 +152,8 @@ StyledDialogView {
                         CheckBox {
                             checked: row.value
 
-                            navigation.panel: content.navigationPanel
-                            navigation.row: row.index
+                            navigation.panel: row.navigationPanel
+                            navigation.order: 0
 
                             onClicked: {
                                 paramsModel.setValue(row.index, !checked)
@@ -173,7 +171,7 @@ StyledDialogView {
             Layout.topMargin: prv.buttonsTopMargin
 
             navigationPanel.section: root.navigationSection
-            navigationPanel.order: 2
+            navigationPanel.order: prv.buttonsNavigationOrder
 
             FlatButton {
                 Layout.preferredWidth: prv.buttonWidth
