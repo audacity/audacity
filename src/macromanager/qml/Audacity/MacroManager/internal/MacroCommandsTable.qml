@@ -4,6 +4,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 
 import Muse.Ui
@@ -129,6 +130,8 @@ ColumnLayout {
             id: listView
 
             anchors.fill: parent
+
+            scrollBarPolicy: ScrollBar.AlwaysOn
 
             delegate: MacroCommandItem {
                 required property int index
