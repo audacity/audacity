@@ -508,10 +508,10 @@ MenuItemList AppMenuModel::makeRecentProjectsItems()
     int index = 0;
     for (const RecentFile& file : recentFiles) {
         MenuItem* item = new MenuItem(openInfo, this);
-        item->setCommandQuery(make_query(PROJECT_OPEN_COMMAND, {
+        item->setParams({
             { PROJECT_URL_PARAM, Val(file.path.toQUrl().toString()) },
             { PROJECT_DISPLAY_NAME_PARAM, Val(file.displayNameOverride) },
-        }));
+        });
         item->setId(makeId(PROJECT_OPEN_COMMAND, index++));
         item->setTitle(TranslatableString::untranslatable(file.displayName(/*includingExtension*/ true)));
         item->setEnabled(true);
