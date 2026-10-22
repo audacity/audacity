@@ -75,14 +75,11 @@ void RecentFilesController::prependRecentFile(const RecentFile& newFile)
 
     TRACEFUNC;
 
-    //! NOTE Make sure the list is up to date before modifying it
-    const RecentFilesList currentList = recentFilesList();
-
     RecentFilesList newList;
-    newList.reserve(currentList.size() + 1);
+    newList.reserve(m_recentFilesList.size() + 1);
     newList.push_back(newFile);
 
-    for (const RecentFile& file : currentList) {
+    for (const RecentFile& file : m_recentFilesList) {
         if (file.path != newFile.path && fileSystem()->exists(file.path)) {
             newList.push_back(file);
         }
