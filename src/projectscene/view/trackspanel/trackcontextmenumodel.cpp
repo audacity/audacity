@@ -44,6 +44,13 @@ muse::actions::ActionQuery makeTrackRateChangeAction(uint64_t rate)
 {
     return muse::actions::ActionQuery(muse::String(TRACK_RATE_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(rate))));
 }
+
+muse::actions::ActionQuery makeTrackViewAction(const ActionCode& action, au::trackedit::TrackId trackId)
+{
+    muse::actions::ActionQuery query(action);
+    query.addParam("trackId", muse::Val { trackId });
+    return query;
+}
 }
 
 MenuItem* TrackContextMenuModel::makeItemWithArg(const ActionCode& actionCode)
@@ -246,7 +253,7 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
 
         const bool isHalfWave = viewState->isHalfWave(m_trackId).val;
 
-        MenuItem& item = findItem(ActionCode(TRACK_VIEW_HALF_WAVE_ACTION));
+        MenuItem& item = findItem(makeTrackViewAction(TRACK_VIEW_HALF_WAVE_ACTION, m_trackId).toString());
         auto state = item.state();
         state.checked = isHalfWave;
         item.setState(state);
@@ -296,23 +303,29 @@ void TrackContextMenuModel::updateTrackViewCheckedState()
         // Probably closing down.
         return;
     }
-    const auto viewType = prj->viewState()->trackViewType(m_trackId).val;
+    const auto viewState = prj->viewState();
+    const auto viewType = viewState->trackViewType(m_trackId).val;
     for (const auto& viewTypeCode : m_trackViewTypeChangeActionCodeList) {
-        MenuItem& item = findItem(viewTypeCode);
+        // Menu items are identified by their full action query, which includes the track id
+        MenuItem& item = findItem(makeTrackViewAction(viewTypeCode, m_trackId).toString());
         auto state = item.state();
-        switch (viewType) {
-        case trackedit::TrackViewType::Waveform:
-            state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
-            break;
-        case trackedit::TrackViewType::Spectrogram:
-            state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
-            break;
-        case trackedit::TrackViewType::WaveformAndSpectrogram:
-            state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
-            break;
-        default:
-            assert(viewType == trackedit::TrackViewType::Undefined);
-            state.checked = false;
+        if (viewTypeCode == TRACK_VIEW_HALF_WAVE_ACTION) {
+            state.checked = viewState->isHalfWave(m_trackId).val;
+        } else {
+            switch (viewType) {
+            case trackedit::TrackViewType::Waveform:
+                state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
+                break;
+            case trackedit::TrackViewType::Spectrogram:
+                state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
+                break;
+            case trackedit::TrackViewType::WaveformAndSpectrogram:
+                state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
+                break;
+            default:
+                assert(viewType == trackedit::TrackViewType::Undefined);
+                state.checked = false;
+            }
         }
         item.setState(state);
     }
@@ -496,9 +509,7 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackVisualizationIt
         if (action == "separator") {
             items.push_back(makeSeparator());
         } else {
-            muse::actions::ActionQuery query(action);
-            query.addParam("trackId", muse::Val { m_trackId });
-            items.push_back(makeMenuItem(query.toString()));
+            items.push_back(makeMenuItem(makeTrackViewAction(action, m_trackId).toString()));
             m_trackViewTypeChangeActionCodeList.push_back(action);
         }
     }
