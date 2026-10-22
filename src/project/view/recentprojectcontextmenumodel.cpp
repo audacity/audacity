@@ -3,6 +3,7 @@
 */
 #include "recentprojectcontextmenumodel.h"
 
+#include "framework/global/log.h"
 #include "framework/global/types/translatablestring.h"
 
 #include <QUrl>
@@ -39,11 +40,15 @@ void RecentProjectContextMenuModel::load()
 {
     muse::uicomponents::AbstractMenuModel::load();
 
-    muse::uicomponents::MenuItem* openItem = nullptr;
-    if (isCloudProject && !m_cloudProjectId.isEmpty()) {
-        openItem = makeMenuItem(make_query(PROJECT_OPEN_CLOUD_COMMAND, { { PROJECT_ID_PARAM, muse::Val(m_cloudProjectId) } }));
+    const bool openFromCloud = isCloudProject && !m_cloudProjectId.isEmpty();
+    muse::uicomponents::MenuItem* openItem = makeMenuItem(openFromCloud ? PROJECT_OPEN_CLOUD_COMMAND : PROJECT_OPEN_COMMAND);
+    IF_ASSERT_FAILED(openItem) {
+        return;
+    }
+
+    if (openFromCloud) {
+        openItem->setParams({ { PROJECT_ID_PARAM, muse::Val(m_cloudProjectId) } });
     } else {
-        openItem = makeMenuItem(PROJECT_OPEN_COMMAND);
         openItem->setParams({
             { PROJECT_URL_PARAM, muse::Val(QUrl::fromLocalFile(m_path).toString()) },
             { PROJECT_DISPLAY_NAME_PARAM, muse::Val(m_displayNameOverride) },
@@ -56,12 +61,18 @@ void RecentProjectContextMenuModel::load()
         muse::uicomponents::MenuItem* pageItem = makeMenuItem(make_query(au3cloud::CLOUD_OPEN_PROJECT_PAGE_COMMAND, {
             { au3cloud::CLOUD_OPEN_PROJECT_PAGE_ID_PARAM, muse::Val(m_cloudProjectId) },
         }));
+        IF_ASSERT_FAILED(pageItem) {
+            return;
+        }
         pageItem->setEnabled(pageItem->enabled() && !m_cloudProjectId.isEmpty());
         items.append(pageItem);
 
         muse::uicomponents::MenuItem* previewItem = makeMenuItem(make_query(PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_FOR_PROJECT_COMMAND, {
             { PROJECT_ID_PARAM, muse::Val(m_cloudProjectId) },
         }));
+        IF_ASSERT_FAILED(previewItem) {
+            return;
+        }
         previewItem->setEnabled(previewItem->enabled() && !m_cloudProjectId.isEmpty());
         items.append(previewItem);
     }

@@ -36,16 +36,11 @@ void PublishToolBarModel::load()
 {
     AbstractMenuModel::load();
 
-    MenuItemList items {
-        // makeMenuItem("print"),
-        // makeMenuItem("file-publish"),
-    };
+    MenuItemList items;
 
     if (au3CloudService()->enabled()) {
         items << makeMenuItem(project::PROJECT_SHARE_AUDIO_COMMAND);
     }
-
-    // items << makeMenuItem("file-export");
 
     setItems(items);
 }

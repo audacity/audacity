@@ -56,7 +56,6 @@ void ClipContextMenuModel::load()
     };
 
     MenuItemList items {
-        // makeMenuItem("clip-properties"),
         makeMenuItem(trackedit::TRACKEDIT_RENAME_ITEM_COMMAND, muse::TranslatableString("clip", "Rename clip")),
         makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems, COLOR_MENU_ID),
         makeSeparator(),

@@ -236,36 +236,36 @@ const std::vector<CommandInfo> s_commandInfos = {
     CommandInfo{
         APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Transport toolbar"),
+        TranslatableString("command", "&Playback controls"),
         //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Show or hide the transport toolbar"),
+        TranslatableString("command_description", "Show/hide playback controls"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes)
     },
     CommandInfo{
         APP_TOGGLE_TRACKS_PANEL_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Tracks"),
+        TranslatableString("command", "&Tracks"),
         //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Show or hide the tracks panel"),
+        TranslatableString("command_description", "Show/hide tracks"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes)
     },
     CommandInfo{
         APP_TOGGLE_HISTORY_PANEL_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "History"),
+        TranslatableString("command", "Show history"),
         //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Show or hide the history panel"),
+        TranslatableString("command_description", "Show history"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes)
     },
     CommandInfo{
         APP_TOGGLE_STATUSBAR_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Status bar"),
+        TranslatableString("command", "&Status bar"),
         //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Show or hide the status bar"),
+        TranslatableString("command_description", "Show/hide status bar"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes)
     },
