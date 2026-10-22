@@ -35,6 +35,9 @@ void ProjectToolBarModel::load()
     ToolBarItemList items;
     for (const Command& command : commands) {
         ToolBarItem* item = makeItem(command);
+        if (!item) {
+            continue;
+        }
         item->setShowTitle(true);
 
         items << item;

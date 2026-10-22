@@ -31,7 +31,6 @@ inline const muse::ui::ToolConfig& defaultPlaybackToolBarConfig()
             { PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND, true },
             { PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND, true },
             { PROJECTSCENE_ZOOM_TOGGLE_COMMAND, true },
-            // { "split-cut", false },
             { trackedit::TRACKEDIT_CUT_COMMAND, false },
             { trackedit::TRACKEDIT_COPY_COMMAND, false },
             { trackedit::TRACKEDIT_PASTE_DEFAULT_COMMAND, false },

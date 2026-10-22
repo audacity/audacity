@@ -3,6 +3,8 @@
 */
 #include "cloudaudiofilecontextmenumodel.h"
 
+#include "framework/global/log.h"
+
 #include "au3cloud/cloudcommands.h"
 #include "project/projectcommands.h"
 
@@ -21,11 +23,17 @@ void CloudAudioFileContextMenuModel::load()
     muse::uicomponents::MenuItem* openItem = makeMenuItem(make_query(PROJECT_OPEN_CLOUD_AUDIO_FILE_COMMAND, {
         { PROJECT_AUDIO_ID_PARAM, muse::Val(m_audioId) },
     }));
+    IF_ASSERT_FAILED(openItem) {
+        return;
+    }
     openItem->setEnabled(openItem->enabled() && !m_audioId.isEmpty());
 
     muse::uicomponents::MenuItem* viewAudiocom = makeMenuItem(make_query(au3cloud::CLOUD_OPEN_AUDIO_PAGE_COMMAND, {
         { au3cloud::CLOUD_OPEN_AUDIO_PAGE_SLUG_PARAM, muse::Val(m_slug) },
     }));
+    IF_ASSERT_FAILED(viewAudiocom) {
+        return;
+    }
     viewAudiocom->setEnabled(viewAudiocom->enabled() && !m_slug.isEmpty());
 
     setItems({ openItem, viewAudiocom });
