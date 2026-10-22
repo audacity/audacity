@@ -72,12 +72,6 @@ Item {
         })
     }
 
-    //! NOTE A submenu may be empty at creation time (e.g. "Open recent" with no recent files),
-    //! it still has to be created as a menu, otherwise it can't be populated later
-    function isSubmenu(item) {
-        return (Boolean(item.subitems) && item.subitems.length > 0) || String(item.id).startsWith("menu-")
-    }
-
     function makeMenu(menuInfo) {
         var menu = menuComponent.createObject(menuBar)
 
@@ -97,6 +91,11 @@ Item {
             if (menu.menuId === menuId) {
                 menu.subitems = subitems
                 menu.load()
+
+                //! NOTE The submenu became empty, so it has to be recreated as a disabled item
+                if (menu.ownerMenu && (!Boolean(subitems) || subitems.length === 0)) {
+                    menu.ownerMenu.load()
+                }
             }
         })
     }
@@ -105,6 +104,14 @@ Item {
         var menuItem = menuItemComponent.createObject(parentMenu)
 
         setUpMenuItem(menuItem, itemInfo)
+
+        //! NOTE An empty submenu (e.g. "Open recent" without recent files) is created as a disabled item,
+        //! so when it gets populated, the parent menu has to be rebuilt to turn it into a real submenu
+        itemInfo.subitemsChanged.connect(function (subitems, menuId) {
+            if (Boolean(subitems) && subitems.length > 0) {
+                parentMenu.load()
+            }
+        })
 
         return menuItem
     }
@@ -125,6 +132,7 @@ Item {
         PLATFORM.Menu {
             property string menuId: ""
             property var subitems: []
+            property var ownerMenu: null
 
             function load() {
                 clear()
@@ -135,10 +143,11 @@ Item {
                         continue
                     }
 
-                    var isMenu = root.isSubmenu(item)
+                    var isMenu = Boolean(item.subitems) && item.subitems.length > 0
 
                     if (isMenu) {
                         let menu = root.makeMenu(item)
+                        menu.ownerMenu = this
                         addMenu(menu)
                         menu.load()
                     } else {
@@ -155,7 +164,7 @@ Item {
                         continue
                     }
 
-                    let isMenu = root.isSubmenu(item)
+                    let isMenu = Boolean(item.subitems) && item.subitems.length > 0
 
                     if (isMenu) {
                         root.setUpMenu(items[i].subMenu, item)
