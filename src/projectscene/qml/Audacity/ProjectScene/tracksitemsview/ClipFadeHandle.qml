@@ -3,6 +3,8 @@ import QtQuick.Shapes
 
 import Muse.Ui
 
+import Audacity.ProjectScene
+
 Item {
     id: root
 
@@ -12,7 +14,6 @@ Item {
     //! The fade line is always drawn, the handle only when this is true
     property bool handleVisible: true
 
-    readonly property alias containsMouse: mouseArea.containsMouse
     readonly property alias pressed: mouseArea.pressed
 
     signal fadeWidthChangeRequested(real width, bool completed)
@@ -70,9 +71,26 @@ Item {
                 y: root.isFadeIn ? 0 : prv.areaHeight
             }
         }
+
+        // Highlights the line while the handle is dragged
+        ShapePath {
+            strokeColor: mouseArea.pressed ? ui.theme.extra["white_color"] : "transparent"
+            strokeWidth: 1.5
+            capStyle: ShapePath.FlatCap
+            fillColor: "transparent"
+
+            startX: root.isFadeIn ? 0 : prv.areaWidth - root.fadeWidth
+            startY: root.isFadeIn ? prv.areaHeight : 0
+            PathLine {
+                x: root.isFadeIn ? root.fadeWidth : prv.areaWidth
+                y: root.isFadeIn ? 0 : prv.areaHeight
+            }
+        }
     }
 
     ClipHandleIcon {
+        id: icon
+
         anchors.centerIn: parent
 
         opacity: root.handleVisible ? 1 : 0
@@ -96,18 +114,58 @@ Item {
 
         property real pressX: 0
         property real pressFadeWidth: 0
+        property bool cursorOverridden: false
 
+        // Active whether the handle is shown or not. Over it, a shown handle grows; a hidden one turns the mouse
+        // cursor into the hovered handle.
         anchors.fill: parent
-        visible: root.handleVisible
 
         hoverEnabled: true
-        cursorShape: Qt.SizeHorCursor
+
+        function updateCursor() {
+            if (root.handleVisible) {
+                CustomCursorProvider.setStandardCursorShape(mouseArea, Qt.SizeHorCursor)
+            } else {
+                CustomCursorProvider.setIconCursorShape(mouseArea, ui.theme.iconsFont.family, icon.iconCode, icon.hoveredIconSize)
+            }
+        }
+
+        Component.onCompleted: updateCursor()
+
+        Connections {
+            target: root
+            function onHandleVisibleChanged() {
+                mouseArea.updateCursor()
+            }
+        }
+
+        Component.onDestruction: restoreCursor()
+
+        // While dragging, the mouse may go over the other handle, which would show its own cursor
+        function overrideCursor() {
+            if (root.handleVisible) {
+                CustomCursorProvider.overrideStandardCursor(Qt.SizeHorCursor)
+            } else {
+                CustomCursorProvider.overrideIconCursor(ui.theme.iconsFont.family, icon.iconCode, icon.hoveredIconSize)
+            }
+            cursorOverridden = true
+        }
+
+        function restoreCursor() {
+            if (cursorOverridden) {
+                CustomCursorProvider.restoreCursor()
+                cursorOverridden = false
+            }
+        }
 
         onPressed: function (e) {
             // in parent coordinates: the handle itself moves while dragging
             pressX = mapToItem(root.parent, e.x, e.y).x
             pressFadeWidth = root.fadeWidth
+            overrideCursor()
         }
+
+        onCanceled: restoreCursor()
 
         function requestFadeWidth(e, completed) {
             const dx = mapToItem(root.parent, e.x, e.y).x - pressX
@@ -125,6 +183,7 @@ Item {
 
         onReleased: function (e) {
             requestFadeWidth(e, true)
+            restoreCursor()
         }
     }
 }

@@ -11,11 +11,7 @@ Item {
 
     //! The fades span the whole item, the handles only a band of it, starting at `handlesY`
     property real handlesY: 0
-    property int handleHeight: 32
     property bool handlesVisible: false
-
-    readonly property bool hovered: fadeInHandle.containsMouse || fadeOutHandle.containsMouse
-    readonly property bool dragged: fadeInHandle.pressed || fadeOutHandle.pressed
 
     signal fadeInWidthChangeRequested(real width, bool completed)
     signal fadeOutWidthChangeRequested(real width, bool completed)
@@ -27,15 +23,23 @@ Item {
     QtObject {
         id: prv
 
-        readonly property int handleWidth: 30
+        readonly property int handleSize: 32
 
-        // While dragging, the cursor may leave the handle (and the clip), and the clip doesn't
-        // get hover updates during the drag: keep both handles up until release.
-        readonly property bool handlesShown: root.handlesVisible || root.dragged
+        readonly property real fadeInLineCenter: root.fadeInWidth - 0.5
+        readonly property real fadeOutLineCenter: root.width - root.fadeOutWidth + 0.5
 
-        function clampX(x) {
-            return Math.max(0, Math.min(x, root.width - handleWidth))
+        // When the handles collide, each is pushed to its side by half the overlap: when the lines are aligned,
+        // the handles are on either side of them.
+        readonly property real collisionPush: Math.max(0, handleSize - (fadeOutLineCenter - fadeInLineCenter)) / 2
+
+        //! Centered on the boundary line, but inside the clip
+        function handleX(lineCenter) {
+            return Math.max(0, Math.min(lineCenter - handleSize / 2, root.width - handleSize))
         }
+
+        // Where the handles overlap, the dragged one is on top, else the longer fade's: e.g., with no fade-in and
+        // a fade-out spanning the whole clip, both handles are in the left corner, and only the fade-out is hittable.
+        readonly property bool fadeInOnTop: fadeInHandle.pressed || (!fadeOutHandle.pressed && root.fadeInWidth > root.fadeOutWidth)
     }
 
     // the boundary lines are drawn just inside their fade
@@ -54,16 +58,15 @@ Item {
     ClipFadeHandle {
         id: fadeInHandle
 
+        x: prv.handleX(prv.fadeInLineCenter - prv.collisionPush)
         y: root.handlesY
-        width: prv.handleWidth
-        height: root.handleHeight
-        handleVisible: prv.handlesShown
+        z: prv.fadeInOnTop ? 1 : 0
+        width: prv.handleSize
+        height: prv.handleSize
+        handleVisible: root.handlesVisible
 
         isFadeIn: true
         fadeWidth: root.fadeInWidth
-
-        // sits outside its fade, against the fade boundary
-        x: prv.clampX(root.fadeInWidth)
 
         onFadeWidthChangeRequested: function (width, completed) {
             root.fadeInWidthChangeRequested(width, completed)
@@ -77,16 +80,15 @@ Item {
     ClipFadeHandle {
         id: fadeOutHandle
 
+        x: prv.handleX(prv.fadeOutLineCenter + prv.collisionPush)
         y: root.handlesY
-        width: prv.handleWidth
-        height: root.handleHeight
-        handleVisible: prv.handlesShown
+        z: prv.fadeInOnTop ? 0 : 1
+        width: prv.handleSize
+        height: prv.handleSize
+        handleVisible: root.handlesVisible
 
         isFadeIn: false
         fadeWidth: root.fadeOutWidth
-
-        // sits outside its fade, against the fade boundary
-        x: prv.clampX(root.width - root.fadeOutWidth - prv.handleWidth)
 
         onFadeWidthChangeRequested: function (width, completed) {
             root.fadeOutWidthChangeRequested(width, completed)

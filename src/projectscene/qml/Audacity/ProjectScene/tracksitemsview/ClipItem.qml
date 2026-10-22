@@ -1170,11 +1170,11 @@ Rectangle {
         width: root.width
         height: viewsColumn.height
         handlesY: clipHandles.y - y
-        handleHeight: clipHandles.handleHeight
 
         fadeInWidth: root.fadeInDuration * root.context.zoom
         fadeOutWidth: root.fadeOutDuration * root.context.zoom
-        handlesVisible: !root.moveActive && (root.hover || fades.hovered || navCtrl.highlight)
+        // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
+        handlesVisible: root.clipSelected && !root.moveActive
 
         onFadeInWidthChangeRequested: function (width, completed) {
             root.fadeInDurationChangeRequested(width / root.context.zoom, completed)

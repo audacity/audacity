@@ -69,12 +69,26 @@ public:
     //! (important for multi-monitor setups with mixed DPI).
     static QCursor createScaledCursor(const QString& source, int size, const QQuickItem* item = nullptr);
 
+    //! Create a DPI-aware QCursor from a glyph of an icon font, drawn like an icon label with an outline style:
+    //! black, outlined in white. \a pixelSize is the logical font size.
+    static QCursor createIconCursor(const QString& fontFamily, int iconCode, int pixelSize, const QQuickItem* item = nullptr);
+
     //! Apply a custom pixmap cursor to a specific QQuickItem (HiDPI-aware)
     Q_INVOKABLE static void setCursorShape(QQuickItem* item, const QString& source, int size = DEFAULT_CURSOR_SIZE);
+
+    //! Apply a cursor drawn from an icon font glyph to a specific QQuickItem (HiDPI-aware)
+    Q_INVOKABLE static void setIconCursorShape(QQuickItem* item, const QString& fontFamily, int iconCode, int pixelSize);
+
+    Q_INVOKABLE static void setStandardCursorShape(QQuickItem* item, Qt::CursorShape shape);
 
     //! Globally override the cursor with a custom pixmap (HiDPI-aware).
     //! Use during drag operations to keep the cursor stable regardless of hover.
     Q_INVOKABLE static void overrideCursor(const QString& source, int size = DEFAULT_CURSOR_SIZE);
+
+    //! Globally override the cursor with one drawn from an icon font glyph (HiDPI-aware).
+    //! Use during drag operations to keep the cursor stable regardless of hover.
+    //! Always overrides the cursor, so that each call can be paired with restoreCursor().
+    Q_INVOKABLE static void overrideIconCursor(const QString& fontFamily, int iconCode, int pixelSize);
 
     //! Globally override the cursor with a standard Qt cursor shape.
     //! Use during drag operations to keep the cursor stable regardless of hover.

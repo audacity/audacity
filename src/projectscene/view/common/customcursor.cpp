@@ -6,7 +6,10 @@
 
 #include <QGuiApplication>
 #include <QScreen>
+#include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
+#include <QtMath>
 #include <QWindow>
 #include <QQuickWindow>
 
@@ -66,9 +69,41 @@ QCursor CustomCursorProvider::createScaledCursor(const QString& source, int size
     return QCursor(scaledPixmap);
 }
 
+QCursor CustomCursorProvider::createIconCursor(const QString& fontFamily, int iconCode, int pixelSize, const QQuickItem* item)
+{
+    const qreal dpr = resolveDevicePixelRatio(item);
+
+    QFont font(fontFamily);
+    font.setPixelSize(qRound(pixelSize * dpr));
+    QPainterPath path;
+    path.addText(0, 0, font, QString(QChar(iconCode)));
+    if (path.isEmpty()) {
+        LOGW() << "Failed to draw icon " << iconCode << " from font " << fontFamily;
+        return QCursor();
+    }
+
+    // Room for the outline; the hot spot is the center
+    constexpr auto outlineWidth = 1.0;
+    const int physicalSize = qCeil((pixelSize + 4 * outlineWidth) * dpr);
+    path.translate(QPointF(physicalSize, physicalSize) / 2 - path.boundingRect().center());
+
+    QPixmap pixmap(physicalSize, physicalSize);
+    pixmap.fill(Qt::transparent);
+    {
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.strokePath(path, QPen(Qt::white, 2 * outlineWidth * dpr, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.fillPath(path, Qt::black);
+    }
+    pixmap.setDevicePixelRatio(dpr);
+    return QCursor(pixmap);
+}
+
 namespace {
 constexpr const char* kCursorSourceProp = "_customCursorSource";
 constexpr const char* kCursorSizeProp = "_customCursorSize";
+constexpr const char* kCursorIconFontFamilyProp = "_customCursorIconFontFamily";
+constexpr const char* kCursorIconCodeProp = "_customCursorIconCode";
 constexpr const char* kCursorItemHookedProp = "_customCursorItemHooked";
 constexpr const char* kCursorHookedWindowProp = "_customCursorHookedWindow";
 
@@ -78,13 +113,16 @@ void applyStoredCursor(QQuickItem* item)
         return;
     }
 
-    const QString source = item->property(kCursorSourceProp).toString();
-    if (source.isEmpty()) {
+    const int size = item->property(kCursorSizeProp).toInt();
+    QCursor cursor;
+    if (const QString source = item->property(kCursorSourceProp).toString(); !source.isEmpty()) {
+        cursor = CustomCursorProvider::createScaledCursor(source, size, item);
+    } else if (const QString fontFamily = item->property(kCursorIconFontFamilyProp).toString(); !fontFamily.isEmpty()) {
+        cursor = CustomCursorProvider::createIconCursor(fontFamily, item->property(kCursorIconCodeProp).toInt(), size, item);
+    } else {
         return;
     }
 
-    const int size = item->property(kCursorSizeProp).toInt();
-    QCursor cursor = CustomCursorProvider::createScaledCursor(source, size, item);
     if (cursor.shape() == Qt::BitmapCursor) {
         item->setCursor(cursor);
     }
@@ -140,12 +178,47 @@ void CustomCursorProvider::setCursorShape(QQuickItem* item, const QString& sourc
     hookScreenChanges(item);
 }
 
+void CustomCursorProvider::setIconCursorShape(QQuickItem* item, const QString& fontFamily, int iconCode, int pixelSize)
+{
+    if (!item) {
+        return;
+    }
+
+    item->setProperty(kCursorSourceProp, QString());
+    item->setProperty(kCursorIconFontFamilyProp, fontFamily);
+    item->setProperty(kCursorIconCodeProp, iconCode);
+    item->setProperty(kCursorSizeProp, pixelSize);
+
+    applyStoredCursor(item);
+
+    hookScreenChanges(item);
+}
+
+void CustomCursorProvider::setStandardCursorShape(QQuickItem* item, Qt::CursorShape shape)
+{
+    if (!item) {
+        return;
+    }
+
+    // Forget the custom cursor, so that `applyStoredCursor` doesn't bring it back
+    item->setProperty(kCursorSourceProp, QString());
+    item->setProperty(kCursorIconFontFamilyProp, QString());
+
+    item->setCursor(QCursor(shape));
+}
+
 void CustomCursorProvider::overrideCursor(const QString& source, int size)
 {
     QCursor cursor = createScaledCursor(source, size);
     if (cursor.shape() == Qt::BitmapCursor) {
         QGuiApplication::setOverrideCursor(cursor);
     }
+}
+
+void CustomCursorProvider::overrideIconCursor(const QString& fontFamily, int iconCode, int pixelSize)
+{
+    QCursor cursor = createIconCursor(fontFamily, iconCode, pixelSize);
+    QGuiApplication::setOverrideCursor(cursor.shape() == Qt::BitmapCursor ? cursor : QCursor(Qt::ArrowCursor));
 }
 
 void CustomCursorProvider::overrideStandardCursor(Qt::CursorShape shape)
