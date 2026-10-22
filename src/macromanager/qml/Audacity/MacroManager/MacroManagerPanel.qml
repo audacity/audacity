@@ -4,6 +4,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 
 import Muse.Ui
@@ -105,6 +106,7 @@ Rectangle {
 
             model: macroManagerModel
             spacing: 0
+            scrollBarPolicy: ScrollBar.AlwaysOn
 
             delegate: MacroItem {
                 required property int index

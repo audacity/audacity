@@ -4,6 +4,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 
 import Muse.Ui
@@ -28,6 +29,8 @@ StyledListView {
     navigation.name: "AvailableCommandsList"
     navigation.direction: NavigationPanel.Vertical
     navigation.accessible.name: qsTrc("macromanager", "Available commands")
+
+    scrollBarPolicy: ScrollBar.AlwaysOn
 
     delegate: ListItemBlank {
         id: item

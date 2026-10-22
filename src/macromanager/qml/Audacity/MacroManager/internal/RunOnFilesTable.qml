@@ -4,6 +4,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 
 import Muse.Ui
@@ -66,6 +67,8 @@ ColumnLayout {
 
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        scrollBarPolicy: ScrollBar.AlwaysOn
 
         delegate: RunOnFilesItem {
             width: ListView.view.width
