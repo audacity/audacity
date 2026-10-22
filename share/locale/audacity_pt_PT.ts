@@ -6384,7 +6384,7 @@ Por favor selecione uma secção da faixa.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="200"/>
         <source>Treble Cut</source>
-        <translation>Corte de Agudos</translation>
+        <translation>Impulso de Corte</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="275"/>
@@ -6438,7 +6438,7 @@ A mensagem de erro diz:
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
         <source>B-spline</source>
         <extracomment>Technical term for a kind of curve.</extracomment>
-        <translation>B-Spline</translation>
+        <translation>B-spline</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="22"/>
@@ -7068,12 +7068,12 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/RemoteProjectSnapshot.cpp" line="169"/>
         <source>Failed to attach to the Cloud project database</source>
-        <translation>Falha ao anexar à base de dados do projeto na Cloud</translation>
+        <translation>Falha ao anexar à base de dados do projeto na Nuvem</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/RemoteProjectSnapshot.cpp" line="552"/>
         <source>Failed to decompress the Cloud project block</source>
-        <translation>Falha ao descomprimir o bloco de projeto Cloud</translation>
+        <translation>Falha ao descomprimir o bloco de projeto da Nuvem</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp" line="238"/>
@@ -7126,7 +7126,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
         <source>Show paths</source>
-        <translation>Exibir caminhos</translation>
+        <translation>Mostrar caminhos</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
@@ -7136,7 +7136,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
         <source>Show profiler</source>
-        <translation>Exibir perfil</translation>
+        <translation>Mostrar perfil</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
@@ -7146,7 +7146,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
         <source>Show graphics info</source>
-        <translation>Exibir informações gráficas</translation>
+        <translation>Mostrar informações gráficas</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
@@ -7156,7 +7156,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
         <source>Show navigation tree</source>
-        <translation>Exibir árvore de navegação</translation>
+        <translation>Mostrar árvore de navegação</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
@@ -7166,7 +7166,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
         <source>Show accessibility tree</source>
-        <translation>Exibir árvore de acessibilidade</translation>
+        <translation>Mostrar árvore de acessibilidade</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
@@ -7246,49 +7246,49 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="53"/>
         <source>Beat Booster</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Beat Booster</translation>
+        <translation>Impulsionador de Batida</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="57"/>
         <source>Deep Dive Master</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Deep Dive Master</translation>
+        <translation>Master de Imersão</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="60"/>
         <source>Beefy Master</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Beefy Master</translation>
+        <translation>Master Robusto</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="63"/>
         <source>Make It Right Master</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Make It Right Master</translation>
+        <translation>Master Faça Isso Correto</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="66"/>
         <source>Brick Wall Master</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Brick Wall Master</translation>
+        <translation>Master Parede de Tijolos</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="70"/>
         <source>Lead Vocals</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Vocais</translation>
+        <translation>Vocais Principais</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="73"/>
         <source>Fat Vocals</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Fat Vocals</translation>
+        <translation>Vocais Encorpados</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="76"/>
         <source>Power Vocals</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Power Vocals</translation>
+        <translation>Vocais Poderosos</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="79"/>
@@ -7306,7 +7306,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="85"/>
         <source>Voice Memos Balancer</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Equilibrador de Memorandos de Voz</translation>
+        <translation>Regulador de Notas de Voz</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="88"/>
@@ -7354,73 +7354,73 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="111"/>
         <source>Climax Impulser SFX</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>Climax Impulser SFX</translation>
+        <translation>Efeitos Sonoros de Impulsor de Clímax</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="114"/>
         <source>Engine Breathing SFX</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>Engine Breathing SFX</translation>
+        <translation>Efeitos Sonoros de Máquinas Respirando</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="117"/>
         <source>Great Impact SFX</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>Great Impact SFX</translation>
+        <translation>Efeitos Sonoros de Grande Impacto</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="120"/>
         <source>Great Body SFX</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>Great Body SFX</translation>
+        <translation>Efeitos Sonoros de Grande Corpo</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="123"/>
         <source>Great Tail SFX</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>Great Tail SFX</translation>
+        <translation>Efeitos Sonoros de Grande Cauda</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="126"/>
         <source>Smack Explosion SFX</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>Smack Explosion SFX</translation>
+        <translation>Efeitos Sonoros de Explosão</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="132"/>
         <source>Master Limiter</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Master Limiter</translation>
+        <translation>Limitador Mestre</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="135"/>
         <source>SFX Limiter</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>SFX Limiter</translation>
+        <translation>Limitador de SFX</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="138"/>
         <source>VO Limiter</source>
         <extracomment>This is the name of an effect preset. VO means Voiceover.</extracomment>
-        <translation>VO Limiter</translation>
+        <translation>Limitador de VO</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="144"/>
         <source>Modern Punch</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Modern Punch</translation>
+        <translation>Puncionar Moderno</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="147"/>
         <source>Modern Punch 2</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Modern Punch 2</translation>
+        <translation>Puncionar Moderno 2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="150"/>
         <source>Play it Loud</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Reproduzir Alto</translation>
+        <translation>Toque Bem Alto</translation>
     </message>
 </context>
 <context>
@@ -7521,7 +7521,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="13"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="14"/>
         <source>Threshold</source>
-        <translation>Limite</translation>
+        <translation>Limiar</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="15"/>
@@ -8985,7 +8985,7 @@ ou, para LISP, comece com um parêntese de abertura, como:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
         <source>Threshold Percentage</source>
-        <translation>Percentagem de Limite</translation>
+        <translation>Percentagem do Limiar</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
@@ -9374,12 +9374,12 @@ ou, para LISP, comece com um parêntese de abertura, como:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
         <source>Threshold level (dB)</source>
-        <translation>Nível de limite (dB)</translation>
+        <translation>Nível do limiar (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="144"/>
         <source>Threshold measurement</source>
-        <translation>Medição de limite</translation>
+        <translation>Medida do limiar</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="145"/>
@@ -9574,7 +9574,7 @@ Canal Direito</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="181"/>
         <source>Gate threshold (dB)</source>
-        <translation>Gate threshold (dB)</translation>
+        <translation>Limiar do gate (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="182"/>
@@ -9603,8 +9603,8 @@ Canal Direito</translation>
                              is too high for selected track.~%~
                              Set the control below ~a kHz.</source>
         <translation>Erro.~%~
-                             Frequências de porta acima de: ~s kHz~%~
-                             é muito alto para a faixa selecionada.~%~
+                             Frequências de gate acima de: ~s kHz~%~
+                             é muito alta para a faixa selecionada.~%~
                              Defina o controlo abaixo de ~a kHz.</translation>
     </message>
     <message>
@@ -9621,7 +9621,7 @@ Canal Direito</translation>
         <source>Peak based on first ~a seconds ~a dB~%~
                Suggested Threshold Setting ~a dB.</source>
         <translation>Pico baseado nos primeiros ~a segundos ~a dB~%~
-               Configuração de Limite Sugerida ~a dB.</translation>
+               Configuração de Limiar Sugerida ~a dB.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="189"/>
@@ -11524,7 +11524,7 @@ Selecione uma área para reparar que tenha áudio em pelo menos um dos lados (qu
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="30"/>
         <source>Threshold</source>
-        <translation>Limite</translation>
+        <translation>Limiar</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="75"/>
@@ -18069,7 +18069,7 @@ Ele não será carregado.</translation>
     </message>
     <message>
         <source>Cloud</source>
-        <translation type="vanished">Cloud</translation>
+        <translation type="vanished">Nuvem</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="225"/>
@@ -19503,7 +19503,7 @@ Você precisa de executar essa versão do Autacity para recuperar o projeto.</tr
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
-        <translation>O seu projeto tem um backup privado em audio.com. Pode aceder ao seu trabalho em qualquer dispositivo e colaborar no seu projeto com outros. Guardar na cloud é gratuito por um número limitado de projetos.</translation>
+        <translation>O seu projeto tem um backup privado em audio.com. Pode aceder ao seu trabalho em qualquer dispositivo e colaborar no seu projeto com outros. Guardar na nuvem é gratuito por um número limitado de projetos.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
