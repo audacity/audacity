@@ -81,6 +81,16 @@ bool TrackeditInteraction::changeClipColor(const ClipKey& clipKey, ClipColorInde
     return m_interaction->changeClipColor(clipKey, colorIndex);
 }
 
+bool TrackeditInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t duration, bool completed)
+{
+    return m_interaction->changeClipFadeIn(clipKey, duration, completed);
+}
+
+bool TrackeditInteraction::changeClipFadeOut(const ClipKey& clipKey, secs_t duration, bool completed)
+{
+    return m_interaction->changeClipFadeOut(clipKey, duration, completed);
+}
+
 bool TrackeditInteraction::changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex)
 {
     return m_interaction->changeTracksColor(tracksIds, colorIndex);

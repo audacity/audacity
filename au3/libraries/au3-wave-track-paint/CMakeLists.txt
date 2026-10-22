@@ -28,6 +28,7 @@ PUBLIC
 PRIVATE
    au3-mixer
    au3-screen-geometry
+   au3-stretching-sequence
    au3-strings
    au3-track
    au3-wave-track

@@ -19,6 +19,7 @@
 #include "waveform/WaveDataCache.h"
 
 #include "au3-mixer/Envelope.h"
+#include "au3-stretching-sequence/ClipFades.h"
 #include "au3-graphics/FrameStatistics.h"
 
 #include "au3-wave-track/WaveClip.h"
@@ -188,6 +189,26 @@ struct WaveBitmapCache::LookupHelper final
             inputData = EnvRemappedColumns.data();
         }
 
+        const auto& fades = cache->mFades;
+        if (fades.fadeIn() > 0 || fades.fadeOut() > 0) {
+            // In the key, samples are counted from the start of the sequence, before trimming
+            const auto firstColumnTime
+                =key.FirstSample / cache->GetScaledSampleRate() - cache->mWaveClip.GetTrimLeft();
+
+            for (size_t column = 0; column < columnsCount; ++column) {
+                const auto columnData = inputData[column];
+                const auto gain = static_cast<float>(fades.gainAt(firstColumnTime + column / key.PixelsPerSecond));
+
+                FadeRemappedColumns[column] = {
+                    columnData.min* gain,
+                    columnData.max* gain,
+                    columnData.rms* gain
+                };
+            }
+
+            inputData = FadeRemappedColumns.data();
+        }
+
         const auto globalMaxRow = GetRowFromValue(cache->mPaintParameters.Max);
         const auto globalMinRow = GetRowFromValue(cache->mPaintParameters.Min) + 1;
 
@@ -278,6 +299,7 @@ struct WaveBitmapCache::LookupHelper final
     std::array<double, GraphicsDataCacheBase::CacheElementWidth>
     EnvelopeValues {};
     WaveCacheElement::Columns EnvRemappedColumns {};
+    WaveCacheElement::Columns FadeRemappedColumns {};
 
     size_t AvailableColumns { 0 };
     bool IsComplete { 0 };
@@ -297,6 +319,8 @@ WaveBitmapCache::WaveBitmapCache(
             mWaveClip.GetRate() / mWaveClip.GetStretchRatio());
     })
                                   }
+    , mFades{ClipFades::Get(waveClip)}
+    , mFadesChangedSubscription{mFades.SubscribeToChanges([this] { Invalidate(); })}
 {
 }
 

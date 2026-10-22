@@ -209,11 +209,12 @@ struct PitchAndSpeedPresetChange
 
 struct StretchRatioChange
 {
-    explicit StretchRatioChange(double newValue)
-        : newValue(newValue)
+    explicit StretchRatioChange(double oldValue, double newValue)
+        : oldValue(oldValue), newValue(newValue)
     {
     }
 
+    const double oldValue;
     const double newValue;
 };
 
@@ -443,6 +444,9 @@ public:
     [[nodiscard]] virtual Observer::Subscription
     SubscribeToPitchAndSpeedPresetChange(
         std::function<void(PitchAndSpeedPreset)> cb) const override;
+
+    [[nodiscard]] Observer::Subscription SubscribeToStretchRatioChange(
+        std::function<void(double oldRatio, double newRatio)> cb) const override;
 
     // Resample clip. This also will set the rate, but without changing
     // the length of the clip

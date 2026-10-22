@@ -67,6 +67,9 @@ Rectangle {
     required property var pressedSpectrogram
     required property bool splitToolActive
 
+    property real fadeInDuration: 0
+    property real fadeOutDuration: 0
+
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
 
@@ -87,6 +90,9 @@ Rectangle {
     signal clipRightTrimRequested(bool completed, int action)
     signal clipLeftStretchRequested(bool completed, int action)
     signal clipRightStretchRequested(bool completed, int action)
+
+    signal fadeInDurationChangeRequested(real duration, bool completed)
+    signal fadeOutDurationChangeRequested(real duration, bool completed)
 
     signal requestSelected
     signal requestSelectionReset
@@ -456,9 +462,8 @@ Rectangle {
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
         z: headerDragArea.z + 1
-        height: !root.collapsed ? root.height / 3 : root.height / 2
-
-        anchors.top: root.top
+        y: clipHandles.y
+        height: clipHandles.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
@@ -514,12 +519,11 @@ Rectangle {
     MouseArea {
         id: rightTrimStretchEdgeHover
 
-        x: root.width - 5
+        x: root.width - 6
         z: headerDragArea.z + 1
         width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5) : 11
-        height: !root.collapsed ? root.height / 3 : root.height / 2
-
-        anchors.top: root.top
+        y: clipHandles.y
+        height: clipHandles.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
@@ -1155,6 +1159,33 @@ Rectangle {
             root.parent.z = 1
         } else {
             root.parent.z = 0
+        }
+    }
+
+    ClipFades {
+        id: fades
+
+        // The fades span the views, below the header
+        y: viewsColumn.y
+        width: root.width
+        height: viewsColumn.height
+        handlesY: clipHandles.y - y
+
+        fadeInWidth: root.fadeInDuration * root.context.zoom
+        fadeOutWidth: root.fadeOutDuration * root.context.zoom
+        // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
+        handlesVisible: root.clipSelected && !root.moveActive
+
+        onFadeInWidthChangeRequested: function (width, completed) {
+            root.fadeInDurationChangeRequested(width / root.context.zoom, completed)
+        }
+
+        onFadeOutWidthChangeRequested: function (width, completed) {
+            root.fadeOutDurationChangeRequested(width / root.context.zoom, completed)
+        }
+
+        onFadeHandlesMousePositionChanged: function (xWithinFadeHandles, yWithinFadeHandles) {
+            clipItemMousePositionChanged(xWithinFadeHandles, fades.y + yWithinFadeHandles)
         }
     }
 
