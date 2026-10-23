@@ -592,7 +592,12 @@ muse::Ret ProjectActionsController::importFiles(const Params& params)
         }
     }
 
-    return project->import(filePaths);
+    const Ret ret = project->import(filePaths);
+    if (ret) {
+        prependRecentMediaFiles(filePaths);
+    }
+
+    return ret;
 }
 
 muse::Ret ProjectActionsController::importStartupMedia(const Params& params)
@@ -610,7 +615,7 @@ muse::Ret ProjectActionsController::importStartupMedia(const Params& params)
 
     const bool removeAfterImport = params.at(PROJECT_REMOVE_AFTER_IMPORT_PARAM, Val(false)).toBool();
 
-    Ret ret = processMediaFiles(filePaths);
+    Ret ret = processMediaFiles(filePaths, !removeAfterImport);
     if (removeAfterImport) {
         for (const auto& filePath : filePaths) {
             fileSystem()->remove(filePath);
@@ -624,7 +629,7 @@ muse::Ret ProjectActionsController::importStartupMedia(const Params& params)
     return ret;
 }
 
-muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& paths)
+muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& paths, bool addToRecent)
 {
     if (paths.empty()) {
         return make_ret(Ret::Code::Cancel);
@@ -662,7 +667,20 @@ muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& p
         return ret;
     }
 
-    return project->import(actualPaths);
+    const Ret importRet = project->import(actualPaths);
+    if (importRet && addToRecent) {
+        prependRecentMediaFiles(actualPaths);
+    }
+
+    return importRet;
+}
+
+void ProjectActionsController::prependRecentMediaFiles(const muse::io::paths_t& paths)
+{
+    //! NOTE Prepend in reverse, so that the first file ends up on top
+    for (auto it = paths.rbegin(); it != paths.rend(); ++it) {
+        recentFilesController()->prependRecentFile(RecentFile(*it));
+    }
 }
 
 bool ProjectActionsController::isUrlSupported(const QUrl& url) const

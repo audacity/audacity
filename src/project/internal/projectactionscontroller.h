@@ -93,7 +93,8 @@ private:
     muse::Ret importFiles(const muse::rcommand::Params& params);
 
     muse::Ret importStartupMedia(const muse::rcommand::Params& params);
-    muse::Ret processMediaFiles(const muse::io::paths_t& paths);
+    muse::Ret processMediaFiles(const muse::io::paths_t& paths, bool addToRecent = true);
+    void prependRecentMediaFiles(const muse::io::paths_t& paths);
     muse::Ret closeProject();
 
     muse::Ret openProject(const muse::io::path_t& path,
