@@ -88,54 +88,8 @@ bool FadingSequence::DoGet(
 }
 
 namespace {
-//! Duration over which fade length changes are applied, to avoid clicks when fades are dragged during playback
-constexpr auto fadeLengthRampDuration = 0.02;
-
-double FadeGain(
-    double t, double clipStart, double clipEnd, double fadeIn, double fadeOut, FadeType fadeInType, FadeType fadeOutType)
-{
-    auto gain = 1.0;
-    if (fadeIn > 0 && t < clipStart + fadeIn) {
-        gain *= ClipFades::fadeGain(fadeInType, (t - clipStart) / fadeIn);
-    }
-    if (fadeOut > 0 && t > clipEnd - fadeOut) {
-        gain *= ClipFades::fadeGain(fadeOutType, (clipEnd - t) / fadeOut);
-    }
-    return gain;
-}
-}
-
-double FadingSequence::FadeLengthRamp::At(size_t i) const
-{
-    return i < remaining ? value + step * i : target;
-}
-
-void FadingSequence::FadeLengthRamp::Retarget(double newTarget, size_t rampLength)
-{
-    if (newTarget == target) {
-        return;
-    }
-    // Ramp from where we are, which may be in the middle of a previous ramp
-    target = newTarget;
-    remaining = std::max<size_t>(rampLength, 1);
-    step = (target - value) / remaining;
-}
-
-void FadingSequence::FadeLengthRamp::Advance(size_t numSamples)
-{
-    if (numSamples >= remaining) {
-        value = target;
-        remaining = 0;
-    } else {
-        value += step * numSamples;
-        remaining -= numSamples;
-    }
-}
-
-void FadingSequence::FadeLengthRamp::Snap(double newTarget)
-{
-    value = target = newTarget;
-    remaining = 0;
+//! Duration over which fade changes are applied, to avoid clicks when fades are dragged during playback
+constexpr auto fadeChangeRampDuration = 0.02;
 }
 
 void FadingSequence::ApplyFades(
@@ -150,27 +104,36 @@ void FadingSequence::ApplyFades(
     const auto continuesPreviousRead = mExpectedStart == start && mExpectedBackwards == backwards;
     mExpectedStart = backwards ? first : end;
     mExpectedBackwards = backwards;
-    const auto rampLength = static_cast<size_t>(fadeLengthRampDuration * rate);
+    const auto rampLength = std::max<size_t>(fadeChangeRampDuration * rate, 1);
 
-    for (auto& [clip, fades, fadeIn, fadeOut] : mClips) {
-        if (continuesPreviousRead) {
-            fadeIn.Retarget(fades.fadeIn(), rampLength);
-            fadeOut.Retarget(fades.fadeOut(), rampLength);
-        } else {
-            fadeIn.Snap(fades.fadeIn());
-            fadeOut.Snap(fades.fadeOut());
+    for (auto& [clip, fades, from, to, rampPosition] : mClips) {
+        const auto latest = fades.snapshot();
+        if (!continuesPreviousRead) {
+            from = to = latest;
+            rampPosition = rampLength;
         }
 
         const auto clipStart = clip->GetPlayStartTime();
-        const auto clipEnd = clip->GetPlayEndTime();
-        const auto fadeInType = fades.fadeInType();
-        const auto fadeOutType = fades.fadeOutType();
-        const auto n0 = std::max(sampleCount { std::ceil(clipStart * rate) }, first);
-        const auto n1 = std::min(sampleCount { std::ceil(clipEnd * rate) }, end);
-        for (auto n = n0; n < n1; ++n) {
-            // Index in the buffers, which is also the number of samples read so far
-            const auto i = (backwards ? start - 1 - n : n - start).as_size_t();
-            const auto gain = FadeGain(n.as_double() / rate, clipStart, clipEnd, fadeIn.At(i), fadeOut.At(i), fadeInType, fadeOutType);
+        const auto n0 = sampleCount { std::ceil(clipStart * rate) };
+        const auto n1 = sampleCount { std::ceil(clip->GetPlayEndTime() * rate) };
+
+        // In reading order, since the ramps are in time of reading
+        for (size_t i = 0; i < len; ++i, rampPosition = std::min(rampPosition + 1, rampLength)) {
+            if (rampPosition == rampLength && latest != to) {
+                from = to;
+                to = latest;
+                rampPosition = 0;
+            }
+
+            const auto n = backwards ? start - 1 - static_cast<sampleCount::type>(i) : start + static_cast<sampleCount::type>(i);
+            if (n < n0 || n >= n1) {
+                continue;
+            }
+
+            const auto t = n.as_double() / rate - clipStart;
+            const auto gain = rampPosition < rampLength
+                              ? std::lerp(from.gainAt(t), to.gainAt(t), static_cast<double>(rampPosition) / rampLength)
+                              : to.gainAt(t);
             if (gain == 1.0) {
                 continue;
             }
@@ -178,9 +141,6 @@ void FadingSequence::ApplyFades(
                 reinterpret_cast<float*>(buffers[c])[i] *= static_cast<float>(gain);
             }
         }
-
-        fadeIn.Advance(len);
-        fadeOut.Advance(len);
     }
 }
 

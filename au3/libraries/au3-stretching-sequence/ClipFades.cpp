@@ -181,6 +181,23 @@ double ClipFades::fadeGain(FadeType type, double x)
     }
 }
 
+double ClipFades::Snapshot::gainAt(double t) const
+{
+    auto gain = 1.0;
+    if (fadeIn > 0 && t < fadeIn) {
+        gain *= fadeGain(fadeInType, t / fadeIn);
+    }
+    if (fadeOut > 0 && t > playDuration - fadeOut) {
+        gain *= fadeGain(fadeOutType, (playDuration - t) / fadeOut);
+    }
+    return gain;
+}
+
+ClipFades::Snapshot ClipFades::snapshot() const
+{
+    return { playDuration(), fadeIn(), fadeOut(), fadeInType(), fadeOutType() };
+}
+
 FadeType ClipFades::fadeInType() const
 {
     return m_fadeInType;

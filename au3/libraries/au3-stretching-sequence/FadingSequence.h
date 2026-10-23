@@ -9,13 +9,12 @@
 #pragma once
 
 #include "au3-mixer/AudioIOSequences.h"
+#include "ClipFades.h"
 #include "ClipInterface.h"
 
 #include <memory>
 #include <optional>
 #include <vector>
-
-class ClipFades;
 
 //! Applies the clips' fades to the output of the sequence it decorates,
 //! typically a `StretchingSequence`, i.e., after stretching.
@@ -56,25 +55,15 @@ public:
     AudioGraph::ChannelType GetChannelType() const override;
 
 private:
-    //! A fade length moving linearly to its latest value, so that changes during playback don't click
-    struct FadeLengthRamp {
-        //! The length at the `i`-th sample from where the ramp was last advanced to
-        double At(size_t i) const;
-        void Retarget(double target, size_t rampLength);
-        void Advance(size_t numSamples);
-        void Snap(double target);
-
-        double value = 0.0;
-        double target = 0.0;
-        double step = 0.0;
-        size_t remaining = 0;
-    };
-
+    //! When the fades change during playback, the gain cross-fades from the previous ones to the new ones,
+    //! so that it doesn't click. A change arriving during a ramp waits for the end of it.
     struct FadedClip {
         std::shared_ptr<const ClipInterface> clip;
         const ClipFades& fades;
-        FadeLengthRamp fadeIn;
-        FadeLengthRamp fadeOut;
+        ClipFades::Snapshot from;
+        ClipFades::Snapshot to;
+        //! How far into the ramp from `from` to `to` we are, in samples
+        size_t rampPosition = 0;
     };
 
     void ApplyFades(
@@ -82,7 +71,7 @@ private:
 
     const std::shared_ptr<const PlayableSequence> mSequence;
 
-    // Mutable: reading the sequence advances the fade-length ramps
+    // Mutable: reading the sequence advances the ramps
     mutable std::vector<FadedClip> mClips;
     //! Where the next read continues the previous one; another read jumps to the latest fades
     mutable std::optional<sampleCount> mExpectedStart;

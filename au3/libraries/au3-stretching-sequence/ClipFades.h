@@ -28,6 +28,20 @@ public:
     //! `x` from 0 (silent end) to 1 (unfaded end)
     static double fadeGain(FadeType type, double x);
 
+    //! Everything that defines the fades of a clip, at some point in time
+    struct Snapshot {
+        double playDuration = 0.0;
+        double fadeIn = 0.0;
+        double fadeOut = 0.0;
+        FadeType fadeInType = FadeType::Linear;
+        FadeType fadeOutType = FadeType::Linear;
+
+        //! The gain of the fades at `timeFromPlayStart`, in seconds from the clip's play start
+        double gainAt(double timeFromPlayStart) const;
+
+        bool operator==(const Snapshot&) const = default;
+    };
+
     static ClipFades& Get(ClipInterface& clip);
     static const ClipFades& Get(const ClipInterface& clip);
 
@@ -50,6 +64,8 @@ public:
     void setFadeOutType(FadeType);
 
     void setDraggingSide(ClipSide);
+
+    Snapshot snapshot() const;
 
 private:
     double playDuration() const;

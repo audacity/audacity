@@ -155,4 +155,29 @@ TEST_F(FadingSequenceTests, FadeChangesDuringPlaybackDontMakeTheGainJump)
     //! [THEN] once the change is ramped in, the new fade applies
     EXPECT_NEAR(after[50], 0.375f, 1e-6); // sample 650
 }
+
+TEST_F(FadingSequenceTests, FadeChangesDuringARampAreRampedInNext)
+{
+    const auto sequence = FadingSequence::Create(*m_track, m_track->GetClipInterfaces());
+    auto& fades = ClipFades::Get(*m_clip);
+
+    //! [GIVEN] a fade change being ramped in (over 20 samples, at this sample rate)
+    std::vector<float> samples = read(*sequence, 0, 600, false);
+    fades.setFadeIn(0.4);
+    const auto duringRamp = read(*sequence, 600, 10, false);
+    samples.insert(samples.end(), duringRamp.begin(), duringRamp.end());
+
+    //! [WHEN] the fade changes again before the end of the ramp
+    fades.setFadeIn(0.3);
+    const auto after = read(*sequence, 610, 90, false);
+    samples.insert(samples.end(), after.begin(), after.end());
+
+    //! [THEN] the gain doesn't jump
+    for (size_t i = 591; i < samples.size(); ++i) {
+        EXPECT_LT(std::abs(samples[i] - samples[i - 1]), 0.02f) << "at sample " << i;
+    }
+
+    //! [THEN] once both changes are ramped in, the latest fade applies
+    EXPECT_NEAR(samples[650], 0.5f, 1e-6); // 0.15 s into a 0.3 s fade-in
+}
 }
