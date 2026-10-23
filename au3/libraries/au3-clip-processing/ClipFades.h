@@ -18,10 +18,13 @@ enum class FadeType {
     Logarithmic,
 };
 
+//! Published whenever the fades of a clip change
+struct ClipFadesChange {};
+
 //! Fade lengths of a clip, in seconds of play time
 //! As a clip attachment, it is copied along with the clip (split, paste, undo history)
 //! and saved as attributes of the clip in the project file.
-class ClipFades final : public ClipInterfaceAttachment
+class ClipFades final : public ClipInterfaceAttachment, public Observer::Publisher<ClipFadesChange>
 {
 public:
     explicit ClipFades(ClipInterface& clip);
@@ -69,6 +72,11 @@ public:
     void setDraggingSide(ClipSide);
 
     Snapshot snapshot() const;
+
+    //! See `Snapshot::gainAt`
+    double gainAt(double timeFromPlayStart) const;
+
+    [[nodiscard]] Observer::Subscription SubscribeToChanges(std::function<void()> cb) const;
 
 private:
     double playDuration() const;
