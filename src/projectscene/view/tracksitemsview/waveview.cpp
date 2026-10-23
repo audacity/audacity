@@ -18,6 +18,7 @@
 #include "au3/wavepainterutils.h"
 #include "au3/samplespainterutils.h"
 #include "view/timeline/timelinecontext.h"
+#include "waverenderertoggle.h"
 
 using namespace au::projectscene;
 
@@ -80,6 +81,8 @@ WaveView::WaveView(QQuickItem* parent)
     //! texture repaints that Qt then runs alongside the scene graph content.
     m_fallback = new PaintedFallback(this);
     m_fallback->setVisible(false);
+
+    connect(WaveRendererToggle::instance(), &WaveRendererToggle::sceneGraphChanged, this, &WaveView::scheduleRepaint);
 
     //! NOTE: Push history state after edit is completed to avoid multiple unecessary calls.
     connect(this, &WaveView::isIsolationModeChanged, [this]() {
@@ -375,7 +378,7 @@ void WaveView::paintRecordingPlaceholder(QPainter& painter, const IWavePainter::
 
 void WaveView::prepareSceneGraphData()
 {
-    if (!m_context || m_clipKey.key.itemId == -1) {
+    if (!m_context || m_clipKey.key.itemId == -1 || !WaveRendererToggle::instance()->sceneGraph()) {
         m_sceneGraph.reset();
         return;
     }
