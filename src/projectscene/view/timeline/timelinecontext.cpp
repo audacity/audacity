@@ -124,6 +124,8 @@ void TimelineContext::init(double frameWidth)
     dispatcher()->reg(this, "zoom-to-fit-project", this, &TimelineContext::fitProjectToWidth);
     dispatcher()->reg(this, "center-view-on-playhead", this, &TimelineContext::centerViewOnPlayhead);
     dispatcher()->reg(this, "zoom-toggle", this, &TimelineContext::zoomToggle);
+    dispatcher()->reg(this, "timeline-page-left", [this]() { shiftFrameTime(frameStartTime() - frameEndTime()); });
+    dispatcher()->reg(this, "timeline-page-right", [this]() { shiftFrameTime(frameEndTime() - frameStartTime()); });
     dispatcher()->reg(this, "timeline-context-menu", [this]() { emit contextMenuRequested(); });
 
     configuration()->playbackOnRulerClickEnabledChanged().onNotify(this, [this]() {
