@@ -35,6 +35,8 @@ static const muse::Settings::Key UPDATE_DISPLAY_WHILE_PLAYING_ENABLED(moduleName
 static const muse::Settings::Key PINNED_PLAY_HEAD_ENABLED(moduleName, "projectscene/pinnedPlayHeadEnabled");
 static const muse::Settings::Key ZOOM_PRESET_1(moduleName, "projectscene/zoomPreset1");
 static const muse::Settings::Key ZOOM_PRESET_2(moduleName, "projectscene/zoomPreset2");
+static const muse::Settings::Key DEFAULT_TRACK_VIEW_TYPE(moduleName, "projectscene/defaultTrackViewType");
+static const muse::Settings::Key DEFAULT_RULER_TYPE(moduleName, "projectscene/defaultRulerType");
 
 static constexpr bool DEFAULT_VERTICAL_RULERS_VISIBILITY = false;
 static constexpr bool DEFAULT_RMS_IN_WAVEFORM_VISIBILITY = false;
@@ -113,6 +115,16 @@ void ProjectSceneConfiguration::init()
 
     muse::settings()->setDefaultValue(ZOOM_PRESET_1, muse::Val(static_cast<int>(ZoomPresets::ZoomDefault)));
     muse::settings()->setDefaultValue(ZOOM_PRESET_2, muse::Val(static_cast<int>(ZoomPresets::Zoom4To1)));
+
+    muse::settings()->setDefaultValue(DEFAULT_TRACK_VIEW_TYPE, muse::Val(static_cast<int>(au::trackedit::TrackViewType::Waveform)));
+    muse::settings()->valueChanged(DEFAULT_TRACK_VIEW_TYPE).onReceive(nullptr, [this](const muse::Val&) {
+        m_defaultTrackViewTypeChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(DEFAULT_RULER_TYPE, muse::Val(static_cast<int>(au::trackedit::TrackRulerType::Linear)));
+    muse::settings()->valueChanged(DEFAULT_RULER_TYPE).onReceive(nullptr, [this](const muse::Val&) {
+        m_defaultRulerTypeChanged.notify();
+    });
 }
 
 bool ProjectSceneConfiguration::isVerticalRulersVisible() const
@@ -434,4 +446,49 @@ ZoomPresets::Preset ProjectSceneConfiguration::zoomPreset2() const
 void ProjectSceneConfiguration::setZoomPreset2(ZoomPresets::Preset preset)
 {
     muse::settings()->setSharedValue(ZOOM_PRESET_2, muse::Val(static_cast<int>(preset)));
+}
+
+au::trackedit::TrackViewType ProjectSceneConfiguration::defaultTrackViewType() const
+{
+    const auto type = static_cast<au::trackedit::TrackViewType>(muse::settings()->value(DEFAULT_TRACK_VIEW_TYPE).toInt());
+    switch (type) {
+    case au::trackedit::TrackViewType::Waveform:
+    case au::trackedit::TrackViewType::Spectrogram:
+    case au::trackedit::TrackViewType::WaveformAndSpectrogram:
+        return type;
+    case au::trackedit::TrackViewType::Undefined:
+        break;
+    }
+    return au::trackedit::TrackViewType::Waveform;
+}
+
+void ProjectSceneConfiguration::setDefaultTrackViewType(au::trackedit::TrackViewType type)
+{
+    if (defaultTrackViewType() == type) {
+        return;
+    }
+    muse::settings()->setSharedValue(DEFAULT_TRACK_VIEW_TYPE, muse::Val(static_cast<int>(type)));
+}
+
+muse::async::Notification ProjectSceneConfiguration::defaultTrackViewTypeChanged() const
+{
+    return m_defaultTrackViewTypeChanged;
+}
+
+au::trackedit::TrackRulerType ProjectSceneConfiguration::defaultRulerType() const
+{
+    return static_cast<au::trackedit::TrackRulerType>(muse::settings()->value(DEFAULT_RULER_TYPE).toInt());
+}
+
+void ProjectSceneConfiguration::setDefaultRulerType(au::trackedit::TrackRulerType scale)
+{
+    if (defaultRulerType() == scale) {
+        return;
+    }
+    muse::settings()->setSharedValue(DEFAULT_RULER_TYPE, muse::Val(static_cast<int>(scale)));
+}
+
+muse::async::Notification ProjectSceneConfiguration::defaultRulerTypeChanged() const
+{
+    return m_defaultRulerTypeChanged;
 }

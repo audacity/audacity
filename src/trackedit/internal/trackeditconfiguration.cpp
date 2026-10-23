@@ -5,6 +5,10 @@
 
 #include "settings.h"
 
+#include "au3wrap/internal/wxtypes_convert.h"
+
+#include "au3-wave-track/WaveTrack.h"
+
 namespace au::trackedit {
 static const std::string moduleName("trackedit");
 
@@ -14,6 +18,8 @@ static const muse::Settings::Key DELETE_BEHAVIOR(moduleName, "trackedit/deleteBe
 static const muse::Settings::Key CLOSE_GAP_BEHAVIOR(moduleName, "trackedit/closeGapBehavior");
 static const muse::Settings::Key PASTE_BEHAVIOR(moduleName, "trackedit/pasteBehavior");
 static const muse::Settings::Key PASTE_INSERT_BEHAVIOR(moduleName, "trackedit/pasteInsertBehavior");
+// Empty means "use the translated default name"
+static const muse::Settings::Key DEFAULT_AUDIO_TRACK_NAME(moduleName, "trackedit/defaultAudioTrackName");
 
 void TrackeditConfiguration::init()
 {
@@ -46,6 +52,39 @@ void TrackeditConfiguration::init()
     muse::settings()->valueChanged(PASTE_INSERT_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
         m_pasteInsertBehaviorChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(DEFAULT_AUDIO_TRACK_NAME, muse::Val(std::string()));
+    muse::settings()->valueChanged(DEFAULT_AUDIO_TRACK_NAME).onReceive(nullptr, [this](const muse::Val&) {
+        applyDefaultAudioTrackName();
+        m_defaultAudioTrackNameChanged.notify();
+    });
+    applyDefaultAudioTrackName();
+}
+
+void TrackeditConfiguration::applyDefaultAudioTrackName() const
+{
+    // New tracks are named by au3 code (WaveTrack::GetDefaultAudioTrackNamePreference),
+    // so keep its setting in sync with ours
+    AudioTrackNameSetting.Write(au3::wxFromStdString(muse::settings()->value(DEFAULT_AUDIO_TRACK_NAME).toString()));
+}
+
+std::string TrackeditConfiguration::defaultAudioTrackName() const
+{
+    return au3::wxToStdString(WaveTrack::GetDefaultAudioTrackNamePreference());
+}
+
+void TrackeditConfiguration::setDefaultAudioTrackName(const std::string& name)
+{
+    const std::string trimmed = muse::String::fromStdString(name).trimmed().toStdString();
+    if (muse::settings()->value(DEFAULT_AUDIO_TRACK_NAME).toString() == trimmed) {
+        return;
+    }
+    muse::settings()->setSharedValue(DEFAULT_AUDIO_TRACK_NAME, muse::Val(trimmed));
+}
+
+muse::async::Notification TrackeditConfiguration::defaultAudioTrackNameChanged() const
+{
+    return m_defaultAudioTrackNameChanged;
 }
 
 bool TrackeditConfiguration::askBeforeConvertingToMonoOrStereo() const
