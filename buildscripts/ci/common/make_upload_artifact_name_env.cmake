@@ -1,4 +1,7 @@
 
+# Name of the GitHub Actions artifact the build job uploads: <PREFIX>_<build number>_<info>.
+# Not the package file name; that one is artifact_name.env, written by the package scripts.
+
 # Config
 set(ARTIFACTS_DIR "build.artifacts")
 
@@ -25,11 +28,11 @@ foreach(SYMBOL ${NOT_ALLOWED_SYMBOLS})
     string(REPLACE "${SYMBOL}" "_" ARTIFACT_INFO ${ARTIFACT_INFO})
 endforeach()
 
-set(ARTIFACT_NAME "${PREFIX}_${BUILD_NUMBER}_${ARTIFACT_INFO}")
+set(UPLOAD_ARTIFACT_NAME "${PREFIX}_${BUILD_NUMBER}_${ARTIFACT_INFO}")
 
 file(MAKE_DIRECTORY ${ARTIFACTS_DIR})
 file(MAKE_DIRECTORY ${ARTIFACTS_DIR}/env)
 
-file(WRITE ${ARTIFACTS_DIR}/env/artifact_name.env ${ARTIFACT_NAME})
-message(STATUS "ARTIFACT_NAME: ${ARTIFACT_NAME} (${ARTIFACTS_DIR}/env/artifact_name.env)")
+file(WRITE ${ARTIFACTS_DIR}/env/upload_artifact_name.env ${UPLOAD_ARTIFACT_NAME})
+message(STATUS "UPLOAD_ARTIFACT_NAME: ${UPLOAD_ARTIFACT_NAME} (${ARTIFACTS_DIR}/env/upload_artifact_name.env)")
 

@@ -109,7 +109,7 @@ jobs:
         echo "BUILD_MODE: $BUILD_MODE"
 
         DO_BUILD='true'
-        UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/artifact_name.env)
+        UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/upload_artifact_name.env)
 
         PROJECT_ID=""
         APP_KEY=""
