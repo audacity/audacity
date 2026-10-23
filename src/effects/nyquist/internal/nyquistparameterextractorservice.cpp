@@ -122,7 +122,10 @@ ParameterInfo convertControl(const NyqControl& ctrl)
     info.name = translateNyquist(ctrl.name);
     // Nyquist's ctrl.label is a freeform descriptor (e.g. "30 - 300 beats/minute"),
     // not a unit symbol. Map it to `description`; leave `units` empty.
-    info.description = translateNyquist(ctrl.label);
+    // For file controls it is the browse button caption, which the UI provides itself.
+    if (ctrl.type != NYQ_CTRL_FILE) {
+        info.description = translateNyquist(ctrl.label);
+    }
 
     info.type = convertControlType(ctrl.type);
 
