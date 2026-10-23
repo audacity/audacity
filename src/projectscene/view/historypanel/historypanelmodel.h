@@ -20,6 +20,7 @@ class HistoryPanelModel : public QAbstractListModel, public QQmlParserStatus, pu
     Q_INTERFACES(QQmlParserStatus)
 
     Q_PROPERTY(int currentIndex READ currentIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(bool isUndoRedoAvailable READ isUndoRedoAvailable NOTIFY isUndoRedoAvailableChanged)
 
     muse::ContextInject<context::IGlobalContext> context = { this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
@@ -33,11 +34,13 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     int currentIndex() const;
+    bool isUndoRedoAvailable() const;
 
     Q_INVOKABLE void undoRedoToIndex(int index);
 
 signals:
     void currentIndexChanged();
+    void isUndoRedoAvailableChanged();
 
 private:
     void classBegin() override;
