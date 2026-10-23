@@ -27,6 +27,7 @@ using namespace au::effects;
 
 static const ActionCode REPEAT_LAST_EFFECT_CODE("repeat-last-effect");
 static const ActionCode PLUGIN_MANAGER_CODE("plugin-manager");
+static const ActionCode GET_EFFECTS_CODE("get-effects");
 static const ActionQuery EFFECT_OPEN_QUERY("action://effects/open");
 static const ActionQuery EFFECT_APPLY_QUERY("action://effects/apply");
 static const ActionQuery TOGGLE_VENDOR_UI_QUERY("action://effects/toggle_vendor_ui");
@@ -38,6 +39,7 @@ static const ActionQuery PRESET_IMPORT_QUERY("action://effects/presets/import");
 static const ActionQuery PRESET_EXPORT_QUERY("action://effects/presets/export");
 
 static const muse::Uri PLUGIN_MANAGER_URI("audacity://effects/plugin_manager");
+static const muse::Uri GET_EFFECTS_URI("audacity://projectscene/geteffects");
 
 namespace {
 CommandQuery queryParamsConv(const Command& command, const ActionData& args)
@@ -138,6 +140,7 @@ void EffectsActionsController::registerActions()
 
     cd->onRequest(this, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, [this]() { return repeatLastEffect(); });
     cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_COMMAND, [this]() { return openPluginManager(); });
+    cd->onRequest(this, EFFECTS_GET_EFFECTS_COMMAND, [this]() { return openGetEffectsDialog(); });
     cd->onRequest(this, EFFECTS_TOGGLE_VENDOR_UI_COMMAND, [this](const Params& params) { return toggleVendorUI(params); });
     cd->onRequest(this, EFFECTS_PRESET_APPLY_COMMAND, [this](const Params& params) { return applyPreset(params); });
     cd->onRequest(this, EFFECTS_PRESET_SAVE_COMMAND, [this](const Params& params) { return savePreset(params); });
@@ -154,6 +157,7 @@ void EffectsActionsController::registerActions()
         { EFFECT_OPEN_QUERY.toString(), Command(), effectOpenConv },
         { REPEAT_LAST_EFFECT_CODE, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, {} },
         { PLUGIN_MANAGER_CODE, EFFECTS_PLUGIN_MANAGER_COMMAND, {} },
+        { GET_EFFECTS_CODE, EFFECTS_GET_EFFECTS_COMMAND, {} },
         { EFFECT_APPLY_QUERY.toString(), Command(), applyConv },
         { TOGGLE_VENDOR_UI_QUERY.toString(), EFFECTS_TOGGLE_VENDOR_UI_COMMAND, queryParamsConv },
         { PRESET_APPLY_QUERY.toString(), EFFECTS_PRESET_APPLY_COMMAND, queryParamsConv },
@@ -319,5 +323,11 @@ muse::async::Channel<muse::actions::ActionCodeList> EffectsActionsController::ca
 muse::Ret EffectsActionsController::openPluginManager()
 {
     interactive()->open(PLUGIN_MANAGER_URI);
+    return make_ok();
+}
+
+muse::Ret EffectsActionsController::openGetEffectsDialog()
+{
+    interactive()->open(GET_EFFECTS_URI);
     return make_ok();
 }

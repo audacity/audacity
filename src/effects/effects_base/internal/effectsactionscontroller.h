@@ -69,6 +69,7 @@ private:
     muse::Ret exportPreset(const muse::rcommand::Params& params);
     muse::Ret toggleVendorUI(const muse::rcommand::Params& params);
     muse::Ret openPluginManager();
+    muse::Ret openGetEffectsDialog();
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;

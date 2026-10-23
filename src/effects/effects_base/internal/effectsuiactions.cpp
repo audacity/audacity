@@ -34,6 +34,15 @@ static UiActionList STATIC_ACTIONS = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Remove realtime effect")
              ),
+    UiAction("get-effects",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Get effects"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Open Get effects dialog"),
+             IconCode::Code::PLUGIN
+             ),
     UiAction("action://effects/presets/apply",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

@@ -46,12 +46,9 @@ static const ActionCode CURS_SEL_END_CODE("curs-sel-end");
 static const ActionCode TOGGLE_EFFECTS_CODE("toggle-effects");
 static const ActionCode ADD_REALTIME_EFFECTS_CODE("add-realtime-effects");
 static const ActionCode AUDIO_SETUP_CODE("audio-setup");
-static const ActionCode GET_EFFECTS_CODE("get-effects");
 static const ActionCode SPLIT_TOOL_CODE("split-tool");
 static const ActionCode REALTIME_EFFECT_MOVE_UP_CODE("realtime-effect-move-up");
 static const ActionCode REALTIME_EFFECT_MOVE_DOWN_CODE("realtime-effect-move-down");
-
-static const muse::Uri GET_EFFECTS_URI("audacity://projectscene/geteffects");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -136,7 +133,6 @@ void ProjectSceneActionsController::init()
     cd->onRequest(this, PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND, [this]() { return toggleEffectsPanel(); });
     cd->onRequest(this, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, [this]() { return toggleEffectsPanel(); });
     cd->onRequest(this, PROJECTSCENE_AUDIO_SETUP_COMMAND, [this]() { return requestAudioSetupContextMenu(); });
-    cd->onRequest(this, PROJECTSCENE_GET_EFFECTS_COMMAND, [this]() { return openGetEffectsDialog(); });
     cd->onRequest(this, PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, [this]() {
         m_splitToolToggleRequested.notify();
         return make_ok();
@@ -197,7 +193,6 @@ void ProjectSceneActionsController::init()
         { TOGGLE_EFFECTS_CODE, PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND, {} },
         { ADD_REALTIME_EFFECTS_CODE, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, {} },
         { AUDIO_SETUP_CODE, PROJECTSCENE_AUDIO_SETUP_COMMAND, {} },
-        { GET_EFFECTS_CODE, PROJECTSCENE_GET_EFFECTS_COMMAND, {} },
         { SPLIT_TOOL_CODE, PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, {} },
         { REALTIME_EFFECT_MOVE_UP_CODE, PROJECTSCENE_REALTIME_EFFECT_MOVE_UP_COMMAND, {} },
         { REALTIME_EFFECT_MOVE_DOWN_CODE, PROJECTSCENE_REALTIME_EFFECT_MOVE_DOWN_COMMAND, {} },
@@ -284,12 +279,6 @@ muse::Ret ProjectSceneActionsController::toggleEffectsPanel()
 muse::Ret ProjectSceneActionsController::requestAudioSetupContextMenu()
 {
     m_audioSetupContextMenuRequested.notify();
-    return make_ok();
-}
-
-muse::Ret ProjectSceneActionsController::openGetEffectsDialog()
-{
-    interactive()->open(GET_EFFECTS_URI);
     return make_ok();
 }
 

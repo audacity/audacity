@@ -121,15 +121,6 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action_description", "Open audio setup context menu"),
              IconCode::Code::CONFIGURE
              ),
-    UiAction("get-effects",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Get effects"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Open Get effects dialog"),
-             IconCode::Code::PLUGIN
-             ),
     UiAction("audio-settings",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,

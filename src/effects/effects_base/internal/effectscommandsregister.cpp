@@ -35,6 +35,15 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
+        EFFECTS_GET_EFFECTS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Get effects"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Open Get effects dialog"),
+        InputSchema(),
+        Decoration(IconCode::Code::PLUGIN)
+    },
+    CommandInfo{
         EFFECTS_TOGGLE_VENDOR_UI_COMMAND,
         //: Action title: shown as a menu item or a button label; keep it short
         TranslatableString("effects", "Use vendor UI"),
