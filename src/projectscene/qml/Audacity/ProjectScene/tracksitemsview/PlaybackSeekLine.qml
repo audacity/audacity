@@ -3,7 +3,12 @@ import QtQuick
 import Muse.Ui
 
 Rectangle {
-    width: 2
+    id: root
+
+    readonly property real devicePixelRatio: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
+    readonly property real lineWidth: Math.max(1, Math.round(devicePixelRatio)) / devicePixelRatio
+
+    width: 2 * lineWidth
     color: "transparent"
 
     Rectangle {
@@ -11,7 +16,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
 
-        width: 1
+        width: root.lineWidth
         color: ui.theme.extra["white_color"]
         opacity: 0.5
     }
@@ -21,7 +26,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
 
-        width: 1
+        width: root.lineWidth
         color: ui.theme.extra["black_color"]
     }
 }
