@@ -6,7 +6,11 @@
 
 #include <set>
 
+#include "global/defer.h"
+#include "testing/testcontext.h"
+
 #include "projectscene/view/timeline/timelinecontext.h"
+#include "projectscene/view/timeline/playregioncontroller.h"
 #include "projectscene/view/tracksitemsview/trackclipslistmodel.h"
 #include "projectscene/view/tracksitemsview/viewtrackitem.h"
 #include "projectscene/internal/projectviewstate.h"
@@ -88,6 +92,52 @@ protected:
 class TimelineContextFindGuidelineTests : public SnapTestBase
 {
 };
+
+TEST_F(TimelineContextFindGuidelineTests, SamplesSnapBeforeInit)
+{
+    const auto ctx = testutils::makeTestContext();
+    muse::modularity::ioc(ctx)->registerExport<playback::IPlayback>("utests", m_playback);
+    DEFER {
+        muse::modularity::ioc(ctx)->unregister<playback::IPlayback>("utests");
+    };
+    m_context->setContext(ctx);
+    useGridSnapOn(SnapType::Samples);
+
+    // QML assigns the play region context before it calls TimelineContext::init().
+    PlayRegionController playRegion;
+    playRegion.setContext(m_context);
+
+    EXPECT_FALSE(playRegion.guidelineVisible());
+    EXPECT_DOUBLE_EQ(m_context->positionToTime(1.6 / 44100.0, true), 2.0 / 44100.0);
+    EXPECT_DOUBLE_EQ(m_context->singleStepToTime(0.0, Direction::Right, m_viewState->snap().val), 1.0 / 44100.0);
+}
+
+TEST_F(TimelineContextFindGuidelineTests, SamplesSnapBeforeInit_UsesEachWindowSampleRate)
+{
+    const auto ctx = testutils::makeTestContext();
+    const auto otherCtx = std::make_shared<muse::modularity::Context>(testutils::testContextId + 1);
+    auto otherPlayback = std::make_shared<NiceMock<playback::PlaybackMock> >();
+    auto otherAudioOutput = std::make_shared<NiceMock<playback::AudioOutputMock> >();
+    ON_CALL(*otherPlayback, audioOutput()).WillByDefault(Return(otherAudioOutput));
+    ON_CALL(*otherAudioOutput, sampleRate()).WillByDefault(Return(static_cast<uint64_t>(48000)));
+
+    muse::modularity::ioc(ctx)->registerExport<playback::IPlayback>("utests", m_playback);
+    muse::modularity::ioc(otherCtx)->registerExport<playback::IPlayback>("utests", otherPlayback);
+    DEFER {
+        muse::modularity::ioc(ctx)->unregister<playback::IPlayback>("utests");
+        muse::modularity::ioc(otherCtx)->unregister<playback::IPlayback>("utests");
+    };
+
+    m_context->setContext(ctx);
+    TimelineContext otherContext;
+    otherContext.setContext(otherCtx);
+    SnapTestAccess::wireContext(&otherContext, m_globalContext, otherPlayback);
+    useGridSnapOn(SnapType::Samples);
+
+    EXPECT_DOUBLE_EQ(m_context->applySnapToTime(0.00003), 1.0 / 44100.0);
+    EXPECT_DOUBLE_EQ(otherContext.applySnapToTime(0.00003), 1.0 / 48000.0);
+    EXPECT_DOUBLE_EQ(m_context->applySnapToTime(0.00003), 1.0 / 44100.0);
+}
 
 TEST_F(TimelineContextFindGuidelineTests, GridSnapOff_ExactBoundary_ReturnsBoundary)
 {

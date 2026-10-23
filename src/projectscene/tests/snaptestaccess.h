@@ -18,7 +18,6 @@
 #include "spectrogram/ifrequencyselectioncontroller.h"
 
 #include "projectscene/view/timeline/timelinecontext.h"
-#include "projectscene/view/timeline/snaptimeformatter.h"
 #include "projectscene/view/playcursor/playcursorcontroller.h"
 #include "projectscene/view/playcursor/playpositionactioncontroller.h"
 #include "projectscene/view/tracksitemsview/selectionviewcontroller.h"
@@ -34,7 +33,6 @@ struct SnapTestAccess {
     {
         ctx->globalContext.set(globalContext);
         ctx->playback.set(playback);
-        ctx->m_snapTimeFormatter = std::make_shared<SnapTimeFormatter>(muse::modularity::globalCtx());
     }
 
     static void wireCursor(PlayCursorController* cursor,
