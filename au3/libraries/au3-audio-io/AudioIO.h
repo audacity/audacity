@@ -65,7 +65,6 @@ struct AudioIOEvent {
     enum Type {
         PLAYBACK,
         CAPTURE,
-        MONITOR,
         PAUSE,
     } type;
     bool on;
@@ -303,15 +302,15 @@ public:
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopRunning;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopActive;
 
-    std::atomic<Acknowledge> mAudioThreadAcknowledge;
+    std::atomic<Acknowledge> mBufferExchangeAcknowledge;
 
     // Async start/stop + wait of AudioThread processing.
     // Provided to allow more flexibility, however use with caution:
     // never call Stop between Start and the wait for Started (and the converse)
-    void StartAudioThread();
-    void WaitForAudioThreadStarted();
-    void StopAudioThread();
-    void WaitForAudioThreadStopped();
+    void StartBufferExchangeOnAudioThread();
+    void WaitForBufferExchangeStartedOnAudioThread();
+    void StopBufferExchangeOnAudioThread();
+    void WaitForBufferExchangeStoppedOnAudioThread();
 
     void ProcessOnceAndWait(std::chrono::milliseconds sleepTime = std::chrono::milliseconds(50));
 
@@ -465,7 +464,7 @@ public:
      * selected number of input channels to open the recording device and start
      * reading input data. If software playthrough is enabled, it also opens
      * the output device in stereo to play the data through */
-    void StartMonitoring(const AudioIOStartStreamOptions& options);
+    void StartMonitoring(const AudioIOStartTransportOptions& options);
 
     /** \brief Stop monitoring */
     void StopMonitoring() override;
@@ -473,7 +472,7 @@ public:
     /** \brief Wait for busy state to end */
     void WaitWhileBusy() const;
 
-    /** \brief Start recording or playing back audio
+    /** \brief Start recording or playing back audio (exchanging buffers between driver and audio threads)
      *
      * Allocates buffers for recording and playback, gets the Audio thread to
      * fill them, and sets the stream rolling.
@@ -486,18 +485,18 @@ public:
      *    `sequences.captureSequences`
      */
 
-    int StartStream(const TransportSequences& sequences, double t0, double t1, double mixerLimit, //!< Time at which mixer stops producing, maybe > t1
-                    const AudioIOStartStreamOptions& options);
+    int StartTransport(const TransportSequences& sequences, double t0, double t1, double mixerLimit, //!< Time at which mixer stops producing, maybe > t1
+                       const AudioIOStartTransportOptions& options);
 
-    /** \brief Stop recording, playback or input monitoring.
+    /** \brief Stop recording or playback.
      *
-     * Does quite a bit of housekeeping, including switching off monitoring,
+     * Does quite a bit of housekeeping, including
      * flushing recording buffers out to RecordableSequences, and applies latency
      * correction to recorded sequences if necessary */
-    void StopStream() override;
-    /** \brief Move the playback / recording position of the current stream
+    void StopTransport();
+    /** \brief Move the playback / recording position of the current transport run
      * by the specified amount from where it is now */
-    void SeekStream(double seconds);
+    void Seek(double seconds);
 
     using PostRecordingAction = std::function<void ()>;
 
@@ -571,9 +570,9 @@ public:
      * too. So the returned time should be always between
      * t0 and t1
      */
-    double GetStreamTime();
+    double GetTransportTime();
 
-    static void AudioThread(std::atomic<bool>& finish);
+    static void AudioThread(AudioIO& audioIO, std::atomic<bool>& finish);
 
     static void Init();
     static void Deinit();
@@ -595,7 +594,13 @@ private:
      * if necessary. The captureFormat is used for recording only, the playback
      * being floating point always. Returns true if the stream opened successfully
      * and false if it did not. */
-    bool StartPortAudioStream(const AudioIOStartStreamOptions& options, unsigned int numPlaybackChannels, unsigned int numCaptureChannels);
+    bool StartPortAudioStream(const AudioIOStartTransportOptions& options, unsigned int numPlaybackChannels,
+                              unsigned int numCaptureChannels);
+
+    /**
+     * \brief Undoes the hardware setup of StartPortAudioStream
+     */
+    void StopPortAudioStream();
 
     void SetOwningProject(const std::shared_ptr<AudacityProject>& pProject);
     void ResetOwningProject();
@@ -641,7 +646,7 @@ private:
       * Returns true iff successful.
       */
     bool AllocateBuffers(
-        const AudioIOStartStreamOptions& options, const TransportSequences& sequences, double t0, double t1, double sampleRate);
+        const AudioIOStartTransportOptions& options, const TransportSequences& sequences, double t0, double t1, double sampleRate);
 
     /** \brief Clean up after StartStream if it fails.
       *

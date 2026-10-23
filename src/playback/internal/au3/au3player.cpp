@@ -88,7 +88,7 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
 {
     if (m_playbackStatus.val == PlaybackStatus::Paused) {
         assert(!startTime.has_value() && "Start time not taken into account when resuming playback");
-        audioEngine()->pauseStream(false);
+        audioEngine()->pauseTransport(false);
         m_playbackStatus.set(PlaybackStatus::Running);
         return;
     }
@@ -107,12 +107,12 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
 
     SelectedRegion selectedRegion(playRegion.GetStart(), playRegion.GetEnd());
 
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         if (audioEngine()->isCapturing()) {
             LOGW() << "Cannot start playback: another project is recording";
             return;
         }
-        audioEngine()->stopStream();
+        audioEngine()->stopTransport();
     }
 
     auto& pStartTime = options.pStartTime;
@@ -249,12 +249,12 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
 
     AudacityProject& project = projectRef();
 
-    au::audio::IAudioEngine::StartStreamOptions engineOptions;
+    au::audio::IAudioEngine::StartTransportOptions engineOptions;
     engineOptions.isDefaultPolicy = options.isDefaultPolicy;
     engineOptions.sampleRate = ProjectRate::Get(project).GetRate();
     engineOptions.streamStartTime = options.streamStartTime;
 
-    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, engineOptions);
+    int token = audioEngine()->startTransport(seqs, startTime, endTime, mixerEndTime, project, engineOptions);
     bool success = token > 0;
 
     return success ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
@@ -274,7 +274,7 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     }
 
     if (applyIfPlaying && m_playbackStatus.val == PlaybackStatus::Running) {
-        audioEngine()->seekStream(pos);
+        audioEngine()->seek(pos);
     }
 
     m_playbackPosition.set(pos);
@@ -305,13 +305,13 @@ void Au3Player::stop()
     m_playbackStatus.set(PlaybackStatus::Stopped);
 
     //! NOTE: copied from ProjectAudioManager::Stop
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return;
     }
 
-    audioEngine()->stopStream();
+    audioEngine()->stopTransport();
     //Make sure to unpause
-    audioEngine()->pauseStream(false);
+    audioEngine()->pauseTransport(false);
 
     // Stop the timer once the stream is down; otherwise it ticks past project
     // close, causing a use-after-free in updatePlaybackPosition().
@@ -334,20 +334,20 @@ void Au3Player::stop()
 
 void Au3Player::pause()
 {
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return;
     }
-    audioEngine()->pauseStream(true);
+    audioEngine()->pauseTransport(true);
 
     m_playbackStatus.set(PlaybackStatus::Paused);
 }
 
 void Au3Player::resume()
 {
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return;
     }
-    audioEngine()->pauseStream(false);
+    audioEngine()->pauseTransport(false);
 
     m_playbackStatus.set(PlaybackStatus::Running);
 }
@@ -542,7 +542,7 @@ void Au3Player::updateStreamState()
 
 void Au3Player::updatePlaybackState()
 {
-    const double time = std::max(0.0, audioEngine()->streamTime());
+    const double time = std::max(0.0, audioEngine()->transportTime());
 
     if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
         m_playbackPosition.set(time);
@@ -620,9 +620,9 @@ Au3Project& Au3Player::projectRef() const
     return *project;
 }
 
-bool Au3Player::canStopAudioStream() const
+bool Au3Player::canStopTransport() const
 {
-    return audioEngine()->canStopAudioStream(projectRef());
+    return audioEngine()->canStopTransport(projectRef());
 }
 
 TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool selectedOnly)
