@@ -29,8 +29,10 @@ GetStretchingParameters(const ClipInterface& clip)
 struct ClipStretchingNode::TimeStretchingStream {
     //! @param start relative to the clip's play start
     TimeStretchingStream(const ClipInterface& clip, sampleCount start)
-        : source{clip, start.as_double() / clip.GetRate(), PlaybackDirection::forward}
-        , stretcher{clip.GetRate(), clip.NChannels(), source, GetStretchingParameters(clip)}
+        :// Simply initialize `source` with `PlaybackDirection::forward`: we don't use backward
+         // reading these days.
+        source{clip, start.as_double() / clip.GetRate(), PlaybackDirection::forward},
+        stretcher{clip.GetRate(), clip.NChannels(), source, GetStretchingParameters(clip)}
     {
     }
 
