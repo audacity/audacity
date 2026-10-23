@@ -55,6 +55,9 @@ public:
     void cursorToSelectionStart() override;
     void cursorToSelectionEnd() override;
 
+    void cursorPageUp() override;
+    void cursorPageDown() override;
+
 private:
     void onProjectChanged();
 

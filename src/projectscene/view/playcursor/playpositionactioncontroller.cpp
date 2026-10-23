@@ -22,6 +22,8 @@
 
 #include "playpositionactioncontroller.h"
 
+#include <algorithm>
+
 #include "global/realfn.h"
 
 using namespace au::projectscene;
@@ -124,6 +126,27 @@ void PlayPositionActionController::cursorToSelectionEnd()
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
         movePlayPositionTo(secs);
     }
+}
+
+void PlayPositionActionController::cursorPageUp()
+{
+    const muse::secs_t page = m_context->frameEndTime() - m_context->frameStartTime();
+    const muse::secs_t current = playbackState()->playbackPosition();
+    movePlayPositionTo(std::max(0.0, (current - page).raw()));
+}
+
+void PlayPositionActionController::cursorPageDown()
+{
+    auto currentProject = globalContext()->currentProject();
+    if (!currentProject) {
+        return;
+    }
+
+    // A seek past totalTime() is rejected as invalid and stops playback, so clamp to it
+    const muse::secs_t total = currentProject->trackeditProject()->totalTime();
+    const muse::secs_t page = m_context->frameEndTime() - m_context->frameStartTime();
+    const muse::secs_t current = playbackState()->playbackPosition();
+    movePlayPositionTo(std::min((current + page).raw(), total.raw()));
 }
 
 muse::secs_t PlayPositionActionController::stepFromTime(muse::secs_t from, Direction direction) const
