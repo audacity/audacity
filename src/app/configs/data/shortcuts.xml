@@ -951,6 +951,14 @@
         <seq>Ctrl+F</seq>
     </SC>
     <SC>
+        <key>timeline-page-left</key>
+        <seq>PgUp</seq>
+    </SC>
+    <SC>
+        <key>timeline-page-right</key>
+        <seq>PgDown</seq>
+    </SC>
+    <SC>
         <key>fit-v</key>
         <seq>Ctrl+Shift+F</seq>
     </SC>

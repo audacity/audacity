@@ -44,6 +44,16 @@ void TimelineViewController::zoomToggle()
     m_context->zoomToggle();
 }
 
+void TimelineViewController::pageLeft()
+{
+    m_context->shiftFrameTime(m_context->frameStartTime() - m_context->frameEndTime());
+}
+
+void TimelineViewController::pageRight()
+{
+    m_context->shiftFrameTime(m_context->frameEndTime() - m_context->frameStartTime());
+}
+
 void TimelineViewController::fitSelectionToWidth()
 {
     m_context->fitSelectionToWidth();
