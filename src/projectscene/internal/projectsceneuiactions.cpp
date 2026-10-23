@@ -87,6 +87,18 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action_description", "Zoom toggle"),
              IconCode::Code::ZOOM_TOGGLE
              ),
+    UiAction("timeline-page-left",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Scroll timeline left one page"),
+             TranslatableString("action_description", "Scroll the timeline left by one screen width")
+             ),
+    UiAction("timeline-page-right",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Scroll timeline right one page"),
+             TranslatableString("action_description", "Scroll the timeline right by one screen width")
+             ),
     UiAction("center-view-on-playhead",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
