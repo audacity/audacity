@@ -71,7 +71,9 @@ else()
     set(LONG_NAME "Audacity")
 endif()
 set(DMG_NAME ${LONG_NAME}-${BUILD_VERSION}.dmg)
-set(ARTIFACT_NAME ${LONG_NAME}-${BUILD_VERSION}-${PACKARCH}.dmg)
+
+include(${CMAKE_CURRENT_LIST_DIR}/../common/package_name.cmake)
+audacity_package_name(ARTIFACT_NAME macOS ${PACKARCH} dmg)
 
 execute_process(
     COMMAND bash ${PACKAGING_DIR}/make_dmg.sh --long_name "${LONG_NAME}" --version ${BUILD_VERSION}
