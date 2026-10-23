@@ -10,6 +10,7 @@
 #define __AUDACITY_REALTIMEEFFECTLIST_H__
 
 #include <atomic>
+#include <memory>
 #include <optional>
 #include <vector>
 
@@ -75,11 +76,16 @@ public:
     // std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
 
     //! Apply the function to all states sequentially.
+    //! Safe on the audio thread while the main thread changes the list: a
+    //! change waits until running visits are over before it frees anything
     template<typename StateVisitor>
     void Visit(const StateVisitor& func)
     {
-        for (auto& state : mStates) {
-            func(*state, IsActive());
+        VisitorScope scope { *this };
+        if (scope.states) {
+            for (auto& state : *scope.states) {
+                func(*state, IsActive());
+            }
         }
     }
 
@@ -87,8 +93,11 @@ public:
     template<typename StateVisitor>
     void Visit(const StateVisitor& func) const
     {
-        for (const auto& state : mStates) {
-            func(*state, IsActive());
+        VisitorScope scope { *this };
+        if (scope.states) {
+            for (const auto& state : *scope.states) {
+                func(*state, IsActive());
+            }
         }
     }
 
@@ -161,7 +170,30 @@ public:
     void SetActive(bool value);
 
 private:
+    struct VisitorScope {
+        explicit VisitorScope(const RealtimeEffectList& list)
+            : visitors(list.mVisitors)
+        {
+            // Counted before the load, so a change that publishes after this
+            // point waits for us; see PublishToVisitors
+            visitors.fetch_add(1);
+            states = list.mVisible.load();
+        }
+        ~VisitorScope() { visitors.fetch_sub(1); }
+
+        std::atomic<int>& visitors;
+        const States* states = nullptr;
+    };
+
+    //! Main thread, after each change of mStates
+    void PublishToVisitors();
+
+    //! The main thread's copy; Visit never reads it
     States mStates;
+    //! What Visit reads; replaced only by PublishToVisitors
+    std::unique_ptr<const States> mPublished;
+    std::atomic<const States*> mVisible { nullptr };
+    mutable std::atomic<int> mVisitors { 0 };
 
     using LockGuard = std::lock_guard<Lock>;
     mutable Lock mLock;

@@ -117,4 +117,28 @@ BaseSection {
             }
         }
     }
+
+    Row {
+        width: parent.width
+        spacing: 12
+
+        FlatButton {
+            text: qsTrc("preferences", "Measure latency…")
+
+            navigation.name: "MeasureLatencyButton"
+            navigation.panel: root.navigation
+            navigation.row: 2
+            navigation.column: 0
+
+            onClicked: apiModel.measureLatency()
+        }
+
+        StyledTextLabel {
+            width: parent.width - x
+            anchors.verticalCenter: parent.verticalCenter
+            horizontalAlignment: Qt.AlignLeft
+            wrapMode: Text.WordWrap
+            text: qsTrc("preferences", "Finds the real recording delay of your audio setup with a cable or a microphone.")
+        }
+    }
 }

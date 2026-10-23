@@ -21,6 +21,8 @@ qt_add_qml_module(preferences_qml
         foreign.h
         generalpreferencesmodel.cpp
         generalpreferencesmodel.h
+        latencymeasurementmodel.cpp
+        latencymeasurementmodel.h
         musicpreferencesmodel.cpp
         musicpreferencesmodel.h
         playbackpreferencesmodel.cpp
@@ -44,6 +46,7 @@ qt_add_qml_module(preferences_qml
         EditPreferencesPage.qml
         ExportPreferencesPage.qml
         GeneralPreferencesPage.qml
+        MeasureLatencyDialog.qml
         internal/AccentColorsSection.qml
         internal/AdvancedTopSection.qml
         internal/AsioSection.qml
@@ -102,6 +105,7 @@ qt_add_qml_module(preferences_qml
         internal/UiColorsSection.qml
         internal/UiFontSection.qml
         internal/UsageInfoSection.qml
+        internal/WasapiSection.qml
         internal/WorkspacesAsymmetricChannelsSection.qml
         internal/WorkspacesTempoDetectionSection.qml
         internal/ZoomSection.qml

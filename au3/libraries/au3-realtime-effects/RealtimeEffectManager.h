@@ -265,7 +265,8 @@ public:
         }
     }
 
-    //! @return how many samples to discard for latency
+    //! The processed samples start at the beginning of `buffers`
+    //! @return how many samples at the end are not output, because of latency
     size_t Process(const ChannelGroup* group,
                    float* const* buffers,
                    float* const* scratch,

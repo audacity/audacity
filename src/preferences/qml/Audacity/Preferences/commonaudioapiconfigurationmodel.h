@@ -68,6 +68,8 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     Q_PROPERTY(bool isAsio READ isAsio NOTIFY currentAudioApiIndexChanged)
     Q_PROPERTY(bool asioUseDeviceSampleRate READ asioUseDeviceSampleRate NOTIFY asioUseDeviceSampleRateChanged)
+    Q_PROPERTY(bool isWasapi READ isWasapi NOTIFY currentAudioApiIndexChanged)
+    Q_PROPERTY(QString wasapiMode READ wasapiMode NOTIFY wasapiModeChanged)
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
@@ -101,6 +103,8 @@ public:
 
     double latencyCompensation() const;
     Q_INVOKABLE void latencyCompensationSelected(const QString& latencyCompensationStr);
+    //! Opens the measurement dialog and stages its result as manual compensation
+    Q_INVOKABLE void measureLatency();
 
     QString currentInputChannelsSelected() const;
     QVariantList inputChannelsList() const;
@@ -130,6 +134,10 @@ public:
     Q_INVOKABLE void setAsioUseDeviceSampleRate(bool use);
     Q_INVOKABLE void showAsioControlPanel();
 
+    bool isWasapi() const;
+    QString wasapiMode() const;
+    Q_INVOKABLE void setWasapiMode(const QString& mode);
+
 signals:
     void currentAudioApiIndexChanged();
 
@@ -157,6 +165,7 @@ signals:
     void longestDeviceNameLengthChanged();
 
     void asioUseDeviceSampleRateChanged();
+    void wasapiModeChanged();
 
 private:
     std::string effectiveApi() const;
