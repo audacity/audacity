@@ -53,13 +53,6 @@ else()
     set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${PACKARCH}")
 endif()
 
-# if [ "$PACKTYPE" == "7z" ]; then
-#     mv $INSTALL_DIR $ARTIFACT_NAME
-#     7z a $ARTIFACTS_DIR/$ARTIFACT_NAME.7z $ARTIFACT_NAME
-#     bash ./buildscripts/ci/tools/make_artifact_name_env.sh $ARTIFACT_NAME.7z
-#     chmod a+rw $ARTIFACT_NAME.7z
-# fi
-
 if(PACKTYPE STREQUAL "appimage")
     # To enable automatic updates for AppImages, set UPDATE_INFORMATION according to
     # https://github.com/AppImage/AppImageSpec/blob/master/draft.md#update-information
