@@ -450,16 +450,7 @@ void ProjectSceneConfiguration::setZoomPreset2(ZoomPresets::Preset preset)
 
 au::trackedit::TrackViewType ProjectSceneConfiguration::defaultTrackViewType() const
 {
-    const auto type = static_cast<au::trackedit::TrackViewType>(muse::settings()->value(DEFAULT_TRACK_VIEW_TYPE).toInt());
-    switch (type) {
-    case au::trackedit::TrackViewType::Waveform:
-    case au::trackedit::TrackViewType::Spectrogram:
-    case au::trackedit::TrackViewType::WaveformAndSpectrogram:
-        return type;
-    case au::trackedit::TrackViewType::Undefined:
-        break;
-    }
-    return au::trackedit::TrackViewType::Waveform;
+    return static_cast<au::trackedit::TrackViewType>(muse::settings()->value(DEFAULT_TRACK_VIEW_TYPE).toInt());
 }
 
 void ProjectSceneConfiguration::setDefaultTrackViewType(au::trackedit::TrackViewType type)
