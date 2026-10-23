@@ -16,7 +16,7 @@ class SnapTimeFormatter : public muse::Contextable
     muse::ContextInject<playback::IPlayback> playback{ this };
 
 public:
-    SnapTimeFormatter(const muse::modularity::ContextPtr& ctx)
+    SnapTimeFormatter(const muse::Contextable* ctx)
         : muse::Contextable(ctx) {}
 
     muse::secs_t snapTime(muse::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const;
