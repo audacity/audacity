@@ -69,6 +69,8 @@ Rectangle {
 
     property real fadeInDuration: 0
     property real fadeOutDuration: 0
+    required property int fadeInType
+    required property int fadeOutType
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
@@ -1176,6 +1178,8 @@ Rectangle {
 
         fadeInWidth: root.fadeInDuration * root.context.zoom
         fadeOutWidth: root.fadeOutDuration * root.context.zoom
+        fadeInType: root.fadeInType
+        fadeOutType: root.fadeOutType
         // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
         handlesVisible: root.clipSelected && !root.moveActive
 

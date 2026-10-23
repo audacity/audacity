@@ -18,6 +18,7 @@
 #include "internal/projecteditstate.h"
 
 class Mixer;
+struct PlayableSequence;
 class WaveTrack;
 
 namespace muse::extensions {
@@ -82,6 +83,9 @@ private:
     AudioFormat m_format;
     sampleCount m_position{ 0 };
     sampleCount m_end{ 0 };
+    //! What is heard: clips stretched, pitch-shifted and faded
+    std::shared_ptr<PlayableSequence> m_sequence;
+    //! If the format differs from the track's
     std::unique_ptr<Mixer> m_mixer;
     AudioChunkObject* m_chunk = nullptr;
 };

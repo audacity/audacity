@@ -1,5 +1,7 @@
 import QtQuick
 
+import Audacity.ProjectScene
+
 Item {
     id: root
 
@@ -12,6 +14,8 @@ Item {
     //! This item may only span part of the clip: how much of the clip is on its left, and the clip's whole width
     property real clipOffset: 0
     property real clipWidth: width
+    required property int fadeInType
+    required property int fadeOutType
 
     //! The fades span the whole item, the handles only a band of it, starting at `handlesY`
     property real handlesY: 0
@@ -76,6 +80,7 @@ Item {
         isFadeIn: true
         fadeWidth: root.fadeInWidth
         fadeLeft: prv.fadeInEnd - root.fadeInWidth
+        fadeType: root.fadeInType
 
         onFadeWidthChangeRequested: function (width, completed) {
             root.fadeInWidthChangeRequested(width, completed)
@@ -99,6 +104,7 @@ Item {
         isFadeIn: false
         fadeWidth: root.fadeOutWidth
         fadeLeft: prv.fadeOutStart
+        fadeType: root.fadeOutType
 
         onFadeWidthChangeRequested: function (width, completed) {
             root.fadeOutWidthChangeRequested(width, completed)

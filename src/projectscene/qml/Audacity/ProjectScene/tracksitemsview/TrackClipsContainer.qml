@@ -393,6 +393,8 @@ TrackItemsContainer {
                                 isPitchModified: itemData.isPitchModified
                                 fadeInDuration: itemData.fadeInDuration
                                 fadeOutDuration: itemData.fadeOutDuration
+                                fadeInType: itemData.fadeInType
+                                fadeOutType: itemData.fadeOutType
 
                                 currentClipStyle: clipsModel.clipStyle
                                 headerHeight: root.headerHeight

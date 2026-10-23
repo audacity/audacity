@@ -10,8 +10,9 @@ Item {
 
     required property bool isFadeIn
     required property real fadeWidth
-    //! Where the fade starts, in parent coordinates: possibly outside the parent, which only spans the visible part of the clip
+    //! Where the fade starts, in parent coordinates: possibly far outside the parent, which only spans the visible part of the clip
     required property real fadeLeft
+    required property int fadeType
 
     //! The fade line is always drawn, the handle only when this is true
     property bool handleVisible: true
@@ -29,6 +30,31 @@ Item {
         // The area in which the fade is drawn
         readonly property real areaWidth: root.parent ? root.parent.width : 0
         readonly property real areaHeight: root.parent ? root.parent.height : 0
+
+        //! The part of the fade within the area: when zoomed in, drawing all of it would mean huge coordinates
+        readonly property real visibleLeft: Math.max(root.fadeLeft, 0)
+        readonly property real visibleRight: Math.min(root.fadeLeft + root.fadeWidth, areaWidth)
+
+        readonly property var linePoints: {
+            const width = root.fadeWidth
+            const visibleWidth = visibleRight - visibleLeft
+            if (width <= 0 || visibleWidth <= 0) {
+                return []
+            }
+            // PathPolyline will linearly interpolate between datapoints, so we can afford some
+            // downsampling here:
+            const segmentCount = Math.max(1, Math.ceil(visibleWidth / 2))
+            const positions = []
+            for (let i = 0; i <= segmentCount; ++i) {
+                positions.push((visibleLeft + i / segmentCount * visibleWidth - root.fadeLeft) / width)
+            }
+            // From the silent end of the fade
+            const gains = ClipFadeGains.gainsAt(root.fadeType, root.isFadeIn ? positions : positions.map(p => 1 - p))
+            return positions.map((p, i) => Qt.point(root.fadeLeft + p * width, areaHeight * (1 - gains[i])))
+        }
+
+        //! The faded-out part, above the line: the line closed by the top of the area
+        readonly property var shadingPoints: linePoints.length ? [Qt.point(visibleLeft, 0)].concat(linePoints).concat([Qt.point(visibleRight, 0)]) : []
     }
 
     // Drawn in parent coordinates: the line spans the whole fade, from the clip's edge to the fade boundary
@@ -38,25 +64,16 @@ Item {
         width: prv.areaWidth
         height: prv.areaHeight
 
-        visible: root.fadeWidth > 0
+        visible: prv.linePoints.length > 0
         preferredRendererType: Shape.CurveRenderer
-
-        // Linear fades for now
 
         // Shades the faded-out part, above the line
         ShapePath {
             strokeColor: "transparent"
             fillColor: Qt.rgba(0, 0, 0, 0.2)
 
-            startX: root.isFadeIn ? root.fadeLeft : root.fadeLeft + root.fadeWidth
-            startY: 0
-            PathLine {
-                x: root.isFadeIn ? root.fadeLeft + root.fadeWidth : root.fadeLeft
-                y: 0
-            }
-            PathLine {
-                x: root.isFadeIn ? root.fadeLeft : root.fadeLeft + root.fadeWidth
-                y: prv.areaHeight
+            PathPolyline {
+                path: prv.shadingPoints
             }
         }
 
@@ -66,11 +83,8 @@ Item {
             capStyle: ShapePath.FlatCap
             fillColor: "transparent"
 
-            startX: root.fadeLeft
-            startY: root.isFadeIn ? prv.areaHeight : 0
-            PathLine {
-                x: root.fadeLeft + root.fadeWidth
-                y: root.isFadeIn ? 0 : prv.areaHeight
+            PathPolyline {
+                path: prv.linePoints
             }
         }
 
@@ -81,11 +95,8 @@ Item {
             capStyle: ShapePath.FlatCap
             fillColor: "transparent"
 
-            startX: root.fadeLeft
-            startY: root.isFadeIn ? prv.areaHeight : 0
-            PathLine {
-                x: root.fadeLeft + root.fadeWidth
-                y: root.isFadeIn ? 0 : prv.areaHeight
+            PathPolyline {
+                path: prv.linePoints
             }
         }
     }
