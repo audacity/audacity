@@ -260,6 +260,11 @@ muse::async::Notification Au3AudioEngine::recordingUpdateRequested() const
     return s_audioIOListener->recordingUpdateRequested();
 }
 
+muse::async::Notification Au3AudioEngine::recordingNewBlocks() const
+{
+    return s_audioIOListener->recordingNewBlocks();
+}
+
 muse::async::Notification Au3AudioEngine::recordingCommitRequested() const
 {
     return s_audioIOListener->recordingCommitRequested();

@@ -14,6 +14,7 @@
 #include <atomic>
 #include <deque>
 #include <functional>
+#include <mutex>
 
 #include "au3-math/SampleFormat.h"
 #include "au3-math/SampleCount.h"
@@ -65,6 +66,10 @@ public:
 
     static void SetMaxDiskBlockSize(size_t bytes);
     static size_t GetMaxDiskBlockSize();
+
+    //! Used by the project serialization and the recording to synchronize access to the recorded data.
+    //! The main thread waits on the mutex, the audio thread skips when it is busy
+    static std::mutex& RecordingMutex();
 
     //! true if nValue is one of the sampleFormat enum values
     static bool IsValidSampleFormat(const int nValue);

@@ -41,6 +41,7 @@ target_link_libraries(record PRIVATE
         au3wrap
         au3-audio-devices
         au3-audio-io
+        au3-project-file-io
         au3-project-rate
         au3-stretching-sequence
         au3-strings
