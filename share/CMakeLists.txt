@@ -8,6 +8,7 @@ if (MUSE_MODULE_TESTFLOW)
 endif()
 add_subdirectory(icons)
 add_subdirectory(workspaces)
+add_subdirectory(macros)
 
 IF (AU_MODULE_EFFECTS_NYQUIST)
     add_subdirectory(nyquist-runtime)

@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+#include <QCoreApplication>
+
 #include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/internal/effectsutils.h"
@@ -136,6 +138,16 @@ void EffectsActionsController::registerActions()
         cd->onRequest(this, makeEffectApplyCommand(effectId), [this, effectId](const Params& params) {
             return applyEffect(effectId, params);
         });
+        cd->onRequest(this, makeEffectConfigureCommand(effectId),
+                      ICommandDispatcher::AsyncCallBack([this, effectId](const Request& request,
+                                                                         const ICommandDispatcher::OnResponse& onResponse) {
+            //! NOTE Command handlers run inside the muse async queue drain. The effect dialog is modal and
+            //! spins a nested event loop, which would hold that drain and block every command dispatched
+            //! meanwhile, including keyboard navigation. Hop to the Qt event loop so the drain stays free.
+            QMetaObject::invokeMethod(qApp, [this, request, effectId, onResponse]() {
+                onResponse(configureEffect(request, effectId));
+            }, Qt::QueuedConnection);
+        }));
     }
 
     cd->onRequest(this, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, [this]() { return repeatLastEffect(); });
@@ -185,27 +197,67 @@ muse::Ret EffectsActionsController::openEffect(const EffectId& effectId)
     return effectExecutionScenario()->performEffect(effectId);
 }
 
+static std::string serializeEffectParams(const Params& params)
+{
+    CommandParameters eap;
+    for (const auto& [key, val] : params) {
+        eap.Write(wxString::FromUTF8(key), wxString::FromUTF8(val.toString()));
+    }
+
+    wxString effectParams;
+    eap.GetParameters(effectParams);
+
+    return effectParams.ToStdString(wxConvUTF8);
+}
+
+static Params deserializeEffectParams(const std::string& serialized)
+{
+    Params params;
+
+    CommandParameters eap(wxString::FromUTF8(serialized));
+    wxString key;
+    long index = 0;
+    bool more = eap.GetFirstEntry(key, index);
+    while (more) {
+        wxString value;
+        eap.Read(key, &value);
+        params[key.ToStdString(wxConvUTF8)] = Val(value.ToStdString(wxConvUTF8));
+        more = eap.GetNextEntry(key, index);
+    }
+
+    return params;
+}
+
 muse::Ret EffectsActionsController::applyEffect(const EffectId& effectId, const Params& params)
 {
     IF_ASSERT_FAILED(!effectId.empty()) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    CommandParameters eap;
-    for (const auto& [key, val] : params) {
-        eap.Write(wxString::FromUTF8(key), wxString::FromUTF8(val.toString()));
-    }
-    wxString effectParams;
-    eap.GetParameters(effectParams);
+    const std::string effectParams = serializeEffectParams(params);
 
-    LOGI() << "applyEffect: effectId=" << effectId << ", params=" << effectParams.ToStdString(wxConvUTF8);
+    LOGI() << "applyEffect: effectId=" << effectId << ", params=" << effectParams;
 
     playbackController()->stop();
-    const muse::Ret ret = effectExecutionScenario()->performEffect(effectId, effectParams.ToStdString(wxConvUTF8));
+    const muse::Ret ret = effectExecutionScenario()->performEffect(effectId, effectParams);
     if (!ret) {
         LOGE() << "applyEffect failed: effectId=" << effectId << ", code=" << ret.code() << ", text=" << ret.text();
     }
     return ret;
+}
+
+Response EffectsActionsController::configureEffect(const Request& request, const EffectId& effectId)
+{
+    IF_ASSERT_FAILED(!effectId.empty()) {
+        return make_response(request, make_ret(Ret::Code::BadArgs));
+    }
+
+    const RetVal<std::string> result = effectExecutionScenario()->configureEffect(effectId, serializeEffectParams(request.params));
+    if (!result.ret) {
+        return make_response(request, result.ret);
+    }
+
+    return make_response(request, make_ok(), std::any(deserializeEffectParams(result.val)));
 }
 
 muse::Ret EffectsActionsController::repeatLastEffect()

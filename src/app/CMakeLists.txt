@@ -153,6 +153,7 @@ add_to_link_if_exists(effects_vst)
 add_to_link_if_exists(exporter)
 add_to_link_if_exists(iex_labels)
 add_to_link_if_exists(importer)
+add_to_link_if_exists(macromanager)
 add_to_link_if_exists(playback)
 add_to_link_if_exists(preferences)
 add_to_link_if_exists(project)
@@ -323,6 +324,7 @@ if (AU_MODULE_EFFECTS_NYQUIST)
 endif()
 
 add_dependencies(audacity builtin-workspaces)
+add_dependencies(audacity builtin-macros)
 
 ###########################################
 # INSTALL

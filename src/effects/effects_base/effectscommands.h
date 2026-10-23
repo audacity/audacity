@@ -27,6 +27,7 @@ inline static const muse::rcommand::Command EFFECTS_PRESET_EXPORT_COMMAND("comma
 constexpr std::string_view EFFECTS_SCHEME = "effects";
 constexpr std::string_view EFFECT_OPEN_COMMAND = "open";
 constexpr std::string_view EFFECT_APPLY_COMMAND = "apply";
+constexpr std::string_view EFFECT_CONFIGURE_COMMAND = "configure";
 
 // RFC 3986 percent-encoding: an effect id is a plugin path that may contain Uri delimiters such as ? and /
 inline std::string encodeEffectId(const EffectId& effectId)
@@ -78,7 +79,7 @@ inline muse::rcommand::Command makeEffectCommand(std::string_view commandName, c
 inline EffectId effectIdFromCommand(const muse::rcommand::Command& command)
 {
     const std::string& path = command.path();
-    for (const std::string_view commandName : { EFFECT_OPEN_COMMAND, EFFECT_APPLY_COMMAND }) {
+    for (const std::string_view commandName : { EFFECT_OPEN_COMMAND, EFFECT_APPLY_COMMAND, EFFECT_CONFIGURE_COMMAND }) {
         const std::string prefix = std::string(EFFECTS_SCHEME) + "/" + std::string(commandName) + "/";
         if (muse::strings::startsWith(path, prefix)) {
             return decodeEffectId(path.substr(prefix.size()));
@@ -96,5 +97,10 @@ inline muse::rcommand::Command makeEffectOpenCommand(const EffectId& effectId)
 inline muse::rcommand::Command makeEffectApplyCommand(const EffectId& effectId)
 {
     return makeEffectCommand(EFFECT_APPLY_COMMAND, effectId);
+}
+
+inline muse::rcommand::Command makeEffectConfigureCommand(const EffectId& effectId)
+{
+    return makeEffectCommand(EFFECT_CONFIGURE_COMMAND, effectId);
 }
 }

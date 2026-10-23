@@ -207,6 +207,10 @@
         <key>apply-macros-palette</key>
     </SC>
     <SC>
+        <key>toggle-macro-manager</key>
+        <seq>M</seq>
+    </SC>
+    <SC>
         <key>plot-spectrum</key>
     </SC>
     <SC>

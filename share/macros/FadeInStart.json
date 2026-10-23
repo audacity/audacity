@@ -1,0 +1,23 @@
+{
+    "name": "Fade In Start",
+    "steps": [
+        {
+            "command": "command://trackedit/set-selection",
+            "params": {
+                "start": 0,
+                "end": 1
+            }
+        },
+        {
+            "command": "command://effects/apply/Effect_Audacity_Audacity_Fade%20In_Built-in%20Effect%3A%20Fade%20In",
+            "params": {}
+        },
+        {
+            "command": "command://trackedit/set-selection",
+            "params": {
+                "start": 0,
+                "end": 0
+            }
+        }
+    ]
+}
