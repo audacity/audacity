@@ -107,11 +107,16 @@ Item {
 
         //! NOTE An empty submenu (e.g. "Open recent" without recent files) is created as a disabled item,
         //! so when it gets populated, the parent menu has to be rebuilt to turn it into a real submenu
-        itemInfo.subitemsChanged.connect(function (subitems, menuId) {
-            if (Boolean(subitems) && subitems.length > 0) {
-                parentMenu.load()
+        const isEmptySubmenu = String(itemInfo.id).startsWith("menu-") && itemInfo.subitems.length === 0
+        if (isEmptySubmenu) {
+            const onSubitemsChanged = function (subitems, menuId) {
+                if (Boolean(subitems) && subitems.length > 0) {
+                    itemInfo.subitemsChanged.disconnect(onSubitemsChanged)
+                    parentMenu.load()
+                }
             }
-        })
+            itemInfo.subitemsChanged.connect(onSubitemsChanged)
+        }
 
         return menuItem
     }
