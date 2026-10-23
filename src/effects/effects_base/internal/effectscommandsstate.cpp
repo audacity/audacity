@@ -82,7 +82,7 @@ bool EffectsCommandsState::isSpectralEffect(const EffectId& effectId) const
 CommandState EffectsCommandsState::commandState(const Command& command) const
 {
     if (command == EFFECTS_REPEAT_LAST_EFFECT_COMMAND) {
-        return CommandState(effectExecutionScenario()->lastProcessorIsAvailable(), false);
+        return CommandState(globalContext()->currentProject() != nullptr && effectExecutionScenario()->lastProcessorIsAvailable(), false);
     }
 
     const EffectId effectId = effectIdFromCommand(command);
