@@ -216,8 +216,14 @@ Rectangle {
                 }
 
                 onActiveChanged: {
-                    if (actionsNavCtrl.active) {
-                        root.innerNavigationActive = false
+                    if (!actionsNavCtrl.active) {
+                        return
+                    }
+
+                    root.innerNavigationActive = false
+
+                    if (root.ListView.view) {
+                        root.ListView.view.positionViewAtIndex(root.navigationRow, ListView.Contain)
                     }
                 }
             }
