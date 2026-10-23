@@ -9,7 +9,7 @@ set(BUILD_DIR "build.release")
 # Options
 set(BUILD_MODE "" CACHE STRING "Build mode")
 set(BUILD_VERSION "" CACHE STRING "Build mode")
-set(PACKARCH "x86_64" CACHE STRING "Build mode")
+set(PACKARCH "x86_64" CACHE STRING "Package architecture")
 
 if (NOT BUILD_MODE)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_mode.env" BUILD_MODE)
