@@ -183,6 +183,24 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::ZOOM_TOGGLE)
     },
     CommandInfo{
+        PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Scroll timeline left one page"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Scroll the timeline left by one screen width"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_TIMELINE_PAGE_RIGHT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Scroll timeline right one page"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Scroll the timeline right by one screen width"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
         PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Center view on playhead"),

@@ -337,7 +337,7 @@
         <seq>Ctrl+L</seq>
     </SC>
     <SC>
-        <key>trim</key>
+        <key>trim-audio-outside-selection</key>
         <seq>Ctrl+T</seq>
     </SC>
     <SC>
@@ -551,7 +551,7 @@
         <seq>Ctrl+A</seq>
     </SC>
     <SC>
-        <key>select-none</key>
+        <key>clear-selection</key>
         <seq>Ctrl+Shift+A</seq>
     </SC>
     <SC>
@@ -926,17 +926,20 @@
     <SC>
         <key>zoom-in</key>
         <seq>Ctrl+=</seq>
+        <seq>Ctrl++</seq>
+        <seq>Ctrl+1</seq>
     </SC>
     <SC>
-        <key>zoom-normal</key>
+        <key>zoom-default</key>
         <seq>Ctrl+2</seq>
     </SC>
     <SC>
         <key>zoom-out</key>
         <seq>Ctrl+-</seq>
+        <seq>Ctrl+3</seq>
     </SC>
     <SC>
-        <key>zoom-sel</key>
+        <key>zoom-to-selection</key>
         <seq>Ctrl+E</seq>
     </SC>
     <SC>
@@ -946,6 +949,14 @@
     <SC>
         <key>zoom-to-fit-project</key>
         <seq>Ctrl+F</seq>
+    </SC>
+    <SC>
+        <key>timeline-page-left</key>
+        <seq>PgUp</seq>
+    </SC>
+    <SC>
+        <key>timeline-page-right</key>
+        <seq>PgDown</seq>
     </SC>
     <SC>
         <key>fit-v</key>

@@ -25,6 +25,9 @@ public:
     void zoomDefault() override;
     void zoomToggle() override;
 
+    void pageLeft() override;
+    void pageRight() override;
+
     void fitSelectionToWidth() override;
     void fitProjectToWidth() override;
 

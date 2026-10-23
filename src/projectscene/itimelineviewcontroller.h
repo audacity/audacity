@@ -14,6 +14,9 @@ public:
     virtual void zoomDefault() = 0;
     virtual void zoomToggle() = 0;
 
+    virtual void pageLeft() = 0;
+    virtual void pageRight() = 0;
+
     virtual void fitSelectionToWidth() = 0;
     virtual void fitProjectToWidth() = 0;
 
