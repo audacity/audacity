@@ -32,6 +32,7 @@ inline static const muse::rcommand::Command PLAYBACK_CHANGE_RECORDING_DEVICE_COM
 inline static const std::string PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM("device_index");
 inline static const std::string PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM("is_default_device");
 inline static const muse::rcommand::Command PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND("command://playback/change-input-channels");
+inline static const std::string PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM("input-channels_index");
 inline static const muse::rcommand::Command PLAYBACK_RESCAN_DEVICES_COMMAND("command://playback/rescan-devices");
 
 inline static const muse::rcommand::Command PLAYBACK_TOGGLE_PLAY_REPEATS_COMMAND("command://playback/toggle-play-repeats");

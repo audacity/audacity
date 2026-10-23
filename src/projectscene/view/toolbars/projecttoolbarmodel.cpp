@@ -5,9 +5,12 @@
 
 #include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
+#include "project/projectcommands.h"
+#include "projectscene/projectscenecommands.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
-using namespace muse::actions;
+using namespace muse::rcommand;
 
 void ProjectToolBarModel::load()
 {
@@ -17,21 +20,24 @@ void ProjectToolBarModel::load()
 
     AbstractToolBarModel::load();
 
-    muse::actions::ActionCodeList itemsCodes = {
-        "audio-setup",
+    std::vector<Command> commands = {
+        PROJECTSCENE_AUDIO_SETUP_COMMAND,
     };
 
     if (au3CloudService()->enabled()) {
-        itemsCodes.push_back("file-share-audio");
+        commands.push_back(project::PROJECT_SHARE_AUDIO_COMMAND);
     }
 
 #ifndef Q_OS_LINUX
-    itemsCodes.push_back("get-effects");
+    commands.push_back(PROJECTSCENE_GET_EFFECTS_COMMAND);
 #endif
 
     ToolBarItemList items;
-    for (const ActionCode& code : itemsCodes) {
-        ToolBarItem* item = makeItem(code);
+    for (const Command& command : commands) {
+        ToolBarItem* item = makeItem(command);
+        if (!item) {
+            continue;
+        }
         item->setShowTitle(true);
 
         items << item;
@@ -70,11 +76,11 @@ void ProjectToolBarModel::setIsCompactMode(bool isCompactMode)
     emit isCompactModeChanged();
 }
 
-void ProjectToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
+void ProjectToolBarModel::onCommandStateChanged(const Command& command, const CommandState& state)
 {
     if (uicontextResolver()->currentUiContext() == context::UiCtxDialogOpened) {
         return;
     }
 
-    AbstractToolBarModel::onActionsStateChanges(codes);
+    AbstractToolBarModel::onCommandStateChanged(command, state);
 }

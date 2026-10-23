@@ -5,8 +5,7 @@
 
 #include <QList>
 
-#include "internal/projectsceneuiactions.h"
-
+#include "playbacktoolbarconfig.h"
 #include "playbacktoolbarcustomiseitem.h"
 
 #include "translation.h"
@@ -16,12 +15,9 @@ using namespace au::projectscene;
 using namespace muse;
 using namespace muse::ui;
 using namespace muse::uicomponents;
-using namespace muse::actions;
+using namespace muse::rcommand;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
-
-static const ActionQuery PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY("action://playback/toggle-play-pause");
-static const ActionQuery RECORD_START_QUERY("action://record/start");
 
 PlaybackToolBarCustomiseModel::PlaybackToolBarCustomiseModel(QObject* parent)
     : SelectableItemListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -34,8 +30,7 @@ void PlaybackToolBarCustomiseModel::load()
 
     ItemList items;
 
-    ToolConfig toolConfig = uiState()->toolConfig(TOOLBAR_NAME,
-                                                  projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    ToolConfig toolConfig = uiState()->toolConfig(TOOLBAR_NAME, defaultPlaybackToolBarConfig());
 
     bool lastWasSeparator = false;
     for (const auto& configItem : toolConfig.items) {
@@ -48,12 +43,12 @@ void PlaybackToolBarCustomiseModel::load()
         }
         lastWasSeparator = false;
 
-        UiAction action = actionsRegister()->action(configItem.intent);
-        if (action.code.empty()) {
+        const CommandInfo& info = commandsRegister()->commandInfo(Command(configItem.intent));
+        if (!info.isValid()) {
             continue;
         }
 
-        items << makeItem(action, configItem.show);
+        items << makeItem(info, configItem.show);
     }
 
     setItems(items);
@@ -210,13 +205,13 @@ void PlaybackToolBarCustomiseModel::updateAddSeparatorAvailability()
     setIsAddSeparatorAvailable(addingAvailable);
 }
 
-PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeItem(const UiAction& action, bool checked)
+PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeItem(const CommandInfo& info, bool checked)
 {
     PlaybackToolBarCustomiseItem* item = new PlaybackToolBarCustomiseItem(PlaybackToolBarCustomiseItem::ItemType::ACTION, this);
-    item->setId(QString::fromStdString(action.code));
-    item->setTitle(action.title.qTranslatedWithoutMnemonic());
-    item->setIcon(action.iconCode);
-    item->setIconColor(iconColor(action));
+    item->setId(QString::fromStdString(info.command.toString()));
+    item->setTitle(info.title.qTranslatedWithoutMnemonic());
+    item->setIcon(info.decoration.iconCode);
+    item->setIconColor(iconColor(info.command));
     item->setChecked(checked);
 
     connect(item, &PlaybackToolBarCustomiseItem::checkedChanged, this, [this](bool) {
@@ -234,12 +229,12 @@ PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeSeparatorItem()
     return item;
 }
 
-QColor PlaybackToolBarCustomiseModel::iconColor(const muse::ui::UiAction& action) const
+QColor PlaybackToolBarCustomiseModel::iconColor(const Command& command) const
 {
     QColor color = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
-    if (action.code == PLAYBACK_TOGGLE_PLAY_PAUSE_QUERY.toString()) {
+    if (command == playback::PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND) {
         color = uiConfiguration()->currentTheme().values.value(muse::ui::PLAY_COLOR).value<QColor>();
-    } else if (action.code == RECORD_START_QUERY.toString()) {
+    } else if (command == record::RECORD_START_COMMAND) {
         color = uiConfiguration()->currentTheme().values.value(muse::ui::RECORD_COLOR).value<QColor>();
     }
 

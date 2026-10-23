@@ -1062,11 +1062,11 @@ muse::Ret PlaybackController::setAudioInputDevice(const Params& params)
 
 muse::Ret PlaybackController::setInputChannels(const Params& params)
 {
-    IF_ASSERT_FAILED(params.contains("input-channels_index")) {
+    IF_ASSERT_FAILED(params.contains(PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM)) {
         return make_ret(Ret::Code::BadArgs);
     }
 
-    const int channels = params.at("input-channels_index").toInt();
+    const int channels = params.at(PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM).toInt();
     AudioConfigurationChange change;
     change.inputChannels = channels;
     return handleAudioConfigurationResult(audioDriverController()->apply(iocContext(), change),

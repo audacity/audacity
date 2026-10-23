@@ -4,8 +4,6 @@
 #ifndef AU_PROJECTSCENE_PROJECTSCENEUIACTIONS_H
 #define AU_PROJECTSCENE_PROJECTSCENEUIACTIONS_H
 
-#include "framework/ui/toolconfig.h"
-
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/ui/iuiactionsmodule.h"
@@ -33,8 +31,6 @@ public:
 
     bool actionChecked(const muse::ui::UiAction& act) const override;
     muse::async::Channel<muse::actions::ActionCodeList> actionCheckedChanged() const override;
-
-    static const muse::ui::ToolConfig& defaultPlaybackToolBarConfig();
 
 private:
     std::shared_ptr<ProjectSceneActionsController> m_controller;

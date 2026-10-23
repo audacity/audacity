@@ -12,6 +12,8 @@
 #include "view/trackspanel/wavetrackitem.h"
 #include "view/trackspanel/labeltrackitem.h"
 
+#include "trackedit/trackeditcommands.h"
+
 #include "log.h"
 
 using namespace au::projectscene;
@@ -133,11 +135,11 @@ void PanelTracksListModel::loadTracks(const std::vector<Track>& tracks)
 void PanelTracksListModel::addTrack(TrackTypes::Type type)
 {
     if (type == TrackTypes::Type::MONO) {
-        dispatcher()->dispatch("new-mono-track");
+        commandDispatcher()->dispatch(TRACKEDIT_NEW_MONO_TRACK_COMMAND);
     } else if (type == TrackTypes::Type::STEREO) {
-        dispatcher()->dispatch("new-stereo-track");
+        commandDispatcher()->dispatch(TRACKEDIT_NEW_STEREO_TRACK_COMMAND);
     } else if (type == TrackTypes::Type::LABEL) {
-        dispatcher()->dispatch("new-label-track");
+        commandDispatcher()->dispatch(TRACKEDIT_NEW_LABEL_TRACK_COMMAND);
     }
 }
 
@@ -265,7 +267,7 @@ void PanelTracksListModel::removeSelectedRows()
 
 void PanelTracksListModel::removeSelection()
 {
-    dispatcher()->dispatch("action://trackedit/delete");
+    commandDispatcher()->dispatch(TRACKEDIT_DELETE_COMMAND);
 }
 
 void PanelTracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
@@ -331,7 +333,7 @@ void PanelTracksListModel::endActiveDrag()
 
 void PanelTracksListModel::addLabelToSelection()
 {
-    dispatcher()->dispatch("label-add");
+    commandDispatcher()->dispatch(TRACKEDIT_LABEL_ADD_COMMAND);
 }
 
 void PanelTracksListModel::clear()

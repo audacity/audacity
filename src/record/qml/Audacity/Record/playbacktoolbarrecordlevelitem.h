@@ -51,7 +51,7 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     muse::ContextInject<record::IRecordController> recordController{ this };
 
 public:
-    explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+    explicit PlaybackToolBarRecordLevelItem(const muse::rcommand::CommandInfo& info, muse::uicomponents::ToolBarItemType::Type type,
                                             QObject* parent = nullptr);
 
     float level() const;

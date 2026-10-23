@@ -3,18 +3,30 @@
 */
 #include "recentprojectcontextmenumodel.h"
 
-#include "framework/actions/actiontypes.h"
+#include "framework/global/log.h"
 #include "framework/global/types/translatablestring.h"
 
 #include <QUrl>
 
+#include "au3cloud/cloudcommands.h"
+#include "../projectcommands.h"
+
 using namespace au::project;
+using namespace muse::rcommand;
 
 namespace {
-constexpr const char* OPEN_PROJECT_ACTION = "file-open";
-constexpr const char* OPEN_PROJECT_PAGE_ACTION = "action://cloud/open-project-page";
-constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "action://cloud/update-audio-preview-for-project";
-constexpr const char* SHOW_IN_FOLDER_ACTION = "project-show-in-folder";
+const QString SHOW_IN_FOLDER_ITEM_ID("project-show-in-folder");
+
+muse::TranslatableString showInFolderTitle()
+{
+#if defined(Q_OS_MAC)
+    return muse::TranslatableString("action", "Show in Finder");
+#elif defined(Q_OS_WIN)
+    return muse::TranslatableString("action", "Show in Explorer");
+#else
+    return muse::TranslatableString("action", "Show in File Manager");
+#endif
+}
 }
 
 RecentProjectContextMenuModel::RecentProjectContextMenuModel(bool isCloudProject, QString path, QString displayNameOverride,
@@ -28,62 +40,57 @@ void RecentProjectContextMenuModel::load()
 {
     muse::uicomponents::AbstractMenuModel::load();
 
-    muse::uicomponents::MenuItem* openItem = makeMenuItem(OPEN_PROJECT_ACTION);
+    const bool openFromCloud = isCloudProject && !m_cloudProjectId.isEmpty();
+    muse::uicomponents::MenuItem* openItem = makeMenuItem(openFromCloud ? PROJECT_OPEN_CLOUD_COMMAND : PROJECT_OPEN_COMMAND);
+    IF_ASSERT_FAILED(openItem) {
+        return;
+    }
+
+    if (openFromCloud) {
+        openItem->setParams({ { PROJECT_ID_PARAM, muse::Val(m_cloudProjectId) } });
+    } else {
+        openItem->setParams({
+            { PROJECT_URL_PARAM, muse::Val(QUrl::fromLocalFile(m_path).toString()) },
+            { PROJECT_DISPLAY_NAME_PARAM, muse::Val(m_displayNameOverride) },
+        });
+    }
     openItem->setTitle(muse::TranslatableString("action", "Open"));
 
     muse::uicomponents::MenuItemList items = { openItem };
     if (isCloudProject) {
-        items.append(makeMenuItem(OPEN_PROJECT_PAGE_ACTION));
-        items.append(makeMenuItem(UPDATE_AUDIO_PREVIEW_ACTION));
+        muse::uicomponents::MenuItem* pageItem = makeMenuItem(make_query(au3cloud::CLOUD_OPEN_PROJECT_PAGE_COMMAND, {
+            { au3cloud::CLOUD_OPEN_PROJECT_PAGE_ID_PARAM, muse::Val(m_cloudProjectId) },
+        }));
+        IF_ASSERT_FAILED(pageItem) {
+            return;
+        }
+        pageItem->setEnabled(pageItem->enabled() && !m_cloudProjectId.isEmpty());
+        items.append(pageItem);
+
+        muse::uicomponents::MenuItem* previewItem = makeMenuItem(make_query(PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_FOR_PROJECT_COMMAND, {
+            { PROJECT_ID_PARAM, muse::Val(m_cloudProjectId) },
+        }));
+        IF_ASSERT_FAILED(previewItem) {
+            return;
+        }
+        previewItem->setEnabled(previewItem->enabled() && !m_cloudProjectId.isEmpty());
+        items.append(previewItem);
     }
 
     if (!m_path.isEmpty()) {
-        items.append(makeMenuItem(SHOW_IN_FOLDER_ACTION));
+        muse::uicomponents::MenuItem* showInFolderItem = new muse::uicomponents::MenuItem(this);
+        showInFolderItem->setId(SHOW_IN_FOLDER_ITEM_ID);
+        showInFolderItem->setTitle(showInFolderTitle());
+        showInFolderItem->setEnabled(true);
+        items.append(showInFolderItem);
     }
 
     setItems(items);
-
-    openItem->setShortcuts({});
 }
 
 void RecentProjectContextMenuModel::handleMenuItem(const QString& itemId)
 {
-    if (itemId == OPEN_PROJECT_ACTION) {
-        if (isCloudProject && !m_cloudProjectId.isEmpty()) {
-            dispatcher()->dispatch("cloud-file-open",
-                                   muse::actions::ActionData::make_arg1<QString>(m_cloudProjectId));
-            return;
-        }
-
-        dispatcher()->dispatch("file-open",
-                               muse::actions::ActionData::make_arg2<QUrl, QString>(
-                                   QUrl::fromLocalFile(m_path), m_displayNameOverride));
-        return;
-    }
-
-    if (itemId == OPEN_PROJECT_PAGE_ACTION) {
-        if (m_cloudProjectId.isEmpty()) {
-            return;
-        }
-
-        muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
-        query.addParam("id", muse::Val(m_cloudProjectId));
-        dispatchAction(query);
-        return;
-    }
-
-    if (itemId == UPDATE_AUDIO_PREVIEW_ACTION) {
-        if (m_cloudProjectId.isEmpty()) {
-            return;
-        }
-
-        muse::actions::ActionQuery query(UPDATE_AUDIO_PREVIEW_ACTION);
-        query.addParam("id", muse::Val(m_cloudProjectId));
-        dispatchAction(query);
-        return;
-    }
-
-    if (itemId == SHOW_IN_FOLDER_ACTION) {
+    if (itemId == SHOW_IN_FOLDER_ITEM_ID) {
         if (m_path.isEmpty()) {
             return;
         }

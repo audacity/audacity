@@ -5,14 +5,13 @@
 
 #include "framework/global/log.h"
 #include "framework/global/async/async.h"
+#include "framework/dockwindow/dockcommands.h"
 
-#include "internal/applicationuiactions.h"
-#include "projectscene/internal/projectsceneuiactions.h"
+#include "playback/playbackcommands.h"
+#include "projectscene/view/toolbars/playbacktoolbarconfig.h"
 
 using namespace au::appshell;
-using namespace muse::actions;
-
-static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
+using namespace muse;
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -24,10 +23,9 @@ void ProjectPageModel::init()
     TRACEFUNC;
 
     if (!m_inited) {
-        for (const ActionCode& actionCode : ApplicationUiActions::toggleDockActions().keys()) {
-            DockName dockName = ApplicationUiActions::toggleDockActions()[actionCode];
-            dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
-        }
+        applicationActionController()->dockToggleRequested().onReceive(this, [this](const DockName& dockName) {
+            toggleDock(dockName);
+        });
 
         uiState()->toolConfigChanged(playbackToolBarName()).onNotify(this, [this]() {
             updatePlaybackMeterVisibility();
@@ -45,11 +43,10 @@ void ProjectPageModel::init()
 
 void ProjectPageModel::updatePlaybackMeterVisibility()
 {
-    const auto toolConfig = uiState()->toolConfig(playbackToolBarName(),
-                                                  au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    const auto toolConfig = uiState()->toolConfig(playbackToolBarName(), projectscene::defaultPlaybackToolBarConfig());
     const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
                                  [](const muse::ui::ToolConfig::Item& item) {
-        return item.intent == PLAYBACK_LEVEL_QUERY.toString();
+        return item.intent == playback::PLAYBACK_LEVEL_COMMAND.toString();
     });
 
     if (it != toolConfig.items.end()) {
@@ -57,7 +54,10 @@ void ProjectPageModel::updatePlaybackMeterVisibility()
                                        && (playbackUiState()->playbackMeterPosition()
                                            == playback::PlaybackMeterPosition::MeterPosition::SideBar);
         muse::async::Async::call(this, [this, meterPanelVisible]() {
-            dispatcher()->dispatch("dock-set-open", ActionData::make_arg2<QString, bool>(playbackMeterPanelName(), meterPanelVisible));
+            commandDispatcher()->dispatch(dock::DOCK_SET_OPEN_COMMAND, {
+                { "dock_name", Val(playbackMeterPanelName().toStdString()) },
+                { "open", Val(meterPanelVisible) },
+            });
         });
     }
 }
@@ -104,5 +104,5 @@ QString ProjectPageModel::statusBarName() const
 
 void ProjectPageModel::toggleDock(const QString& name)
 {
-    dispatcher()->dispatch("dock-toggle", ActionData::make_arg1<QString>(name));
+    commandDispatcher()->dispatch(dock::DOCK_TOGGLE_COMMAND, { { "dock_name", Val(name.toStdString()) } });
 }

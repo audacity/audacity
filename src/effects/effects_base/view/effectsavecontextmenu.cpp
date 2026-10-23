@@ -6,8 +6,10 @@
 // needed for PresetIdList (TODO: remove wxWidgets types from interfaces)
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "../effectscommands.h"
+
 using namespace muse;
-using namespace muse::actions;
+using namespace muse::rcommand;
 using namespace muse::uicomponents;
 using namespace au::effects;
 
@@ -70,20 +72,20 @@ void EffectSaveContextMenu::reload()
     MenuItemList items;
 
     {
-        ActionQuery q("action://effects/presets/save");
-        q.addParam("instanceId", Val(m_instanceId));
-        q.addParam("presetId", Val(currentPreset));
-        MenuItem* item = makeMenuItem(q.toString(), muse::TranslatableString("effects", "Save"));
+        MenuItem* item = makeMenuItem(make_query(EFFECTS_PRESET_SAVE_COMMAND, {
+            { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) },
+            { EFFECTS_PRESET_ID_PARAM, Val(currentPreset) },
+        }), muse::TranslatableString("effects", "Save"));
         if (!m_canSave) {
-            item->setState(ui::UiActionState::make_disabled());
+            item->setEnabled(false);
         }
         items << item;
     }
 
     {
-        ActionQuery q("action://effects/presets/save_as");
-        q.addParam("instanceId", Val(m_instanceId));
-        MenuItem* item = makeMenuItem(q.toString(), muse::TranslatableString("effects", "Save as…"));
+        MenuItem* item = makeMenuItem(make_query(EFFECTS_PRESET_SAVE_AS_COMMAND, {
+            { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) },
+        }), muse::TranslatableString("effects", "Save as…"));
         items << item;
     }
 

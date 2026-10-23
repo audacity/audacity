@@ -42,7 +42,9 @@ signals:
     void openRequested();
 
 private:
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
+
+    muse::uicomponents::MenuItem* makeRenameItem();
 
     muse::uicomponents::MenuItemList makeMonoTrackItems();
     muse::uicomponents::MenuItemList makeStereoTrackItems();
@@ -55,17 +57,14 @@ private:
     muse::uicomponents::MenuItemList makeTrackVisualizationItems();
     muse::uicomponents::MenuItemList makeMeterMonitoringItems();
 
-    muse::uicomponents::MenuItem* makeItemWithArg(const muse::actions::ActionCode& actionCode);
-
     void updateColorCheckedState();
     void updateTrackFormatState();
     void updateTrackRateState();
     void updateTrackMonoState();
     void updateTrackViewCheckedState();
+    void updateTrackHalfWaveCheckedState();
     void updateRecordingState();
 
     trackedit::TrackId m_trackId;
-    muse::actions::ActionCodeList m_colorChangeActionCodeList;
-    muse::actions::ActionCodeList m_trackViewTypeChangeActionCodeList;
 };
 }

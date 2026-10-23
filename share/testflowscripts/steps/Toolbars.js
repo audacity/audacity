@@ -5,25 +5,25 @@
 // Playback toolbar controls of each workspace, as shipped
 module.exports = {
     common: [
-        "action://playback/toggle-play-pause",
-        "action://playback/stop",
-        "action://record/start",
-        "action://playback/rewind-start",
-        "action://playback/rewind-end",
-        "toggle-loop-region",
-        "clip-gain",
-        "zoom-in",
-        "zoom-out"
+        "command://playback/toggle-play-pause",
+        "command://playback/stop",
+        "command://record/start",
+        "command://playback/rewind-start",
+        "command://playback/rewind-end",
+        "command://playback/toggle-loop-region",
+        "command://projectscene/toggle-clip-gain-automation",
+        "command://projectscene/zoom-in",
+        "command://projectscene/zoom-out"
     ],
     classicOnly: [
-        "action://trackedit/cut",
-        "action://trackedit/copy",
-        "action://trackedit/paste-default",
-        "zoom-to-fit-project",
-        "zoom-to-selection"
+        "command://trackedit/cut",
+        "command://trackedit/copy",
+        "command://trackedit/paste-default",
+        "command://projectscene/zoom-to-fit-project",
+        "command://projectscene/zoom-to-selection"
     ],
     modernOnly: [
-        "action://trackedit/global-view-spectrogram"
+        "command://trackedit/global-view-spectrogram"
     ],
     musicOnly: [
         "TimeSignature",

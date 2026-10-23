@@ -8,7 +8,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 #include "context/iglobalcontext.h"
 #include "context/iplaybackstate.h"
@@ -33,7 +33,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Co
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };

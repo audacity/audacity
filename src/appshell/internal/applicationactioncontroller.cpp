@@ -36,7 +36,12 @@
 #include "framework/global/translation.h"
 #include "framework/rcommand/actiontocommand.h"
 
+#include "au3cloud/cloudcommands.h"
+#include "playback/playbackcommands.h"
+#include "project/projectcommands.h"
 #include "project/types/projecttypes.h"
+#include "projectscene/projectscenecommands.h"
+#include "trackedit/trackeditcommands.h"
 
 #include "../appshellcommands.h"
 
@@ -109,10 +114,21 @@ void ApplicationActionController::init()
     cd->onRequest(this, APP_SHIFT_ENTER_COMMAND, [this]() { return doGlobalShiftEnter(); });
     cd->onRequest(this, APP_CONTEXT_MENU_COMMAND, [this]() { return doGlobalContextMenu(); });
 
+    for (const auto& [command, dockName] : toggleDockCommands()) {
+        cd->onRequest(this, command, [this, dockName]() {
+            m_dockToggleRequested.send(dockName);
+            return make_ok();
+        });
+    }
+
     //! Note: This table won't be necessary after the actions to commands complete refactor.
     //! It will be removed on https://github.com/audacity/audacity/issues/12321
     static const std::vector<ActionToCommand> actionToCommand = {
         { "quit", APP_QUIT_COMMAND, quitConv },
+        { "toggle-transport", APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND, {} },
+        { "toggle-tracks", APP_TOGGLE_TRACKS_PANEL_COMMAND, {} },
+        { "toggle-history", APP_TOGGLE_HISTORY_PANEL_COMMAND, {} },
+        { "toggle-statusbar", APP_TOGGLE_STATUSBAR_COMMAND, {} },
         { "restart", APP_RESTART_COMMAND, {} },
         { "fullscreen", APP_TOGGLE_FULLSCREEN_COMMAND, {} },
         { "about-audacity", APP_ABOUT_COMMAND, {} },
@@ -138,6 +154,11 @@ void ApplicationActionController::init()
         { "action://context-menu", APP_CONTEXT_MENU_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
+}
+
+muse::async::Channel<DockName> ApplicationActionController::dockToggleRequested() const
+{
+    return m_dockToggleRequested;
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -230,15 +251,21 @@ void ApplicationActionController::onDropEvent(QDropEvent* event)
     if (!projectUrls.isEmpty()) {
         muse::async::Async::call(this, [this, projectUrls]() {
             for (const QUrl& url : projectUrls) {
-                dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
+                commandDispatcher()->dispatch(project::PROJECT_OPEN_COMMAND, { { project::PROJECT_URL_PARAM, Val(url.toString()) } });
             }
         });
     }
 
     if (!mediaFiles.isEmpty()) {
         muse::async::Async::call(this, [this, mediaFiles]() {
-            dispatcher()->dispatch("project-import-startup-media",
-                                   ActionData::make_arg2<QStringList, bool>(mediaFiles, false));
+            ValList files;
+            for (const QString& file : mediaFiles) {
+                files.emplace_back(file);
+            }
+            commandDispatcher()->dispatch(project::PROJECT_IMPORT_STARTUP_MEDIA_COMMAND, {
+                { project::PROJECT_FILES_PARAM, Val(files) },
+                { project::PROJECT_REMOVE_AFTER_IMPORT_PARAM, Val(false) },
+            });
         });
     }
 }
@@ -326,7 +353,7 @@ void ApplicationActionController::handleFileOpenEvent(const QFileOpenEvent* even
                 }
                 mw->requestShowOnFront();
             }
-            dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
+            commandDispatcher()->dispatch(project::PROJECT_OPEN_COMMAND, { { project::PROJECT_URL_PARAM, Val(url.toString()) } });
         } else {
             startupScenario()->setStartupProjectFile(project::ProjectFile { url });
         }
@@ -342,7 +369,7 @@ void ApplicationActionController::handleFileOpenEvent(const QFileOpenEvent* even
             }
             mw->requestShowOnFront();
         }
-        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(urlStr));
+        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(urlStr) } });
     } else {
         startupScenario()->setStartupUrl(urlStr);
     }
@@ -561,7 +588,7 @@ muse::Ret ApplicationActionController::doGlobalCopy()
         return make_ret(Ret::Code::NotSupported);
     }
 
-    dispatcher()->dispatch("action://trackedit/copy");
+    commandDispatcher()->dispatch(trackedit::TRACKEDIT_COPY_COMMAND);
     return make_ok();
 }
 
@@ -571,7 +598,7 @@ muse::Ret ApplicationActionController::doGlobalCut()
         return make_ret(Ret::Code::NotSupported);
     }
 
-    dispatcher()->dispatch("action://trackedit/cut");
+    commandDispatcher()->dispatch(trackedit::TRACKEDIT_CUT_COMMAND);
     return make_ok();
 }
 
@@ -581,7 +608,7 @@ muse::Ret ApplicationActionController::doGlobalPaste()
         return make_ret(Ret::Code::NotSupported);
     }
 
-    dispatcher()->dispatch("action://trackedit/paste-default");
+    commandDispatcher()->dispatch(trackedit::TRACKEDIT_PASTE_DEFAULT_COMMAND);
     return make_ok();
 }
 
@@ -591,7 +618,7 @@ muse::Ret ApplicationActionController::doGlobalUndo()
         return make_ret(Ret::Code::NotSupported);
     }
 
-    dispatcher()->dispatch("action://trackedit/undo");
+    commandDispatcher()->dispatch(trackedit::TRACKEDIT_UNDO_COMMAND);
     return make_ok();
 }
 
@@ -601,7 +628,7 @@ muse::Ret ApplicationActionController::doGlobalRedo()
         return make_ret(Ret::Code::NotSupported);
     }
 
-    dispatcher()->dispatch("action://trackedit/redo");
+    commandDispatcher()->dispatch(trackedit::TRACKEDIT_REDO_COMMAND);
     return make_ok();
 }
 
@@ -611,14 +638,14 @@ muse::Ret ApplicationActionController::doGlobalDelete()
         return make_ret(Ret::Code::NotSupported);
     }
 
-    dispatcher()->dispatch("action://trackedit/delete");
+    commandDispatcher()->dispatch(trackedit::TRACKEDIT_DELETE_COMMAND);
     return make_ok();
 }
 
 muse::Ret ApplicationActionController::doGlobalCancel()
 {
     if (isProjectOpenedAndFocused()) {
-        dispatcher()->dispatch("action://trackedit/cancel");
+        commandDispatcher()->dispatch(trackedit::TRACKEDIT_CANCEL_COMMAND);
         return make_ok();
     }
 
@@ -629,7 +656,7 @@ muse::Ret ApplicationActionController::doGlobalCancel()
 muse::Ret ApplicationActionController::doGlobalTrigger()
 {
     if (isProjectOpened()) {
-        dispatcher()->dispatch("action://playback/toggle-play-stop");
+        commandDispatcher()->dispatch(playback::PLAYBACK_TOGGLE_PLAY_STOP_COMMAND);
         return make_ok();
     }
 
@@ -646,7 +673,7 @@ muse::Ret ApplicationActionController::doGlobalEnter()
     }
 
     if (isProjectOpenedAndFocused()) {
-        dispatcher()->dispatch("track-view-replace-selection");
+        commandDispatcher()->dispatch(trackedit::TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND);
         return make_ok();
     }
 
@@ -663,7 +690,7 @@ muse::Ret ApplicationActionController::doGlobalShiftEnter()
     }
 
     if (isProjectOpenedAndFocused()) {
-        dispatcher()->dispatch("track-view-range-selection");
+        commandDispatcher()->dispatch(trackedit::TRACK_NAVIGATION_RANGE_SELECTION_COMMAND);
         return make_ok();
     }
 
@@ -681,13 +708,13 @@ muse::Ret ApplicationActionController::doGlobalContextMenu()
     if (activeSection->name() == TRACK_VIEW_SECTION_NAME) {
         const muse::ui::INavigationControl* activeControl = navigationController()->activeControl();
         if (activeControl && activeControl->name() == VERTICAL_RULER_CONTROL_NAME) {
-            dispatcher()->dispatch("track-view-ruler-context-menu");
+            commandDispatcher()->dispatch(trackedit::TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND);
             return make_ok();
         }
 
-        dispatcher()->dispatch("track-view-item-context-menu");
+        commandDispatcher()->dispatch(trackedit::TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND);
     } else if (activeSection->name() == TIMELINE_SECTION_NAME) {
-        dispatcher()->dispatch("timeline-context-menu");
+        commandDispatcher()->dispatch(projectscene::PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND);
     }
 
     return make_ok();

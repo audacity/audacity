@@ -6,6 +6,7 @@
 #include "global/types/number.h"
 
 #include "playback/iaudiooutput.h"
+#include "playback/playbackcommands.h"
 #include "snaptimeformatter.h"
 #include "timelineviewcontroller.h"
 #include "../playcursor/playpositionactioncontroller.h"
@@ -24,8 +25,6 @@ static constexpr double SCROLL_MIN_SPEED = 0.00001;
 static constexpr double SCROLL_MAX_SPEED = 0.025;
 
 static constexpr int SNAP_TO_CLIP_TOLERANCE_PX = 4;
-
-static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 using namespace au::projectscene;
 
@@ -765,10 +764,10 @@ void TimelineContext::updateViewOnProjectTempoChange(double ratio)
     setFrameStartTime(m_frameStartTime / ratio);
     setFrameEndTime(m_frameEndTime / ratio);
 
-    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-    q.addParam("seekTime", muse::Val(playbackState()->playbackPosition() / ratio));
-    q.addParam("triggerPlay", muse::Val(false));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+        { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(playbackState()->playbackPosition() / ratio) },
+        { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+    });
 }
 
 void TimelineContext::shiftFrameTimeOnStep(int direction)

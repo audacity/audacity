@@ -5,10 +5,10 @@
 
 using namespace au::playback;
 
-PlaybackToolBarTimeSignatureItem::PlaybackToolBarTimeSignatureItem(const muse::ui::UiAction& action,
+PlaybackToolBarTimeSignatureItem::PlaybackToolBarTimeSignatureItem(const muse::rcommand::CommandInfo& info,
                                                                    muse::uicomponents::ToolBarItemType::Type type,
                                                                    QObject* parent)
-    : muse::uicomponents::ToolBarItem(action, type, parent)
+    : muse::uicomponents::ToolBarItem(info, type, parent)
 {
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
         onProjectChanged();

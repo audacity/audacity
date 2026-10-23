@@ -32,18 +32,18 @@ void DeleteBehaviorOnboardingScenario::showFollowupDialog() const
 {
     const muse::UriQuery followupUri("audacity://trackedit/delete_behavior_followup");
     const muse::RetVal<muse::Val> rv = interactive()->openSync(followupUri);
-    const std::string action = rv.val.toString();
-    if (!action.empty()) {
-        IF_ASSERT_FAILED(actionExists(action)) {
+    const std::string value = rv.val.toString();
+    if (!value.empty()) {
+        const muse::rcommand::Command command(value);
+        IF_ASSERT_FAILED(commandExists(command)) {
             return;
         }
-        dispatcher()->dispatch(muse::actions::ActionCode(action));
+        commandDispatcher()->dispatch(command);
     }
 }
 
-bool DeleteBehaviorOnboardingScenario::actionExists(const std::string& action) const
+bool DeleteBehaviorOnboardingScenario::commandExists(const muse::rcommand::Command& command) const
 {
-    const auto actionList = dispatcher()->actionList();
-    return std::find(actionList.begin(), actionList.end(), action) != actionList.end();
+    return commandsRegister()->commandInfo(command).isValid();
 }
 }
