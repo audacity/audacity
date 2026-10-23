@@ -85,6 +85,9 @@ if(PACKTYPE STREQUAL "appimage")
         COMMAND mv "${INSTALL_DIR}/../${ARTIFACT_NAME}.AppImage" "${ARTIFACTS_DIR}/"
     )
 
+    # Package file name, for the later CI steps (checksum, release)
+    file(WRITE ${ARTIFACTS_DIR}/env/artifact_name.env ${ARTIFACT_NAME}.AppImage)
+
 
     # if [ -v UPDATE_INFORMATION ]; then
     #     # zsync file contains data for automatic delta updates
