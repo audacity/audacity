@@ -21,18 +21,19 @@ constexpr auto TEST_SAMPLE_RATE = 48000;
 constexpr auto TEST_FADE_IN = 0.1;
 constexpr auto TEST_FADE_OUT = 0.25;
 
-//! A project with one track holding a one-second clip with fades
+//! A project with one track holding a one-second clip with fades, the fade-in's type left to its default
 wxString projectXml()
 {
     return wxString::Format(
         "<project version=\"1.3.0\" audacityversion=\"4.0.0\">"
         "<wavetrack rate=\"%d\" sampleformat=\"262159\" channel=\"0\" linked=\"0\">"
-        "<waveclip offset=\"0\" trimLeft=\"0\" trimRight=\"0\" clipStretchRatio=\"1\" fadeIn=\"%.17g\" fadeOut=\"%.17g\">"
+        "<waveclip offset=\"0\" trimLeft=\"0\" trimRight=\"0\" clipStretchRatio=\"1\" fadeIn=\"%.17g\" fadeOut=\"%.17g\" fadeOutType=\"logarithmic\">"
         "<sequence maxsamples=\"262144\" sampleformat=\"262159\" numsamples=\"%d\">"
         "<waveblock start=\"0\" blockid=\"-%d\"/>"
         "</sequence><envelope numpoints=\"0\"/></waveclip>"
         "</wavetrack></project>",
-        TEST_SAMPLE_RATE, TEST_FADE_IN, TEST_FADE_OUT, TEST_SAMPLE_RATE, TEST_SAMPLE_RATE);
+        TEST_SAMPLE_RATE, TEST_FADE_IN, TEST_FADE_OUT, TEST_SAMPLE_RATE,
+        TEST_SAMPLE_RATE);
 }
 }
 
@@ -83,12 +84,22 @@ TEST_F(ClipFadesPersistenceTests, FadesAreLoaded)
     EXPECT_DOUBLE_EQ(fades.fadeOut(), TEST_FADE_OUT);
 }
 
+TEST_F(ClipFadesPersistenceTests, FadeTypesAreLoadedAndDefaultToLinear)
+{
+    const auto& fades = ClipFades::Get(onlyClip(firstTrack()));
+    // The test XML's first clip only has its fade-out specified as logarithmic.
+    EXPECT_EQ(fades.fadeInType(), FadeType::Linear);
+    EXPECT_EQ(fades.fadeOutType(), FadeType::Logarithmic);
+}
+
 TEST_F(ClipFadesPersistenceTests, FadesAreSaved)
 {
     XMLStringWriter writer;
     onlyClip(firstTrack()).WriteXML(0, writer);
     EXPECT_NE(writer.Find(wxString::Format("fadeIn=\"%.8f\"", TEST_FADE_IN)), wxNOT_FOUND) << writer;
     EXPECT_NE(writer.Find(wxString::Format("fadeOut=\"%.8f\"", TEST_FADE_OUT)), wxNOT_FOUND) << writer;
+    EXPECT_NE(writer.Find("fadeInType=\"linear\""), wxNOT_FOUND) << writer;
+    EXPECT_NE(writer.Find("fadeOutType=\"logarithmic\""), wxNOT_FOUND) << writer;
 }
 
 TEST_F(ClipFadesPersistenceTests, CopiedClipsKeepTheirFadesAndFollowTheirOwnStretching)
@@ -102,6 +113,7 @@ TEST_F(ClipFadesPersistenceTests, CopiedClipsKeepTheirFadesAndFollowTheirOwnStre
     //! [THEN] the copied clip has the same fades
     EXPECT_DOUBLE_EQ(ClipFades::Get(copied).fadeIn(), TEST_FADE_IN);
     EXPECT_DOUBLE_EQ(ClipFades::Get(copied).fadeOut(), TEST_FADE_OUT);
+    EXPECT_EQ(ClipFades::Get(copied).fadeOutType(), FadeType::Logarithmic);
 
     //! [WHEN] the copied clip is stretched
     copied.StretchBy(2.0);

@@ -17,6 +17,8 @@ set( SOURCES
    clip-graph/ClipBufferingNode.h
    ClipFades.cpp
    ClipFades.h
+   clip-graph/ClipFadesNode.cpp
+   clip-graph/ClipFadesNode.h
    clip-graph/ClipProcessingGraphFactory.cpp
    clip-graph/ClipProcessingGraphFactory.h
    ClipInterface.cpp
