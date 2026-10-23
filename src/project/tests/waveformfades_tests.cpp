@@ -29,6 +29,8 @@ constexpr auto TEST_HEIGHT = 101;
 //! The painted heights are rounded to rows
 constexpr auto TEST_RELATIVE_HEIGHT_TOLERANCE = 3.0 / TEST_HEIGHT;
 constexpr auto TEST_STRETCH_RATIO = 2.0;
+//! A logarithmic fade spans the whole dB range of the display
+constexpr auto TEST_DB_RANGE = -ClipFades::logarithmicFadeFloorDb;
 
 const graphics::Color sampleColor { 255, 0, 0 };
 const graphics::Color otherColor { 0, 0, 255 };
@@ -76,6 +78,7 @@ protected:
     std::shared_ptr<WaveTrack> m_track;
     std::shared_ptr<WaveClip> m_clip;
     std::unique_ptr<WaveBitmapCache> m_bitmapCache;
+    bool m_dbScale = false;
 
     ::AudacityProject& project()
     {
@@ -125,7 +128,8 @@ protected:
         .SetBackgroundColors(otherColor, otherColor)
         .SetSampleColors(sampleColor, sampleColor)
         .SetRMSColors(sampleColor, sampleColor)
-        .SetClippingColors(otherColor, otherColor);
+        .SetClippingColors(otherColor, otherColor)
+        .SetDBParameters(TEST_DB_RANGE, m_dbScale);
         bitmapCache.SetPaintParameters(params);
 
         const ZoomInfo zoomInfo(0.0, TEST_PIXELS_PER_SECOND);
@@ -188,5 +192,17 @@ TEST_F(WaveformFadesTests, FadeChangesInvalidateTheCache)
 
     //! [THEN] painting it again, with the same cache, shows the new fade-in
     EXPECT_NEAR(relativeHeight(paintedHeights(), t), t / longerFadeIn, TEST_RELATIVE_HEIGHT_TOLERANCE);
+}
+
+TEST_F(WaveformFadesTests, LogarithmicFadeIsPaintedLinearlyInDbScale)
+{
+    //! [GIVEN] a logarithmic fade-in, i.e. linear in dB
+    ClipFades::Get(*m_clip).setFadeInType(FadeType::Logarithmic);
+
+    //! [WHEN] it is painted in dB scale
+    m_dbScale = true;
+
+    //! [THEN] it looks linear
+    expectLinearFadeIn(paintedHeights(), TEST_FADE_IN);
 }
 }
