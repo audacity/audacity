@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include <QQuickItem>
 #include <QQuickPaintedItem>
 
 #include "modularity/ioc.h"
@@ -11,12 +12,14 @@
 #include "global/async/asyncable.h"
 
 #include "iwavepainter.h"
+#include "au3/iminmaxrmspainter.h"
+#include "wavescenegraph.h"
 #include "../timeline/timelinecontext.h"
 #include "types/projectscenetypes.h"
 
 class WaveClipItem;
 namespace au::projectscene {
-class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Contextable
+class WaveView : public QQuickItem, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
@@ -42,11 +45,22 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(bool isLinear READ isLinear WRITE setIsLinear FINAL)
     Q_PROPERTY(double dbRange READ dbRange WRITE setDbRange FINAL)
     Q_PROPERTY(QVariant displayBounds READ displayBounds WRITE setDisplayBounds FINAL)
+    //! Rounded clip corners are drawn here rather than masked by a layer: a
+    //! layer renders every clip offscreen again whenever it changes
+    Q_PROPERTY(qreal cornerRadius READ cornerRadius WRITE setCornerRadius NOTIFY cornerRadiusChanged FINAL)
+    //! The bottom corners are always rounded; the top ones only when no header is above
+    Q_PROPERTY(bool roundTopCorners READ roundTopCorners WRITE setRoundTopCorners NOTIFY roundTopCornersChanged FINAL)
+    Q_PROPERTY(bool dragGhost READ dragGhost WRITE setDragGhost NOTIFY dragGhostChanged FINAL)
+    //! Where the selection is drawn when it snaps to samples; otherwise not valid
+    Q_PROPERTY(bool drawnSelectionValid READ drawnSelectionValid NOTIFY drawnSelectionChanged FINAL)
+    Q_PROPERTY(double drawnSelectionStart READ drawnSelectionStart NOTIFY drawnSelectionChanged FINAL)
+    Q_PROPERTY(double drawnSelectionEnd READ drawnSelectionEnd NOTIFY drawnSelectionChanged FINAL)
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<au::projectscene::IWavePainter> wavePainter{ this };
+    muse::ContextInject<IMinMaxRMSPainter> minMaxRMSPainter{ this };
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
 
 public:
@@ -90,6 +104,15 @@ public:
     void setDbRange(double dbRange);
     QVariant displayBounds() const;
     void setDisplayBounds(const QVariant& displayBounds);
+    qreal cornerRadius() const;
+    void setCornerRadius(qreal cornerRadius);
+    bool roundTopCorners() const;
+    void setRoundTopCorners(bool roundTopCorners);
+    bool dragGhost() const;
+    void setDragGhost(bool dragGhost);
+    bool drawnSelectionValid() const;
+    double drawnSelectionStart() const;
+    double drawnSelectionEnd() const;
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
@@ -97,7 +120,12 @@ public:
     Q_INVOKABLE void smoothLastClickPos(unsigned int x, const unsigned int y);
     Q_INVOKABLE void setIsolatedPoint(unsigned int x, unsigned int y);
 
-    void paint(QPainter* painter) override;
+    //! Called from QML instead of update() to repaint the waveform
+    Q_INVOKABLE void forceRepaint();
+
+    void paintFallback(QPainter* painter);
+
+    QSGNode* updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*) override;
 
 signals:
     void timelineContextChanged();
@@ -113,12 +141,25 @@ signals:
     void isIsolationModeChanged();
     void multiSampleEditChanged();
     void isBrushChanged();
+    void cornerRadiusChanged();
+    void roundTopCornersChanged();
+    void dragGhostChanged();
+    void drawnSelectionChanged();
 
 private:
 
     void updateView();
+    void scheduleRepaint();
+    void prepareSceneGraphData();
+    void storePreparedData();
     void onWaveZoomChanged();
     void paintRecordingPlaceholder(QPainter& painter, const IWavePainter::Params& params);
+    void geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
+    void itemChange(ItemChange change, const ItemChangeData& value) override;
+    void updatePolish() override;
+    void componentComplete() override;
+    void updateDrawnSelection();
+
     IWavePainter::Params getWavePainterParams() const;
     void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, const QColor& clipSelectedColor, bool selected) const;
     void applyClassicStyle(IWavePainter::Params& params, bool selected) const;
@@ -142,8 +183,21 @@ private:
     bool m_isLinear = false;
     double m_dbRange = -60.0;
     std::pair<float, float> m_displayBounds = { -1.0f, 1.0f };
+    qreal m_cornerRadius = 0.0;
+    bool m_roundTopCorners = false;
+    bool m_dragGhost = false;
+    bool m_drawnSelectionValid = false;
+    double m_drawnSelectionStart = 0.0;
+    double m_drawnSelectionEnd = 0.0;
 
     std::optional<int> m_currentChannel;
     std::optional<QPoint> m_lastClickedPoint;
+
+    //! Fallback QPainter-based rendering child (used for ConnectingDots/Samples modes)
+    class PaintedFallback;
+    PaintedFallback* m_fallback = nullptr;
+
+    WaveSceneGraph m_sceneGraph;
+    bool m_retryPending = false;
 };
 }
