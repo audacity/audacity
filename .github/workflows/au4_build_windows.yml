@@ -261,6 +261,12 @@ jobs:
       run: |
         cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/windows/package.cmake
 
+    - name: Checksum
+      if: env.DO_BUILD == 'true'
+      shell: bash
+      run: |
+        bash ./muse/buildscripts/ci/tools/checksum.sh
+
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
