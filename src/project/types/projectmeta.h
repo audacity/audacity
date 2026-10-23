@@ -84,9 +84,10 @@ static const QList<std::string> standardTags {
 
 using MemberPtr = std::string ProjectMeta::*;
 
+//! Same order as `standardTags`
 inline static const std::array<MemberPtr, 6> kStdMembers = {
-    &project::ProjectMeta::artist,
     &project::ProjectMeta::trackTitle,
+    &project::ProjectMeta::artist,
     &project::ProjectMeta::album,
     &project::ProjectMeta::trackNumber,
     // &project::ProjectMeta::genre, // TODO
