@@ -178,11 +178,11 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
     // Saved state should represent what is stored on disk
     updateSavedState();
 
-    //! NOTE: sanitize legacy/corrupted projects that were saved with overlapping
+    //! NOTE: sanitize legacy/corrupted projects that were saved with empty clips or overlapping
     //! clip play regions (an unsupported state). Done here, before the trackedit
     //! project and UI are built, so no change notifications are needed.
     for (auto pWaveTrack : tracks.Any<WaveTrack>()) {
-        WaveTrackUtilities::RemoveOverlaps(*pWaveTrack);
+        WaveTrackUtilities::Sanitize(*pWaveTrack);
     }
 
     return ret;
