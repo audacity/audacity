@@ -184,12 +184,6 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
 
     std::vector<std::string> filter {
         muse::trc("project", "Audacity 4 files") + " (*.aup4)"
-
-#ifdef Q_OS_MAC
-        + " (*)"
-#else
-        + " (*.)"
-#endif
     };
 
     muse::io::path_t selectedPath = interactive()->selectSavingFileSync(dialogTitle, defaultPath, filter);
