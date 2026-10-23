@@ -43,14 +43,14 @@ from the project that will own the track.
 
 #include "au3-math/float_cast.h"
 
-#include "au3-stretching-sequence/AudioSegmentSampleView.h"
+#include "au3-clip-processing/AudioSegmentSampleView.h"
 #include "au3-track/ChannelAttachments.h"
-#include "au3-stretching-sequence/ClipTimeAndPitchSource.h"
+#include "au3-clip-processing/ClipTimeAndPitchSource.h"
 #include "au3-mixer/Envelope.h"
 #include "Sequence.h"
 #include "au3-time-and-pitch/StaffPadTimeAndPitch.h"
 
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 #include "au3-project/Project.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "SampleBlock.h"

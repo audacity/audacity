@@ -14,7 +14,7 @@
 
 #include "au3-math/SampleCount.h"
 
-class STRETCHING_SEQUENCE_API SilenceSegment final : public AudioSegment
+class SilenceSegment final : public AudioSegment
 {
 public:
     SilenceSegment(size_t numChannels, sampleCount numSamples);

@@ -15,7 +15,7 @@
 #include "au3-project-history/UndoManager.h"
 #include "au3-project-history/ProjectHistory.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-xml/XMLFileReader.h"
 

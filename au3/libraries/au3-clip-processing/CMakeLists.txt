@@ -6,7 +6,7 @@ Please refer to this directory's readme for a presentation of the constraints
 inherent to such an implementation.
 ]]
 
-set( TARGET au3-stretching-sequence )
+set( TARGET au3-clip-processing )
 
 set( SOURCES
    AudioSegment.cpp

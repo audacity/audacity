@@ -17,7 +17,7 @@ class AudioSegment;
 class WaveClip;
 enum class PlaybackDirection;
 
-class STRETCHING_SEQUENCE_API AudioSegmentFactoryInterface
+class AudioSegmentFactoryInterface
 {
 public:
     virtual ~AudioSegmentFactoryInterface();

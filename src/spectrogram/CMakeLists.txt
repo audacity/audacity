@@ -116,7 +116,7 @@ set(MODULE_LINK
         au3-fft
         au3-math
         au3-project
-        au3-stretching-sequence
+        au3-clip-processing
         au3-time-frequency-selection
         au3-track
         au3-utility

@@ -14,7 +14,7 @@
 #include "au3-utility/Observer.h"
 #include "au3-math/SampleCount.h"
 
-class STRETCHING_SEQUENCE_API ClipTimes
+class ClipTimes
 {
 public:
     virtual ~ClipTimes();
@@ -41,7 +41,7 @@ enum class PitchAndSpeedPreset
     OptimizeForVoice,
 };
 
-class STRETCHING_SEQUENCE_API ClipInterface : public ClipTimes
+class ClipInterface : public ClipTimes
 {
 public:
     ~ClipInterface() override;

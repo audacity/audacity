@@ -11,7 +11,7 @@
 
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "au3-stretching-sequence/ClipInterface.h"
+#include "au3-clip-processing/ClipInterface.h"
 
 #include "au3wrap/internal/domaccessor.h"
 

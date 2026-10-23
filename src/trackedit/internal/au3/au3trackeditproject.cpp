@@ -7,7 +7,7 @@
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 #include "au3-project-history/UndoManager.h"
 
 #include "au3wrap/iau3project.h"

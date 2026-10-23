@@ -17,7 +17,7 @@
 #include "au3-math/SampleFormat.h"
 #include "au3-mixer/Mix.h"
 #include "au3-mixer/WideSampleSource.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-clip-processing/StretchingSequence.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
 #include "au3-wave-track/WaveClip.h"
