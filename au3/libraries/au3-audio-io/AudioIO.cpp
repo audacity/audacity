@@ -3311,11 +3311,10 @@ unsigned AudioIoCallback::CountSoloingSequences()
 // fading out.
 bool AudioIoCallback::SequenceShouldBeSilent(const PlayableSequence& ps)
 {
-    return !ps.GetSolo() && (
+    return ps.GetMute() || (
+        // Cut if we're muted (and not soloing)
+        !ps.GetSolo() && mbHasSoloSequences
         // Cut if somebody else is soloing
-        mbHasSoloSequences
-        ||// Cut if we're muted (and not soloing)
-        ps.GetMute()
         );
 }
 
