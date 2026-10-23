@@ -24,7 +24,7 @@ using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface> >;
 
 // For now this class assumes forward reading, which will be sufficient for the
 // first goal of allowing export and rendering.
-class STRETCHING_SEQUENCE_API StretchingSequence final : public PlayableSequence
+class StretchingSequence final : public PlayableSequence
 {
 public:
     static std::shared_ptr<StretchingSequence>

@@ -20,11 +20,8 @@ using OnProjectTempoChange
           void, ChannelGroup,
           const std::optional<double>& /* oldTempo */, double /* newTempo */
           >;
-DECLARE_EXPORTED_ATTACHED_VIRTUAL(
-    STRETCHING_SEQUENCE_API, OnProjectTempoChange);
+DECLARE_EXPORTED_ATTACHED_VIRTUAL(, OnProjectTempoChange);
 
-STRETCHING_SEQUENCE_API
 void DoProjectTempoChange(ChannelGroup& group, double newTempo);
 
-STRETCHING_SEQUENCE_API
 const std::optional<double>& GetProjectTempo(const ChannelGroup& group);

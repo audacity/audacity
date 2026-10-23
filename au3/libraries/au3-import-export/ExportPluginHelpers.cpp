@@ -17,7 +17,7 @@
 #include "au3-effects/MixAndRender.h"
 #include "ExportUtils.h"
 #include "ExportPlugin.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-clip-processing/StretchingSequence.h"
 
 //Create a mixer by computing the time warp factor
 std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(

@@ -22,7 +22,7 @@
  * @brief A generalization for audio segments, whether clips or silence between
  * clips.
  */
-class STRETCHING_SEQUENCE_API AudioSegment
+class AudioSegment
 {
 public:
     virtual ~AudioSegment();

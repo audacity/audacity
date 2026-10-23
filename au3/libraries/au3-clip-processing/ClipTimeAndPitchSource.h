@@ -18,7 +18,7 @@
 class ClipInterface;
 using ChannelSampleViews = std::vector<AudioSegmentSampleView>;
 
-class STRETCHING_SEQUENCE_API ClipTimeAndPitchSource final : public TimeAndPitchSource
+class ClipTimeAndPitchSource final : public TimeAndPitchSource
 {
 public:
     ClipTimeAndPitchSource(

@@ -24,7 +24,7 @@ ranges.
 
 using BlockSampleView = std::shared_ptr<std::vector<float> >;
 
-class STRETCHING_SEQUENCE_API AudioSegmentSampleView final
+class AudioSegmentSampleView final
 {
 public:
     /**

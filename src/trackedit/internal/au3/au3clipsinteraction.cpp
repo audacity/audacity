@@ -9,7 +9,7 @@
 
 #include <QCoreApplication>
 
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
 #include "au3-wave-track/WaveClip.h"
