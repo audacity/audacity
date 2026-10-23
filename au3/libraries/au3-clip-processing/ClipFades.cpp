@@ -84,6 +84,7 @@ void ClipFades::Reparent(ClipInterface& clip)
         const auto ratioChange = newRatio / oldRatio;
         m_fadeIn = m_fadeIn * ratioChange;
         m_fadeOut = m_fadeOut * ratioChange;
+        Publish(ClipFadesChange {});
     });
 }
 
@@ -109,6 +110,7 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
             return false;
         }
         m_fadeIn = value;
+        Publish(ClipFadesChange {});
         return true;
     }
     if (attr == FadeOut_attr) {
@@ -116,6 +118,7 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
             return false;
         }
         m_fadeOut = value;
+        Publish(ClipFadesChange {});
         return true;
     }
     if (attr == FadeInType_attr || attr == FadeOutType_attr) {
@@ -124,6 +127,7 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
             return false;
         }
         (attr == FadeInType_attr ? m_fadeInType : m_fadeOutType) = *type;
+        Publish(ClipFadesChange {});
         return true;
     }
     return false;
@@ -143,6 +147,7 @@ void ClipFades::setFadeIn(double value)
 {
     m_fadeIn = std::clamp(value, 0., playDuration());
     m_draggingSide = ClipSide::Left;
+    Publish(ClipFadesChange {});
 }
 
 double ClipFades::fadeOut() const
@@ -159,6 +164,7 @@ void ClipFades::setFadeOut(double value)
 {
     m_fadeOut = std::clamp(value, 0., playDuration());
     m_draggingSide = ClipSide::Right;
+    Publish(ClipFadesChange {});
 }
 
 void ClipFades::setDraggingSide(ClipSide side)
@@ -169,6 +175,7 @@ void ClipFades::setDraggingSide(ClipSide side)
     m_fadeIn = fadeIn();
     m_fadeOut = fadeOut();
     m_draggingSide = side;
+    Publish(ClipFadesChange {});
 }
 
 double ClipFades::fadeGain(FadeType type, double x)
@@ -201,6 +208,17 @@ ClipFades::Snapshot ClipFades::snapshot() const
     return { playDuration(), fadeIn(), fadeOut(), fadeInType(), fadeOutType() };
 }
 
+double ClipFades::gainAt(double timeFromPlayStart) const
+{
+    return snapshot().gainAt(timeFromPlayStart);
+}
+
+Observer::Subscription ClipFades::SubscribeToChanges(std::function<void()> cb) const
+{
+    // Consider the list of subscribers as a mutable member that doesn't change real state
+    return const_cast<ClipFades*>(this)->Subscribe([cb](const ClipFadesChange&) { cb(); });
+}
+
 FadeType ClipFades::fadeInType() const
 {
     return m_fadeInType;
@@ -208,7 +226,11 @@ FadeType ClipFades::fadeInType() const
 
 void ClipFades::setFadeInType(FadeType type)
 {
+    if (type == m_fadeInType) {
+        return;
+    }
     m_fadeInType = type;
+    Publish(ClipFadesChange {});
 }
 
 FadeType ClipFades::fadeOutType() const
@@ -218,5 +240,9 @@ FadeType ClipFades::fadeOutType() const
 
 void ClipFades::setFadeOutType(FadeType type)
 {
+    if (type == m_fadeOutType) {
+        return;
+    }
     m_fadeOutType = type;
+    Publish(ClipFadesChange {});
 }
