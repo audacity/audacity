@@ -49,6 +49,12 @@ StyledListView {
         navigation.row: item.index
         navigation.accessible.name: item.title
 
+        navigation.onActiveChanged: {
+            if (item.navigation.active) {
+                item.scrollIntoView()
+            }
+        }
+
         mouseArea.drag.target: dragTarget
 
         Drag.dragType: Drag.Automatic
