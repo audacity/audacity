@@ -43,7 +43,7 @@ StyledListView {
         width: ListView.view.width
         height: prv.rowHeight
 
-        isSelected: item.navigation.active
+        isSelected: item.navigation.highlight
 
         navigation.panel: root.navigation
         navigation.row: item.index
@@ -65,13 +65,7 @@ StyledListView {
             return data
         }
 
-        onClicked: function (mouse) {
-            if (!mouse) {
-                root.addRequested(item.code, item.title, item.isMacro)
-            }
-        }
-
-        onDoubleClicked: {
+        onClicked: {
             root.addRequested(item.code, item.title, item.isMacro)
         }
 
@@ -113,7 +107,7 @@ StyledListView {
                 Layout.preferredWidth: prv.addButtonSize
                 Layout.preferredHeight: prv.addButtonSize
 
-                visible: item.isSelected
+                visible: item.isSelected || item.mouseArea.containsMouse
 
                 icon: IconCode.PLUS
                 transparent: true
