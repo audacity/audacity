@@ -113,6 +113,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "au3-realtime-effects/RealtimeEffectManager.h"
 #include "au3-project-rate/QualitySettings.h"
 #include "au3-basic-ui/BasicUI.h"
+#include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/WaveTrack.h"
 
 namespace {
@@ -2400,6 +2401,12 @@ bool AudioIO::ProcessPlaybackSlices(
 void AudioIO::DrainRecordBuffers()
 {
     if (mRecordingException || mCaptureSequences.empty()) {
+        return;
+    }
+
+    // The sequences might be locked during project serialization (e.g. on autosave): skip this turn
+    std::unique_lock recordingLock(Sequence::RecordingMutex(), std::try_to_lock);
+    if (!recordingLock.owns_lock()) {
         return;
     }
 

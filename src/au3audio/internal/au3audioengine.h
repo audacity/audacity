@@ -49,6 +49,7 @@ public:
     std::optional<au::audio::AudioCallbackInfo> consumeNextCallbackInfo() override;
 
     muse::async::Notification recordingUpdateRequested() const override;
+    muse::async::Notification recordingNewBlocks() const override;
     muse::async::Notification recordingCommitRequested() const override;
     muse::async::Notification recordingFinished() const override;
     muse::async::Notification streamStopped() const override;

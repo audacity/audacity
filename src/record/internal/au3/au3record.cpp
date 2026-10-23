@@ -16,6 +16,7 @@
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-project-rate/ProjectRate.h"
 
 #include "au3wrap/internal/domconverter.h"
@@ -203,6 +204,14 @@ void Au3Record::init()
         }
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.UpdatePendingTracks();
+    });
+
+    audioEngine()->recordingNewBlocks().onNotify(this, [this]() {
+        if (m_recordData.empty()) {
+            return;
+        }
+        // Autosave project during recording to keep the document synchronized with the recorded data
+        ProjectFileIO::Get(projectRef()).AutoSave();
     });
 
     audioEngine()->recordingClipChanged().onReceive(this, [this](const au3::Au3TrackId& trackId, const au3::Au3ClipId& clipId) {
