@@ -5,6 +5,8 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.ProjectScene
+
 Item {
     id: root
 
@@ -127,6 +129,31 @@ Item {
                 anchors.verticalCenter: buttonContainer.verticalCenter
 
                 text: qsTrc("projectscene", "Tracks")
+            }
+
+            // TEMPORARY: switches between the new and the old waveform renderer for testing
+            FlatButton {
+                id: waveRendererToggleBtn
+
+                width: 44
+                height: root.buttonHeight
+
+                anchors.right: addNewTrackBtn.left
+                anchors.rightMargin: 4
+                anchors.verticalCenter: buttonContainer.verticalCenter
+
+                navigation.name: "WaveRendererToggle"
+                navigation.panel: buttonContainer.navigation
+                navigation.order: 1
+
+                backgroundRadius: 3
+                accentButton: WaveRendererToggle.sceneGraph
+
+                text: WaveRendererToggle.sceneGraph ? "New" : "Old"
+
+                onClicked: {
+                    WaveRendererToggle.sceneGraph = !WaveRendererToggle.sceneGraph
+                }
             }
 
             FlatButton {
