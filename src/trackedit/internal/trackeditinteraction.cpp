@@ -348,7 +348,11 @@ bool TrackeditInteraction::canRedo()
 
 bool TrackeditInteraction::undoRedoToIndex(size_t index)
 {
-    return m_interaction->undoRedoToIndex(index);
+    // Already at the requested state: nothing will change, so don't interrupt playback.
+    if (projectHistory()->currentStateIndex() == index) {
+        return false;
+    }
+    return withPlaybackStop(&ITrackeditInteraction::undoRedoToIndex, index);
 }
 
 muse::async::Notification TrackeditInteraction::cancelDragEditRequested() const
