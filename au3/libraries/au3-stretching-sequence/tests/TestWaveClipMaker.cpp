@@ -23,7 +23,7 @@ WaveClipHolder TestWaveClipMaker::ClipFilledWith(
     const std::vector<std::vector<float> >& values, Operations operations) const
 {
     const auto numSamples = values[0].size();
-    const auto clip = std::make_shared<WaveClip>(
+    const auto clip = WaveClip::NewShared(
         values.size(), mFactory, floatSample, mSampleRate);
     // Is there any more convenient way of doing this ?
     clip->InsertSilence(0, 1. * numSamples / mSampleRate);
