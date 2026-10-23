@@ -8,24 +8,17 @@ set(BUILD_DIR "build.release")
 
 # Options
 set(BUILD_MODE "" CACHE STRING "Build mode")
-set(BUILD_VERSION "" CACHE STRING "Build mode")
-set(PACKARCH "x86_64" CACHE STRING "Build mode")
+set(PACKARCH "x86_64" CACHE STRING "Package architecture")
 
 if (NOT BUILD_MODE)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_mode.env" BUILD_MODE)
-endif()
-
-if (NOT BUILD_VERSION)
-    file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
 endif()
 
 if (NOT BUILD_MODE)
     message(FATAL_ERROR "not set BUILD_MODE")
 endif()
 
-if (NOT BUILD_VERSION)
-    message(FATAL_ERROR "not set BUILD_VERSION")
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/../common/package_name.cmake)
 
 file (STRINGS "${BUILD_DIR}/PREFIX.txt" INSTALL_DIR)
 
@@ -43,22 +36,7 @@ set(PACKTYPE "appimage")
 # echo "PACKARCH: $PACKARCH"
 # echo "INSTALL_DIR: $INSTALL_DIR"
 
-if (BUILD_MODE STREQUAL "nightly")
-    #   BUILD_NUMBER=$(cat $ARTIFACTS_DIR/env/build_number.env)
-    #   BUILD_BRANCH=$(cat $ARTIFACTS_DIR/env/build_branch.env)
-    #   BUILD_REVISION=$(cat $ARTIFACTS_DIR/env/build_revision.env)
-    #   ARTIFACT_NAME=AudacityNightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}-${PACKARCH}
-    set(ARTIFACT_NAME "AudacityNightly-${BUILD_VERSION}-${PACKARCH}")
-else()
-    set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${PACKARCH}")
-endif()
-
-# if [ "$PACKTYPE" == "7z" ]; then
-#     mv $INSTALL_DIR $ARTIFACT_NAME
-#     7z a $ARTIFACTS_DIR/$ARTIFACT_NAME.7z $ARTIFACT_NAME
-#     bash ./buildscripts/ci/tools/make_artifact_name_env.sh $ARTIFACT_NAME.7z
-#     chmod a+rw $ARTIFACT_NAME.7z
-# fi
+audacity_package_name(ARTIFACT_NAME linux ${PACKARCH} AppImage)
 
 if(PACKTYPE STREQUAL "appimage")
     # To enable automatic updates for AppImages, set UPDATE_INFORMATION according to
@@ -78,12 +56,15 @@ if(PACKTYPE STREQUAL "appimage")
     require_tool(appimageupdatetool)
 
     execute_process(
-        COMMAND bash ${CMAKE_CURRENT_LIST_DIR}/make_appimage.sh "${INSTALL_DIR}" "${ARTIFACT_NAME}.AppImage" "${PACKARCH}" "${BUILD_TOOLS}/environment.sh"
+        COMMAND bash ${CMAKE_CURRENT_LIST_DIR}/make_appimage.sh "${INSTALL_DIR}" "${ARTIFACT_NAME}" "${PACKARCH}" "${BUILD_TOOLS}/environment.sh"
     )
 
     execute_process(
-        COMMAND mv "${INSTALL_DIR}/../${ARTIFACT_NAME}.AppImage" "${ARTIFACTS_DIR}/"
+        COMMAND mv "${INSTALL_DIR}/../${ARTIFACT_NAME}" "${ARTIFACTS_DIR}/"
     )
+
+    # Package file name, for the later CI steps (checksum, release)
+    file(WRITE ${ARTIFACTS_DIR}/env/artifact_name.env ${ARTIFACT_NAME})
 
 
     # if [ -v UPDATE_INFORMATION ]; then

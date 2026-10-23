@@ -123,7 +123,7 @@ jobs:
         echo "BUILD_MODE: $BUILD_MODE"
 
         DO_BUILD='true'
-        UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/artifact_name.env)
+        UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/upload_artifact_name.env)
 
         PROJECT_ID=""
         APP_KEY=""
@@ -247,6 +247,12 @@ jobs:
         USER=${{ secrets.APPLE_USERNAME }}; if [ -z "$USER" ]; then USER=""; fi
         PW=${{ secrets.APPLE_PASSWORD }}; if [ -z "$PW" ]; then PW=""; fi
         bash ./muse/buildscripts/ci/macos/notarize.sh -u $USER -p $PW
+
+    - name: Checksum
+      if: env.DO_BUILD == 'true'
+      run: |
+        bash ./muse/buildscripts/ci/tools/checksum.sh
+
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
