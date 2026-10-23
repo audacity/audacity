@@ -4,9 +4,43 @@
 #include "au3-xml/XMLWriter.h"
 
 #include <algorithm>
+#include <cmath>
+#include <numbers>
+#include <optional>
+#include <string>
 
 static constexpr auto FadeIn_attr = "fadeIn";
 static constexpr auto FadeOut_attr = "fadeOut";
+static constexpr auto FadeInType_attr = "fadeInType";
+static constexpr auto FadeOutType_attr = "fadeOutType";
+
+namespace {
+//! 10^(floorDb * (1 - x) / 20) = exp(floorDb * ln(10) / 20 * (1 - x)), `exp` being cheaper than `pow`
+constexpr auto logarithmicFadeExponent = ClipFades::logarithmicFadeFloorDb * std::numbers::ln10 / 20.0;
+
+constexpr const char* fadeTypeName(FadeType type)
+{
+    switch (type) {
+    case FadeType::Logarithmic:
+        return "logarithmic";
+    case FadeType::Linear:
+        return "linear";
+    default:
+        assert(false);
+        return "";
+    }
+}
+
+constexpr std::optional<FadeType> fadeTypeFromName(const std::string& name)
+{
+    for (const auto type : { FadeType::Linear, FadeType::Logarithmic }) {
+        if (name == fadeTypeName(type)) {
+            return type;
+        }
+    }
+    return std::nullopt;
+}
+}
 
 static const ClipInterface::ClipAttachments::RegisteredFactory keyClipFades{
     [](ClipInterface& clip) { return std::make_unique<ClipFades>(clip); }
@@ -34,6 +68,8 @@ std::unique_ptr<ClipInterfaceAttachment> ClipFades::Clone() const
     clone->m_fadeIn = m_fadeIn.load();
     clone->m_fadeOut = m_fadeOut.load();
     clone->m_draggingSide = m_draggingSide.load();
+    clone->m_fadeInType = m_fadeInType.load();
+    clone->m_fadeOutType = m_fadeOutType.load();
     return clone;
 }
 
@@ -58,6 +94,8 @@ void ClipFades::WriteXMLAttributes(XMLWriter& writer) const
     // Don't write the raw values, or we'd also have to write the `m_draggingSide` state.
     writer.WriteAttr(FadeIn_attr, fadeIn(), 8);
     writer.WriteAttr(FadeOut_attr, fadeOut(), 8);
+    writer.WriteAttr(FadeInType_attr, wxString { fadeTypeName(fadeInType()) });
+    writer.WriteAttr(FadeOutType_attr, wxString { fadeTypeName(fadeOutType()) });
 }
 
 bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
@@ -75,6 +113,14 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
             return false;
         }
         m_fadeOut = value;
+        return true;
+    }
+    if (attr == FadeInType_attr || attr == FadeOutType_attr) {
+        const auto type = fadeTypeFromName(valueView.ToString());
+        if (!type) {
+            return false;
+        }
+        (attr == FadeInType_attr ? m_fadeInType : m_fadeOutType) = *type;
         return true;
     }
     return false;
@@ -120,4 +166,37 @@ void ClipFades::setDraggingSide(ClipSide side)
     m_fadeIn = fadeIn();
     m_fadeOut = fadeOut();
     m_draggingSide = side;
+}
+
+double ClipFades::fadeGain(FadeType type, double x)
+{
+    // Positions may be marginally outside of the fade
+    x = std::clamp(x, 0.0, 1.0);
+    switch (type) {
+    case FadeType::Logarithmic:
+        return x == 0.0 ? 0.0 : std::exp(logarithmicFadeExponent * (1.0 - x));
+    case FadeType::Linear:
+    default:
+        return x;
+    }
+}
+
+FadeType ClipFades::fadeInType() const
+{
+    return m_fadeInType;
+}
+
+void ClipFades::setFadeInType(FadeType type)
+{
+    m_fadeInType = type;
+}
+
+FadeType ClipFades::fadeOutType() const
+{
+    return m_fadeOutType;
+}
+
+void ClipFades::setFadeOutType(FadeType type)
+{
+    m_fadeOutType = type;
 }

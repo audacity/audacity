@@ -11,6 +11,11 @@
 namespace au::trackedit {
 using ClipVersion = int64_t;
 
+enum class FadeType {
+    Linear,
+    Logarithmic,
+};
+
 struct Clip {
     ClipKey key;
     ClipVersion clipVersion = -1;
@@ -31,6 +36,8 @@ struct Clip {
 
     double fadeInDuration = 0.0;
     double fadeOutDuration = 0.0;
+    FadeType fadeInType = FadeType::Linear;
+    FadeType fadeOutType = FadeType::Linear;
 
     inline bool isValid() const { return key.isValid(); }
 };

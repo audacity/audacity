@@ -10,6 +10,7 @@ Item {
 
     required property bool isFadeIn
     required property real fadeWidth
+    required property int fadeType
 
     //! The fade line is always drawn, the handle only when this is true
     property bool handleVisible: true
@@ -27,6 +28,23 @@ Item {
         // The area in which the fade is drawn
         readonly property real areaWidth: root.parent ? root.parent.width : 0
         readonly property real areaHeight: root.parent ? root.parent.height : 0
+
+        readonly property var linePoints: {
+            const width = root.fadeWidth
+            const left = root.isFadeIn ? 0 : areaWidth - width
+            // Sampled every couple of pixels
+            const segmentCount = Math.max(1, Math.min(Math.ceil(width / 2), 512))
+            const positions = []
+            for (let i = 0; i <= segmentCount; ++i) {
+                positions.push(i / segmentCount)
+            }
+            // From the silent end of the fade
+            const gains = ClipFadeGains.gainsAt(root.fadeType, root.isFadeIn ? positions : positions.map(p => 1 - p))
+            return positions.map((p, i) => Qt.point(left + p * width, areaHeight * (1 - gains[i])))
+        }
+
+        //! The faded-out part, above the line: the line closed by the top corner on the clip's edge
+        readonly property var shadingPoints: root.isFadeIn ? [Qt.point(0, 0)].concat(linePoints) : linePoints.concat([Qt.point(areaWidth, 0)])
     }
 
     // Drawn in parent coordinates: the line spans the whole fade, from the clip's edge to the fade boundary
@@ -39,22 +57,13 @@ Item {
         visible: root.fadeWidth > 0
         preferredRendererType: Shape.CurveRenderer
 
-        // Linear fades for now
-
         // Shades the faded-out part, above the line
         ShapePath {
             strokeColor: "transparent"
             fillColor: Qt.rgba(0, 0, 0, 0.2)
 
-            startX: root.isFadeIn ? 0 : prv.areaWidth
-            startY: 0
-            PathLine {
-                x: root.isFadeIn ? root.fadeWidth : prv.areaWidth - root.fadeWidth
-                y: 0
-            }
-            PathLine {
-                x: root.isFadeIn ? 0 : prv.areaWidth
-                y: prv.areaHeight
+            PathPolyline {
+                path: prv.shadingPoints
             }
         }
 
@@ -64,11 +73,8 @@ Item {
             capStyle: ShapePath.FlatCap
             fillColor: "transparent"
 
-            startX: root.isFadeIn ? 0 : prv.areaWidth - root.fadeWidth
-            startY: root.isFadeIn ? prv.areaHeight : 0
-            PathLine {
-                x: root.isFadeIn ? root.fadeWidth : prv.areaWidth
-                y: root.isFadeIn ? 0 : prv.areaHeight
+            PathPolyline {
+                path: prv.linePoints
             }
         }
 
@@ -79,11 +85,8 @@ Item {
             capStyle: ShapePath.FlatCap
             fillColor: "transparent"
 
-            startX: root.isFadeIn ? 0 : prv.areaWidth - root.fadeWidth
-            startY: root.isFadeIn ? prv.areaHeight : 0
-            PathLine {
-                x: root.isFadeIn ? root.fadeWidth : prv.areaWidth
-                y: root.isFadeIn ? 0 : prv.areaHeight
+            PathPolyline {
+                path: prv.linePoints
             }
         }
     }

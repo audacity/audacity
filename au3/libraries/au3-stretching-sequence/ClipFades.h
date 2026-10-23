@@ -10,6 +10,11 @@ enum class ClipSide {
     Right
 };
 
+enum class FadeType {
+    Linear,
+    Logarithmic,
+};
+
 //! Fade lengths of a clip, in seconds of play time
 //! As a clip attachment, it is copied along with the clip (split, paste, undo history)
 //! and saved as attributes of the clip in the project file.
@@ -17,6 +22,11 @@ class STRETCHING_SEQUENCE_API ClipFades final : public ClipInterfaceAttachment
 {
 public:
     explicit ClipFades(ClipInterface& clip);
+
+    static constexpr double logarithmicFadeFloorDb = -60.0;
+
+    //! `x` from 0 (silent end) to 1 (unfaded end)
+    static double fadeGain(FadeType type, double x);
 
     static ClipFades& Get(ClipInterface& clip);
     static const ClipFades& Get(const ClipInterface& clip);
@@ -33,6 +43,12 @@ public:
     double fadeOut() const;
     void setFadeOut(double);
 
+    FadeType fadeInType() const;
+    void setFadeInType(FadeType);
+
+    FadeType fadeOutType() const;
+    void setFadeOutType(FadeType);
+
     void setDraggingSide(ClipSide);
 
 private:
@@ -44,6 +60,8 @@ private:
     std::atomic<double> m_fadeIn = 0.0;
     std::atomic<double> m_fadeOut = 0.0;
     std::atomic<ClipSide> m_draggingSide = static_cast<ClipSide>(0);
+    std::atomic<FadeType> m_fadeInType = FadeType::Linear;
+    std::atomic<FadeType> m_fadeOutType = FadeType::Linear;
 
     Observer::Subscription mStretchChangedSubscription;
 };

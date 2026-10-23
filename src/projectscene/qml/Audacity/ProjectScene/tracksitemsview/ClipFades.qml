@@ -1,5 +1,7 @@
 import QtQuick
 
+import Audacity.ProjectScene
+
 Item {
     id: root
 
@@ -8,6 +10,8 @@ Item {
 
     property real fadeInWidth: 0
     property real fadeOutWidth: 0
+    required property int fadeInType
+    required property int fadeOutType
 
     //! The fades span the whole item, the handles only a band of it, starting at `handlesY`
     property real handlesY: 0
@@ -67,6 +71,7 @@ Item {
 
         isFadeIn: true
         fadeWidth: root.fadeInWidth
+        fadeType: root.fadeInType
 
         onFadeWidthChangeRequested: function (width, completed) {
             root.fadeInWidthChangeRequested(width, completed)
@@ -89,6 +94,7 @@ Item {
 
         isFadeIn: false
         fadeWidth: root.fadeOutWidth
+        fadeType: root.fadeOutType
 
         onFadeWidthChangeRequested: function (width, completed) {
             root.fadeOutWidthChangeRequested(width, completed)

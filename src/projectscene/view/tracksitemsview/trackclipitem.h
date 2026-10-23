@@ -23,6 +23,8 @@ class TrackClipItem : public ViewTrackItem
     Q_PROPERTY(bool isSpeedModified READ isSpeedModified NOTIFY speedPercentageChanged FINAL)
     Q_PROPERTY(double fadeInDuration READ fadeInDuration NOTIFY fadesChanged FINAL)
     Q_PROPERTY(double fadeOutDuration READ fadeOutDuration NOTIFY fadesChanged FINAL)
+    Q_PROPERTY(FadeTypes::Type fadeInType READ fadeInType NOTIFY fadesChanged FINAL)
+    Q_PROPERTY(FadeTypes::Type fadeOutType READ fadeOutType NOTIFY fadesChanged FINAL)
     // Q_PROPERTY(QObject * envelopeModel READ envelopeModel NOTIFY envelopeModelChanged)
 
 public:
@@ -40,6 +42,8 @@ public:
 
     double fadeInDuration() const;
     double fadeOutDuration() const;
+    FadeTypes::Type fadeInType() const;
+    FadeTypes::Type fadeOutType() const;
 
 signals:
     void groupIdChanged();
@@ -54,5 +58,7 @@ private:
     double m_speed = 1.0;
     double m_fadeInDuration = 0.0;
     double m_fadeOutDuration = 0.0;
+    FadeTypes::Type m_fadeInType = FadeTypes::Type::LINEAR;
+    FadeTypes::Type m_fadeOutType = FadeTypes::Type::LINEAR;
 };
 }

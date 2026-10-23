@@ -87,6 +87,26 @@ TEST_F(FadingSequenceTests, LinearFadesAreAppliedReadingForward)
     EXPECT_NEAR(samples[1499], 0.01f, 1e-6); // last sample of the clip
 }
 
+TEST_F(FadingSequenceTests, LogarithmicFadesAreLinearInDb)
+{
+    auto& fades = ClipFades::Get(*m_clip);
+    fades.setFadeInType(FadeType::Logarithmic);
+    fades.setFadeOutType(FadeType::Logarithmic);
+
+    const auto sequence = FadingSequence::Create(*m_track, m_track->GetClipInterfaces());
+    const auto samples = read(*sequence, 0, 2000, false);
+
+    constexpr auto clipStartSample = TEST_CLIP_START * TEST_SAMPLE_RATE;
+    constexpr auto clipEndSample = (TEST_CLIP_START + TEST_CLIP_DURATION) * TEST_SAMPLE_RATE;
+    constexpr auto fadeInNumSamples = TEST_FADE_IN * TEST_SAMPLE_RATE;
+    constexpr auto fadeOutNumSamples = TEST_FADE_OUT * TEST_SAMPLE_RATE;
+    const auto halfwayGain = std::pow(10.0, ClipFades::logarithmicFadeFloorDb / 2 / 20);
+    EXPECT_FLOAT_EQ(samples[clipStartSample], 0.f);
+    EXPECT_NEAR(samples[clipStartSample + fadeInNumSamples / 2], halfwayGain, 1e-6);
+    EXPECT_FLOAT_EQ(samples[clipStartSample + fadeInNumSamples], 1.f);
+    EXPECT_NEAR(samples[clipEndSample - fadeOutNumSamples / 2], halfwayGain, 1e-6);
+}
+
 TEST_F(FadingSequenceTests, LinearFadesAreAppliedReadingBackward)
 {
     const auto sequence = FadingSequence::Create(*m_track, m_track->GetClipInterfaces());
