@@ -18,6 +18,8 @@ std::optional<TrackItemKey> firstItemOnTrack(const ItemKeys& timeSortedItems, co
 
 std::vector<const Clip*> clipSetDifference(const Clips& set1, const Clips& set2);
 
+TrackIdList audibleAudioTracks(const ITrackeditProject& project, const TrackIdList& trackIds);
+
 template<typename Fn>
 void executeAndNotifyAboutChangedClips(ITrackeditProjectPtr prj, TrackId trackId, Fn&& fn)
 {

@@ -52,3 +52,28 @@ std::optional<au::trackedit::TrackItemKey> au::trackedit::utils::firstItemOnTrac
 
     return std::nullopt;
 }
+
+au::trackedit::TrackIdList au::trackedit::utils::audibleAudioTracks(const ITrackeditProject& project, const TrackIdList& trackIds)
+{
+    const auto isAudio = [](const Track& track) {
+        return track.type == TrackType::Mono || track.type == TrackType::Stereo;
+    };
+
+    const TrackList tracks = project.trackList();
+    const bool anySolo = std::any_of(tracks.cbegin(), tracks.cend(), [&isAudio](const Track& track) {
+        return isAudio(track) && track.solo;
+    });
+    const auto isAudible = [anySolo](const Track& track) {
+        return anySolo ? track.solo : !track.mute;
+    };
+
+    TrackIdList result;
+    for (const TrackId& trackId : trackIds) {
+        const std::optional<Track> track = project.track(trackId);
+        if (track && isAudio(*track) && isAudible(*track) && !project.clipList(trackId).empty()) {
+            result.push_back(trackId);
+        }
+    }
+
+    return result;
+}

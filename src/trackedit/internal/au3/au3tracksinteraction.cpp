@@ -1310,6 +1310,47 @@ bool Au3TracksInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     return true;
 }
 
+muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::mixAndRender(const TrackIdList& tracksIds)
+{
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+
+    const auto isInput = [&tracksIds](const Au3WaveTrack* track) {
+        return muse::contains(tracksIds, TrackId(track->GetId()));
+    };
+    const auto inputs = tracks.Any<const Au3WaveTrack>() + isInput;
+    if (inputs.empty()) {
+        return muse::RetVal<TrackId>::make_ret(make_ret(Err::TrackNotFound));
+    }
+
+    const TrackId lastInput = (*inputs.rbegin())->GetId();
+
+    //! NOTE The whole extent of the inputs is mixed, regardless of the time selection
+    const auto mix = MixAndRender(inputs,
+                                  Mixer::WarpOptions { tracks.GetOwner() },
+                                  tracks.MakeUniqueTrackName(wxFromStdString(muse::trc("trackedit", "Mix"))),
+                                  &WaveTrackFactory::Get(projectRef()),
+                                  ::ProjectRate::Get(projectRef()).GetRate(),
+                                  QualitySettings::SampleFormatChoice(),
+                                  0.0, 0.0);
+    if (!mix) {
+        LOGW() << "Mix and render was cancelled or failed";
+        return muse::RetVal<TrackId>::make_ret(make_ret(Err::Cancel));
+    }
+
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    tracks.Append(mix, true);
+    prj->notifyAboutTrackAdded(DomConverter::track(mix.get()));
+    for (const auto& clip : prj->clipList(mix->GetId())) {
+        prj->notifyAboutClipAdded(clip);
+    }
+
+    //! NOTE Right below the last input, so the mix ends up where the inputs were when they are removed
+    moveTracksTo({ mix->GetId() }, trackPosition(lastInput) + 1);
+
+    return muse::RetVal<TrackId>::make_ok(mix->GetId());
+}
+
 //void Au3TracksInteraction::adjustVerticalZoom(const trackedit::TrackId& trackId)
 //{
 // Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
