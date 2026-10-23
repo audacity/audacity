@@ -20,8 +20,8 @@ static const TranslatableString REPEAT_LAST_EFFECT_TITLE("action", "Repeat %1");
 
 static UiActionList STATIC_ACTIONS = {
     UiAction("repeat-last-effect",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
              REPEAT_LAST_EFFECT_DEF_TITLE,
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Repeat last effect")
