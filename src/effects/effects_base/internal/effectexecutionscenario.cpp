@@ -735,6 +735,10 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
+    // A previous preview may still be active or not torn down yet (e.g. the dialog was applied or closed while previewing).
+    // Clean it up now, otherwise its state and playback-status receiver would be left dangling.
+    stopPreview();
+
     auto player = playback()->player();
     if (player->isBusy()) {
         LOGW() << "can't play, maybe audio is busy";
@@ -774,7 +778,8 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         // (Au3 used to read `previewLen` from the `/AudioIO/EffectsPreviewLen` setting.
         // There is no plan at the moment to reintroduce it in Au4.)
         const double maxPreviewLen = effectsConfiguration()->previewMaxDuration();
-        const double previewLen = std::min(originCtx.t1 - effect.mT0, maxPreviewLen);
+        // A generator creates audio out of nothing, so the selection length (typically 0) mustn't limit the preview.
+        const double previewLen = isGenerator ? maxPreviewLen : std::min(originCtx.t1 - effect.mT0, maxPreviewLen);
         double previewDuration = 0.0;
         if (isNyquist && isGenerator) {
             previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
@@ -907,6 +912,9 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         const auto loopWasActive = player->isLoopRegionActive();
         player->setLoopRegionActive(false);
         player->setPlaybackRegion({ effect.mT0, newCtx.t1 });
+        // The playhead may be left anywhere by a previous (stopped) preview. Move it to the start now, otherwise
+        // the position jump after the stream has started may make the playback controller stop playback right away.
+        player->seek(effect.mT0, false);
 
         m_effectPreviewState.emplace(effectId, originCtx, newCtx.tracks, loopWasActive);
 
@@ -947,7 +955,8 @@ void EffectExecutionScenario::stopPreview()
 
     player->playbackStatusChanged().disconnect(this);
 
-    if (player->playbackStatus() == playback::PlaybackStatus::Running) {
+    // Also stop a paused preview, otherwise its stream stays alive and the player remains busy.
+    if (player->playbackStatus() != playback::PlaybackStatus::Stopped) {
         player->stop();
     }
 
