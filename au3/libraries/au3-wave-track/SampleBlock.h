@@ -11,7 +11,7 @@ SampleBlock.h
 
 #include "au3-utility/GlobalVariable.h"
 #include "au3-math/SampleFormat.h"
-#include "au3-stretching-sequence/AudioSegmentSampleView.h"
+#include "au3-clip-processing/AudioSegmentSampleView.h"
 
 #include <functional>
 #include <memory>

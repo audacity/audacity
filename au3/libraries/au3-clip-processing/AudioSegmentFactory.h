@@ -20,7 +20,7 @@
 class ClipInterface;
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface> >;
 
-class STRETCHING_SEQUENCE_API AudioSegmentFactory final : public AudioSegmentFactoryInterface
+class AudioSegmentFactory final : public AudioSegmentFactoryInterface
 {
 public:
     AudioSegmentFactory(int sampleRate, int numChannels, ClipConstHolders clips);

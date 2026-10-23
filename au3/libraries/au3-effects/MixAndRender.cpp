@@ -13,7 +13,7 @@ Paul Licameli split from Mix.cpp
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-mixer/Mix.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-clip-processing/StretchingSequence.h"
 #include "au3-wave-track/WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;

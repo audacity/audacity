@@ -25,7 +25,7 @@
 #include "au3-numeric-formats/NumericConverterFormats.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-transactions/TransactionScope.h"
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 #include "au3-strings/TranslatableString.h"
 
 #include "au3-command-parameters/ShuttleAutomation.h"

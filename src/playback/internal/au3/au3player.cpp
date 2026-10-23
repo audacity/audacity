@@ -10,7 +10,7 @@
 #include "au3-time-frequency-selection/SelectedRegion.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-clip-processing/StretchingSequence.h"
 #include "au3-audio-devices/AudioIOBase.h"
 #include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-time-frequency-selection/ViewInfo.h"

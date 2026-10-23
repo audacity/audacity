@@ -12,7 +12,7 @@
 #include "au3-mixer/Envelope.h"
 #include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 #include "au3-wave-track/TimeStretching.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
