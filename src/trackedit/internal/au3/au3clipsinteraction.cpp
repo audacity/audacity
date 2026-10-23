@@ -431,8 +431,12 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
 
     changeClipsStartTime(clipKeyList, timePositionOffset, false);
 
+    muse::Ret moveRet = muse::make_ok();
     const bool needsDownmixing = trackPositionOffset != 0
-                                 && moveSelectedClipsUpOrDown(newClipKeyList, trackPositionOffset) == NeedsDownmixing::Yes;
+                                 && moveSelectedClipsUpOrDown(newClipKeyList, trackPositionOffset, moveRet) == NeedsDownmixing::Yes;
+    if (!moveRet) {
+        return muse::RetVal<ClipKeyList>::make_ret(moveRet);
+    }
 
     const muse::Ret makeRoomRet = makeRoomForClips(newClipKeyList);
     if (!makeRoomRet) {
@@ -891,7 +895,7 @@ ClipKeyList Au3ClipsInteraction::clipsInGroup(int64_t id) const
     return clips;
 }
 
-NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset)
+NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset, muse::Ret& ret)
 {
     // We create a temporary copy, from which we remove the moving clips.
     // This will help us decide whether the track can be toggled stereo or if it's the clips that should be converted.
@@ -916,6 +920,25 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
 
     const NeedsDownmixing needsDownmixing = utils::moveClipsVertically(offset, orig,
                                                                        *copy, clipKeyList);
+
+    // A moved clip keeps the rate of its source track: convert it before the original is changed
+    std::vector<std::pair<std::shared_ptr<Au3WaveClip>, int> > clipsToResample;
+    for (Au3Track* track : *copy) {
+        Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track);
+        if (!waveTrack) {
+            continue;
+        }
+        for (const ClipKey& clipKey : clipKeyList) {
+            const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
+            if (clip && clip->GetRate() != waveTrack->GetRate()) {
+                clipsToResample.emplace_back(clip, static_cast<int>(waveTrack->GetRate()));
+            }
+        }
+    }
+    ret = utils::resampleClips(*interactive(), clipsToResample);
+    if (!ret) {
+        return NeedsDownmixing::No;
+    }
 
     // Now we can update the original with the modified copy.
     auto& mutOrig = const_cast<au3::Au3TrackList&>(orig);
@@ -949,11 +972,12 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
         // Default case: a clip from this track was either added or removed.
 
         const auto wasToggled = origWaveTrack->NChannels() != newWaveTrack->NChannels();
+        const auto rateChanged = origWaveTrack->GetRate() != newWaveTrack->GetRate();
         const auto trackId = origWaveTrack->GetId();
         const auto clipsBefore = prj->clipList(trackId);
         // Careful, this decreases the `origWaveTrack` ref count.
         mutOrig.ReplaceOne(*origWaveTrack, std::move(*copy));
-        if (wasToggled) {
+        if (wasToggled || rateChanged) {
             prj->trackChanged().send(DomConverter::track(newWaveTrack));
         } else {
             // Minimize the amount of UI refresh needed.
