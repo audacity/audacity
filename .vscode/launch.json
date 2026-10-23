@@ -75,16 +75,22 @@
             // Runs a testflow script without UI, like on CI: offscreen Qt platform
             // and a fresh isolated profile (reset by the preLaunchTask).
             // Exits with its result (0 = passed, 1 = failed, 2 = script not found).
-            // For a plain run use the "testflow: run all test cases" task
+            // Only single scripts: to run a .testflow series use the "testflow: run test case" task.
+            // The script picker requires the Command Variable extension
             "name": "Debug testflow test case headless (lldb - Linux)",
             "type": "lldb",
             "request": "launch",
             "preLaunchTask": "testflow: reset headless profile",
+            // Read by the file picker of the Command Variable extension: as a ${command:} variable, it gets
+            // this whole object as arguments. Unlike an ${input:} of type command, escaping it cancels the run.
+            // Top-level scripts only: steps/ holds helpers, sub-directories hold series
+            "include": "share/testflowscripts/*.js",
+            "description": "Testflow script to debug",
             "cwd": "${workspaceFolder}",
             "program": "${command:cmake.launchTargetPath}",
             "args": [
                 "--test-case",
-                "${input:testflowScript}",
+                "${command:extension.commandvariable.file.pickFile}",
                 "--test-case-speed",
                 "Fast" // Default | Fast | Normal | Slow
             ],
@@ -126,24 +132,6 @@
                     "value": "${env:LD_LIBRARY_PATH}:${command:cmake.launchTargetDirectory}/lib"
                 }
             ]
-        }
-    ],
-    "inputs": [
-        {
-            "id": "testflowScript",
-            "type": "pickString",
-            "description": "Testflow script to run (from share/testflowscripts)",
-            "options": [
-                "TC1.1_BasicTest.js",
-                "TC1.2_BasicTest.js",
-                "TC1.2_ClipEditingMode.js",
-                "TC1.2_EnterClipEditingMode.js",
-                "TC1.3_Workspaces.js",
-                "TC1.5_Effects_Shortcut.js",
-                "TC1.6_Effects_Shortcut_Disabled.js",
-                "TC2.1_CutDeleteActions.js"
-            ],
-            "default": "TC1.1_BasicTest.js"
         }
     ]
 }
