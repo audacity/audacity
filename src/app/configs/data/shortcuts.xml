@@ -102,7 +102,6 @@
     </SC>
     <SC>
         <key>action://redo</key>
-        <seq>Ctrl+Y</seq>
         <seq>Ctrl+Shift+Z</seq>
     </SC>
     <SC>
@@ -318,7 +317,6 @@
     </SC>
     <SC>
         <key>cut-leave-gap</key>
-        <seq>Ctrl+Alt+X</seq>
     </SC>
     <SC>
         <key>cut-per-clip-ripple</key>
@@ -339,7 +337,7 @@
         <seq>Ctrl+L</seq>
     </SC>
     <SC>
-        <key>trim-audio-outside-selection</key>
+        <key>trim</key>
         <seq>Ctrl+T</seq>
     </SC>
     <SC>
@@ -347,7 +345,7 @@
         <seq>Ctrl+I</seq>
     </SC>
     <SC>
-        <key>split-into-new-track</key>
+        <key>split-new</key>
         <seq>Ctrl+Alt+I</seq>
     </SC>
     <SC>
@@ -363,20 +361,17 @@
         <seq>S</seq>
     </SC>
     <SC>
-        <key>preference-dialog</key>
-        <seq>Ctrl+P</seq>
+        <key>preferences</key>
         <seq>Ctrl+,</seq>
     </SC>
     <SC>
         <key>delete-leave-gap</key>
-        <seq>Ctrl+Alt+K</seq>
     </SC>
     <SC>
         <key>delete-per-clip-ripple</key>
     </SC>
     <SC>
         <key>delete-per-track-ripple</key>
-        <seq>Ctrl+K</seq>
         <seq>Shift+Del</seq>
         <seq>Shift+Backspace</seq>
     </SC>
@@ -556,7 +551,7 @@
         <seq>Ctrl+A</seq>
     </SC>
     <SC>
-        <key>clear-selection</key>
+        <key>select-none</key>
         <seq>Ctrl+Shift+A</seq>
     </SC>
     <SC>
@@ -930,20 +925,18 @@
     </SC>
     <SC>
         <key>zoom-in</key>
-        <seq>Ctrl+1</seq>
         <seq>Ctrl+=</seq>
     </SC>
     <SC>
-        <key>zoom-default</key>
+        <key>zoom-normal</key>
         <seq>Ctrl+2</seq>
     </SC>
     <SC>
         <key>zoom-out</key>
-        <seq>Ctrl+3</seq>
         <seq>Ctrl+-</seq>
     </SC>
     <SC>
-        <key>zoom-to-selection</key>
+        <key>zoom-sel</key>
         <seq>Ctrl+E</seq>
     </SC>
     <SC>
