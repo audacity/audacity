@@ -7,15 +7,14 @@
 #include <memory>
 
 #include "global/internal/baseapplication.h"
-#include "diagnostics/icrashhandler.h"
+#include "diagnostics/idiagnosticsconfiguration.h"
 
 #include "cmdoptions.h"
 
 namespace au::app {
 class PluginRegistrationApp : public muse::BaseApplication
 {
-    //! Note: by default only resolves on CI
-    muse::GlobalInject<muse::diagnostics::ICrashHandler> crashHandler;
+    muse::GlobalInject<muse::diagnostics::IDiagnosticsConfiguration> diagnosticsConfiguration;
 
 public:
     PluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options);

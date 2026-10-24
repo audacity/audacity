@@ -23,6 +23,10 @@ Item {
 
         isCollapsed: root.isCollapsed
         channelHeightRatio: root.channelHeightRatio
+
+        onContextMenuOpenRequested: {
+            customizePopup.toggleOpened()
+        }
     }
     MouseArea {
         anchors.fill: parent

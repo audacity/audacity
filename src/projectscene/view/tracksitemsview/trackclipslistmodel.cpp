@@ -26,6 +26,14 @@ TrackClipsListModel::TrackClipsListModel(QObject* parent)
 
 void TrackClipsListModel::onInit()
 {
+    if (moveController()) {
+        connect(moveController(), &TrackItemsMoveController::activeChanged, this, [this] {
+            if (!moveController()->active()) {
+                m_pendingToggleDeselect = {};
+            }
+        });
+    }
+
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList& keyList) {
         if (keyList.empty()) {
             resetSelectedClips();
@@ -52,8 +60,8 @@ void TrackClipsListModel::onInit()
         emit asymmetricStereoHeightsPossibleChanged();
     });
 
-    dispatcher()->reg(this, "rename-item", [this]() {
-        requestItemTitleChange();
+    tracksViewRequestsService()->clipTitleEditRequested().onReceive(this, [this](const trackedit::ClipKey&) {
+        updatePendingTitleEdit();
     });
 
     uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
@@ -168,7 +176,9 @@ void TrackClipsListModel::update()
     }
 
     QList<TrackClipItem*> newList;
-    bool isStereo = false;
+    const auto prj = globalContext()->currentTrackeditProject();
+    const auto track = prj ? prj->track(m_trackId) : std::nullopt;
+    const bool isStereo = track && track->type == TrackType::Stereo;
 
     // Building a new list, reusing exiting clips
     for (const au::trackedit::Clip& c : m_allClipList) {
@@ -184,7 +194,6 @@ void TrackClipsListModel::update()
 
         item->setClip(c);
         newList.append(item);
-        isStereo |= c.stereo;
     }
 
     // Removing deleted or moved clips
@@ -234,9 +243,32 @@ void TrackClipsListModel::update()
         emit isStereoChanged();
     }
 
-    muse::async::Async::call(this, [cleanupList]() {
-        qDeleteAll(cleanupList);
-    });
+    updatePendingTitleEdit();
+
+    for (TrackClipItem* item : cleanupList) {
+        item->deleteLater();
+    }
+}
+
+void TrackClipsListModel::updatePendingTitleEdit()
+{
+    const std::optional<trackedit::ClipKey> pending = tracksViewRequestsService()->pendingClipTitleEdit();
+    if (!pending.has_value() || pending->trackId != m_trackId) {
+        return;
+    }
+
+    if (TrackClipItem* item = clipItemByKey(*pending)) {
+        item->setTitleEditRequested(true);
+    }
+}
+
+void TrackClipsListModel::titleEditRequestHandled(const ClipKey& key)
+{
+    if (TrackClipItem* item = clipItemByKey(key.key)) {
+        item->setTitleEditRequested(false);
+    }
+
+    tracksViewRequestsService()->clipTitleEditRequestHandled(key.key);
 }
 
 void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
@@ -251,6 +283,11 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     trackedit::Clip clip = prj->clip(item->key().key);
     if (!clip.isValid()) {
         return;
+    }
+
+    if (item->isDragGhost()) {
+        clip.startTime += moveTimeOffset();
+        clip.endTime += moveTimeOffset();
     }
 
     // Pin the recording clip's visual boundary to the smooth playhead: data is
@@ -286,6 +323,13 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
     item->setLeftVisibleMargin(std::max(m_context->frameStartTime() - time.itemStartTime, 0.0) * m_context->zoom());
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
+}
+
+ViewTrackItem* TrackClipsListModel::createDragGhost(const trackedit::TrackItemKey& key)
+{
+    TrackClipItem* item = new TrackClipItem(this);
+    item->setClip(globalContext()->currentTrackeditProject()->clip(key));
+    return item;
 }
 
 bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
@@ -365,99 +409,6 @@ bool TrackClipsListModel::asymmetricStereoHeightsPossible() const
 bool TrackClipsListModel::isContrastFocusBorderEnabled() const
 {
     return !uiConfiguration()->isDarkMode();
-}
-
-au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) const
-{
-    ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
-    if (!trackeditPrj) {
-        return clipKey;
-    }
-
-    auto allTracks = trackeditPrj->trackIdList();
-
-    for (const auto& trackId : allTracks) {
-        auto clips = trackeditPrj->clipList(trackId);
-
-        for (const auto& clip : clips) {
-            if (clip.key.itemId == clipKey.key.itemId) {
-                ClipKey updatedKey;
-                updatedKey.key.trackId = trackId;
-                updatedKey.key.itemId = clip.key.itemId;
-                return updatedKey;
-            }
-        }
-    }
-
-    return clipKey;
-}
-
-/*!
- * \brief Moves all selected clips
- * \param key - the key from which the offset will be calculated to move all clips
-
-    Calculate offset of clip that's being grabbed
-    and apply it to all selected clips
- */
-bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
-{
-    TrackClipItem* item = clipItemByKey(key.key);
-    if (!item) {
-        return false;
-    }
-
-    m_pendingToggleDeselect.clear();
-
-    auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        return false;
-    }
-
-    auto vs = project->viewState();
-    IF_ASSERT_FAILED(vs) {
-        return false;
-    }
-
-    bool clipsMovedToOtherTrack = false;
-    // Clips can only be moved to audio tracks (Mono and Stereo)
-    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, {
-        trackedit::TrackType::Mono,
-        trackedit::TrackType::Stereo
-    }, completed);
-
-    if (vs->moveInitiated()) {
-        if (!selectionController()->timeSelectionIsEmpty()) {
-            trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
-        } else {
-            ClipKeyList selectedClips = selectionController()->selectedClipsInTrackOrder();
-            muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(selectedClips, moveOffset.timeOffset,
-                                                                                 moveOffset.trackOffset,
-                                                                                 completed, clipsMovedToOtherTrack);
-            if (result.ret) {
-                selectionController()->setSelectedClips(result.val, completed);
-            }
-        }
-    }
-
-    // Update key if clip moved to another track
-    ClipKey updatedKey = key;
-    if (clipsMovedToOtherTrack && !completed) {
-        updatedKey = updateClipTrack(key);
-
-        // Reconnect with updated key
-        if (m_autoScrollConnection) {
-            disconnectAutoScroll();
-        }
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, updatedKey](){
-            moveSelectedClips(updatedKey, false);
-        });
-    } else if ((completed && m_autoScrollConnection)) {
-        disconnectAutoScroll();
-    } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });
-    }
-
-    return clipsMovedToOtherTrack;
 }
 
 ClipKeyList TrackClipsListModel::clipsForInteraction(const ClipKey& key) const
@@ -768,45 +719,32 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const ClipKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
-        if (!rangeKeys.empty()) {
-            selectionController()->resetSelectedLabels();
-            selectionController()->setSelectedClips(rangeKeys, complete);
+        const ItemKeys box = m_context
+                             ? selectionController()->itemsTouchingBoxFromAnchor(
+            m_context->mousePositionTime(), m_trackId)
+                             : ItemKeys();
+        if (!box.empty()) {
+            selectionController()->setSelectedItems(box, complete);
             return;
         }
 
         selectionController()->resetSelectedLabels();
         selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
         setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         return;
     }
 
-    const auto clipGroupId = trackeditInteraction()->clipGroupId(key.key);
-    if (clipGroupId != -1) {
-        //! NOTE: clip belongs to a group, select the whole group
-        if (mode == SelectionMode::Toggle) {
-            const auto groupedClips = trackeditInteraction()->clipsInGroup(clipGroupId);
-            const auto selectedClips = selectionController()->selectedClips();
-            const bool allGroupClipsSelected = std::all_of(groupedClips.cbegin(), groupedClips.cend(), [&](const auto& groupClipKey) {
-                return muse::contains(selectedClips, groupClipKey);
-            });
-
-            if (allGroupClipsSelected) {
-                m_pendingToggleDeselect = groupedClips;
-            } else {
-                for (const auto& groupClipKey : groupedClips) {
-                    selectionController()->addSelectedClip(groupClipKey);
-                }
-            }
-        } else {
-            selectionController()->resetSelectedLabels();
-            selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);
-            trackNavigationController()->setFocusedTrack(key.key.trackId);
+    if (selectItemGroup(key.key, mode, complete)) {
+        if (mode != SelectionMode::Toggle) {
+            trackNavigationController()->setFocus(TrackFocus::track(key.key.trackId));
         }
     } else {
         if (mode == SelectionMode::Toggle) {
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
-                m_pendingToggleDeselect = { key.key };
+                m_pendingToggleDeselect.clips = { key.key };
             } else {
                 selectionController()->addSelectedClip(key.key);
             }
@@ -819,23 +757,21 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     }
 
     setFocusedItem(key);
+    if (m_context) {
+        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+    }
 }
 
 void TrackClipsListModel::handleClipRelease(const ClipKey& key)
 {
-    if (!m_pendingToggleDeselect.empty() && muse::contains(m_pendingToggleDeselect, key.key)) {
-        for (const auto& clipKey : m_pendingToggleDeselect) {
-            selectionController()->removeClipSelection(clipKey);
-        }
-        m_pendingToggleDeselect.clear();
-    }
+    handleItemRelease(key.key);
 }
 
 void TrackClipsListModel::endEditItem(const TrackItemKey& key)
 {
     TrackItemsListModel::endEditItem(key);
 
-    m_pendingToggleDeselect.clear();
+    m_pendingToggleDeselect = {};
 }
 
 void TrackClipsListModel::resetSelectedClips()
@@ -848,11 +784,11 @@ TrackItemKeyList TrackClipsListModel::getSelectedItemKeys() const
 {
     TrackItemKeyList result = selectionController()->selectedClips();
 
-    trackedit::TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+    const std::optional<trackedit::TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (focusedItemKey && !muse::contains(result, *focusedItemKey)) {
         const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        if (prj && prj->track(focusedItemKey.trackId)->type != TrackType::Label) {
-            result.insert(result.cbegin(), focusedItemKey);
+        if (prj && prj->track(focusedItemKey->trackId)->type != TrackType::Label) {
+            result.insert(result.cbegin(), *focusedItemKey);
         }
     }
 

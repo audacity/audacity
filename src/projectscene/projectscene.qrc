@@ -41,6 +41,7 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlaybackSeekLine.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayCursorHead.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/common/TracksListView.qml</file>
         <file>qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/CustomiseView.qml</file>

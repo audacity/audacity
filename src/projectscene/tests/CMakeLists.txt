@@ -11,15 +11,20 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/snaptimeformatter_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tracklabelslayoutmanager_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/trackitemsselection_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/trackitemsmovecontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/findguideline_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playcursorcontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playpositionactioncontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/marqueeselection_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/selectionbelowtracks_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/doubleclickselection_tests.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/snaptestaccess.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/globalcontextmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/audacity4projectmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/projectsceneconfigurationmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/audiooutputmock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/projectviewstatemock.h
 )
 
 set(MODULE_TEST_LINK

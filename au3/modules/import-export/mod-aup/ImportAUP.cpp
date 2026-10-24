@@ -1444,7 +1444,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath& blockFilename,
 
 bool AUPImportFileHandle::SetError(const ::TranslatableString& msg)
 {
-    wxLogError(msg.Debug());
+    wxLogError("%s", au3::qtToWx(msg.debugStr()));
 
     if (mErrorMsg.empty() || !mHasParseError) {
         mErrorMsg = msg;
@@ -1456,7 +1456,7 @@ bool AUPImportFileHandle::SetError(const ::TranslatableString& msg)
 
 bool AUPImportFileHandle::SetWarning(const ::TranslatableString& msg)
 {
-    wxLogWarning(msg.Debug());
+    wxLogWarning("%s", au3::qtToWx(msg.debugStr()));
 
     if (mErrorMsg.empty()) {
         mErrorMsg = msg;

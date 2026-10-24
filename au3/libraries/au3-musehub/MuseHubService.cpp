@@ -12,6 +12,12 @@
 
 #include <optional>
 
+#include <QUrl>
+#include <QUrlQuery>
+#include <QCoreApplication>
+
+#include "MuseHubUrlHandler.h"
+
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
 
@@ -22,6 +28,16 @@
 #include "au3-network-manager/IResponse.h"
 
 namespace audacity::musehub {
+namespace {
+void InitializeUrlHandler()
+{
+    new MuseHubUrlHandler(QCoreApplication::instance());
+}
+
+// Set the url handler on startup
+Q_COREAPP_STARTUP_FUNCTION(InitializeUrlHandler)
+}
+
 static const std::string becomeAPartnerUrl = "https://developer.musehub.com/muse-partners-help/introduction/becoming-a-muse-partner";
 static const std::string musehubAPIEndpointUrl = "https://customers-api.musehub.com/graphql/v3";
 static const std::string musehubAPIDevEndpointUrl = "https://customers-api-dev.musehub.com/graphql/v3";
@@ -75,6 +91,7 @@ static std::optional<EffectInfo> parseEffect(const rapidjson::Value& effectObj)
 {
     if (!effectObj.HasMember("product")
         || !effectObj.HasMember("iconImageUrl")
+        || !effectObj["product"].HasMember("id")
         || !effectObj["product"].HasMember("code")
         || !effectObj["product"].HasMember("title")
         || !effectObj["product"].HasMember("subtitle")) {
@@ -87,6 +104,7 @@ static std::optional<EffectInfo> parseEffect(const rapidjson::Value& effectObj)
         effectObj["product"]["code"].GetString(),
         effectObj["product"]["title"].GetString(),
         effectObj["product"]["subtitle"].GetString(),
+        effectObj["product"]["id"].GetString(),
     };
 }
 
@@ -197,5 +215,23 @@ std::string GetEffectUrl(const std::string& effectCode)
            + "?" + musehubEffectUtmSource
            + "&" + musehubEffectUtmMediumPrefix + effectCode
            + "&" + musehubEffectUtmCampaignPrefix + effectCode;
+}
+
+std::string GetProductUrl(const std::string& webUrl, const std::string& productId)
+{
+    if (productId.empty() || !IsMuseHubRegistered()) {
+        return webUrl;
+    }
+
+    QUrl url("musehub://product/store");
+    QUrlQuery query;
+    query.addQueryItem("id", QString::fromStdString(productId));
+    query.addQueryItem("type", "plugin");
+    const auto webQueryItems = QUrlQuery(QUrl(QString::fromStdString(webUrl))).queryItems();
+    for (const auto& item : webQueryItems) {
+        query.addQueryItem(item.first, item.second);
+    }
+    url.setQuery(query);
+    return url.toString(QUrl::FullyEncoded).toStdString();
 }
 }

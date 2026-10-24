@@ -32,8 +32,7 @@ public:
     MOCK_METHOD(ITrackDataPtr, copyClip, (const ClipKey&), (override));
     MOCK_METHOD(std::optional<TimeSpan>, removeClip, (const ClipKey&), (override));
     MOCK_METHOD(bool, removeClips, (const ClipKeyList&, bool), (override));
-    MOCK_METHOD(muse::RetVal<ClipKeyList>, moveClips, (const ClipKeyList&, secs_t, int, bool, bool&), (override));
-    MOCK_METHOD(void, cancelClipDragEdit, (), (override));
+    MOCK_METHOD(muse::RetVal<ClipKeyList>, moveClips, (const ClipKeyList&, secs_t, int), (override));
 
     MOCK_METHOD(bool, splitClipsAtSilences, (const ClipKeyList&), (override));
     MOCK_METHOD(bool, splitClipsIntoNewTracks, (const ClipKeyList&), (override));
@@ -58,8 +57,6 @@ public:
 
     MOCK_METHOD(int64_t, clipGroupId, (const trackedit::ClipKey&), (const, override));
     MOCK_METHOD(void, setClipGroupId, (const trackedit::ClipKey&, int64_t), (override));
-    MOCK_METHOD(void, groupClips, (const trackedit::ClipKeyList&), (override));
-    MOCK_METHOD(void, ungroupClips, (const trackedit::ClipKeyList&), (override));
     MOCK_METHOD(ClipKeyList, clipsInGroup, (int64_t), (const, override));
 
     MOCK_METHOD(muse::Progress, progress, (), (const, override));

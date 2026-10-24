@@ -8,8 +8,8 @@
 using namespace au::project;
 
 namespace {
-constexpr const char* OPEN_AUDIO_FILE_ACTION = "audacity://cloud/open-audio-file";
-constexpr const char* OPEN_AUDIO_PAGE_ACTION = "audacity://cloud/open-audio-page";
+constexpr const char* OPEN_AUDIO_FILE_ACTION = "action://cloud/open-audio-file";
+constexpr const char* OPEN_AUDIO_PAGE_ACTION = "action://cloud/open-audio-page";
 }
 
 CloudAudioFileContextMenuModel::CloudAudioFileContextMenuModel(QString audioId, QString slug, QObject* parent)
@@ -36,7 +36,7 @@ void CloudAudioFileContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(OPEN_AUDIO_PAGE_ACTION);
         query.addParam("slug", muse::Val(m_slug));
-        dispatch(query);
+        dispatchAction(query);
         return;
     }
 
@@ -47,7 +47,7 @@ void CloudAudioFileContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(OPEN_AUDIO_FILE_ACTION);
         query.addParam("audioId", muse::Val(m_audioId));
-        dispatch(query);
+        dispatchAction(query);
         return;
     }
 

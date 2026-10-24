@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "effects/builtin/view/builtineffectmodel.h"
+#include "effects/builtin/qml/Audacity/BuiltinEffects/builtineffectmodel.h"
 
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"

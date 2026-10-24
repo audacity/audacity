@@ -8,9 +8,9 @@
 #include "global/iapplication.h"
 #include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
-#include "actions/actionable.h"
 #include "actions/iactionsdispatcher.h"
 
+#include "projectscene/iprojectsceneactionscontroller.h"
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "playback/iplayback.h"
 #include "playback/iplaybackcontroller.h"
@@ -29,7 +29,9 @@ namespace au::projectscene {
 using Direction = DirectionType::Direction;
 
 class SnapTimeFormatter;
-class TimelineContext : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Contextable
+class TimelineViewController;
+class PlayPositionActionController;
+class TimelineContext : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
@@ -70,6 +72,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
@@ -82,6 +85,7 @@ public:
     static constexpr double INVALID_GUIDELINE_TIME = -1.0;
 
     TimelineContext(QObject* parent = nullptr);
+    ~TimelineContext() override;
 
     double invalidGuidelineTime() const { return INVALID_GUIDELINE_TIME; }
 
@@ -126,7 +130,14 @@ public:
     Q_INVOKABLE void scrollHorizontal(qreal newPos);
     Q_INVOKABLE void scrollVertical(qreal newPos);
 
-    void centerViewOnPlayhead(const muse::actions::ActionData& args);
+    void zoomIn();
+    void zoomOut();
+    void zoomDefault();
+    void fitSelectionToWidth();
+    void fitProjectToWidth();
+    void zoomToggle();
+    void centerViewOnPlayhead(bool onlyIfPlayheadNotVisible);
+
     void centerOnTime(double secs);
     Q_INVOKABLE void insureVisible(double posSec);
     Q_INVOKABLE void animatedInsureVisible(double posSec);
@@ -212,17 +223,10 @@ private:
 
     void onProjectChanged();
 
-    void zoomIn();
-    void zoomOut();
-    void zoomDefault();
-
     qreal frameCenterPosition() const;
     qreal selectionCenterPosition() const;
     qreal findZoomFocusPosition() const;
 
-    void fitSelectionToWidth();
-    void fitProjectToWidth();
-    void zoomToggle();
     double getZoomOfPreset(ZoomPresets::Preset preset) const;
     double clampedZoom(double zoom) const;
     std::pair<double, double> selectionRange() const;
@@ -281,6 +285,8 @@ private:
     bool m_singleItemSelected = false;
 
     std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
+    std::unique_ptr<TimelineViewController> m_viewController;
+    std::unique_ptr<PlayPositionActionController> m_playPositionController;
 
     qreal m_previousVerticalScrollPosition = 0.0;
     qreal m_previousHorizontalScrollPosition = 0.0;

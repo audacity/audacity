@@ -70,6 +70,7 @@ using ProgressReporter = std::function<void (double)>;
 
 class Envelope;
 class WaveTrack;
+namespace WaveTrackUtilities { struct EmptyCopyAccess; }
 
 struct WaveTrackMessage {
     WaveClipHolder pClip{};
@@ -290,6 +291,28 @@ private:
     Track::Holder Clone(bool backup) const override;
 
     friend class WaveTrackFactory;
+    friend struct WaveTrackUtilities::EmptyCopyAccess;
+
+    //! Make another track copying format, rate, etc. but containing no
+    //! clips; with the specified number of channels.
+    /*!
+     It is important to pass the correct factory (that for the project
+     which will own the copy) in the unusual case that a track is copied from
+     another project or the clipboard.  For copies within one project, the
+     default will do.
+     */
+    Holder EmptyCopy(size_t nChannels, const SampleBlockFactoryPtr& pFactory = {}) const;
+
+    //! Make another channel group copying format, rate, etc. but
+    //! containing no clips; with as many channels as in `this`
+    /*!
+     It is important to pass the correct factory (that for the project
+     which will own the copy) in the unusual case that a track is copied from
+     another project or the clipboard.  For copies within one project, the
+     default will do.
+     */
+    Holder EmptyCopy(const SampleBlockFactoryPtr& pFactory = {})
+    const;
 
     wxString MakeClipCopyName(const wxString& originalName) const;
     wxString MakeNewClipName() const;
@@ -345,27 +368,6 @@ public:
     //
 
     Track::Holder Cut(double t0, double t1, bool moveClips) override;
-
-    //! Make another track copying format, rate, etc. but containing no
-    //! clips; with the specified number of channels.
-    /*!
-     It is important to pass the correct factory (that for the project
-     which will own the copy) in the unusual case that a track is copied from
-     another project or the clipboard.  For copies within one project, the
-     default will do.
-     */
-    Holder EmptyCopy(size_t nChannels, const SampleBlockFactoryPtr& pFactory = {}) const;
-
-    //! Make another channel group copying format, rate, etc. but
-    //! containing no clips; with as many channels as in `this`
-    /*!
-     It is important to pass the correct factory (that for the project
-     which will own the copy) in the unusual case that a track is copied from
-     another project or the clipboard.  For copies within one project, the
-     default will do.
-     */
-    Holder EmptyCopy(const SampleBlockFactoryPtr& pFactory = {})
-    const;
 
     Track::Holder TrackEmptyCopy() const override;
 
@@ -427,11 +429,6 @@ public:
     void Split(double t0, double t1);
 
     std::pair<IntervalHolder, IntervalHolder> SplitAt(double t);
-
-    /*!
-     May assume precondition: t0 <= t1
-     */
-    void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
     /*!
      @post result: `result->NChannels() == NChannels()`
@@ -587,15 +584,15 @@ public:
      @param offset desired sequence (not play) start time
      */
     IntervalHolder
-    CreateClip(double offset = .0, const wxString& name = wxEmptyString, const Interval* pToCopy = nullptr, bool copyCutlines = true);
+    CreateClip(double offset = .0, const wxString& name = wxEmptyString, const Interval* pToCopy = nullptr, bool copyGroupId = true);
 
     //! Create new clip and add it to this track.
     /*!
      Returns a pointer to the newly created clip, using this track's block
      factory but copying all else from the given clip, except possibly the
-     cutlines.
+     group ID.
      */
-    IntervalHolder CopyClip(const Interval& toCopy, bool copyCutlines);
+    IntervalHolder CopyClip(const Interval& toCopy, bool copyGroupId);
 
     /*!
     @pre t0 <= t1
@@ -764,7 +761,7 @@ public:
 
 private:
     // May assume precondition: t0 <= t1
-    void HandleClear(double t0, double t1, bool addCutLines, bool split, const bool moveClips, bool clearByTrimming = false);
+    void HandleClear(double t0, double t1, bool split, const bool moveClips, bool clearByTrimming = false);
 
     /*
      * @brief Copy/Paste operations must preserve beat durations, but time
@@ -780,7 +777,6 @@ private:
     //! @pre All clips intersecting [t0, t1) have unit stretch ratio
     static void JoinOne(WaveTrack& track, double t0, double t1);
     static void WriteOneXML(const WaveChannel& channel, XMLWriter& xmlFile, size_t iChannel, size_t nChannels);
-    void ExpandOneCutLine(double cutLinePosition, double* cutlineStart, double* cutlineEnd);
     void ApplyPitchAndSpeedOnIntervals(
         const std::vector<IntervalHolder>& intervals, const ProgressReporter& reportProgress);
     /*!

@@ -241,6 +241,11 @@ bool NavigableAppMenuModel::processEventForOpenedMenu(QEvent* event)
         return false;
     }
 
+    if (!m_openedMenuSymbolMatcher.isCallable()
+        || !m_openedMenuSymbolMatcher.call({ keyEvent->text() }).toBool()) {
+        return false;
+    }
+
     // The visible menu knows which nested submenu owns keyboard focus.
     // Reserve the key first, then activate it once on KeyPress.
     if (event->type() == QEvent::KeyPress) {

@@ -110,7 +110,7 @@ public:
 
     void MarkTemporary();
 
-    bool AutoSave(bool recording = false);
+    bool AutoSave();
     bool AutoSaveDelete(sqlite3* db = nullptr);
 
     bool OpenProject();
@@ -235,7 +235,7 @@ private:
     void OnCheckpointFailure();
 
     void WriteXMLHeader(XMLWriter& xmlFile) const;
-    void WriteXML(XMLWriter& xmlFile, bool recording = false, const TrackList* tracks = nullptr) /* not override */;
+    void WriteXML(XMLWriter& xmlFile, const TrackList* tracks = nullptr) /* not override */;
 
     // XMLTagHandler callback methods
     bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;

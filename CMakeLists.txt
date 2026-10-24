@@ -32,6 +32,8 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     )
 
+option(MUSE_MODULE_DOCKWINDOW_KDDOCKWIDGETS_V2 "Use KDDockWidgets v2" ON)
+
 include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 include(DeclareModuleSetup)
 
@@ -72,6 +74,7 @@ option(AU_BUILD_CONTEXT_TESTS "Build context tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_EFFECTS_MODULE "Build effects module" ON)
 option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_IMPORT_TESTS "Build import tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_EXPORT_TESTS "Build export tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
 option(AU_BUILD_PLAYBACK_TESTS "Build playback tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_PREFERENCES_TESTS "Build preferences tests" ${MUSE_ENABLE_UNIT_TESTS})

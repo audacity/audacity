@@ -3,9 +3,8 @@
  */
 #pragma once
 
+#include "iprojectsceneactionscontroller.h"
 #include "iprojectsceneconfiguration.h"
-#include "actions/iactionsdispatcher.h"
-#include "actions/actionable.h"
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
 #include "ui/inavigationcontroller.h"
@@ -13,7 +12,7 @@
 #include <map>
 
 namespace au::projectscene {
-class RealtimeEffectSectionModel : public QObject, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
+class RealtimeEffectSectionModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
@@ -23,7 +22,7 @@ class RealtimeEffectSectionModel : public QObject, public muse::actions::Actiona
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
 
 public:
@@ -43,8 +42,6 @@ signals:
     void navigationFocusInsideEffectsPanelChanged();
 
 private:
-    void toggleEffectsPanel();
-
     void savePreviouslyFocusedControl();
     void restorePreviouslyFocusedControl();
 

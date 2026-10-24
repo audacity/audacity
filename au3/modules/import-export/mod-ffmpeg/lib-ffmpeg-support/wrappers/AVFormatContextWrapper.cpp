@@ -63,7 +63,7 @@ AVIOContextWrapper::OpenResult AVFormatContextWrapper::OpenInputContext(
        May be NULL."
      */
     int rc = (mFFmpeg.avformat_open_input(
-                  &mAVFormatContext, path.c_str(),
+                  &mAVFormatContext, path.ToUTF8().data(),
                   inputFormat != nullptr ? inputFormat->GetWrappedValue() : nullptr,
                   &dict));
 

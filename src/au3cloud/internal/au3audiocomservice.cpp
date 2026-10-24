@@ -44,6 +44,7 @@
 #include "au3cloud/au3clouderrors.h"
 #include "au3cloud/cloudtypes.h"
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "importexport/export/iexporter.h"
 #include "importexport/export/types/exporttypes.h"
 #include "project/iaudacityproject.h"
@@ -188,6 +189,17 @@ UploadPlan resolveUploadPlan(au::project::IAudacityProjectPtr project,
     }
 
     return StartNewSnapshot {};
+}
+
+au::importexport::ExportChannelsPref::ExportChannels exportChannelsType(const au::au3::Au3Project& au3Project)
+{
+    const auto waveTracks = TrackList::Get(au3Project).Any<const WaveTrack>();
+    const bool mono = std::all_of(waveTracks.begin(), waveTracks.end(), [](const WaveTrack* track) {
+        return track->NChannels() == 1 && track->GetPan() == 0;
+    });
+
+    return mono ? au::importexport::ExportChannelsPref::ExportChannels::MONO
+           : au::importexport::ExportChannelsPref::ExportChannels::STEREO;
 }
 
 sync::UploadMode toAu3UploadMode(UploadMode mode)
@@ -646,11 +658,6 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
             return;
         }
 
-        auto waveTracks = TrackList::Get(*au3Project).Any<const WaveTrack>();
-        const bool mono = std::all_of(waveTracks.begin(), waveTracks.end(), [](const WaveTrack* track) {
-            return track->NChannels() == 1 && track->GetPan() == 0;
-        });
-
         muse::ValList paramsList;
         for (const auto& [id, val] : self->exporter()->cloudExportParameters(format)) {
             muse::ValMap entry;
@@ -663,9 +670,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
         options[importexport::IExporter::OptionKey::Format] = muse::Val(format);
         options[importexport::IExporter::OptionKey::ProcessType] = muse::Val(importexport::ExportProcessType::FULL_PROJECT_AUDIO);
         options[importexport::IExporter::OptionKey::ExportChannelsType]
-            = muse::Val(static_cast<int>(mono ? importexport::ExportChannelsPref::ExportChannels::MONO
-                                         : importexport::ExportChannelsPref::ExportChannels::STEREO));
-        options[importexport::IExporter::OptionKey::ExportChannels] = muse::Val(mono ? 1 : 2);
+            = muse::Val(static_cast<int>(exportChannelsType(*au3Project)));
         options[importexport::IExporter::OptionKey::ExportSampleRate]
             = muse::Val(static_cast<int>(ProjectRate::Get(*au3Project).GetRate()));
         options[importexport::IExporter::OptionKey::Parameters] = muse::Val(paramsList);
@@ -809,16 +814,6 @@ std::string Au3AudioComService::getCloudProjectPage(const std::string& projectId
     const auto userSlug = GetUserService().GetUserSlug().ToStdString();
     const auto projectPage = serviceConfig.GetProjectPagePath(userSlug, projectId, AudiocomTrace::OpenFromCloudMenu);
     return oauthService.MakeAudioComAuthorizeURL(userId, projectPage);
-}
-
-std::string Au3AudioComService::getCloudProjectPage(const muse::io::path_t& projectPath) const
-{
-    auto dbProjectData = getProjectDataFromDatabase(projectPath);
-    if (!dbProjectData || dbProjectData->ProjectId.empty()) {
-        return {};
-    }
-
-    return getCloudProjectPage(dbProjectData->ProjectId);
 }
 
 std::string Au3AudioComService::getCloudAudioPage(const std::string& slug) const
@@ -1009,6 +1004,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
             return;
         }
         au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+        if (!au3Project) {
+            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project")));
+            return;
+        }
 
         const std::string format = preferredFormats[0];
 
@@ -1024,8 +1023,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
         options[importexport::IExporter::OptionKey::Format] = muse::Val(format);
         options[importexport::IExporter::OptionKey::ProcessType] = muse::Val(importexport::ExportProcessType::FULL_PROJECT_AUDIO);
         options[importexport::IExporter::OptionKey::ExportChannelsType]
-            = muse::Val(static_cast<int>(importexport::ExportChannelsPref::ExportChannels::STEREO));
-        options[importexport::IExporter::OptionKey::ExportChannels] = muse::Val(2);
+            = muse::Val(static_cast<int>(exportChannelsType(*au3Project)));
         options[importexport::IExporter::OptionKey::ExportSampleRate]
             = muse::Val(static_cast<int>(ProjectRate::Get(*au3Project).GetRate()));
         options[importexport::IExporter::OptionKey::Parameters] = muse::Val(paramsList);
@@ -1058,8 +1056,8 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
 
         const bool isPublic = false;
         op->handle = op->service->Upload(
-            tempPath.toStdString(),
-            title,
+            au::au3::wxFromPath(tempPath),
+            au::au3::wxFromStdString(title),
             isPublic,
             [op, progress, tempPath, filesystem = self->filesystem()](const audacity::cloud::audiocom::UploadOperationCompleted& result) {
             filesystem->remove(tempPath);

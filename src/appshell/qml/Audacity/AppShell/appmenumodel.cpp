@@ -23,11 +23,12 @@
 
 #include <QSet>
 
-#include "shared/types/workspacetitles.h"
+#include "framework/global/containers.h"
+#include "framework/global/types/translatablestring.h"
+#include "framework/extensions/extensionscommands.h"
 
-#include "global/containers.h"
-#include "types/translatablestring.h"
-#include "extensions/extensionscommands.h"
+#include "shared/types/workspacetitles.h"
+#include "record/recordcommands.h"
 
 #include "muse_framework_config.h"
 
@@ -260,7 +261,7 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeMenuItem("file-save"),
         makeMenuItem("file-save-to-cloud"),
         makeMenuItem("file-save-as"),
-        makeMenuItem("audacity://cloud/update-audio-preview"),
+        makeMenuItem("action://cloud/update-audio-preview"),
 
         makeSeparator(),
 
@@ -384,9 +385,10 @@ MenuItem* AppMenuModel::makeViewMenu()
 MenuItem* AppMenuModel::makeRecordMenu()
 {
     MenuItemList recordItems {
-        makeMenuItem("record-on-current-track"),
-        makeMenuItem("record-on-new-track"),
+        makeMenuItem(record::RECORD_ON_CURRENT_TRACK_COMMAND),
+        makeMenuItem(record::RECORD_ON_NEW_TRACK_COMMAND),
         //! makeMenuItem("set-up-timed-recording"),
+        //! NOTE: kept as an action until shortcuts move to commands, otherwise the menu loses its Shift+D shortcut
         makeMenuItem("action://record/lead-in-recording"),
         //! makeMenuItem("toggle-sound-activated-recording"),
         //! makeMenuItem("set-sound-activation-level"),
@@ -636,8 +638,8 @@ MenuItemList AppMenuModel::makeClipItems()
         makeMenuItem("disjoin"),
         makeMenuItem("join"),
         makeSeparator(),
-        makeMenuItem("group-clips"),
-        makeMenuItem("ungroup-clips")
+        makeMenuItem("group-items"),
+        makeMenuItem("ungroup-items")
     };
 
     return items;

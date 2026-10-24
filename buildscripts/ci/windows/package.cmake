@@ -31,16 +31,16 @@ endif()
 
 # Setup package type
 set(PACK_TYPE "7z")
-if (BUILD_MODE STREQUAL "devel_build")
+if (BUILD_MODE STREQUAL "devel")
   set(PACK_TYPE "7z")
-elseif(BUILD_MODE STREQUAL "nightly_build")
+elseif(BUILD_MODE STREQUAL "nightly")
   set(PACK_TYPE "7z")
-elseif(BUILD_MODE STREQUAL "testing_build")
+elseif(BUILD_MODE STREQUAL "testing")
   set(PACK_TYPE "msi")
   if(DEFINED ENV{WIN_MSI_TESTING_AU4_GUID} AND NOT "$ENV{WIN_MSI_TESTING_AU4_GUID}" STREQUAL "")
     set(UPGRADE_UUID "$ENV{WIN_MSI_TESTING_AU4_GUID}" CACHE STRING "WiX Upgrade GUID" FORCE)
   endif()
-elseif(BUILD_MODE STREQUAL "stable_build")
+elseif(BUILD_MODE STREQUAL "stable")
   set(PACK_TYPE "msi")
   if(DEFINED ENV{WIN_MSI_STABLE_AU4_GUID} AND NOT "$ENV{WIN_MSI_STABLE_AU4_GUID}" STREQUAL "")
     set(UPGRADE_UUID "$ENV{WIN_MSI_STABLE_AU4_GUID}" CACHE STRING "WiX Upgrade GUID" FORCE)
@@ -55,20 +55,58 @@ if(NOT DEFINED SIGN_ENABLE AND SIGN_KEY AND SIGN_SECRET)
   set(SIGN_ENABLE ON)
 endif()
 
-set(SIGN_SERVICE_SH "${CMAKE_SOURCE_DIR}/buildscripts/ci/windows/sign_service_aws.sh")
+set(SIGN_SERVICE_PS "${CMAKE_SOURCE_DIR}/buildscripts/ci/windows/PfxSign.ps1")
+
+function(sign_files)
+  message(STATUS "Signing: ${ARGN}")
+  execute_process(
+    COMMAND "${POWERSHELL_EXECUTABLE}" -NoProfile -NonInteractive -ExecutionPolicy Bypass
+            -File "${SIGN_SERVICE_PS}"
+            ${ARGN}
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    RESULT_VARIABLE _sign_rc
+  )
+  if(NOT _sign_rc EQUAL 0)
+    message(FATAL_ERROR "Code signing failed (exit ${_sign_rc})")
+  endif()
+endfunction()
+
+if(SIGN_ENABLE)
+  if(NOT SIGN_KEY OR NOT SIGN_SECRET)
+    message(FATAL_ERROR "Code signing enabled but credentials are missing")
+  endif()
+  if(NOT EXISTS "${SIGN_SERVICE_PS}")
+    message(FATAL_ERROR "Signing script not found: ${SIGN_SERVICE_PS}")
+  endif()
+  find_program(POWERSHELL_EXECUTABLE NAMES pwsh powershell REQUIRED)
+
+  sign_files(-Directory "${INSTALL_DIR}")
+else()
+  message(STATUS "[sign-prepack] disabled or credentials missing; skipping runtime signing")
+endif()
 
 file(MAKE_DIRECTORY "${ARTIFACTS_DIR}")
 
 # PACK 7z
-if(PACK_TYPE STREQUAL "7z")
-  message(STATUS "Start 7z packing...")
-  set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${PACKARCH}")
-
-  file(RENAME ${INSTALL_DIR} ${ARTIFACT_NAME})
-  file(ARCHIVE_CREATE OUTPUT ${ARTIFACTS_DIR}/${ARTIFACT_NAME}.7z PATHS ${ARTIFACT_NAME} FORMAT 7zip)
+message(STATUS "Start 7z packing...")
+set(_archive_name "Audacity-${BUILD_VERSION}-${PACKARCH}")
+set(_archive_stage "${BUILD_DIR}/archive")
+set(_archive_root "${_archive_stage}/${_archive_name}")
+file(REMOVE_RECURSE "${_archive_root}")
+file(MAKE_DIRECTORY "${_archive_root}")
+file(COPY "${INSTALL_DIR}/" DESTINATION "${_archive_root}")
+get_filename_component(_archive_path "${ARTIFACTS_DIR}/${_archive_name}.7z" ABSOLUTE)
+execute_process(
+  COMMAND "${CMAKE_COMMAND}" -E tar cf "${_archive_path}" --format=7zip "${_archive_name}"
+  WORKING_DIRECTORY "${_archive_stage}"
+  RESULT_VARIABLE _archive_rc
+)
+if(NOT _archive_rc EQUAL 0)
+  message(FATAL_ERROR "7z packaging failed (exit ${_archive_rc})")
+endif()
+file(REMOVE_RECURSE "${_archive_root}")
 
 message(STATUS "Finished 7z packing")
-endif()
 
 # PACK MSI
 if(PACK_TYPE STREQUAL "msi")
@@ -99,30 +137,6 @@ if(PACK_TYPE STREQUAL "msi")
     "set(CPACK_INSTALL_CMAKE_PROJECTS \"\")\n"
     "set(CPACK_INSTALLED_DIRECTORIES \"${_install_abs};.\")\n"
   )
-
-  if(SIGN_ENABLE AND SIGN_KEY AND SIGN_SECRET)
-    set(_app_exe "${INSTALL_DIR}/bin/Audacity4.exe")
-
-    if(EXISTS "${_app_exe}")
-      message(STATUS "[sign-prepack] exe: ${_app_exe}")
-      find_program(BASH_EXECUTABLE bash REQUIRED)
-      execute_process(
-        COMMAND "${BASH_EXECUTABLE}" "${SIGN_SERVICE_SH}"
-                --s3_key     "${SIGN_KEY}"
-                --s3_secret  "${SIGN_SECRET}"
-                --file_path  "${_app_exe}"
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        RESULT_VARIABLE _rc_exe
-      )
-      if(NOT _rc_exe EQUAL 0)
-        message(WARNING "[sign-prepack] failed to sign ${_app_exe} (rc=${_rc_exe})")
-      endif()
-    else()
-      message(WARNING "[sign-prepack] exe not found at ${_app_exe}")
-    endif()
-  else()
-    message(STATUS "[sign-prepack] disabled or credentials missing; skipping exe signing")
-  endif()
 
   get_filename_component(_cmake_bin_dir "${CMAKE_COMMAND}" DIRECTORY)
   find_program(_cpack_cmd cpack HINTS "${_cmake_bin_dir}" REQUIRED)
@@ -179,7 +193,7 @@ if(PACK_TYPE STREQUAL "msi")
     message(FATAL_ERROR "No MSI produced in ${BUILD_DIR}")
   endif()
 
-  if(BUILD_MODE STREQUAL "nightly_build")
+  if(BUILD_MODE STREQUAL "nightly")
     if(BUILD_NUMBER AND BUILD_BRANCH AND BUILD_REVISION)
       set(ARTIFACT_NAME "Audacity-Nightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}-${PACKARCH}.msi")
     else()
@@ -196,24 +210,7 @@ if(PACK_TYPE STREQUAL "msi")
   message(STATUS "Copied installer to ${ARTIFACT_PATH}")
 
   if(SIGN_ENABLE)
-    if(NOT EXISTS "${SIGN_SERVICE_SH}")
-      message(FATAL_ERROR "Signing script not found: ${SIGN_SERVICE_SH}")
-    endif()
-
-    find_program(BASH_EXECUTABLE bash)
-
-    message(STATUS "Signing MSI: ${ARTIFACT_PATH}")
-    execute_process(
-      COMMAND "${BASH_EXECUTABLE}" "${SIGN_SERVICE_SH}"
-              --s3_key "${SIGN_KEY}"
-              --s3_secret "${SIGN_SECRET}"
-              --file_path "${ARTIFACT_PATH}"
-      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-      RESULT_VARIABLE _sign_rc
-    )
-    if(NOT _sign_rc EQUAL 0)
-      message(FATAL_ERROR "Code signing failed (exit ${_sign_rc})")
-    endif()
+    sign_files(-File "${ARTIFACT_PATH}")
     message(STATUS "Signing complete: ${ARTIFACT_PATH}")
   endif()
 

@@ -64,7 +64,7 @@ void EffectConfigSettings::Load()
         } else if (type == "double") {
             m_vals.insert({ key, val.toDouble() });
         } else if (type == "string") {
-            m_vals.insert({ key, val.toStdString() });
+            m_vals.insert({ key, au::au3::wxFromStdString(val.toStdString()) });
         }
     }
 }
@@ -137,9 +137,9 @@ std::string EffectConfigSettings::fullKey(const wxString& key) const
 wxString EffectConfigSettings::GetGroup() const
 {
     if (m_currentGroup.empty()) {
-        return GENERAL;
+        return au3::wxFromStdString(GENERAL);
     } else {
-        return m_currentGroup;
+        return au3::wxFromStdString(m_currentGroup);
     }
 }
 
@@ -175,7 +175,7 @@ wxArrayString EffectConfigSettings::GetChildGroups() const
 
         if (seen.find(subgroup) == seen.end()) {
             seen.insert(subgroup);
-            child.push_back(subgroup);
+            child.push_back(au3::wxFromStdString(subgroup));
         }
     }
 
@@ -198,7 +198,7 @@ wxArrayString EffectConfigSettings::GetChildKeys() const
             continue;
         }
 
-        child.push_back(fullSub);
+        child.push_back(au3::wxFromStdString(fullSub));
     }
 
     return child;

@@ -43,7 +43,7 @@ public:
     MOCK_METHOD(bool, removeClip, (const ClipKey&), (override));
     MOCK_METHOD(bool, removeClips, (const ClipKeyList&, bool), (override));
     MOCK_METHOD(bool, removeTracksData, (const TrackIdList&, secs_t, secs_t, bool), (override));
-    MOCK_METHOD(muse::RetVal<ClipKeyList>, moveClips, (const ClipKeyList&, secs_t, int, bool, bool&), (override));
+    MOCK_METHOD(muse::RetVal<ClipKeyList>, moveClips, (const ClipKeyList&, secs_t, int), (override));
     MOCK_METHOD(bool, moveRangeSelection, (secs_t, bool), (override));
     MOCK_METHOD(void, cancelItemDragEdit, (), (override));
     MOCK_METHOD(bool, splitTracksAt, (const TrackIdList&, std::vector<secs_t>), (override));
@@ -92,12 +92,6 @@ public:
 
     MOCK_METHOD(bool, toggleStretchToMatchProjectTempo, (const ClipKey&), (override));
 
-    MOCK_METHOD(int64_t, clipGroupId, (const trackedit::ClipKey&), (const, override));
-    MOCK_METHOD(void, setClipGroupId, (const trackedit::ClipKey&, int64_t), (override));
-    MOCK_METHOD(void, groupClips, (const trackedit::ClipKeyList&), (override));
-    MOCK_METHOD(void, ungroupClips, (const trackedit::ClipKeyList&), (override));
-    MOCK_METHOD(ClipKeyList, clipsInGroup, (int64_t), (const, override));
-
     MOCK_METHOD(bool, changeTracksFormat, (const TrackIdList&, trackedit::TrackFormat), (override));
     MOCK_METHOD(bool, changeTracksRate, (const TrackIdList&, int), (override));
 
@@ -120,8 +114,7 @@ public:
     MOCK_METHOD(bool, cutLabel, (const LabelKey&), (override));
     MOCK_METHOD(bool, copyLabel, (const LabelKey&), (override));
 
-    MOCK_METHOD(bool, moveLabels, (const LabelKeyList&, secs_t, bool), (override));
-    MOCK_METHOD(muse::RetVal<LabelKeyList>, moveLabels, (const LabelKeyList&, secs_t, int, bool), (override));
+    MOCK_METHOD(muse::RetVal<LabelKeyList>, moveLabels, (const LabelKeyList&, secs_t, int), (override));
     MOCK_METHOD(muse::RetVal<LabelKeyList>, moveLabelsToTrack, (const LabelKeyList&, const TrackId&, bool), (override));
 
     MOCK_METHOD(bool, stretchLabelLeft, (const LabelKey&, secs_t, bool), (override));
@@ -131,6 +124,13 @@ public:
     MOCK_METHOD(bool, stretchLabelsRight, (const LabelKeyList&, secs_t, bool), (override));
 
     MOCK_METHOD(void, resetLabelStretchState, (), (override));
+
+    MOCK_METHOD(bool, copyItems, (const ClipKeyList&, const LabelKeyList&), (override));
+    MOCK_METHOD(bool, cutItems, (const ClipKeyList&, const LabelKeyList&, bool), (override));
+    MOCK_METHOD(int64_t, itemGroupId, (const TrackItemKey&), (const, override));
+    MOCK_METHOD(void, groupItems, (const TrackItemKeyList&), (override));
+    MOCK_METHOD(void, ungroupItems, (const TrackItemKeyList&), (override));
+    MOCK_METHOD(ItemKeys, itemsInGroup, (int64_t), (const, override));
 
     MOCK_METHOD(muse::Progress, progress, (), (const, override));
 };

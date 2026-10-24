@@ -141,7 +141,7 @@ Item {
 
             onClicked: {
                 // Toggle is a single atomic operation - begin and end gesture immediately
-                root.gestureStarted(root.parameterId);
+                root.gestureStarted(root.parameterId)
 
                 // Send the opposite of current value (toggle)
                 var isCurrentlyOn = parameterData.isToggleChecked

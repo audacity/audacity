@@ -24,20 +24,20 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         submodules: recursive
 
     - name: "Configure workflow"
       run: |
         cmake -DEVENT=${{ github.event_name }} \
-              -DBUILD_MODE="devel_build" \
+              -DBUILD_MODE="devel" \
               -DARTIFACT_INFO="build.artifacts/" \
               -P ${CI_DIR}/common/ci_configure.cmake
 
     - name: Restore ccache files
       id: restore-ccache
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.ccache
         key: ${{github.workflow}}-${{runner.arch}}-ccache-
@@ -45,7 +45,7 @@ jobs:
     - name: Setup ccache
       run: |
         sudo apt-get update && sudo apt-get install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        bash ./muse/buildscripts/ci/tools/setup_ccache_config.sh
 
     - name: Free up disk space
       run: |
@@ -59,7 +59,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.10.1'
+        version: '6.11.2'
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
@@ -104,14 +104,14 @@ jobs:
         lcov --remove coverage.info '/usr/*' '*/tests/*' '*/thirdparty/*' '*/moc_*' '*framework/Headers/*' '*/hb-*' '*/Qt/*' --output-file filtered_coverage.info
 
         COVERAGE=$(lcov --summary filtered_coverage.info --ignore-errors inconsistent,corrupt,unsupported,empty,negative,mismatch,gcov | grep -oP 'lines\.+:\s+\K[0-9.]+')
-        python3 buildscripts/ci/linux/tools/lcov_badger.py "${COVERAGE}" coverage_badge.svg
+        python3 muse/buildscripts/ci/linux/tools/lcov_badger.py "${COVERAGE}" coverage_badge.svg
 
     - name: Push to S3
       if: ( github.event_name == 'schedule' || inputs.code_coverage ) && github.repository == 'audacity/audacity'
       run: |
         S3_URL='s3://extensions.musescore.org/test/code_coverage/au_coverage_badge.svg'
 
-        bash ./buildscripts/ci/tools/s3_push_file.sh \
+        bash ./muse/buildscripts/ci/tools/s3_push_file.sh \
           --s3_key '${{ secrets.S3_KEY }}' \
           --s3_secret '${{ secrets.S3_SECRET }}' \
           --s3_url "${S3_URL}" \
@@ -126,7 +126,7 @@ jobs:
         echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
     - name: Save ccache files
       if: always()
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache

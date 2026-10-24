@@ -4,6 +4,7 @@
 #include "realtimeeffectlistitemmodel.h"
 
 #include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "framework/global/log.h"
 #include "framework/global/translation.h"
@@ -55,7 +56,7 @@ QString RealtimeEffectListItemModel::effectName() const
         return QString();
     }
 
-    const auto effectId = state->GetID().ToStdString();
+    const auto effectId = au::au3::wxToStdString(state->GetID());
     const auto name = effectsProvider()->effectName(effectId);
     const auto isValid = effectsProvider()->meta(muse::String::fromStdString(effectId)).isValid();
 

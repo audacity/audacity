@@ -23,7 +23,7 @@ void SplitToolController::init(QObject* root)
 {
     m_cursor = CustomCursorProvider::createScaledCursor(":/images/customCursorShapes/Split.png", DEFAULT_CURSOR_SIZE);
 
-    dispatcher()->reg(this, "split-tool", [this]() {
+    projectSceneActionsController()->splitToolToggleRequested().onNotify(this, [this]() {
         setActive(!active());
     });
 

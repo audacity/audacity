@@ -135,10 +135,21 @@ ResponseFactory::ResponseFactory()
 
     if (QNetworkInformation::loadBackendByFeatures(
             QNetworkInformation::Feature::Reachability)) {
+        auto networkInformation = QNetworkInformation::instance();
         QObject::connect(
-            QNetworkInformation::instance(),
+            networkInformation,
             &QNetworkInformation::reachabilityChanged,
-            mNetworkManager, &QNetworkAccessManager::clearConnectionCache);
+            mNetworkManager,
+            [manager = mNetworkManager, previousReachability = networkInformation->reachability()]
+            (QNetworkInformation::Reachability reachability) mutable {
+            const bool hadReachability = previousReachability != QNetworkInformation::Reachability::Unknown;
+            previousReachability = reachability;
+            // Do not clear active connections when the initial status changes from Unknown
+            // Otherwise it might cause the connection drop on the first network request
+            if (hadReachability) {
+                manager->clearConnectionCache();
+            }
+        });
     }
 }
 

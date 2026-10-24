@@ -31,6 +31,7 @@
 #include "framework/global/iapplicationeventcontroller.h"
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/iuiactionsregister.h"
@@ -56,7 +57,7 @@ class QFileOpenEvent;
 
 namespace au::appshell {
 class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
-    public muse::async::Asyncable, public muse::Contextable
+    public muse::rcommand::Commandable, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<IAppShellConfiguration> configuration;
@@ -106,36 +107,36 @@ private:
     void setupConnections();
 
     bool quit(const muse::io::path_t& installerPath = "");
-    void restart();
+    muse::Ret restart();
 
-    void toggleFullScreen();
-    void openAboutDialog();
-    void openAboutQtDialog();
+    muse::Ret toggleFullScreen();
+    muse::Ret openAboutDialog();
+    muse::Ret openAboutQtDialog();
 
-    void openOnlineHandbookPage();
-    void openAskForHelpPage();
-    void openPreferencesDialog();
-    void openAudioSettingsDialog();
-    void openShortcutsPreferencesDialog();
-    void openEditingPreferencesDialog();
-    void openSpectrogramPreferencesDialog();
+    muse::Ret openOnlineHandbookPage();
+    muse::Ret openAskForHelpPage();
+    muse::Ret openPreferencesDialog();
+    muse::Ret openAudioSettingsDialog();
+    muse::Ret openShortcutsPreferencesDialog();
+    muse::Ret openEditingPreferencesDialog();
+    muse::Ret openSpectrogramPreferencesDialog();
 
-    void revertToFactorySettings();
+    muse::Ret revertToFactorySettings();
 
     bool isProjectOpened() const;
     bool isProjectOpenedAndFocused() const;
 
-    void doGlobalCopy();
-    void doGlobalCut();
-    void doGlobalPaste();
-    void doGlobalUndo();
-    void doGlobalRedo();
-    void doGlobalDelete();
-    void doGlobalCancel();
-    void doGlobalTrigger();
-    void doGlobalEnter();
-    void doGlobalShiftEnter();
-    void doGlobalContextMenu();
+    muse::Ret doGlobalCopy();
+    muse::Ret doGlobalCut();
+    muse::Ret doGlobalPaste();
+    muse::Ret doGlobalUndo();
+    muse::Ret doGlobalRedo();
+    muse::Ret doGlobalDelete();
+    muse::Ret doGlobalCancel();
+    muse::Ret doGlobalTrigger();
+    muse::Ret doGlobalEnter();
+    muse::Ret doGlobalShiftEnter();
+    muse::Ret doGlobalContextMenu();
 
     bool m_quiting = false;
 

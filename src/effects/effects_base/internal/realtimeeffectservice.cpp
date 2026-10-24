@@ -150,7 +150,10 @@ void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
         IF_ASSERT_FAILED(e.mId.has_value()) {
             return;
         }
-        unregisterRealtimeEffectList(*e.mId);
+        const bool isTrackReplaced = e.mExtra == 1;
+        if (!isTrackReplaced) {
+            unregisterRealtimeEffectList(*e.mId);
+        }
     }
     break;
     case TrackListEvent::UNDO_REDO_BEGIN:
@@ -455,7 +458,7 @@ RealtimeEffectList* RealtimeEffectService::realtimeEffectList(TrackId trackId)
 
 std::string RealtimeEffectService::getEffectName(const RealtimeEffectState& state) const
 {
-    return effectsProvider()->effectName(state.GetID().ToStdString());
+    return effectsProvider()->effectName(au3::wxToStdString(state.GetID()));
 }
 
 const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const PluginID& id)
@@ -465,11 +468,11 @@ const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const Plu
     IF_ASSERT_FAILED(provider) {
         return nullptr;
     }
-    if (!provider->loadEffect(EffectId::fromStdString(id.ToStdString()))) {
+    if (!provider->loadEffect(au3::wxToString(id))) {
         return nullptr;
     }
     return EffectManager::GetInstanceFactory(id, [provider](const PluginID& id) -> EffectSettingsManager* {
-        return provider->effect(muse::String::fromStdString(id.ToStdString()));
+        return provider->effect(au3::wxToString(id));
     });
 }
 
@@ -480,8 +483,7 @@ wxString RealtimeEffectService::resolveEffectId(const PluginID& id)
         return {};
     }
 
-    const EffectId resolved = utils::findRelocatedVst3EffectId(EffectId::fromStdString(id.ToStdString()),
-                                                               provider->effectMetaList());
+    const EffectId resolved = utils::findRelocatedVst3EffectId(au3::wxToString(id), provider->effectMetaList());
     return resolved.empty() ? wxString {} : au3::wxFromString(resolved);
 }
 
@@ -492,7 +494,7 @@ bool RealtimeEffectService::isAvailable(const RealtimeEffectStatePtr& state) con
     }
     // isValid() passes for Missing/Error/Discovered entries too;
     // only isLoadable (Validated) gates actual usability
-    const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
+    const auto meta = effectsProvider()->meta(au3::wxToString(state->GetID()));
     return meta.isValid() && meta.isLoadable();
 }
 }

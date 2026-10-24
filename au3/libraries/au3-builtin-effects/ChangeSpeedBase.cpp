@@ -8,6 +8,7 @@
 #include "au3-track/TimeWarper.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 #include <cmath>
 
 // Soundtouch is not reasonable below -99% or above 3000%.
@@ -172,7 +173,7 @@ bool ChangeSpeedBase::Process(EffectInstance&, EffectSettings&)
 
                 const auto gaps = FindGaps(outWaveTrack, mCurT0, mCurT1);
 
-                auto pNewTrack = outWaveTrack.EmptyCopy();
+                auto pNewTrack = WaveTrackUtilities::EmptyCopy(outWaveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
                 auto iter = pNewTrack->Channels().begin();
                 for (const auto pChannel : outWaveTrack.Channels()) {
                     // ProcessOne() (implemented below) processes a single channel

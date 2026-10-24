@@ -1,9 +1,11 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <array>
 #include <cassert>
 #include <iomanip>
 #include <sstream>
+#include <utility>
 
 #include "framework/global/realfn.h"
 

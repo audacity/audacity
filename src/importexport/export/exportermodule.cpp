@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include <QtQml/qqml.h>
+
 #include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/au3/au3exporter.h"

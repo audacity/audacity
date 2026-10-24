@@ -8,6 +8,7 @@
 
 #include "au3-cloud-audiocom/CloudLibrarySettings.h"
 #include "au3-cloud-audiocom/ServiceConfig.h"
+#include "au3-network-manager/NetworkManager.h"
 
 using namespace au::au3cloud;
 
@@ -18,6 +19,12 @@ const muse::Settings::Key WARN_ON_SYNC_ERROR("cloud", "cloud/warnOnSyncError");
 void Au3CloudConfiguration::init()
 {
     muse::settings()->setDefaultValue(WARN_ON_SYNC_ERROR, muse::Val(true));
+}
+
+void Au3CloudConfiguration::onAllInited()
+{
+    const QVariant userAgent = cloudConfiguration()->headers().knownHeaders.value(QNetworkRequest::UserAgentHeader);
+    audacity::network_manager::NetworkManager::GetInstance().setUserAgent(userAgent.toString().toStdString());
 }
 
 muse::io::path_t Au3CloudConfiguration::cloudProjectsPath() const

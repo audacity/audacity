@@ -6,13 +6,12 @@
 #include <functional>
 
 #include <QAbstractListModel>
+#include <QPointer>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
-#include "framework/actions/actionable.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
 
 #include "context/iglobalcontext.h"
@@ -26,21 +25,21 @@
 
 #include "projectscene/types/projectscenetypes.h"
 #include "viewtrackitem.h"
+#include "trackitemsmovecontroller.h"
 
 namespace au::projectscene {
-class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable,
-    public muse::Contextable
+class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
+    Q_PROPERTY(TrackItemsMoveController * moveController READ moveController WRITE setMoveController NOTIFY moveControllerChanged FINAL)
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
 protected:
     muse::GlobalInject<muse::IApplication> application;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
@@ -57,6 +56,9 @@ public:
     QVariant trackId() const;
     void setTrackId(const QVariant& newTrackId);
 
+    TrackItemsMoveController* moveController() const;
+    void setMoveController(TrackItemsMoveController* controller);
+
     static int cacheBufferPx();
 
     Q_INVOKABLE void init();
@@ -70,7 +72,7 @@ public:
     Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
 
     Q_INVOKABLE bool containsItem(const TrackItemKey& key) const;
-    Q_INVOKABLE double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
+    Q_INVOKABLE virtual double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
 
     Q_INVOKABLE void setFocusedItem(const TrackItemKey& key);
     Q_INVOKABLE void resetFocusedItem();
@@ -81,8 +83,8 @@ public:
 
 signals:
     void trackIdChanged();
+    void moveControllerChanged();
     void timelineContextChanged();
-    void itemTitleEditRequested(const TrackItemKey& key);
 
     void itemContextMenuOpenRequested(const TrackItemKey& key);
 
@@ -105,7 +107,6 @@ protected:
     ViewTrackItem* itemByKey(const trackedit::TrackItemKey& key) const;
     int indexByKey(const trackedit::TrackItemKey& key) const;
 
-    void requestItemTitleChange();
     virtual trackedit::TrackItemKeyList getSelectedItemKeys() const = 0;
 
     virtual void onInit() = 0;
@@ -119,19 +120,14 @@ protected:
 
     QVariant neighbor(const TrackItemKey& key, int offset) const;
 
-    struct MoveOffset {
-        muse::secs_t timeOffset = 0.0;
-        int trackOffset = 0;
-    };
-    MoveOffset calculateMoveOffset(const ViewTrackItem* item, const TrackItemKey& key,
-                                   const std::vector<trackedit::TrackType>& trackTypesAllowedToMove, bool completed,
-                                   bool applySnap = true) const;
-    trackedit::secs_t calculateTimePositionOffset(const ViewTrackItem* item, bool applySnap = true) const;
-
-    int calculateTrackPositionOffset(const TrackItemKey& key, const std::vector<trackedit::TrackType>& trackTypesAllowedToMove) const;
-    bool isAllowedToMoveToTracks(const std::vector<trackedit::TrackType>& allowedTrackTypes, const trackedit::TrackId& movedTrackId) const;
+    virtual ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) = 0;
+    double moveTimeOffset() const;
 
     trackedit::SelectionMode selectionMode() const;
+
+    bool selectItemGroup(const trackedit::TrackItemKey& key, trackedit::SelectionMode mode, bool complete);
+    void handleItemRelease(const trackedit::TrackItemKey& key);
+    trackedit::ItemKeys m_pendingToggleDeselect;
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 
@@ -144,5 +140,12 @@ protected:
     QList<ViewTrackItem*> m_items;
     QList<ViewTrackItem*> m_selectedItems;
     QMetaObject::Connection m_autoScrollConnection;
+
+private:
+    void onItemsMoveChanged();
+    void updateDragGhostsMetrics();
+
+    QList<ViewTrackItem*> m_dragGhostItems;
+    QPointer<TrackItemsMoveController> m_moveController;
 };
 }

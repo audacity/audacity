@@ -12,7 +12,7 @@
 #include "playback/view/toolbars/playbacktoolbartimeitem.h"
 #include "playback/view/toolbars/playbacktoolbarbpmitem.h"
 #include "playback/view/toolbars/playbacktoolbartimesignatureitem.h"
-#include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
+#include "record/qml/Audacity/Record/playbacktoolbarrecordlevelitem.h"
 #include "projectscene/view/toolbars/snaptoolbaritem.h"
 
 using namespace muse::uicomponents;

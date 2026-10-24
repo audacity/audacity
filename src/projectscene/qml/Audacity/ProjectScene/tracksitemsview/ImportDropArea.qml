@@ -117,7 +117,7 @@ DropArea {
 
         let trackId = tracksViewState.trackAtPosition(dropX, dropY)
         let trackCount = dropController.requiredTracksCount()
-        let tracksIds = dropController.draggedTracksIds(trackId, trackCount);
+        let tracksIds = dropController.draggedTracksIds(trackId, trackCount)
         // by this time, url list is already inside dropController
         dropController.handleDroppedFiles(tracksIds, timeline.context.positionToTime(dropX))
 

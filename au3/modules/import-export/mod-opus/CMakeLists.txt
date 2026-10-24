@@ -13,17 +13,17 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   Ogg::ogg
-   Opus::opus
-   opusfile::opusfile
    au3-import-export
+PRIVATE
    au3-mixer
    au3-string-utils
    au3-tags
    au3-track
    au3-utility
    au3-wave-track
-PRIVATE
+   Ogg::ogg
+   Opus::opus
+   opusfile::opusfile
    wxBase
 )
 

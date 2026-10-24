@@ -47,8 +47,8 @@ wxString GetFactoryPresetsBasePath()
 wxString GetPresetsPath(const wxString& basePath, const VST3::Hosting::ClassInfo& effectClassInfo)
 {
     wxRegEx fixName(R"([\\*?/:<>|])");
-    wxString companyName = wxString(effectClassInfo.vendor()).Trim();
-    wxString pluginName = wxString(effectClassInfo.name()).Trim();
+    wxString companyName = wxString::FromUTF8(effectClassInfo.vendor()).Trim();
+    wxString pluginName = wxString::FromUTF8(effectClassInfo.name()).Trim();
 
     fixName.ReplaceAll(&companyName, { "_" });
     fixName.ReplaceAll(&pluginName, { "_" });
@@ -102,7 +102,7 @@ std::string VST3Utils::UTF16ToStdString(const Steinberg::Vst::TChar* str)
 
     // Use wxString's built-in UTF-16 to UTF-8 conversion
     // This leverages the same conversion logic as ToWxString
-    return ToWxString(str).ToStdString();
+    return ToWxString(str).ToStdString(wxConvUTF8);
 }
 
 std::string VST3Utils::GetParameterUnitStdString(Steinberg::Vst::IEditController* controller,

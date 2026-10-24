@@ -42,6 +42,28 @@ Item {
         appMenuAreaRect: Qt.rect(root.x, root.y, root.width, root.height)
         openedMenuAreaRect: prv.openedArea(menuLoader)
 
+        openedMenuSymbolMatcher: function(symbol) {
+            if (!menuLoader.isMenuOpened) {
+                return false
+            }
+            let menu = menuLoader.menu
+            while (menu && !menu.contentItem.navigationSection.active) {
+                menu = menu.isSubMenuOpen ? menu.subMenuLoader.menu : null
+            }
+            if (!menu) {
+                return false
+            }
+            const items = menu.model
+            const count = items.count !== undefined ? items.count : items.length
+            for (let i = 0; i < count; ++i) {
+                const item = items.get ? items.get(i).item : items[i]
+                if (item && item.enabled && appMenuModel.menuItemMatchesSymbol(item, symbol)) {
+                    return true
+                }
+            }
+            return false
+        }
+
         onOpenMenuRequested: function (menuId) {
             prv.openMenu(menuId)
         }

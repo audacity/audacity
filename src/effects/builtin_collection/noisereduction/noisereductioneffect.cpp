@@ -50,6 +50,7 @@
 #include "au3-strings/TranslatableString.h"
 #include "au3-wave-track-fft/TrackSpectrumTransformer.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
 
 // SPECTRAL_SELECTION not to affect this effect for now, as there might be no
@@ -411,7 +412,7 @@ bool NoiseReductionEffect::Worker::Process(
             std::optional<ChannelGroup::ChannelIterator<WaveChannel> > pIter;
             WaveTrack* pFirstTrack {};
             if (!mSettings.mDoProfile) {
-                ppTempTrack.emplace(track->EmptyCopy());
+                ppTempTrack.emplace(WaveTrackUtilities::EmptyCopy(*track, WaveTrackUtilities::RealtimeEffectsCopy::Ref));
                 pFirstTrack = ppTempTrack->get();
                 pIter.emplace(pFirstTrack->Channels().begin());
             }

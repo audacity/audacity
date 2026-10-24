@@ -23,7 +23,6 @@ public:
     ClipContextMenuModel() = default;
 
     Q_INVOKABLE void load() override;
-    Q_INVOKABLE void handleMenuItem(const QString& itemId) override;
 
     ClipKey clipKey() const;
     void setClipKey(const ClipKey& newClipKey);

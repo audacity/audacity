@@ -34,6 +34,15 @@ static UiActionList STATIC_ACTIONS = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Remove realtime effect")
              ),
+    UiAction("get-effects",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Get effects"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Open Get effects dialog"),
+             IconCode::Code::PLUGIN
+             ),
     UiAction("action://effects/presets/apply",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -117,31 +126,6 @@ UiAction makeUiAction(const std::string& uri, const EffectMeta& meta)
     action.title = TranslatableString::untranslatable(utils::effectDisplayTitle(meta));
     return action;
 }
-
-// It can be that different plugins have the same name. Seeing them side by side in a menu is confusing for the user.
-// To mitigate this, we replace the title with the path of the plugin.
-void replaceIdenticalTitlesWithPaths(EffectMetaList& effects)
-{
-    using DuplicationKey = std::tuple<EffectFamily, EffectType, muse::String, muse::String>;
-
-    std::map<DuplicationKey, std::vector<size_t> > duplicateMap;
-
-    for (auto i = 0u; i < effects.size(); ++i) {
-        const auto& effect = effects[i];
-        DuplicationKey key{ effect.family, effect.type, effect.category, effect.title };
-        duplicateMap[key].push_back(i);
-    }
-
-    for (const auto&[_, indices] : duplicateMap) {
-        if (indices.size() == 1) {
-            continue;
-        }
-        for (const size_t index : indices) {
-            auto& meta = effects[index];
-            meta.title = meta.path.toString();
-        }
-    }
-}
 }
 
 void EffectsUiActions::makeActions(EffectMetaList effects)
@@ -149,7 +133,7 @@ void EffectsUiActions::makeActions(EffectMetaList effects)
     m_actions.clear();
     m_actions.reserve(effects.size() + STATIC_ACTIONS.size());
 
-    replaceIdenticalTitlesWithPaths(effects);
+    utils::replaceIdenticalTitlesWithPaths(effects);
 
     for (const EffectMeta& e : effects) {
         m_actions.push_back(makeUiAction(EFFECT_OPEN_ACTION, e));

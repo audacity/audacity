@@ -7,13 +7,15 @@
 #include <memory>
 #include <vector>
 
+#include "framework/global/async/asyncable.h"
+
 #include "effects/effects_base/ieffectloader.h"
 
 namespace au::effects::extensions {
 class ExtensionEffect;
 class ExtensionEffectsRepository;
 
-class ExtensionEffectLoader final : public IEffectLoader
+class ExtensionEffectLoader final : public IEffectLoader, public muse::async::Asyncable
 {
 public:
     explicit ExtensionEffectLoader(std::shared_ptr<ExtensionEffectsRepository> repository);

@@ -19,6 +19,7 @@
 #include "au3-preferences/Prefs.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
 #include "au3-track/TimeWarper.h"
 
@@ -56,7 +57,7 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
 
             if (duration > 0.0) {
                 // Create a temporary track
-                auto copy = track.EmptyCopy();
+                auto copy = WaveTrackUtilities::EmptyCopy(track, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
                 // Fill with data
                 if (!GenerateTrack(settings, *copy)) {
                     bGoodResult = false;

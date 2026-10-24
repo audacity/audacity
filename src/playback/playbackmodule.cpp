@@ -6,7 +6,11 @@
 #include <QtQml>
 
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
+#include "internal/playbackcommandsregister.h"
+#include "internal/playbackcommandsstate.h"
 #include "internal/playbackconfiguration.h"
 #include "internal/playbackcontroller.h"
 #include "internal/playbackmetercontroller.h"
@@ -76,6 +80,11 @@ void PlaybackModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://playback/loop_region_in_out"), "Audacity/Playback/dialogs/LoopRegionInOut.qml");
     }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<PlaybackCommandsRegister>());
+    }
 }
 
 void PlaybackModule::onInit(const IApplication::RunMode& mode)
@@ -113,6 +122,14 @@ void PlaybackContext::registerExports()
     ioc()->registerExport<IPlaybackUiState>(mname, m_uiState);
     ioc()->registerExport<playback::IPlayback>(mname, m_playback);
     ioc()->registerExport<ITrackPlaybackControl>(mname, std::make_shared<Au3TrackPlaybackControl>(iocContext()));
+}
+
+void PlaybackContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<PlaybackCommandsState>(iocContext()));
+    }
 }
 
 void PlaybackContext::onInit(const IApplication::RunMode& mode)

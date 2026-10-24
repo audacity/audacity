@@ -13,12 +13,20 @@ Rectangle {
     property ViewTracksListModel model: null
     property var context: null
 
-    readonly property int listHeaderHeight: 2
+    property var navPanels: null
 
     width: 32
     color: ui.theme.backgroundQuarternaryColor
 
     visible: model.isVerticalRulersVisible
+
+    TracksViewStateModel {
+        id: tracksViewState
+    }
+
+    Component.onCompleted: {
+        tracksViewState.init()
+    }
 
     Rectangle {
         id: leftBorder
@@ -29,57 +37,22 @@ Rectangle {
         opacity: 0.1
     }
 
-    StyledListView {
+    TracksListView {
         id: verticalRulersListView
 
         anchors.fill: parent
 
         clip: false
 
-        ScrollBar.vertical: null
-
-        //! NOTE Sync with TracksItemsView
-        TracksViewStateModel {
-            id: tracksViewState
-            onTracksVerticalOffsetChanged: {
-                verticalRulersListView.contentY = tracksViewState.tracksVerticalOffset - root.listHeaderHeight
-            }
-        }
-
-        Component.onCompleted: {
-            tracksViewState.init()
-        }
-
-        header: Rectangle {
-            height: root.listHeaderHeight
-            width: parent.width
-            color: "transparent"
-        }
-
-        footer: Item {
-            height: tracksViewState.tracksVerticalScrollPadding
-        }
-
-        property real lockedVerticalScrollPosition
-        property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
-
-        onVerticalScrollLockedChanged: {
-            lockedVerticalScrollPosition = contentY
-        }
-
-        onContentYChanged: {
-            if (verticalScrollLocked) {
-                verticalRulersListView.contentY = lockedVerticalScrollPosition
-            } else {
-                tracksViewState.changeTracksVerticalOffset(verticalRulersListView.contentY + root.listHeaderHeight)
-            }
-        }
-
-        interactive: false
+        tracksViewState: tracksViewState
 
         model: root.model
 
         delegate: Loader {
+            id: rulerLoader
+
+            property int index: model.index
+
             width: root.width
             height: trackViewState.trackHeight
 
@@ -104,7 +77,34 @@ Rectangle {
                 id: waveComp
 
                 Rectangle {
+                    id: rulerItem
+
                     color: ui.theme.backgroundQuarternaryColor
+
+                    NavigationControl {
+                        id: navCtrl
+
+                        name: "VerticalRuler"
+                        enabled: root.enabled && root.visible
+                        panel: root.navPanels && root.navPanels[rulerLoader.index] ? root.navPanels[rulerLoader.index] : null
+                        order: 0
+
+                        accessible.role: MUAccessible.Information
+                        accessible.name: qsTrc("projectscene", "Track %1: %2, vertical ruler").arg(rulerLoader.index + 1).arg(model.trackTitle)
+
+                        onActiveChanged: function (active) {
+                            if (active) {
+                                rulerItem.forceActiveFocus()
+                                verticalRulersListView.ensureVerticallyVisible(rulerLoader)
+                            }
+                        }
+                    }
+
+                    NavigationFocusBorder {
+                        navigationCtrl: navCtrl
+                        drawOutsideParent: false
+                        border.color: ui.theme.fontSecondaryColor
+                    }
 
                     MouseArea {
                         id: mouseClickBlocker // to prevent clicks from reaching and modifying the viewport

@@ -128,7 +128,7 @@ void TracksViewStateModel::requestVerticalScrollUnlock()
     }
 }
 
-void TracksViewStateModel::insureVerticallyVisible(int viewContentY, int viewHeight, int itemY, int itemHeight)
+void TracksViewStateModel::ensureVerticallyVisible(int viewContentY, int viewHeight, int itemY, int itemHeight)
 {
     static constexpr int PADDING = 10;
 

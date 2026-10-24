@@ -71,7 +71,7 @@ void ProjectsPageModel::openCloudAudioFile(const QString& cloudItemId)
         return;
     }
 
-    muse::actions::ActionQuery query("audacity://cloud/open-audio-file");
+    muse::actions::ActionQuery query("action://cloud/open-audio-file");
     query.addParam("audioId", muse::Val(cloudItemId.toStdString()));
     dispatcher()->dispatch(query);
 }

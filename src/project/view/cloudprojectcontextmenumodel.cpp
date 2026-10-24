@@ -10,8 +10,8 @@ using namespace au::project;
 
 namespace {
 constexpr const char* OPEN_PROJECT_ACTION = "cloud-file-open";
-constexpr const char* OPEN_PROJECT_PAGE_ACTION = "audacity://cloud/open-project-page";
-constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "audacity://cloud/update-audio-preview-for-project";
+constexpr const char* OPEN_PROJECT_PAGE_ACTION = "action://cloud/open-project-page";
+constexpr const char* UPDATE_AUDIO_PREVIEW_ACTION = "action://cloud/update-audio-preview-for-project";
 constexpr const char* SHOW_IN_FOLDER_ACTION = "project-show-in-folder";
 }
 
@@ -55,7 +55,7 @@ void CloudProjectContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(OPEN_PROJECT_PAGE_ACTION);
         query.addParam("id", muse::Val(m_projectId));
-        dispatch(query);
+        dispatchAction(query);
         return;
     }
 
@@ -75,7 +75,7 @@ void CloudProjectContextMenuModel::handleMenuItem(const QString& itemId)
 
         muse::actions::ActionQuery query(UPDATE_AUDIO_PREVIEW_ACTION);
         query.addParam("id", muse::Val(m_projectId));
-        dispatch(query);
+        dispatchAction(query);
         return;
     }
 

@@ -9,6 +9,7 @@
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
 #include "trackedit/internal/au3/au3trackeditclipboard.h"
 #include "trackedit/internal/au3/au3trackdata.h"
@@ -46,8 +47,8 @@ public:
         .WillByDefault(Return(m_currentProject));
 
         // The testClipboard.aup4 project contains two groups, 0 and 1
-        m_oldGroupIds.push_back((0));
-        m_oldGroupIds.push_back((1));
+        m_oldGroupIds.insert(0);
+        m_oldGroupIds.insert(1);
 
         ON_CALL(*m_trackEditProject, groupsIdsList())
         .WillByDefault(Return(m_oldGroupIds));
@@ -93,7 +94,8 @@ public:
             TrackId trackId = au3Track->GetId();
             Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
 
-            auto clipboardTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+            auto clipboardTrack = WaveTrackUtilities::EmptyCopy(*waveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Ref,
+                                                                pSampleBlockFactory);
 
             auto waveClips = DomAccessor::waveClipsAsList(waveTrack);
 
@@ -130,7 +132,7 @@ public:
 
     std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor;
 
-    std::vector<int64_t> m_oldGroupIds;
+    std::set<int64_t> m_oldGroupIds;
 };
 
 TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)

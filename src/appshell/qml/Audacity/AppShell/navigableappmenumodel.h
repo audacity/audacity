@@ -25,6 +25,7 @@
 #include <optional>
 
 #include <QObject>
+#include <QJSValue>
 #include <QtQml/qqmlregistration.h>
 
 #include "appmenumodel.h"
@@ -43,6 +44,7 @@ class NavigableAppMenuModel : public AppMenuModel
     Q_PROPERTY(QRect openedMenuAreaRect READ openedMenuAreaRect WRITE setOpenedMenuAreaRect NOTIFY openedMenuAreaRectChanged)
 
     Q_PROPERTY(QWindow * appWindow READ appWindow WRITE setAppWindow)
+    Q_PROPERTY(QJSValue openedMenuSymbolMatcher MEMBER m_openedMenuSymbolMatcher)
 
 public:
     explicit NavigableAppMenuModel(QObject* parent = nullptr);
@@ -115,6 +117,7 @@ private:
     bool m_moveFocusToAppMenuOnAltRelease = true;
 
     QWindow* m_appWindow = nullptr;
+    QJSValue m_openedMenuSymbolMatcher;
     QRect m_appMenuAreaRect;
     QRect m_openedMenuAreaRect;
 };

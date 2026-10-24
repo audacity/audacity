@@ -32,7 +32,7 @@ void PlaybackToolBarCustomiseModel::load()
 {
     TRACEFUNC;
 
-    QList<Item*> items;
+    ItemList items;
 
     ToolConfig toolConfig = uiState()->toolConfig(TOOLBAR_NAME,
                                                   projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
@@ -251,7 +251,7 @@ void PlaybackToolBarCustomiseModel::saveActions()
     TRACEFUNC;
 
     ToolConfig config;
-    for (const Item* item : items()) {
+    for (const QObject* item : items()) {
         auto customiseItem = dynamic_cast<const PlaybackToolBarCustomiseItem*>(item);
         if (!customiseItem) {
             continue;
