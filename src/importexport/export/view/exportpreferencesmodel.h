@@ -176,6 +176,7 @@ private:
     IExporter::Options separateFilesOptions() const;
 
     QString m_filename;
+    bool m_filenameIsStem = true;
     QString m_fileNamePrefix;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
     bool m_resetSampleRate = true;

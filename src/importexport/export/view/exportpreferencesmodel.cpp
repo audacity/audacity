@@ -3,6 +3,7 @@
  */
 
 #include "exportpreferencesmodel.h"
+#include "internal/exportfilename.h"
 
 #include "framework/global/containers.h"
 #include "framework/global/io/fileinfo.h"
@@ -136,12 +137,9 @@ void ExportPreferencesModel::init()
         setCurrentProcess(processName(ExportProcessType::FULL_PROJECT_AUDIO));
     }
 
-    muse::io::path_t displayName = globalContext()->currentProject()->displayName();
-    if (muse::io::suffix(displayName) == "aup4unsaved") {
-        m_filename = "Untitled";
-    } else {
-        m_filename = globalContext()->currentProject()->displayName();
-    }
+    const auto project = globalContext()->currentProject();
+    m_filename = defaultExportFilename(project->displayName(), project->title().toQString());
+    m_filenameIsStem = true;
     emit filenameChanged();
     emit suggestedFilePathChanged();
 
@@ -359,16 +357,7 @@ QString ExportPreferencesModel::filename() const
 
 muse::io::path_t ExportPreferencesModel::exportFilePath() const
 {
-    std::string name = m_filename.toStdString();
-
-    const std::vector<std::string> extensions = exporter()->formatExtensions(exportConfiguration()->currentFormat());
-    if (!extensions.empty()) {
-        const std::string suffix = muse::strings::toLower(muse::io::suffix(muse::io::path_t(name)));
-        if (!muse::contains(extensions, suffix)) {
-            name += "." + extensions.front();
-        }
-    }
-
+    const QString name = exportFilenameWithExtensions(m_filename, formatExtensions(currentFormat()), m_filenameIsStem);
     return exportConfiguration()->directoryPath().appendingComponent(name);
 }
 
@@ -384,6 +373,7 @@ void ExportPreferencesModel::setFilename(const QString& filename)
     }
 
     m_filename = filename;
+    m_filenameIsStem = false;
     emit filenameChanged();
     emit suggestedFilePathChanged();
 }
