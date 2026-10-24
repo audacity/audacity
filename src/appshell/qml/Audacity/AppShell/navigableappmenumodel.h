@@ -44,7 +44,7 @@ class NavigableAppMenuModel : public AppMenuModel
     Q_PROPERTY(QRect openedMenuAreaRect READ openedMenuAreaRect WRITE setOpenedMenuAreaRect NOTIFY openedMenuAreaRectChanged)
 
     Q_PROPERTY(QWindow * appWindow READ appWindow WRITE setAppWindow)
-    Q_PROPERTY(QJSValue openedMenuSymbolMatcher MEMBER m_openedMenuSymbolMatcher)
+    Q_PROPERTY(QJSValue openedMenuSymbolMatcher READ openedMenuSymbolMatcher WRITE setOpenedMenuSymbolMatcher)
 
 public:
     explicit NavigableAppMenuModel(QObject* parent = nullptr);
@@ -56,6 +56,9 @@ public:
 
     bool isNavigationStarted() const;
     bool isMenuOpened() const;
+
+    QJSValue openedMenuSymbolMatcher() const { return m_openedMenuSymbolMatcher; }
+    void setOpenedMenuSymbolMatcher(const QJSValue& matcher) { m_openedMenuSymbolMatcher = matcher; }
 
     QRect appMenuAreaRect() const;
     QRect openedMenuAreaRect() const;
