@@ -1006,19 +1006,9 @@ void Sequence::WriteXML(XMLWriter& xmlFile) const
             // editing operation that caused this, not fixing
             // the problem but moving the point of detection earlier if we
             // find a reproducible case.
-            using namespace BasicUI;
-            auto sMsg
-                =TranslatableString("wave-track",
-                                    "Sequence has block file exceeding maximum %1 samples per block.\nTruncating to this maximum length.")
-                  .Format(Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0));
-            ShowMessageBox(
-                sMsg,
-                MessageBoxOptions {}
-                .Caption(TranslatableString("wave-track", "Warning - Truncating Overlong Block File"))
-                .IconStyle(Icon::Warning)
-                .ButtonStyle(Button::Ok));
-            wxLogWarning("%s", sMsg.Translation()); //Debug?
-//         bb.sb->SetLength(mMaxSamples);
+            wxLogWarning("Sequence has a block of %llu samples, more than the maximum of %llu samples per block",
+                         static_cast<unsigned long long>(bb.sb->GetSampleCount()),
+                         static_cast<unsigned long long>(mMaxSamples));
         }
 
         xmlFile.StartTag(WaveBlock_tag);
@@ -1907,6 +1897,12 @@ void Sequence::SetMaxDiskBlockSize(size_t bytes)
 size_t Sequence::GetMaxDiskBlockSize()
 {
     return sMaxDiskBlockSize;
+}
+
+std::mutex& Sequence::RecordingMutex()
+{
+    static std::mutex mutex;
+    return mutex;
 }
 
 bool Sequence::IsValidSampleFormat(const int iValue)

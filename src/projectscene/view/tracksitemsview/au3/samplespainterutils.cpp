@@ -245,12 +245,11 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     const double t1 = metrics.toTime;
     const auto s1 = sampleCount(ceil(t1 * rate));
 
-    // Assume size_t will not overflow, else we wouldn't be here drawing the
-    // few individual samples
-    const auto slen = std::min(snSamples - s0, s1 - s0 + 1).as_size_t();
-    if (slen <= 0) {
-        SampleData();
+    const auto samplesToRead = std::min(snSamples - s0, s1 - s0 + 1);
+    if (samplesToRead <= 0) {
+        return SampleData();
     }
+    const auto slen = samplesToRead.as_size_t();
 
     Floats buffer{ slen };
     clip.GetSamples(channelIndex, (samplePtr)buffer.get(), floatSample, s0, slen, false);

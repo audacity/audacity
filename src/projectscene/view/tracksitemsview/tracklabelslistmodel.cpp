@@ -22,6 +22,14 @@ TrackLabelsListModel::TrackLabelsListModel(QObject* parent)
 
 void TrackLabelsListModel::onInit()
 {
+    if (moveController()) {
+        connect(moveController(), &TrackItemsMoveController::activeChanged, this, [this] {
+            if (!moveController()->active()) {
+                m_pendingToggleDeselect = {};
+            }
+        });
+    }
+
     selectionController()->labelsSelected().onReceive(this, [this](const LabelKeyList& keyList) {
         if (keyList.empty()) {
             resetSelectedLabels();
@@ -177,9 +185,9 @@ void TrackLabelsListModel::update()
 
     updatePendingTitleEdit();
 
-    muse::async::Async::call(this, [cleanupList]() {
-        qDeleteAll(cleanupList);
-    });
+    for (TrackLabelItem* item : cleanupList) {
+        item->deleteLater();
+    }
 }
 
 void TrackLabelsListModel::updatePendingTitleEdit()
@@ -223,6 +231,11 @@ void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         return;
     }
 
+    if (item->isDragGhost()) {
+        label.startTime += moveTimeOffset();
+        label.endTime += moveTimeOffset();
+    }
+
     //! NOTE The first step is to calculate the position and width
     LabelTime time;
     time.startTime = label.startTime;
@@ -242,15 +255,22 @@ void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
 }
 
+ViewTrackItem* TrackLabelsListModel::createDragGhost(const trackedit::TrackItemKey& key)
+{
+    TrackLabelItem* item = new TrackLabelItem(this);
+    item->setLabel(globalContext()->currentTrackeditProject()->label(key));
+    return item;
+}
+
 TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
 {
     TrackItemKeyList result = selectionController()->selectedLabels();
 
-    trackedit::TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
-    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+    const std::optional<trackedit::TrackItemKey> focusedItemKey = trackNavigationController()->focus().itemKey();
+    if (focusedItemKey && !muse::contains(result, *focusedItemKey)) {
         const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        if (prj && prj->track(focusedItemKey.trackId)->type == TrackType::Label) {
-            result.insert(result.cbegin(), focusedItemKey);
+        if (prj && prj->track(focusedItemKey->trackId)->type == TrackType::Label) {
+            result.insert(result.cbegin(), *focusedItemKey);
         }
     }
 
@@ -266,11 +286,13 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     const SelectionMode mode = selectionMode();
 
     if (mode == SelectionMode::Range) {
-        const LabelKeyList rangeKeys = trackNavigationController()->itemKeysInRange(trackNavigationController()->focusedItem(), key.key);
-        if (!rangeKeys.empty()) {
+        const ItemKeys box = m_context
+                             ? selectionController()->itemsTouchingBoxFromAnchor(
+            m_context->mousePositionTime(), m_trackId)
+                             : ItemKeys();
+        if (!box.empty()) {
             selectionController()->resetDataSelection();
-            selectionController()->resetSelectedClips();
-            selectionController()->setSelectedLabels(rangeKeys, true);
+            selectionController()->setSelectedItems(box, true);
             m_needToSelectTracksData = false;
             return;
         }
@@ -279,13 +301,29 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         selectionController()->resetSelectedClips();
         selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
         setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         m_needToSelectTracksData = false;
+        return;
+    }
+
+    if (trackeditInteraction()->itemGroupId(key.key) != -1) {
+        if (mode != SelectionMode::Toggle) {
+            selectionController()->resetDataSelection();
+        }
+        selectItemGroup(key.key, mode, true);
+        m_needToSelectTracksData = false;
+        setFocusedItem(key);
+        if (m_context) {
+            selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+        }
         return;
     }
 
     if (mode == SelectionMode::Toggle) {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
-            m_pendingToggleDeselect = key.key;
+            m_pendingToggleDeselect.labels = { key.key };
         } else {
             selectionController()->addSelectedLabel(key.key);
         }
@@ -303,6 +341,9 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     }
 
     setFocusedItem(key);
+    if (m_context) {
+        selectionController()->setItemSelectionAnchor(m_context->mousePositionTime(), key.key);
+    }
     m_needToSelectTracksData = false;
 }
 
@@ -363,9 +404,8 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
         return;
     }
 
-    if (m_pendingToggleDeselect.isValid() && m_pendingToggleDeselect == key.key) {
-        selectionController()->removeLabelSelection(key.key);
-        m_pendingToggleDeselect = {};
+    if (muse::contains(m_pendingToggleDeselect.labels, key.key)) {
+        handleItemRelease(key.key);
         return;
     }
 
@@ -389,50 +429,18 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
     }
 }
 
-bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool completed)
+double TrackLabelsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
 {
-    TrackLabelItem* item = labelItemByKey(key.key);
-    if (!item) {
-        return false;
-    }
-
-    m_pendingToggleDeselect = {};
-
-    auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        return false;
-    }
-
-    auto vs = project->viewState();
-    IF_ASSERT_FAILED(vs) {
-        return false;
-    }
-
-    bool ok = false;
-
-    // Labels can only be moved to label tracks.
-    TrackItemsListModel::MoveOffset moveOffset
-        = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
-    if (vs->moveInitiated()) {
-        if (!selectionController()->timeSelectionIsEmpty()) {
-            ok = trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
-        } else {
-            auto selectedLabels = selectionController()->selectedLabels();
-            ok = trackeditInteraction()->moveLabels(selectedLabels, moveOffset.timeOffset, moveOffset.trackOffset, completed).ret;
+    const ViewTrackItem* item = itemByKey(key.key);
+    if (item && !muse::RealIsEqual(item->time().startTime, item->time().endTime)) {
+        if (direction == DirectionType::Direction::Right && muse::RealIsEqual(item->time().endTime, m_editedLabelStartTime)) {
+            direction = DirectionType::Direction::Left;
+        } else if (direction == DirectionType::Direction::Left && muse::RealIsEqual(item->time().startTime, m_editedLabelEndTime)) {
+            direction = DirectionType::Direction::Right;
         }
     }
 
-    if (ok && selectionController()->timeSelectionIsEmpty() && isTrackDataSelected()) {
-        doSelectTracksData(key);
-    }
-
-    if ((completed && m_autoScrollConnection)) {
-        disconnectAutoScroll();
-    } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedLabels(key, false); });
-    }
-
-    return ok;
+    return TrackItemsListModel::findGuideline(key, direction);
 }
 
 bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed)

@@ -10,6 +10,7 @@ TrackItemsContainer {
 
     TrackLabelsListModel {
         id: labelsModel
+        moveController: root.moveController
         trackId: root.trackId
         context: root.context
     }
@@ -96,12 +97,20 @@ TrackItemsContainer {
                             }
                         }
 
-                        function clearGuidelineIfPointerLeft() {
-                            const overAnyLabel = labelsContainer.checkIfAnyLabel(function (labelItem) {
-                                return labelItem && labelItem.hover
-                            })
-                            if (!labelsContainerMouseArea.containsMouse && !overAnyLabel) {
-                                root.clearItemGuideline()
+                        // Timer to wait for hover state to update after item creation
+                        Timer {
+                            id: clearGuidelineTimer
+                            interval: 0
+
+                            onTriggered: {
+                                if (root.moveActive || labelsContainerMouseArea.containsMouse) {
+                                    return
+                                }
+
+                                const overAnyLabel = labelsContainer.checkIfAnyLabel(labelItem => labelItem.hover)
+                                if (!overAnyLabel) {
+                                    root.clearItemGuideline()
+                                }
                             }
                         }
 
@@ -146,8 +155,10 @@ TrackItemsContainer {
                                 labelItem.setContainsMouse(containsMouse)
                             })
 
-                            if (!containsMouse) {
-                                Qt.callLater(labelsContainerMouseArea.clearGuidelineIfPointerLeft)
+                            if (!containsMouse && !root.moveActive) {
+                                clearGuidelineTimer.restart()
+                            } else {
+                                clearGuidelineTimer.stop()
                             }
                         }
 
@@ -179,6 +190,17 @@ TrackItemsContainer {
                             z: Boolean(itemData) && itemData.isEditing ? 1000 : itemData.level
 
                             asynchronous: true
+
+                            active: !itemData.dragged
+                            enabled: !itemData.isDragGhost
+
+                            onActiveChanged: {
+                                if (!active) {
+                                    // The dragged label is destroyed before it can report that it is no longer hovered
+                                    root.itemHeaderHoveredChanged(false)
+                                    root.hover = labelsContainer.checkIfAnyLabel(labelItem => labelItem.hover)
+                                }
+                            }
 
                             visible: y < root.height
 
@@ -246,7 +268,7 @@ TrackItemsContainer {
                                     navigation.onActiveChanged: {
                                         if (navigation.highlight) {
                                             root.context.animatedInsureVisible(itemData.time.startTime)
-                                            root.insureVerticallyVisible()
+                                            root.ensureVerticallyVisible()
                                         }
                                     }
 
@@ -254,7 +276,7 @@ TrackItemsContainer {
                                         var yWithinTrack = yWithinLabel
                                         var xWithinTrack = xWithinLabel + itemData.x
 
-                                        trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key);
+                                        trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
                                         // During a move/stretch the guideline follows the dragged edge
                                         // (handleLabelGuideline), not the cursor.
@@ -366,6 +388,16 @@ TrackItemsContainer {
                                         }
                                     }
 
+                                    Connections {
+                                        target: root.container
+                                        function onItemContextMenuRequested(itemKey, x, y, modifiers) {
+                                            if (itemKey === item.itemData.key) {
+                                                const pos = item.mapFromItem(root.canvas, x, y)
+                                                item.openContextMenuAt(pos.x, pos.y)
+                                            }
+                                        }
+                                    }
+
                                     Component.onCompleted: {
                                         itemData.visualHeight = item.headerDefaultHeight
 
@@ -410,22 +442,6 @@ TrackItemsContainer {
 
     Connections {
         target: root.container
-
-        function onItemMoveRequested(itemKey, completed) {
-            root.updateMouseMoveActive(completed)
-
-            labelsModel.moveSelectedLabels(itemKey, completed)
-
-            handleLabelGuideline(itemKey, Direction.Auto, completed)
-        }
-
-        function onItemStartEditRequested(itemKey) {
-            labelsModel.startEditItem(itemKey)
-        }
-
-        function onItemEndEditRequested(itemKey) {
-            labelsModel.endEditItem(itemKey)
-        }
 
         function onItemReleaseRequested(itemKey) {
             labelsModel.toggleTracksDataSelectionByLabel(itemKey)

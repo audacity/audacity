@@ -6,20 +6,20 @@
 
 #include <QObject>
 
-#include "actions/actionable.h"
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
 
+#include "projectscene/iprojectsceneactionscontroller.h"
+
 namespace au::projectscene {
-class RealtimeEffectRowActionsController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Injectable
+class RealtimeEffectRowActionsController : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged FINAL)
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
 
 public:
     explicit RealtimeEffectRowActionsController(QObject* parent = nullptr);
@@ -28,8 +28,6 @@ public:
 
     bool enabled() const;
     void setEnabled(bool enabled);
-
-    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 signals:
     void enabledChanged();

@@ -4,28 +4,25 @@
 #pragma once
 
 #include <QFileInfo>
-#include <QString>
+#include <QStringList>
 
 namespace au::importexport {
 inline QString defaultExportFilename(const QString& displayName, const QString& projectTitle)
 {
-    // Never-saved projects have a session filename, but imports already set
-    // their title to the source filename without its extension.
     if (displayName.isEmpty() || displayName.endsWith(QStringLiteral(".aup4unsaved"))) {
         return projectTitle.isEmpty() ? QStringLiteral("Untitled") : projectTitle;
     }
-
     return displayName;
 }
 
-inline QString exportFilenameWithExtension(const QString& filename, const QString& extension, bool isStem)
+inline QString exportFilenameWithExtensions(const QString& filename, const QStringList& extensions, bool isStem)
 {
-    // A generated name is a stem even when it contains dots (take.2.wav).
-    // Keep the existing handling of explicitly entered filename extensions.
-    if (!extension.isEmpty() && (isStem || QFileInfo(filename).suffix().isEmpty())) {
-        return filename + QLatin1Char('.') + extension;
+    // Imported titles are stems, even when their last component looks like an extension.
+    // Explicit names retain the selected format's recognized extensions.
+    if (!extensions.isEmpty()
+        && (isStem || !extensions.contains(QFileInfo(filename).suffix(), Qt::CaseInsensitive))) {
+        return filename + QLatin1Char('.') + extensions.front();
     }
-
     return filename;
 }
 }

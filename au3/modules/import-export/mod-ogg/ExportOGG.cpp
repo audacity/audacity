@@ -16,11 +16,87 @@
 #include <wx/log.h>
 #include <wx/stream.h>
 
-namespace {
-/*: kbit/s abbreviates "thousands of bits per second" */
-TranslatableString n_kbps(int n)
+#include <algorithm>
+#include <array>
+
+#include "au3-import-export/Export.h"
+#include "au3-import-export/ExportPluginHelpers.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-files/FileIO.h"
+#include "au3-mixer/Mix.h"
+#include "au3-tags/Tags.h"
+#include "au3-track/Track.h"
+#include "au3-import-export/PlainExportOptionsEditor.h"
+#include <vorbis/vorbisenc.h>
+
+#define SAMPLES_PER_RUN 8192u
+
+class ExportOptionOGGEditor final : public ExportOptionsEditor
 {
-    return TranslatableString("import-export", "%1 kbit/s").arg(n);
+public:
+
+    ExportOptionOGGEditor();
+
+    std::string GetName() const override;
+    int GetOptionsCount() const override;
+    bool GetOption(int, ExportOption& option) const override;
+    bool GetValue(ExportOptionID, ExportValue& value) const override;
+    bool SetValue(ExportOptionID, const ExportValue& value) override;
+    SampleRateList GetSampleRateList() const override;
+    void Load(const audacity::BasicSettings& config) override;
+    void Store(audacity::BasicSettings& config) const override;
+
+private:
+    int mQualityUnscaled;
+};
+
+class OGGExportProcessor final : public ExportProcessor
+{
+    struct
+    {
+        TranslatableString status;
+        double t0;
+        double t1;
+        unsigned numChannels;
+        std::unique_ptr<Mixer> mixer;
+        std::unique_ptr<FileIO> outFile;
+        wxFileNameWrapper fName;
+
+        // All the Ogg and Vorbis encoding data
+        ogg_stream_state stream;
+        ogg_page page;
+        ogg_packet packet;
+
+        vorbis_info info;
+        vorbis_comment comment;
+        vorbis_dsp_state dsp;
+        vorbis_block block;
+        bool stream_ok{ false };
+        bool analysis_state_ok{ false };
+    } context;
+public:
+    ~OGGExportProcessor() override;
+
+    bool Initialize(AudacityProject& project, const Parameters& parameters, const wxFileNameWrapper& filename, double t0, double t1,
+                    bool selectedOnly, double sampleRate, unsigned channels, MixerOptions::Downmix* mixerSpec, const Tags* tags) override;
+
+    ExportResult Process(ExportProcessorDelegate& delegate) override;
+
+private:
+    static void FillComment(AudacityProject* project, vorbis_comment* comment, const Tags* metadata);
+};
+
+namespace {
+// Nominal bitrate (kbit/s) for each Ogg Vorbis quality 0-10
+constexpr std::array<int, 11> nominalBitrates { 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 500 };
+
+/*: %1 is the Ogg Vorbis quality setting (0-10); %2 is the nominal bitrate
+ (in kbit/s, "thousands of bits per second") derived from that quality, which
+ may vary from the effective bitrate depending on sample rate */
+TranslatableString qualityString(int quality)
+{
+    quality = std::clamp(quality, 0, static_cast<int>(nominalBitrates.size()) - 1);
+    return TranslatableString("import-export", "Quality %1 (~%2 kbit/s)").arg(quality).arg(nominalBitrates[quality]);
 }
 
 enum : int {
@@ -48,17 +124,17 @@ const PlainExportOptionsEditor::OptionDesc OGGOptionBitrate {
             10,
         },
         {
-            n_kbps(64),
-            n_kbps(80),
-            n_kbps(96),
-            n_kbps(112),
-            n_kbps(128),
-            n_kbps(160),
-            n_kbps(192),
-            n_kbps(224),
-            n_kbps(256),
-            n_kbps(320),
-            n_kbps(500),
+            qualityString(0),
+            qualityString(1),
+            qualityString(2),
+            qualityString(3),
+            qualityString(4),
+            qualityString(5),
+            qualityString(6),
+            qualityString(7),
+            qualityString(8),
+            qualityString(9),
+            qualityString(10),
         }
     }, wxT("/FileFormats/OGG/Bitrate")
 };

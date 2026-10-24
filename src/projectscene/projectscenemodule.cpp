@@ -9,9 +9,13 @@
 
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
 #include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
+#include "internal/projectscenecommandsregister.h"
+#include "internal/projectscenecommandsstate.h"
 #include "internal/projectsceneuistate.h"
 #include "internal/projectsceneconfiguration.h"
 #include "internal/projectviewstatecreator.h"
@@ -39,6 +43,7 @@
 
 #include "view/tracksitemsview/viewtrackslistmodel.h"
 #include "view/tracksitemsview/trackclipslistmodel.h"
+#include "view/tracksitemsview/trackitemsmovecontroller.h"
 #include "view/tracksitemsview/trackclipitem.h"
 #include "view/tracksitemsview/tracklabelslistmodel.h"
 #include "view/tracksitemsview/tracklabelslayoutmanager.h"
@@ -70,7 +75,6 @@
 #include "view/timeline/gridlines.h"
 
 #include "view/playcursor/playcursorcontroller.h"
-#include "view/playcursor/playpositionactioncontroller.h"
 
 #include "view/statusbar/selectionstatusmodel.h"
 
@@ -127,6 +131,11 @@ void ProjectSceneModule::resolveImports()
         ir->registerQmlUri(muse::Uri("audacity://projectscene/geteffects"),
                            "Audacity/ProjectScene/toolbars/GetEffectsDialog.qml");
     }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<ProjectSceneCommandsRegister>());
+    }
 }
 
 void ProjectSceneModule::registerUiTypes()
@@ -172,6 +181,7 @@ void ProjectSceneModule::registerUiTypes()
 
     // clips view
     qmlRegisterType<ViewTracksListModel>("Audacity.ProjectScene", 1, 0, "ViewTracksListModel");
+    qmlRegisterType<TrackItemsMoveController>("Audacity.ProjectScene", 1, 0, "TrackItemsMoveController");
     qmlRegisterType<TrackClipsListModel>("Audacity.ProjectScene", 1, 0, "TrackClipsListModel");
     qmlRegisterUncreatableType<TrackClipItem>("Audacity.ProjectScene", 1, 0, "TrackClipItem", "Not creatable from QML");
     qmlRegisterType<MouseHelper>("Audacity.ProjectScene", 1, 0, "MouseHelper");
@@ -205,7 +215,6 @@ void ProjectSceneModule::registerUiTypes()
 
     // play cursor
     qmlRegisterType<PlayCursorController>("Audacity.ProjectScene", 1, 0, "PlayCursorController");
-    qmlRegisterType<PlayPositionActionController>("Audacity.ProjectScene", 1, 0, "PlayPositionActionController");
 
     // status bar
     qmlRegisterType<SelectionStatusModel>("Audacity.ProjectScene", 1, 0, "SelectionStatusModel");
@@ -245,6 +254,14 @@ void ProjectSceneContext::registerExports()
     ioc()->registerExport<IConnectingDotsPainter>(mname, std::make_shared<ConnectingDotsPainter>(iocContext()));
     ioc()->registerExport<IMinMaxRMSPainter>(mname, std::make_shared<MinMaxRMSPainter>(iocContext()));
     ioc()->registerExport<ISamplesPainter>(mname, std::make_shared<SamplesPainter>(iocContext()));
+}
+
+void ProjectSceneContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<ProjectSceneCommandsState>(iocContext()));
+    }
 }
 
 void ProjectSceneContext::onInit(const muse::IApplication::RunMode& mode)

@@ -26,7 +26,8 @@ public:
 
     Q_INVOKABLE void toggleTracksDataSelectionByLabel(const LabelKey& key);
 
-    Q_INVOKABLE bool moveSelectedLabels(const LabelKey& key, bool completed);
+    double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const override;
+
     Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed);
     Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, const LabelKey& rightLinkedLabel, bool unlink, bool completed);
 
@@ -35,6 +36,7 @@ public:
 
 private:
     friend class TrackLabelsLayoutManagerTests;
+    friend class TrackItemsMoveControllerTests;
 
     void onInit() override;
     void onReload() override;
@@ -42,6 +44,7 @@ private:
     void update();
     void updatePendingTitleEdit();
     void updateItemMetrics(ViewTrackItem* item) override;
+    ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
 
     TrackLabelItem* labelItemByKey(const trackedit::LabelKey& k) const;
@@ -54,8 +57,6 @@ private:
 
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
     bool m_needToSelectTracksData = false;
-
-    trackedit::TrackItemKey m_pendingToggleDeselect;
 
     double m_editedLabelStartTime = 0.0;
     double m_editedLabelEndTime = 0.0;

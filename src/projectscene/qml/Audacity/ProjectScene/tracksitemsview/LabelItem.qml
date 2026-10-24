@@ -89,8 +89,12 @@ Item {
     }
 
     function openContextMenu() {
+        openContextMenuAt(width - 4, 4)
+    }
+
+    function openContextMenuAt(x, y) {
         root.requestSelected()
-        labelContextMenuLoader.show(Qt.point(width - 4, 4), labelContextMenuModel.items)
+        labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
     }
 
     // Navigation support
@@ -129,7 +133,7 @@ Item {
         name: "LabelNavigationPanel"
         enabled: navCtrl.active
         direction: NavigationPanel.Horizontal
-        section: navigation.panel.section
+        section: navigation.panel ? navigation.panel.section : null
         onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
@@ -304,11 +308,6 @@ Item {
 
         onRequestSingleSelected: {
             root.requestSingleSelected()
-        }
-
-        onContextMenuOpenRequested: function (x, y) {
-            root.requestSelected()
-            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
         }
 
         onMousePositionChanged: function (x, y) {

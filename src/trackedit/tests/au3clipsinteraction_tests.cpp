@@ -2,11 +2,25 @@
  * Audacity: A Digital Audio Editor
  */
 #include <gtest/gtest.h>
+#include "global/defer.h"
+
+#include <cmath>
 
 #include "../internal/au3/au3clipsinteraction.h"
 #include "../internal/au3/au3trackdata.h"
 
+#include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
+#include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-xml/XMLFileReader.h"
+
+#include "effects/effects_base/internal/realtimeeffectrestorer.h"
+#include "project/tests/mocks/dummyeffectinstancefactory.h"
 
 #include "au3interactiontestbase.h"
 #include "mocks/selectioncontrollermock.h"
@@ -65,6 +79,71 @@ public:
     std::shared_ptr<muse::IInteractive> m_interactive;
     std::shared_ptr<automation::ClipGainInteractionMock> m_clipGainInteraction;
 };
+
+TEST_F(Au3ClipsInteractionTests, EnablingTempoMatchingWithoutClipTempoPreservesDuration)
+{
+    auto* track = Au3WaveTrack::New(projectRef());
+    DoProjectTempoChange(*track, 120.0);
+    XMLFileReader reader;
+    ASSERT_TRUE(reader.ParseString(track,
+                                   "<wavetrack rate=\"48000\" sampleformat=\"262159\">"
+                                   "<waveclip offset=\"0\" rawAudioTempo=\"240\" clipStretchRatio=\"1\" clipStretchToMatchTempo=\"0\">"
+                                   "<sequence maxsamples=\"262144\" sampleformat=\"262159\" numsamples=\"48000\">"
+                                   "<waveblock start=\"0\" blockid=\"-48000\"/>"
+                                   "</sequence><envelope numpoints=\"0\"/></waveclip></wavetrack>"));
+    track->LinkConsistencyFix(true);
+    const auto clip = track->SortedIntervalArray().front();
+    ASSERT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    ASSERT_DOUBLE_EQ(clip->End(), 1.0);
+    TimeSignature timeSignature;
+    timeSignature.tempo = 120.0;
+    ON_CALL(*m_trackEditProject, timeSignature()).WillByDefault(Return(timeSignature));
+
+    ASSERT_TRUE(m_clipsInteraction->toggleStretchToMatchProjectTempo({ track->GetId(), clip->GetId() }));
+    EXPECT_TRUE(clip->GetStretchToMatchProjectTempo());
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    EXPECT_DOUBLE_EQ(clip->End(), 1.0);
+
+    DoProjectTempoChange(*track, 60.0);
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 2.0);
+    EXPECT_DOUBLE_EQ(clip->End(), 2.0);
+    removeTrack(track->GetId());
+}
+
+TEST_F(Au3ClipsInteractionTests, EnablingTempoMatchingOnATrimmedClipPreservesItsSpeed)
+{
+    auto* track = Au3WaveTrack::New(projectRef());
+    DoProjectTempoChange(*track, 120.0);
+    XMLFileReader reader;
+    ASSERT_TRUE(reader.ParseString(track,
+                                   "<wavetrack rate=\"48000\" sampleformat=\"262159\">"
+                                   "<waveclip offset=\"0\" trimLeft=\"0.2\" trimRight=\"0.3\" "
+                                   "rawAudioTempo=\"240\" clipStretchRatio=\"1\" clipStretchToMatchTempo=\"0\">"
+                                   "<sequence maxsamples=\"262144\" sampleformat=\"262159\" numsamples=\"48000\">"
+                                   "<waveblock start=\"0\" blockid=\"-48000\"/>"
+                                   "</sequence><envelope numpoints=\"0\"/></waveclip></wavetrack>"));
+    track->LinkConsistencyFix(true);
+    const auto clip = track->SortedIntervalArray().front();
+    ASSERT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    ASSERT_DOUBLE_EQ(clip->End() - clip->Start(), 0.5);
+    TimeSignature timeSignature;
+    timeSignature.tempo = 120.0;
+    ON_CALL(*m_trackEditProject, timeSignature()).WillByDefault(Return(timeSignature));
+
+    ASSERT_TRUE(m_clipsInteraction->toggleStretchToMatchProjectTempo({ track->GetId(), clip->GetId() }));
+    // Enabling tempo matching must not change how fast the audio plays, ...
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    // ... nor how much audio is hidden at either end.
+    EXPECT_DOUBLE_EQ(clip->GetTrimLeft(), 0.2);
+    EXPECT_DOUBLE_EQ(clip->GetTrimRight(), 0.3);
+    EXPECT_DOUBLE_EQ(clip->End() - clip->Start(), 0.5);
+
+    // Halving the project tempo now stretches the clip by two.
+    DoProjectTempoChange(*track, 60.0);
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 2.0);
+    EXPECT_DOUBLE_EQ(clip->End() - clip->Start(), 1.0);
+    removeTrack(track->GetId());
+}
 
 TEST_F(Au3ClipsInteractionTests, ChangeClipColor)
 {
@@ -611,8 +690,7 @@ TEST_F(Au3ClipsInteractionTests, MoveClipsRight)
     };
 
     //! [WHEN] Move the clips right
-    auto clipsMovedToOtherTracks = false;
-    m_clipsInteraction->moveClips(selectedClipsKeys, secondsToMove, 0, true, clipsMovedToOtherTracks);
+    m_clipsInteraction->moveClips(selectedClipsKeys, secondsToMove, 0);
 
     //! [THEN] All clips are moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
@@ -651,8 +729,7 @@ TEST_F(Au3ClipsInteractionTests, MoveClipLeftWhenClipIsAtZero)
     };
 
     //! [WHEN] Move the clips left
-    auto clipsMovedToOtherTracks = false;
-    m_clipsInteraction->moveClips(selectedClipsKeys, -1.0, 0, true, clipsMovedToOtherTracks);
+    m_clipsInteraction->moveClips(selectedClipsKeys, -1.0, 0);
 
     //! [THEN] No clip is moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
@@ -663,6 +740,234 @@ TEST_F(Au3ClipsInteractionTests, MoveClipLeftWhenClipIsAtZero)
     ValidateClipProperties(modifiedLastClip, lastClipStart, lastClipEnd);
 
     removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveAcrossTracksPreservesIntermediateAndEmptyTrackFormats)
+{
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    auto source = factory.createTrackFromTemplate("source", { { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    source = source->MonoToStereo();
+    const auto intermediate = factory.createTrackFromTemplate("intermediate", {});
+    const auto destination = factory.createTrackFromTemplate("destination", {});
+    const TrackId sourceId = factory.addTrackToProject(source);
+    const TrackId intermediateId = factory.addTrackToProject(intermediate);
+    const TrackId destinationId = factory.addTrackToProject(destination);
+    const TrackId trailingId = factory.addTrackFromTemplate("trailing", {});
+    const ClipKey sourceKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+
+    const auto moved = m_clipsInteraction->moveClips({ sourceKey }, 0.0, 2);
+    ASSERT_TRUE(moved.ret);
+    ASSERT_EQ(moved.val, (ClipKeyList { { destinationId, sourceKey.itemId } }));
+    auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    EXPECT_EQ(destinationTrack->NChannels(), 2u);
+    EXPECT_EQ(destinationTrack->NIntervals(), 1u);
+    auto sourceTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId));
+    ASSERT_NE(sourceTrack, nullptr);
+    EXPECT_EQ(sourceTrack->NChannels(), 2u);
+    EXPECT_TRUE(sourceTrack->IsEmpty());
+    EXPECT_EQ(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(intermediateId)), intermediate.get());
+    EXPECT_EQ(intermediate->NChannels(), 1u);
+    EXPECT_TRUE(intermediate->IsEmpty());
+
+    const auto returned = m_clipsInteraction->moveClips(moved.val, 0.0, -2);
+    ASSERT_TRUE(returned.ret);
+    EXPECT_EQ(returned.val, (ClipKeyList { sourceKey }));
+    destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    EXPECT_EQ(destinationTrack->NChannels(), 2u);
+    EXPECT_TRUE(destinationTrack->IsEmpty());
+    EXPECT_EQ(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(intermediateId)), intermediate.get());
+    EXPECT_EQ(intermediate->NChannels(), 1u);
+    EXPECT_TRUE(intermediate->IsEmpty());
+    EXPECT_NE(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trailingId)), nullptr);
+    EXPECT_EQ(Au3TrackList::Get(projectRef()).Size(), 4u);
+    EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveStereoClipsUpIntoOccupiedMonoTrackReturnsExistingClips)
+{
+    //! [GIVEN] A mono track holding a clip above a stereo track holding two clips
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto upper = factory.createTrackFromTemplate("upper", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto lower = factory.createTrackFromTemplate("lower", {
+            { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } },
+            { 1.0, { { 0.1, TrackTemplateFactory::createNoise } } }
+        });
+    lower = lower->MonoToStereo();
+    const TrackId upperId = factory.addTrackToProject(upper);
+    const TrackId lowerId = factory.addTrackToProject(lower);
+    const ClipKeyList keys {
+        { lowerId, lower->GetSortedClipByIndex(0)->GetId() },
+        { lowerId, lower->GetSortedClipByIndex(1)->GetId() }
+    };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { lowerId }));
+
+    //! [WHEN] Both stereo clips are moved up, which mixes them down to mono
+    const auto result = m_clipsInteraction->moveClips(keys, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val.size(), 2u);
+
+    //! [THEN] Every returned key names a clip that exists on the upper track
+    const Au3WaveTrack* upperTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(upperId));
+    ASSERT_NE(upperTrack, nullptr);
+    EXPECT_EQ(upperTrack->NChannels(), 1u);
+    EXPECT_EQ(upperTrack->NIntervals(), 3u);
+    for (const ClipKey& key : result.val) {
+        EXPECT_EQ(key.trackId, upperId);
+        EXPECT_NE(DomAccessor::findWaveClip(const_cast<Au3WaveTrack*>(upperTrack), key.itemId), nullptr) << "clip " << key.itemId;
+    }
+}
+
+class Au3ClipsDropTests : public Au3ClipsInteractionTests, public testing::WithParamInterface<std::tuple<bool, bool> >
+{
+};
+
+TEST_P(Au3ClipsDropTests, ConvertsDestinationChannelsBeforeAutosave)
+{
+    const auto [sourceIsStereo, overlap] = GetParam();
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    auto source = factory.createTrackFromTemplate("source", { { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto destination = factory.createTrackFromTemplate("destination", { { 1.0, { { 0.3, TrackTemplateFactory::createNoise } } } });
+    if (sourceIsStereo) {
+        source = source->MonoToStereo();
+    } else {
+        destination = destination->MonoToStereo();
+    }
+    const TrackId sourceId = factory.addTrackToProject(source);
+    const TrackId destinationId = factory.addTrackToProject(destination);
+    const ClipKey sourceKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+
+    // A preview-only drag keeps the original selection until the completed move returns.
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { sourceId }));
+    const auto result = m_clipsInteraction->moveClips({ sourceKey }, overlap ? 1.1 : 2.0, 1);
+
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val, (ClipKeyList { { destinationId, sourceKey.itemId } }));
+    const auto movedTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(movedTrack, nullptr);
+    EXPECT_EQ(movedTrack->NChannels(), sourceIsStereo ? 1u : 2u);
+    EXPECT_EQ(movedTrack->NIntervals(), overlap ? 3u : 2u);
+    for (const auto& clip : movedTrack->Intervals()) {
+        // A stereo track containing a mono clip crashes while serializing its second channel.
+        ASSERT_EQ(clip->NChannels(), movedTrack->NChannels());
+    }
+    EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+}
+
+INSTANTIATE_TEST_SUITE_P(CompletedMove, Au3ClipsDropTests, testing::Combine(testing::Bool(), testing::Bool()));
+
+TEST_F(Au3ClipsInteractionTests, CompletedMoveKeepsTrackWhenChannelsAlreadyMatch)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    const auto track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(track, nullptr);
+    const ClipKey key { trackId, track->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { trackId }));
+    EXPECT_CALL(*std::static_pointer_cast<muse::InteractiveMock>(m_interactive), showProgress(_, _)).Times(0);
+
+    const auto result = m_clipsInteraction->moveClips({ key }, 1.0, 0);
+
+    ASSERT_TRUE(result.ret);
+    EXPECT_EQ(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId)), track);
+    EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+}
+
+TEST_P(Au3ClipsDropTests, PreservesEffectsThroughUndoRedo)
+{
+    class CountingEffectFactory final : public project::DummyEffectInstanceFactory
+    {
+    public:
+        std::shared_ptr<EffectInstance> MakeInstance() const override
+        {
+            ++instanceCreations;
+            return nullptr;
+        }
+
+        mutable int instanceCreations = 0;
+    } factory;
+    RealtimeEffectState::EffectFactory::Scope factoryScope {
+        [&](const PluginID&) -> const EffectInstanceFactory* { return &factory; }
+    };
+    const muse::Defer cleanup([&] {
+        Au3TrackList::Get(projectRef()).Clear();
+        ::UndoManager::Get(projectRef()).ClearStates();
+    });
+    // Include the real settings restorer used by the application's undo/redo path.
+    effects::setRealtimeEffectRestorerSignals(projectRef(), {});
+
+    const auto [sourceIsStereo, overlap] = GetParam();
+    TrackTemplateFactory trackFactory(projectRef(), DEFAULT_SAMPLE_RATE);
+    auto source = trackFactory.createTrackFromTemplate("source", { { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto destination = trackFactory.createTrackFromTemplate("destination", { { 1.0, { { 0.3, TrackTemplateFactory::createNoise } } } });
+    if (sourceIsStereo) {
+        source = source->MonoToStereo();
+    } else {
+        destination = destination->MonoToStereo();
+    }
+    const TrackId sourceId = trackFactory.addTrackToProject(source);
+    const TrackId destinationId = trackFactory.addTrackToProject(destination);
+    const ClipKey key { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { destinationId }));
+    const auto sourceEffect = RealtimeEffectState::make_shared("au-test:source");
+    const auto destinationEffect = RealtimeEffectState::make_shared("au-test:destination");
+    ASSERT_TRUE(RealtimeEffectList::Get(*source).AddState(sourceEffect));
+    ASSERT_TRUE(RealtimeEffectList::Get(*destination).AddState(destinationEffect));
+    RealtimeEffectList::Get(*source).SetActive(false);
+    // Loaded effects may never have been played or opened before this edit.
+    ASSERT_EQ(factory.instanceCreations, 0);
+
+    auto& history = ::ProjectHistory::Get(projectRef());
+    auto& undoManager = ::UndoManager::Get(projectRef());
+    const auto restore = [&](const UndoStackElem& elem) { history.PopState(elem.state); };
+    history.InitialState();
+    history.ModifyState(false);
+
+    const auto result = m_clipsInteraction->moveClips({ key }, overlap ? 1.1 : 2.0, 1);
+    ASSERT_TRUE(result.ret);
+    history.PushState({}, {});
+
+    const auto checkEffects = [&] {
+        const auto sourceTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId));
+        const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+        ASSERT_NE(sourceTrack, nullptr);
+        ASSERT_NE(destinationTrack, nullptr);
+        EXPECT_EQ(RealtimeEffectList::Get(*sourceTrack).GetStateAt(0), sourceEffect);
+        EXPECT_EQ(RealtimeEffectList::Get(*destinationTrack).GetStateAt(0), destinationEffect);
+        EXPECT_FALSE(RealtimeEffectList::Get(*sourceTrack).IsActive());
+        EXPECT_EQ(factory.instanceCreations, 0);
+        EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+    };
+    checkEffects();
+
+    for (int i = 0; i < 2; ++i) {
+        ASSERT_TRUE(undoManager.UndoAvailable());
+        undoManager.Undo(restore);
+        EXPECT_NE(DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId)), key.itemId), nullptr);
+        checkEffects();
+        ASSERT_TRUE(undoManager.RedoAvailable());
+        undoManager.Redo(restore);
+        EXPECT_NE(DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId)), key.itemId), nullptr);
+        checkEffects();
+    }
+
+    destinationEffect->SetActive(false);
+    history.PushState({}, {});
+    undoManager.Undo(restore);
+    EXPECT_TRUE(destinationEffect->IsEnabled());
+    undoManager.Redo(restore);
+    EXPECT_FALSE(destinationEffect->IsEnabled());
+    undoManager.Undo(restore);
+    EXPECT_TRUE(destinationEffect->IsEnabled());
+
+    auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    RealtimeEffectList::Get(*destinationTrack).RemoveState(destinationEffect);
+    history.PushState({}, {});
+    undoManager.Undo(restore);
+    checkEffects();
+    undoManager.Redo(restore);
+    destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    EXPECT_EQ(RealtimeEffectList::Get(*destinationTrack).GetStatesCount(), 0u);
 }
 
 TEST_F(Au3ClipsInteractionTests, SplitDeteleByClipId)
@@ -1077,6 +1382,110 @@ constexpr double midpointOf(double start, double end)
 }
 }
 
+TEST_F(Au3ClipsInteractionTests, MoveClipOfAnotherRateOntoNeighbourStartTrimsPastItsEnd)
+{
+    //! [GIVEN] A 44.1 kHz track with a clip, and below it a 48 kHz track with a clip whose end
+    //! falls just above a 44.1 kHz sample, so a trim by the exact overlap would round back into it
+    TrackTemplateFactory factory44(projectRef(), DEFAULT_SAMPLE_RATE);
+    TrackTemplateFactory factory48(projectRef(), 48000.0);
+    const auto destination = factory44.createTrackFromTemplate("destination", { { 0.9, { { 1.1, TrackTemplateFactory::createNoise } } } });
+    const auto source = factory48.createTrackFromTemplate("source", { { 0.5, { { 24007.5 / 48000.0,
+                                                                  TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory44.addTrackToProject(destination);
+    const TrackId sourceId = factory48.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double movedEnd = source->GetSortedClipByIndex(0)->GetPlayEndTime();
+    ASSERT_LT(std::fmod(movedEnd * DEFAULT_SAMPLE_RATE, 1.0), 0.5) << "the layout must round the neighbour's edge down";
+
+    //! [WHEN] The 48 kHz clip is moved up onto the neighbour's start
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour was trimmed past the moved clip's end and nothing overlaps
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_GE(neighbour->GetPlayStartTime(), moved->GetPlayEndTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipOntoNeighbourAtExactSampleBoundaryLeavesNoGap)
+{
+    //! [GIVEN] Two same-rate clips whose overlap, 12 samples, computes to a hair above 12 in floating point
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto destination = factory.createTrackFromTemplate("destination", { { 1.0 / DEFAULT_SAMPLE_RATE, { { 0.1,
+                                                                     TrackTemplateFactory::createNoise } } } });
+    const auto source = factory.createTrackFromTemplate("source", { { 0.0, { { 13.5 / DEFAULT_SAMPLE_RATE,
+                                                                TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory.addTrackToProject(destination);
+    const TrackId sourceId = factory.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double overlap = (source->GetSortedClipByIndex(0)->GetPlayEndTime() - destination->GetSortedClipByIndex(0)->GetPlayStartTime())
+                           * DEFAULT_SAMPLE_RATE;
+    ASSERT_GT(overlap, 12.0) << "the layout must compute the overlap just above a whole sample count";
+    ASSERT_LT(overlap, 12.0001);
+
+    //! [WHEN] The clip is moved up onto the neighbour's start
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour starts exactly where the moved clip ends, with neither an overlap nor a gap
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_DOUBLE_EQ(neighbour->GetPlayStartTime(), moved->GetPlayEndTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipOfAnotherRateOntoNeighbourEndTrimsBeforeItsStart)
+{
+    //! [GIVEN] A 44.1 kHz track with a clip, and below it a 48 kHz clip whose start falls just
+    //! below a 44.1 kHz sample and which reaches past the neighbour's end, so a trim by the
+    //! exact overlap would round forward into it
+    TrackTemplateFactory factory44(projectRef(), DEFAULT_SAMPLE_RATE);
+    TrackTemplateFactory factory48(projectRef(), 48000.0);
+    const auto destination = factory44.createTrackFromTemplate("destination", { { 0.2, { { 0.8, TrackTemplateFactory::createNoise } } } });
+    const auto source = factory48.createTrackFromTemplate("source", { { 24013.0 / 48000.0, { { 1.0,
+                                                                  TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory44.addTrackToProject(destination);
+    const TrackId sourceId = factory48.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double movedStart = source->GetSortedClipByIndex(0)->GetPlayStartTime();
+    ASSERT_GT(std::fmod(movedStart * DEFAULT_SAMPLE_RATE, 1.0), 0.5) << "the layout must round the neighbour's edge up";
+
+    //! [WHEN] The 48 kHz clip is moved up onto the neighbour's end
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour was trimmed before the moved clip's start and nothing overlaps
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_LE(neighbour->GetPlayEndTime(), moved->GetPlayStartTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
+}
+
 TEST_F(Au3ClipsInteractionTests, ChangeClipStartTimeOntoNeighbourResolvesOverlap)
 {
     //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
@@ -1286,6 +1695,25 @@ TEST_F(Au3ClipsInteractionTests, RemoveOverlapsClearsAlreadyOverlappingTrack)
     EXPECT_DOUBLE_EQ(secondClip->GetPlayStartTime(), TRACK_TWO_CLIPS_CLIP2_START);
     EXPECT_DOUBLE_EQ(secondClip->GetPlayEndTime(), TRACK_TWO_CLIPS_CLIP2_END);
 
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipGroupIdOfAMissingClipIsNone)
+{
+    //! [GIVEN] A track with a clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3Project& project = projectRef();
+    const Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(trackId));
+    const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(project, track->GetId(), 0);
+    ASSERT_NE(clip, nullptr);
+
+    //! [THEN] Stale keys, e.g. a clip's key from before it moved to another track, are in no group
+    EXPECT_EQ(m_clipsInteraction->clipGroupId(ClipKey { track->GetId(), clip->GetId() + 1000 }), -1);
+    EXPECT_EQ(m_clipsInteraction->clipGroupId(ClipKey { trackId + 1000, clip->GetId() }), -1);
+
+    // Cleanup
     removeTrack(trackId);
 }
 }

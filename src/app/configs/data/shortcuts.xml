@@ -141,7 +141,7 @@
     </SC>
 
     <SC>
-        <key>track-view-item-context-menu</key>
+        <key>action://context-menu</key>
         <seq>Shift+F10</seq>
         <seq>Ctrl+Shift+F10</seq>
     </SC>
@@ -758,11 +758,11 @@
         <key>sync-lock</key>
     </SC>
     <SC>
-        <key>group-clips</key>
+        <key>group-items</key>
         <seq>Ctrl+G</seq>
     </SC>
     <SC>
-        <key>ungroup-clips</key>
+        <key>ungroup-items</key>
         <seq>Ctrl+Shift+G</seq>
     </SC>
     <SC>
@@ -818,11 +818,11 @@
         <key>track-move-bottom</key>
     </SC>
     <SC>
-        <key>play-stop-select</key>
+        <key>action://playback/toggle-play-stop-and-set-cursor</key>
         <seq>X</seq>
     </SC>
     <SC>
-        <key>once-play-stop</key>
+        <key>action://playback/play-selection</key>
         <seq>Shift+Space</seq>
     </SC>
     <SC>
@@ -874,14 +874,6 @@
     <SC>
         <key>action://playback/toggle-play-stop</key>
         <seq>Space</seq>
-    </SC>
-    <SC>
-        <key>action://playback/toggle-play-from-cursor</key>
-        <seq>Shift+Space</seq>
-    </SC>
-    <SC>
-        <key>action://playback/play-selection</key>
-        <seq>W</seq>
     </SC>
     <SC>
         <key>action://record/stop</key>

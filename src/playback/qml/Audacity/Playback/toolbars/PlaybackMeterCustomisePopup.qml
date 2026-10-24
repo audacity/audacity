@@ -27,7 +27,7 @@ StyledPopupView {
         anchors.fill: parent
         spacing: 12
 
-        StyledGroupBox {
+        RadioOptionsGroup {
             Layout.fillWidth: true
             Layout.preferredHeight: 92
 
@@ -64,7 +64,7 @@ StyledPopupView {
 
             spacing: 12
 
-            StyledGroupBox {
+            RadioOptionsGroup {
                 Layout.fillWidth: true
                 Layout.preferredWidth: 0 // Force both to start with the same width
                 Layout.preferredHeight: 120
@@ -100,7 +100,7 @@ StyledPopupView {
                 }
             }
 
-            StyledGroupBox {
+            RadioOptionsGroup {
                 Layout.fillWidth: true
                 Layout.preferredWidth: 0 // Force both to start with the same width
                 Layout.preferredHeight: 120

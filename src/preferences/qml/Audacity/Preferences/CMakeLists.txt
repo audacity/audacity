@@ -18,6 +18,7 @@ qt_add_qml_module(preferences_qml
         editpreferencesmodel.h
         exportpreferencespagemodel.cpp
         exportpreferencespagemodel.h
+        foreign.h
         generalpreferencesmodel.cpp
         generalpreferencesmodel.h
         musicpreferencesmodel.cpp
@@ -123,4 +124,7 @@ qt_add_qml_module(preferences_qml
 
 fixup_qml_module_dependencies(preferences_qml)
 
-target_link_libraries(preferences_qml PRIVATE audacity_extensions)
+target_link_libraries(preferences_qml PRIVATE
+    audacity_extensions
+    importer # TempoDetectionPref (foreign.h) lives there; the link makes its metatypes visible to qmltyperegistrar
+)

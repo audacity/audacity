@@ -7,7 +7,10 @@
 
 #include <string>
 
+#include "framework/global/log.h"
 #include "framework/global/translation.h"
+#include "framework/global/types/uri.h"
+#include "framework/interactive/iinteractive.h"
 
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/UserService.h"
@@ -16,8 +19,14 @@
 #include "au3-preferences/Prefs.h"
 
 #include "au3cloud/cloudtypes.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace au::au3cloud;
+
+namespace {
+const muse::Uri SIGNIN_AUDIOCOM_URI("audacity://signin/audiocom");
+const std::string CREATE_ACCOUNT_MODE_PARAM("isCreateAccountMode");
+}
 
 void Au3CloudService::init()
 {
@@ -52,8 +61,6 @@ void Au3CloudService::init()
             service.ClearUserData();
         }
     });
-    oauthService.ValidateAuth(nullptr, AudiocomTrace::ignore, true);
-
     auto& userService = audacity::cloud::audiocom::GetUserService();
     usageInfo()->setUserId(userService.GetUserId().ToStdString());
 
@@ -65,8 +72,8 @@ void Au3CloudService::init()
             auto& userService = audacity::cloud::audiocom::GetUserService();
             m_accountInfo.id = userService.GetUserId().ToStdString();
             m_accountInfo.userSlug = userService.GetUserSlug().ToStdString();
-            m_accountInfo.displayName = userService.GetDisplayName().ToStdString();
-            m_accountInfo.avatarPath = userService.GetAvatarPath().ToStdString();
+            m_accountInfo.displayName = au::au3::wxToStdString(userService.GetDisplayName());
+            m_accountInfo.avatarPath = au::au3::wxToStdString(userService.GetAvatarPath());
 
             if (!std::holds_alternative<Authorized>(m_authState.val)) {
                 //Only set to authorized if we have user data
@@ -87,6 +94,11 @@ void Au3CloudService::init()
         usageInfo()->setUserId(m_accountInfo.id);
         m_accountInfoChanged.notify();
     });
+}
+
+void Au3CloudService::onAllInited()
+{
+    audacity::cloud::audiocom::GetOAuthService().ValidateAuth(nullptr, AudiocomTrace::ignore, true);
 }
 
 bool Au3CloudService::initReplyHandlerIfNecessary()
@@ -191,6 +203,30 @@ void Au3CloudService::signOut()
 muse::ValCh<AuthState> Au3CloudService::authState() const
 {
     return m_authState;
+}
+
+muse::Ret Au3CloudService::ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode)
+{
+    if (isAuthorized()) {
+        return muse::make_ok();
+    }
+
+    auto interactive = muse::modularity::ioc(ctx)->resolve<muse::IInteractive>("au3cloud");
+    IF_ASSERT_FAILED(interactive) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
+    muse::UriQuery uri(SIGNIN_AUDIOCOM_URI);
+    if (createAccountMode) {
+        uri.addParam(CREATE_ACCOUNT_MODE_PARAM, muse::Val(true));
+    }
+
+    const muse::RetVal<muse::Val> rv = interactive->openSync(uri);
+    if (!rv.ret) {
+        return rv.ret;
+    }
+
+    return isAuthorized() ? muse::make_ok() : muse::make_ret(muse::Ret::Code::Cancel);
 }
 
 bool Au3CloudService::isAuthorized() const

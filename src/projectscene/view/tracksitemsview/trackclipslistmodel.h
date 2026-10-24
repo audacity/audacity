@@ -10,6 +10,7 @@
 #include "iprojectsceneconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "record/irecordcontroller.h"
+#include "trackedit/itracksviewrequestsservice.h"
 
 #include "trackitemslistmodel.h"
 #include "trackclipitem.h"
@@ -31,14 +32,13 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::ContextInject<context::IGlobalContext> globalContext { this };
     muse::ContextInject<au::record::IRecordController> recordController { this };
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
+    muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
 
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);
 
     bool isStereo() const;
     ClipStyles::Style clipStyle() const;
-
-    Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
 
     void endEditItem(const TrackItemKey& key) override;
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
@@ -50,15 +50,13 @@ public:
     Q_INVOKABLE void handleClipRelease(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
+    Q_INVOKABLE void titleEditRequestHandled(const ClipKey& key);
 
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
 
     Q_INVOKABLE void openClipSpeedEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipSpeed(const ClipKey& key);
-
-    // update clip after moving to other track
-    Q_INVOKABLE projectscene::ClipKey updateClipTrack(ClipKey clipKey) const;
 
     bool asymmetricStereoHeightsPossible() const;
     bool isContrastFocusBorderEnabled() const;
@@ -79,7 +77,9 @@ private:
     void onReload() override;
 
     void update();
+    void updatePendingTitleEdit();
     void updateItemMetrics(ViewTrackItem* item) override;
+    ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
     trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
 
@@ -90,7 +90,5 @@ private:
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
-
-    trackedit::ClipKeyList m_pendingToggleDeselect;
 };
 }

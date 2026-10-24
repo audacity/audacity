@@ -1,5 +1,6 @@
 import QtQuick
 
+import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.ProjectScene
@@ -9,6 +10,7 @@ Rectangle {
 
     property alias context: timelineContext
     property alias ruler: timelineRuler
+    property NavigationSection navigationSection: null
 
     color: ui.theme.backgroundSecondaryColor
 
@@ -42,6 +44,34 @@ Rectangle {
         return timelineRuler.isMajorSection(y)
     }
 
+    NavigationPanel {
+        id: navPanel
+        name: "TimelinePanel"
+        enabled: root.enabled && root.visible
+        section: root.navigationSection
+        direction: NavigationPanel.Horizontal
+        order: 0
+
+        accessible.name: qsTrc("projectscene", "Timeline")
+    }
+
+    NavigationControl {
+        id: navCtrl
+        name: "Timeline"
+        enabled: root.enabled && root.visible
+        panel: navPanel
+        order: 0
+
+        accessible.role: MUAccessible.Information
+        accessible.name: qsTrc("projectscene", "Timeline")
+
+        onActiveChanged: function (active) {
+            if (active) {
+                root.forceActiveFocus()
+            }
+        }
+    }
+
     TimelineContextMenuModel {
         id: contextMenuModel
     }
@@ -56,6 +86,11 @@ Rectangle {
 
     TimelineContext {
         id: timelineContext
+
+        onContextMenuRequested: {
+            contextMenuModel.load()
+            contextMenuLoader.show(Qt.point(0, root.height), contextMenuModel.items)
+        }
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -87,5 +122,10 @@ Rectangle {
 
     SeparatorLine {
         anchors.bottom: parent.bottom
+    }
+
+    NavigationFocusBorder {
+        navigationCtrl: navCtrl
+        drawOutsideParent: false
     }
 }

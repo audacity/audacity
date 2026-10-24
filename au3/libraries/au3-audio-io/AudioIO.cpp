@@ -113,6 +113,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "au3-realtime-effects/RealtimeEffectManager.h"
 #include "au3-project-rate/QualitySettings.h"
 #include "au3-basic-ui/BasicUI.h"
+#include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/WaveTrack.h"
 
 namespace {
@@ -888,12 +889,8 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 
     const auto pOwningProject = mOwningProject.lock();
     if (!success) {
-        using namespace BasicUI;
-        const auto msg = TranslatableString("audio-io", "Error opening recording device.\nError code: %1")
-                         .Format(Get()->LastPaErrorString());
-        ShowErrorDialog(*ProjectFramePlacement(pOwningProject.get()),
-                        TranslatableString("audio-io", "Error"), msg, wxT("Error_opening_sound_device"),
-                        ErrorDialogOptions { ErrorDialogType::ModalErrorReport });
+        wxLogMessage("Error opening recording device for monitoring. Error code: %s",
+                     Get()->LastPaErrorString());
         return;
     }
 
@@ -2395,6 +2392,12 @@ void AudioIO::DrainRecordBuffers()
         return;
     }
 
+    // The sequences might be locked during project serialization (e.g. on autosave): skip this turn
+    std::unique_lock recordingLock(Sequence::RecordingMutex(), std::try_to_lock);
+    if (!recordingLock.owns_lock()) {
+        return;
+    }
+
     if (mTrackChannelSourceMap.empty() && mNumCaptureChannels > 0) {
         ConfigureCaptureRouting(mNumCaptureChannels);
     }
@@ -3384,8 +3387,7 @@ int AudioIoCallback::AudioCallback(
                                    : outputBuffer;
     // ----- END of MEMORY ALLOCATIONS ------------------------------------------
 
-    const auto levelDisplayTime = std::chrono::steady_clock::now()
-                                  + std::chrono::milliseconds(static_cast<int>(mHardwarePlaybackLatencyMs));
+    const auto callbackTime = std::chrono::steady_clock::now();
 
     if (inputBuffer && numCaptureChannels) {
         float* inputSamples;
@@ -3407,7 +3409,7 @@ int AudioIoCallback::AudioCallback(
             inputSamples = tempFloats;
         }
 
-        SendVuInputMeterData(inputSamples, framesPerBuffer, levelDisplayTime);
+        SendVuInputMeterData(inputSamples, framesPerBuffer, callbackTime);
 
         // This function may queue up a pause or resume.
         // TODO this is a bit dodgy as it toggles the Pause, and
@@ -3477,6 +3479,7 @@ int AudioIoCallback::AudioCallback(
         }
     }
 
+    const auto levelDisplayTime = callbackTime + std::chrono::milliseconds(static_cast<int>(mHardwarePlaybackLatencyMs));
     SendVuOutputMeterData(outputMeterFloats, framesPerBuffer, levelDisplayTime);
 
     return mCallbackReturn;

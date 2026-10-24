@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include "framework/global/async/asyncable.h"
 
 #include "modularity/ioc.h"
@@ -47,6 +49,7 @@ public:
     void setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio) override;
     trackedit::TrackId trackAtPosition(double y) const override;
     trackedit::TrackIdList tracksInRange(double y1, double y2) const override;
+    bool isBelowAllTracks(double y) const override;
 
     bool isSnapEnabled() const override;
     void setIsSnapEnabled(bool enabled) override;
@@ -107,6 +110,9 @@ public:
     void setMoveInitiated(bool val) override;
     bool moveInitiated() const override;
 
+    void setMovePreviewEndTime(double time) override;
+    double movePreviewEndTime() const override;
+
     void setLastEditedClip(const trackedit::ClipKey& clipKey) override;
     trackedit::ClipKey lastEditedClip() const override;
 
@@ -136,6 +142,7 @@ private:
     friend class ProjectViewStateTests;
 
     int calculateVerticalRulerWidth() const;
+    std::optional<int> tracksBottomY() const;
     float maxVerticalZoomLevel(const trackedit::TrackId& trackId) const;
 
     struct TrackData {
@@ -179,6 +186,7 @@ private:
     //! User needs to drag a mouse by a certain amount of pixels (left or right) or
     //! move to the other track for move to be initiated
     bool m_moveInitiated = false;
+    double m_movePreviewEndTime = 0.0;
 
     trackedit::ClipKey m_lastEditedClip = trackedit::ClipKey{};
 

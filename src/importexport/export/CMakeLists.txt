@@ -64,6 +64,6 @@ set(MODULE_USE_UNITY OFF)
 
 setup_module()
 
-if (MUSE_ENABLE_UNIT_TESTS)
+if (AU_BUILD_EXPORT_TESTS)
     add_subdirectory(tests)
 endif()

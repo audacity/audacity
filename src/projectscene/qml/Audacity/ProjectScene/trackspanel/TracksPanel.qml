@@ -31,12 +31,8 @@ Item {
         id: tracksModel
     }
 
-    //! NOTE Sync with TracksItemsView
     TracksViewStateModel {
         id: tracksViewState
-        onTracksVerticalOffsetChanged: {
-            view.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight
-        }
     }
 
     Component.onCompleted: {
@@ -49,7 +45,6 @@ Item {
         id: prv
 
         property string currentItemNavigationName: ""
-        readonly property int listHeaderHeight: 2
     }
 
     Rectangle {
@@ -156,7 +151,7 @@ Item {
             readonly property int sideMargin: 12
             spacing: sideMargin
 
-            StyledListView {
+            TracksListView {
                 id: view
 
                 Layout.topMargin: 1
@@ -166,41 +161,9 @@ Item {
                 spacing: 0
                 cacheBuffer: 3000
 
-                ScrollBar.vertical: null
-
-                property real lockedVerticalScrollPosition
-                property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
-
-                onVerticalScrollLockedChanged: {
-                    lockedVerticalScrollPosition = contentY
-                }
-
-                onContentYChanged: {
-                    if (verticalScrollLocked) {
-                        view.contentY = lockedVerticalScrollPosition
-                    } else {
-                        tracksViewState.changeTracksVerticalOffset(view.contentY + prv.listHeaderHeight)
-                    }
-                }
-
-                interactive: false
+                tracksViewState: tracksViewState
 
                 model: tracksModel
-
-                header: Rectangle {
-                    height: prv.listHeaderHeight
-                    width: parent.width
-                    color: "transparent"
-                }
-
-                footer: Item {
-                    height: tracksViewState.tracksVerticalScrollPadding
-                }
-
-                function insureVerticallyVisible(item) {
-                    var itemViewY = item.mapToItem(view.contentItem, Qt.point(0, 0)).y
-                    tracksViewState.insureVerticallyVisible(view.contentY + prv.listHeaderHeight, view.height, itemViewY + prv.listHeaderHeight, item.height)
-                }
 
                 delegate: Loader {
                     id: trackItemLoader
@@ -239,7 +202,7 @@ Item {
                                 if (navigation.active) {
                                     prv.currentItemNavigationName = navigation.name
 
-                                    view.insureVerticallyVisible(this)
+                                    view.ensureVerticallyVisible(this)
                                 }
                             }
 
@@ -306,7 +269,7 @@ Item {
                                 if (navigation.active) {
                                     prv.currentItemNavigationName = navigation.name
 
-                                    view.insureVerticallyVisible(this)
+                                    view.ensureVerticallyVisible(this)
                                 }
                             }
 

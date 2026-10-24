@@ -194,7 +194,7 @@ void PanelTracksListModel::focusTrack(int row)
     }
 
     if (TrackItem* item = modelIndexToItem(index(row))) {
-        trackNavigationController()->setFocusedTrack(item->trackId());
+        trackNavigationController()->setFocus(TrackFocus::track(item->trackId()));
     }
 }
 

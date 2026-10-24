@@ -40,6 +40,7 @@ static const muse::Uri EXTENSIONS_DIALOG_URI("muse://extensions/viewer");
 //! area that's being focused when opening a project
 static const QString PROJECT_NAVIGATION_PANEL("MainToolBar");
 static const QString DEFAULT_NAVIGATION_SECTION("TrackViewSection");
+static const QString TIMELINE_NAVIGATION_SECTION("TimelineSection");
 
 UiContextResolver::UiContextResolver(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx)
@@ -94,6 +95,10 @@ muse::ui::UiContext UiContextResolver::resolveUiContext() const
         }
 
         INavigationSection* activeSection = navigationController()->activeSection();
+        if (activeSection && activeSection->name() == TIMELINE_NAVIGATION_SECTION) {
+            return context::UiCtxProjectFocused;
+        }
+
         if (activeSection && activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
             //! NOTE: the project focus is bound to the track panel and the clips/labels panel.
             //! The track header controls panel is navigated as a usual panel (general navigation),

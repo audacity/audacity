@@ -161,6 +161,7 @@ Rectangle {
                         title: modelData.title
                         subtitle: modelData.subtitle
                         effectCode: modelData.code
+                        effectId: modelData.id
 
                         navigation.panel: root.navigation
                         navigation.column: index
@@ -175,8 +176,8 @@ Rectangle {
                             }
                         }
 
-                        onGetEffectClicked: function (code) {
-                            root.model.openEffectUrl(code)
+                        onGetEffectClicked: function (code, effectId) {
+                            root.model.openEffectUrl(code, effectId)
                         }
                     }
                 }

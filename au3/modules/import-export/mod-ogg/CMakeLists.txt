@@ -13,15 +13,15 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   Ogg::ogg
-   Vorbis::vorbis # bundles vorbis, vorbisenc and vorbisfile
-   au3-files
    au3-import-export
+PRIVATE
+   au3-files
    au3-mixer
    au3-tags
    au3-track
    au3-wave-track
-PRIVATE
+   Ogg::ogg
+   Vorbis::vorbis
    wxBase
 )
 

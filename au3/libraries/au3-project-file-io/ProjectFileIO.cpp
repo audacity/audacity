@@ -36,7 +36,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "au3-string-utils/CodeConversions.h"
 #include "DBConnection.h"
 #include "au3-files/FileNames.h"
-#include "au3-track/PendingTracks.h"
 #include "au3-project/Project.h"
 #include "ProjectFileIOExtension.h"
 #include "au3-project-history/ProjectHistory.h"
@@ -45,6 +44,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "au3-wave-track/SampleBlock.h"
 #include "au3-files/TempDirectory.h"
 #include "au3-transactions/TransactionScope.h"
+#include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-basic-ui/BasicUI.h"
@@ -500,7 +500,7 @@ wxString ProjectFileIO::GenerateDoc()
 
     XMLStringWriter doc;
     WriteXMLHeader(doc);
-    WriteXML(doc, false, trackList.empty() ? nullptr : &trackList);
+    WriteXML(doc, trackList.empty() ? nullptr : &trackList);
     return doc;
 }
 
@@ -944,8 +944,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
     // Mark the project recovered if we deleted any rows
     int changes = sqlite3_changes(db);
     if (changes > 0) {
-        //: %1 is the number of deleted orphan blocks
-        wxLogInfo(TranslatableString("project-file-io", "Total orphan blocks deleted %1").Translation(), changes);
+        wxLogInfo("Total orphan blocks deleted %d", changes);
         mRecovered = true;
     }
 
@@ -996,7 +995,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
     // Create the project doc
     ProjectSerializer doc;
     WriteXMLHeader(doc);
-    WriteXML(doc, false, tracks.empty() ? nullptr : tracks[0]);
+    WriteXML(doc, tracks.empty() ? nullptr : tracks[0]);
 
     auto db = DB();
     Connection destConn = nullptr;
@@ -1844,10 +1843,12 @@ void ProjectFileIO::WriteXMLHeader(XMLWriter& xmlFile) const
 }
 
 void ProjectFileIO::WriteXML(XMLWriter& xmlFile,
-                             bool recording /* = false */,
                              const TrackList* tracks /* = nullptr */)
 // may throw
 {
+    // Prevent the recording from changing the sequences during serialization
+    std::lock_guard recordingLock(Sequence::RecordingMutex());
+
     auto& proj = mProject;
     auto& tracklist = tracks ? *tracks : TrackList::Get(proj);
 
@@ -1861,23 +1862,14 @@ void ProjectFileIO::WriteXML(XMLWriter& xmlFile,
 
     ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
-    auto& pendingTracks = PendingTracks::Get(proj);
     tracklist.Any().Visit([&](const Track& t) {
-        auto useTrack = &t;
-        if (recording) {
-            // When append-recording, there is a temporary "shadow" track accumulating
-            // changes and displayed on the screen but it is not yet part of the
-            // regular track list.  That is the one that we want to back up.
-            // SubstitutePendingChangedTrack() fetches the shadow, if the track has
-            // one, else it gives the same track back.
-            useTrack = &pendingTracks.SubstitutePendingChangedTrack(t);
-        } else if (useTrack->GetId() == TrackId {}) {
+        if (t.GetId() == TrackId {}) {
             // This is a track added during a non-appending recording that is
             // not yet in the undo history.  The UndoManager skips backing it up
             // when pushing.  Don't auto-save it.
             return;
         }
-        useTrack->WriteXML(xmlFile);
+        t.WriteXML(xmlFile);
     });
 
     SavedMasterEffectList::Get(proj).List().WriteXML(xmlFile);
@@ -1887,11 +1879,11 @@ void ProjectFileIO::WriteXML(XMLWriter& xmlFile,
     //TIMER_STOP( xml_writer_timer );
 }
 
-bool ProjectFileIO::AutoSave(bool recording)
+bool ProjectFileIO::AutoSave()
 {
     ProjectSerializer autosave;
     WriteXMLHeader(autosave);
-    WriteXML(autosave, recording);
+    WriteXML(autosave);
 
     if (WriteDoc("autosave", autosave)) {
         mModified = true;
@@ -2168,11 +2160,14 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
     if (
         !useAutosave
         && (!GetValue("SELECT COUNT(1) FROM main.project;", rowsCount, true) || rowsCount == 0)) {
-        // Missing both the autosave and project docs. This can happen if the
-        // system were to crash before the first autosave into a temporary file.
-        // This should be a recoverable scenario.
+        // No saved document, and autosave is absent or deliberately ignored.
+        // This also covers a crash before the first autosave.
         mRecovered = true;
         mModified = true;
+        mTemporary = true;
+
+        // Let the caller commit this connection even without a document to load.
+        result->SetFileName(fileName);
 
         return result;
     }
@@ -2234,7 +2229,7 @@ bool ProjectFileIO::UpdateSaved(const TrackList* tracks)
 {
     ProjectSerializer doc;
     WriteXMLHeader(doc);
-    WriteXML(doc, false, tracks);
+    WriteXML(doc, tracks);
 
     if (!WriteDoc("project", doc)) {
         return false;

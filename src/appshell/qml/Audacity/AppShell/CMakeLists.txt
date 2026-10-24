@@ -104,7 +104,6 @@ qt_add_qml_module(appshell_qml
         TARGET muse_shortcuts_qml
         TARGET muse_toast_qml
         TARGET muse_tours_qml
-        TARGET muse_update_qml
 )
 
 if (AU_BUILD_CLOUD_AUDIOCOM)
@@ -146,7 +145,7 @@ if (NOT OS_IS_MAC)
     target_link_libraries(appshell_qml PRIVATE Qt6::GuiPrivate)
 endif(NOT OS_IS_MAC)
 
-target_link_libraries(appshell_qml PRIVATE Qt::Widgets)
+target_link_libraries(appshell_qml PRIVATE Qt::Widgets Qt::Quick)
 
 fixup_qml_module_dependencies(appshell_qml)
 

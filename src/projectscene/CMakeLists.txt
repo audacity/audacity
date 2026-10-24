@@ -13,6 +13,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstate.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstatecreator.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaypositionviewcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/itimelineviewcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/projectscenecommands.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
 
@@ -34,6 +37,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsstate.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.h
@@ -134,6 +141,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackitemslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackitemslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackitemsmovecontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackitemsmovecontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipitem.cpp
@@ -184,6 +193,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelineviewcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelineviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelineruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelineruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/irulerformat.h
@@ -250,13 +261,16 @@ set(MODULE_LINK
         au3-wave-track
         au3-xml
         trackedit
+        record_qml # PlaybackToolBarRecordLevelItem is created in C++ by PlaybackToolBarModel
         spectrogram
         uicomponents
+        uicomponents_qml
         au3-registries
         au3-track
         au3-project
         au3-wave-track-paint
         au3-musehub
+        Qt::Quick
 )
 
 if(MUSE_MODULE_WORKSPACE)

@@ -8,7 +8,7 @@ var Shortcut = require("steps/Shortcut.js")
 // The controls exist whether the panel is shown or not, but their enabled
 // flags follow its visibility, so the count of enabled ones tracks the panel
 function effectsPanelState() {
-    var controls = api.navigation.controls("AddNewTrackSection", "RealtimeEffectsSectionPanel")
+    var controls = api.navigation.controls("EffectsSection", "EffectsPanel")
     var enabled = 0
     for (var i = 0; i < controls.length; i++) {
         if (controls[i].enabled) {

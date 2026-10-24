@@ -9,17 +9,10 @@
 #include "internal/builtineffectsmetareader.h"
 #include "internal/builtineffectsscanner.h"
 
-#include "view/builtineffectmodel.h"
-#include "view/builtineffectviewloader.h"
 #include "view/builtineffectsviewregister.h"
 
 #include "framework/audioplugins/iaudiopluginsscannerregister.h"
 #include "framework/audioplugins/iaudiopluginmetareaderregister.h"
-
-static void effects_builtin_init_qrc()
-{
-    Q_INIT_RESOURCE(effects_builtin);
-}
 
 namespace au::effects {
 std::string BuiltinEffectsModule::moduleName() const
@@ -54,17 +47,6 @@ void BuiltinEffectsModule::resolveImports()
     if (loadersRegister) {
         loadersRegister->registerLoader(m_effectLoader);
     }
-}
-
-void BuiltinEffectsModule::registerResources()
-{
-    effects_builtin_init_qrc();
-}
-
-void BuiltinEffectsModule::registerUiTypes()
-{
-    qmlRegisterUncreatableType<BuiltinEffectModel>("Audacity.BuiltinEffects", 1, 0, "BuiltinEffectModel", "Not creatable abstract type");
-    qmlRegisterType<BuiltinEffectViewLoader>("Audacity.BuiltinEffects", 1, 0, "BuiltinEffectViewLoader");
 }
 
 void BuiltinEffectsModule::onInit(const muse::IApplication::RunMode& mode)

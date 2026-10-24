@@ -30,6 +30,7 @@
 #include "au3-wave-track/WaveChannelUtilities.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-files/wxFileNameWrapper.h"
 
 #include "nyquist/xlisp/xlisp.h"
@@ -1545,7 +1546,7 @@ bool NyquistBase::ProcessOne(
         return false;
     }
 
-    nyxContext.mOutputTrack = mCurChannelGroup->EmptyCopy();
+    nyxContext.mOutputTrack = WaveTrackUtilities::EmptyCopy(*mCurChannelGroup, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
     auto out = nyxContext.mOutputTrack;
 
     // Now fully evaluate the sound
@@ -2233,16 +2234,12 @@ bool NyquistBase::Parse(
                 } else if (tokens[3] == wxT("time")) {
                     ctrl.type = NYQ_CTRL_TIME;
                 } else {
-                    wxString str;
-                    str.Printf(
-                        wxT(
-                            "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
-                        tokens[3], mFileName.GetFullPath());
-
                     // Note that the AudacityApp's mLogger has not yet been created,
                     // so this brings up an alert box, but after the Audacity frame
                     // is up.
-                    wxLogWarning(str);
+                    wxLogWarning(
+                        wxT("Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
+                        tokens[3], mFileName.GetFullPath());
                     return true;
                 }
 

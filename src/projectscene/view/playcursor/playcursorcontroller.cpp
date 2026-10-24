@@ -87,6 +87,15 @@ void PlayCursorController::animatedSeekToTime(double secs)
     seekToTime(secs);
 }
 
+void PlayCursorController::seekToTimeKeepingView(double secs)
+{
+    if (!playbackState()->isPlaying()) {
+        m_keepViewOnSeek = true;
+    }
+
+    seekToTime(secs);
+}
+
 void PlayCursorController::beginSeekGesture(double time, double x, double y)
 {
     m_seekGestureActive = true;
@@ -161,6 +170,7 @@ au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
 void PlayCursorController::updatePositionX(muse::secs_t secs)
 {
     const bool seekAnimated = std::exchange(m_seekAnimated, false);
+    const bool keepView = std::exchange(m_keepViewOnSeek, false);
 
     if (m_positionX == m_context->timeToPosition(secs)) {
         return;
@@ -198,7 +208,7 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
                 }
             }
         }
-    } else if (playbackState()->playbackStatus() != playback::PlaybackStatus::Paused) {
+    } else if (!keepView && playbackState()->playbackStatus() != playback::PlaybackStatus::Paused) {
         //! NOTE: residual ticks after pausing must not scroll the view;
         //! seeks made while paused stop playback first, so they still follow
         const double halfFrameDuration = (m_context->frameEndTime() - m_context->frameStartTime()) * 0.5;

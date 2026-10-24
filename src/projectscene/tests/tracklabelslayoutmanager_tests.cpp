@@ -377,6 +377,28 @@ TEST_F(TrackLabelsLayoutManagerTests, LinkedLabels)
     ASSERT_EQ(rightLinkedLabel, key2) << "Right link should point to Label 2";
 }
 
+TEST_F(TrackLabelsLayoutManagerTests, PointLabelsAreNeverLinked)
+{
+    //! [GIVEN] A layout manager with a model set
+    m_layoutManager->setLabelsModel(m_labelsModel);
+
+    //! [WHEN] Point labels share a time with each other and with a region label's edge
+    addItem(1, u"Region", 0.0, 10.0);
+    addItem(2, u"Point 1", 10.0, 10.0);
+    addItem(3, u"Point 2", 10.0, 10.0);
+
+    m_layoutManager->init();
+
+    //! [THEN] Neither the points nor the region are linked to anything
+    for (int i = 0; i < 3; ++i) {
+        const LabelKey key = item(i)->key();
+        ASSERT_EQ(leftLinkedLabelKey(key), LabelKey()) << "Label " << i << " should not have a left link";
+        ASSERT_EQ(rightLinkedLabelKey(key), LabelKey()) << "Label " << i << " should not have a right link";
+        ASSERT_FALSE(item(i)->isLeftLinked()) << "Label " << i << " should not be marked left linked";
+        ASSERT_FALSE(item(i)->isRightLinked()) << "Label " << i << " should not be marked right linked";
+    }
+}
+
 TEST_F(TrackLabelsLayoutManagerTests, UnlinkedLabels)
 {
     //! [GIVEN] A layout manager with a model set
@@ -437,5 +459,38 @@ TEST_F(TrackLabelsLayoutManagerTests, ChainOfLinkedLabels)
     // Label 3 <- Label 2
     leftLinkedLabel = leftLinkedLabelKey(key3);
     ASSERT_EQ(leftLinkedLabel, key2) << "Label 3's left link should point to Label 2";
+}
+
+TEST_F(TrackLabelsLayoutManagerTests, DragPreviewsStackWithoutHiddenOriginals)
+{
+    m_layoutManager->setLabelsModel(m_labelsModel);
+    addItem(1, u"Original", 10.0, 20.0);
+    addItem(2, u"Preview one", 10.0, 20.0);
+    addItem(3, u"Preview two", 10.0, 20.0);
+    item(0)->setDragged(true);
+    item(1)->setDragGhost(true);
+    item(2)->setDragGhost(true);
+    m_layoutManager->init();
+
+    EXPECT_EQ(item(1)->level(), 0);
+    EXPECT_EQ(item(2)->level(), 1);
+
+    // Moving a preview away releases its level for the other visible labels.
+    item(1)->setX(40.0);
+    relayout();
+    EXPECT_EQ(item(1)->level(), 0);
+    EXPECT_EQ(item(2)->level(), 0);
+}
+
+TEST_F(TrackLabelsLayoutManagerTests, PreviewsDoNotBecomeEditableLinkedLabels)
+{
+    m_layoutManager->setLabelsModel(m_labelsModel);
+    addItem(1, u"Label", 0.0, 10.0);
+    addItem(2, u"Preview", 10.0, 20.0);
+    item(1)->setDragGhost(true);
+    m_layoutManager->init();
+
+    EXPECT_FALSE(rightLinkedLabelKey(item(0)->key()).isValid());
+    EXPECT_FALSE(leftLinkedLabelKey(item(1)->key()).isValid());
 }
 }

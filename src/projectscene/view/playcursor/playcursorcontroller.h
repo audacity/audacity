@@ -59,6 +59,7 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void seekToTime(double secs, bool triggerPlay = false);
     Q_INVOKABLE void animatedSeekToTime(double secs);
+    Q_INVOKABLE void seekToTimeKeepingView(double secs);
     Q_INVOKABLE void setPlaybackRegionByTime(double time1, double time2);
 
     //! NOTE Deferred seek: a press in the track area must not move the playhead
@@ -96,6 +97,7 @@ private:
     QTimer m_scrollSuppressionTimer;
     bool m_viewUpdatesSuppressed = false;
     bool m_seekAnimated = false;
+    bool m_keepViewOnSeek = false;
 
     bool m_seekGestureActive = false;
     bool m_seekGestureDragged = false;

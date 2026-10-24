@@ -52,8 +52,13 @@ public:
     ResponsePtr doPatch(const Request& request, RequestPayloadStreamPtr payloadStream);
 
     void setProxy(const std::string& proxy);
+
+    void setUserAgent(std::string userAgent);
+    std::string getUserAgent() const;
 private:
     std::unique_ptr<IResponseFactory> mResponseFactory;
+
+    std::string mUserAgent;
 };
 }
 }

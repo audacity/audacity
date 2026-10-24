@@ -3,6 +3,8 @@
 */
 #include "builtineffectscollectionmodule.h"
 
+#include <QtQml/qqml.h>
+
 #include "internal/builtincollectionloader.h"
 #include "internal/builtinviewlauncher.h"
 

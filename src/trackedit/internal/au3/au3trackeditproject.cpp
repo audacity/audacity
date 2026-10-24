@@ -1,6 +1,10 @@
 #include "au3trackeditproject.h"
 
+#include <algorithm>
+
+#include "au3-label-track/LabelTrack.h"
 #include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-stretching-sequence/TempoChange.h"
@@ -47,6 +51,7 @@ Au3TrackeditProject::Au3TrackeditProject(const muse::modularity::ContextPtr& ctx
     });
 
     updateHasAudioContent();
+    updateHasLabels();
 }
 
 Au3TrackeditProject::~Au3TrackeditProject()
@@ -59,25 +64,24 @@ bool Au3TrackeditProject::timeTrackFound() const
     return TimeTrackDetector::Get(*m_impl->prj).found;
 }
 
-std::vector<int64_t> Au3TrackeditProject::groupsIdsList() const
+std::set<int64_t> Au3TrackeditProject::groupsIdsList() const
 {
-    std::vector<int64_t> groupsList;
+    std::set<int64_t> groupsList;
 
-    for (const auto& trackId : trackIdList()) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
-        if (!waveTrack) {
-            continue;
+    const auto add = [&groupsList](int64_t groupId) {
+        if (groupId != -1) {
+            groupsList.insert(groupId);
         }
+    };
 
-        for (const auto& key : clipList(trackId)) {
-            std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.key.itemId);
-            IF_ASSERT_FAILED(au3Clip) {
-                return {};
+    for (const Au3Track* track : *m_impl->trackList) {
+        if (const auto waveTrack = dynamic_cast<const Au3WaveTrack*>(track)) {
+            for (const auto& clip : waveTrack->Intervals()) {
+                add(clip->GetGroupId());
             }
-
-            int64_t groupId = au3Clip->GetGroupId();
-            if (!muse::contains(groupsList, groupId)) {
-                groupsList.push_back(groupId);
+        } else if (const auto labelTrack = dynamic_cast<const Au3LabelTrack*>(track)) {
+            for (const Au3Label& label : labelTrack->GetLabels()) {
+                add(label.GetGroupId());
             }
         }
     }
@@ -101,18 +105,48 @@ muse::ValCh<bool> Au3TrackeditProject::hasAudioContent() const
     return m_hasAudioContent;
 }
 
+muse::ValCh<bool> Au3TrackeditProject::hasLabels() const
+{
+    return m_hasLabels;
+}
+
 void Au3TrackeditProject::updateHasAudioContent()
 {
     bool has = false;
-    for (const TrackId& trackId : trackIdList()) {
-        if (!getClips(trackId).empty()) {
+    for (const Au3WaveTrack* track : m_impl->trackList->Any<const Au3WaveTrack>()) {
+        if (!track->IsEmpty()) {
             has = true;
             break;
         }
     }
 
+    setHasAudioContent(has);
+}
+
+void Au3TrackeditProject::setHasAudioContent(bool has)
+{
     if (m_hasAudioContent.val != has) {
         m_hasAudioContent.set(has);
+    }
+}
+
+void Au3TrackeditProject::updateHasLabels()
+{
+    bool has = false;
+    for (const Au3LabelTrack* track : m_impl->trackList->Any<const Au3LabelTrack>()) {
+        if (track->GetNumLabels() > 0) {
+            has = true;
+            break;
+        }
+    }
+
+    setHasLabels(has);
+}
+
+void Au3TrackeditProject::setHasLabels(bool has)
+{
+    if (m_hasLabels.val != has) {
+        m_hasLabels.set(has);
     }
 }
 
@@ -171,6 +205,9 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
     case TrackListEvent::DELETION: {
         if (e.mExtra == 1) {
             m_impl->trackReplacing = true;
+        } else {
+            updateHasAudioContent();
+            updateHasLabels();
         }
     } break;
     case TrackListEvent::ADDITION: {
@@ -178,6 +215,8 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
             onTrackDataChanged(trackId);
             m_impl->trackReplacing = false;
         }
+        updateHasAudioContent();
+        updateHasLabels();
     } break;
     default:
         break;
@@ -274,6 +313,53 @@ muse::async::NotifyList<au::trackedit::Label> Au3TrackeditProject::labelList(con
     return labelNotifyList;
 }
 
+au::trackedit::ItemTimeSpanList Au3TrackeditProject::itemTimeSpansSorted(const au::trackedit::TrackId& trackId) const
+{
+    const std::optional<Track> track = this->track(trackId);
+    if (!track.has_value()) {
+        return {};
+    }
+
+    ItemTimeSpanList items;
+    if (track->type == TrackType::Label) {
+        Labels labels = getLabels(trackId);
+        std::sort(labels.begin(), labels.end(), [](const Label& a, const Label& b) { return a.startTime < b.startTime; });
+        for (const Label& label : labels) {
+            items.push_back({ label.key, TimeSpan(label.startTime, label.endTime) });
+        }
+    } else {
+        Clips clips = getClips(trackId);
+        std::sort(clips.begin(), clips.end(), [](const Clip& a, const Clip& b) { return a.startTime < b.startTime; });
+        for (const Clip& clip : clips) {
+            items.push_back({ clip.key, TimeSpan(clip.startTime, clip.endTime) });
+        }
+    }
+
+    return items;
+}
+
+std::optional<au::trackedit::TimeSpan> Au3TrackeditProject::itemTimeSpan(const au::trackedit::TrackItemKey& key) const
+{
+    const std::optional<Track> track = this->track(key.trackId);
+    if (!track.has_value()) {
+        return std::nullopt;
+    }
+
+    if (track->type == TrackType::Label) {
+        const Label label = this->label(key);
+        if (!label.isValid()) {
+            return std::nullopt;
+        }
+        return TimeSpan(label.startTime, label.endTime);
+    }
+
+    const Clip clip = this->clip(key);
+    if (!clip.isValid()) {
+        return std::nullopt;
+    }
+    return TimeSpan(clip.startTime, clip.endTime);
+}
+
 std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId) const
 {
     const Au3Track* au3Track = au::au3::DomAccessor::findTrack(*m_impl->prj, au::au3::Au3TrackId { trackId });
@@ -285,27 +371,34 @@ std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId
 
 void Au3TrackeditProject::reload()
 {
+    updateHasAudioContent();
+    updateHasLabels();
     m_tracksChanged.send(trackList());
 }
 
 void Au3TrackeditProject::notifyAboutTrackAdded(const Track& track)
 {
     m_trackAdded.send(track);
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutTrackChanged(const Track& track)
 {
     m_trackChanged.send(track);
+    updateHasAudioContent();
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutTrackRemoved(const Track& track)
 {
     m_trackRemoved.send(track);
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutTrackInserted(const Track& track, int pos)
 {
     m_trackInserted.send(track, pos);
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutTrackMoved(const Track& track, int pos)
@@ -367,7 +460,7 @@ void Au3TrackeditProject::notifyAboutClipAdded(const Clip& clip)
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
     notifier.itemAdded(clip);
 
-    updateHasAudioContent();
+    setHasAudioContent(true);
 }
 
 void Au3TrackeditProject::notifyAboutLabelChanged(const Label& label)
@@ -380,12 +473,16 @@ void Au3TrackeditProject::notifyAboutLabelRemoved(const Label& label)
 {
     async::ChangedNotifier<Label>& notifier = m_labelsChanged[label.key.trackId];
     notifier.itemRemoved(label);
+
+    updateHasLabels();
 }
 
 void Au3TrackeditProject::notifyAboutLabelAdded(const Label& label)
 {
     async::ChangedNotifier<Label>& notifier = m_labelsChanged[label.key.trackId];
     notifier.itemAdded(label);
+
+    setHasLabels(true);
 }
 
 au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
@@ -400,7 +497,7 @@ au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
     return result;
 }
 
-void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeSignature)
+void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeSignature, bool noStretch)
 {
     ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(*m_impl->prj);
 
@@ -408,7 +505,27 @@ void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeS
     if (!muse::is_equal(timeSig.GetTempo(), timeSignature.tempo)) {
         historyStateMessage = muse::trc("trackedit", "Tempo changed");
     }
+
+    //! NOTE: `SetTempo` notifies synchronously, and the clips that follow the
+    //! project tempo stretch from within that call. To leave them alone, they
+    //! have to stop following for the duration of it.
+    std::vector<Au3WaveClip* > reEnable;
+    if (noStretch) {
+        for (Au3WaveTrack* track : m_impl->trackList->Any<Au3WaveTrack>()) {
+            for (const auto& clip : track->Intervals()) {
+                if (clip->GetStretchToMatchProjectTempo()) {
+                    clip->SetStretchToMatchProjectTempo(false);
+                    reEnable.push_back(clip.get());
+                }
+            }
+        }
+    }
+
     timeSig.SetTempo(timeSignature.tempo);
+
+    for (const auto& clip : reEnable) {
+        clip->SetStretchToMatchProjectTempo(true);
+    }
 
     if (!muse::is_equal(timeSig.GetUpperTimeSignature(), timeSignature.upper)) {
         historyStateMessage = muse::trc("trackedit", "Upper time signature changed");

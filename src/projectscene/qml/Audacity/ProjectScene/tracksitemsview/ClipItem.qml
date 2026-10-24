@@ -121,7 +121,7 @@ Rectangle {
     }
 
     property int borderWidth: 1
-    property bool hover: root.containsMouse || root.headerHovered
+    property bool hover: clipHoverHandler.hovered || root.containsMouse || root.headerHovered
     property bool headerHovered: false
     property var lastSample: undefined
     property bool altPressed: false
@@ -272,6 +272,34 @@ Rectangle {
         menuBtn.toggleMenu(menuBtn)
     }
 
+    function openContextMenuAt(x, y, modifiers) {
+        if (!root.enableCursorInteraction) {
+            return
+        }
+
+        if (root.multiClipsSelected) {
+            prv.ensureMultiMenuLoaded()
+            if (modifiers & (Qt.ShiftModifier | Qt.ControlModifier)) {
+                if (!root.clipSelected) {
+                    root.requestSelectionReset()
+                }
+                root.requestSelected()
+            }
+            multiClipContextMenuLoader.show(Qt.point(x, y), multiClipContextMenuModel.items)
+        } else if (root.isGrouped) {
+            prv.ensureMultiMenuLoaded()
+            if (!root.clipSelected) {
+                root.requestSelectionReset()
+            }
+            root.requestSelected()
+            multiClipContextMenuLoader.show(Qt.point(x, y), multiClipContextMenuModel.items)
+        } else {
+            prv.ensureSingleMenuLoaded()
+            singleClipContextMenuLoader.show(Qt.point(x, y), singleClipContextMenuModel.items)
+            root.requestSelected()
+        }
+    }
+
     function mousePositionChanged(x, y) {
         clipItemMousePositionChanged(x, y)
         waveView.onWaveViewPositionChanged(x, y - header.height)
@@ -379,7 +407,7 @@ Rectangle {
         Component.onCompleted: updateCustomCursor()
         onForbiddenChanged: updateCustomCursor()
 
-        acceptedButtons: Qt.RightButton
+        acceptedButtons: Qt.NoButton
 
         visible: root.enableCursorInteraction
 
@@ -387,32 +415,8 @@ Rectangle {
             root.setContainsMouse(containsMouse)
         }
 
-        onClicked: function (e) {
-            if (root.multiClipsSelected) {
-                prv.ensureMultiMenuLoaded()
-                if (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier)) {
-                    if (!root.clipSelected) {
-                        root.requestSelectionReset()
-                    }
-                    root.requestSelected()
-                }
-                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
-            } else if (root.isGrouped) {
-                prv.ensureMultiMenuLoaded()
-                if (!root.clipSelected) {
-                    root.requestSelectionReset()
-                }
-                root.requestSelected()
-                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
-            } else {
-                prv.ensureSingleMenuLoaded()
-                singleClipContextMenuLoader.show(Qt.point(e.x, e.y), singleClipContextMenuModel.items)
-                root.requestSelected()
-            }
-        }
-
         onPositionChanged: function (e) {
-            clipItemMousePositionChanged(e.x, e.y);
+            clipItemMousePositionChanged(e.x, e.y)
 
             // propagate mouse position to the wave view adjusting the y position
             waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
@@ -425,6 +429,12 @@ Rectangle {
 
             root.setContainsMouse(containsMouse)
         }
+    }
+
+    HoverHandler {
+        id: clipHoverHandler
+
+        enabled: root.enableCursorInteraction
     }
 
     // NOTE: hover events from polyline are not visible in MouseArea
@@ -581,7 +591,7 @@ Rectangle {
             height: root.headerHeight
             z: 2
 
-            visible: !root.collapsed || root.hover
+            visible: !root.collapsed || root.hover || menuBtn.isMenuOpened
 
             Rectangle {
                 id: headerSelectionRectangle
@@ -606,6 +616,12 @@ Rectangle {
                         return
                     }
 
+                    root.headerHovered = containsMouse
+                }
+
+                // during dragging, the clip is hidden, and do not receive mouse events
+                // we need to restore hover state when the clip become visible again
+                onVisibleChanged: {
                     root.headerHovered = containsMouse
                 }
 
@@ -972,8 +988,10 @@ Rectangle {
 
                     defaultValue: clipGainModel.defaultValue
 
-                    xRangeFrom: waveView.itemStartTime
-                    xRangeTo: waveView.itemEndTime
+                    // Offset the envelope display to follow the drag preview while its point times remain unchanged.
+                    readonly property real timeOffset: waveView.startTime - clipGainModel.clipStartTime
+                    xRangeFrom: waveView.itemStartTime - timeOffset
+                    xRangeTo: waveView.itemEndTime - timeOffset
 
                     yRangeFrom: clipGainModel.minValue
                     yRangeTo: clipGainModel.maxValue
@@ -1152,6 +1170,7 @@ Rectangle {
         clipHeight: root.height
         headerHeight: header.height
         altPressed: root.altPressed
+        exclusionItem: root.collapsed ? menuBtn : null
 
         clipNavigationPanel: root.clipNavigationPanel
 

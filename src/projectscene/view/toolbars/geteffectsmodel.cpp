@@ -40,6 +40,7 @@ void GetEffectsModel::load()
                 groupData.title = QString::fromStdString(group.title);
                 for (const auto& effect : group.effects) {
                     EffectData effectData;
+                    effectData.id = QString::fromStdString(effect.id);
                     effectData.iconUrl = QString::fromStdString(effect.iconUrl);
                     effectData.code = QString::fromStdString(effect.code);
                     effectData.title = QString::fromStdString(effect.title);
@@ -75,10 +76,10 @@ void GetEffectsModel::openUrl(const std::string& url) const
     }
 }
 
-void GetEffectsModel::openEffectUrl(const QString& effectCode) const
+void GetEffectsModel::openEffectUrl(const QString& effectCode, const QString& effectId) const
 {
-    const std::string url = audacity::musehub::GetEffectUrl(effectCode.toStdString());
-    openUrl(url);
+    const std::string webUrl = audacity::musehub::GetEffectUrl(effectCode.toStdString());
+    openUrl(audacity::musehub::GetProductUrl(webUrl, effectId.toStdString()));
 }
 
 void GetEffectsModel::openBecomeAPartnerUrl() const
@@ -95,6 +96,7 @@ QVariantList GetEffectsModel::effectsGroups() const
         QVariantList effectsList;
         for (const auto& effect : group.effects) {
             QVariantMap effectMap;
+            effectMap["id"] = effect.id;
             effectMap["iconUrl"] = effect.iconUrl;
             effectMap["code"] = effect.code;
             effectMap["title"] = effect.title;
