@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  StretchingSequenceIntegrationTest.cpp
+  PlayableSequenceIntegrationTest.cpp
 
   Matthieu Hodgkinson
 
@@ -12,7 +12,7 @@
 #include "MockPlayableSequence.h"
 #include "MockSampleBlockFactory.h"
 #include "au3-math/SampleFormat.h"
-#include "StretchingSequence.h"
+#include "PlayableSequenceFactory.h"
 #include "TestWaveClipMaker.h"
 #include "TestWaveTrackMaker.h"
 
@@ -27,7 +27,7 @@ TestWaveClipMaker clipMaker { sampleRate, sampleBlockFactory };
 TestWaveTrackMaker trackMaker { sampleRate, sampleBlockFactory };
 } // namespace
 
-TEST_CASE("StretchingSequence integration tests")
+TEST_CASE("PlayableSequence integration tests")
 {
     const auto numChannels
         =GENERATE(1 /*, 2*/); // When wide WaveTrack is implemented this test
@@ -36,7 +36,7 @@ TEST_CASE("StretchingSequence integration tests")
         =std::make_shared<MockPlayableSequence>(sampleRate, numChannels);
 
     SECTION(
-        "StretchingSequence and WaveTrack have identical outputs when clips aren't stretched.")
+        "PlayableSequence and WaveTrack have identical outputs when clips aren't stretched.")
     {
         constexpr auto totalLength
             =sampleRate * 4; // 1s no clip, 1s minusClip, 1s no clip, 1s plusClip
@@ -48,7 +48,7 @@ TEST_CASE("StretchingSequence integration tests")
             +.5f, sampleRate, numChannels,
             [](auto& clip) { clip.SetPlayStartTime(3.0); });
 
-        const auto sut = StretchingSequence::Create(
+        const auto sut = PlayableSequenceFactory::Create(
             *mockSequence, ClipConstHolders { minusClip, plusClip });
         const auto track = trackMaker.Track({ minusClip, plusClip });
         constexpr auto backwards = false;

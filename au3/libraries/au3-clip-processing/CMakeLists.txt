@@ -9,23 +9,23 @@ inherent to such an implementation.
 set( TARGET au3-clip-processing )
 
 set( SOURCES
-   AudioSegment.cpp
-   AudioSegment.h
-   AudioSegmentFactory.cpp
-   AudioSegmentFactory.h
-   AudioSegmentFactoryInterface.cpp
-   AudioSegmentFactoryInterface.h
+   clip-graph/IClipProcessingNode.h
+   sequence-graph/ISequenceProcessingNode.h
    AudioSegmentSampleView.cpp
    AudioSegmentSampleView.h
+   clip-graph/ClipProcessingGraphFactory.cpp
+   clip-graph/ClipProcessingGraphFactory.h
    ClipInterface.cpp
    ClipInterface.h
-   ClipSegment.cpp
-   ClipSegment.h
+   clip-graph/ClipStretchingNode.cpp
+   clip-graph/ClipStretchingNode.h
    PlaybackDirection.h
-   SilenceSegment.cpp
-   SilenceSegment.h
-   StretchingSequence.cpp
-   StretchingSequence.h
+   PlayableSequenceImpl.cpp
+   PlayableSequenceImpl.h
+   sequence-graph/ClipTimelineNode.cpp
+   sequence-graph/ClipTimelineNode.h
+   PlayableSequenceFactory.cpp
+   PlayableSequenceFactory.h
    ClipTimeAndPitchSource.cpp
    ClipTimeAndPitchSource.h
    TempoChange.cpp
