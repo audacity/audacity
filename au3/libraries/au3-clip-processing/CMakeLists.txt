@@ -21,6 +21,8 @@ set( SOURCES
    ClipInterface.h
    clip-graph/ClipStretchingNode.cpp
    clip-graph/ClipStretchingNode.h
+   sequence-graph/CrossFadingSmoother.cpp
+   sequence-graph/CrossFadingSmoother.h
    PlaybackDirection.h
    PlayableSequenceImpl.cpp
    PlayableSequenceImpl.h
