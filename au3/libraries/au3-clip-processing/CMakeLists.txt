@@ -13,6 +13,8 @@ set( SOURCES
    sequence-graph/ISequenceProcessingNode.h
    AudioSegmentSampleView.cpp
    AudioSegmentSampleView.h
+   clip-graph/ClipBufferingNode.cpp
+   clip-graph/ClipBufferingNode.h
    clip-graph/ClipProcessingGraphFactory.cpp
    clip-graph/ClipProcessingGraphFactory.h
    ClipInterface.cpp
