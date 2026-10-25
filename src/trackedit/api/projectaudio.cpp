@@ -17,7 +17,7 @@
 #include "au3-math/SampleFormat.h"
 #include "au3-mixer/Mix.h"
 #include "au3-mixer/WideSampleSource.h"
-#include "au3-clip-processing/StretchingSequence.h"
+#include "au3-clip-processing/PlayableSequenceFactory.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
 #include "au3-wave-track/WaveClip.h"
@@ -168,7 +168,7 @@ AudioReaderObject::AudioReaderObject(std::shared_ptr<EditState> state, std::shar
         m_end = m_source->TimeToLongSamples(end);
     } else {
         Mixer::Inputs inputs;
-        inputs.emplace_back(StretchingSequence::Create(*m_source, m_source->GetClipInterfaces()), Mixer::Stages {});
+        inputs.emplace_back(PlayableSequenceFactory::Create(*m_source, m_source->GetClipInterfaces()), Mixer::Stages {});
         m_mixer = std::make_unique<Mixer>(
             std::move(inputs), std::nullopt, true, Mixer::WarpOptions { m_state->project.get() }, start, end, format.channelCount,
             AUDIO_CHUNK_SAMPLES, false, format.sampleRate, floatSample, true, nullptr, Mixer::ApplyVolume::Mixdown);
