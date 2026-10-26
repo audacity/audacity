@@ -131,7 +131,7 @@ endmacro()
 macro(do_install build_dir)
     message(STATUS "========= Begin install =========")
     execute_process(
-        COMMAND cmake --install ${build_dir}
+        COMMAND cmake --install ${build_dir} ${ARGN}
         RESULT_VARIABLE INSTALL_RESULT
     )
     if (INSTALL_RESULT GREATER 0)
@@ -166,8 +166,8 @@ elseif(BUILD_TYPE STREQUAL "APPIMAGE")
     set(SKIP_RPATH ON)
     set(BUILD_DIR build.release)
 
-    do_build(Release ${BUILD_DIR})
-    do_install(${BUILD_DIR})
+    do_build(RelWithDebInfo ${BUILD_DIR})
+    do_install(${BUILD_DIR} --strip)
 
     file (STRINGS "${BUILD_DIR}/PREFIX.txt" INSTALL_DIR)
 

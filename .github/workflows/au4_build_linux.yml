@@ -218,31 +218,29 @@ jobs:
         path: ./build.install/
         retention-days: 1
 
+    - name: Upload debug files
+      if: env.DO_UPLOAD_SYMBOLS == 'true'
+      env:
+        SENTRY_URL: https://sentry.audacityteam.org
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: sentry
+      run: |
+        APP_BIN=$(find build.release/src/app/ -type f -name 'audacity4portable*' -print -quit)
+        if [ -z "$APP_BIN" ]; then echo "error: app binary not found"; exit 1; fi
+
+        cmake -DFILES="$APP_BIN" -P muse/buildscripts/ci/tools/sentry/upload_debug_files.cmake
+
     - name: Package
       if: env.DO_BUILD == 'true'
       run: |
         cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/linux/package.cmake
-
-    - name: Generate and upload dump symbols
-      if: env.DO_UPLOAD_SYMBOLS == 'true'
-      shell: bash
-      run: |
-        APP_BIN=$(find "$(pwd)/build.release/src/app/" -type f -name "audacity4portable*" -print -quit)
-        sudo cmake -DAPP_BIN=${APP_BIN} \
-                   -DSENTRY_URL=https://sentry.audacityteam.org \
-                   -DSENTRY_ORG=sentry \
-                   -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
-                   -DSENTRY_PROJECT=${SENTRY_PROJECT} \
-                   -P muse/buildscripts/ci/crashdumps/ci_generate_and_upload.cmake
 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v7
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
-        path: |
-          ./build.artifacts/
-          !./build.artifacts/symbols/**
+        path: ./build.artifacts/
 
     - name: Prepare ccache files for saving
       id: prepare-save-ccache
