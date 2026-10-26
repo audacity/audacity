@@ -11,6 +11,7 @@
 #include "framework/global/log.h"
 
 #include "../trackeditcommands.h"
+#include "../trackeditutils.h"
 
 using namespace au::trackedit;
 using namespace muse;
@@ -41,6 +42,7 @@ const std::vector<Command> commandsDisabledDuringRecording {
     TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND,
     TRACKEDIT_TRACK_MAKE_STEREO_COMMAND,
     TRACKEDIT_TRACK_RESAMPLE_COMMAND,
+    TRACKEDIT_MIX_AND_RENDER_COMMAND,
     TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND,
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
     TRACKEDIT_GROUP_ITEMS_COMMAND,
@@ -100,6 +102,10 @@ const std::vector<Command> dataSelectionCommands {
     TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
 };
 
+const std::vector<Command> mixAndRenderCommands {
+    TRACKEDIT_MIX_AND_RENDER_COMMAND,
+};
+
 const std::vector<Command> focusCommands {
     TRACKEDIT_GROUP_ITEMS_COMMAND,
     TRACKEDIT_UNGROUP_ITEMS_COMMAND,
@@ -120,8 +126,10 @@ void TrackeditCommandsState::init()
     }
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        listenToTrackList();
         updateCommandStates();
     });
+    listenToTrackList();
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
         updateCommandStates(commandsDisabledDuringRecording);
@@ -129,12 +137,17 @@ void TrackeditCommandsState::init()
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateCommandStates(historyCommands);
+        updateCommandStates(mixAndRenderCommands);
 
         //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
         //! in its own history receiver, which may run after this one. Evaluate the group commands once it has.
         muse::async::Async::call(this, [this]() {
             updateCommandStates(groupCommands);
         });
+    });
+
+    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this](long) {
+        updateCommandStates(mixAndRenderCommands);
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList&) {
@@ -151,6 +164,7 @@ void TrackeditCommandsState::init()
 
     selectionController()->selectedTracksChanged().onReceive(this, [this](const TrackIdList&) {
         updateCommandStates(dataSelectionCommands);
+        updateCommandStates(mixAndRenderCommands);
     });
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](secs_t) {
@@ -173,6 +187,7 @@ void TrackeditCommandsState::deinit()
     globalContext()->currentProjectChanged().disconnect(this);
     globalContext()->isRecordingChanged().disconnect(this);
     projectHistory()->historyChanged().disconnect(this);
+    trackPlaybackControl()->muteOrSoloChanged().disconnect(this);
     selectionController()->clipsSelected().disconnect(this);
     selectionController()->labelsSelected().disconnect(this);
     selectionController()->clipsIntersectingRangeSelectionChanged().disconnect(this);
@@ -236,6 +251,10 @@ CommandState TrackeditCommandsState::commandState(const Command& command) const
 
     if (command == TRACKEDIT_RENAME_ITEM_COMMAND) {
         return CommandState(clipsForInteraction().size() + labelsForInteraction().size() == 1);
+    }
+
+    if (muse::contains(mixAndRenderCommands, command)) {
+        return CommandState(hasAudibleAudioTracks());
     }
 
     return CommandState(true);
@@ -382,6 +401,32 @@ bool TrackeditCommandsState::canSilenceAudio() const
     }
 
     return false;
+}
+
+bool TrackeditCommandsState::hasAudibleAudioTracks() const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return false;
+    }
+
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    return !utils::audibleAudioTracks(*prj, selectedTracks.empty() ? prj->trackIdList() : selectedTracks).empty();
+}
+
+void TrackeditCommandsState::listenToTrackList()
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    const auto updateMixAndRender = [this](const Track&) {
+        updateCommandStates(mixAndRenderCommands);
+    };
+    prj->trackAdded().onReceive(this, updateMixAndRender, muse::async::Asyncable::Mode::SetReplace);
+    prj->trackRemoved().onReceive(this, updateMixAndRender, muse::async::Asyncable::Mode::SetReplace);
+    prj->trackChanged().onReceive(this, updateMixAndRender, muse::async::Asyncable::Mode::SetReplace);
 }
 
 async::Channel<Command, CommandState> TrackeditCommandsState::commandStateChanged() const

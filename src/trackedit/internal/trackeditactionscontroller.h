@@ -161,6 +161,7 @@ private:
     muse::Ret setCustomTrackRate();
     muse::Ret makeStereoTrack();
     muse::Ret resampleTracks();
+    muse::Ret mixAndRender(bool toNewTrack);
 
     muse::Ret groupItems();
     muse::Ret ungroupItems();
