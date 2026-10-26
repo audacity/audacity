@@ -45,7 +45,6 @@ private:
     muse::io::paths_t builtinMacroFilePaths() const;
 
     void reload();
-    void loadMacroFile(const muse::io::path_t& path, bool builtin);
     muse::Ret visitReferences(const Macro& macro, std::vector<std::string>& path) const;
 
     muse::Config m_config;

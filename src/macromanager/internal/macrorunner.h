@@ -3,9 +3,6 @@
 */
 #pragma once
 
-#include <functional>
-#include <memory>
-
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
@@ -15,6 +12,7 @@
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditclipboard.h"
+#include "trackedit/itrackeditinteraction.h"
 
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
@@ -30,6 +28,7 @@ class MacroRunner : public IMacroRunner, public muse::Contextable, public muse::
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ITrackeditClipboard> clipboard{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
 
 public:
     explicit MacroRunner(const muse::modularity::ContextPtr& ctx)
@@ -47,36 +46,26 @@ public:
     muse::async::Notification currentFileChanged() const override;
 
 private:
-    using OnDone = std::function<void (const muse::Ret&)>;
-    using Steps = std::shared_ptr<const std::vector<MacroItem> >;
+    muse::Ret begin(const Macro& macro);
+    void finish(const Macro& macro, const muse::Ret& ret);
 
-    muse::async::Promise<muse::Ret> start(const Macro& macro, const muse::io::paths_t& files);
+    muse::async::Promise<muse::Ret> runFiles(const Macro& macro, const muse::io::paths_t& files);
+    muse::async::Promise<muse::Ret> runFile(const Macro& macro, const muse::io::path_t& file);
+    muse::async::Promise<muse::Ret> runSteps(const std::vector<MacroItem>& items);
+    muse::async::Promise<muse::Ret> runItem(const MacroItem& item);
+    muse::async::Promise<muse::Ret> runMacro(const MacroReference& reference);
+    muse::async::Promise<muse::Ret> resetProject();
 
-    void runNextFile();
-    void finishFile(const muse::Ret& ret);
-    void runSteps(const std::vector<MacroItem>& steps, const OnDone& onDone);
-    void runStep(const Steps& steps, size_t index, const OnDone& onDone);
-    void runMacro(const MacroReference& reference, const OnDone& onDone);
-    void resetProject(const OnDone& onDone);
-    void finish(const muse::Ret& ret);
-
-    void dispatch(const muse::rcommand::Command& command, const muse::rcommand::Params& params, const OnDone& onDone);
     muse::rcommand::Params stepParams(const MacroStep& step) const;
-    void undoToStartState();
-    void showCompleted();
-    void showError(const muse::Ret& ret);
+    void undoToState(size_t stateIndex);
+    void showCompleted(const std::string& macroName);
+    void showError(const muse::Ret& ret, const std::string& macroName);
 
-    Macro m_macro;
-    std::vector<std::string> m_macroStack;
-    muse::io::paths_t m_files;
     std::vector<std::string> m_outputNames;
-    size_t m_fileIndex = 0;
-    size_t m_appliedStepCount = 0;
     std::vector<muse::Ret> m_fileResults;
-    size_t m_startStateIndex = 0;
+    size_t m_appliedStepCount = 0;
     bool m_running = false;
     bool m_abortRequested = false;
-    muse::async::Promise<muse::Ret>::Resolve m_resolve;
 
     muse::async::Notification m_isRunningChanged;
     muse::async::Notification m_currentFileChanged;
