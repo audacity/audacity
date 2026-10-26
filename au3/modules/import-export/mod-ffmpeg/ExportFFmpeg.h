@@ -83,7 +83,7 @@ private:
     bool AddTags(const Tags* metadata);
 
     /// Sets individual metadata values
-    void SetMetadata(const Tags* tags, const char* name, const wxChar* tag);
+    void SetMetadata(const std::string& name, const wxString& value);
 
     /// Check whether or not current project sample rate is compatible with the export codec
     bool CheckSampleRate(int rate, int lowrate, int highrate, const int* sampRates);
