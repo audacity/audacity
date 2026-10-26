@@ -410,6 +410,11 @@ bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     });
 }
 
+muse::RetVal<TrackId> TrackeditInteraction::mixAndRender(const TrackIdList& tracksIds, bool toNewTrack)
+{
+    return withPlaybackStopRetVal(&ITrackeditInteraction::mixAndRender, tracksIds, toNewTrack);
+}
+
 muse::RetVal<LabelKey> TrackeditInteraction::addLabel(const TrackId& toTrackId)
 {
     return m_interaction->addLabel(toTrackId);

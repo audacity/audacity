@@ -29,6 +29,7 @@
 
 #include "shared/types/workspacetitles.h"
 #include "record/recordcommands.h"
+#include "trackedit/trackeditcommands.h"
 
 #include "muse_framework_config.h"
 
@@ -406,8 +407,8 @@ MenuItem* AppMenuModel::makeTracksMenu()
         makeSeparator(),
         makeMenuItem("track-duplicate"),
         // makeMenuItem("remove-tracks"),
-        // makeSeparator(),
-        // makeMenuItem("mixdown-to"),
+        makeSeparator(),
+        makeMenu(TranslatableString("appshell-menu-mix", "Mix"), makeMixItems(), "menu-mix"),
         // makeSeparator(),
         // makeMenu(TranslatableString("appshell-menu-align", "Align content"), makeAlignItems(), "menu-align", false),
         // makeMenu(TranslatableString("appshell-menu-sort", "Sort tracks"), makeSortItems(), "menu-sort", false),
@@ -731,6 +732,20 @@ MenuItemList AppMenuModel::makeSkipToItems()
     MenuItemList items {
         makeMenuItem("skip-to-selection-start"),
         makeMenuItem("skip-to-selection-end")
+    };
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeMixItems()
+{
+    MenuItemList items {
+        makeMenuItem(muse::rcommand::make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
+            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(false) }
+        })),
+        makeMenuItem(muse::rcommand::make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
+            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(true) }
+        }), TranslatableString("appshell-menu-mix", "Mix and render to new track")),
     };
 
     return items;

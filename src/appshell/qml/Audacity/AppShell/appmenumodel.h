@@ -125,6 +125,7 @@ private:
     muse::uicomponents::MenuItemList makeLoopingItems();
     muse::uicomponents::MenuItemList makeZoomItems();
     muse::uicomponents::MenuItemList makeSkipToItems();
+    muse::uicomponents::MenuItemList makeMixItems();
     muse::uicomponents::MenuItemList makeAlignItems();
     muse::uicomponents::MenuItemList makeSortItems();
     muse::uicomponents::MenuItemList makeVolumeAndCompressionItems();

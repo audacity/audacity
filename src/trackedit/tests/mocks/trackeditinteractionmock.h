@@ -100,6 +100,7 @@ public:
     MOCK_METHOD(bool, splitStereoTracksToCenterMono, (const TrackIdList&), (override));
     MOCK_METHOD(bool, makeStereoTrack, (const TrackId, const TrackId), (override));
     MOCK_METHOD(bool, resampleTracks, (const TrackIdList&, int), (override));
+    MOCK_METHOD(muse::RetVal<TrackId>, mixAndRender, (const TrackIdList&, bool), (override));
 
     MOCK_METHOD(muse::RetVal<LabelKey>, addLabel, (const TrackId&), (override));
     MOCK_METHOD(muse::RetVal<LabelKey>, addLabelToSelection, (), (override));

@@ -11,6 +11,7 @@
 #include "framework/rcommand/imodulecommandsstate.h"
 
 #include "context/iglobalcontext.h"
+#include "playback/itrackplaybackcontrol.h"
 #include "../iprojecthistory.h"
 #include "../iselectioncontroller.h"
 #include "../itrackeditinteraction.h"
@@ -25,6 +26,7 @@ class TrackeditCommandsState : public muse::rcommand::IModuleCommandsState, publ
     muse::ContextInject<ISelectionController> selectionController{ this };
     muse::ContextInject<ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
 
 public:
     TrackeditCommandsState(const muse::modularity::ContextPtr& ctx)
@@ -48,6 +50,8 @@ private:
     bool itemsShareOneGroup(const TrackItemKeyList& items) const;
     bool canJoin() const;
     bool canSilenceAudio() const;
+    bool hasAudibleAudioTracks() const;
+    void listenToTrackList();
 
     muse::rcommand::IModuleCommandsRegisterPtr m_moduleRegister;
     std::map<muse::rcommand::Command, muse::rcommand::CommandState> m_commandStates;

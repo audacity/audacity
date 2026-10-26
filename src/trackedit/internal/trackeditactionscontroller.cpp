@@ -15,6 +15,7 @@
 #include "framework/rcommand/actiontocommand.h"
 
 #include "../trackeditcommands.h"
+#include "../trackeditutils.h"
 
 using namespace muse;
 using namespace au::trackedit;
@@ -437,6 +438,9 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, [this]() { return setCustomTrackRate(); });
     cd->onRequest(this, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, [this]() { return makeStereoTrack(); });
     cd->onRequest(this, TRACKEDIT_TRACK_RESAMPLE_COMMAND, [this]() { return resampleTracks(); });
+    cd->onRequest(this, TRACKEDIT_MIX_AND_RENDER_COMMAND, [this](const Params& params) {
+        return mixAndRender(params.at(TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(false)).toBool());
+    });
 
     cd->onRequest(this, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, [this]() { return trimAudioOutsideSelection(); });
     cd->onRequest(this, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, [this]() { return doGlobalSilence(); });
@@ -2305,6 +2309,22 @@ muse::Ret TrackeditActionsController::resampleTracks()
     }
 
     return Ret(trackeditInteraction()->resampleTracks(selectedTracks, customRate));
+}
+
+muse::Ret TrackeditActionsController::mixAndRender(bool toNewTrack)
+{
+    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    const TrackIdList tracks = utils::audibleAudioTracks(*project, selectedTracks.empty() ? project->trackIdList() : selectedTracks);
+    if (tracks.empty()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    return trackeditInteraction()->mixAndRender(tracks, toNewTrack).ret;
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode&) const
