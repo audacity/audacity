@@ -4,6 +4,9 @@
 #include "macrosrepository.h"
 
 #include <algorithm>
+#include <iterator>
+#include <map>
+#include <ranges>
 
 #include "framework/global/configreader.h"
 #include "framework/global/io/path.h"
@@ -265,21 +268,36 @@ io::paths_t MacrosRepository::builtinMacroFilePaths() const
 
 void MacrosRepository::reload()
 {
-    m_macros.clear();
+    std::map<std::string, Macro> macrosByName;
     m_userMacroFiles.clear();
 
     for (const io::path_t& path : builtinMacroFilePaths()) {
-        loadMacroFile(path, true);
+        RetVal<Macro> macro = readMacroFile(path);
+        if (!macro.ret) {
+            LOGW() << "failed to load macro file " << path << ": " << macro.ret.toString();
+            continue;
+        }
+
+        macro.val.builtin = true;
+        macrosByName.insert_or_assign(macro.val.name, std::move(macro.val));
     }
 
     const RetVal<io::paths_t> userFiles = fileSystem()->scanFiles(userMacrosPath(), { "*" + MACRO_FILE_SUFFIX });
     if (userFiles.ret) {
         for (const io::path_t& path : userFiles.val) {
-            loadMacroFile(path, false);
+            RetVal<Macro> macro = readMacroFile(path);
+            if (!macro.ret) {
+                LOGW() << "failed to load macro file " << path << ": " << macro.ret.toString();
+                continue;
+            }
+
+            m_userMacroFiles.insert_or_assign(macro.val.name, path);
+            macrosByName.insert_or_assign(macro.val.name, std::move(macro.val));
         }
     }
 
-    std::ranges::sort(m_macros, {}, &Macro::name);
+    m_macros.clear();
+    std::ranges::move(macrosByName | std::views::values, std::back_inserter(m_macros));
 }
 
 RetVal<Macro> MacrosRepository::readMacroFile(const io::path_t& path) const
@@ -302,24 +320,4 @@ Ret MacrosRepository::writeMacroFile(const Macro& macro, const io::path_t& path)
 {
     const JsonDocument document(toJson(macro));
     return fileSystem()->writeFile(path, document.toJson());
-}
-
-void MacrosRepository::loadMacroFile(const io::path_t& path, bool builtin)
-{
-    RetVal<Macro> macro = readMacroFile(path);
-    if (!macro.ret) {
-        LOGW() << "failed to load macro file " << path << ": " << macro.ret.toString();
-        return;
-    }
-
-    macro.val.builtin = builtin;
-
-    if (builtin) {
-        m_userMacroFiles.erase(macro.val.name);
-    } else {
-        m_userMacroFiles.insert_or_assign(macro.val.name, path);
-    }
-
-    std::erase_if(m_macros, [&macro](const Macro& m) { return m.name == macro.val.name; });
-    m_macros.push_back(std::move(macro.val));
 }

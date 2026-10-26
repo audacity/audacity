@@ -9,6 +9,8 @@ using namespace au::macromanager;
 using namespace muse;
 
 namespace {
+// Stopgap: CommandInfo::availabilities defaults to All, so the Availability::API check below
+// does not filter anything yet. Remove this list when commands set their availabilities properly.
 const std::vector<std::string> EXCLUDED_PATH_PREFIXES {
     "effects/open/",
     "effects/configure/",
