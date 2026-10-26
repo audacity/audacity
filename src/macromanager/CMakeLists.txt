@@ -25,3 +25,7 @@ target_sources(macromanager PRIVATE
 )
 
 add_subdirectory(qml/Audacity/MacroManager)
+
+if (AU_BUILD_MACROMANAGER_TESTS)
+    add_subdirectory(tests)
+endif()
