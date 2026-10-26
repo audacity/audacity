@@ -10,21 +10,17 @@
 #include "framework/global/io/path.h"
 #include "framework/global/log.h"
 
+#include "importexport/export/exportcommands.h"
 #include "trackedit/trackeditcommands.h"
+
+#include "macrooutputnames.h"
 
 using namespace au::macromanager;
 using namespace muse;
 using namespace muse::rcommand;
 
 namespace {
-const std::string EXPORT_COMMAND_PATH_PREFIX("importexport/export/");
-const std::string EXPORT_NAME_PARAM("name");
 constexpr std::chrono::seconds COMPLETED_TOAST_TIMEOUT(5);
-
-bool isExportCommand(const Command& command)
-{
-    return command.path().starts_with(EXPORT_COMMAND_PATH_PREFIX);
-}
 }
 
 async::Promise<Ret> MacroRunner::run(const Macro& macro)
@@ -88,7 +84,9 @@ async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& fi
 
         m_macroStack = { macro.name };
         m_files = files;
+        m_outputNames = uniqueOutputNames(files);
         m_fileIndex = 0;
+        m_appliedStepCount = 0;
         m_fileResults.clear();
         m_abortRequested = false;
         m_resolve = resolve;
@@ -175,7 +173,13 @@ void MacroRunner::runStep(const Steps& steps, size_t index, const OnDone& onDone
 
     const MacroItem& item = steps->at(index);
     if (const MacroStep* step = std::get_if<MacroStep>(&item)) {
-        dispatch(step->command, stepParams(*step), next);
+        dispatch(step->command, stepParams(*step), [this, next](const Ret& ret) {
+            if (ret) {
+                ++m_appliedStepCount;
+            }
+
+            next(ret);
+        });
     } else {
         runMacro(std::get<MacroReference>(item), next);
     }
@@ -247,8 +251,8 @@ Params MacroRunner::stepParams(const MacroStep& step) const
 {
     Params params = step.params;
 
-    if (!m_files.empty() && isExportCommand(step.command)) {
-        params[EXPORT_NAME_PARAM] = Val(io::completeBasename(m_files.at(m_fileIndex)).toStdString());
+    if (!m_files.empty() && importexport::isExportCommand(step.command)) {
+        params[importexport::EXPORT_NAME_PARAM] = Val(m_outputNames.at(m_fileIndex));
     }
 
     return params;
@@ -270,8 +274,9 @@ void MacroRunner::undoToStartState()
 void MacroRunner::showCompleted()
 {
     const QString name = QString::fromStdString(m_macro.name);
-    const QString result = qtrc("macromanager", "%n step(s) applied to the project", nullptr, int(m_macro.steps.size()));
-    const std::string message = qtrc("macromanager", "\n“%1” ran successfully\n%2\n\n").arg(name, result).toStdString();
+    const QString title = qtrc("macromanager", "“%1” ran successfully").arg(name);
+    const QString result = qtrc("macromanager", "%n step(s) applied to the project", nullptr, int(m_appliedStepCount));
+    const std::string message = QString("\n%1\n%2\n\n").arg(title, result).toStdString();
 
     toastService()->showWithTimeout(trc("macromanager", "Macro completed"), message, COMPLETED_TOAST_TIMEOUT,
                                     ui::IconCode::Code::TICK);

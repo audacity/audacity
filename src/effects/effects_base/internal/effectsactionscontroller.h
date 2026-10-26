@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <QObject>
+
 #include "framework/interactive/iinteractive.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
@@ -74,5 +76,6 @@ private:
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;
+    QObject m_queuedCallContext;
 };
 }

@@ -12,6 +12,8 @@ target_sources(macromanager PRIVATE
     imacrorunner.h
     irunonfilesrequests.h
 
+    internal/macrooutputnames.cpp
+    internal/macrooutputnames.h
     internal/macrorunner.cpp
     internal/macrorunner.h
     internal/macroserialization.cpp

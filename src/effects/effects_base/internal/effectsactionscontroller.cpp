@@ -5,8 +5,6 @@
 
 #include <algorithm>
 
-#include <QCoreApplication>
-
 #include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/internal/effectsutils.h"
@@ -141,10 +139,7 @@ void EffectsActionsController::registerActions()
         cd->onRequest(this, makeEffectConfigureCommand(effectId),
                       ICommandDispatcher::AsyncCallBack([this, effectId](const Request& request,
                                                                          const ICommandDispatcher::OnResponse& onResponse) {
-            //! NOTE Command handlers run inside the muse async queue drain. The effect dialog is modal and
-            //! spins a nested event loop, which would hold that drain and block every command dispatched
-            //! meanwhile, including keyboard navigation. Hop to the Qt event loop so the drain stays free.
-            QMetaObject::invokeMethod(qApp, [this, request, effectId, onResponse]() {
+            QMetaObject::invokeMethod(&m_queuedCallContext, [this, request, effectId, onResponse]() {
                 onResponse(configureEffect(request, effectId));
             }, Qt::QueuedConnection);
         }));

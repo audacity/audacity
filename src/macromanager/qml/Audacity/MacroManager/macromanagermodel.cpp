@@ -142,7 +142,10 @@ void MacroManagerModel::importMacro()
         return;
     }
 
-    repository()->save(macro.val);
+    const Ret ret = repository()->save(macro.val);
+    if (!ret) {
+        interactive()->error(trc("macromanager", "The macro could not be imported"), ret.text());
+    }
 }
 
 void MacroManagerModel::exportMacro(int row)
