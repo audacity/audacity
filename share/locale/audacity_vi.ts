@@ -266,7 +266,7 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
-        <translation>Lam lại &apos;%1&apos;</translation>
+        <translation>Làm lại &apos;%1&apos;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
@@ -459,7 +459,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="163"/>
         <source>Timecode</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Mã thời gian</translation>
+        <translation>Mã Thời gian</translation>
     </message>
     <message>
         <source>Set playback time</source>
@@ -881,7 +881,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
         <source>Show metadata editor</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hiện Trình sửa Siêu dữ hiệu</translation>
+        <translation>Hiện Trình sửa Siêu dữ liệu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="347"/>
@@ -905,7 +905,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
         <source>Set up timed recording</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cài đặt thời gian ghi âm</translation>
+        <translation>Thiết lập Thời gian Ghi âm</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
@@ -923,13 +923,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
         <source>Remove tracks</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Xóa track</translation>
+        <translation>Xóa Tracks</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
         <source>Mix-down to…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Trộn âm xuống thành...</translation>
+        <translation>Trộn Âm Xuống thành...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
@@ -1081,7 +1081,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="541"/>
         <source>Plot spectrum</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Đồ thị phổ</translation>
+        <translation>Đồ thị Phổ</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="551"/>
@@ -1147,13 +1147,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="633"/>
         <source>Previous window</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cửa sổ trước</translation>
+        <translation>Cửa sổ Trước</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="641"/>
         <source>Next window</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cửa sổ tiếp theo</translation>
+        <translation>Cửa sổ Tiếp theo</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="649"/>
@@ -1177,19 +1177,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="675"/>
         <source>Device info</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thông tin thiết bị</translation>
+        <translation>Thông tin Thiết bị</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="683"/>
         <source>MIDI device info</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thông tin thiết bị MIDI</translation>
+        <translation>Thông tin Thiết bị MIDI</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="691"/>
         <source>Log</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Cửa sổ nhật ký</translation>
+        <translation>Cửa sổ Nhật ký</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
@@ -1201,43 +1201,43 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="707"/>
         <source>Raise segfault</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kích hoạt lỗi phân đoạn</translation>
+        <translation>Kích hoạt Lỗi phân đoạn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="715"/>
         <source>Throw exception</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lỗi hệ thống không thể tự xử </translation>
+        <translation>Hệ thống Không thể Tự Xử lý</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="723"/>
         <source>Violate assertion</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Khẳng định vi phạm</translation>
+        <translation>Khẳng định Vi phạm</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="731"/>
         <source>Menu tree</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sơ đồ menu</translation>
+        <translation>Sơ đồ Menu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="739"/>
         <source>Frame statistics</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Thống kê khung hình</translation>
+        <translation>Thống kê Khung hình</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="747"/>
         <source>Link account</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Liên kết tài khoản</translation>
+        <translation>Liên kết Tài khoản</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="755"/>
         <source>Save to clo&amp;ud…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lưu trong clo&amp;ud...</translation>
+        <translation>Lưu trong Clo&amp;ud...</translation>
     </message>
     <message>
         <source>Save to cloud…</source>
@@ -4044,7 +4044,7 @@ Thao tác này sẽ không xóa bất kỳ dự án nào của bạn.</translati
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="303"/>
         <source>&amp;Edit</source>
-        <translation>Chỉnh &amp;Sửa</translation>
+        <translation>Chỉnh &amp;sửa</translation>
     </message>
 </context>
 <context>
