@@ -164,13 +164,12 @@ size_t RealtimeEffectManager::Process(bool suspended,
         called++;
     });
 
-    // Once we're done, we might wind up with the last effect storing its results
-    // in the temporary buffers.  If that's the case, we need to copy it over to
-    // the caller's buffers.  This happens when the number of effects processed
-    // is odd.
-    if (called & 1) {
+    // The result is in the scratch buffers when the number of effects processed
+    // is odd, and past the discarded latency in either case; move it to the
+    // start of the caller's buffers
+    if ((called & 1) || totalDiscardable > 0) {
         for (unsigned int i = 0; i < nBuffers; i++) {
-            memcpy(buffers[i], ibuf[i], numSamples * sizeof(float));
+            memmove(buffers[i], ibuf[i], numSamples * sizeof(float));
         }
     }
 

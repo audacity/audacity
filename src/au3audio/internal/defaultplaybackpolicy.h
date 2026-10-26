@@ -37,6 +37,8 @@ public:
     bool RepositionPlayback(
         PlaybackSchedule& schedule, const Mixers& playbackMixers, size_t frames, size_t available) override;
 
+    void SeekMixers(PlaybackSchedule& schedule, const Mixers& playbackMixers, double time) override;
+
     bool Looping(const PlaybackSchedule&) const override;
 
 private:

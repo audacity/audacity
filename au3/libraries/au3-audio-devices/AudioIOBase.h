@@ -24,6 +24,9 @@ Paul Licameli split from AudioIO.h
 #include "IMeterSender.h"
 
 struct PaDeviceInfo;
+#ifdef __WXMSW__
+struct PaWasapiStreamInfo;
+#endif
 typedef void PaStream;
 
 #if USE_PORTMIXER
@@ -140,6 +143,11 @@ public:
      * AudioIO object to avoid doing it later? Would simplify the
      * GetSupported*Rate functions considerably */
     void HandleDeviceChange();
+    static void InvalidateRateCache();
+
+#ifdef __WXMSW__
+    static PaWasapiStreamInfo MakeWasapiStreamInfo(bool autoConvert = false);
+#endif
 
     static int GetHostIndex(const std::string& hostName);
 
@@ -407,6 +415,7 @@ extern AUDIO_DEVICES_API StringSetting AudioIOHost;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyCompensation;
 extern AUDIO_DEVICES_API BoolSetting AudioIOAutomaticLatencyCompensation;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyDuration;
+extern AUDIO_DEVICES_API StringSetting AudioIOWasapiMode;
 extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackDevice;
 extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackSource;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOPlaybackVolume;

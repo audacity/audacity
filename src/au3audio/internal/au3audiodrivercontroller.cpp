@@ -13,6 +13,8 @@
 #include "framework/global/defer.h"
 #include "framework/global/log.h"
 #include "framework/global/realfn.h"
+#include "framework/global/runtime.h"
+#include "framework/global/async/async.h"
 #include "framework/global/settings.h"
 
 #include "audio/iaudiostreamsuspender.h"
@@ -23,6 +25,7 @@
 
 #include "au3-audio-devices/AudioIOBase.h"
 #include "au3-audio-devices/DeviceManager.h"
+#include "au3-audio-io/AudioIO.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
 
@@ -44,6 +47,7 @@ const muse::Settings::Key DEFAULT_PROJECT_SAMPLE_FORMAT("au3audio", "SamplingRat
 const muse::Settings::Key RECORDING_SOURCE("au3audio", "AudioIO/RecordingSource");
 const muse::Settings::Key RECORDING_SOURCE_INDEX("au3audio", "AudioIO/RecordingSourceIndex");
 const muse::Settings::Key ASIO_USE_DEVICE_SAMPLE_RATE("au3audio", "AudioIO/ASIO/UseDeviceSampleRate");
+const muse::Settings::Key WASAPI_MODE("au3audio", "AudioIO/WASAPI/Mode");
 
 std::string preferredAudioHost(const std::vector<std::string>& hosts)
 {
@@ -87,6 +91,31 @@ std::string internalSampleFormat(const std::string& display)
         }
     }
     return {};
+}
+
+LatencyMeasurement toLatencyMeasurement(const AudioIOLoopbackResult& r)
+{
+    LatencyMeasurement result;
+    switch (r.status) {
+    case AudioIOLoopbackResult::Status::Measured: result.status = LatencyMeasurement::Status::Measured;
+        break;
+    case AudioIOLoopbackResult::Status::Busy: result.status = LatencyMeasurement::Status::Busy;
+        break;
+    case AudioIOLoopbackResult::Status::DeviceError: result.status = LatencyMeasurement::Status::DeviceError;
+        break;
+    case AudioIOLoopbackResult::Status::NoSignal: result.status = LatencyMeasurement::Status::NoSignal;
+        break;
+    }
+    result.sampleRate = r.sampleRate;
+    result.roundTripFrames = r.roundTripFrames;
+    result.reportedInputLatencyMs = r.reportedInputLatencySecs * 1000.0;
+    result.reportedOutputLatencyMs = r.reportedOutputLatencySecs * 1000.0;
+    result.signalsFound = r.burstsFound;
+    result.signalsSent = r.burstsTotal;
+    result.spreadFrames = r.spreadFrames;
+    result.inputPeak = r.inputPeak;
+    result.inverted = r.inverted;
+    return result;
 }
 
 bool restoreSafely(const AudioStreamRestorer& restoreStream) noexcept
@@ -240,6 +269,7 @@ void Au3AudioDriverController::initDefaults()
     settings()->setDefaultValue(AUTOMATIC_LATENCY_COMPENSATION, muse::Val(false));
     settings()->setDefaultValue(LATENCY_COMPENSATION, muse::Val(-130.0));
     settings()->setDefaultValue(ASIO_USE_DEVICE_SAMPLE_RATE, muse::Val(true));
+    settings()->setDefaultValue(WASAPI_MODE, muse::Val("shared-low-latency"));
     settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(AudioIOBase::GetOptimalSupportedSampleRate()));
     settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_FORMAT,
                                 muse::Val(QualitySettings::SampleFormatSetting.Default().Internal().ToStdString()));
@@ -258,6 +288,7 @@ AudioConfiguration Au3AudioDriverController::configurationFromSettings() const
     result.defaultSampleRate = settings()->value(DEFAULT_PROJECT_SAMPLE_RATE).toInt();
     result.defaultSampleFormat = displaySampleFormat(settings()->value(DEFAULT_PROJECT_SAMPLE_FORMAT).toString());
     result.asioUseDeviceSampleRate = settings()->value(ASIO_USE_DEVICE_SAMPLE_RATE).toBool();
+    result.wasapiMode = settings()->value(WASAPI_MODE).toString();
     return result;
 }
 
@@ -411,6 +442,12 @@ std::optional<AudioConfiguration> Au3AudioDriverController::normalizedConfigurat
     if (change.asioUseDeviceSampleRate) {
         result.asioUseDeviceSampleRate = *change.asioUseDeviceSampleRate;
     }
+    if (change.wasapiMode) {
+        if (*change.wasapiMode != "shared" && *change.wasapiMode != "shared-low-latency" && *change.wasapiMode != "exclusive") {
+            return std::nullopt;
+        }
+        result.wasapiMode = *change.wasapiMode;
+    }
     return result;
 }
 
@@ -449,6 +486,9 @@ AudioConfigurationDelta Au3AudioDriverController::makeDelta(const AudioConfigura
     if (before.asioUseDeviceSampleRate != after.asioUseDeviceSampleRate) {
         add(AudioConfigurationField::AsioUseDeviceSampleRate);
     }
+    if (before.wasapiMode != after.wasapiMode) {
+        add(AudioConfigurationField::WasapiMode);
+    }
     return delta;
 }
 
@@ -461,13 +501,11 @@ bool Au3AudioDriverController::streamNeedsSuspension(
         return false;
     }
 
-    // Routing and the ASIO flag invalidate the process-wide PortAudio state, so
-    // any stream must reopen. A buffer-length change would only take effect on
-    // the next stream; reopening even another window's stream is a deliberate
-    // policy so the new value is audible immediately.
+    // Routing, driver modes, and buffer length require the owning stream to reopen.
     const bool routing = changesRouting(delta);
     const bool reopenAll = routing || delta.contains(AudioConfigurationField::BufferLength)
-                           || delta.contains(AudioConfigurationField::AsioUseDeviceSampleRate);
+                           || delta.contains(AudioConfigurationField::AsioUseDeviceSampleRate)
+                           || delta.contains(AudioConfigurationField::WasapiMode);
     if (reopenAll) {
         return true;
     }
@@ -582,6 +620,10 @@ void Au3AudioDriverController::writeConfiguration(const AudioConfiguration& valu
     if (delta.contains(AudioConfigurationField::AsioUseDeviceSampleRate)) {
         settings()->setLocalValue(ASIO_USE_DEVICE_SAMPLE_RATE, muse::Val(value.asioUseDeviceSampleRate));
     }
+    if (delta.contains(AudioConfigurationField::WasapiMode)) {
+        settings()->setLocalValue(WASAPI_MODE, muse::Val(value.wasapiMode));
+        AudioIOBase::InvalidateRateCache();
+    }
     if (delta.contains(AudioConfigurationField::DefaultSampleFormat)) {
         const auto internal = internalSampleFormat(value.defaultSampleFormat);
         settings()->setLocalValue(DEFAULT_PROJECT_SAMPLE_FORMAT, muse::Val(internal));
@@ -660,7 +702,7 @@ void Au3AudioDriverController::publish(const AudioConfigurationDelta& delta,
 ApplyResult Au3AudioDriverController::apply(const muse::modularity::ContextPtr& requester,
                                             const AudioConfigurationChange& change)
 {
-    if (m_applying) {
+    if (m_applying || m_measuring) {
         return { ApplyStatus::Busy };
     }
 
@@ -723,9 +765,72 @@ ApplyResult Au3AudioDriverController::apply(const muse::modularity::ContextPtr& 
     return { ApplyStatus::Applied, !restored };
 }
 
+Au3AudioDriverController::~Au3AudioDriverController()
+{
+    if (m_measureThread.joinable()) {
+        m_measureThread.join();
+    }
+}
+
+bool Au3AudioDriverController::isMeasuring() const
+{
+    return m_measuring;
+}
+
+void Au3AudioDriverController::measure(const muse::modularity::ContextPtr& requester,
+                                       std::function<void(const LatencyMeasurement&)> done)
+{
+    // Long enough for a few test signals even at a large buffer setting
+    constexpr double MEASURE_SECONDS = 4.0;
+    // About -6 dBFS: loud enough for a microphone near a speaker
+    constexpr float SIGNAL_GAIN = 0.5f;
+
+    LatencyMeasurement busy;
+    busy.status = LatencyMeasurement::Status::Busy;
+    if (m_applying || m_measuring) {
+        done(busy);
+        return;
+    }
+
+    // Input monitoring can wait; playback and recording are the user's work
+    AudioStreamRestorer restoreStream;
+    const auto stream = audioEngine() ? audioEngine()->currentStream() : std::nullopt;
+    if (stream) {
+        if (stream->kind != AudioStreamKind::Monitoring) {
+            done(busy);
+            return;
+        }
+        restoreStream = suspendOrForceStop(*stream);
+        if (!restoreStream) {
+            done(busy);
+            return;
+        }
+    }
+
+    const AudacityProject* project = projectForContext(requester);
+    const double rate = project ? ::ProjectRate::Get(*project).GetRate()
+                        : static_cast<double>(configuration().defaultSampleRate);
+
+    if (m_measureThread.joinable()) {
+        m_measureThread.join();
+    }
+    m_measuring = true;
+    m_measureThread = std::thread([this, rate, restoreStream, done]() {
+        const AudioIOLoopbackResult r = AudioIO::Get()->MeasureLoopbackLatency(rate, MEASURE_SECONDS, SIGNAL_GAIN);
+
+        const LatencyMeasurement result = toLatencyMeasurement(r);
+
+        muse::async::Async::call(this, [this, result, restoreStream, done]() {
+            m_measuring = false;
+            restoreSafely(restoreStream);
+            done(result);
+        }, muse::runtime::mainThreadId());
+    });
+}
+
 ApplyResult Au3AudioDriverController::rescan()
 {
-    if (m_applying) {
+    if (m_applying || m_measuring) {
         return { ApplyStatus::Busy };
     }
 
@@ -799,6 +904,7 @@ ApplyResult Au3AudioDriverController::reload(const muse::modularity::ContextPtr&
     change.defaultSampleRate = fromSettings.defaultSampleRate;
     change.defaultSampleFormat = fromSettings.defaultSampleFormat;
     change.asioUseDeviceSampleRate = fromSettings.asioUseDeviceSampleRate;
+    change.wasapiMode = fromSettings.wasapiMode;
     const auto result = apply(requester, change);
     if (!result.succeeded() && result.status != ApplyStatus::Busy) {
         // Restore persisted settings when the live configuration rejects them.
@@ -814,7 +920,7 @@ ApplyResult Au3AudioDriverController::reload(const muse::modularity::ContextPtr&
 
 ApplyResult Au3AudioDriverController::openAsioDriverSettings(const AudioRoutingChange& routing)
 {
-    if (m_applying) {
+    if (m_applying || m_measuring) {
         return { ApplyStatus::Busy };
     }
     AudioConfigurationChange change;

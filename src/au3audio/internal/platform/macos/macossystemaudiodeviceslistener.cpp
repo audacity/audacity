@@ -6,6 +6,8 @@
 
 #include <CoreAudio/CoreAudio.h>
 
+#include <algorithm>
+
 using namespace au::au3audio;
 
 namespace {
@@ -18,14 +20,58 @@ const AudioObjectPropertyAddress LISTENED_PROPERTIES[] = {
     { kAudioHardwarePropertyDefaultOutputDevice, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster },
 };
 
-OSStatus devicesChangedCallback(AudioObjectID, UInt32, const AudioObjectPropertyAddress*, void* clientData)
+OSStatus devicesChangedCallback(AudioObjectID, UInt32 count, const AudioObjectPropertyAddress* addresses, void* clientData)
 {
     auto* self = reinterpret_cast<MacosSystemAudioDevicesListener*>(clientData);
-    QMetaObject::invokeMethod(self, [self]() {
-        self->onSystemDevicesChanged();
+    const bool onlyDeviceList = std::all_of(addresses, addresses + count, [](const AudioObjectPropertyAddress& address) {
+        return address.mSelector == kAudioHardwarePropertyDevices;
+    });
+    QMetaObject::invokeMethod(self, [self, onlyDeviceList]() {
+        self->onSystemDevicesChanged(onlyDeviceList);
     }, Qt::QueuedConnection);
 
     return noErr;
+}
+
+bool isPrivateAggregate(AudioObjectID device)
+{
+    const AudioObjectPropertyAddress address {
+        kAudioAggregateDevicePropertyComposition, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster
+    };
+    CFDictionaryRef composition = nullptr;
+    UInt32 size = sizeof(composition);
+    if (AudioObjectGetPropertyData(device, &address, 0, nullptr, &size, &composition) != noErr || !composition) {
+        return false;
+    }
+
+    int isPrivate = 0;
+    const auto value = static_cast<CFNumberRef>(CFDictionaryGetValue(composition, CFSTR(kAudioAggregateDeviceIsPrivateKey)));
+    if (value) {
+        CFNumberGetValue(value, kCFNumberIntType, &isPrivate);
+    }
+    CFRelease(composition);
+    return isPrivate != 0;
+}
+
+//! A private aggregate is visible only to the process that made it, and PortAudio
+//! makes one for each stream on two devices: it is not a system change
+std::vector<uint32_t> systemDevices()
+{
+    const AudioObjectPropertyAddress address {
+        kAudioHardwarePropertyDevices, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster
+    };
+    UInt32 size = 0;
+    if (AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &address, 0, nullptr, &size) != noErr) {
+        return {};
+    }
+    std::vector<AudioObjectID> devices(size / sizeof(AudioObjectID));
+    if (AudioObjectGetPropertyData(kAudioObjectSystemObject, &address, 0, nullptr, &size, devices.data()) != noErr) {
+        return {};
+    }
+    devices.resize(size / sizeof(AudioObjectID));
+    devices.erase(std::remove_if(devices.begin(), devices.end(), isPrivateAggregate), devices.end());
+    std::sort(devices.begin(), devices.end());
+    return devices;
 }
 }
 
@@ -49,6 +95,7 @@ void MacosSystemAudioDevicesListener::startListening()
         return;
     }
 
+    m_systemDevices = systemDevices();
     for (const AudioObjectPropertyAddress& property : LISTENED_PROPERTIES) {
         AudioObjectAddPropertyListener(kAudioObjectSystemObject, &property, devicesChangedCallback, this);
     }
@@ -72,8 +119,15 @@ muse::async::Notification MacosSystemAudioDevicesListener::systemDevicesChanged(
     return m_systemDevicesChanged;
 }
 
-void MacosSystemAudioDevicesListener::onSystemDevicesChanged()
+void MacosSystemAudioDevicesListener::onSystemDevicesChanged(bool onlyDeviceList)
 {
+    auto devices = systemDevices();
+    const bool devicesChanged = devices != m_systemDevices;
+    m_systemDevices = std::move(devices);
+    if (onlyDeviceList && !devicesChanged) {
+        return;
+    }
+
     // bursts of CoreAudio notifications (e.g. plugging a headset changes
     // the device list and both defaults) collapse into one notification;
     // restarting the timer would let a continuous stream starve it forever

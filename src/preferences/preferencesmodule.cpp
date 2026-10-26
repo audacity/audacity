@@ -16,5 +16,6 @@ void PreferencesModule::resolveImports()
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://preferences"), "Audacity.Preferences", "PreferencesDialog");
+        ir->registerQmlUri(muse::Uri("audacity://preferences/measure_latency"), "Audacity.Preferences", "MeasureLatencyDialog");
     }
 }

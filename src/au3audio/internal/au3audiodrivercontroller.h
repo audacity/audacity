@@ -4,18 +4,21 @@
 #pragma once
 
 #include <optional>
+#include <thread>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "audio/driver/iaudiodrivercontroller.h"
+#include "audio/driver/ilatencymeasurement.h"
 #include "audio/iaudioengine.h"
 #include "audio/iaudiostreamsuspender.h"
 #include "au3audio/isystemaudiodeviceslistener.h"
 
 namespace au::au3audio {
-class Au3AudioDriverController final : public audio::IAudioDriverController, public muse::async::Asyncable
+class Au3AudioDriverController final : public audio::IAudioDriverController, public audio::ILatencyMeasurement,
+    public muse::async::Asyncable
 {
     muse::GlobalInject<audio::IAudioEngine> audioEngine;
     muse::GlobalInject<muse::IApplication> application;
@@ -48,6 +51,11 @@ public:
     muse::async::Channel<std::string> usedOutputDeviceChanged() const override;
     muse::async::Channel<std::string> usedInputDeviceChanged() const override;
 
+    ~Au3AudioDriverController() override;
+
+    bool isMeasuring() const override;
+    void measure(const muse::modularity::ContextPtr& requester, std::function<void(const audio::LatencyMeasurement&)> done) override;
+
 private:
     friend class Au3AudioDriverControllerTests;
 
@@ -74,6 +82,8 @@ private:
     void publish(const audio::AudioConfigurationDelta& delta, bool deviceListChanged = false) noexcept;
     audio::AudioConfiguration m_configuration;
     bool m_applying = false;
+    bool m_measuring = false;
+    std::thread m_measureThread;
     bool m_pendingSystemDevicesChange = false;
 
     muse::async::Channel<audio::AudioConfigurationDelta> m_configurationChanged;

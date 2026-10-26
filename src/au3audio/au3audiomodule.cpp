@@ -45,6 +45,7 @@ void Au3AudioModule::registerExports()
 
     globalIoc()->registerExport<audio::IAudioEngine>(mname, m_audioEngine);
     globalIoc()->registerExport<audio::IAudioDriverController>(mname, m_audioDriverController);
+    globalIoc()->registerExport<audio::ILatencyMeasurement>(mname, m_audioDriverController);
     globalIoc()->registerExport<ISystemAudioDevicesListener>(mname, m_systemAudioDevicesListener);
 }
 
