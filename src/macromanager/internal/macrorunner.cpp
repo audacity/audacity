@@ -79,6 +79,13 @@ async::Promise<Ret> MacroRunner::start(const Macro& macro, const io::paths_t& fi
         }
 
         m_macro = macro;
+
+        const Ret valid = repository()->validateReferences(macro);
+        if (!valid) {
+            showError(valid);
+            return resolve(valid);
+        }
+
         m_macroStack = { macro.name };
         m_files = files;
         m_fileIndex = 0;
