@@ -8,11 +8,6 @@
 
 #include <atomic>
 
-enum class ClipSide {
-    Left,
-    Right
-};
-
 enum class FadeType {
     Linear,
     Logarithmic,
@@ -56,6 +51,9 @@ public:
 
     void WriteXMLAttributes(XMLWriter& writer) const override;
     bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView) override;
+
+    //! The split side loses its fade, which belongs to the other clip
+    void OnSplit(ClipSide splitSide) override;
 
     double fadeIn() const;
     void setFadeIn(double);

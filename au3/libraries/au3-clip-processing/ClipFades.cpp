@@ -133,6 +133,12 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
     return false;
 }
 
+void ClipFades::OnSplit(ClipSide splitSide)
+{
+    (splitSide == ClipSide::Left ? m_fadeIn : m_fadeOut) = 0.0;
+    Publish(ClipFadesChange {});
+}
+
 double ClipFades::fadeIn() const
 {
     if (m_draggingSide == ClipSide::Left) {

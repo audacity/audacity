@@ -3374,6 +3374,8 @@ auto WaveTrack::SplitAt(double t) -> std::pair<IntervalHolder, IntervalHolder>
             auto newClip = CopyClip(*c, true);
             c->TrimRightTo(t);// put t on a sample
             newClip->TrimLeftTo(t);
+            c->OnSplit(ClipSide::Right);
+            newClip->OnSplit(ClipSide::Left);
             auto result = std::pair{ c, newClip };
 
             // This could invalidate the iterators for the loop!  But we return
