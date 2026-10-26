@@ -19,6 +19,7 @@ function.
 *//*******************************************************************/
 
 #include <algorithm>
+#include <map>
 
 #include "FFmpeg.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
@@ -1508,34 +1509,36 @@ bool FFmpegExporter::AddTags(const Tags* tags)
         return false;
     }
 
-    SetMetadata(tags, "album", TAG_ALBUM);
-    SetMetadata(tags, "comment", TAG_COMMENTS);
-    SetMetadata(tags, "genre", TAG_GENRE);
-    SetMetadata(tags, "title", TAG_TITLE);
-    SetMetadata(tags, "track", TAG_TRACK);
+    //! FFmpeg's generic keys; each muxer maps them to its own tag names
+    static const std::map<wxString, std::string> genericKeys {
+        { TAG_TITLE, "title" },
+        { TAG_ARTIST, "artist" },
+        { TAG_ALBUM, "album" },
+        { TAG_TRACK, "track" },
+        { TAG_YEAR, "date" },
+        { TAG_GENRE, "genre" },
+        { TAG_COMMENTS, "comment" },
+        { wxString(TAG_COPYRIGHT).Upper(), "copyright" },
+    };
 
-    // Bug 2564: Add m4a tags
-    if (mEncFormatDesc->GetAudioCodec() == mFFmpeg->GetAVCodecID(AUDACITY_AV_CODEC_ID_AAC)) {
-        SetMetadata(tags, "artist", TAG_ARTIST);
-        SetMetadata(tags, "date", TAG_YEAR);
-    } else {
-        SetMetadata(tags, "author", TAG_ARTIST);
-        SetMetadata(tags, "year", TAG_YEAR);
+    for (const auto& [name, value] : tags->GetRange()) {
+        if (value.empty()) {
+            continue;
+        }
+
+        const auto it = genericKeys.find(name.Upper());
+        SetMetadata(it != genericKeys.end() ? it->second : name.ToStdString(), value);
     }
 
     return true;
 }
 
-void FFmpegExporter::SetMetadata(const Tags* tags, const char* name, const wxChar* tag)
+void FFmpegExporter::SetMetadata(const std::string& name, const wxString& value)
 {
-    if (tags->HasTag(tag)) {
-        wxString value = tags->GetTag(tag);
+    AVDictionaryWrapper metadata = mEncFormatCtx->GetMetadata();
 
-        AVDictionaryWrapper metadata = mEncFormatCtx->GetMetadata();
-
-        metadata.Set(name, mSupportsUTF8 ? value : value.mb_str(), 0);
-        mEncFormatCtx->SetMetadata(metadata);
-    }
+    metadata.Set(name, mSupportsUTF8 ? value : value.mb_str(), 0);
+    mEncFormatCtx->SetMetadata(metadata);
 }
 
 //----------------------------------------------------------------------------
