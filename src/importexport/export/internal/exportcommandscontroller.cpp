@@ -18,7 +18,6 @@ using namespace muse;
 namespace {
 const std::string MACRO_OUTPUT_DIR("macro-output");
 const std::string MP3_EXTENSION("mp3");
-const std::string NAME_PARAM("name");
 }
 
 void ExportCommandsController::init()
@@ -45,7 +44,7 @@ Ret ExportCommandsController::exportToMacroOutput(const std::string& extension, 
         return dirRet;
     }
 
-    std::string baseName = params.contains(NAME_PARAM) ? params.at(NAME_PARAM).toString() : outputBaseName();
+    std::string baseName = params.contains(EXPORT_NAME_PARAM) ? params.at(EXPORT_NAME_PARAM).toString() : outputBaseName();
     baseName = io::escapeFileName(baseName).toStdString();
     if (baseName.empty() || baseName == "." || baseName == "..") {
         return make_ret(Ret::Code::BadArgs, "invalid export name");

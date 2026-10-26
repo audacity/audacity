@@ -69,7 +69,9 @@ private:
     Macro m_macro;
     std::vector<std::string> m_macroStack;
     muse::io::paths_t m_files;
+    std::vector<std::string> m_outputNames;
     size_t m_fileIndex = 0;
+    size_t m_appliedStepCount = 0;
     std::vector<muse::Ret> m_fileResults;
     size_t m_startStateIndex = 0;
     bool m_running = false;
