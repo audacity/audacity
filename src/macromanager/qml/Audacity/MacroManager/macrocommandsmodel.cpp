@@ -190,7 +190,13 @@ void MacroCommandsModel::editParams(int row)
 
 bool MacroCommandsModel::save()
 {
-    return repository()->save(m_macro);
+    const Ret ret = repository()->save(m_macro);
+    if (!ret) {
+        interactive()->error(trc("macromanager", "The macro could not be saved"), ret.text());
+        return false;
+    }
+
+    return true;
 }
 
 void MacroCommandsModel::run()
