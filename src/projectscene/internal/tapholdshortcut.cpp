@@ -115,7 +115,8 @@ void TapHoldShortcut::updateShortcut(const std::string& action)
 
 bool TapHoldShortcut::matchKeyEvent(QKeyEvent* ke) const
 {
-    if (!uicontextResolver()->isShortcutContextAllowed(m_shortcut.context) || !m_shortcut.isValid()) {
+    if (!m_shortcut.isValid() || m_shortcut.sequences.empty()
+        || !uicontextResolver()->isShortcutContextAllowed(m_shortcut.context)) {
         return false;
     }
 
