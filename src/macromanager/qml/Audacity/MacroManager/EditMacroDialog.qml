@@ -275,8 +275,9 @@ StyledDialogView {
                 navigation.column: 2
 
                 onClicked: {
-                    macroCommandsModel.save()
-                    root.hide()
+                    if (macroCommandsModel.save()) {
+                        root.hide()
+                    }
                 }
             }
         }

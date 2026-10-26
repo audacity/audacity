@@ -8,6 +8,7 @@
 #include "framework/global/configreader.h"
 #include "framework/global/io/path.h"
 #include "framework/global/serialization/json.h"
+#include "framework/global/translation.h"
 #include "framework/global/log.h"
 
 #include "macroserialization.h"
@@ -77,10 +78,55 @@ std::vector<std::string> MacrosRepository::dependentMacros(const std::string& na
     return dependents;
 }
 
+Ret MacrosRepository::validateReferences(const Macro& macro) const
+{
+    std::vector<std::string> path { macro.name };
+    return visitReferences(macro, path);
+}
+
+Ret MacrosRepository::visitReferences(const Macro& macro, std::vector<std::string>& path) const
+{
+    for (const MacroItem& item : macro.steps) {
+        const MacroReference* reference = std::get_if<MacroReference>(&item);
+        if (!reference) {
+            continue;
+        }
+
+        if (std::ranges::find(path, reference->name) != path.end()) {
+            const QString root = QString::fromStdString(path.front());
+            const QString message = path.size() == 1
+                                    ? qtrc("macromanager", "Macro “%1” calls itself").arg(root)
+                                    : qtrc("macromanager", "Macro “%1” calls itself through “%2”").arg(root,
+                                                                                                       QString::fromStdString(path.back()));
+            return make_ret(Ret::Code::BadArgs, message.toStdString());
+        }
+
+        const std::optional<Macro> referenced = this->macro(reference->name);
+        if (!referenced) {
+            continue;
+        }
+
+        path.push_back(reference->name);
+        const Ret ret = visitReferences(*referenced, path);
+        path.pop_back();
+
+        if (!ret) {
+            return ret;
+        }
+    }
+
+    return make_ok();
+}
+
 Ret MacrosRepository::save(const Macro& macro)
 {
     if (macro.name.empty()) {
         return make_ret(Ret::Code::BadArgs, "macro name is empty");
+    }
+
+    const Ret valid = validateReferences(macro);
+    if (!valid) {
+        return valid;
     }
 
     const Ret ret = writeMacroFile(macro, userMacroFilePath(macro.name));

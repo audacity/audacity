@@ -25,6 +25,7 @@ public:
     const MacroList& macros() const override;
     std::optional<Macro> macro(const std::string& name) const override;
     std::vector<std::string> dependentMacros(const std::string& name) const override;
+    muse::Ret validateReferences(const Macro& macro) const override;
 
     muse::Ret save(const Macro& macro) override;
     muse::Ret remove(const std::string& name) override;
@@ -42,6 +43,7 @@ private:
 
     void reload();
     void loadMacroFile(const muse::io::path_t& path, bool builtin);
+    muse::Ret visitReferences(const Macro& macro, std::vector<std::string>& path) const;
 
     muse::Config m_config;
     MacroList m_macros;
