@@ -107,6 +107,7 @@ endif()
 file(REMOVE_RECURSE "${_archive_root}")
 
 message(STATUS "Finished 7z packing")
+set(ARTIFACT_NAME "${_archive_name}.7z")
 
 # PACK MSI
 if(PACK_TYPE STREQUAL "msi")
@@ -215,5 +216,7 @@ if(PACK_TYPE STREQUAL "msi")
   endif()
 
   message(STATUS "Finished MSI packing")
-  return()
 endif()
+
+# Package file name, for the later CI steps (checksum, release): the MSI when one is built, else the 7z
+file(WRITE "${ARTIFACTS_DIR}/env/artifact_name.env" "${ARTIFACT_NAME}")
