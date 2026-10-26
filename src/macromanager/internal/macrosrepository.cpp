@@ -129,7 +129,8 @@ Ret MacrosRepository::save(const Macro& macro)
         return valid;
     }
 
-    const Ret ret = writeMacroFile(macro, userMacroFilePath(macro.name));
+    const io::path_t path = userMacroFilePath(macro.name).value_or(newUserMacroFilePath(macro.name));
+    const Ret ret = writeMacroFile(macro, path);
     if (!ret) {
         LOGE() << "failed to save macro " << macro.name << ": " << ret.toString();
         return ret;
@@ -147,23 +148,24 @@ Ret MacrosRepository::remove(const std::string& name)
     names.insert(names.begin(), name);
 
     for (const std::string& macroName : names) {
-        if (!fileSystem()->exists(userMacroFilePath(macroName))) {
+        if (!userMacroFilePath(macroName)) {
             return make_ret(Ret::Code::NotSupported, "built-in macros cannot be removed");
         }
     }
 
+    Ret ret = make_ok();
     for (const std::string& macroName : names) {
-        const Ret ret = fileSystem()->remove(userMacroFilePath(macroName));
+        ret = fileSystem()->remove(m_userMacroFiles.at(macroName));
         if (!ret) {
             LOGE() << "failed to remove macro " << macroName << ": " << ret.toString();
-            return ret;
+            break;
         }
     }
 
     reload();
     m_macrosChanged.notify();
 
-    return make_ok();
+    return ret;
 }
 
 Ret MacrosRepository::rename(const std::string& oldName, const std::string& newName)
@@ -181,24 +183,21 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
         return make_ret(Ret::Code::BadArgs, "macro not found");
     }
 
-    if (!fileSystem()->exists(userMacroFilePath(oldName))) {
+    const std::optional<io::path_t> path = userMacroFilePath(oldName);
+    if (!path) {
         return make_ret(Ret::Code::NotSupported, "built-in macros cannot be renamed");
     }
 
     Macro renamed = *existing;
     renamed.name = newName;
 
-    Ret ret = writeMacroFile(renamed, userMacroFilePath(newName));
-    if (!ret) {
-        return ret;
-    }
-
-    ret = fileSystem()->remove(userMacroFilePath(oldName));
-    if (!ret) {
-        return ret;
-    }
+    Ret ret = writeMacroFile(renamed, *path);
 
     for (const Macro& dependent : m_macros) {
+        if (!ret) {
+            break;
+        }
+
         if (dependent.builtin || dependent.name == oldName || !references(dependent, oldName)) {
             continue;
         }
@@ -211,16 +210,13 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
             }
         }
 
-        ret = writeMacroFile(updated, userMacroFilePath(updated.name));
-        if (!ret) {
-            return ret;
-        }
+        ret = writeMacroFile(updated, m_userMacroFiles.at(updated.name));
     }
 
     reload();
     m_macrosChanged.notify();
 
-    return make_ok();
+    return ret;
 }
 
 async::Notification MacrosRepository::macrosChanged() const
@@ -233,9 +229,26 @@ io::path_t MacrosRepository::userMacrosPath() const
     return globalConfiguration()->userAppDataPath() + "/" + MACROS_DIR;
 }
 
-io::path_t MacrosRepository::userMacroFilePath(const std::string& name) const
+std::optional<io::path_t> MacrosRepository::userMacroFilePath(const std::string& name) const
 {
-    return userMacrosPath() + "/" + io::escapeFileName(name) + MACRO_FILE_SUFFIX;
+    const auto it = m_userMacroFiles.find(name);
+    if (it == m_userMacroFiles.end()) {
+        return std::nullopt;
+    }
+
+    return it->second;
+}
+
+io::path_t MacrosRepository::newUserMacroFilePath(const std::string& name) const
+{
+    const io::path_t baseName = userMacrosPath() + "/" + io::escapeFileName(name);
+
+    io::path_t path = baseName + MACRO_FILE_SUFFIX;
+    for (int suffix = 2; fileSystem()->exists(path); ++suffix) {
+        path = baseName + "_" + std::to_string(suffix) + MACRO_FILE_SUFFIX;
+    }
+
+    return path;
 }
 
 io::paths_t MacrosRepository::builtinMacroFilePaths() const
@@ -253,6 +266,7 @@ io::paths_t MacrosRepository::builtinMacroFilePaths() const
 void MacrosRepository::reload()
 {
     m_macros.clear();
+    m_userMacroFiles.clear();
 
     for (const io::path_t& path : builtinMacroFilePaths()) {
         loadMacroFile(path, true);
@@ -299,6 +313,12 @@ void MacrosRepository::loadMacroFile(const io::path_t& path, bool builtin)
     }
 
     macro.val.builtin = builtin;
+
+    if (builtin) {
+        m_userMacroFiles.erase(macro.val.name);
+    } else {
+        m_userMacroFiles.insert_or_assign(macro.val.name, path);
+    }
 
     std::erase_if(m_macros, [&macro](const Macro& m) { return m.name == macro.val.name; });
     m_macros.push_back(std::move(macro.val));
