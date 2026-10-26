@@ -321,6 +321,9 @@ bool au::importexport::Au3Importer::importIntoTrackInternal(const muse::io::path
         return false;
     }
 
+    // no more errors, commit
+    committed = true;
+
     if (applyProjectTitle) {
         applyImportedProjectTitleIfNeeded(filePath);
     }
