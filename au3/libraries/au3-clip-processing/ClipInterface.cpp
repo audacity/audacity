@@ -16,4 +16,15 @@ bool ClipInterfaceAttachment::HandleXMLAttribute(
     return false;
 }
 
+void ClipInterfaceAttachment::OnSplit(ClipSide)
+{
+}
+
 ClipInterface::~ClipInterface() = default;
+
+void ClipInterface::OnSplit(ClipSide splitSide)
+{
+    ForEach([splitSide](ClipInterfaceAttachment& attachment) {
+        attachment.OnSplit(splitSide);
+    });
+}

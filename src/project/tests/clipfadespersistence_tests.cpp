@@ -149,4 +149,19 @@ TEST_F(ClipFadesPersistenceTests, WinningFadeLongerThanTheTrimmedClipLeavesNoRoo
     EXPECT_DOUBLE_EQ(fades.fadeIn(), 0.5);
     EXPECT_DOUBLE_EQ(fades.fadeOut(), 0.0);
 }
+
+TEST_F(ClipFadesPersistenceTests, SplittingInAFadeLeavesItToTheClipWithItsEdge)
+{
+    //! [WHEN] the clip is split halfway through its fade-in
+    const auto [left, right] = firstTrack().SplitAt(TEST_FADE_IN / 2);
+    ASSERT_TRUE(left && right);
+
+    //! [THEN] the left clip is faded in all the way, and doesn't fade out
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*left).fadeIn(), left->GetPlayDuration());
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*left).fadeOut(), 0.0);
+
+    //! [THEN] the right clip isn't faded in, and keeps the fade-out
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*right).fadeIn(), 0.0);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*right).fadeOut(), TEST_FADE_OUT);
+}
 }

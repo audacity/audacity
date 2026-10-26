@@ -49,6 +49,11 @@ enum class PitchAndSpeedPreset
     OptimizeForVoice,
 };
 
+enum class ClipSide {
+    Left,
+    Right
+};
+
 struct ClipInterfaceAttachment;
 CRTP_BASE(ClipInterfaceAttachmentBase, struct,
           ClientData::Cloneable<ClipInterfaceAttachment>);
@@ -70,6 +75,13 @@ struct ClipInterfaceAttachment : ClipInterfaceAttachmentBase {
     //! Default implementation just returns false
     virtual bool HandleXMLAttribute(
         const std::string_view& attr, const XMLAttributeValueView& valueView);
+
+    //! Called on the attachments of both clips resulting from a split, once trimmed
+    /*!
+     Default implementation does nothing
+     @param splitSide the side of the clip where the split is
+     */
+    virtual void OnSplit(ClipSide splitSide);
 };
 
 /*!
@@ -84,6 +96,12 @@ public:
         =ClientData::Site<ClipInterface, ClipInterfaceAttachment, ClientData::DeepCopying>;
 
     ~ClipInterface() override;
+
+    //! To be called on both clips resulting from a split, once trimmed: notifies the attachments
+    /*!
+     @param splitSide the side of the clip where the split is
+     */
+    void OnSplit(ClipSide splitSide);
 
     virtual AudioSegmentSampleView GetSampleView(
         size_t iChannel, sampleCount start, size_t length, bool mayThrow = true) const = 0;
