@@ -64,6 +64,7 @@ Item {
         height: root.height - root.drawingTop
         x: prv.fadeInEnd - 1
         visible: root.fadeInWidth >= 1
+        highlighted: fadeInHandle.pressed
     }
 
     ClipFadeBoundaryLine {
@@ -71,6 +72,7 @@ Item {
         height: root.height - root.drawingTop
         x: prv.fadeOutStart
         visible: root.fadeOutWidth >= 1
+        highlighted: fadeOutHandle.pressed
     }
 
     ClipFadeHandle {
