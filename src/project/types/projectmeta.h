@@ -20,7 +20,7 @@ struct ProjectMeta
     std::string trackTitle;
     std::string album;
     std::string trackNumber;
-    // std::string genre; // TODO
+    std::string genre;
     std::string year;
     std::string comments;
 
@@ -44,7 +44,7 @@ struct ProjectMeta
         equal &= artist == other.artist;
         equal &= album == other.album;
         equal &= trackNumber == other.trackNumber;
-        // equal &= genre == other.genre; // TODO
+        equal &= genre == other.genre;
         equal &= year == other.year;
         equal &= comments == other.comments;
 
@@ -69,7 +69,7 @@ inline const std::string ARTIST_TAG("ARTIST");
 inline const std::string ALBUM_TAG("ALBUM");
 inline const std::string TRACK_NUMBER_TAG("TRACKNUMBER");
 inline const std::string YEAR_TAG("YEAR");
-// inline const std::string GENRE_TAG("GENRE"); // TODO
+inline const std::string GENRE_TAG("GENRE");
 inline const std::string COMMENTS_TAG("COMMENTS");
 
 static const QList<std::string> standardTags {
@@ -78,20 +78,20 @@ static const QList<std::string> standardTags {
     ALBUM_TAG,
     TRACK_NUMBER_TAG,
     YEAR_TAG,
-    // GENRE_TAG, // TODO
+    GENRE_TAG,
     COMMENTS_TAG,
 };
 
 using MemberPtr = std::string ProjectMeta::*;
 
 //! Same order as `standardTags`
-inline static const std::array<MemberPtr, 6> kStdMembers = {
+inline static const std::array<MemberPtr, 7> kStdMembers = {
     &project::ProjectMeta::trackTitle,
     &project::ProjectMeta::artist,
     &project::ProjectMeta::album,
     &project::ProjectMeta::trackNumber,
-    // &project::ProjectMeta::genre, // TODO
     &project::ProjectMeta::year,
+    &project::ProjectMeta::genre,
     &project::ProjectMeta::comments,
 };
 
@@ -100,7 +100,7 @@ static std::map<std::string, std::string> LABEL_MAP {
     { TITLE_TAG,        muse::trc("metadata", "Track title") },
     { ALBUM_TAG,        muse::trc("metadata", "Album title") },
     { TRACK_NUMBER_TAG, muse::trc("metadata", "Track number") },
-    // { GENRE_TAG,        muse::trc("metadata", "Genre") }, // TODO
+    { GENRE_TAG,        muse::trc("metadata", "Genre") },
     { YEAR_TAG,         muse::trc("metadata", "Year") },
     { COMMENTS_TAG,     muse::trc("metadata", "Comments") },
 };
