@@ -20,6 +20,7 @@ function.
 
 #include <algorithm>
 #include <map>
+#include <vector>
 
 #include "FFmpeg.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
@@ -1525,13 +1526,23 @@ bool FFmpegExporter::AddTags(const Tags* tags)
         { TAG_COPYRIGHT, "copyright" },
     };
 
+    std::vector<std::pair<std::string, wxString> > standardTags;
     for (const auto& [name, value] : tags->GetRange()) {
         if (value.empty()) {
             continue;
         }
 
         const auto it = genericKeys.find(name);
-        SetMetadata(it != genericKeys.end() ? it->second : name.ToStdString(), value);
+        if (it == genericKeys.end()) {
+            SetMetadata(name.ToStdString(), value);
+        } else {
+            standardTags.emplace_back(it->second, value);
+        }
+    }
+
+    //! Written last, so they win over additional tags FFmpeg treats as the same key, e.g. DATE
+    for (const auto& [key, value] : standardTags) {
+        SetMetadata(key, value);
     }
 
     return true;
