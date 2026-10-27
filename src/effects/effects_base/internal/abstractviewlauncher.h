@@ -20,7 +20,7 @@ public:
         : muse::Contextable(ctx) {}
 
 protected:
-    muse::Ret doShowEffect(int instanceId, EffectFamily) const;
+    muse::Ret doShowEffect(int instanceId, EffectFamily, EffectViewMode) const;
     void doShowRealtimeEffect(const RealtimeEffectStatePtr& state) const;
 
 private:

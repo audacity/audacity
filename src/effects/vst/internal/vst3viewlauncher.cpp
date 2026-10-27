@@ -36,7 +36,7 @@ void Vst3ViewLauncher::registerFxPlugin(const EffectInstanceId& instanceId) cons
     museInstancesRegister()->registerFxPlugin(0, 0, museVstInstance);
 }
 
-muse::Ret Vst3ViewLauncher::showEffect(const EffectInstanceId& instanceId) const
+muse::Ret Vst3ViewLauncher::showEffect(const EffectInstanceId& instanceId, EffectViewMode mode) const
 {
     auto museVstInstance = museInstancesRegister()->instanceById(instanceId);
     if (!museVstInstance) {
@@ -47,7 +47,7 @@ muse::Ret Vst3ViewLauncher::showEffect(const EffectInstanceId& instanceId) const
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    return doShowEffect(instanceId, EffectFamily::VST3);
+    return doShowEffect(instanceId, EffectFamily::VST3, mode);
 }
 
 void Vst3ViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) const

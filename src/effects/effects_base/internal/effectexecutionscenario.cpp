@@ -133,7 +133,7 @@ muse::RetVal<std::string> EffectExecutionScenario::configureEffect(const EffectI
     if (effect->IsInteractive()) {
         const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
         const EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, instance, access);
-        const Ret ret = effectViewController()->showEffect(effectId, instanceId);
+        const Ret ret = effectViewController()->showEffect(effectId, instanceId, EffectViewMode::Configure);
         effectInstancesRegister()->requestUpdateSettings(instanceId);
         effectInstancesRegister()->unregInstance(instanceId);
         if (!ret) {
@@ -434,7 +434,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
             EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, pInstanceEx, access);
-            muse::Ret ret = effectViewController()->showEffect(effectId, instanceId);
+            muse::Ret ret = effectViewController()->showEffect(effectId, instanceId, EffectViewMode::Apply);
             effectInstancesRegister()->requestUpdateSettings(instanceId);
             effectInstancesRegister()->unregInstance(instanceId);
             if (ret) {

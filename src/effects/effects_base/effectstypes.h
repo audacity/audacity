@@ -212,6 +212,11 @@ public:
 
 using EffectFamily = EffectFamilies::EffectFamily;
 
+enum class EffectViewMode {
+    Apply,
+    Configure
+};
+
 enum class EffectCategory {
     Unspecified = -1,
     None,

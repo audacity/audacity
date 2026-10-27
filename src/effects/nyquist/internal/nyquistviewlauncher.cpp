@@ -5,9 +5,9 @@
 
 using namespace au::effects;
 
-muse::Ret NyquistViewLauncher::showEffect(const EffectInstanceId& instanceId) const
+muse::Ret NyquistViewLauncher::showEffect(const EffectInstanceId& instanceId, EffectViewMode mode) const
 {
-    return doShowEffect(instanceId, EffectFamily::Nyquist);
+    return doShowEffect(instanceId, EffectFamily::Nyquist, mode);
 }
 
 void NyquistViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) const

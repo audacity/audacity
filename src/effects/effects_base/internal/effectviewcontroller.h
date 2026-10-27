@@ -27,7 +27,7 @@ public:
     EffectViewController(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
-    muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) override;
+    muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId, EffectViewMode mode) override;
 
     void showEffect(const RealtimeEffectStatePtr& state) const override;
     void hideEffect(const RealtimeEffectStatePtr& state) const override;
