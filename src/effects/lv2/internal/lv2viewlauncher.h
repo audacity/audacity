@@ -22,7 +22,7 @@ class Lv2ViewLauncher final : public AbstractViewLauncher, public muse::async::A
 public:
     Lv2ViewLauncher(const muse::modularity::ContextPtr& ctx);
 
-    muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
+    muse::Ret showEffect(const EffectInstanceId& instanceId, EffectViewMode mode) const override;
     void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
     bool vendorUiSupported(const EffectId& effectId) const override;
     void markVendorUiFailed(const EffectId& effectId) override;

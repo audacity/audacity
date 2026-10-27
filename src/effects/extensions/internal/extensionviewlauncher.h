@@ -14,7 +14,7 @@ public:
     {
     }
 
-    muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
+    muse::Ret showEffect(const EffectInstanceId& instanceId, EffectViewMode mode) const override;
     void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
 };
 } // namespace au::effects::extensions

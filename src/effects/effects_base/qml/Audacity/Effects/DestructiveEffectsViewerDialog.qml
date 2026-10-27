@@ -17,6 +17,7 @@ EffectStyledDialogView {
     id: root
 
     property int effectFamily: EffectFamily.Unknown
+    property bool previewAllowed: true
 
     title: viewerModel.title
     navigationSection.name: title
@@ -51,7 +52,7 @@ EffectStyledDialogView {
         property bool showBottomPanel: true
 
         property bool isApplyAllowed: viewerModel.effectFamily !== EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
-        property bool isPreviewAllowed: !viewer || viewer.isPreviewAllowed !== false
+        property bool isPreviewAllowed: root.previewAllowed && (!viewer || viewer.isPreviewAllowed !== false)
         property bool shouldRollbackOnClose: true
 
         function closeWindow(accept) {

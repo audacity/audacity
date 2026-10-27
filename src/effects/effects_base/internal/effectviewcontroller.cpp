@@ -40,7 +40,7 @@ void callOnLauncher(const RealtimeEffectStatePtr& state, const IEffectsProvider&
 }
 }
 
-muse::Ret EffectViewController::showEffect(const EffectId& effectId, const EffectInstanceId& instanceId)
+muse::Ret EffectViewController::showEffect(const EffectId& effectId, const EffectInstanceId& instanceId, EffectViewMode mode)
 {
     LOGD() << "try open effect: " << effectId << ", instanceId: " << instanceId;
 
@@ -53,7 +53,7 @@ muse::Ret EffectViewController::showEffect(const EffectId& effectId, const Effec
         return muse::make_ret(muse::Ret::Code::NotSupported);
     }
 
-    const muse::Ret ret = launcher->showEffect(instanceId);
+    const muse::Ret ret = launcher->showEffect(instanceId, mode);
 
     LOGD() << "open ret: " << ret.toString();
     return ret;
