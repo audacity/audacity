@@ -19,6 +19,8 @@ Item {
 
     //! The fades span the whole item, the handles only a band of it, starting at `handlesY`
     property real handlesY: 0
+    //! Above it, the fades aren't drawn
+    property real drawingTop: 0
     property bool handlesVisible: false
 
     signal fadeEditStarted
@@ -58,13 +60,15 @@ Item {
 
     // the boundary lines are drawn just inside their fade
     ClipFadeBoundaryLine {
-        height: root.height
+        y: root.drawingTop
+        height: root.height - root.drawingTop
         x: prv.fadeInEnd - 1
         visible: root.fadeInWidth >= 1
     }
 
     ClipFadeBoundaryLine {
-        height: root.height
+        y: root.drawingTop
+        height: root.height - root.drawingTop
         x: prv.fadeOutStart
         visible: root.fadeOutWidth >= 1
     }
@@ -83,6 +87,7 @@ Item {
         fadeWidth: root.fadeInWidth
         fadeLeft: prv.fadeInEnd - root.fadeInWidth
         fadeType: root.fadeInType
+        drawingTop: root.drawingTop
 
         onFadeEditStarted: root.fadeEditStarted()
 
@@ -111,6 +116,7 @@ Item {
         fadeWidth: root.fadeOutWidth
         fadeLeft: prv.fadeOutStart
         fadeType: root.fadeOutType
+        drawingTop: root.drawingTop
 
         onFadeEditStarted: root.fadeEditStarted()
 
