@@ -1509,8 +1509,12 @@ bool FFmpegExporter::AddTags(const Tags* tags)
         return false;
     }
 
+    struct CaseInsensitiveLess {
+        bool operator()(const wxString& a, const wxString& b) const { return a.CmpNoCase(b) < 0; }
+    };
+
     //! FFmpeg's generic keys; each muxer maps them to its own tag names
-    static const std::map<wxString, std::string> genericKeys {
+    static const std::map<wxString, std::string, CaseInsensitiveLess> genericKeys {
         { TAG_TITLE, "title" },
         { TAG_ARTIST, "artist" },
         { TAG_ALBUM, "album" },
@@ -1518,7 +1522,7 @@ bool FFmpegExporter::AddTags(const Tags* tags)
         { TAG_YEAR, "date" },
         { TAG_GENRE, "genre" },
         { TAG_COMMENTS, "comment" },
-        { wxString(TAG_COPYRIGHT).Upper(), "copyright" },
+        { TAG_COPYRIGHT, "copyright" },
     };
 
     for (const auto& [name, value] : tags->GetRange()) {
@@ -1526,7 +1530,7 @@ bool FFmpegExporter::AddTags(const Tags* tags)
             continue;
         }
 
-        const auto it = genericKeys.find(name.Upper());
+        const auto it = genericKeys.find(name);
         SetMetadata(it != genericKeys.end() ? it->second : name.ToStdString(), value);
     }
 
