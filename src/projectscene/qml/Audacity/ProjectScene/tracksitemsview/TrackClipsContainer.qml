@@ -597,12 +597,20 @@ TrackItemsContainer {
                                     clipsContainer.resetTargetHeightRatio()
                                 }
 
+                                onFadeEditStarted: {
+                                    clipsModel.startClipFadeEdit(itemData.key)
+                                }
+
                                 onFadeInDurationChangeRequested: function (duration, completed) {
                                     clipsModel.changeClipFadeIn(itemData.key, duration, completed)
                                 }
 
                                 onFadeOutDurationChangeRequested: function (duration, completed) {
                                     clipsModel.changeClipFadeOut(itemData.key, duration, completed)
+                                }
+
+                                onFadeEditCanceled: {
+                                    clipsModel.cancelClipFadeEdit()
                                 }
 
                                 onPitchChangeRequested: {

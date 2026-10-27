@@ -21,8 +21,10 @@ Item {
     property real handlesY: 0
     property bool handlesVisible: false
 
+    signal fadeEditStarted
     signal fadeInWidthChangeRequested(real width, bool completed)
     signal fadeOutWidthChangeRequested(real width, bool completed)
+    signal fadeEditCanceled
 
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
@@ -82,9 +84,13 @@ Item {
         fadeLeft: prv.fadeInEnd - root.fadeInWidth
         fadeType: root.fadeInType
 
+        onFadeEditStarted: root.fadeEditStarted()
+
         onFadeWidthChangeRequested: function (width, completed) {
             root.fadeInWidthChangeRequested(width, completed)
         }
+
+        onFadeEditCanceled: root.fadeEditCanceled()
 
         onMousePositionChanged: function (mouseX, mouseY) {
             root.fadeHandlesMousePositionChanged(mouseX, mouseY)
@@ -106,9 +112,13 @@ Item {
         fadeLeft: prv.fadeOutStart
         fadeType: root.fadeOutType
 
+        onFadeEditStarted: root.fadeEditStarted()
+
         onFadeWidthChangeRequested: function (width, completed) {
             root.fadeOutWidthChangeRequested(width, completed)
         }
+
+        onFadeEditCanceled: root.fadeEditCanceled()
 
         onMousePositionChanged: function (mouseX, mouseY) {
             root.fadeHandlesMousePositionChanged(mouseX, mouseY)

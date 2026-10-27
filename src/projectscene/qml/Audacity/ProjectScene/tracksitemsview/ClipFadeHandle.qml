@@ -19,7 +19,9 @@ Item {
 
     readonly property alias pressed: mouseArea.pressed
 
+    signal fadeEditStarted
     signal fadeWidthChangeRequested(real width, bool completed)
+    signal fadeEditCanceled
 
     // in parent coordinates
     signal mousePositionChanged(real x, real y)
@@ -175,10 +177,14 @@ Item {
             // in parent coordinates: the handle itself moves while dragging
             pressX = mapToItem(root.parent, e.x, e.y).x
             pressFadeWidth = root.fadeWidth
+            root.fadeEditStarted()
             overrideCursor()
         }
 
-        onCanceled: restoreCursor()
+        onCanceled: {
+            root.fadeEditCanceled()
+            restoreCursor()
+        }
 
         function requestFadeWidth(e, completed) {
             const dx = mapToItem(root.parent, e.x, e.y).x - pressX
