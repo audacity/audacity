@@ -14,7 +14,7 @@ class IEffectViewLauncher
 public:
     virtual ~IEffectViewLauncher() = default;
 
-    virtual muse::Ret showEffect(const EffectInstanceId& instanceId) const = 0;
+    virtual muse::Ret showEffect(const EffectInstanceId& instanceId, EffectViewMode mode) const = 0;
 
     virtual void showRealtimeEffect(const RealtimeEffectStatePtr& state) const = 0;
     virtual void hideRealtimeEffect(const RealtimeEffectStatePtr& state) const = 0;

@@ -18,7 +18,7 @@ class IEffectViewController : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IEffectViewController() = default;
 
-    virtual muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) = 0;
+    virtual muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId, EffectViewMode mode) = 0;
     virtual void showEffect(const RealtimeEffectStatePtr& state) const = 0;
     virtual void hideEffect(const RealtimeEffectStatePtr& state) const = 0;
 };
