@@ -44,6 +44,7 @@ from the project that will own the track.
 #include "au3-math/float_cast.h"
 
 #include "au3-clip-processing/AudioSegmentSampleView.h"
+#include "au3-clip-processing/ClipFades.h"
 #include "au3-track/ChannelAttachments.h"
 #include "au3-clip-processing/ClipTimeAndPitchSource.h"
 #include "au3-mixer/Envelope.h"
@@ -66,10 +67,19 @@ from the project that will own the track.
 
 using std::max;
 
+namespace {
+void SetFades(WaveClip& clip, const ClipFades::Snapshot& fades)
+{
+    auto& clipFades = ClipFades::Get(clip);
+    clipFades.setFadeInType(fades.fadeInType);
+    clipFades.setFadeIn(fades.fadeIn);
+    clipFades.setFadeOutType(fades.fadeOutType);
+    clipFades.setFadeOut(fades.fadeOut);
+}
+
 /*!
  * @post result: `result->GetStretchRatio() == 1`
  */
-namespace {
 WaveTrack::IntervalHolder GetRenderedCopy(
     const WaveTrack::IntervalHolder& pInterval,
     const std::function<void(double)>& reportProgress,
@@ -86,6 +96,8 @@ WaveTrack::IntervalHolder GetRenderedCopy(
     const auto originalPlayStartTime = interval.GetPlayStartTime();
     const auto originalPlayEndTime = interval.GetPlayEndTime();
     const auto stretchRatio = interval.GetStretchRatio();
+    // Before the temporary trimming below, which would let them be longer
+    const auto fades = ClipFades::Get(interval).snapshot();
 
     auto success = false;
     Finally Do { [&] {
@@ -159,6 +171,9 @@ WaveTrack::IntervalHolder GetRenderedCopy(
     dstEnvelope->CollapseRegion(0, originalPlayStartTime, samplePeriod);
     dstEnvelope->SetOffset(originalPlayStartTime);
     dst->SetEnvelope(move(dstEnvelope));
+
+    // In play time, which the rendering doesn't change
+    SetFades(*dst, fades);
 
     success = true;
 
@@ -1580,7 +1595,6 @@ void WaveTrack::ClearAndPasteAtSameTempo(
                 }
             }
         }
-
     }
 
     if (joinEnds) {
@@ -2327,6 +2341,39 @@ void RebuildJoinedEnvelope(
 
     target.SetEnvelope(std::move(rebuilt));
 }
+
+//! Applies the fades of `clip` to its samples, except those to keep
+void RenderFades(WaveClip& clip, bool keepFadeIn, bool keepFadeOut)
+{
+    ClipFades::Snapshot fades = ClipFades::Get(clip).snapshot();
+    if (keepFadeIn) {
+        fades.fadeIn = 0.0;
+    }
+    if (keepFadeOut) {
+        fades.fadeOut = 0.0;
+    }
+    const auto numSamples = clip.GetVisibleSampleCount();
+    const auto effectiveFormat = clip.GetSampleFormats().Effective();
+    const auto blockSize = clip.GetMaxBlockSize();
+    std::vector<float> buffer(blockSize);
+    const auto render = [&](sampleCount start, sampleCount end) {
+        for (auto blockStart = start; blockStart < end; blockStart += blockSize) {
+            const auto len = limitSampleBufferSize(blockSize, end - blockStart);
+            for (size_t ii = 0; ii < clip.NChannels(); ++ii) {
+                clip.GetSamples(ii, reinterpret_cast<samplePtr>(buffer.data()), floatSample, blockStart, len);
+                for (size_t i = 0; i < len; ++i) {
+                    buffer[i] *= fades.gainAt(clip.SamplesToTime(blockStart + i));
+                }
+                clip.SetSamples(ii, reinterpret_cast<constSamplePtr>(buffer.data()), floatSample, blockStart, len,
+                                effectiveFormat);
+            }
+        }
+    };
+    // Each sample once, even where the fades overlap
+    const auto fadeInEnd = std::min(clip.TimeToSamples(fades.fadeIn), numSamples);
+    render(0, fadeInEnd);
+    render(std::max(numSamples - clip.TimeToSamples(fades.fadeOut), fadeInEnd), numSamples);
+}
 }
 
 /*! @excsafety{Weak} */
@@ -2380,6 +2427,18 @@ void WaveTrack::Join(double t0, double t1, const ProgressReporter& reportProgres
         return;
     }
 
+    // Only the outer fades remain: the inner ones are rendered
+    const auto& firstFades = ClipFades::Get(*clipsToDelete.front());
+    const auto& lastFades = ClipFades::Get(*clipsToDelete.back());
+    ClipFades::Snapshot outerFades;
+    outerFades.fadeIn = firstFades.fadeIn();
+    outerFades.fadeOut = lastFades.fadeOut();
+    outerFades.fadeInType = firstFades.fadeInType();
+    outerFades.fadeOutType = lastFades.fadeOutType();
+    for (const auto& clip : clipsToDelete) {
+        RenderFades(*clip, clip == clipsToDelete.front(), clip == clipsToDelete.back());
+    }
+
     const auto firstToDelete = clipsToDelete[0].get();
     auto t = firstToDelete->GetPlayStartTime();
     //preserve left trim data if any
@@ -2411,6 +2470,8 @@ void WaveTrack::Join(double t0, double t1, const ProgressReporter& reportProgres
     }
 
     RebuildJoinedEnvelope(*newClip, clipsToDelete, rate);
+
+    SetFades(*newClip, outerFades);
 
     InsertInterval(move(newClip), false);
 }
