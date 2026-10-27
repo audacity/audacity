@@ -49,6 +49,20 @@ static bool isNyquistPrompt(const Effect& effect)
     return effect.GetSymbol().Internal() == NYQUIST_PROMPT_ID;
 }
 
+static double generatorDuration(Effect& effect, const std::string& params)
+{
+    double duration = 0.0;
+    const CommandParameters eap(wxString::FromUTF8(params));
+    if (eap.Read(EffectSettingsExtra::DurationKey(), &duration)) {
+        return duration;
+    }
+
+    GetConfig(effect.GetDefinition(), PluginSettings::Private,
+              CurrentSettingsGroup(),
+              EffectSettingsExtra::DurationKey(), duration, effect.GetDefaultDuration());
+    return duration;
+}
+
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
     au3::Au3Project& project = projectRef();
@@ -76,6 +90,11 @@ muse::RetVal<std::string> EffectExecutionScenario::configureEffect(const EffectI
     });
     IF_ASSERT_FAILED(settings) {
         return RetVal<std::string>(make_ret(Err::UnknownError));
+    }
+
+    const bool isGenerator = effect->GetType() == EffectTypeGenerate;
+    if (isGenerator) {
+        settings->extra.SetDuration(generatorDuration(*effect, params));
     }
 
     if (!params.empty()) {
@@ -125,6 +144,12 @@ muse::RetVal<std::string> EffectExecutionScenario::configureEffect(const EffectI
     wxString serialized;
     if (!effect->SaveSettingsAsString(*settings, serialized)) {
         return RetVal<std::string>(make_ret(Err::UnknownError, "Failed to serialize effect settings"));
+    }
+
+    if (isGenerator) {
+        CommandParameters eap(serialized);
+        eap.Write(EffectSettingsExtra::DurationKey(), settings->extra.GetDuration());
+        eap.GetParameters(serialized);
     }
 
     return RetVal<std::string>::make_ok(serialized.ToStdString(wxConvUTF8));
@@ -316,9 +341,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         //! NOTE Step 2.2 - get oldDuration for EffectTypeGenerate
         double duration = 0.0;
         if (effect->GetType() == EffectTypeGenerate) {
-            GetConfig(effect->GetDefinition(), PluginSettings::Private,
-                      CurrentSettingsGroup(),
-                      EffectSettingsExtra::DurationKey(), duration, effect->GetDefaultDuration());
+            duration = generatorDuration(*effect, params);
         }
 
         //! NOTE Step 2.3 - check selected time
