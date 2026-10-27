@@ -504,6 +504,7 @@ MenuItem* AppMenuModel::makeHelpMenu()
         makeMenuItem("about-audacity", MenuItemRole::AboutRole),
         makeMenuItem("about-qt", MenuItemRole::AboutQtRole),
         makeSeparator(),
+        makeMenuItem("diagnostic-save-diagnostic-files"),
         makeMenuItem("revert-factory")
     };
 
@@ -524,7 +525,6 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
     };
 
     MenuItemList items {
-        makeMenuItem("diagnostic-save-diagnostic-files"),
         makeMenu(TranslatableString("appshell-menu-diagnostics", "&System"), systemItems, "menu-system")
     };
 
@@ -781,7 +781,6 @@ MenuItemList AppMenuModel::makeDiagnosticsItems()
     };
 
     MenuItemList items {
-        makeMenuItem("diagnostic-save-diagnostic-files"),
         makeMenu(TranslatableString("appshell-menu-diagnostic", "&System"), systemItems, "menu-system")
     };
 

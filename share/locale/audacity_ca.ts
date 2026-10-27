@@ -7083,8 +7083,8 @@ Intenta restablir els clips estirats o de mesclar i renderitzar les pistes abans
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Això crearà un fitxer .zip amb informació de la vostra configuració de MuseScore Studio per ajudar els desenvolupadors a diagnosticar qualsevol problema que tingueu. Podeu inspeccionar el contingut d&apos;aquest fitxer abans d&apos;enviar-lo a qualsevol persona.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Això crearà un fitxer .zip amb informació de la vostra configuració de Audacity per ajudar els desenvolupadors a diagnosticar qualsevol problema que tingueu. Podeu inspeccionar el contingut d&apos;aquest fitxer abans d&apos;enviar-lo a qualsevol persona.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

@@ -7103,8 +7103,8 @@ Prøv å tilbakestille tidsstrukne klipp eller miks ned sporene før du analyser
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Dette vil lage en zip-fil med informasjon om hvordan MuseScore Studio er konfigurert for å hjelpe utviklerne med å diagnotisere problemer du har. Du kan inspisere innholdet før du sender det til noen.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Dette vil lage en zip-fil med informasjon om hvordan Audacity er konfigurert for å hjelpe utviklerne med å diagnotisere problemer du har. Du kan inspisere innholdet før du sender det til noen.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

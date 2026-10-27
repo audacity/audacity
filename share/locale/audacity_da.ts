@@ -7106,8 +7106,8 @@ Forsøg at nulstille udstrakte klip, eller mix sporene, før de analyseres</tran
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Dette vil danne en ZIP-fil med oplysninger om din MuseScore Studio-opsætning til hjælp for programudviklernes diagnosticering af problemer, som du oplever. Du kan se indholdet af filen, før den sendes videre.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Dette vil danne en ZIP-fil med oplysninger om din Audacity-opsætning til hjælp for programudviklernes diagnosticering af problemer, som du oplever. Du kan se indholdet af filen, før den sendes videre.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

@@ -7105,8 +7105,8 @@ Versuchen Sie, alle gestreckten Clips zurückzusetzen oder die Spuren vor der An
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Dies wird eine .zip-Datei mit Information über Ihre MuseScore-Studio-Einrichtung erstellen, die den MuseScore-Studio-Entwicklern bei der Diagnose Ihrer Probleme hilft. Sie können den Inhalt der Datei untersuchen, bevor Sie diesen an irgendjemanden senden.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Dies wird eine .zip-Datei mit Information über Ihre Audacity-Einrichtung erstellen, die den Audacity-Entwicklern bei der Diagnose Ihrer Probleme hilft. Sie können den Inhalt der Datei untersuchen, bevor Sie diesen an irgendjemanden senden.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

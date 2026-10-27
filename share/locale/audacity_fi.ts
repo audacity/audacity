@@ -7106,8 +7106,8 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Tämä luo .zip-tiedoston, joka sisältää tietoja MuseScore Studio -asennuksestasi, jotta kehittäjät voivat auttaa sinua diagnosoimaan mahdolliset ongelmasi. Voit tarkastaa tämän tiedoston sisällön ennen kuin lähetät sen kenellekään.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Tämä luo .zip-tiedoston, joka sisältää tietoja Audacity -asennuksestasi, jotta kehittäjät voivat auttaa sinua diagnosoimaan mahdolliset ongelmasi. Voit tarkastaa tämän tiedoston sisällön ennen kuin lähetät sen kenellekään.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

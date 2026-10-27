@@ -7102,8 +7102,8 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Isto vai criar um ficheiro .zip com informação sobre as suas definições do MuseScore para ajudar os programadores a diagnosticar quaisquer problemas que tenha. Pode inspecionar os conteúdos deste ficheiro antes de o enviar.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Isto vai criar um ficheiro .zip com informação sobre as suas definições do Audacity para ajudar os programadores a diagnosticar quaisquer problemas que tenha. Pode inspecionar os conteúdos deste ficheiro antes de o enviar.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

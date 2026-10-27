@@ -7106,8 +7106,8 @@ Provare a reimpostare eventuali clip allungate o a mixare e renderizzare le trac
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Questo creerà un file .zip con informazioni sulla tua configurazione di MuseScore Studio per aiutare gli sviluppatori a diagnosticare eventuali problemi. Puoi controllare il contenuto di questo file prima di inviarlo a qualcuno.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Questo creerà un file .zip con informazioni sulla tua configurazione di Audacity per aiutare gli sviluppatori a diagnosticare eventuali problemi. Puoi controllare il contenuto di questo file prima di inviarlo a qualcuno.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

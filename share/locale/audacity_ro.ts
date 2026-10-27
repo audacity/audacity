@@ -7104,8 +7104,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Acest lucru va crea o arhivă .zip cu informații despre configurația ta MuseScore Studio pentru a ajuta dezvoltatorii să diagnosticheze orice problemă ai putea avea. Poți să inspectezi conținutul acestui fișier înainte de a-l trimite oricui.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Acest lucru va crea o arhivă .zip cu informații despre configurația ta Audacity pentru a ajuta dezvoltatorii să diagnosticheze orice problemă ai putea avea. Poți să inspectezi conținutul acestui fișier înainte de a-l trimite oricui.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

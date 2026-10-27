@@ -7102,8 +7102,8 @@ Esnetilmiş parçaları sıfırlamayı ya da incelemeden önce izleri karıştı
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Bu, geliştiricilerin yaşadığınız sorunları teşhis etmesine yardımcı olmak için MuseScore Studio kurulumunuzla ilgili bilgileri içeren bir .zip dosyası oluşturacaktır. Bu dosyanın içeriğini herhangi birine göndermeden önce inceleyebilirsiniz.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Bu, geliştiricilerin yaşadığınız sorunları teşhis etmesine yardımcı olmak için Audacity kurulumunuzla ilgili bilgileri içeren bir .zip dosyası oluşturacaktır. Bu dosyanın içeriğini herhangi birine göndermeden önce inceleyebilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

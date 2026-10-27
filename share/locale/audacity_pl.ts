@@ -7106,8 +7106,8 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Spowoduje to utworzenie pliku .zip z informacjami o Twoich ustawieniach MuseScore Studio, aby pomóc twórcom zdiagnozować wszystkie problemy. Możesz sprawdzić zawartość tego pliku przed wysłaniem go komukolwiek.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Spowoduje to utworzenie pliku .zip z informacjami o Twoich ustawieniach Audacity, aby pomóc twórcom zdiagnozować wszystkie problemy. Możesz sprawdzić zawartość tego pliku przed wysłaniem go komukolwiek.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

@@ -7100,8 +7100,8 @@ Poskusite ponastaviti vse raztegnjene posnetke ali zmešati in izdelati steze pr
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Ustvarjena bo .zip datoteka s podatki o namestitvi MuseScore studia, da bodo razvijalci lažje določili težave, ki se vam pojavljajo. Preden pošljete to datoteko komurkoli, lahko preverite njeno vsebino.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Ustvarjena bo .zip datoteka s podatki o namestitvi Audacity, da bodo razvijalci lažje določili težave, ki se vam pojavljajo. Preden pošljete to datoteko komurkoli, lahko preverite njeno vsebino.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

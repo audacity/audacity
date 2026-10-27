@@ -7106,8 +7106,8 @@ Coba atur ulang klip yang regang, atau mix dan render trek sebelum menganalisis<
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Ini akan membuat berkas .zip dengan informasi tentang setup MuseScore Studio Anda untuk membantu pengembang mendiagnosis apapun masalah yang Anda sedang memiliki. Anda dapat menyelidiki isi berkasnya sebelum mengirimkannya ke seseorang.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Ini akan membuat berkas .zip dengan informasi tentang setup Audacity Anda untuk membantu pengembang mendiagnosis apapun masalah yang Anda sedang memiliki. Anda dapat menyelidiki isi berkasnya sebelum mengirimkannya ke seseorang.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

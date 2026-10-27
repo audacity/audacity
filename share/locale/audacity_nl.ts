@@ -7106,8 +7106,8 @@ Probeer uitgerekte clips te resetten of de tracks te mixen en renderen voordat u
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Dit maakt een .zip-bestand aan met daarin informatie over uw MuseScore Studio-instellingen, om ontwikkelaars te helpen bij het onderzoeken van problemen die u ervaart. U kunt de inhoud van dit bestand bekijken voordat u het naar iemand opstuurt.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Dit maakt een .zip-bestand aan met daarin informatie over uw Audacity-instellingen, om ontwikkelaars te helpen bij het onderzoeken van problemen die u ervaart. U kunt de inhoud van dit bestand bekijken voordat u het naar iemand opstuurt.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

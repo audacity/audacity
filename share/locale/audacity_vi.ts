@@ -7105,8 +7105,8 @@ Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộ
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Thao tác này sẽ tạo một tập tin .zip chứa thông tin về thiết lập MuseScore Studio của bạn, giúp các nhà phát triển chẩn đoán bất kỳ sự cố nào bạn đang gặp phải. Bạn có thể kiểm tra nội dung của tập tin này trước khi gửi cho bất kỳ ai.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Thao tác này sẽ tạo một tập tin .zip chứa thông tin về thiết lập Audacity của bạn, giúp các nhà phát triển chẩn đoán bất kỳ sự cố nào bạn đang gặp phải. Bạn có thể kiểm tra nội dung của tập tin này trước khi gửi cho bất kỳ ai.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

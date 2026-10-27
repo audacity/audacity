@@ -7106,8 +7106,8 @@ Intente restablecer cualquier clip estirado o mezcle y genere las pistas antes d
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Se creará un archivo .zip con información sobre su configuración de MuseScore Studio para ayudar a los desarrolladores a diagnosticar cualquier problema que tenga. Puede inspeccionar el contenido de este archivo antes de enviarlo.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Se creará un archivo .zip con información sobre su configuración de Audacity para ayudar a los desarrolladores a diagnosticar cualquier problema que tenga. Puede inspeccionar el contenido de este archivo antes de enviarlo.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

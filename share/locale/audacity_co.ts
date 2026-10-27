@@ -7106,8 +7106,8 @@ Pruvate di reinizià tutti i pezzi stinzati o di mischià è trasfurmà e tracci
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>St’azzione hà da creà un schedariu .zip cù l’infurmazione nant’à a vostra cunfigurazione MuseScore Studio per aiutà i sviluppatori à diagnosticà i prublemi chì vo scuntrate. Pudete ispettà u cuntenutu di stu schedariu prima di mandallu à qualunque.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>St’azzione hà da creà un schedariu .zip cù l’infurmazione nant’à a vostra cunfigurazione Audacity per aiutà i sviluppatori à diagnosticà i prublemi chì vo scuntrate. Pudete ispettà u cuntenutu di stu schedariu prima di mandallu à qualunque.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

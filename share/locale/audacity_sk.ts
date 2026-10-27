@@ -7105,8 +7105,8 @@ Skúste vynulovať všetky roztiahnuté strihy alebo pred analýzou stopy zmieš
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Tým sa vytvorí súbor .zip s informáciami o vašom nastavení MuseScore Studio, ktorý pomôže vývojárom diagnostikovať akékoľvek problémy, ktoré máte. Pred odoslaním tohto súboru môžete skontrolovať jeho obsah.Tým sa vytvorí súbor .zip s informáciami o vašom nastavení MuseScore Studio, ktorý pomôže vývojárom diagnostikovať akékoľvek problémy, ktoré máte. Pred odoslaním tohto súboru môžete skontrolovať jeho obsah.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Tým sa vytvorí súbor .zip s informáciami o vašom nastavení Audacity, ktorý pomôže vývojárom diagnostikovať akékoľvek problémy, ktoré máte. Pred odoslaním tohto súboru môžete skontrolovať jeho obsah.Tým sa vytvorí súbor .zip s informáciami o vašom nastavení Audacity, ktorý pomôže vývojárom diagnostikovať akékoľvek problémy, ktoré máte. Pred odoslaním tohto súboru môžete skontrolovať jeho obsah.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

@@ -7106,8 +7106,8 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Detta kommer att skapa en .zip-fil med information om din MuseScore Studio-setup för att hjälpa utvecklarna diagnostisera dina bekymmer. Du kan inspektera filens innehåll innan du skickar den till någon.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Detta kommer att skapa en .zip-fil med information om din Audacity-setup för att hjälpa utvecklarna diagnostisera dina bekymmer. Du kan inspektera filens innehåll innan du skickar den till någon.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>

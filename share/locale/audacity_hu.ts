@@ -7104,8 +7104,8 @@ Próbálja meg visszaállítani a nyújtást a klipeken, vagy az elemzés előtt
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Ez egy ZIP-fájlt hoz létre, amely információkat tartalmaz a MuseScore Studio beállításairól, hogy segítsen a fejlesztőknek a tapasztalt problémák diagnosztizálásában. Megvizsgálhatja a fájl tartalmát, mielőtt bárkinek is elküldené.</translation>
+        <source>This will create a .zip file with information about your Audacity setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Ez egy ZIP-fájlt hoz létre, amely információkat tartalmaz az Audacity beállításairól, hogy segítsen a fejlesztőknek a tapasztalt problémák diagnosztizálásában. Megvizsgálhatja a fájl tartalmát, mielőtt bárkinek is elküldené.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
