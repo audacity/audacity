@@ -164,4 +164,40 @@ TEST_F(ClipFadesPersistenceTests, SplittingInAFadeLeavesItToTheClipWithItsEdge)
     EXPECT_DOUBLE_EQ(ClipFades::Get(*right).fadeIn(), 0.0);
     EXPECT_DOUBLE_EQ(ClipFades::Get(*right).fadeOut(), TEST_FADE_OUT);
 }
+
+TEST_F(ClipFadesPersistenceTests, SplitDeletingPartOfAFadeLeavesItToTheClipWithItsEdge)
+{
+    //! [WHEN] the middle of the fade-in is deleted
+    firstTrack().SplitDelete(TEST_FADE_IN / 4, TEST_FADE_IN / 2);
+
+    const auto clips = firstTrack().SortedIntervalArray();
+    ASSERT_EQ(clips.size(), 2);
+    const auto& left = *clips.front();
+    const auto& right = *clips.back();
+
+    //! [THEN] the left clip is faded in all the way, and doesn't fade out
+    EXPECT_DOUBLE_EQ(ClipFades::Get(left).fadeIn(), left.GetPlayDuration());
+    EXPECT_DOUBLE_EQ(ClipFades::Get(left).fadeOut(), 0.0);
+
+    //! [THEN] the right clip isn't faded in, and keeps the fade-out
+    EXPECT_DOUBLE_EQ(ClipFades::Get(right).fadeIn(), 0.0);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(right).fadeOut(), TEST_FADE_OUT);
+}
+
+TEST_F(ClipFadesPersistenceTests, CopyingPartOfAFadeKeepsItOnlyWithItsEdge)
+{
+    //! [WHEN] copying from the clip's start to the middle of the fade-in
+    const auto withEdge = firstTrack().Copy(0, TEST_FADE_IN / 2);
+    //! [THEN] the copy is faded in all the way, and doesn't fade out
+    const auto& withEdgeClip = onlyClip(*std::static_pointer_cast<WaveTrack>(withEdge));
+    EXPECT_DOUBLE_EQ(ClipFades::Get(withEdgeClip).fadeIn(), withEdgeClip.GetPlayDuration());
+    EXPECT_DOUBLE_EQ(ClipFades::Get(withEdgeClip).fadeOut(), 0.0);
+
+    //! [WHEN] copying from the middle of the fade-in
+    const auto withoutEdge = firstTrack().Copy(TEST_FADE_IN / 2, TEST_FADE_IN);
+    //! [THEN] the copy has no fades
+    const auto& withoutEdgeClip = onlyClip(*std::static_pointer_cast<WaveTrack>(withoutEdge));
+    EXPECT_DOUBLE_EQ(ClipFades::Get(withoutEdgeClip).fadeIn(), 0.0);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(withoutEdgeClip).fadeOut(), 0.0);
+}
 }
