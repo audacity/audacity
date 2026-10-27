@@ -1210,6 +1210,12 @@ void WaveTrack::CopyPartOfClip(
     auto newClip = WaveClip::NewSharedFromRange(
         clip, pFactory, !forClipboard, backup, t0, t1);
     newClip->SetName(clip.GetName());
+    if (clip.SplitsPlayRegion(t0)) {
+        newClip->OnSplit(ClipSide::Left);
+    }
+    if (clip.SplitsPlayRegion(t1)) {
+        newClip->OnSplit(ClipSide::Right);
+    }
     newClip->ShiftBy(-t0);
     if (newClip->GetPlayStartTime() < 0) {
         newClip->SetPlayStartTime(0);
@@ -1589,7 +1595,9 @@ void WaveTrack::SplitDelete(double t0, double t1)
 {
     constexpr bool split = true;
     constexpr bool moveClips = false;
-    HandleClear(t0, t1, split, moveClips);
+    constexpr bool clearByTrimming = false;
+    constexpr bool notifySplits = true;
+    HandleClear(t0, t1, split, moveClips, clearByTrimming, notifySplits);
 }
 
 std::ptrdiff_t WaveTrack::FindClip(const Interval& clip)
@@ -1611,7 +1619,7 @@ void WaveTrack::RemoveClip(std::ptrdiff_t distance)
 
 /*! @excsafety{Strong} */
 void WaveTrack::HandleClear(double t0, double t1,
-                            const bool split, const bool moveClips, const bool clearByTrimming)
+                            const bool split, const bool moveClips, const bool clearByTrimming, const bool notifySplits)
 {
     // For debugging, use an ASSERT so that we stop
     // closer to the problem.
@@ -1643,6 +1651,9 @@ void WaveTrack::HandleClear(double t0, double t1,
                     clipsToDelete.push_back(clip);
                     auto newClip = CopyClip(*clip, true);
                     newClip->TrimLeft(t1 - clip->GetPlayStartTime());
+                    if (notifySplits) {
+                        newClip->OnSplit(ClipSide::Left);
+                    }
                     if (!split) {
                         // If this is not a split-cut, where things are left in
                         // place, we need to reposition the clip.
@@ -1657,6 +1668,9 @@ void WaveTrack::HandleClear(double t0, double t1,
                     clipsToDelete.push_back(clip);
                     auto newClip = CopyClip(*clip, true);
                     newClip->TrimRight(clip->GetPlayEndTime() - t0);
+                    if (notifySplits) {
+                        newClip->OnSplit(ClipSide::Right);
+                    }
 
                     clipsToAdd.push_back(move(newClip));
                 } else {
@@ -1665,10 +1679,16 @@ void WaveTrack::HandleClear(double t0, double t1,
 
                     auto leftClip = CopyClip(*clip, true);
                     leftClip->TrimRight(clip->GetPlayEndTime() - t0);
+                    if (notifySplits) {
+                        leftClip->OnSplit(ClipSide::Right);
+                    }
                     clipsToAdd.push_back(move(leftClip));
 
                     auto rightClip = CopyClip(*clip, true);
                     rightClip->TrimLeft(t1 - clip->GetPlayStartTime());
+                    if (notifySplits) {
+                        rightClip->OnSplit(ClipSide::Left);
+                    }
                     if (!split) {
                         // If this is not a split-cut, where things are left in
                         // place, we need to reposition the clip.
