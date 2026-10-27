@@ -1011,13 +1011,30 @@ Rectangle {
                         automation.init()
                     }
 
+                    // While dragging, the mouse may go over other items, e.g. fade handles, which would show their own cursor
+                    property bool cursorOverridden: false
+
+                    function updateCursorOverride(dragging) {
+                        if (dragging && !cursorOverridden) {
+                            CustomCursorProvider.overrideStandardCursor(Qt.CrossCursor)
+                            cursorOverridden = true
+                        } else if (!dragging && cursorOverridden) {
+                            CustomCursorProvider.restoreCursor()
+                            cursorOverridden = false
+                        }
+                    }
+
+                    Component.onDestruction: updateCursorOverride(false)
+
                     onPointMoved: function (index, x, y, completed) {
+                        updateCursorOverride(!completed)
                         clipGainModel.setPoint(index, x, y, completed)
                         tooltip.value = gainToDb(y)
                         tooltip.show(true)
                     }
 
                     onPointAdded: function (x, y, completed) {
+                        updateCursorOverride(!completed)
                         clipGainModel.addPoint(x, y, completed)
                     }
 
@@ -1026,11 +1043,13 @@ Rectangle {
                     }
 
                     onDragCancelled: {
+                        updateCursorOverride(false)
                         clipGainModel.cancelDrag()
                         tooltip.hide(true)
                     }
 
                     onInteractionFinished: function () {
+                        updateCursorOverride(false)
                         if (!automation.hasActivePoint) {
                             tooltip.hide(true)
                         }
