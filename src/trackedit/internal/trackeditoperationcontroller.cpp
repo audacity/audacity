@@ -149,7 +149,7 @@ bool TrackeditOperationController::changeClipFadeIn(const ClipKey& clipKey, secs
     }
     if (completed) {
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed fade in"),
-                                           muse::trc("trackedit", "Changed fade in"), UndoPushType::CONSOLIDATE);
+                                           muse::trc("trackedit", "Changed fade in"));
     }
     return true;
 }
@@ -161,7 +161,7 @@ bool TrackeditOperationController::changeClipFadeOut(const ClipKey& clipKey, sec
     }
     if (completed) {
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed fade out"),
-                                           muse::trc("trackedit", "Changed fade out"), UndoPushType::CONSOLIDATE);
+                                           muse::trc("trackedit", "Changed fade out"));
     }
     return true;
 }
