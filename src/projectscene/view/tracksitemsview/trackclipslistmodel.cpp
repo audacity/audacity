@@ -339,11 +339,19 @@ bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& new
 
 bool TrackClipsListModel::changeClipFadeIn(const ClipKey& key, double duration, bool completed)
 {
+    if (const TrackClipItem* item = clipItemByKey(key.key)) {
+        const double start = item->time().startTime;
+        duration = m_context->applyDetectedSnap(start + duration) - start;
+    }
     return trackeditInteraction()->changeClipFadeIn(key.key, duration, completed);
 }
 
 bool TrackClipsListModel::changeClipFadeOut(const ClipKey& key, double duration, bool completed)
 {
+    if (const TrackClipItem* item = clipItemByKey(key.key)) {
+        const double end = item->time().endTime;
+        duration = end - m_context->applyDetectedSnap(end - duration);
+    }
     return trackeditInteraction()->changeClipFadeOut(key.key, duration, completed);
 }
 
