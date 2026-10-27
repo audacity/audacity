@@ -34,6 +34,11 @@ void TrackClipsListModel::onInit()
         });
     }
 
+    // Escape
+    trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this] {
+        cancelClipFadeEdit();
+    });
+
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList& keyList) {
         if (keyList.empty()) {
             resetSelectedClips();
@@ -337,22 +342,57 @@ bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& new
     return trackeditInteraction()->changeClipTitle(key.key, newTitle);
 }
 
+void TrackClipsListModel::startClipFadeEdit(const ClipKey& key)
+{
+    // So that a cancel can roll back
+    projectHistory()->startUserInteraction();
+    m_fadeEditedClip = key.key;
+}
+
+bool TrackClipsListModel::changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change)
+{
+    // E.g., the rest of a canceled drag
+    if (m_fadeEditedClip != key.key) {
+        return false;
+    }
+    const bool changed = change();
+    if (completed) {
+        m_fadeEditedClip.reset();
+        // In case the change failed and so pushed no state
+        projectHistory()->endUserInteraction();
+    }
+    return changed;
+}
+
 bool TrackClipsListModel::changeClipFadeIn(const ClipKey& key, double duration, bool completed)
 {
-    if (const TrackClipItem* item = clipItemByKey(key.key)) {
-        const double start = item->time().startTime;
-        duration = m_context->applyDetectedSnap(start + duration) - start;
-    }
-    return trackeditInteraction()->changeClipFadeIn(key.key, duration, completed);
+    return changeClipFade(key, completed, [&] {
+        if (const TrackClipItem* item = clipItemByKey(key.key)) {
+            const double start = item->time().startTime;
+            duration = m_context->applyDetectedSnap(start + duration) - start;
+        }
+        return trackeditInteraction()->changeClipFadeIn(key.key, duration, completed);
+    });
 }
 
 bool TrackClipsListModel::changeClipFadeOut(const ClipKey& key, double duration, bool completed)
 {
-    if (const TrackClipItem* item = clipItemByKey(key.key)) {
-        const double end = item->time().endTime;
-        duration = end - m_context->applyDetectedSnap(end - duration);
+    return changeClipFade(key, completed, [&] {
+        if (const TrackClipItem* item = clipItemByKey(key.key)) {
+            const double end = item->time().endTime;
+            duration = end - m_context->applyDetectedSnap(end - duration);
+        }
+        return trackeditInteraction()->changeClipFadeOut(key.key, duration, completed);
+    });
+}
+
+void TrackClipsListModel::cancelClipFadeEdit()
+{
+    if (!m_fadeEditedClip) {
+        return;
     }
-    return trackeditInteraction()->changeClipFadeOut(key.key, duration, completed);
+    m_fadeEditedClip.reset();
+    trackeditInteraction()->cancelItemDragEdit();
 }
 
 bool TrackClipsListModel::isKeyboardTriggered() const
