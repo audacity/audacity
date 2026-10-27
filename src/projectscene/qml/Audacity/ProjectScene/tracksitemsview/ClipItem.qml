@@ -1173,7 +1173,10 @@ Rectangle {
         y: viewsColumn.y
         width: root.width
         height: viewsColumn.height
-        handlesY: clipHandles.y - y
+        // The header covers the top of a collapsed clip when shown
+        drawingTop: header.visible ? Math.max(0, header.y + header.height - y) : 0
+        // Level with the trim and stretch handles, but dropping down with the header of a collapsed clip
+        handlesY: clipHandles.y - y + drawingTop
 
         clipOffset: (waveView.itemStartTime - waveView.startTime) * root.context.zoom
         clipWidth: (waveView.endTime - waveView.startTime) * root.context.zoom

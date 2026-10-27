@@ -13,6 +13,8 @@ Item {
     //! Where the fade starts, in parent coordinates: possibly far outside the parent, which only spans the visible part of the clip
     required property real fadeLeft
     required property int fadeType
+    //! In parent coordinates: above it, the fade isn't drawn
+    property real drawingTop: 0
 
     //! The fade line is always drawn, the handle only when this is true
     property bool handleVisible: true
@@ -59,46 +61,54 @@ Item {
         readonly property var shadingPoints: linePoints.length ? [Qt.point(visibleLeft, 0)].concat(linePoints).concat([Qt.point(visibleRight, 0)]) : []
     }
 
-    // Drawn in parent coordinates: the line spans the whole fade, from the clip's edge to the fade boundary
-    Shape {
+    // Spans the area below `drawingTop`
+    Item {
         x: -root.x
-        y: -root.y
+        y: -root.y + root.drawingTop
         width: prv.areaWidth
-        height: prv.areaHeight
+        height: Math.max(0, prv.areaHeight - root.drawingTop)
+        clip: true
 
-        visible: prv.linePoints.length > 0
-        preferredRendererType: Shape.CurveRenderer
+        // Drawn in parent coordinates: the line spans the whole fade, from the clip's edge to the fade boundary
+        Shape {
+            y: -root.drawingTop
+            width: prv.areaWidth
+            height: prv.areaHeight
 
-        // Shades the faded-out part, above the line
-        ShapePath {
-            strokeColor: "transparent"
-            fillColor: Qt.rgba(0, 0, 0, 0.2)
+            visible: prv.linePoints.length > 0
+            preferredRendererType: Shape.CurveRenderer
 
-            PathPolyline {
-                path: prv.shadingPoints
+            // Shades the faded-out part, above the line
+            ShapePath {
+                strokeColor: "transparent"
+                fillColor: Qt.rgba(0, 0, 0, 0.2)
+
+                PathPolyline {
+                    path: prv.shadingPoints
+                }
             }
-        }
 
-        ShapePath {
-            strokeColor: Qt.rgba(0, 0, 0, 0.5)
-            strokeWidth: 1
-            capStyle: ShapePath.FlatCap
-            fillColor: "transparent"
+            ShapePath {
+                strokeColor: Qt.rgba(0, 0, 0, 0.5)
+                strokeWidth: 1
+                capStyle: ShapePath.FlatCap
+                fillColor: "transparent"
 
-            PathPolyline {
-                path: prv.linePoints
+                PathPolyline {
+                    path: prv.linePoints
+                }
             }
-        }
 
-        // Highlights the line while the handle is dragged
-        ShapePath {
-            strokeColor: mouseArea.pressed ? ui.theme.extra["white_color"] : "transparent"
-            strokeWidth: 1.5
-            capStyle: ShapePath.FlatCap
-            fillColor: "transparent"
+            // Highlights the line while the handle is dragged
+            ShapePath {
+                strokeColor: mouseArea.pressed ? ui.theme.extra["white_color"] : "transparent"
+                strokeWidth: 1.5
+                capStyle: ShapePath.FlatCap
+                fillColor: "transparent"
 
-            PathPolyline {
-                path: prv.linePoints
+                PathPolyline {
+                    path: prv.linePoints
+                }
             }
         }
     }
