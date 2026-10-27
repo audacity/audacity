@@ -220,7 +220,8 @@ public:
     ///\ tags - Audacity tags object
     ///\ tag - name of tag to set
     ///\ name - name of metadata item to retrieve
-    void GetMetadata(Tags& tags, const wxChar* tag, const char* name);
+    ///\return true if the item was found
+    bool GetMetadata(Tags& tags, const wxChar* tag, const char* name);
 
     ///! Called by Import.cpp
     ///\return number of readable streams in the file
@@ -701,14 +702,11 @@ void FFmpegImportFileHandle::WriteMetadata(Tags* tags)
     GetMetadata(temp, TAG_TRACK, "track");
     GetMetadata(temp, TAG_GENRE, "genre");
 
-    if (wxString(mAVFormatContext->GetInputFormat()->GetName()).Contains("m4a")) {
-        GetMetadata(temp, TAG_ARTIST, "artist");
-        GetMetadata(temp, TAG_YEAR, "date");
-    } else if (wxString(mAVFormatContext->GetInputFormat()->GetName()).Contains("asf")) { /* wma */
-        GetMetadata(temp, TAG_ARTIST, "artist");
-        GetMetadata(temp, TAG_YEAR, "year");
-    } else {
+    //! FFmpeg's generic keys first, then the names older Audacity versions exported
+    if (!GetMetadata(temp, TAG_ARTIST, "artist")) {
         GetMetadata(temp, TAG_ARTIST, "author");
+    }
+    if (!GetMetadata(temp, TAG_YEAR, "date")) {
         GetMetadata(temp, TAG_YEAR, "year");
     }
 
@@ -717,13 +715,16 @@ void FFmpegImportFileHandle::WriteMetadata(Tags* tags)
     }
 }
 
-void FFmpegImportFileHandle::GetMetadata(Tags& tags, const wxChar* tag, const char* name)
+bool FFmpegImportFileHandle::GetMetadata(Tags& tags, const wxChar* tag, const char* name)
 {
     auto metadata = mAVFormatContext->GetMetadata();
 
-    if (metadata.HasValue(name, DICT_IGNORE_SUFFIX)) {
-        tags.SetTag(tag, wxString::FromUTF8(std::string(metadata.Get(name, {}, DICT_IGNORE_SUFFIX))));
+    if (!metadata.HasValue(name)) {
+        return false;
     }
+
+    tags.SetTag(tag, wxString::FromUTF8(std::string(metadata.Get(name, {}))));
+    return true;
 }
 
 FFmpegImportFileHandle::~FFmpegImportFileHandle()
