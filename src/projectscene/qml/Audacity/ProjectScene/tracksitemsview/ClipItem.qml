@@ -95,8 +95,10 @@ Rectangle {
     signal clipLeftStretchRequested(bool completed, int action)
     signal clipRightStretchRequested(bool completed, int action)
 
+    signal fadeEditStarted
     signal fadeInDurationChangeRequested(real duration, bool completed)
     signal fadeOutDurationChangeRequested(real duration, bool completed)
+    signal fadeEditCanceled
 
     signal requestSelected
     signal requestSelectionReset
@@ -1192,6 +1194,8 @@ Rectangle {
         // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
         handlesVisible: root.clipSelected && !root.moveActive
 
+        onFadeEditStarted: root.fadeEditStarted()
+
         onFadeInWidthChangeRequested: function (width, completed) {
             root.fadeInDurationChangeRequested(width / root.context.zoom, completed)
         }
@@ -1199,6 +1203,8 @@ Rectangle {
         onFadeOutWidthChangeRequested: function (width, completed) {
             root.fadeOutDurationChangeRequested(width / root.context.zoom, completed)
         }
+
+        onFadeEditCanceled: root.fadeEditCanceled()
 
         onFadeHandlesMousePositionChanged: function (xWithinFadeHandles, yWithinFadeHandles) {
             clipItemMousePositionChanged(xWithinFadeHandles, fades.y + yWithinFadeHandles)
