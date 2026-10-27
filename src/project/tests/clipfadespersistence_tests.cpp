@@ -131,6 +131,23 @@ TEST_F(ClipFadesPersistenceTests, CopiedClipsKeepTheirFadesAndFollowTheirOwnStre
     EXPECT_DOUBLE_EQ(ClipFades::Get(original).fadeIn(), 0.5 * TEST_FADE_IN);
     EXPECT_DOUBLE_EQ(ClipFades::Get(copied).fadeIn(), 2 * TEST_FADE_IN);
 }
+
+TEST_F(ClipFadesPersistenceTests, RenderingPitchAndSpeedKeepsTheFades)
+{
+    //! [GIVEN] the clip stretched, with its fades
+    constexpr auto stretchRatio = 2.0;
+    onlyClip(firstTrack()).StretchBy(stretchRatio);
+
+    //! [WHEN] its stretching is rendered
+    firstTrack().ApplyPitchAndSpeed(std::nullopt, {});
+
+    //! [THEN] the rendered clip has the same fades
+    const auto& rendered = onlyClip(firstTrack());
+    ASSERT_FALSE(rendered.HasPitchOrSpeed());
+    EXPECT_DOUBLE_EQ(ClipFades::Get(rendered).fadeIn(), stretchRatio * TEST_FADE_IN);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(rendered).fadeOut(), stretchRatio * TEST_FADE_OUT);
+    EXPECT_EQ(ClipFades::Get(rendered).fadeOutType(), FadeType::Logarithmic);
+}
 }
 
 namespace au::project {

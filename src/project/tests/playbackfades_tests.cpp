@@ -114,4 +114,33 @@ TEST_F(PlaybackFadesTests, FadesOfStretchedClipsAreInPlayTime)
     constexpr auto tolerance = 0.01;
     EXPECT_NEAR(levelHalfway / levelAfterFadeIn, 0.5, tolerance);
 }
+
+TEST_F(PlaybackFadesTests, JoiningKeepsTheOuterFadesAndRendersTheInnerOnes)
+{
+    //! [GIVEN] the clip split in two, with fades where they meet
+    constexpr auto splitSample = (clipStartSample + clipEndSample) / 2;
+    const auto [left, right] = m_track->SplitAt(static_cast<double>(splitSample) / TEST_SAMPLE_RATE);
+    ASSERT_TRUE(left && right);
+    ClipFades::Get(*left).setFadeOut(TEST_FADE_OUT);
+    ClipFades::Get(*right).setFadeIn(TEST_FADE_IN);
+
+    //! [WHEN] they are joined
+    m_track->Join(TEST_CLIP_START, TEST_CLIP_START + TEST_CLIP_DURATION, {}, false);
+
+    //! [THEN] the joined clip has the outer fades
+    const auto clips = m_track->SortedIntervalArray();
+    ASSERT_EQ(clips.size(), 1);
+    const auto& fades = ClipFades::Get(*clips.front());
+    EXPECT_DOUBLE_EQ(fades.fadeIn(), TEST_FADE_IN);
+    EXPECT_DOUBLE_EQ(fades.fadeOut(), TEST_FADE_OUT);
+
+    //! [THEN] the outer fades are applied once, and the inner ones are still heard
+    constexpr auto halfwayGain = 0.5f;
+    const auto sequence = PlayableSequenceFactory::Create(*m_track, m_track->GetClipInterfaces());
+    const auto samples = read(*sequence, 0, clipEndSample);
+    EXPECT_NEAR(samples[clipStartSample + fadeInNumSamples / 2], halfwayGain, TEST_TOLERANCE);
+    EXPECT_NEAR(samples[splitSample - fadeOutNumSamples / 2], halfwayGain, TEST_TOLERANCE);
+    EXPECT_NEAR(samples[splitSample + fadeInNumSamples / 2], halfwayGain, TEST_TOLERANCE);
+    EXPECT_FLOAT_EQ(samples[splitSample + fadeInNumSamples], 1.f);
+}
 }
