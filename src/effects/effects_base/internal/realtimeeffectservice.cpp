@@ -339,7 +339,8 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         return nullptr;
     }
     const auto oldState = data->effectList->GetStateAt(effectListIndex);
-    if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, au3::wxFromString(newEffectId))) {
+    if (const auto newState
+            = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, au3::wxFromString(newEffectId))) {
         const auto oldEffectName = getEffectName(*oldState);
         const auto newEffectName = getEffectName(*newState);
         projectHistory()->pushHistoryState(

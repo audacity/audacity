@@ -582,7 +582,6 @@ void ApplicationActionController::doGlobalEnter()
     commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
 }
 
-
 void ApplicationActionController::doGlobalContextMenu()
 {
     const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
