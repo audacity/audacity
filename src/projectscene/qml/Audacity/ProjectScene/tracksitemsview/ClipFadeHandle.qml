@@ -36,6 +36,10 @@ Item {
         readonly property real areaHeight: root.parent ? root.parent.height : 0
 
         //! The part of the fade within the area: when zoomed in, drawing all of it would mean huge coordinates
+        //! Where the fade meets the clip's edge, and where it meets the unfaded part, in parent coordinates
+        readonly property real clipEdgeX: root.isFadeIn ? root.fadeLeft : root.fadeLeft + root.fadeWidth
+        readonly property real boundaryX: root.isFadeIn ? root.fadeLeft + root.fadeWidth : root.fadeLeft
+
         readonly property real visibleLeft: Math.max(root.fadeLeft, 0)
         readonly property real visibleRight: Math.min(root.fadeLeft + root.fadeWidth, areaWidth)
 
@@ -137,8 +141,8 @@ Item {
     MouseArea {
         id: mouseArea
 
-        property real pressX: 0
-        property real pressFadeWidth: 0
+        //! From the boundary to where the handle was grabbed, so that the boundary doesn't jump to the mouse
+        property real grabOffset: 0
         property bool cursorOverridden: false
 
         // Active whether the handle is shown or not. Over it, a shown handle grows; a hidden one turns the mouse
@@ -185,8 +189,7 @@ Item {
 
         onPressed: function (e) {
             // in parent coordinates: the handle itself moves while dragging
-            pressX = mapToItem(root.parent, e.x, e.y).x
-            pressFadeWidth = root.fadeWidth
+            grabOffset = mapToItem(root.parent, e.x, e.y).x - prv.boundaryX
             root.fadeEditStarted()
             overrideCursor()
         }
@@ -196,9 +199,11 @@ Item {
             restoreCursor()
         }
 
+        // From the clip's edge where it is now, rather than from where the drag started: zooming or scrolling during
+        // the drag moves the clip
         function requestFadeWidth(e, completed) {
-            const dx = mapToItem(root.parent, e.x, e.y).x - pressX
-            root.fadeWidthChangeRequested(pressFadeWidth + (root.isFadeIn ? dx : -dx), completed)
+            const boundaryX = mapToItem(root.parent, e.x, e.y).x - grabOffset
+            root.fadeWidthChangeRequested(root.isFadeIn ? boundaryX - prv.clipEdgeX : prv.clipEdgeX - boundaryX, completed)
         }
 
         onPositionChanged: function (e) {
