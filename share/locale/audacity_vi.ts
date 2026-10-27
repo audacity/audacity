@@ -929,7 +929,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
         <source>Mix-down to…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Trộn Âm Xuống thành...</translation>
+        <translation>Trộn Âm Xuống thành…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
@@ -1237,7 +1237,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="755"/>
         <source>Save to clo&amp;ud…</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lưu trong Clo&amp;ud...</translation>
+        <translation>Lưu trong Clo&amp;ud…</translation>
     </message>
     <message>
         <source>Save to cloud…</source>
@@ -2710,7 +2710,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="402"/>
         <source>Mix-down to…</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Trộn âm xuống thành...</translation>
+        <translation>Trộn âm xuống thành…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
