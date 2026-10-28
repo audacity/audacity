@@ -126,6 +126,7 @@ TEST(FFmpegMetadataTests, ImportsGenericKeys)
         { "date", wxT("2026") },
         { "genre", wxT("Rock") },
         { "comment", wxT("A comment") },
+        { "copyright", wxT("(c) Someone") },
     });
 
     EXPECT_EQ(tags.GetTag(TAG_TITLE), wxT("Title"));
@@ -135,6 +136,7 @@ TEST(FFmpegMetadataTests, ImportsGenericKeys)
     EXPECT_EQ(tags.GetTag(TAG_YEAR), wxT("2026"));
     EXPECT_EQ(tags.GetTag(TAG_GENRE), wxT("Rock"));
     EXPECT_EQ(tags.GetTag(TAG_COMMENTS), wxT("A comment"));
+    EXPECT_EQ(tags.GetTag(TAG_COPYRIGHT), wxT("(c) Someone"));
 }
 
 TEST(FFmpegMetadataTests, ImportsKeysOlderVersionsExported)

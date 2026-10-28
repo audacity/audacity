@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <fstream>
 #include <iterator>
+#include <memory>
 #include <optional>
 #include <string>
 #include <tuple>
@@ -187,8 +188,12 @@ protected:
         if (!format.needsFFmpeg) {
             return;
         }
-        if (!FFmpegFunctions::Load()) {
+        const std::shared_ptr<FFmpegFunctions> ffmpeg = FFmpegFunctions::Load();
+        if (!ffmpeg) {
             GTEST_SKIP() << "FFmpeg is not available";
+        }
+        if (format.ffmpegContainer && !ffmpeg->GuessOutputFormat(format.ffmpegContainer, nullptr, nullptr)) {
+            GTEST_SKIP() << "FFmpeg has no " << format.ffmpegContainer << " muxer";
         }
         if (!std::get<0>(ExportPluginRegistry::Get().FindFormat(wxString(format.name)))) {
             GTEST_SKIP() << "FFmpeg cannot export " << format.name;
