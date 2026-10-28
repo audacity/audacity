@@ -290,6 +290,28 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
         return ret;
     }
 
+    // A destination with clips keeps its rate: convert the pasted data before the project is changed
+    std::vector<std::pair<Au3WaveTrack*, int> > tracksToResample;
+    std::vector<std::pair<std::shared_ptr<Au3WaveClip>, int> > clipsToResample;
+    for (size_t i = 0; i < dstTracksIds.size(); ++i) {
+        const Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
+        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(i)->track());
+        if (dstWaveTrack && !dstWaveTrack->IsEmpty() && trackToPaste->GetRate() != dstWaveTrack->GetRate()) {
+            const int rate = static_cast<int>(dstWaveTrack->GetRate());
+            tracksToResample.emplace_back(trackToPaste.get(), rate);
+            for (const auto& clip : trackToPaste->Intervals()) {
+                clipsToResample.emplace_back(clip, rate);
+            }
+        }
+    }
+    ret = utils::resampleClips(*interactive(), clipsToResample);
+    if (!ret) {
+        return ret;
+    }
+    for (const auto& [track, rate] : tracksToResample) {
+        track->SetRate(rate);
+    }
+
     muse::Ret ok { muse::make_ok() };
     projectWasModified = true;
 
