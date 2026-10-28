@@ -12,6 +12,9 @@ struct CaseInsensitiveLess {
     bool operator()(const wxString& a, const wxString& b) const { return a.CmpNoCase(b) < 0; }
 };
 
+//! FFmpeg's generic metadata keys. FFmpeg doesn't define them as constants; they are listed
+//! in the "Metadata API" documentation of libavformat/avformat.h:
+//! https://ffmpeg.org/doxygen/trunk/group__metadata__api.html
 const std::map<wxString, std::string, CaseInsensitiveLess> GENERIC_KEYS {
     { TAG_TITLE, "title" },
     { TAG_ARTIST, "artist" },
