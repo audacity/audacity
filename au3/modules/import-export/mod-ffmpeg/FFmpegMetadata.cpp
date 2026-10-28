@@ -62,6 +62,7 @@ void FFmpegMetadata::ImportTags(const Lookup& lookup, Tags& tags)
     readTag(lookup, tags, TAG_ALBUM, { "album" });
     readTag(lookup, tags, TAG_TRACK, { "track" });
     readTag(lookup, tags, TAG_GENRE, { "genre" });
+    readTag(lookup, tags, TAG_COPYRIGHT, { "copyright" });
     readTag(lookup, tags, TAG_ARTIST, { "artist", "author" });
     readTag(lookup, tags, TAG_YEAR, { "date", "year" });
 }

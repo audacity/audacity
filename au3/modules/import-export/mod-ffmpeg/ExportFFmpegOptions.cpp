@@ -370,7 +370,7 @@ ExposedFormat ExportFFmpegOptions::fmts[] =
     },
    #endif
     {
-        FMT_WMA2,  wxT("WMA"),    wxT("wma"),  wxT("asf"),  2,   AV_VERSION_INT(52, 53, 0), false, TranslatableString("import-export", "WMA (version 2) Files (FFmpeg)"),
+        FMT_WMA2,  wxT("WMA"),    wxT("wma"),  wxT("asf"),  2,   AV_VERSION_INT(52, 53, 0), true,  TranslatableString("import-export", "WMA (version 2) Files (FFmpeg)"),
         AUDACITY_AV_CODEC_ID_WMAV2,  true
     },
     { FMT_OTHER, wxT("FFMPEG"), wxT(""),     wxT(""),     255, AV_CANMETA,              true,  TranslatableString("import-export", "Custom FFmpeg Export"),
