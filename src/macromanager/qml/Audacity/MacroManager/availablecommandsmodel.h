@@ -50,6 +50,8 @@ private:
         QString code;
         QString title;
         bool isMacro = false;
+
+        bool operator==(const Item&) const = default;
     };
 
     void reload();

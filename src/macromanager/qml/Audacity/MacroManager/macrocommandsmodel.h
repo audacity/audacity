@@ -58,7 +58,6 @@ public:
     Q_INVOKABLE void remove(int row);
     Q_INVOKABLE void removeAllSteps();
     Q_INVOKABLE void editParams(int row);
-    Q_INVOKABLE bool save();
     Q_INVOKABLE void run();
     Q_INVOKABLE void runOnFiles();
     Q_INVOKABLE void rename();
@@ -88,6 +87,7 @@ private:
     void notifyStepsChanged(int fromRow, int toRow);
     void insertStep(int row, const MacroItem& item);
     void setStepParams(int row, const muse::rcommand::Params& params);
+    void persist();
     void requestParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
     void requestEffectParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
     void requestSchemaParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
