@@ -102,7 +102,13 @@ StyledDialogView {
                     }
 
                     onSearchAccepted: {
-                        if (availableCommandsModel.rowCount() !== 1) {
+                        const count = availableCommandsModel.rowCount()
+                        if (count === 0) {
+                            return
+                        }
+
+                        if (count > 1) {
+                            availableCommandsList.navigation.requestActive()
                             return
                         }
 
@@ -118,6 +124,8 @@ StyledDialogView {
                 SeparatorLine {}
 
                 AvailableCommandsList {
+                    id: availableCommandsList
+
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
