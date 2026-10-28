@@ -22,7 +22,7 @@ StyledListView {
 
         readonly property int rowHeight: 32
         readonly property int sideMargin: 8
-        readonly property int addButtonSize: 24
+        readonly property int addIconSize: 24
         readonly property int titleButtonSpacing: 10
     }
 
@@ -40,10 +40,13 @@ StyledListView {
         required property string title
         required property bool isMacro
 
+        property bool wasSelectedOnPress: false
+        property bool addedOnClick: false
+
         width: ListView.view.width
         height: prv.rowHeight
 
-        isSelected: item.navigation.highlight
+        isSelected: item.navigation.active
 
         navigation.panel: root.navigation
         navigation.row: item.index
@@ -71,12 +74,22 @@ StyledListView {
             return data
         }
 
-        onClicked: {
-            root.addRequested(item.code, item.title, item.isMacro)
+        onClicked: function (mouse) {
+            item.addedOnClick = !mouse || item.wasSelectedOnPress
+            if (item.addedOnClick) {
+                root.addRequested(item.code, item.title, item.isMacro)
+            }
+        }
+
+        onDoubleClicked: {
+            if (!item.addedOnClick) {
+                root.addRequested(item.code, item.title, item.isMacro)
+            }
         }
 
         onPressed: function (isPressed) {
             if (isPressed) {
+                item.wasSelectedOnPress = item.isSelected
                 item.grabToImage(function (result) {
                     item.Drag.imageSource = result.url
                 })
@@ -109,18 +122,13 @@ StyledListView {
                 elide: Text.ElideRight
             }
 
-            FlatButton {
-                Layout.preferredWidth: prv.addButtonSize
-                Layout.preferredHeight: prv.addButtonSize
+            StyledIconLabel {
+                Layout.preferredWidth: prv.addIconSize
+                Layout.preferredHeight: prv.addIconSize
 
-                visible: item.isSelected || item.mouseArea.containsMouse
+                visible: item.isSelected
 
-                icon: IconCode.PLUS
-                transparent: true
-
-                onClicked: {
-                    root.addRequested(item.code, item.title, item.isMacro)
-                }
+                iconCode: IconCode.PLUS
             }
         }
     }
