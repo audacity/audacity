@@ -126,8 +126,6 @@ QVariantMap AvailableCommandsModel::itemAt(int row) const
 
 void AvailableCommandsModel::reload()
 {
-    beginResetModel();
-
     m_allItems.clear();
     appendCommands();
     appendMacros();
@@ -136,11 +134,17 @@ void AvailableCommandsModel::reload()
         return QString::localeAwareCompare(a.title, b.title) < 0;
     });
 
-    m_items.clear();
-    std::ranges::copy_if(m_allItems, std::back_inserter(m_items), [this](const Item& item) {
+    QList<Item> items;
+    std::ranges::copy_if(m_allItems, std::back_inserter(items), [this](const Item& item) {
         return matchesSearch(item);
     });
 
+    if (items == m_items) {
+        return;
+    }
+
+    beginResetModel();
+    m_items = std::move(items);
     endResetModel();
 }
 
