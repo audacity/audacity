@@ -127,5 +127,15 @@ void NetworkManager::setProxy(const std::string& proxy)
 {
     mResponseFactory->setProxy(proxy);
 }
+
+void NetworkManager::setUserAgent(std::string userAgent)
+{
+    mUserAgent = std::move(userAgent);
+}
+
+std::string NetworkManager::getUserAgent() const
+{
+    return mUserAgent;
+}
 }
 }
