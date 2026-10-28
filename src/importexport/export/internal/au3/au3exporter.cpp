@@ -406,10 +406,10 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         m_t0 = region.start;
         m_t1 = region.end;
     } else {
-        auto trackeditProject = exportProject->trackeditProject();
-
         m_t0 = 0.0;
-        m_t1 = trackeditProject->totalTime().to_double();
+        const auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(*au3Project), false);
+        m_t1 = !exportedTracks.empty() ? exportedTracks.max(&Track::GetEndTime)
+               : exportProject->trackeditProject()->totalTime().to_double();
     }
 
     m_tags = &Tags::Get(*au3Project);
