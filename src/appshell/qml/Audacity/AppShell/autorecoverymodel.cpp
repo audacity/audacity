@@ -71,7 +71,6 @@ QString AutoRecoveryModel::name(const Item& item)
     return name.toQString();
 }
 
-
 bool AutoRecoveryModel::hasSelection() const
 {
     return std::any_of(m_items.begin(), m_items.end(), [](const Item& item) { return item.selected; });
