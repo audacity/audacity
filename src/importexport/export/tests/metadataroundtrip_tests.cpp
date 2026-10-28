@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
 #include <fstream>
 #include <iterator>
 #include <memory>
@@ -182,22 +183,36 @@ protected:
         return m_dir.filePath(QString("metadata.") + format.extension).toStdString();
     }
 
-    //! FFmpeg is loaded at runtime and may be missing, or built without the format's encoder
-    void skipIfUnavailable(const MetadataFormat& format)
+    //! FFmpeg is loaded at runtime. CI installs it, so there a missing FFmpeg fails the test;
+    //! elsewhere the test is skipped.
+    void requireFFmpeg(const MetadataFormat& format)
     {
         if (!format.needsFFmpeg) {
             return;
         }
+        const std::string missing = missingFFmpegSupport(format);
+        if (missing.empty()) {
+            return;
+        }
+        if (std::getenv("CI")) {
+            FAIL() << missing << ", but CI is expected to install FFmpeg";
+        }
+        GTEST_SKIP() << missing;
+    }
+
+    static std::string missingFFmpegSupport(const MetadataFormat& format)
+    {
         const std::shared_ptr<FFmpegFunctions> ffmpeg = FFmpegFunctions::Load();
         if (!ffmpeg) {
-            GTEST_SKIP() << "FFmpeg is not available";
+            return "FFmpeg is not available";
         }
         if (format.ffmpegContainer && !ffmpeg->GuessOutputFormat(format.ffmpegContainer, nullptr, nullptr)) {
-            GTEST_SKIP() << "FFmpeg has no " << format.ffmpegContainer << " muxer";
+            return std::string("FFmpeg has no ") + format.ffmpegContainer + " muxer";
         }
         if (!std::get<0>(ExportPluginRegistry::Get().FindFormat(wxString(format.name)))) {
-            GTEST_SKIP() << "FFmpeg cannot export " << format.name;
+            return std::string("FFmpeg cannot export ") + format.name;
         }
+        return {};
     }
 
     void exportWithTags(const MetadataFormat& format, const Tags& tags, const std::string& path)
@@ -267,8 +282,8 @@ protected:
 TEST_P(MetadataRoundTripTests, TagsSurviveExportAndImport)
 {
     const MetadataFormat& format = GetParam();
-    skipIfUnavailable(format);
-    if (IsSkipped()) {
+    requireFFmpeg(format);
+    if (IsSkipped() || HasFatalFailure()) {
         return;
     }
     const std::string path = exportPath(format);
@@ -327,7 +342,7 @@ TEST_P(MetadataRoundTripTests, WritesId3v23Tag)
     EXPECT_EQ((*tag)[3], 3) << "ID3v2." << int((*tag)[3]);
 }
 
-//! The FFmpeg formats are skipped when FFmpeg cannot be loaded.
+//! The FFmpeg formats need FFmpeg installed; see requireFFmpeg.
 INSTANTIATE_TEST_SUITE_P(AllFormatsWithMetadata, MetadataRoundTripTests, ::testing::Values(
                              MetadataFormat { "MP3", "mp3", Id3Location::FileStart },
                              MetadataFormat { "MP2", "mp2", Id3Location::FileStart },
