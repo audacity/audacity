@@ -410,6 +410,9 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         const auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(*au3Project), false);
         m_t1 = !exportedTracks.empty() ? exportedTracks.max(&Track::GetEndTime)
                : exportProject->trackeditProject()->totalTime().to_double();
+        if (m_t1 <= m_t0) {
+            return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "There is no audio to export"));
+        }
     }
 
     m_tags = &Tags::Get(*au3Project);
