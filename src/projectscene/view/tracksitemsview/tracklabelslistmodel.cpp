@@ -6,7 +6,6 @@
 #include "global/async/async.h"
 
 #include "types/projectscenetypes.h"
-#include "view/common/selectioncolor.h"
 
 #include "log.h"
 
@@ -428,11 +427,6 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
         resetSelectedTracksData();
         selectionController()->setSelectedTracks({ key.key.trackId }, true);
     }
-}
-
-QColor TrackLabelsListModel::timeSelectionColor(const QColor& labelColor) const
-{
-    return au::projectscene::timeSelectionColor(labelColor);
 }
 
 double TrackLabelsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const

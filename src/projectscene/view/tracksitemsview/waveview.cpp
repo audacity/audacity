@@ -166,11 +166,11 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
 {
     params.style.blankBrush = selected ? CLASSIC_BACKGROUND_SELECTED_COLOR : CLASSIC_BACKGROUND_COLOR;
     params.style.normalBackground = params.style.blankBrush;
-    params.style.selectedBackground = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+    params.style.selectedBackground = selected ? timeSelectionColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
 
     params.style.envelopeBackground = params.style.blankBrush;
     params.style.selectedEnvelopeBackground
-        = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+        = selected ? timeSelectionColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
 
     QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
     params.style.samplePen = baseSampleColor;
@@ -506,11 +506,6 @@ void WaveView::setDisplayBounds(const QVariant& displayBounds)
     m_displayBounds.second = maxBound;
 
     update();
-}
-
-QColor WaveView::transformColor(const QColor& originalColor) const
-{
-    return timeSelectionColor(originalColor);
 }
 
 void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)

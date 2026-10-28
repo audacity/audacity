@@ -26,8 +26,6 @@ public:
 
     Q_INVOKABLE void toggleTracksDataSelectionByLabel(const LabelKey& key);
 
-    Q_INVOKABLE QColor timeSelectionColor(const QColor& labelColor) const;
-
     double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const override;
 
     Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed);
