@@ -59,6 +59,8 @@ public:
     bool changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex) override;
     bool changeClipFadeIn(const ClipKey& clipKey, secs_t duration, bool completed) override;
     bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration, bool completed) override;
+    bool changeClipFadeInType(const ClipKey& clipKey, FadeType type) override;
+    bool changeClipFadeOutType(const ClipKey& clipKey, FadeType type) override;
     bool changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;

@@ -20,6 +20,8 @@
 
 #include "trackedit/iclipsinteraction.h"
 
+class ClipFades;
+
 namespace au::trackedit {
 class Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
@@ -53,6 +55,8 @@ public:
     bool changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex) override;
     bool changeClipFadeIn(const ClipKey& clipKey, secs_t duration) override;
     bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration) override;
+    bool changeClipFadeInType(const ClipKey& clipKey, FadeType type) override;
+    bool changeClipFadeOutType(const ClipKey& clipKey, FadeType type) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
 
@@ -117,6 +121,7 @@ private:
 
     //! Returns the @p edit result for the last clip.
     bool applyClipEdit(const ClipKeyList& clipKeys, bool completed, const std::function<bool(au3::Au3WaveClip&)>& edit);
+    bool changeClipFades(const ClipKey& clipKey, const std::function<void(ClipFades&)>& change);
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 

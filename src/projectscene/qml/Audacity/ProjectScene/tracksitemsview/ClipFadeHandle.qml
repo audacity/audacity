@@ -1,6 +1,7 @@
 import QtQuick
 
 import Muse.Ui
+import Muse.UiComponents
 
 import Audacity.ProjectScene
 
@@ -11,15 +12,17 @@ Item {
     required property real fadeWidth
     //! Where the fade starts, in parent coordinates: possibly far outside the parent, which only spans the visible part of the clip
     required property real fadeX
+    required property int fadeType
 
     //! The fade line is always drawn, the handle only when this is true
     property bool handleVisible: true
 
-    readonly property alias pressed: mouseArea.pressed
+    readonly property alias pressed: mouseArea.dragging
 
     signal fadeEditStarted
     signal fadeWidthChangeRequested(real width, bool completed)
     signal fadeEditCanceled
+    signal fadeTypeChangeRequested(int type)
 
     // in parent coordinates
     signal mousePositionChanged(real x, real y)
@@ -30,6 +33,26 @@ Item {
         //! Where the fade meets the clip's edge, and where it meets the unfaded part, in parent coordinates
         readonly property real clipEdgeX: root.isFadeIn ? root.fadeX : root.fadeX + root.fadeWidth
         readonly property real boundaryX: root.isFadeIn ? root.fadeX + root.fadeWidth : root.fadeX
+
+        readonly property var fadeTypes: [
+            {
+                type: FadeType.LINEAR,
+                title: qsTrc("projectscene", "Linear")
+            },
+            {
+                type: FadeType.LOGARITHMIC,
+                title: qsTrc("projectscene", "Logarithmic")
+            }
+        ]
+
+        function openContextMenu(x, y) {
+            contextMenuLoader.show(Qt.point(x, y), fadeTypes.map(fadeType => ({
+                        id: String(fadeType.type),
+                        title: fadeType.title,
+                        checkable: true,
+                        checked: fadeType.type === root.fadeType
+                    })))
+        }
     }
 
     ClipHandleIcon {
@@ -46,15 +69,29 @@ Item {
             }
         }
 
-        hovered: mouseArea.containsMouse || mouseArea.pressed
+        hovered: mouseArea.containsMouse || mouseArea.dragging
         iconCode: root.isFadeIn ? IconCode.FADE_HANDLE_IN : IconCode.FADE_HANDLE_OUT
         color: ui.theme.extra["black_color"]
         style: Text.Outline
         styleColor: ui.theme.extra["white_color"]
     }
 
+    ContextMenuLoader {
+        id: contextMenuLoader
+
+        onHandleMenuItem: function (itemId) {
+            const type = parseInt(itemId)
+            if (type !== root.fadeType) {
+                root.fadeTypeChangeRequested(type)
+            }
+        }
+    }
+
     MouseArea {
         id: mouseArea
+
+        //! Only the left button drags the handle, the right one opens the context menu
+        property bool dragging: false
 
         //! From the boundary to where the handle was grabbed, so that the boundary doesn't jump to the mouse
         property real grabOffset: 0
@@ -64,6 +101,7 @@ Item {
         // cursor into the hovered handle.
         anchors.fill: parent
 
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
 
         function updateCursor() {
@@ -103,6 +141,11 @@ Item {
         }
 
         onPressed: function (e) {
+            // The context menu opens on release, like the clips'
+            if (e.button === Qt.RightButton) {
+                return
+            }
+            dragging = true
             // in parent coordinates: the handle itself moves while dragging
             grabOffset = mapToItem(root.parent, e.x, e.y).x - prv.boundaryX
             root.fadeEditStarted()
@@ -110,6 +153,10 @@ Item {
         }
 
         onCanceled: {
+            if (!dragging) {
+                return
+            }
+            dragging = false
             root.fadeEditCanceled()
             restoreCursor()
         }
@@ -125,12 +172,22 @@ Item {
             const pos = mapToItem(root.parent, e.x, e.y)
             root.mousePositionChanged(pos.x, pos.y)
 
-            if (pressed) {
+            if (dragging) {
                 requestFadeWidth(e, false)
             }
         }
 
         onReleased: function (e) {
+            if (e.button === Qt.RightButton) {
+                if (!dragging && containsMouse) {
+                    prv.openContextMenu(e.x, e.y)
+                }
+                return
+            }
+            if (!dragging) {
+                return
+            }
+            dragging = false
             requestFadeWidth(e, true)
             restoreCursor()
         }
