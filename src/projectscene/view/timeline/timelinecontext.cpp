@@ -45,14 +45,13 @@ double calculateScrollSpeed(double value, double inMin, double inMax, double out
 }
 
 TimelineContext::TimelineContext(QObject* parent)
-    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this)),
+    m_snapTimeFormatter(std::make_shared<SnapTimeFormatter>(this))
 {
 }
 
 void TimelineContext::init(double frameWidth)
 {
-    m_snapTimeFormatter = std::make_shared<SnapTimeFormatter>(iocContext());
-
     m_scrollTimer.setInterval(16); // scroll at ~60 FPS
     connect(&m_scrollTimer, &QTimer::timeout, [this](){ autoScrollView(m_autoScrollStep); });
 
