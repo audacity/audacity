@@ -36,12 +36,15 @@ Item {
     property bool containsMouse: false
 
     property color labelColor: null
+    property real startTime: 0
+    property real endTime: 0
 
     component TimeSelection: QtObject {
         property bool isDataSelected: false
+        property real startTime: 0
+        property real endTime: 0
         property real start: 0
         property real width: 0
-        property bool containsPoint: false
         property color color: "transparent"
     }
 
@@ -81,10 +84,10 @@ Item {
         property bool isPoint: root.isPoint
         readonly property int earWidth: 7
 
-        readonly property bool showsTimeSelection: root.timeSelection.isDataSelected && root.timeSelection.width > 0
-        readonly property real selectionEnd: root.timeSelection.start + root.timeSelection.width
-        readonly property bool leftEdgeInSelection: showsTimeSelection && (isPoint ? root.timeSelection.containsPoint : root.timeSelection.start <= 0 && selectionEnd > 0)
-        readonly property bool rightEdgeInSelection: showsTimeSelection && (isPoint ? root.timeSelection.containsPoint : root.timeSelection.start < root.width && selectionEnd >= root.width)
+        readonly property bool hasTimeSelection: root.timeSelection.isDataSelected && root.timeSelection.endTime > root.timeSelection.startTime
+        readonly property bool leftEdgeInSelection: hasTimeSelection && (isPoint ? root.timeSelection.startTime < root.startTime : root.timeSelection.startTime <= root.startTime) && root.startTime < root.timeSelection.endTime
+        readonly property bool rightEdgeInSelection: isPoint ? leftEdgeInSelection : hasTimeSelection && root.timeSelection.startTime < root.endTime && root.endTime <= root.timeSelection.endTime
+        readonly property bool overlapsSelection: isPoint ? leftEdgeInSelection : hasTimeSelection && root.timeSelection.startTime < root.endTime && root.startTime < root.timeSelection.endTime
 
         property color backgroundColor: root.labelColor
         property color leftEarBackgroundColor: root.labelColor
@@ -300,7 +303,7 @@ Item {
         backgroundColor: prv.backgroundColor
 
         timeSelection.start: prv.isPoint ? 0 : root.timeSelection.start
-        timeSelection.width: !prv.showsTimeSelection ? 0 : prv.isPoint ? (root.timeSelection.containsPoint ? header.width : 0) : root.timeSelection.width
+        timeSelection.width: !prv.overlapsSelection ? 0 : prv.isPoint ? header.width : root.timeSelection.width
         timeSelection.color: root.timeSelection.color
 
         earWidth: prv.earWidth
