@@ -72,7 +72,7 @@ StyledDialogView {
                 StyledTextLabel {
                     Layout.fillWidth: true
 
-                    text: root.dependents.length > 0 ? qsTrc("macromanager", "\"%1\" is used by other macros. Deleting it will also delete: %2").arg(root.macroName).arg(root.dependents.join(", ")) : qsTrc("macromanager", "\"%1\" will be deleted").arg(root.macroName)
+                    text: root.dependents.length > 0 ? qsTrc("macromanager", "\"%1\" is used by other macros. Deleting it will also remove it from: %2").arg(root.macroName).arg(root.dependents.join(", ")) : qsTrc("macromanager", "\"%1\" will be deleted").arg(root.macroName)
                     horizontalAlignment: Qt.AlignLeft
                     wrapMode: Text.WordWrap
                 }
