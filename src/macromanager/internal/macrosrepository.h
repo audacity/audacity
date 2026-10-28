@@ -5,8 +5,6 @@
 
 #include <map>
 
-#include "framework/global/types/config.h"
-
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/iglobalconfiguration.h"
 #include "framework/global/io/ifilesystem.h"
@@ -42,12 +40,10 @@ private:
     muse::io::path_t userMacrosPath() const;
     std::optional<muse::io::path_t> userMacroFilePath(const std::string& name) const;
     muse::io::path_t newUserMacroFilePath(const std::string& name) const;
-    muse::io::paths_t builtinMacroFilePaths() const;
 
     void reload();
     muse::Ret visitReferences(const Macro& macro, std::vector<std::string>& path) const;
 
-    muse::Config m_config;
     MacroList m_macros;
     std::map<std::string, muse::io::path_t> m_userMacroFiles;
     muse::async::Notification m_macrosChanged;

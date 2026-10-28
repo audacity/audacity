@@ -76,11 +76,6 @@ QString MacroCommandsModel::name() const
     return QString::fromStdString(m_macro.name);
 }
 
-bool MacroCommandsModel::isBuiltin() const
-{
-    return m_macro.builtin;
-}
-
 bool MacroCommandsModel::isEmpty() const
 {
     return m_macro.steps.empty();

@@ -28,7 +28,6 @@ class MacroCommandsModel : public QAbstractListModel, public muse::Contextable, 
     QML_ELEMENT;
 
     Q_PROPERTY(QString name READ name NOTIFY nameChanged FINAL)
-    Q_PROPERTY(bool isBuiltin READ isBuiltin NOTIFY nameChanged FINAL)
     Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged FINAL)
     Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged FINAL)
 
@@ -47,7 +46,6 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     QString name() const;
-    bool isBuiltin() const;
     bool isEmpty() const;
     bool isRunning() const;
 
