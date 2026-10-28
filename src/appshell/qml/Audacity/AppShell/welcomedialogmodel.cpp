@@ -33,7 +33,8 @@ const char* AU4_VIDEO_URL {
     "https://youtu.be/BTQymidLYIM" };
 const char* FEATURE_SURVEY_URL { "https://audacityteam.org/survey" };
 const char* SOAP_VOICE_CLEANER_URL {
-    "https://www.musehub.com/plugin/soap-voice-cleaner?utm_source=au-app&utm_medium=au-app-welcome-soap&utm_campaign=au-app-welcome-soap-mh" };
+    "https://www.musehub.com/plugin/soap-voice-cleaner?id=1ee282dd-0429-47a2-8615-7fcbe0f72480"
+    "&utm_source=au-app&utm_medium=au-app-welcome-soap&utm_campaign=au-app-welcome-soap-mh" };
 }
 
 std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
