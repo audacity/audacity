@@ -76,8 +76,9 @@ TEST(FFmpegMetadataTests, ExportsStandardTagsUnderGenericKeys)
 
 TEST(FFmpegMetadataTests, MatchesStandardTagNamesCaseInsensitively)
 {
-    //! Importers keep the spelling a file uses, e.g. "genre" in Vorbis comments
-    const Tags tags = makeTags({ { wxT("genre"), wxT("Rock") }, { wxT("copyright"), wxT("(c) Someone") } });
+    //! Importers keep the spelling a file uses, and the keys differ from these names,
+    //! so an additional tag passed through under its own name would fail the check
+    const Tags tags = makeTags({ { wxT("Genre"), wxT("Rock") }, { wxT("COPYRIGHT"), wxT("(c) Someone") } });
 
     const std::map<std::string, wxString> expected { { "genre", wxT("Rock") }, { "copyright", wxT("(c) Someone") } };
     EXPECT_EQ(toMap(FFmpegMetadata::ExportEntries(tags)), expected);
