@@ -37,6 +37,16 @@ Item {
 
     property color labelColor: null
 
+    component TimeSelection: QtObject {
+        property bool isDataSelected: false
+        property real start: 0
+        property real width: 0
+        property bool containsPoint: false
+        property color color: "transparent"
+    }
+
+    readonly property TimeSelection timeSelection: TimeSelection {}
+
     property alias navigation: navCtrl
 
     height: header.height
@@ -70,6 +80,11 @@ Item {
 
         property bool isPoint: root.isPoint
         readonly property int earWidth: 7
+
+        readonly property bool showsTimeSelection: root.timeSelection.isDataSelected && root.timeSelection.width > 0
+        readonly property real selectionEnd: root.timeSelection.start + root.timeSelection.width
+        readonly property bool leftEdgeInSelection: showsTimeSelection && (isPoint ? root.timeSelection.containsPoint : root.timeSelection.start <= 0 && selectionEnd > 0)
+        readonly property bool rightEdgeInSelection: showsTimeSelection && (isPoint ? root.timeSelection.containsPoint : root.timeSelection.start < root.width && selectionEnd >= root.width)
 
         property color backgroundColor: root.labelColor
         property color leftEarBackgroundColor: root.labelColor
@@ -189,7 +204,7 @@ Item {
 
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
-        backgroundColor: prv.leftEarBackgroundColor
+        backgroundColor: prv.leftEdgeInSelection ? root.timeSelection.color : prv.leftEarBackgroundColor
         isSelected: root.isSelected
         isLinked: root.isLeftLinked
 
@@ -237,7 +252,7 @@ Item {
 
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
-        backgroundColor: prv.rightEarBackgroundColor
+        backgroundColor: prv.rightEdgeInSelection ? root.timeSelection.color : prv.rightEarBackgroundColor
         isSelected: root.isSelected
         isLinked: root.isRightLinked
 
@@ -283,6 +298,10 @@ Item {
         isPoint: prv.isPoint
 
         backgroundColor: prv.backgroundColor
+
+        timeSelection.start: prv.isPoint ? 0 : root.timeSelection.start
+        timeSelection.width: !prv.showsTimeSelection ? 0 : prv.isPoint ? (root.timeSelection.containsPoint ? header.width : 0) : root.timeSelection.width
+        timeSelection.color: root.timeSelection.color
 
         earWidth: prv.earWidth
 
@@ -334,7 +353,7 @@ Item {
 
         isForPoint: true
         enableCursorInteraction: root.enableCursorInteraction
-        backgroundColor: leftEar.hovered ? prv.leftEarBackgroundColor : prv.rightEarBackgroundColor
+        backgroundColor: prv.leftEdgeInSelection ? root.timeSelection.color : leftEar.hovered ? prv.leftEarBackgroundColor : prv.rightEarBackgroundColor
 
         visible: prv.isPoint
 
@@ -367,7 +386,7 @@ Item {
 
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
-        backgroundColor: prv.leftEarBackgroundColor
+        backgroundColor: prv.leftEdgeInSelection ? root.timeSelection.color : prv.leftEarBackgroundColor
         isSelected: root.isSelected
 
         visible: !prv.isPoint
@@ -409,7 +428,7 @@ Item {
 
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
-        backgroundColor: prv.rightEarBackgroundColor
+        backgroundColor: prv.rightEdgeInSelection ? root.timeSelection.color : prv.rightEarBackgroundColor
         isSelected: root.isSelected
 
         visible: !prv.isPoint

@@ -14,6 +14,7 @@
 #include "au3/wavepainterutils.h"
 #include "au3/samplespainterutils.h"
 #include "view/timeline/timelinecontext.h"
+#include "view/common/selectioncolor.h"
 
 using namespace au::projectscene;
 
@@ -509,19 +510,7 @@ void WaveView::setDisplayBounds(const QVariant& displayBounds)
 
 QColor WaveView::transformColor(const QColor& originalColor) const
 {
-    int r = originalColor.red();
-    int g = originalColor.green();
-    int b = originalColor.blue();
-
-    int deltaRed = (r < 240) ? 51 : (255 - r);
-    int deltaGreen = (g < 240) ? 69 : (255 - g);
-    int deltaBlue = 77;
-
-    int newRed = qBound(0, r + deltaRed, 255);
-    int newGreen = qBound(0, g + deltaGreen, 255);
-    int newBlue = qBound(0, b + deltaBlue, 255);
-
-    return QColor(newRed, newGreen, newBlue);
+    return timeSelectionColor(originalColor);
 }
 
 void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)
