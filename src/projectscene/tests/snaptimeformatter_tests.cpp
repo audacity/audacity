@@ -15,11 +15,12 @@ public:
 
     void SetUp() override
     {
-        m_formatter = std::make_shared<SnapTimeFormatter>(muse::modularity::globalCtx());
+        m_formatter = std::make_shared<SnapTimeFormatter>(&m_context);
         m_timeSignature = { 120, 4, 4 };
     }
 
 protected:
+    muse::Contextable m_context{ muse::modularity::globalCtx() };
     std::shared_ptr<SnapTimeFormatter> m_formatter = nullptr;
     trackedit::TimeSignature m_timeSignature;
 };
