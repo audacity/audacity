@@ -5,6 +5,7 @@
         "llvm-vs-code-extensions.vscode-clangd", // Better C++ parsing
         "zachflower.uncrustify", // for code formatting
         "vadimcn.vscode-lldb", // provides a fast debugger (tried on Linux),
-        "emeraldwalk.RunOnSave"
+        "emeraldwalk.RunOnSave",
+        "rioj7.command-variable" // file pickers for the testflow launch configuration and task
     ],
 }
