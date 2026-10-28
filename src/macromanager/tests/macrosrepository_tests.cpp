@@ -119,3 +119,41 @@ TEST_F(MacroManager_MacrosRepositoryTests, RemoveDeletesOnlyTheRemovedMacro)
     EXPECT_THAT(names(*m_repository), ::testing::ElementsAre("my_macro"));
     EXPECT_THAT(names(*makeRepository()), ::testing::ElementsAre("my_macro"));
 }
+
+TEST_F(MacroManager_MacrosRepositoryTests, RemoveDropsReferencesFromOtherMacros)
+{
+    ASSERT_TRUE(m_repository->save(Macro { "child", {} }));
+    ASSERT_TRUE(m_repository->save(Macro { "other", {} }));
+    ASSERT_TRUE(m_repository->save(Macro { "parent",
+                                           { MacroReference { "child" }, MacroReference { "other" }, MacroReference { "child" } } }));
+    ASSERT_TRUE(m_repository->save(Macro { "grandparent", { MacroReference { "parent" } } }));
+
+    EXPECT_THAT(m_repository->referencingMacros("child"), ::testing::ElementsAre("parent"));
+
+    ASSERT_TRUE(m_repository->remove("child"));
+
+    const std::shared_ptr<MacrosRepository> reloaded = makeRepository();
+    EXPECT_THAT(names(*reloaded), ::testing::UnorderedElementsAre("other", "parent", "grandparent"));
+
+    const std::optional<Macro> parent = reloaded->macro("parent");
+    ASSERT_TRUE(parent);
+    ASSERT_EQ(parent->steps.size(), 1);
+    EXPECT_EQ(std::get<MacroReference>(parent->steps.front()).name, "other");
+
+    const std::optional<Macro> grandparent = reloaded->macro("grandparent");
+    ASSERT_TRUE(grandparent);
+    EXPECT_EQ(grandparent->steps.size(), 1);
+}
+
+TEST_F(MacroManager_MacrosRepositoryTests, DependentMacrosFollowsReferencesTransitively)
+{
+    ASSERT_TRUE(m_repository->save(Macro { "child", {} }));
+    ASSERT_TRUE(m_repository->save(Macro { "unrelated", {} }));
+    ASSERT_TRUE(m_repository->save(Macro { "parent", { MacroReference { "child" } } }));
+    ASSERT_TRUE(m_repository->save(Macro { "grandparent", { MacroReference { "parent" }, MacroReference { "child" } } }));
+
+    EXPECT_THAT(m_repository->referencingMacros("child"), ::testing::UnorderedElementsAre("parent", "grandparent"));
+    EXPECT_THAT(m_repository->dependentMacros("child"), ::testing::UnorderedElementsAre("parent", "grandparent"));
+    EXPECT_THAT(m_repository->dependentMacros("parent"), ::testing::ElementsAre("grandparent"));
+    EXPECT_THAT(m_repository->dependentMacros("unrelated"), ::testing::IsEmpty());
+}

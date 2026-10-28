@@ -43,7 +43,7 @@ std::optional<std::string> MacroActions::rename(const std::string& name) const
 bool MacroActions::remove(const std::string& name) const
 {
     ValList dependents;
-    for (const std::string& dependent : repository()->dependentMacros(name)) {
+    for (const std::string& dependent : repository()->referencingMacros(name)) {
         dependents.push_back(Val(dependent));
     }
 
