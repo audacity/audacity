@@ -9,13 +9,11 @@
 #include "projectscene/view/trackruler/dblinearmonoruler.h"
 #include "projectscene/view/trackruler/dblinearstereoruler.h"
 
+#include "projectscene/projectscenecommands.h"
+
 #include "trackrulermodel.h"
 
 using namespace au::projectscene;
-
-namespace {
-const muse::actions::ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
-}
 
 TrackRulerModel::TrackRulerModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -361,9 +359,9 @@ void TrackRulerModel::resetZoom()
 
 void TrackRulerModel::toggleHalfWave()
 {
-    muse::actions::ActionQuery query(TOGGLE_TRACK_HALF_WAVE);
-    query.addParam("trackId", muse::Val { m_trackId });
-    dispatcher()->dispatch(query);
+    commandDispatcher()->dispatch(PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND, {
+        { PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM, muse::Val(m_trackId) },
+    });
 }
 
 bool TrackRulerModel::isDefaultZoom() const

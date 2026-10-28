@@ -20,10 +20,9 @@ public:
     AudioSetupContextMenuModel() = default;
 
     Q_INVOKABLE void load() override;
+    Q_INVOKABLE void handleMenuItem(const QString& itemId) override;
 
 private:
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
-
     void makeMenuItems();
 
     muse::uicomponents::MenuItemList makeHostItems();

@@ -2,9 +2,11 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectmenumodelbase.h"
+#include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 
 using namespace au::projectscene;
+using namespace muse::uicomponents;
 
 RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
     : AbstractMenuModel(parent)
@@ -37,6 +39,18 @@ void RealtimeEffectMenuModelBase::load()
 muse::uicomponents::MenuItemList RealtimeEffectMenuModelBase::effectMenus()
 {
     return effectsMenuProvider()->realtimeEffectMenu(*this);
+}
+
+MenuItem* RealtimeEffectMenuModelBase::makeEffectItem(const effects::EffectId& effectId)
+{
+    const muse::rcommand::CommandInfo& info = commandsRegister()->commandInfo(effects::makeEffectOpenCommand(effectId));
+
+    MenuItem* item = new MenuItem(this);
+    item->setId(effectId.toQString());
+    item->setTitle(info.title);
+    item->setDescription(info.description);
+    item->setEnabled(true);
+    return item;
 }
 
 std::optional<au::trackedit::TrackId> RealtimeEffectMenuModelBase::trackId() const

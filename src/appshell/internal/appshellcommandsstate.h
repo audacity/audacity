@@ -10,6 +10,7 @@
 #include "framework/rcommand/icommandsregister.h"
 #include "framework/rcommand/imodulecommandsstate.h"
 #include "framework/ui/imainwindow.h"
+#include "framework/dockwindow/idockwindowprovider.h"
 
 #include "context/iuicontextresolver.h"
 #include "record/irecordcontroller.h"
@@ -21,6 +22,7 @@ class AppShellCommandsState : public muse::rcommand::IModuleCommandsState, publi
     muse::ContextInject<muse::ui::IMainWindow> mainWindow{ this };
     muse::ContextInject<record::IRecordController> recordController{ this };
     muse::ContextInject<context::IUiContextResolver> uiContextResolver{ this };
+    muse::ContextInject<muse::dock::IDockWindowProvider> dockWindowProvider{ this };
 
 public:
     AppShellCommandsState(const muse::modularity::ContextPtr& ctx)
@@ -36,6 +38,7 @@ public:
 
 private:
     void updateCommandStates(const std::vector<muse::rcommand::Command>& commands = {});
+    void listenOpenedDocksChanged(muse::dock::IDockWindow* window);
 
     muse::rcommand::IModuleCommandsRegisterPtr m_moduleRegister;
     std::map<muse::rcommand::Command, muse::rcommand::CommandState> m_commandStates;

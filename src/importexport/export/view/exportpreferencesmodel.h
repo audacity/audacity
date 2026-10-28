@@ -9,7 +9,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iinteractive.h"
 #include "appshell/iappshellconfiguration.h"
 #include "importexport/export/iexportconfiguration.h"
@@ -28,7 +28,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<IExporter> exporter{ this };

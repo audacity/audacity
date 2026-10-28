@@ -5,7 +5,6 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "ui/iuiactionsregister.h"
 
 #include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
@@ -20,10 +19,10 @@ class SnapToolBarItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(QVariantList availableSnapTypes READ availableSnapTypes NOTIFY availableSnapTypesChanged)
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
-    muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
 
 public:
-    explicit SnapToolBarItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type, QObject* parent = nullptr);
+    explicit SnapToolBarItem(const muse::rcommand::CommandInfo& info, muse::uicomponents::ToolBarItemType::Type type,
+                             QObject* parent = nullptr);
 
     Q_INVOKABLE void handleMenuItem(const QString& itemId);
 

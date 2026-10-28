@@ -5,56 +5,48 @@
 
 #include "translation.h"
 
+#include "trackedit/trackeditcommands.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
-using namespace muse::actions;
 
 void LabelContextMenuModel::load()
 {
     AbstractMenuModel::load();
 
-    auto makeItemWithArg = [this](const ActionCode& actionCode, const muse::TranslatableString& title = {}) {
-        MenuItem* item = makeMenuItem(actionCode);
-        item->setArgs(ActionData::make_arg1<trackedit::LabelKey>(m_labelKey.key));
-        if (!title.isEmpty()) {
-            item->setTitle(title);
-        }
-        return item;
-    };
-
     MenuItemList cutAndItems {
-        makeMenuItem("cut-leave-gap",
+        makeMenuItem(trackedit::TRACKEDIT_CUT_LEAVE_GAP_COMMAND,
                      muse::TranslatableString("label", "Cut and leave gap")),
-        makeMenuItem("cut-per-track-ripple",
+        makeMenuItem(trackedit::TRACKEDIT_CUT_PER_TRACK_RIPPLE_COMMAND,
                      muse::TranslatableString("label", "Cut and close gap on this track")),
-        makeMenuItem("cut-all-tracks-ripple",
+        makeMenuItem(trackedit::TRACKEDIT_CUT_ALL_TRACKS_RIPPLE_COMMAND,
                      muse::TranslatableString("label", "Cut and close gap on all tracks")),
     };
 
     MenuItemList pasteAndItems {
-        makeMenuItem("action://trackedit/paste-overlap",
+        makeMenuItem(trackedit::TRACKEDIT_PASTE_OVERLAP_COMMAND,
                      muse::TranslatableString("label", "Paste and overlap")),
-        makeMenuItem("action://trackedit/paste-insert",
+        makeMenuItem(trackedit::TRACKEDIT_PASTE_INSERT_COMMAND,
                      muse::TranslatableString("label", "Paste and make room on this track")),
-        makeMenuItem("action://trackedit/paste-insert-all-tracks-ripple",
+        makeMenuItem(trackedit::TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_COMMAND,
                      muse::TranslatableString("label", "Paste and make room on all tracks")),
     };
 
     MenuItemList deleteAndItems {
-        makeMenuItem("delete-leave-gap",
+        makeMenuItem(trackedit::TRACKEDIT_DELETE_LEAVE_GAP_COMMAND,
                      muse::TranslatableString("label", "Delete and leave gap")),
-        makeMenuItem("delete-per-track-ripple",
+        makeMenuItem(trackedit::TRACKEDIT_DELETE_PER_TRACK_RIPPLE_COMMAND,
                      muse::TranslatableString("label", "Delete and close gap on this track")),
-        makeMenuItem("delete-all-tracks-ripple",
+        makeMenuItem(trackedit::TRACKEDIT_DELETE_ALL_TRACKS_RIPPLE_COMMAND,
                      muse::TranslatableString("label", "Delete and close gap on all tracks")),
     };
 
     MenuItemList items {
-        makeItemWithArg("rename-item", muse::TranslatableString("label", "Rename label")),
+        makeMenuItem(trackedit::TRACKEDIT_RENAME_ITEM_COMMAND, muse::TranslatableString("label", "Rename label")),
         makeSeparator(),
-        makeItemWithArg("action://trackedit/cut"),
-        makeItemWithArg("action://trackedit/copy"),
-        makeItemWithArg("action://trackedit/delete"),
+        makeMenuItem(trackedit::TRACKEDIT_CUT_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_COPY_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_DELETE_COMMAND),
         makeSeparator(),
         makeMenu(muse::TranslatableString("label", "Cut and…"), cutAndItems, "menu-cut-and"),
         makeMenu(muse::TranslatableString("label", "Paste and…"), pasteAndItems, "menu-paste-and"),

@@ -24,12 +24,11 @@
 
 #include <QString>
 
-#include "actions/actiontypes.h"
-
 #include "types/projecttypes.h"
+#include "../projectcommands.h"
 
 using namespace au::project;
-using namespace muse::actions;
+using namespace muse;
 
 ProjectsPageModel::ProjectsPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -43,17 +42,20 @@ bool ProjectsPageModel::cloudEnabled() const
 
 void ProjectsPageModel::createNewProject()
 {
-    dispatcher()->dispatch("file-new");
+    commandDispatcher()->dispatch(PROJECT_NEW_COMMAND);
 }
 
 void ProjectsPageModel::openOther()
 {
-    dispatcher()->dispatch("file-open");
+    commandDispatcher()->dispatch(PROJECT_OPEN_COMMAND);
 }
 
 void ProjectsPageModel::openProject(const QString& scorePath, const QString& displayNameOverride)
 {
-    dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(QUrl::fromLocalFile(scorePath), displayNameOverride));
+    commandDispatcher()->dispatch(PROJECT_OPEN_COMMAND, {
+        { PROJECT_URL_PARAM, Val(QUrl::fromLocalFile(scorePath).toString()) },
+        { PROJECT_DISPLAY_NAME_PARAM, Val(displayNameOverride) },
+    });
 }
 
 void ProjectsPageModel::openCloudProject(const QString& cloudProjectId)
@@ -62,7 +64,7 @@ void ProjectsPageModel::openCloudProject(const QString& cloudProjectId)
         return;
     }
 
-    dispatcher()->dispatch("cloud-file-open", ActionData::make_arg1<QString>(cloudProjectId));
+    commandDispatcher()->dispatch(PROJECT_OPEN_CLOUD_COMMAND, { { PROJECT_ID_PARAM, Val(cloudProjectId) } });
 }
 
 void ProjectsPageModel::openCloudAudioFile(const QString& cloudItemId)
@@ -71,9 +73,7 @@ void ProjectsPageModel::openCloudAudioFile(const QString& cloudItemId)
         return;
     }
 
-    muse::actions::ActionQuery query("action://cloud/open-audio-file");
-    query.addParam("audioId", muse::Val(cloudItemId.toStdString()));
-    dispatcher()->dispatch(query);
+    commandDispatcher()->dispatch(PROJECT_OPEN_CLOUD_AUDIO_FILE_COMMAND, { { PROJECT_AUDIO_ID_PARAM, Val(cloudItemId.toStdString()) } });
 }
 
 void ProjectsPageModel::openProjectManager()

@@ -26,7 +26,7 @@
 
 #include "framework/global/modularity/ioc.h"
 
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/cloud/musescorecom/imusescorecomservice.h"
 #include "framework/cloud/audiocom/iaudiocomservice.h"
@@ -46,7 +46,7 @@ class ProjectsPageModel : public QObject, public muse::Contextable
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
     muse::ContextInject<au3cloud::IAu3AudioComService> au3CloudService { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
 
     Q_PROPERTY(bool cloudEnabled READ cloudEnabled CONSTANT)
     Q_PROPERTY(int tabIndex READ tabIndex WRITE setTabIndex NOTIFY tabIndexChanged)

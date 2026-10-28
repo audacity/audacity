@@ -6,26 +6,27 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
-#include "framework/actions/actionable.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/dockwindow/idockwindowprovider.h"
 #include "framework/ui/iuiconfiguration.h"
 #include "framework/ui/iuistate.h"
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackuistate.h"
+#include "appshell/iapplicationactioncontroller.h"
 
 #include <QtQml/qqmlregistration.h>
 
 namespace au::appshell {
-class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Contextable
+class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
+    muse::ContextInject<IApplicationActionController> applicationActionController { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
     muse::ContextInject<muse::ui::IUiState> uiState { this };

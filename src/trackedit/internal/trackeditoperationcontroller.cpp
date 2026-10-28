@@ -4,6 +4,8 @@
 
 #include "trackeditoperationcontroller.h"
 
+#include "projectscene/projectscenecommands.h"
+
 #include "trackediterrors.h"
 
 #include "framework/global/defer.h"
@@ -192,8 +194,9 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
 
     if (pastingFromSystemClipboard) {
         ret = importer()->importFromSystemClipboard(paths, begin);
-        dispatcher()->dispatch("center-view-on-playhead", muse::actions::ActionData::make_arg1<bool>(
-                                   true /* center only if playhead is not visible */));
+        commandDispatcher()->dispatch(projectscene::PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND, {
+                { projectscene::PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_ONLY_IF_NOT_VISIBLE_PARAM, muse::Val(true) },
+            });
     } else {
         const std::vector<ITrackDataPtr> trackData = clipboard()->trackDataCopy();
         for (const ITrackDataPtr& data : trackData) {

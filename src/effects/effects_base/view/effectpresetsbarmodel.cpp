@@ -3,13 +3,13 @@
 */
 #include "effectpresetsbarmodel.h"
 
+#include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/effectstypes.h"
 #include "au3-components/EffectInterface.h"
 #include "au3-effects/Effect.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace muse;
-using namespace muse::actions;
 using namespace au::effects;
 
 namespace {
@@ -296,17 +296,15 @@ void EffectPresetsBarModel::resetPreset()
         return;
     }
 
-    ActionQuery q("action://effects/presets/apply");
-    q.addParam("instanceId", Val(m_instanceId));
-    q.addParam("presetId", Val(m_currentPreset.toStdString()));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(EFFECTS_PRESET_APPLY_COMMAND, {
+        { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) },
+        { EFFECTS_PRESET_ID_PARAM, Val(m_currentPreset.toStdString()) },
+    });
 }
 
 void EffectPresetsBarModel::savePresetAs()
 {
-    ActionQuery q("action://effects/presets/save_as");
-    q.addParam("instanceId", Val(m_instanceId));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(EFFECTS_PRESET_SAVE_AS_COMMAND, { { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) } });
 }
 
 muse::uicomponents::AbstractMenuModel* EffectPresetsBarModel::saveContextMenu()
@@ -343,10 +341,10 @@ void EffectPresetsBarModel::deletePreset()
         return;
     }
 
-    ActionQuery q("action://effects/presets/delete");
-    q.addParam("effectId", Val(effectId.toStdString()));
-    q.addParam("presetId", Val(m_currentPreset.toStdString()));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(EFFECTS_PRESET_DELETE_COMMAND, {
+        { EFFECTS_EFFECT_ID_PARAM, Val(effectId.toStdString()) },
+        { EFFECTS_PRESET_ID_PARAM, Val(m_currentPreset.toStdString()) },
+    });
 }
 
 void EffectPresetsBarModel::commitSelectedPreset()

@@ -17,7 +17,9 @@
 #include "context/tests/mocks/playbackstatemock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
-#include "actions/tests/mocks/actionsdispatchermock.h"
+#include "rcommand/tests/mocks/commanddispatchermock.h"
+
+#include "playback/playbackcommands.h"
 
 using namespace ::testing;
 
@@ -38,8 +40,10 @@ protected:
         m_audioOutput = std::make_shared<NiceMock<playback::AudioOutputMock> >();
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
-        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
+        m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
 
+        ON_CALL(*m_commandDispatcher, dispatch(_))
+        .WillByDefault(Invoke(&PlayPositionActionControllerTests::okResponse));
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_project));
         ON_CALL(*m_globalContext, currentTrackeditProject())
@@ -61,13 +65,20 @@ protected:
         SnapTestAccess::wireContext(m_context, m_globalContext, m_playback);
 
         m_controller = new PlayPositionActionController(m_context, muse::modularity::globalCtx());
-        SnapTestAccess::wirePlayPosition(m_controller, m_globalContext, m_dispatcher, m_selectionController);
+        SnapTestAccess::wirePlayPosition(m_controller, m_globalContext, m_commandDispatcher, m_selectionController);
     }
 
     void TearDown() override
     {
         delete m_controller;
         delete m_context;
+    }
+
+    static muse::async::Promise<muse::rcommand::Response> okResponse(const muse::rcommand::Request& request)
+    {
+        return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
+            return resolve(muse::rcommand::make_response(request, muse::make_ok()));
+        });
     }
 
     void useTimeSelection(double start, double end)
@@ -94,7 +105,7 @@ protected:
     std::shared_ptr<NiceMock<playback::AudioOutputMock> > m_audioOutput;
     std::shared_ptr<NiceMock<context::PlaybackStateMock> > m_playbackState;
     std::shared_ptr<NiceMock<trackedit::SelectionControllerMock> > m_selectionController;
-    std::shared_ptr<NiceMock<muse::actions::ActionsDispatcherMock> > m_dispatcher;
+    std::shared_ptr<NiceMock<muse::rcommand::CommandDispatcherMock> > m_commandDispatcher;
 
     TimelineContext* m_context = nullptr;
     PlayPositionActionController* m_controller = nullptr;
@@ -105,14 +116,14 @@ TEST_F(PlayPositionActionControllerTests, CursorToSelectionStart_SeeksToSelectio
     //! CASE The play position moves to the start edge of the time selection.
     useTimeSelection(5.0, 12.0);
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayPositionActionControllerTests::okResponse)));
 
     m_controller->cursorToSelectionStart();
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 5.0);
-    EXPECT_FALSE(captured.param("triggerPlay").toBool());
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 5.0);
+    EXPECT_FALSE(captured.params.at(playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool());
 }
 
 TEST_F(PlayPositionActionControllerTests, CursorToSelectionEnd_SeeksToSelectionEnd)
@@ -120,14 +131,14 @@ TEST_F(PlayPositionActionControllerTests, CursorToSelectionEnd_SeeksToSelectionE
     //! CASE The play position moves to the end edge of the time selection.
     useTimeSelection(5.0, 12.0);
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayPositionActionControllerTests::okResponse)));
 
     m_controller->cursorToSelectionEnd();
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 12.0);
-    EXPECT_FALSE(captured.param("triggerPlay").toBool());
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 12.0);
+    EXPECT_FALSE(captured.params.at(playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool());
 }
 
 TEST_F(PlayPositionActionControllerTests, CursorToSelectionStart_KeepsSelectionIntact)
@@ -150,7 +161,7 @@ TEST_F(PlayPositionActionControllerTests, CursorToSelection_NoSelection_DoesNoth
     //! CASE With no time selection there is no edge to move to.
     useEmptyTimeSelection();
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
     .Times(0);
 
     m_controller->cursorToSelectionStart();
@@ -165,12 +176,12 @@ TEST_F(PlayPositionActionControllerTests, CursorToSelection_WhilePlaying_StillMo
     ON_CALL(*m_playbackState, isPlaying())
     .WillByDefault(Return(true));
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayPositionActionControllerTests::okResponse)));
 
     m_controller->cursorToSelectionStart();
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 5.0);
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 5.0);
 }
 }

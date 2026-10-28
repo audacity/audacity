@@ -9,8 +9,8 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 #include "playback/iplaybackcontroller.h"
-#include "actions/iactionsdispatcher.h"
 #include "global/iapplication.h"
+#include "rcommand/icommanddispatcher.h"
 
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/internal/itracknavigationcontroller.h"
@@ -37,11 +37,11 @@ struct SnapTestAccess {
 
     static void wireCursor(PlayCursorController* cursor,
                            const std::shared_ptr<context::IGlobalContext>& globalContext,
-                           const std::shared_ptr<muse::actions::IActionsDispatcher>& dispatcher,
+                           const std::shared_ptr<muse::rcommand::ICommandDispatcher>& commandDispatcher,
                            const std::shared_ptr<playback::IPlaybackController>& playbackController = nullptr)
     {
         cursor->globalContext.set(globalContext);
-        cursor->dispatcher.set(dispatcher);
+        cursor->commandDispatcher.set(commandDispatcher);
         if (playbackController) {
             cursor->playbackController.set(playbackController);
         }
@@ -55,11 +55,11 @@ struct SnapTestAccess {
 
     static void wirePlayPosition(PlayPositionActionController* controller,
                                  const std::shared_ptr<context::IGlobalContext>& globalContext,
-                                 const std::shared_ptr<muse::actions::IActionsDispatcher>& dispatcher,
+                                 const std::shared_ptr<muse::rcommand::ICommandDispatcher>& commandDispatcher,
                                  const std::shared_ptr<trackedit::ISelectionController>& selectionController)
     {
         controller->globalContext.set(globalContext);
-        controller->dispatcher.set(dispatcher);
+        controller->commandDispatcher.set(commandDispatcher);
         controller->selectionController.set(selectionController);
     }
 

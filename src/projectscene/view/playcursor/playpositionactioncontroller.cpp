@@ -24,10 +24,9 @@
 
 #include "global/realfn.h"
 
-using namespace au::projectscene;
-using namespace muse::actions;
+#include "playback/playbackcommands.h"
 
-static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
+using namespace au::projectscene;
 
 PlayPositionActionController::PlayPositionActionController(TimelineContext* context, const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx), m_context(context)
@@ -68,10 +67,10 @@ void PlayPositionActionController::snapCurrentPosition()
     const double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);
     const muse::secs_t secs = m_context->positionToTime(currentXPosition, true);
     if (muse::RealIsEqualOrMore(secs, 0.0) || !muse::RealIsEqual(secs, currentPlaybackPosition)) {
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(secs));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
+        commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+            { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(secs) },
+            { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+        });
     }
 }
 
@@ -92,10 +91,10 @@ void PlayPositionActionController::applySingleStep(Direction direction)
 
 void PlayPositionActionController::movePlayPositionTo(muse::secs_t secs)
 {
-    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-    q.addParam("seekTime", muse::Val(secs));
-    q.addParam("triggerPlay", muse::Val(false));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+        { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(secs) },
+        { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+    });
 
     m_context->animatedInsureVisible(secs);
 }

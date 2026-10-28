@@ -30,7 +30,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/iuiconfiguration.h"
 #include "iappshellconfiguration.h"
@@ -53,7 +53,7 @@ class WelcomeDialogModel : public QObject, public muse::Contextable, public muse
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
 
 public:
     WelcomeDialogModel();

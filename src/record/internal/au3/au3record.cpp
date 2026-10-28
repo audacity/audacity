@@ -26,6 +26,8 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
+#include "playback/playbackcommands.h"
+
 #include "au3audioinput.h"
 #include "../../recorderrors.h"
 
@@ -36,8 +38,6 @@ using namespace au::au3;
 
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
-
-static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 struct PropertiesOfSelected
 {
@@ -307,10 +307,10 @@ void Au3Record::init()
         m_recordPosition.set(m_recordPosition.val);
         m_recordingFinished.notify();
 
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(m_recordPosition.val));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
+        commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+            { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(m_recordPosition.val) },
+            { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+        });
 
         m_recordData.clear();
         rebuildRecordingClipKeys();
@@ -631,10 +631,10 @@ muse::Ret Au3Record::leadInRecording()
         // Set playhead to lead-in time start and trigger position tracking.
         // With isDefaultPlayTrackPolicy=false, the stream time starts from
         // t1-leadInTime so this will align with the actual audio position.
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(t1 - leadInTime));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
+        commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+            { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(t1 - leadInTime) },
+            { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+        });
     }
 
     return ret;

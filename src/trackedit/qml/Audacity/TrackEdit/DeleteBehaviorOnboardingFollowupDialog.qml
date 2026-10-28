@@ -54,10 +54,10 @@ StyledDialogView {
             horizontalAlignment: Text.AlignLeft
 
             text: {
-                const editingPrefsLink = '<a href="editing-preferences">%1</a>'.arg(qsTrc("trackedit/preferences", "Preferences"))
+                const editingPrefsLink = '<a href="command://app/editing-preferences">%1</a>'.arg(qsTrc("trackedit/preferences", "Preferences"))
                 const line1 = qsTrc("trackedit/preferences", "You can change this at any time in %1.").arg(editingPrefsLink)
 
-                const shortcutsPrefsLink = '<a href="shortcuts-preferences">%1</a>'.arg(qsTrc("trackedit/preferences", "Shortcuts"))
+                const shortcutsPrefsLink = '<a href="command://app/shortcuts-preferences">%1</a>'.arg(qsTrc("trackedit/preferences", "Shortcuts"))
                 const line2 = qsTrc("trackedit/preferences", "There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.").arg(shortcutsPrefsLink)
 
                 return line1 + "<br/><br/>" + line2

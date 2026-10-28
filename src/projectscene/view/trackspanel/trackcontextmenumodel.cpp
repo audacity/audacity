@@ -5,74 +5,74 @@
 
 #include "framework/global/async/async.h"
 
+#include "project/projectcommands.h"
+#include "projectscene/projectscenecommands.h"
 #include "record/recordcommands.h"
 #include "spectrogram/spectrogramcommands.h"
 #include "trackedit/dom/track.h"
+#include "trackedit/trackeditcommands.h"
 
 using namespace au::projectscene;
+using namespace muse;
 using namespace muse::uicomponents;
-using namespace muse::actions;
+using namespace muse::rcommand;
 
 namespace {
-constexpr const char* TRACK_FORMAT_CHANGE_ACTION = "action://trackedit/track/change-format?format=%1";
-constexpr const char* TRACK_RATE_CHANGE_ACTION = "action://trackedit/track/change-rate?rate=%1";
+const QString TRACK_RENAME_ITEM_ID("track-rename");
 
-constexpr const char* TRACK_VIEW_WAVEFORM_ACTION = "action://trackedit/track-view-waveform";
-constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "action://trackedit/track-view-spectrogram";
-constexpr const char* TRACK_VIEW_MULTI_ACTION = "action://trackedit/track-view-multi";
-constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "action://projectscene/track-view-half-wave";
+const QString TRACK_COLOR_MENU_ID("trackColorMenu");
+const QString TRACK_FORMAT_MENU_ID("trackFormatMenu");
+const QString TRACK_RATE_MENU_ID("trackRateMenu");
 
-constexpr const char* TRACK_COLOR_MENU_ID = "trackColorMenu";
-constexpr const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
-constexpr const char* TRACK_RATE_MENU_ID = "trackRateMenu";
+const std::vector<Command> TRACK_VIEW_TYPE_COMMANDS = {
+    au::trackedit::TRACKEDIT_TRACK_VIEW_WAVEFORM_COMMAND,
+    au::trackedit::TRACKEDIT_TRACK_VIEW_SPECTROGRAM_COMMAND,
+    au::trackedit::TRACKEDIT_TRACK_VIEW_MULTI_COMMAND,
+};
 
-//! NOTE: can be moved to the framework
-bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
+Command trackViewTypeCommand(au::trackedit::TrackViewType viewType)
 {
-    return std::any_of(actionCodes.begin(), actionCodes.end(), [&](ActionCode code) {
-        return std::find(list.begin(), list.end(), code) != list.end();
-    });
-}
-
-muse::actions::ActionQuery makeTrackFormatChangeAction(const au::trackedit::TrackFormat& format)
-{
-    return muse::actions::ActionQuery(muse::String(TRACK_FORMAT_CHANGE_ACTION).arg(
-                                          muse::String::number(static_cast<int>(format))));
-}
-
-muse::actions::ActionQuery makeTrackRateChangeAction(uint64_t rate)
-{
-    return muse::actions::ActionQuery(muse::String(TRACK_RATE_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(rate))));
+    switch (viewType) {
+    case au::trackedit::TrackViewType::Waveform: return au::trackedit::TRACKEDIT_TRACK_VIEW_WAVEFORM_COMMAND;
+    case au::trackedit::TrackViewType::Spectrogram: return au::trackedit::TRACKEDIT_TRACK_VIEW_SPECTROGRAM_COMMAND;
+    case au::trackedit::TrackViewType::WaveformAndSpectrogram: return au::trackedit::TRACKEDIT_TRACK_VIEW_MULTI_COMMAND;
+    default:
+        assert(viewType == au::trackedit::TrackViewType::Undefined);
+        return Command();
+    }
 }
 }
 
-MenuItem* TrackContextMenuModel::makeItemWithArg(const ActionCode& actionCode)
+MenuItem* TrackContextMenuModel::makeRenameItem()
 {
-    MenuItem* item = makeMenuItem(actionCode);
-    item->setArgs(ActionData::make_arg1<trackedit::TrackId>(m_trackId));
+    MenuItem* item = new MenuItem(this);
+    item->setId(TRACK_RENAME_ITEM_ID);
+    item->setTitle(muse::TranslatableString("action", "Rename"));
+    item->setDescription(muse::TranslatableString("action_description", "Rename track"));
+    item->setEnabled(true);
     return item;
 }
 
 MenuItemList TrackContextMenuModel::makeStereoTrackItems()
 {
     MenuItemList items {
-        makeItemWithArg("track-rename"),
-        makeItemWithArg("track-duplicate"),
-        makeItemWithArg("track-delete"),
+        makeRenameItem(),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
         makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
-        makeItemWithArg("toggle-vertical-rulers"),
+        makeMenuItem(PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
-        makeItemWithArg("track-swap-channels"),
-        makeItemWithArg("track-split-stereo-to-lr"),
-        makeItemWithArg("track-split-stereo-to-center"),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_SWAP_CHANNELS_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_SPLIT_STEREO_TO_LR_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_SPLIT_STEREO_TO_CENTER_COMMAND),
         makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Format:"), makeTrackFormatItems(), TRACK_FORMAT_MENU_ID),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Rate:"), makeTrackRateItems(), TRACK_RATE_MENU_ID),
-        makeItemWithArg("track-resample"),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_RESAMPLE_COMMAND),
     };
 
     return items;
@@ -81,21 +81,21 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
 MenuItemList TrackContextMenuModel::makeMonoTrackItems()
 {
     MenuItemList items {
-        makeItemWithArg("track-rename"),
-        makeItemWithArg("track-duplicate"),
-        makeItemWithArg("track-delete"),
+        makeRenameItem(),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
         makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
-        makeItemWithArg("toggle-vertical-rulers"),
+        makeMenuItem(PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
-        makeItemWithArg("track-make-stereo"),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_MAKE_STEREO_COMMAND),
         makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Format:"), makeTrackFormatItems(), TRACK_FORMAT_MENU_ID),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Rate:"), makeTrackRateItems(), TRACK_RATE_MENU_ID),
-        makeItemWithArg("track-resample"),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_RESAMPLE_COMMAND),
     };
 
     return items;
@@ -104,14 +104,16 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
 MenuItemList TrackContextMenuModel::makeLabelTrackItems()
 {
     return {
-        makeItemWithArg("track-rename"),
-        makeItemWithArg("track-duplicate"),
-        makeItemWithArg("track-delete"),
+        makeRenameItem(),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
         makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeSeparator(),
-        makeItemWithArg("export-labels")
+        makeMenuItem(make_query(project::PROJECT_EXPORT_LABELS_COMMAND, {
+            { project::PROJECT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) },
+        }))
     };
 }
 
@@ -169,11 +171,22 @@ void TrackContextMenuModel::load()
     updateTrackRateState();
     updateTrackMonoState();
     updateTrackViewCheckedState();
+    updateTrackHalfWaveCheckedState();
     updateRecordingState();
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
         updateRecordingState();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    if (const auto project = globalContext()->currentProject(); project && project->viewState()) {
+        project->viewState()->trackViewType(m_trackId).ch.onReceive(this, [this](trackedit::TrackViewType) {
+            updateTrackViewCheckedState();
+        }, muse::async::Asyncable::Mode::SetReplace);
+
+        project->viewState()->isHalfWave(m_trackId).ch.onReceive(this, [this](bool) {
+            updateTrackHalfWaveCheckedState();
+        }, muse::async::Asyncable::Mode::SetReplace);
+    }
 }
 
 au::trackedit::TrackId TrackContextMenuModel::trackId() const
@@ -192,7 +205,7 @@ void TrackContextMenuModel::setTrackId(const trackedit::TrackId& newTrackId)
 
 void TrackContextMenuModel::handleMenuItem(const QString& itemId)
 {
-    if (itemId == "track-rename") {
+    if (itemId == TRACK_RENAME_ITEM_ID) {
         emit trackRenameRequested();
     } else {
         //! Why an async call?
@@ -212,56 +225,32 @@ void TrackContextMenuModel::handleMenuItem(const QString& itemId)
     }
 }
 
-void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
+void TrackContextMenuModel::onCommandStateChanged(const Command& command, const CommandState& state)
 {
-    if (codes.empty()) {
-        return;
-    }
+    AbstractMenuModel::onCommandStateChanged(command, state);
 
-    for (const ActionCode& code : codes) {
-        MenuItem& actionItem = findItem(code);
-        if (actionItem.isValid()) {
-            actionItem.setState(uiActionsRegister()->actionState(code));
-        }
-    }
-
-    if (containsAny(codes, m_colorChangeActionCodeList)) {
+    if (command == trackedit::TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND) {
         updateColorCheckedState();
     }
 
-    if (containsAny(codes, m_trackViewTypeChangeActionCodeList)) {
+    if (muse::contains(TRACK_VIEW_TYPE_COMMANDS, command)) {
         updateTrackViewCheckedState();
     }
 
-    if (containsAny(codes, { ActionCode(TRACK_VIEW_HALF_WAVE_ACTION) })) {
-        const auto project = globalContext()->currentProject();
-        if (!project) {
-            return;
-        }
-
-        const auto viewState = project->viewState();
-        if (!viewState) {
-            return;
-        }
-
-        const bool isHalfWave = viewState->isHalfWave(m_trackId).val;
-
-        MenuItem& item = findItem(ActionCode(TRACK_VIEW_HALF_WAVE_ACTION));
-        auto state = item.state();
-        state.checked = isHalfWave;
-        item.setState(state);
+    if (command == PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND) {
+        updateTrackHalfWaveCheckedState();
     }
 
-    for (const auto& formatInfo : au::trackedit::availableTrackFormats()) {
-        if (std::find(codes.begin(), codes.end(), makeTrackFormatChangeAction(formatInfo.format).toString()) != codes.end()) {
-            updateTrackFormatState();
-        }
+    if (command == trackedit::TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND) {
+        updateTrackFormatState();
     }
 
-    for (const auto& rate : audioDriverController()->sampleRates()) {
-        if (std::find(codes.begin(), codes.end(), makeTrackRateChangeAction(rate).toString()) != codes.end()) {
-            updateTrackRateState();
-        }
+    if (command == trackedit::TRACKEDIT_TRACK_CHANGE_RATE_COMMAND || command == trackedit::TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND) {
+        updateTrackRateState();
+    }
+
+    if (command == trackedit::TRACKEDIT_TRACK_MAKE_STEREO_COMMAND) {
+        updateTrackMonoState();
     }
 }
 
@@ -277,15 +266,14 @@ void TrackContextMenuModel::updateColorCheckedState()
         return;
     }
 
-    for (const auto& action : m_colorChangeActionCodeList) {
-        MenuItem& item = findItem(ActionCode(action));
-        ActionQuery query(action);
+    for (MenuItem* item : findMenu(TRACK_COLOR_MENU_ID).subitems()) {
+        if (!item || !item->isValid()) {
+            continue;
+        }
 
-        bool checked = query.contains("colorindex")
-                       && query.param("colorindex").toInt() == track.value().colorIndex;
-        auto state = item.state();
-        state.checked = checked;
-        item.setState(state);
+        const CommandQuery query = item->commandQuery();
+        item->setChecked(query.contains(trackedit::TRACKEDIT_COLOR_INDEX_PARAM)
+                         && query.param(trackedit::TRACKEDIT_COLOR_INDEX_PARAM).toInt() == track.value().colorIndex);
     }
 }
 
@@ -296,25 +284,25 @@ void TrackContextMenuModel::updateTrackViewCheckedState()
         // Probably closing down.
         return;
     }
-    const auto viewType = prj->viewState()->trackViewType(m_trackId).val;
-    for (const auto& viewTypeCode : m_trackViewTypeChangeActionCodeList) {
-        MenuItem& item = findItem(viewTypeCode);
-        auto state = item.state();
-        switch (viewType) {
-        case trackedit::TrackViewType::Waveform:
-            state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
-            break;
-        case trackedit::TrackViewType::Spectrogram:
-            state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
-            break;
-        case trackedit::TrackViewType::WaveformAndSpectrogram:
-            state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
-            break;
-        default:
-            assert(viewType == trackedit::TrackViewType::Undefined);
-            state.checked = false;
+    const Command currentCommand = trackViewTypeCommand(prj->viewState()->trackViewType(m_trackId).val);
+    for (const Command& command : TRACK_VIEW_TYPE_COMMANDS) {
+        MenuItem& item = findItem(command);
+        if (item.isValid()) {
+            item.setChecked(command == currentCommand);
         }
-        item.setState(state);
+    }
+}
+
+void TrackContextMenuModel::updateTrackHalfWaveCheckedState()
+{
+    const auto project = globalContext()->currentProject();
+    if (!project || !project->viewState()) {
+        return;
+    }
+
+    MenuItem& item = findItem(PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND);
+    if (item.isValid()) {
+        item.setChecked(project->viewState()->isHalfWave(m_trackId).val);
     }
 }
 
@@ -330,17 +318,19 @@ void TrackContextMenuModel::updateTrackFormatState()
         return;
     }
 
-    for (const auto& formatInfo : au::trackedit::availableTrackFormats()) {
-        MenuItem& item = findItem(makeTrackFormatChangeAction(formatInfo.format).toString());
-        if (track.value().format != formatInfo.format) {
-            item.setChecked(false);
+    MenuItem& menu = findMenu(TRACK_FORMAT_MENU_ID);
+    for (MenuItem* item : menu.subitems()) {
+        if (!item || !item->isValid()) {
             continue;
         }
 
-        item.setChecked(true);
-        MenuItem& menu = findMenu(QString::fromUtf8(TRACK_FORMAT_MENU_ID));
-        menu.setTitle(muse::TranslatableString("trackcontextmenu", "Format: %1")
-                      .arg(formatInfo.description));
+        const bool checked = item->commandQuery().param(trackedit::TRACKEDIT_FORMAT_PARAM).toInt()
+                             == static_cast<int>(track.value().format);
+        item->setChecked(checked);
+        if (checked) {
+            menu.setTitle(muse::TranslatableString("trackcontextmenu", "Format: %1")
+                          .arg(muse::TranslatableString::untranslatable(item->translatedTitle())));
+        }
     }
 }
 
@@ -357,21 +347,20 @@ void TrackContextMenuModel::updateTrackRateState()
     }
 
     bool isOnAvailableRates = false;
-    for (const auto& rate : audioDriverController()->sampleRates()) {
-        MenuItem& item = findItem(makeTrackRateChangeAction(rate).toString());
-        if (track.value().rate != rate) {
-            item.setChecked(false);
+    for (MenuItem* item : findMenu(TRACK_RATE_MENU_ID).subitems()) {
+        if (!item || !item->isValid() || item->command() != trackedit::TRACKEDIT_TRACK_CHANGE_RATE_COMMAND) {
             continue;
         }
 
-        item.setChecked(true);
-        isOnAvailableRates = true;
+        const bool checked = item->commandQuery().param(trackedit::TRACKEDIT_RATE_PARAM).toInt() == static_cast<int>(track.value().rate);
+        item->setChecked(checked);
+        isOnAvailableRates |= checked;
     }
 
-    MenuItem& customRateItem = findItem(ActionCode("track-change-rate-custom"));
+    MenuItem& customRateItem = findItem(trackedit::TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND);
     customRateItem.setChecked(!isOnAvailableRates);
 
-    MenuItem& menu = findMenu(QString::fromUtf8(TRACK_RATE_MENU_ID));
+    MenuItem& menu = findMenu(TRACK_RATE_MENU_ID);
     //: %1 is a sample rate in hertz, e.g. "44100 Hz"
     menu.setTitle(muse::TranslatableString("trackcontextmenu", "Rate: %1 Hz")
                   .arg(muse::String::number(static_cast<int>(track.value().rate))));
@@ -398,7 +387,7 @@ void TrackContextMenuModel::updateTrackMonoState()
         return;
     }
 
-    MenuItem& makeStereoItem = findItem(ActionCode("track-make-stereo"));
+    MenuItem& makeStereoItem = findItem(trackedit::TRACKEDIT_TRACK_MAKE_STEREO_COMMAND);
     if (!makeStereoItem.isValid()) {
         return;
     }
@@ -409,40 +398,34 @@ void TrackContextMenuModel::updateTrackMonoState()
                          && (it->type == au::trackedit::TrackType::Mono)
                          && (it + 1)->type == au::trackedit::TrackType::Mono;
 
-    auto state = makeStereoItem.state();
-    state.enabled = canMakeStereo;
-    makeStereoItem.setState(state);
+    makeStereoItem.setEnabled(canMakeStereo);
 }
 
 void TrackContextMenuModel::updateRecordingState()
 {
     bool recording = globalContext()->isRecording();
 
-    MenuItem& formatMenu = findMenu(QString::fromUtf8(TRACK_FORMAT_MENU_ID));
+    MenuItem& formatMenu = findMenu(TRACK_FORMAT_MENU_ID);
     if (formatMenu.isValid()) {
-        auto state = formatMenu.state();
-        state.enabled = !recording;
-        formatMenu.setState(state);
+        formatMenu.setEnabled(!recording);
     }
 
-    MenuItem& rateMenu = findMenu(QString::fromUtf8(TRACK_RATE_MENU_ID));
+    MenuItem& rateMenu = findMenu(TRACK_RATE_MENU_ID);
     if (rateMenu.isValid()) {
-        auto state = rateMenu.state();
-        state.enabled = !recording;
-        rateMenu.setState(state);
+        rateMenu.setEnabled(!recording);
     }
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
 {
-    m_colorChangeActionCodeList.clear();
-
     MenuItemList items;
     const auto& colorInfos = projectSceneConfiguration()->clipColorInfos();
     for (const auto& info : colorInfos) {
-        items << makeMenuItem(makeTrackColorChangeAction(info.index).toString(),
-                              info.title);
-        m_colorChangeActionCodeList.push_back(makeTrackColorChangeAction(info.index).toString());
+        MenuItem* item = makeMenuItem(make_query(trackedit::TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, {
+            { trackedit::TRACKEDIT_COLOR_INDEX_PARAM, Val(info.index) },
+        }), info.title);
+        item->setIconColor(QString::fromStdString(projectSceneConfiguration()->clipColor(info.index).toString()));
+        items << item;
     }
 
     return items;
@@ -452,8 +435,9 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
 {
     muse::uicomponents::MenuItemList items;
     for (const auto& formatInfo : trackedit::availableTrackFormats()) {
-        items << makeMenuItem(makeTrackFormatChangeAction(formatInfo.format).toString(),
-                              formatInfo.description);
+        items << makeMenuItem(make_query(trackedit::TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND, {
+            { trackedit::TRACKEDIT_FORMAT_PARAM, Val(static_cast<int>(formatInfo.format)) },
+        }), formatInfo.description);
     }
     return items;
 }
@@ -462,46 +446,41 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
 {
     muse::uicomponents::MenuItemList items;
     for (const auto& rate : audioDriverController()->sampleRates()) {
-        items << makeMenuItem(makeTrackRateChangeAction(rate).toString(),
+        items << makeMenuItem(make_query(trackedit::TRACKEDIT_TRACK_CHANGE_RATE_COMMAND, {
+            { trackedit::TRACKEDIT_RATE_PARAM, Val(static_cast<int>(rate)) },
+        }),
                               //: %1 is a sample rate in hertz, e.g. "44100 Hz"
                               muse::TranslatableString("trackcontextmenu", "%1 Hz").arg(muse::String::number(static_cast<int>(rate))));
     }
     items << makeSeparator();
-    items << makeItemWithArg("track-change-rate-custom");
+    items << makeMenuItem(trackedit::TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND);
     return items;
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackMoveItems()
 {
     return {
-        makeItemWithArg("track-move-up"),
-        makeItemWithArg("track-move-down"),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_MOVE_UP_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_MOVE_DOWN_COMMAND),
         makeSeparator(),
-        makeItemWithArg("track-move-top"),
-        makeItemWithArg("track-move-bottom"),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_MOVE_TOP_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_MOVE_BOTTOM_COMMAND),
     };
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackVisualizationItems()
 {
-    m_trackViewTypeChangeActionCodeList.clear();
-    muse::uicomponents::MenuItemList items;
-    items.reserve(5);
+    const Params trackParams { { trackedit::TRACKEDIT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) } };
 
-    for (const std::string action : { TRACK_VIEW_WAVEFORM_ACTION,
-                                      TRACK_VIEW_SPECTROGRAM_ACTION,
-                                      TRACK_VIEW_MULTI_ACTION,
-                                      TRACK_VIEW_HALF_WAVE_ACTION,
-                                      "separator" }) {
-        if (action == "separator") {
-            items.push_back(makeSeparator());
-        } else {
-            muse::actions::ActionQuery query(action);
-            query.addParam("trackId", muse::Val { m_trackId });
-            items.push_back(makeMenuItem(query.toString()));
-            m_trackViewTypeChangeActionCodeList.push_back(action);
-        }
+    muse::uicomponents::MenuItemList items;
+    for (const Command& command : TRACK_VIEW_TYPE_COMMANDS) {
+        items.push_back(makeMenuItem(make_query(command, trackParams)));
     }
+
+    items.push_back(makeMenuItem(make_query(PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND, {
+        { PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) },
+    })));
+    items.push_back(makeSeparator());
 
     items.push_back(makeMenuItem(muse::rcommand::make_query(spectrogram::TRACK_SPECTROGRAM_SETTINGS_COMMAND, {
         { spectrogram::TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM, muse::Val(static_cast<int>(m_trackId)) }

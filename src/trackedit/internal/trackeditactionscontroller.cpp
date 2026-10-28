@@ -14,6 +14,10 @@
 #include "framework/global/async/async.h"
 #include "framework/rcommand/actiontocommand.h"
 
+#include "effects/effects_base/effectscommands.h"
+#include "playback/playbackcommands.h"
+#include "projectscene/projectscenecommands.h"
+
 #include "../trackeditcommands.h"
 #include "../trackeditutils.h"
 
@@ -262,8 +266,6 @@ static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://trackedit/track-vi
 static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-multi");
 
 static const ActionCode LABEL_ADD_CODE("label-add");
-
-static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 static const ActionCode TRACK_VIEW_ITEM_MOVE_LEFT_CODE("track-view-item-move-left");
 static const ActionCode TRACK_VIEW_ITEM_MOVE_RIGHT_CODE("track-view-item-move-right");
@@ -961,7 +963,7 @@ muse::Ret TrackeditActionsController::doGlobalDelete()
     if (frequencySelectionController()->showsSpectrogram(frequencySelection.trackId) && frequencySelection.isValid()) {
         using namespace spectrogram;
         if (const std::optional<SpectralEffect> effect = spectralEffectsRegister()->spectralEffect(SpectralEffectId::DeleteSelection)) {
-            dispatcher()->dispatch(effect->action);
+            commandDispatcher()->dispatch(effects::makeEffectOpenCommand(effects::effectIdFromAction(ActionQuery(effect->action))));
             return make_ok();
         }
     }
@@ -1873,7 +1875,11 @@ muse::Ret TrackeditActionsController::openClipPitchAndSpeed()
         return make_ret(Ret::Code::NotSupported);
     }
 
-    dispatcher()->dispatch("clip-pitch-speed", ActionData::make_arg1<trackedit::ClipKey>(selectedClips.front()));
+    const ClipKey& clipKey = selectedClips.front();
+    commandDispatcher()->dispatch(projectscene::PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND, {
+        { projectscene::PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM, Val(static_cast<int64_t>(clipKey.trackId)) },
+        { projectscene::PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM, Val(static_cast<int64_t>(clipKey.itemId)) },
+    });
     return make_ok();
 }
 
@@ -2046,10 +2052,10 @@ muse::Ret TrackeditActionsController::moveCursorToClosestZeroCrossing()
     secs_t zeroCrossing = trackeditInteraction()->nearestZeroCrossing(playbackState()->playbackPosition());
     zeroCrossing = std::max(zeroCrossing.to_double(), 0.0);
 
-    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-    q.addParam("seekTime", muse::Val(zeroCrossing));
-    q.addParam("triggerPlay", muse::Val(false));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+        { playback::PLAYBACK_SEEK_TIME_PARAM, Val(zeroCrossing) },
+        { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, Val(false) },
+    });
     return make_ok();
 }
 
@@ -2402,7 +2408,7 @@ muse::Ret TrackeditActionsController::extendFocusedItemBoundaryLeft()
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsLeft(clipsForInteraction(), -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     } else {
-        dispatcher()->dispatch("sel-ext-left");
+        commandDispatcher()->dispatch(projectscene::PROJECTSCENE_SELECTION_EXTEND_LEFT_COMMAND);
     }
     return make_ok();
 }
@@ -2418,7 +2424,7 @@ muse::Ret TrackeditActionsController::extendFocusedItemBoundaryRight()
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsRight(clipsForInteraction(), -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     } else {
-        dispatcher()->dispatch("sel-ext-right");
+        commandDispatcher()->dispatch(projectscene::PROJECTSCENE_SELECTION_EXTEND_RIGHT_COMMAND);
     }
     return make_ok();
 }
@@ -2434,7 +2440,7 @@ muse::Ret TrackeditActionsController::reduceFocusedItemBoundaryLeft()
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsRight(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     } else {
-        dispatcher()->dispatch("sel-cntr-right");
+        commandDispatcher()->dispatch(projectscene::PROJECTSCENE_SELECTION_CONTRACT_RIGHT_COMMAND);
     }
     return make_ok();
 }
@@ -2450,7 +2456,7 @@ muse::Ret TrackeditActionsController::reduceFocusedItemBoundaryRight()
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipsLeft(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     } else {
-        dispatcher()->dispatch("sel-cntr-left");
+        commandDispatcher()->dispatch(projectscene::PROJECTSCENE_SELECTION_CONTRACT_LEFT_COMMAND);
     }
     return make_ok();
 }
