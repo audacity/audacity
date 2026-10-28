@@ -62,19 +62,25 @@ std::vector<std::string> MacrosRepository::dependentMacros(const std::string& na
         const std::string current = std::move(pending.back());
         pending.pop_back();
 
-        for (const Macro& macro : m_macros) {
-            if (macro.name == name || std::ranges::find(dependents, macro.name) != dependents.end()) {
+        for (std::string& referencing : referencingMacros(current)) {
+            if (referencing == name || std::ranges::find(dependents, referencing) != dependents.end()) {
                 continue;
             }
 
-            if (references(macro, current)) {
-                dependents.push_back(macro.name);
-                pending.push_back(macro.name);
-            }
+            pending.push_back(referencing);
+            dependents.push_back(std::move(referencing));
         }
     }
 
     return dependents;
+}
+
+std::vector<std::string> MacrosRepository::referencingMacros(const std::string& name) const
+{
+    auto referencing = m_macros
+                       | std::views::filter([&name](const Macro& macro) { return macro.name != name && references(macro, name); })
+                       | std::views::transform(&Macro::name);
+    return { referencing.begin(), referencing.end() };
 }
 
 Ret MacrosRepository::validateReferences(const Macro& macro) const
@@ -147,16 +153,23 @@ Ret MacrosRepository::remove(const std::string& name)
         return make_ret(Ret::Code::BadArgs, "macro not found");
     }
 
-    std::vector<std::string> names = dependentMacros(name);
-    names.insert(names.begin(), name);
+    Ret ret = fileSystem()->remove(m_userMacroFiles.at(name));
+    if (!ret) {
+        LOGE() << "failed to remove macro " << name << ": " << ret.toString();
+    }
 
-    Ret ret = make_ok();
-    for (const std::string& macroName : names) {
-        ret = fileSystem()->remove(m_userMacroFiles.at(macroName));
+    for (const std::string& referencingName : referencingMacros(name)) {
         if (!ret) {
-            LOGE() << "failed to remove macro " << macroName << ": " << ret.toString();
             break;
         }
+
+        Macro updated = *macro(referencingName);
+        std::erase_if(updated.steps, [&name](const MacroItem& item) {
+            const MacroReference* reference = std::get_if<MacroReference>(&item);
+            return reference && reference->name == name;
+        });
+
+        ret = writeMacroFile(updated, m_userMacroFiles.at(referencingName));
     }
 
     reload();

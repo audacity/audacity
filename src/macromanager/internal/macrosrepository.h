@@ -25,6 +25,7 @@ public:
     const MacroList& macros() const override;
     std::optional<Macro> macro(const std::string& name) const override;
     std::vector<std::string> dependentMacros(const std::string& name) const override;
+    std::vector<std::string> referencingMacros(const std::string& name) const override;
     muse::Ret validateReferences(const Macro& macro) const override;
 
     muse::Ret save(const Macro& macro) override;
