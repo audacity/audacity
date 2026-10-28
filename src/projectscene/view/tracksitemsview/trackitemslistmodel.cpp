@@ -9,6 +9,8 @@
 
 #include "global/realfn.h"
 
+#include "view/common/selectioncolor.h"
+
 using namespace au::projectscene;
 using namespace au::trackedit;
 
@@ -203,6 +205,11 @@ QVariant TrackItemsListModel::next(const TrackItemKey& key) const
 QVariant TrackItemsListModel::prev(const TrackItemKey& key) const
 {
     return neighbor(key, -1);
+}
+
+QColor TrackItemsListModel::timeSelectionColor(const QColor& itemColor) const
+{
+    return au::projectscene::timeSelectionColor(itemColor);
 }
 
 bool TrackItemsListModel::containsItem(const TrackItemKey& key) const
