@@ -24,7 +24,6 @@ using MacroItem = std::variant<MacroStep, MacroReference>;
 struct Macro {
     std::string name;
     std::vector<MacroItem> steps;
-    bool builtin = false;
 };
 
 using MacroList = std::vector<Macro>;

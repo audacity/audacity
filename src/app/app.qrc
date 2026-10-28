@@ -8,7 +8,6 @@
         <file>configs/shortcuts.cfg</file>
         <file>configs/data/shortcuts.xml</file>
         <file>configs/workspaces.cfg</file>
-        <file>configs/macros.cfg</file>
         <file>configs/languages.cfg</file>
         <file>configs/ui.cfg</file>
         <file>configs/update.cfg</file>

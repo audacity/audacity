@@ -156,7 +156,6 @@ StyledDialogView {
                         Layout.preferredHeight: prv.rowHeight
 
                         title: macroCommandsModel.name
-                        isBuiltin: macroCommandsModel.isBuiltin
 
                         navigationPanel.section: root.navigationSection
                         navigationPanel.order: 3

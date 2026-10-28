@@ -8,7 +8,6 @@
 #include <map>
 #include <ranges>
 
-#include "framework/global/configreader.h"
 #include "framework/global/io/path.h"
 #include "framework/global/serialization/json.h"
 #include "framework/global/translation.h"
@@ -22,7 +21,6 @@ using namespace muse;
 namespace {
 const std::string MACROS_DIR("macros");
 const std::string MACRO_FILE_SUFFIX(".json");
-const std::string BUILTIN_MACRO_FILES_KEY("builtin_macro_files");
 
 bool references(const Macro& macro, const std::string& name)
 {
@@ -36,8 +34,6 @@ bool references(const Macro& macro, const std::string& name)
 void MacrosRepository::init()
 {
     fileSystem()->makePath(userMacrosPath());
-
-    m_config = ConfigReader::read(":/configs/macros.cfg");
 
     reload();
 }
@@ -147,14 +143,12 @@ Ret MacrosRepository::save(const Macro& macro)
 
 Ret MacrosRepository::remove(const std::string& name)
 {
+    if (!macro(name)) {
+        return make_ret(Ret::Code::BadArgs, "macro not found");
+    }
+
     std::vector<std::string> names = dependentMacros(name);
     names.insert(names.begin(), name);
-
-    for (const std::string& macroName : names) {
-        if (!userMacroFilePath(macroName)) {
-            return make_ret(Ret::Code::NotSupported, "built-in macros cannot be removed");
-        }
-    }
 
     Ret ret = make_ok();
     for (const std::string& macroName : names) {
@@ -186,22 +180,17 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
         return make_ret(Ret::Code::BadArgs, "macro not found");
     }
 
-    const std::optional<io::path_t> path = userMacroFilePath(oldName);
-    if (!path) {
-        return make_ret(Ret::Code::NotSupported, "built-in macros cannot be renamed");
-    }
-
     Macro renamed = *existing;
     renamed.name = newName;
 
-    Ret ret = writeMacroFile(renamed, *path);
+    Ret ret = writeMacroFile(renamed, m_userMacroFiles.at(oldName));
 
     for (const Macro& dependent : m_macros) {
         if (!ret) {
             break;
         }
 
-        if (dependent.builtin || dependent.name == oldName || !references(dependent, oldName)) {
+        if (dependent.name == oldName || !references(dependent, oldName)) {
             continue;
         }
 
@@ -254,33 +243,10 @@ io::path_t MacrosRepository::newUserMacroFilePath(const std::string& name) const
     return path;
 }
 
-io::paths_t MacrosRepository::builtinMacroFilePaths() const
-{
-    io::paths_t paths;
-
-    const io::path_t builtinDir = globalConfiguration()->appDataPath() + "/" + MACROS_DIR;
-    for (const Val& file : m_config.value(BUILTIN_MACRO_FILES_KEY).toList()) {
-        paths.emplace_back(builtinDir + "/" + file.toString());
-    }
-
-    return paths;
-}
-
 void MacrosRepository::reload()
 {
     std::map<std::string, Macro> macrosByName;
     m_userMacroFiles.clear();
-
-    for (const io::path_t& path : builtinMacroFilePaths()) {
-        RetVal<Macro> macro = readMacroFile(path);
-        if (!macro.ret) {
-            LOGW() << "failed to load macro file " << path << ": " << macro.ret.toString();
-            continue;
-        }
-
-        macro.val.builtin = true;
-        macrosByName.insert_or_assign(macro.val.name, std::move(macro.val));
-    }
 
     const RetVal<io::paths_t> userFiles = fileSystem()->scanFiles(userMacrosPath(), { "*" + MACRO_FILE_SUFFIX });
     if (userFiles.ret) {

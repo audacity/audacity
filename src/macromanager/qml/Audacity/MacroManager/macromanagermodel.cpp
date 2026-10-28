@@ -27,7 +27,6 @@ QVariant MacroManagerModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case TitleRole: return QString::fromStdString(macro.name);
-    case IsBuiltinRole: return macro.builtin;
     default: return QVariant();
     }
 }
@@ -40,8 +39,7 @@ int MacroManagerModel::rowCount(const QModelIndex&) const
 QHash<int, QByteArray> MacroManagerModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles {
-        { TitleRole, "title" },
-        { IsBuiltinRole, "isBuiltin" }
+        { TitleRole, "title" }
     };
 
     return roles;

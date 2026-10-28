@@ -55,8 +55,7 @@ signals:
 
 private:
     enum Roles {
-        TitleRole = Qt::UserRole + 1,
-        IsBuiltinRole
+        TitleRole = Qt::UserRole + 1
     };
 
     bool isRowValid(int row) const;
