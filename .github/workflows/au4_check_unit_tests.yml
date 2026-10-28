@@ -70,6 +70,10 @@ jobs:
       run: |
         bash ./buildscripts/ci/linux/setup.sh
 
+    - name: Install FFmpeg for the FFmpeg metadata tests
+      run: |
+        sudo apt-get install -y --no-install-recommends ffmpeg
+
     - name: Build
       env:
         GITHUB_EVENT_NAME: ${{ github.event_name }}
