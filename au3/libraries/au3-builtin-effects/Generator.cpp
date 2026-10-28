@@ -17,7 +17,6 @@
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-project/Project.h"
 #include "au3-preferences/Prefs.h"
-#include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
 
@@ -65,13 +64,8 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
                 if (bGoodResult) {
                     copy->Flush();
                     PasteTimeWarper warper { mT1, mT0 + duration };
-                    auto pProject = FindProject();
-                    const auto& selectedRegion = ViewInfo::Get(*pProject).selectedRegion;
-                    constexpr auto preserve = true;
                     constexpr auto merge = true;
-                    track.ClearAndPaste(
-                        selectedRegion.t0(), selectedRegion.t1(), *copy, mPreserveUnderlyingClipBoundaries,
-                        merge, &warper);
+                    track.ClearAndPaste(mT0, mT1, *copy, mPreserveUnderlyingClipBoundaries, merge, &warper);
                 } else {
                     return;
                 }
