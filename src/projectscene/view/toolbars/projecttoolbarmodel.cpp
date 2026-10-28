@@ -5,6 +5,7 @@
 
 #include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
+#include "effects/effects_base/effectscommands.h"
 #include "project/projectcommands.h"
 #include "projectscene/projectscenecommands.h"
 
@@ -29,7 +30,7 @@ void ProjectToolBarModel::load()
     }
 
 #ifndef Q_OS_LINUX
-    commands.push_back(PROJECTSCENE_GET_EFFECTS_COMMAND);
+    commands.push_back(effects::EFFECTS_GET_EFFECTS_COMMAND);
 #endif
 
     ToolBarItemList items;

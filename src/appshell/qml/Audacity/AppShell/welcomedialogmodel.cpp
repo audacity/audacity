@@ -23,7 +23,7 @@
 #include "welcomedialogmodel.h"
 
 #include "au3cloud/cloudcommands.h"
-#include "projectscene/projectscenecommands.h"
+#include "effects/effects_base/effectscommands.h"
 #include "translation.h"
 #include "log.h"
 
@@ -70,7 +70,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             {},
             muse::qtrc("appshell/welcome", "View free plugins"),
             [this]() {
-                commandDispatcher()->dispatch(projectscene::PROJECTSCENE_GET_EFFECTS_COMMAND);
+                commandDispatcher()->dispatch(effects::EFFECTS_GET_EFFECTS_COMMAND);
             }
         },
 #endif
