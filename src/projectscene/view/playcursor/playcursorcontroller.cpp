@@ -116,7 +116,7 @@ void PlayCursorController::updateSeekGesture(double x, double y)
     }
 }
 
-bool PlayCursorController::endSeekGesture()
+bool PlayCursorController::endSeekGesture(double selectionStartTime)
 {
     if (!m_seekGestureActive) {
         return false;
@@ -125,7 +125,15 @@ bool PlayCursorController::endSeekGesture()
     m_seekGestureActive = false;
 
     if (m_seekGestureDragged) {
-        return false;
+        const bool stopped = !playbackState()->isPlaying()
+                             && playbackState()->playbackStatus() != playback::PlaybackStatus::Paused
+                             && !globalContext()->isRecording();
+        if (!stopped) {
+            return false;
+        }
+
+        seekToTime(selectionStartTime);
+        return true;
     }
 
     if (playbackState()->isPlaying()) {
