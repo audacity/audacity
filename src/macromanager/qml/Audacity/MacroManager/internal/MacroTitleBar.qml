@@ -13,7 +13,6 @@ Rectangle {
     id: root
 
     property string title: ""
-    property bool isBuiltin: false
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "MacroTitleBar"
@@ -67,8 +66,7 @@ Rectangle {
             menuModel: [
                 {
                     id: "rename",
-                    title: qsTrc("macromanager", "Rename macro"),
-                    enabled: !root.isBuiltin
+                    title: qsTrc("macromanager", "Rename macro")
                 },
                 {
                     id: "export",
@@ -81,8 +79,7 @@ Rectangle {
                 },
                 {
                     id: "delete",
-                    title: qsTrc("macromanager", "Delete macro"),
-                    enabled: !root.isBuiltin
+                    title: qsTrc("macromanager", "Delete macro")
                 }
             ]
 
