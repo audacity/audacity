@@ -151,6 +151,7 @@ void MacroCommandsModel::move(int from, int to)
     endMoveRows();
 
     notifyStepsChanged(std::min(from, to), std::max(from, to));
+    persist();
 }
 
 void MacroCommandsModel::remove(int row)
@@ -165,6 +166,7 @@ void MacroCommandsModel::remove(int row)
 
     notifyStepsChanged(row, rowCount() - 1);
     emit isEmptyChanged();
+    persist();
 }
 
 void MacroCommandsModel::editParams(int row)
@@ -181,17 +183,6 @@ void MacroCommandsModel::editParams(int row)
     requestParams(step->command, step->params, [this, row](const Params& params) {
         setStepParams(row, params);
     });
-}
-
-bool MacroCommandsModel::save()
-{
-    const Ret ret = repository()->save(m_macro);
-    if (!ret) {
-        interactive()->error(trc("macromanager", "The macro could not be saved"), ret.text());
-        return false;
-    }
-
-    return true;
 }
 
 void MacroCommandsModel::run()
@@ -215,6 +206,7 @@ void MacroCommandsModel::removeAllSteps()
     endResetModel();
 
     emit isEmptyChanged();
+    persist();
 }
 
 void MacroCommandsModel::rename()
@@ -283,6 +275,7 @@ void MacroCommandsModel::insertStep(int row, const MacroItem& item)
 
     notifyStepsChanged(row + 1, rowCount() - 1);
     emit isEmptyChanged();
+    persist();
 }
 
 void MacroCommandsModel::setStepParams(int row, const Params& params)
@@ -291,8 +284,20 @@ void MacroCommandsModel::setStepParams(int row, const Params& params)
         return;
     }
 
-    if (MacroStep* step = std::get_if<MacroStep>(&m_macro.steps[row])) {
-        step->params = params;
+    MacroStep* step = std::get_if<MacroStep>(&m_macro.steps[row]);
+    if (!step) {
+        return;
+    }
+
+    step->params = params;
+    persist();
+}
+
+void MacroCommandsModel::persist()
+{
+    const Ret ret = repository()->save(m_macro);
+    if (!ret) {
+        interactive()->error(trc("macromanager", "The macro could not be saved"), ret.text());
     }
 }
 

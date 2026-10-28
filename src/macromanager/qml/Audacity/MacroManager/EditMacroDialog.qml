@@ -24,6 +24,7 @@ StyledDialogView {
     contentHeight: prv.height
     resizable: true
     margins: 0
+    modal: false
 
     QtObject {
         id: prv
@@ -282,9 +283,7 @@ StyledDialogView {
                 navigation.column: 2
 
                 onClicked: {
-                    if (macroCommandsModel.save()) {
-                        root.hide()
-                    }
+                    root.hide()
                 }
             }
         }
