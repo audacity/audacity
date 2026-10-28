@@ -8,15 +8,19 @@
 #include <QCoreApplication>
 
 #include "../../trackedittypes.h"
+#include "../../trackediterrors.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
+#include "au3-exceptions/AudacityException.h"
+#include "au3-exceptions/UserException.h"
 #include "global/containers.h"
 #include "global/realfn.h"
 #include "log.h"
+#include "translation.h"
 #include <unordered_set>
 
 namespace {
@@ -47,8 +51,13 @@ au::trackedit::NeedsDownmixing addClipToTrack(const std::shared_ptr<au::au3::Au3
     // All clips in movement were removed from `copy` before the move-clip iteration began,
     // so it's using `copy` as reference that we must check whether toggling the entire track is allowed.
     const auto emptyTrackIndices = getEmptyWaveTrackIndices(copy);
-    if (muse::contains(emptyTrackIndices, dstTrackIndex) && dstWaveTrack.NChannels() != clip->NChannels()) {
+    const bool dstIsEmpty = muse::contains(emptyTrackIndices, dstTrackIndex);
+    if (dstIsEmpty && dstWaveTrack.NChannels() != clip->NChannels()) {
         ptr = toggleStereo(copy, getTrackIndex(copy, dstWaveTrack));
+    }
+    // Like paste, an empty track takes the clip rate, so that the clip needs no resampling
+    if (dstIsEmpty && ptr->GetRate() != clip->GetRate()) {
+        ptr->SetRate(clip->GetRate());
     }
 
     ptr->InsertInterval(clip, false);
@@ -294,6 +303,51 @@ muse::Ret au::trackedit::utils::withProgress(muse::IInteractive& interactive, co
     progress.finish(muse::make_ok());
 
     return result;
+}
+
+muse::Ret au::trackedit::utils::resampleClips(muse::IInteractive& interactive,
+                                              const std::vector<std::pair<std::shared_ptr<au3::Au3WaveClip>, int> >& clips)
+{
+    if (clips.empty()) {
+        return muse::make_ok();
+    }
+
+    double numSamples = 0.0;
+    for (const auto& [clip, rate] : clips) {
+        numSamples += clip->GetSequenceSamplesCount().as_double() / clip->NChannels();
+    }
+
+    const muse::Ret ret = withProgress(interactive, muse::trc("trackedit", "Resampling…"), [&](ProgressCb progressCb, CancelCb cancelCb) {
+        double consumedSamples = 0.0;
+        const auto progressReport = [&](size_t consumed) {
+            consumedSamples += static_cast<double>(consumed);
+            progressCb(std::min(consumedSamples / std::max(numSamples, 1.0), 1.0));
+            if (cancelCb()) {
+                throw UserException();
+            }
+        };
+        // Queues the message of a read or write error, so that the caller can roll back first
+        return GuardedCall<bool>([&] {
+            for (const auto& [clip, rate] : clips) {
+                clip->Resample(rate, progressReport);
+                // Round the trims to the new sample grid
+                clip->SetRate(rate);
+            }
+            return true;
+        });
+    });
+    if (!ret) {
+        return ret;
+    }
+
+    // Prevent resampling from erasing clips. If a clip becomes Empty after resampling, then cancel the action
+    for (const auto& [clip, rate] : clips) {
+        if (!clip->GetIsPlaceholder() && clip->IsEmpty()) {
+            return make_ret(Err::UnknownError);
+        }
+    }
+
+    return muse::make_ok();
 }
 
 namespace {

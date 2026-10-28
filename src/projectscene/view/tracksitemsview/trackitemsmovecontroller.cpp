@@ -427,9 +427,6 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
         if (m_rangeSelection) {
             trackeditInteraction()->moveRangeSelection(0.0, true);
         } else {
-            m_moved = false;
-            emit previewChanged();
-
             if (keyboard) {
                 selectionController()->setSelectedItems(ItemKeys { m_clips, m_labels }, false);
             }
@@ -437,6 +434,9 @@ au::projectscene::TrackItemKey TrackItemsMoveController::finish()
             const auto result = isLabelTrack(m_sourceType)
                                 ? trackeditInteraction()->moveLabels(selected, m_timeOffset, m_trackOffset)
                                 : trackeditInteraction()->moveClips(selected, m_timeOffset, m_trackOffset);
+            //! NOTE Keep the preview until the move ends: the move can show a progress dialog
+            m_moved = false;
+            emit previewChanged();
             if (result.ret) {
                 const auto source = std::find(selected.begin(), selected.end(), m_sourceKey);
                 const auto sourceIndex = std::distance(selected.begin(), source);
