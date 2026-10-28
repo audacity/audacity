@@ -9208,7 +9208,7 @@ o per u LISP, principiate cù una parentesi aperta cum’è :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="111"/>
         <source>Adjust label interval to fit length</source>
-        <translation>Adatta l’intervallu d’etichetta à a longhezza</translation>
+        <translation>Adattà l’intervallu d’etichetta à a longhezza</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="112"/>
