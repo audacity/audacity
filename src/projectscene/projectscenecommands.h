@@ -32,6 +32,8 @@ inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_DEFAULT_COMMAND("c
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND("command://projectscene/zoom-to-selection");
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND("command://projectscene/zoom-to-fit-project");
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_TOGGLE_COMMAND("command://projectscene/zoom-toggle");
+inline static const muse::rcommand::Command PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND("command://projectscene/timeline-page-left");
+inline static const muse::rcommand::Command PROJECTSCENE_TIMELINE_PAGE_RIGHT_COMMAND("command://projectscene/timeline-page-right");
 inline static const muse::rcommand::Command PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND("command://projectscene/center-view-on-playhead");
 inline static const std::string PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_ONLY_IF_NOT_VISIBLE_PARAM("only_if_playhead_not_visible");
 inline static const muse::rcommand::Command PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND("command://projectscene/timeline-context-menu");

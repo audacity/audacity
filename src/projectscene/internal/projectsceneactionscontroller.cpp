@@ -33,6 +33,8 @@ static const ActionCode ZOOM_DEFAULT_CODE("zoom-default");
 static const ActionCode ZOOM_TO_SELECTION_CODE("zoom-to-selection");
 static const ActionCode ZOOM_TO_FIT_PROJECT_CODE("zoom-to-fit-project");
 static const ActionCode ZOOM_TOGGLE_CODE("zoom-toggle");
+static const ActionCode TIMELINE_PAGE_LEFT_CODE("timeline-page-left");
+static const ActionCode TIMELINE_PAGE_RIGHT_CODE("timeline-page-right");
 static const ActionCode CENTER_VIEW_ON_PLAYHEAD_CODE("center-view-on-playhead");
 static const ActionCode TIMELINE_CONTEXT_MENU_CODE("timeline-context-menu");
 static const ActionCode PLAY_POSITION_DECREASE_CODE("play-position-decrease");
@@ -105,6 +107,10 @@ void ProjectSceneActionsController::init()
                         &ITimelineViewController::fitProjectToWidth);
     registerViewCommand(PROJECTSCENE_ZOOM_TOGGLE_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
                         &ITimelineViewController::zoomToggle);
+    registerViewCommand(PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::pageLeft);
+    registerViewCommand(PROJECTSCENE_TIMELINE_PAGE_RIGHT_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
+                        &ITimelineViewController::pageRight);
     cd->onRequest(this, PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, [this]() {
         m_timelineContextMenuRequested.notify();
         return make_ok();
@@ -180,6 +186,8 @@ void ProjectSceneActionsController::init()
         { ZOOM_TO_SELECTION_CODE, PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND, {} },
         { ZOOM_TO_FIT_PROJECT_CODE, PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND, {} },
         { ZOOM_TOGGLE_CODE, PROJECTSCENE_ZOOM_TOGGLE_COMMAND, {} },
+        { TIMELINE_PAGE_LEFT_CODE, PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND, {} },
+        { TIMELINE_PAGE_RIGHT_CODE, PROJECTSCENE_TIMELINE_PAGE_RIGHT_COMMAND, {} },
         { CENTER_VIEW_ON_PLAYHEAD_CODE, PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND, centerViewOnPlayheadConv },
         { TIMELINE_CONTEXT_MENU_CODE, PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND, {} },
         { PLAY_POSITION_DECREASE_CODE, PROJECTSCENE_PLAY_POSITION_DECREASE_COMMAND, {} },
