@@ -135,9 +135,9 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-mp2/ExportMP2.h
 
     # FFmpeg support (still compiled as sources, not yet converted to library)
-    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp
+    # Note: FFmpeg.cpp does #include "ImportFFmpeg.cpp" and #include "ExportFFmpeg.cpp",
+    # so those two files must not be listed as sources here.
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.h
-    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ExportFFmpeg.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ExportFFmpeg.h
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/FFmpegDefines.h
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/FFmpeg.cpp
