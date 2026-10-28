@@ -259,6 +259,12 @@ TrackItemsContainer {
                                     isPoint: Boolean(itemData) && itemData.isPoint
                                     leftVisibleMargin: Boolean(itemData) ? itemData.leftVisibleMargin : 0
 
+                                    timeSelection.isDataSelected: root.isDataSelected
+                                    timeSelection.start: Boolean(itemData) ? Math.floor(root.context.selectionStartPosition - itemData.x + 0.5) : 0
+                                    timeSelection.width: Boolean(itemData) ? Math.floor(root.context.selectionEndPosition - itemData.x + 0.5) - timeSelection.start : 0
+                                    timeSelection.containsPoint: Boolean(itemData) && itemData.time.startTime >= root.context.selectionStartTime && itemData.time.startTime <= root.context.selectionEndTime
+                                    timeSelection.color: Boolean(itemData) ? labelsModel.timeSelectionColor(itemData.color) : "transparent"
+
                                     container: repeater
 
                                     navigation.name: Boolean(itemData) ? itemData.key.itemId() : ""
