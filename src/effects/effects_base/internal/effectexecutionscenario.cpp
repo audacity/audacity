@@ -87,6 +87,10 @@ au::au3::Au3Project& EffectExecutionScenario::projectRef()
 
 muse::Ret EffectExecutionScenario::repeatLastProcessor()
 {
+    if (!globalContext()->currentProject()) {
+        return make_ret(Err::UnknownError);
+    }
+
     IF_ASSERT_FAILED(m_lastProcessorId) {
         return make_ret(Err::UnknownError);
     }
