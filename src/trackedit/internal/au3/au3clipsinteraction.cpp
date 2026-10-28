@@ -41,6 +41,17 @@ using namespace au::au3;
 
 namespace {
 static const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono…");
+
+::FadeType au3FadeType(au::trackedit::FadeType type)
+{
+    switch (type) {
+    case au::trackedit::FadeType::Logarithmic:
+        return ::FadeType::Logarithmic;
+    case au::trackedit::FadeType::Linear:
+    default:
+        return ::FadeType::Linear;
+    }
+}
 }
 
 Au3ClipsInteraction::Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx)
@@ -253,8 +264,7 @@ bool Au3ClipsInteraction::changeClipColor(const ClipKey& clipKey, ClipColorIndex
     return true;
 }
 
-// a fade pushes the other one back when it runs into it
-bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t duration)
+bool Au3ClipsInteraction::changeClipFades(const ClipKey& clipKey, const std::function<void(ClipFades&)>& change)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -266,7 +276,7 @@ bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t durati
         return false;
     }
 
-    ClipFades::Get(*clip).setFadeIn(duration.to_double());
+    change(ClipFades::Get(*clip));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
@@ -274,24 +284,33 @@ bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t durati
     return true;
 }
 
+// a fade pushes the other one back when it runs into it
+bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t duration)
+{
+    return changeClipFades(clipKey, [duration](ClipFades& fades) {
+        fades.setFadeIn(duration.to_double());
+    });
+}
+
 bool Au3ClipsInteraction::changeClipFadeOut(const ClipKey& clipKey, secs_t duration)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
+    return changeClipFades(clipKey, [duration](ClipFades& fades) {
+        fades.setFadeOut(duration.to_double());
+    });
+}
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
+bool Au3ClipsInteraction::changeClipFadeInType(const ClipKey& clipKey, FadeType type)
+{
+    return changeClipFades(clipKey, [type](ClipFades& fades) {
+        fades.setFadeInType(au3FadeType(type));
+    });
+}
 
-    ClipFades::Get(*clip).setFadeOut(duration.to_double());
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-
-    return true;
+bool Au3ClipsInteraction::changeClipFadeOutType(const ClipKey& clipKey, FadeType type)
+{
+    return changeClipFades(clipKey, [type](ClipFades& fades) {
+        fades.setFadeOutType(au3FadeType(type));
+    });
 }
 
 bool Au3ClipsInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)

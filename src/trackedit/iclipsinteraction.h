@@ -39,6 +39,8 @@ public:
     virtual bool changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex) = 0;
     virtual bool changeClipFadeIn(const ClipKey& clipKey, secs_t duration) = 0;
     virtual bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration) = 0;
+    virtual bool changeClipFadeInType(const ClipKey& clipKey, FadeType type) = 0;
+    virtual bool changeClipFadeOutType(const ClipKey& clipKey, FadeType type) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
 
