@@ -692,10 +692,9 @@ Rectangle {
                         let releaseTime = timeline.context.positionToTime(e.x)
                         selectionViewController.onReleased(releaseTime, e.y)
 
-                        // Deferred from the press. Only a plain click repositions the playhead
-                        // and the next playback start; a drag selection leaves both alone —
-                        // playback derives its region from the selection when it starts.
-                        if (playCursorController.endSeekGesture()) {
+                        // Deferred from the press. A plain click repositions the playhead and the
+                        // next playback start; a drag selection moves them to its start when stopped.
+                        if (playCursorController.endSeekGesture(timeline.context.selectionStartTime)) {
                             playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                         }
                     } else {
