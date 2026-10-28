@@ -178,7 +178,7 @@ ColumnLayout {
 
             visible: listView.count === 0
 
-            text: qsTrc("macromanager", "Empty state")
+            text: qsTrc("macromanager", "Double-click a command, or drag it, to add it to your macro")
         }
 
         DropArea {
