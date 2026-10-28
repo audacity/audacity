@@ -65,12 +65,12 @@ public:
     //! NOTE Deferred seek: a press in the track area must not move the playhead
     //! immediately, otherwise the viewport can shift mid-gesture (e.g. while
     //! dragging a clip or a selection). The target is remembered on press and
-    //! the seek is dispatched on release, and only when the gesture stayed a
-    //! plain click — dragging anything other than the play cursor itself never
-    //! moves the playhead.
+    //! the seek is dispatched on release: a plain click seeks to the pressed time,
+    //! a drag selection seeks to the selection start when the drag selection
+    //! is stopped. Item drags cancel the gesture and never move the playhead.
     Q_INVOKABLE void beginSeekGesture(double time, double x, double y);
     Q_INVOKABLE void updateSeekGesture(double x, double y);
-    Q_INVOKABLE bool endSeekGesture();
+    Q_INVOKABLE bool endSeekGesture(double selectionStartTime);
     Q_INVOKABLE void cancelSeekGesture();
 
 signals:
