@@ -23,6 +23,7 @@ Licensed under the GNU General Public License v2 or later
 #include "ImportFFmpeg.h"
 
 #include "FFmpeg.h"
+#include "FFmpegMetadata.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 
 #include <wx/log.h>
@@ -214,14 +215,6 @@ public:
     ///\param avf - file context
     ///\ tags - Audacity tags object
     void WriteMetadata(Tags* tags);
-
-    ///! Retrieves metadata from FFmpeg and converts to wxString
-    ///\param avf - file context
-    ///\ tags - Audacity tags object
-    ///\ tag - name of tag to set
-    ///\ name - name of metadata item to retrieve
-    ///\return true if the item was found
-    bool GetMetadata(Tags& tags, const wxChar* tag, const char* name);
 
     ///! Called by Import.cpp
     ///\return number of readable streams in the file
@@ -694,37 +687,19 @@ void FFmpegImportFileHandle::WriteData(StreamContext* sc, const AVPacketWrapper*
 
 void FFmpegImportFileHandle::WriteMetadata(Tags* tags)
 {
+    const AVDictionaryWrapper metadata = mAVFormatContext->GetMetadata();
+
     Tags temp;
-
-    GetMetadata(temp, TAG_TITLE, "title");
-    GetMetadata(temp, TAG_COMMENTS, "comment");
-    GetMetadata(temp, TAG_ALBUM, "album");
-    GetMetadata(temp, TAG_TRACK, "track");
-    GetMetadata(temp, TAG_GENRE, "genre");
-
-    //! FFmpeg's generic keys first, then the names older Audacity versions exported
-    if (!GetMetadata(temp, TAG_ARTIST, "artist")) {
-        GetMetadata(temp, TAG_ARTIST, "author");
-    }
-    if (!GetMetadata(temp, TAG_YEAR, "date")) {
-        GetMetadata(temp, TAG_YEAR, "year");
-    }
+    FFmpegMetadata::ImportTags([&metadata](const std::string& key) -> std::optional<wxString> {
+        if (!metadata.HasValue(key)) {
+            return std::nullopt;
+        }
+        return wxString::FromUTF8(std::string(metadata.Get(key, {})));
+    }, temp);
 
     if (!temp.IsEmpty()) {
         *tags = temp;
     }
-}
-
-bool FFmpegImportFileHandle::GetMetadata(Tags& tags, const wxChar* tag, const char* name)
-{
-    auto metadata = mAVFormatContext->GetMetadata();
-
-    if (!metadata.HasValue(name)) {
-        return false;
-    }
-
-    tags.SetTag(tag, wxString::FromUTF8(std::string(metadata.Get(name, {}))));
-    return true;
 }
 
 FFmpegImportFileHandle::~FFmpegImportFileHandle()

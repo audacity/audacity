@@ -19,10 +19,9 @@ function.
 *//*******************************************************************/
 
 #include <algorithm>
-#include <map>
-#include <vector>
 
 #include "FFmpeg.h"
+#include "FFmpegMetadata.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 #include "lib-ffmpeg-support/FifoBuffer.h"
 
@@ -1510,38 +1509,7 @@ bool FFmpegExporter::AddTags(const Tags* tags)
         return false;
     }
 
-    struct CaseInsensitiveLess {
-        bool operator()(const wxString& a, const wxString& b) const { return a.CmpNoCase(b) < 0; }
-    };
-
-    //! FFmpeg's generic keys; each muxer maps them to its own tag names
-    static const std::map<wxString, std::string, CaseInsensitiveLess> genericKeys {
-        { TAG_TITLE, "title" },
-        { TAG_ARTIST, "artist" },
-        { TAG_ALBUM, "album" },
-        { TAG_TRACK, "track" },
-        { TAG_YEAR, "date" },
-        { TAG_GENRE, "genre" },
-        { TAG_COMMENTS, "comment" },
-        { TAG_COPYRIGHT, "copyright" },
-    };
-
-    std::vector<std::pair<std::string, wxString> > standardTags;
-    for (const auto& [name, value] : tags->GetRange()) {
-        if (value.empty()) {
-            continue;
-        }
-
-        const auto it = genericKeys.find(name);
-        if (it == genericKeys.end()) {
-            SetMetadata(name.ToStdString(), value);
-        } else {
-            standardTags.emplace_back(it->second, value);
-        }
-    }
-
-    //! Written last, so they win over additional tags FFmpeg treats as the same key, e.g. DATE
-    for (const auto& [key, value] : standardTags) {
+    for (const auto& [key, value] : FFmpegMetadata::ExportEntries(*tags)) {
         SetMetadata(key, value);
     }
 
