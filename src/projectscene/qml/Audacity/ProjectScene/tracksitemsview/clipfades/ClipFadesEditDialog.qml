@@ -12,6 +12,8 @@ import Audacity.ProjectScene
 StyledDialogView {
     id: root
 
+    property int focusedFade: ClipSide.Left
+
     title: qsTrc("projectscene", "Edit fades") + " - " + (fadesModel.clipCount > 1 ? qsTrc("projectscene", "%n clips", "", fadesModel.clipCount) : fadesModel.clipTitle)
 
     contentWidth: 320
@@ -42,7 +44,11 @@ StyledDialogView {
     }
 
     onNavigationActivateRequested: {
-        fadeInSection.requestActiveFocus()
+        if (root.focusedFade === ClipSide.Right) {
+            fadeOutSection.requestActiveFocus()
+        } else {
+            fadeInSection.requestActiveFocus()
+        }
     }
 
     ColumnLayout {
