@@ -24,11 +24,34 @@ StyledListView {
         readonly property int sideMargin: 8
         readonly property int addIconSize: 24
         readonly property int titleButtonSpacing: 10
+
+        property int selectedIndex: -1
     }
 
     navigation.name: "AvailableCommandsList"
     navigation.direction: NavigationPanel.Vertical
     navigation.accessible.name: qsTrc("macromanager", "Available commands")
+
+    navigation.onNavigationEvent: function (event) {
+        if (event.type !== NavigationEvent.AboutActive || prv.selectedIndex < 0) {
+            return
+        }
+
+        root.positionViewAtIndex(prv.selectedIndex, ListView.Contain)
+
+        const item = root.itemAtIndex(prv.selectedIndex)
+        if (item) {
+            event.setData("controlIndex", [item.navigation.row, item.navigation.column])
+        }
+    }
+
+    Connections {
+        target: root.model
+
+        function onModelReset() {
+            prv.selectedIndex = -1
+        }
+    }
 
     scrollBarPolicy: ScrollBar.AlwaysOn
 
@@ -46,7 +69,7 @@ StyledListView {
         width: ListView.view.width
         height: prv.rowHeight
 
-        isSelected: item.navigation.active
+        isSelected: item.index === prv.selectedIndex
 
         navigation.panel: root.navigation
         navigation.row: item.index
@@ -54,6 +77,7 @@ StyledListView {
 
         navigation.onActiveChanged: {
             if (item.navigation.active) {
+                prv.selectedIndex = item.index
                 item.scrollIntoView()
             }
         }
