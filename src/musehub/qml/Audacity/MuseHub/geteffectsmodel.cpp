@@ -10,7 +10,7 @@
 
 #include "au3-musehub/MuseHubService.h"
 
-using namespace au::projectscene;
+using namespace au::musehub;
 
 GetEffectsModel::GetEffectsModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))

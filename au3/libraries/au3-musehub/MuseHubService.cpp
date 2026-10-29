@@ -45,6 +45,12 @@ static const std::string musehubEffectUrl = "https://www.musehub.com/plugin/";
 static const std::string musehubEffectsQueryId = "audacity-effects-page-v1";
 static const std::string fallbackLocale = "en-US";
 
+static const std::string musehubPluginsUrl
+    = "musehub://plugins?compatible=audacity"
+      "&utm_medium=referral&utm_source=au"
+      "&utm_campaign=mh_ww_ref_au_app_all_281026_crosslink"
+      "&utm_content=au-get-effects";
+
 static const std::string musehubEffectUtmSource = "utm_source=au-app-get-fx-panel";
 static const std::string musehubEffectUtmMediumPrefix = "utm_medium=";
 static const std::string musehubEffectUtmCampaignPrefix = "utm_campaign=au-app-get-fx-mh-";
@@ -207,6 +213,11 @@ std::string GetBecomeAPartnerUrl()
 std::string GetMusehubAPIEndpoint()
 {
     return musehubAPIEndpointUrl;
+}
+
+std::string GetPluginsUrl()
+{
+    return musehubPluginsUrl;
 }
 
 std::string GetEffectUrl(const std::string& effectCode)

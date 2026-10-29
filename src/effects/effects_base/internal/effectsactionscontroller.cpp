@@ -39,7 +39,6 @@ static const ActionQuery PRESET_IMPORT_QUERY("action://effects/presets/import");
 static const ActionQuery PRESET_EXPORT_QUERY("action://effects/presets/export");
 
 static const muse::Uri PLUGIN_MANAGER_URI("audacity://effects/plugin_manager");
-static const muse::Uri GET_EFFECTS_URI("audacity://projectscene/geteffects");
 
 namespace {
 CommandQuery queryParamsConv(const Command& command, const ActionData& args)
@@ -140,7 +139,6 @@ void EffectsActionsController::registerActions()
 
     cd->onRequest(this, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, [this]() { return repeatLastEffect(); });
     cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_COMMAND, [this]() { return openPluginManager(); });
-    cd->onRequest(this, EFFECTS_GET_EFFECTS_COMMAND, [this]() { return openGetEffectsDialog(); });
     cd->onRequest(this, EFFECTS_TOGGLE_VENDOR_UI_COMMAND, [this](const Params& params) { return toggleVendorUI(params); });
     cd->onRequest(this, EFFECTS_PRESET_APPLY_COMMAND, [this](const Params& params) { return applyPreset(params); });
     cd->onRequest(this, EFFECTS_PRESET_SAVE_COMMAND, [this](const Params& params) { return savePreset(params); });
@@ -323,11 +321,5 @@ muse::async::Channel<muse::actions::ActionCodeList> EffectsActionsController::ca
 muse::Ret EffectsActionsController::openPluginManager()
 {
     interactive()->open(PLUGIN_MANAGER_URI);
-    return make_ok();
-}
-
-muse::Ret EffectsActionsController::openGetEffectsDialog()
-{
-    interactive()->open(GET_EFFECTS_URI);
     return make_ok();
 }
