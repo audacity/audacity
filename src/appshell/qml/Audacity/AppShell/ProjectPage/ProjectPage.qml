@@ -30,6 +30,7 @@ import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.TrackEdit
+import Audacity.MacroManager
 
 DockPage {
     id: root
@@ -146,6 +147,7 @@ DockPage {
 
     readonly property string verticalPanelsGroup: "VERTICAL_PANELS"
     readonly property string horizontalPanelsGroup: "HORIZONTAL_PANELS"
+    readonly property string toolPanelsGroup: "TOOL_PANELS"
 
     readonly property var verticalPanelDropDestinations: [
         {
@@ -423,6 +425,49 @@ DockPage {
             }
         },
         DockPanel {
+            id: macroManagerPanel
+
+            readonly property int panelWidth: root.verticalPanelDefaultWidth
+            readonly property int floatingMaximumWidth: 16777215
+
+            objectName: pageModel.macroManagerPanelName()
+            title: qsTrc("appshell", "Macro manager")
+
+            navigationSection: root.navigationPanelSec(macroManagerPanel.location)
+
+            titleBar: Component {
+                MacroManagerTitleBar {
+                    title: macroManagerPanel.title
+                }
+            }
+
+            floatable: true
+
+            width: panelWidth
+            minimumWidth: panelWidth
+            maximumWidth: floating ? floatingMaximumWidth : panelWidth
+
+            groupName: root.toolPanelsGroup
+            location: Location.Right
+
+            dropDestinations: [
+                {
+                    "dock": tracksPanel,
+                    "dropLocation": Location.Left
+                },
+                {
+                    "dock": root.centralDock,
+                    "dropLocation": Location.Right,
+                    "dropDistance": root.verticalPanelDefaultWidth
+                }
+            ]
+
+            MacroManagerPanel {
+                navigationSection: macroManagerPanel.navigationSection
+                navigationOrderStart: macroManagerPanel.contentNavigationPanelOrderStart
+            }
+        },
+        DockPanel {
             id: historyPanel
 
             objectName: root.pageModel.historyPanelName()
@@ -434,7 +479,7 @@ DockPage {
             minimumWidth: root.verticalPanelDefaultWidth
             maximumWidth: root.verticalPanelDefaultWidth
 
-            groupName: root.verticalPanelsGroup
+            groupName: root.toolPanelsGroup
             location: Location.Right
 
             //! NOTE: hidden by default

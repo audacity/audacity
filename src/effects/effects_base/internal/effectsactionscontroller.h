@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <QObject>
+
 #include "framework/interactive/iinteractive.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
@@ -59,6 +61,7 @@ private:
 
     muse::Ret openEffect(const EffectId& effectId);
     muse::Ret applyEffect(const EffectId& effectId, const muse::rcommand::Params& params);
+    muse::rcommand::Response configureEffect(const muse::rcommand::Request& request, const EffectId& effectId);
     muse::Ret repeatLastEffect();
 
     muse::Ret applyPreset(const muse::rcommand::Params& params);
@@ -73,5 +76,6 @@ private:
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;
+    QObject m_queuedCallContext;
 };
 }
