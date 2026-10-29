@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Shapes
 
 import Muse.Ui
 
@@ -31,93 +30,22 @@ Item {
     // in this item's coordinates
     signal mousePositionChanged(real x, real y)
 
-    QtObject {
-        id: prv
+    // Only spans the visible part of the fade: when zoomed in, the whole of it could be huge. Rounded outwards, so
+    // that the item's size, which Qt rounds, doesn't crop the fade's ends.
+    ClipFadeCurveItem {
+        id: curve
 
-        //! The part of the fade within this item: when zoomed in, drawing all of it would mean huge coordinates
-        readonly property real visibleLeft: Math.max(root.fadeLeft, 0)
-        readonly property real visibleRight: Math.min(root.fadeLeft + root.fadeWidth, root.width)
+        x: Math.floor(Math.max(root.fadeLeft, 0))
+        width: Math.max(0, Math.ceil(Math.min(root.fadeLeft + root.fadeWidth, root.width)) - x)
+        height: root.height
+        visible: width > 0
 
-        readonly property var linePoints: {
-            const width = root.fadeWidth
-            const visibleWidth = visibleRight - visibleLeft
-            if (width <= 0 || visibleWidth <= 0) {
-                return []
-            }
-            // PathPolyline will linearly interpolate between datapoints, so we can afford some
-            // downsampling here:
-            const segmentCount = Math.max(1, Math.ceil(visibleWidth / 2))
-            const positions = []
-            for (let i = 0; i <= segmentCount; ++i) {
-                positions.push((visibleLeft + i / segmentCount * visibleWidth - root.fadeLeft) / width)
-            }
-            // From the silent end of the fade
-            const gains = ClipFadeGains.gainsAt(root.fadeType, root.isFadeIn ? positions : positions.map(p => 1 - p))
-            return positions.map((p, i) => Qt.point(root.fadeLeft + p * width, root.height * (1 - gains[i])))
-        }
-
-        //! The faded-out part, above the line: the line closed by the top of this item
-        readonly property var shadingPoints: linePoints.length ? [Qt.point(visibleLeft, 0)].concat(linePoints).concat([Qt.point(visibleRight, 0)]) : []
-    }
-
-    // the boundary line is drawn just inside the fade
-    ClipFadeBoundaryLine {
-        y: root.drawingTop
-        height: root.height - root.drawingTop
-        x: root.isFadeIn ? root.fadeLeft + root.fadeWidth - 1 : root.fadeLeft
-        visible: root.fadeWidth >= 1
+        isFadeIn: root.isFadeIn
+        fadeLeft: root.fadeLeft - x
+        fadeWidth: root.fadeWidth
+        fadeType: root.fadeType
+        drawingTop: root.drawingTop
         highlighted: handle.pressed
-    }
-
-    // Spans the area below `drawingTop`
-    Item {
-        y: root.drawingTop
-        width: root.width
-        height: Math.max(0, root.height - root.drawingTop)
-        clip: true
-
-        // Drawn in this item's coordinates: the line spans the whole fade, from the clip's edge to the fade boundary
-        Shape {
-            y: -root.drawingTop
-            width: root.width
-            height: root.height
-
-            visible: prv.linePoints.length > 0
-            preferredRendererType: Shape.CurveRenderer
-
-            // Shades the faded-out part, above the line
-            ShapePath {
-                strokeColor: "transparent"
-                fillColor: Qt.rgba(0, 0, 0, 0.2)
-
-                PathPolyline {
-                    path: prv.shadingPoints
-                }
-            }
-
-            ShapePath {
-                strokeColor: Qt.rgba(0, 0, 0, 0.5)
-                strokeWidth: 1
-                capStyle: ShapePath.FlatCap
-                fillColor: "transparent"
-
-                PathPolyline {
-                    path: prv.linePoints
-                }
-            }
-
-            // Highlights the line while the handle is dragged
-            ShapePath {
-                strokeColor: handle.pressed ? ui.theme.extra["white_color"] : "transparent"
-                strokeWidth: 1.5
-                capStyle: ShapePath.FlatCap
-                fillColor: "transparent"
-
-                PathPolyline {
-                    path: prv.linePoints
-                }
-            }
-        }
     }
 
     ClipFadeHandle {

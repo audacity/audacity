@@ -24,7 +24,7 @@
 #include "view/common/tracksviewstatemodel.h"
 #include "view/common/trackviewstatemodel.h"
 #include "view/common/customcursor.h"
-#include "view/tracksitemsview/au3/clipfadegains.h"
+#include "view/tracksitemsview/au3/clipfadecurveitem.h"
 
 #include "view/toolbars/audiosetupcontextmenumodel.h"
 #include "view/toolbars/projecttoolbarmodel.h"
@@ -155,10 +155,7 @@ void ProjectSceneModule::registerUiTypes()
                                                    [](QQmlEngine*, QJSEngine*) -> QObject* {
         return new CustomCursorProvider();
     });
-    qmlRegisterSingletonType<ClipFadeGains>("Audacity.ProjectScene", 1, 0, "ClipFadeGains",
-                                            [](QQmlEngine*, QJSEngine*) -> QObject* {
-        return new ClipFadeGains();
-    });
+    qmlRegisterType<ClipFadeCurveItem>("Audacity.ProjectScene", 1, 0, "ClipFadeCurveItem");
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
