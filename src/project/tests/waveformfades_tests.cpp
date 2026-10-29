@@ -7,6 +7,7 @@
 #include <QTemporaryDir>
 
 #include <algorithm>
+#include <cmath>
 #include <vector>
 
 #include "au3wrap/internal/au3project.h"
@@ -29,8 +30,8 @@ constexpr auto TEST_HEIGHT = 101;
 //! The painted heights are rounded to rows
 constexpr auto TEST_RELATIVE_HEIGHT_TOLERANCE = 3.0 / TEST_HEIGHT;
 constexpr auto TEST_STRETCH_RATIO = 2.0;
-//! A logarithmic fade spans the whole dB range of the display
-constexpr auto TEST_DB_RANGE = -ClipFades::logarithmicFadeFloorDb;
+//! An exponential fade spans the whole dB range of the display
+constexpr auto TEST_DB_RANGE = -ClipFades::fadeLogRangeDb;
 
 const graphics::Color sampleColor { 255, 0, 0 };
 const graphics::Color otherColor { 0, 0, 255 };
@@ -194,15 +195,19 @@ TEST_F(WaveformFadesTests, FadeChangesInvalidateTheCache)
     EXPECT_NEAR(relativeHeight(paintedHeights(), t), t / longerFadeIn, TEST_RELATIVE_HEIGHT_TOLERANCE);
 }
 
-TEST_F(WaveformFadesTests, LogarithmicFadeIsPaintedLinearlyInDbScale)
+TEST_F(WaveformFadesTests, ExponentialFadeIsPaintedInDbScale)
 {
-    //! [GIVEN] a logarithmic fade-in, i.e. linear in dB
-    ClipFades::Get(*m_clip).setFadeInType(FadeType::Logarithmic);
+    //! [GIVEN] an exponential fade-in, i.e. nearly linear in dB
+    ClipFades::Get(*m_clip).setFadeInType(FadeType::Exponential);
 
     //! [WHEN] it is painted in dB scale
     m_dbScale = true;
 
-    //! [THEN] it looks linear
-    expectLinearFadeIn(paintedHeights(), TEST_FADE_IN);
+    //! [THEN] its painted heights are its gains in dB
+    const auto heights = paintedHeights();
+    for (const auto t : { TEST_FADE_IN / 4, TEST_FADE_IN / 2, 2 * TEST_FADE_IN }) {
+        const auto gainDb = 20 * std::log10(ClipFades::fadeGain(FadeType::Exponential, t / TEST_FADE_IN));
+        EXPECT_NEAR(relativeHeight(heights, t), 1 + gainDb / TEST_DB_RANGE, TEST_RELATIVE_HEIGHT_TOLERANCE);
+    }
 }
 }

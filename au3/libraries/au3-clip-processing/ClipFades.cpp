@@ -17,12 +17,13 @@ static constexpr auto FadeInType_attr = "fadeInType";
 static constexpr auto FadeOutType_attr = "fadeOutType";
 
 namespace {
-//! 10^(floorDb * (1 - x) / 20) = exp(floorDb * ln(10) / 20 * (1 - x)), `exp` being cheaper than `pow`
-constexpr auto logarithmicFadeExponent = ClipFades::logarithmicFadeFloorDb * std::numbers::ln10 / 20.0;
+//! 10^(floorDb * (1 - t) / 20) = exp(floorDb * ln(10) / 20 * (1 - t)), `exp` being cheaper than `pow`
+constexpr auto exponentialFadeExponent = ClipFades::fadeLogRangeDb * std::numbers::ln10 / 20.0;
+const auto fadeFloor = std::pow(10, ClipFades::fadeLogRangeDb / 20);
 
 std::optional<FadeType> fadeTypeFromValue(int value)
 {
-    for (const auto type : { FadeType::Linear, FadeType::Logarithmic }) {
+    for (const auto type : { FadeType::Linear, FadeType::Logarithmic, FadeType::Exponential }) {
         if (value == static_cast<int>(type)) {
             return type;
         }
@@ -174,16 +175,24 @@ void ClipFades::setDraggingSide(ClipSide side)
     Publish(ClipFadesChange {});
 }
 
-double ClipFades::fadeGain(FadeType type, double x)
+double ClipFades::fadeGain(FadeType type, double t)
 {
     // Positions may be marginally outside of the fade
-    x = std::clamp(x, 0.0, 1.0);
+    t = std::clamp(t, 0.0, 1.0);
     switch (type) {
+    case FadeType::Exponential:
+        // Linear in dB from `fadeLogRangeDb` to 0dB, offset and scaled to go from 0 to 1.
+        return (std::exp(exponentialFadeExponent * (1.0 - t)) - fadeFloor) / (1.0 - fadeFloor);
     case FadeType::Logarithmic:
-        return x == 0.0 ? 0.0 : std::exp(logarithmicFadeExponent * (1.0 - x));
+    {
+        // The inverse function of the exponential fade.
+        const auto u = fadeFloor + t * (1.0 - fadeFloor);
+        // Rounding may take the gain marginally below 0 at `t == 0`
+        return std::max(0.0, 1.0 - 20.0 * std::log10(u) / ClipFades::fadeLogRangeDb);
+    }
     case FadeType::Linear:
     default:
-        return x;
+        return t;
     }
 }
 

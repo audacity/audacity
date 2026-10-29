@@ -12,6 +12,7 @@
 enum class FadeType {
     Linear = 0,
     Logarithmic = 1,
+    Exponential = 2,
 };
 
 //! Published whenever the fades of a clip change
@@ -25,10 +26,13 @@ class ClipFades final : public ClipInterfaceAttachment, public Observer::Publish
 public:
     explicit ClipFades(ClipInterface& clip);
 
-    static constexpr double logarithmicFadeFloorDb = -60.0;
+    //! Not the start fade-in value (which really begins at 0 for both exp and log fades),
+    //! but more the chosen range of the log function we use to shape our fade. -60dB makes
+    //! the fades probably too abrupt.
+    static constexpr double fadeLogRangeDb = -40.0;
 
-    //! `x` from 0 (silent end) to 1 (unfaded end)
-    static double fadeGain(FadeType type, double x);
+    //! `t` from 0 (silent end) to 1 (unfaded end)
+    static double fadeGain(FadeType type, double t);
 
     //! Everything that defines the fades of a clip, at some point in time
     struct Snapshot {
