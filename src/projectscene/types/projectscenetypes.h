@@ -155,6 +155,7 @@ class FadeTypes
 public:
     enum class Type {
         LINEAR = 0,
+        EXPONENTIAL,
         LOGARITHMIC
     };
     Q_ENUM(Type)

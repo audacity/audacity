@@ -40,6 +40,10 @@ Item {
                 title: qsTrc("projectscene", "Linear")
             },
             {
+                type: FadeType.EXPONENTIAL,
+                title: qsTrc("projectscene", "Exponential")
+            },
+            {
                 type: FadeType.LOGARITHMIC,
                 title: qsTrc("projectscene", "Logarithmic")
             }

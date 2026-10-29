@@ -26,6 +26,8 @@ const QColor highlightColor = Qt::white;
     switch (type) {
     case FadeTypes::Type::LOGARITHMIC:
         return ::FadeType::Logarithmic;
+    case FadeTypes::Type::EXPONENTIAL:
+        return ::FadeType::Exponential;
     case FadeTypes::Type::LINEAR:
     default:
         return ::FadeType::Linear;
