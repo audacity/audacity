@@ -47,7 +47,6 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipPreview.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandleIcon.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandles.qml</file>
-        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipFadeBoundaryLine.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipFade.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipFadeHandle.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipFades.qml</file>
