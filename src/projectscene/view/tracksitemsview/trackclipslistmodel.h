@@ -61,6 +61,8 @@ public:
     Q_INVOKABLE void cancelClipFadeEdit();
     Q_INVOKABLE bool changeClipFadeInType(const ClipKey& key, FadeTypes::Type type);
     Q_INVOKABLE bool changeClipFadeOutType(const ClipKey& key, FadeTypes::Type type);
+    Q_INVOKABLE void openClipFadeInLengthEdit(const ClipKey& key);
+    Q_INVOKABLE void openClipFadeOutLengthEdit(const ClipKey& key);
 
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
@@ -83,6 +85,7 @@ signals:
     void contentXChanged();
 
 private:
+    void openClipFadesEdit(const ClipKey& key, ClipSides::Side focusedFade);
     void onInit() override;
     void onReload() override;
 

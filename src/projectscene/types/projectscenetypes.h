@@ -164,6 +164,17 @@ public:
     Q_ENUM(Type)
 };
 
+class ClipSides
+{
+    Q_GADGET
+public:
+    enum class Side {
+        Left = 0,
+        Right
+    };
+    Q_ENUM(Side)
+};
+
 class DirectionType
 {
     Q_GADGET

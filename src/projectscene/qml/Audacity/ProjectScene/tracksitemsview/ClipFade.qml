@@ -27,6 +27,7 @@ Item {
     signal fadeWidthChangeRequested(real width, bool completed)
     signal fadeEditCanceled
     signal fadeTypeChangeRequested(int type)
+    signal fadeLengthEditRequested
 
     // in this item's coordinates
     signal mousePositionChanged(real x, real y)
@@ -71,6 +72,8 @@ Item {
         onFadeTypeChangeRequested: function (type) {
             root.fadeTypeChangeRequested(type)
         }
+
+        onFadeLengthEditRequested: root.fadeLengthEditRequested()
 
         onMousePositionChanged: function (mouseX, mouseY) {
             root.mousePositionChanged(mouseX, mouseY)

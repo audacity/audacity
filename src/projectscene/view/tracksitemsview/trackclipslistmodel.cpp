@@ -19,6 +19,7 @@ using namespace au::trackedit;
 constexpr double MIN_CLIP_WIDTH = 3.0;
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
+static const muse::Uri EDIT_CLIP_FADES_URI("audacity://projectscene/editclipfades");
 
 TrackClipsListModel::TrackClipsListModel(QObject* parent)
     : TrackItemsListModel(parent)
@@ -430,6 +431,30 @@ bool TrackClipsListModel::changeClipFadeInType(const ClipKey& key, FadeTypes::Ty
 bool TrackClipsListModel::changeClipFadeOutType(const ClipKey& key, FadeTypes::Type type)
 {
     return trackeditInteraction()->changeClipFadeOutType(key.key, toTrackeditFadeType(type), true);
+}
+
+void TrackClipsListModel::openClipFadeInLengthEdit(const ClipKey& key)
+{
+    openClipFadesEdit(key, ClipSides::Side::Left);
+}
+
+void TrackClipsListModel::openClipFadeOutLengthEdit(const ClipKey& key)
+{
+    openClipFadesEdit(key, ClipSides::Side::Right);
+}
+
+void TrackClipsListModel::openClipFadesEdit(const ClipKey& key, ClipSides::Side focusedFade)
+{
+    selectClip(key);
+
+    if (interactive()->isOpened(EDIT_CLIP_FADES_URI).val) {
+        return;
+    }
+
+    muse::UriQuery query(EDIT_CLIP_FADES_URI);
+    query.addParam("focusedFade", muse::Val(static_cast<int>(focusedFade)));
+
+    interactive()->open(query);
 }
 
 bool TrackClipsListModel::isKeyboardTriggered() const

@@ -31,6 +31,8 @@ Item {
     signal fadeEditCanceled
     signal fadeInTypeChangeRequested(int type)
     signal fadeOutTypeChangeRequested(int type)
+    signal fadeInLengthEditRequested
+    signal fadeOutLengthEditRequested
 
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
@@ -90,6 +92,8 @@ Item {
             root.fadeInTypeChangeRequested(type)
         }
 
+        onFadeLengthEditRequested: root.fadeInLengthEditRequested()
+
         onMousePositionChanged: function (mouseX, mouseY) {
             root.fadeHandlesMousePositionChanged(mouseX, mouseY)
         }
@@ -123,6 +127,8 @@ Item {
         onFadeTypeChangeRequested: function (type) {
             root.fadeOutTypeChangeRequested(type)
         }
+
+        onFadeLengthEditRequested: root.fadeOutLengthEditRequested()
 
         onMousePositionChanged: function (mouseX, mouseY) {
             root.fadeHandlesMousePositionChanged(mouseX, mouseY)
