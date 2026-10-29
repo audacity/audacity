@@ -55,41 +55,25 @@ Item {
 
         // Where the handles overlap, the dragged one is on top, else the longer fade's: e.g., with no fade-in and
         // a fade-out spanning the whole clip, both handles are in the left corner, and only the fade-out is hittable.
-        readonly property bool fadeInOnTop: fadeInHandle.pressed || (!fadeOutHandle.pressed && root.fadeInWidth > root.fadeOutWidth)
+        readonly property bool fadeInOnTop: fadeIn.pressed || (!fadeOut.pressed && root.fadeInWidth > root.fadeOutWidth)
     }
 
-    // the boundary lines are drawn just inside their fade
-    ClipFadeBoundaryLine {
-        y: root.drawingTop
-        height: root.height - root.drawingTop
-        x: prv.fadeInEnd - 1
-        visible: root.fadeInWidth >= 1
-        highlighted: fadeInHandle.pressed
-    }
+    ClipFade {
+        id: fadeIn
 
-    ClipFadeBoundaryLine {
-        y: root.drawingTop
-        height: root.height - root.drawingTop
-        x: prv.fadeOutStart
-        visible: root.fadeOutWidth >= 1
-        highlighted: fadeOutHandle.pressed
-    }
-
-    ClipFadeHandle {
-        id: fadeInHandle
-
-        x: prv.handleX(prv.fadeInLineCenter - prv.collisionPush)
-        y: root.handlesY
+        anchors.fill: parent
         z: prv.fadeInOnTop ? 1 : 0
-        width: prv.handleSize
-        height: prv.handleSize
-        handleVisible: root.handlesVisible
 
         isFadeIn: true
         fadeWidth: root.fadeInWidth
         fadeLeft: prv.fadeInEnd - root.fadeInWidth
         fadeType: root.fadeInType
         drawingTop: root.drawingTop
+
+        handleX: prv.handleX(prv.fadeInLineCenter - prv.collisionPush)
+        handleY: root.handlesY
+        handleSize: prv.handleSize
+        handleVisible: root.handlesVisible
 
         onFadeEditStarted: root.fadeEditStarted()
 
@@ -104,21 +88,22 @@ Item {
         }
     }
 
-    ClipFadeHandle {
-        id: fadeOutHandle
+    ClipFade {
+        id: fadeOut
 
-        x: prv.handleX(prv.fadeOutLineCenter + prv.collisionPush)
-        y: root.handlesY
+        anchors.fill: parent
         z: prv.fadeInOnTop ? 0 : 1
-        width: prv.handleSize
-        height: prv.handleSize
-        handleVisible: root.handlesVisible
 
         isFadeIn: false
         fadeWidth: root.fadeOutWidth
         fadeLeft: prv.fadeOutStart
         fadeType: root.fadeOutType
         drawingTop: root.drawingTop
+
+        handleX: prv.handleX(prv.fadeOutLineCenter + prv.collisionPush)
+        handleY: root.handlesY
+        handleSize: prv.handleSize
+        handleVisible: root.handlesVisible
 
         onFadeEditStarted: root.fadeEditStarted()
 
