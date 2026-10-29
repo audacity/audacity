@@ -3,32 +3,10 @@
 */
 #include "trackclipitem.h"
 
+#include "fadetypeconversion.h"
 #include "framework/global/realfn.h"
 
 using namespace au::projectscene;
-
-namespace {
-constexpr FadeTypes::Type fadeType(au::trackedit::FadeType type)
-{
-    switch (type) {
-    case au::trackedit::FadeType::Linear:
-        return FadeTypes::Type::LINEAR;
-    case au::trackedit::FadeType::Exponential:
-        return FadeTypes::Type::EXPONENTIAL;
-    case au::trackedit::FadeType::Logarithmic:
-        return FadeTypes::Type::LOGARITHMIC;
-    case au::trackedit::FadeType::SquareRoot:
-        return FadeTypes::Type::SQUARE_ROOT;
-    case au::trackedit::FadeType::EqualPower:
-        return FadeTypes::Type::EQUAL_POWER;
-    case au::trackedit::FadeType::SCurve:
-        return FadeTypes::Type::S_CURVE;
-    default:
-        assert(false);
-        return FadeTypes::Type::LINEAR;
-    }
-}
-}
 
 TrackClipItem::TrackClipItem(QObject* parent)
     : ViewTrackItem(parent)
@@ -46,8 +24,8 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     m_speed = clip.speed;
     m_fadeInDuration = clip.fadeInDuration;
     m_fadeOutDuration = clip.fadeOutDuration;
-    m_fadeInType = fadeType(clip.fadeInType);
-    m_fadeOutType = fadeType(clip.fadeOutType);
+    m_fadeInType = toFadeTypesType(clip.fadeInType);
+    m_fadeOutType = toFadeTypesType(clip.fadeOutType);
 
     emit titleChanged();
     emit pitchChanged();

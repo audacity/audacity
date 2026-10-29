@@ -12,6 +12,7 @@ using namespace au::projectscene;
 using namespace muse::rcommand;
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
+static const muse::Uri EDIT_CLIP_FADES_URI("audacity://projectscene/editclipfades");
 
 void ProjectSceneActionsController::init()
 {
@@ -85,6 +86,7 @@ void ProjectSceneActionsController::init()
     cd->onRequest(this, PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND, [this](const Params& params) {
         return openClipPitchAndSpeedEdit(params);
     });
+    cd->onRequest(this, PROJECTSCENE_CLIP_EDIT_FADES_COMMAND, [this]() { return openClipFadesEdit(); });
     cd->onRequest(this, PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND, [this]() { return openLabelEditor(); });
 }
 
@@ -259,6 +261,16 @@ muse::Ret ProjectSceneActionsController::openClipPitchAndSpeedEdit(const Params&
     query.addParam("focusItemName", muse::Val("pitch"));
 
     interactive()->open(query);
+    return make_ok();
+}
+
+muse::Ret ProjectSceneActionsController::openClipFadesEdit()
+{
+    if (interactive()->isOpened(EDIT_CLIP_FADES_URI).val) {
+        return make_ret(Ret::Code::Busy);
+    }
+
+    interactive()->open(EDIT_CLIP_FADES_URI);
     return make_ok();
 }
 

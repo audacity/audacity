@@ -57,6 +57,7 @@
 #include "view/tracksitemsview/selectionviewcontroller.h"
 #include "view/tracksitemsview/splittoolcontroller.h"
 #include "view/tracksitemsview/pitchandspeedchangemodel.h"
+#include "view/tracksitemsview/clipfadeseditmodel.h"
 #include "view/tracksitemsview/wavepainterproxy.h"
 #include "view/tracksitemsview/au3/connectingdotspainter.h"
 #include "view/tracksitemsview/au3/minmaxrmspainter.h"
@@ -122,6 +123,8 @@ void ProjectSceneModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://projectscene/editpitchandspeed"),
                            "Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://projectscene/editclipfades"),
+                           "Audacity/ProjectScene/tracksitemsview/clipfades/ClipFadesEditDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://projectscene/insertsilence"),
                            "Audacity/ProjectScene/common/InsertSilence.qml");
         ir->registerQmlUri(muse::Uri("audacity://projectscene/openlabeleditor"),
@@ -196,6 +199,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<CanvasContextMenuModel>("Audacity.ProjectScene", 1, 0, "CanvasContextMenuModel");
     qmlRegisterType<SelectionViewController>("Audacity.ProjectScene", 1, 0, "SelectionViewController");
     qmlRegisterType<PitchAndSpeedChangeModel>("Audacity.ProjectScene", 1, 0, "PitchAndSpeedChangeModel");
+    qmlRegisterType<ClipFadesEditModel>("Audacity.ProjectScene", 1, 0, "ClipFadesEditModel");
     qmlRegisterType<SplitToolController>("Audacity.ProjectScene", 1, 0, "SplitToolController");
     qmlRegisterType<DropController>("Audacity.ProjectScene", 1, 0, "DropController");
     qmlRegisterType<LabelsTableViewModel>("Audacity.ProjectScene", 1, 0, "LabelsTableViewModel");
