@@ -34,39 +34,12 @@ Item {
         readonly property real clipEdgeX: root.isFadeIn ? root.fadeX : root.fadeX + root.fadeWidth
         readonly property real boundaryX: root.isFadeIn ? root.fadeX + root.fadeWidth : root.fadeX
 
-        readonly property var fadeTypes: [
-            {
-                type: FadeType.LINEAR,
-                title: qsTrc("projectscene", "Linear")
-            },
-            {
-                type: FadeType.EXPONENTIAL,
-                title: qsTrc("projectscene", "Exponential")
-            },
-            {
-                type: FadeType.LOGARITHMIC,
-                title: qsTrc("projectscene", "Logarithmic")
-            },
-            {
-                type: FadeType.SQUARE_ROOT,
-                title: qsTrc("projectscene", "Square root")
-            },
-            {
-                type: FadeType.EQUAL_POWER,
-                title: qsTrc("projectscene", "Equal power")
-            },
-            {
-                type: FadeType.S_CURVE,
-                title: qsTrc("projectscene", "S-curve")
-            }
-        ]
-
         function openContextMenu(x, y) {
-            contextMenuLoader.show(Qt.point(x, y), fadeTypes.map(fadeType => ({
-                        id: String(fadeType.type),
-                        title: fadeType.title,
+            contextMenuLoader.show(Qt.point(x, y), FadeTypeOptions.all.map(fadeType => ({
+                        id: String(fadeType.value),
+                        title: fadeType.text,
                         checkable: true,
-                        checked: fadeType.type === root.fadeType
+                        checked: fadeType.value === root.fadeType
                     })))
         }
     }

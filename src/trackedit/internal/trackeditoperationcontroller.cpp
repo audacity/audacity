@@ -169,23 +169,27 @@ bool TrackeditOperationController::changeClipFadeOut(const ClipKey& clipKey, sec
     return true;
 }
 
-bool TrackeditOperationController::changeClipFadeInType(const ClipKey& clipKey, FadeType type)
+bool TrackeditOperationController::changeClipFadeInType(const ClipKey& clipKey, FadeType type, bool completed)
 {
     if (!clipsInteraction()->changeClipFadeInType(clipKey, type)) {
         return false;
     }
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed fade in type"),
-                                       muse::trc("trackedit", "Changed fade in type"));
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed fade in type"),
+                                           muse::trc("trackedit", "Changed fade in type"));
+    }
     return true;
 }
 
-bool TrackeditOperationController::changeClipFadeOutType(const ClipKey& clipKey, FadeType type)
+bool TrackeditOperationController::changeClipFadeOutType(const ClipKey& clipKey, FadeType type, bool completed)
 {
     if (!clipsInteraction()->changeClipFadeOutType(clipKey, type)) {
         return false;
     }
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed fade out type"),
-                                       muse::trc("trackedit", "Changed fade out type"));
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed fade out type"),
+                                           muse::trc("trackedit", "Changed fade out type"));
+    }
     return true;
 }
 

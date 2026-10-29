@@ -3,6 +3,7 @@
 */
 #include "trackclipslistmodel.h"
 
+#include "fadetypeconversion.h"
 #include "global/realfn.h"
 #include "global/async/async.h"
 
@@ -18,27 +19,6 @@ using namespace au::trackedit;
 constexpr double MIN_CLIP_WIDTH = 3.0;
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
-
-namespace {
-FadeType fadeType(FadeTypes::Type type)
-{
-    switch (type) {
-    case FadeTypes::Type::LOGARITHMIC:
-        return FadeType::Logarithmic;
-    case FadeTypes::Type::SQUARE_ROOT:
-        return FadeType::SquareRoot;
-    case FadeTypes::Type::EQUAL_POWER:
-        return FadeType::EqualPower;
-    case FadeTypes::Type::S_CURVE:
-        return FadeType::SCurve;
-    case FadeTypes::Type::EXPONENTIAL:
-        return FadeType::Exponential;
-    case FadeTypes::Type::LINEAR:
-    default:
-        return FadeType::Linear;
-    }
-}
-}
 
 TrackClipsListModel::TrackClipsListModel(QObject* parent)
     : TrackItemsListModel(parent)
@@ -444,12 +424,12 @@ void TrackClipsListModel::cancelClipFadeEdit()
 
 bool TrackClipsListModel::changeClipFadeInType(const ClipKey& key, FadeTypes::Type type)
 {
-    return trackeditInteraction()->changeClipFadeInType(key.key, fadeType(type));
+    return trackeditInteraction()->changeClipFadeInType(key.key, toTrackeditFadeType(type), true);
 }
 
 bool TrackClipsListModel::changeClipFadeOutType(const ClipKey& key, FadeTypes::Type type)
 {
-    return trackeditInteraction()->changeClipFadeOutType(key.key, fadeType(type));
+    return trackeditInteraction()->changeClipFadeOutType(key.key, toTrackeditFadeType(type), true);
 }
 
 bool TrackClipsListModel::isKeyboardTriggered() const

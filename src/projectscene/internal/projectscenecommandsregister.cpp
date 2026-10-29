@@ -122,6 +122,15 @@ const std::vector<CommandInfo> s_commandInfos = {
         Availability::Internal
     },
     CommandInfo{
+        PROJECTSCENE_CLIP_EDIT_FADES_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Edit fades"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Edit the fades of the selected clips"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
         PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Show label editor"),
