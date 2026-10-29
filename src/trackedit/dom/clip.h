@@ -13,6 +13,7 @@ using ClipVersion = int64_t;
 
 enum class FadeType {
     Linear,
+    Exponential,
     Logarithmic,
 };
 

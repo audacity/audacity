@@ -13,6 +13,8 @@ constexpr FadeTypes::Type fadeType(au::trackedit::FadeType type)
     switch (type) {
     case au::trackedit::FadeType::Linear:
         return FadeTypes::Type::LINEAR;
+    case au::trackedit::FadeType::Exponential:
+        return FadeTypes::Type::EXPONENTIAL;
     case au::trackedit::FadeType::Logarithmic:
         return FadeTypes::Type::LOGARITHMIC;
     default:

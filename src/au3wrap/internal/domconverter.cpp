@@ -93,6 +93,8 @@ namespace {
 au::trackedit::FadeType fadeType(::FadeType type)
 {
     switch (type) {
+    case ::FadeType::Exponential:
+        return au::trackedit::FadeType::Exponential;
     case ::FadeType::Logarithmic:
         return au::trackedit::FadeType::Logarithmic;
     case ::FadeType::Linear:
