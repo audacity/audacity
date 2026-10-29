@@ -113,6 +113,8 @@ private:
     void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath) const;
 
     muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);
+    bool confirmCloseWithUnsavedChanges(const IAudacityProjectPtr& project);
+    bool doCloseOpenedProject(bool quitApp);
 
     muse::Ret canSaveProject() const;
     bool saveProject(SaveMode saveMode, SaveLocationType saveLocationType = SaveLocationType::Undefined, bool force = false);

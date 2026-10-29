@@ -712,6 +712,45 @@ muse::Ret ProjectActionsController::closeProject()
 
 bool ProjectActionsController::closeOpenedProject(const bool quitApp)
 {
+    const IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return true;
+    }
+
+    if (!confirmCloseWithUnsavedChanges(project)) {
+        return false;
+    }
+
+    return doCloseOpenedProject(quitApp);
+}
+
+bool ProjectActionsController::confirmCloseWithUnsavedChanges(const IAudacityProjectPtr& project)
+{
+    if (!project->hasUnsavedChanges()) {
+        return true;
+    }
+
+    const IInteractive::Button btn = askAboutSavingProject(project);
+
+    if (btn == IInteractive::Button::Cancel) {
+        return false;
+    }
+
+    if (btn == IInteractive::Button::Save) {
+        if (!saveProject()) {
+            return false;
+        }
+
+        if (audioComService()->syncingInProgressChanged().val) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ProjectActionsController::doCloseOpenedProject(const bool quitApp)
+{
     if (m_isProjectClosing) {
         return false;
     }
@@ -724,24 +763,6 @@ bool ProjectActionsController::closeOpenedProject(const bool quitApp)
     const IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
         return true;
-    }
-
-    if (project->hasUnsavedChanges()) {
-        const IInteractive::Button btn = askAboutSavingProject(project);
-
-        if (btn == IInteractive::Button::Cancel) {
-            return false;
-        }
-
-        if (btn == IInteractive::Button::Save) {
-            if (!saveProject()) {
-                return false;
-            }
-
-            if (audioComService()->syncingInProgressChanged().val) {
-                return false;
-            }
-        }
     }
 
     if (project->isCloudProject() && !askAboutStoppingCloudSync()) {
@@ -2024,8 +2045,9 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
     }
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
         const io::path_t localPath = project->path();
-        closeOpenedProject(false);
-        openCloudProject(localPath, {}, {}, true);
+        if (doCloseOpenedProject(false)) {
+            openCloudProject(localPath, {}, {}, true);
+        }
         break;
     }
     default:

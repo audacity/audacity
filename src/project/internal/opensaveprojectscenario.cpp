@@ -88,6 +88,11 @@ const char* CLOUD_SAVE_UNAVAILABLE_TEXT
     =
         "Your project is no longer linked to its previous cloud save. This may happen if the cloud version was deleted.\n\nSave to audio.com to re-upload this project to the cloud.";
 
+const char* SAVE_NOT_SAVED_TITLE = "Project not saved";
+const char* SAVE_NOT_SAVED_MESSAGE
+    =
+        "Audacity could not save the project to audio.com, so your changes have not been saved. Check your internet connection and try again, or save the project to your computer.";
+
 const char* DEFAULT_SYNC_ERROR_TITLE = "We encountered an issue syncing your file";
 const char* DEFAULT_SYNC_ERROR_TEXT
     =
@@ -738,6 +743,23 @@ Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& ret) const
                                                                  buttons, saveLocallyBtn,
                                                                  { IInteractive::Option::WithIcon },
                                                                  muse::trc("project", "Access denied"));
+        if (result.isButton(saveLocallyBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY);
+        }
+        break;
+    }
+    case Err::ProjectNotSaved: {
+        const int saveLocallyBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            IInteractive::ButtonData(saveLocallyBtn, trc("project", "Save to computer"), /*accent=*/ true, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+        };
+        IInteractive::Result result = interactive()->warningSync(trc("project", SAVE_NOT_SAVED_TITLE),
+                                                                 trc("project", SAVE_NOT_SAVED_MESSAGE),
+                                                                 buttons, saveLocallyBtn,
+                                                                 { IInteractive::Option::WithIcon },
+                                                                 muse::trc("project", "Project not saved"));
         if (result.isButton(saveLocallyBtn)) {
             return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY);
         }
