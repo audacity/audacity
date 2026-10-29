@@ -12,6 +12,7 @@ qt_add_qml_module(record_qml
         playbacktoolbarrecordlevelitem.h
     QML_FILES
         RecordLevel.qml
+        TimedRecordingDialog.qml
         internal/RecordLevelPopup.qml
     IMPORTS
         TARGET muse_ui_qml

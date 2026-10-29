@@ -84,7 +84,7 @@ CommandState RecordCommandsState::commandState(const Command& command) const
         return CommandState(controller()->isRecordAllowed() && !controller()->isLeadInRecording());
     }
 
-    if (command == RECORD_LEAD_IN_RECORDING_COMMAND) {
+    if (command == RECORD_LEAD_IN_RECORDING_COMMAND || command == RECORD_TIMED_RECORDING_COMMAND) {
         return CommandState(controller()->isRecordAllowed() && !controller()->isRecording());
     }
 

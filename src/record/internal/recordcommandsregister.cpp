@@ -96,6 +96,16 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration(IconCode::Code::RECORD_FILL)
     },
+    CommandInfo{
+        RECORD_TIMED_RECORDING_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Timed recording"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Set up a timed recording"),
+        InputSchema(),
+        Decoration(),
+        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+    },
 };
 }
 

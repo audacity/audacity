@@ -21,6 +21,7 @@ static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
 static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
 static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
 static const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
+static const ActionCode RECORD_TIMED_RECORDING_CODE("timer-record");
 
 const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_START_QUERY.toString(),
@@ -101,6 +102,14 @@ const UiActionList RecordUiActions::m_mainActions = {
              TranslatableString("action", "Record on new track"),
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Record on new track")
+             ),
+    UiAction(RECORD_TIMED_RECORDING_CODE,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Timed recording"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Set up a timed recording")
              ),
 };
 

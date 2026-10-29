@@ -29,6 +29,8 @@ target_sources(record PRIVATE
     internal/recordmetercontroller.h
     internal/recorduiactions.cpp
     internal/recorduiactions.h
+    internal/timedrecordingcontroller.cpp
+    internal/timedrecordingcontroller.h
 
     #internal/au3
     internal/au3/au3audioinput.cpp
