@@ -443,6 +443,31 @@ void TrackClipsListModel::openClipFadeOutLengthEdit(const ClipKey& key)
     openClipFadesEdit(key, ClipSides::Side::Right);
 }
 
+bool TrackClipsListModel::removeClipFadeIn(const ClipKey& key)
+{
+    return removeClipFades(key, ClipSides::Side::Left);
+}
+
+bool TrackClipsListModel::removeClipFadeOut(const ClipKey& key)
+{
+    return removeClipFades(key, ClipSides::Side::Right);
+}
+
+bool TrackClipsListModel::removeClipFades(const ClipKey& key, ClipSides::Side side)
+{
+    // Like trimming and stretching, for all the selected clips if this one is
+    const ClipKeyList keys = clipsForInteraction(key);
+    bool removed = false;
+    for (const trackedit::ClipKey& clipKey : keys) {
+        // Only the last change completes, so that one state is pushed for all the clips
+        const bool completed = &clipKey == &keys.back();
+        removed = side == ClipSides::Side::Left ? trackeditInteraction()->changeClipFadeIn(clipKey, 0.0, completed)
+                  : trackeditInteraction()->changeClipFadeOut(clipKey, 0.0, completed);
+    }
+    // That of the last clip, whose change pushes the state
+    return removed;
+}
+
 void TrackClipsListModel::openClipFadesEdit(const ClipKey& key, ClipSides::Side focusedFade)
 {
     selectClip(key);

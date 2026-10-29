@@ -63,6 +63,8 @@ public:
     Q_INVOKABLE bool changeClipFadeOutType(const ClipKey& key, FadeTypes::Type type);
     Q_INVOKABLE void openClipFadeInLengthEdit(const ClipKey& key);
     Q_INVOKABLE void openClipFadeOutLengthEdit(const ClipKey& key);
+    Q_INVOKABLE bool removeClipFadeIn(const ClipKey& key);
+    Q_INVOKABLE bool removeClipFadeOut(const ClipKey& key);
 
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
@@ -102,6 +104,7 @@ private:
     bool isKeyboardTriggered() const;
 
     bool changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change);
+    bool removeClipFades(const ClipKey& key, ClipSides::Side side);
 
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
