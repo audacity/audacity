@@ -3,6 +3,7 @@
 */
 #include "macroserialization.h"
 
+#include <charconv>
 #include <cmath>
 #include <limits>
 #include <optional>
@@ -17,6 +18,36 @@ const std::string STEPS_KEY("steps");
 const std::string COMMAND_KEY("command");
 const std::string PARAMS_KEY("params");
 const std::string MACRO_KEY("macro");
+const std::string INT64_KEY("int64");
+
+JsonObject int64ToJson(int64_t number)
+{
+    JsonObject object;
+    object.set(INT64_KEY, std::to_string(number));
+
+    return object;
+}
+
+std::optional<int64_t> int64FromJson(const JsonObject& object)
+{
+    if (object.size() != 1 || !object.contains(INT64_KEY)) {
+        return std::nullopt;
+    }
+
+    const JsonValue value = object.value(INT64_KEY);
+    if (!value.isString()) {
+        return std::nullopt;
+    }
+
+    const std::string& text = value.toStdString();
+    int64_t number = 0;
+    const auto [end, error] = std::from_chars(text.data(), text.data() + text.size(), number);
+    if (error != std::errc() || end != text.data() + text.size()) {
+        return std::nullopt;
+    }
+
+    return number;
+}
 
 JsonObject valMapToJson(const ValMap& map);
 
@@ -31,7 +62,7 @@ JsonValue valToJson(const Val& val)
         break;
     case Val::Type::Int: value = val.toInt();
         break;
-    case Val::Type::Int64: value = static_cast<double>(val.toInt64());
+    case Val::Type::Int64: value = int64ToJson(val.toInt64());
         break;
     case Val::Type::Double: value = val.toDouble();
         break;
@@ -106,7 +137,12 @@ std::optional<Val> valFromJson(const JsonValue& value)
     }
 
     if (value.isObject()) {
-        return Val(valMapFromJson(value.toObject()));
+        const JsonObject object = value.toObject();
+        if (const std::optional<int64_t> number = int64FromJson(object)) {
+            return Val(*number);
+        }
+
+        return Val(valMapFromJson(object));
     }
 
     return std::nullopt;
