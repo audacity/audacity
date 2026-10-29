@@ -3,6 +3,8 @@
 */
 #include <gtest/gtest.h>
 
+#include <limits>
+
 #include "global/serialization/json.h"
 
 #include "macromanager/internal/macroserialization.h"
@@ -45,6 +47,36 @@ TEST(MacroManager_MacroSerializationTests, KeepsScalarTypes)
     EXPECT_EQ(params.at("double").toDouble(), 0.5);
     EXPECT_EQ(params.at("string").type(), Val::Type::String);
     EXPECT_EQ(params.at("string").toString(), "text");
+}
+
+TEST(MacroManager_MacroSerializationTests, KeepsInt64Precision)
+{
+    const int64_t large = (int64_t(1) << 53) + 1;
+    const int64_t negative = std::numeric_limits<int64_t>::min();
+
+    const Params params = roundTrip({
+        { "large", Val(large) },
+        { "negative", Val(negative) },
+        { "list", Val(ValList { Val(large) }) },
+    });
+
+    EXPECT_EQ(params.at("large").type(), Val::Type::Int64);
+    EXPECT_EQ(params.at("large").toInt64(), large);
+    EXPECT_EQ(params.at("negative").type(), Val::Type::Int64);
+    EXPECT_EQ(params.at("negative").toInt64(), negative);
+    ASSERT_EQ(params.at("list").type(), Val::Type::List);
+    EXPECT_EQ(params.at("list").toList().at(0).type(), Val::Type::Int64);
+    EXPECT_EQ(params.at("list").toList().at(0).toInt64(), large);
+}
+
+TEST(MacroManager_MacroSerializationTests, KeepsMapsThatLookLikeInt64)
+{
+    const Params params = roundTrip({
+        { "map", Val(ValMap { { "int64", Val(std::string("not a number")) } }) },
+    });
+
+    ASSERT_EQ(params.at("map").type(), Val::Type::Map);
+    EXPECT_EQ(params.at("map").toMap().at("int64").toString(), "not a number");
 }
 
 TEST(MacroManager_MacroSerializationTests, KeepsNestedListsAndMaps)
