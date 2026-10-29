@@ -238,7 +238,8 @@ protected:
         }
         if (format.ffmpegContainer) {
             setParameter(parameters, FEFormatID, std::string(format.ffmpegContainer));
-            setParameter(parameters, FECodecID, std::string("flac"));
+            //! PCM, because FFmpeg 4.4's Matroska muxer rejects the final FLAC packet the exporter writes
+            setParameter(parameters, FECodecID, std::string("pcm_s16le"));
         }
         ASSERT_TRUE(plugin->GetFormatInfo(formatIndex).canMetaData);
 
