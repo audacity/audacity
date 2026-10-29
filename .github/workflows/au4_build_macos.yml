@@ -232,6 +232,27 @@ jobs:
         path: ./build.install/
         retention-days: 1
 
+    # Use the binary in the build tree: macdeployqt strips the installed copy during install
+    - name: Generate dSYM
+      if: env.DO_UPLOAD_SYMBOLS == 'true'
+      run: |
+        cmake -DBIN=build.release/src/app/audacity.app/Contents/MacOS/audacity \
+              -DDSYM=build.release/audacity.dSYM \
+              -P muse/buildscripts/ci/macos/generate_dsym.cmake
+
+    - name: Upload debug files
+      if: env.DO_UPLOAD_SYMBOLS == 'true'
+      env:
+        SENTRY_URL: https://sentry.audacityteam.org
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: sentry
+      run: |
+        FILES="build.release/audacity.dSYM/Contents/Resources/DWARF/audacity;build.release/src/app/audacity.app/Contents/MacOS/audacity"
+        for LIB in build.install/audacity.app/Contents/Frameworks/*.dylib; do
+          FILES="${FILES};${LIB}"
+        done
+        cmake -DFILES="${FILES}" -P muse/buildscripts/ci/tools/sentry/upload_debug_files.cmake
+
     - name: Package
       env:
         SIGN_CERTIFICATE_ENCRYPT_SECRET: ${{ secrets.MAC_SIGN_CERTIFICATE_ENCRYPT_SECRET }}
@@ -247,34 +268,13 @@ jobs:
         USER=${{ secrets.APPLE_USERNAME }}; if [ -z "$USER" ]; then USER=""; fi
         PW=${{ secrets.APPLE_PASSWORD }}; if [ -z "$PW" ]; then PW=""; fi
         bash ./muse/buildscripts/ci/macos/notarize.sh -u $USER -p $PW
-    - name: Generate and upload dump symbols
-      if: env.DO_UPLOAD_SYMBOLS == 'true'
-      shell: bash
-      run: |
-        APP_BIN=$(pwd)/build.install/audacity.app/Contents/MacOS/audacity
-        GENERATE_ARCHS="${{ matrix.arch }}"
-        if [ "$GENERATE_ARCHS" == "universal" ]; then
-          GENERATE_ARCHS="x86_64 arm64"
-        fi
-        BUILD_DIR=$(pwd)/build.install
-
-        cmake -DAPP_BIN=${APP_BIN} \
-              -DGENERATE_ARCHS="${GENERATE_ARCHS}" \
-              -DBUILD_DIR=${BUILD_DIR} \
-              -DSENTRY_URL=https://sentry.audacityteam.org \
-              -DSENTRY_ORG=sentry \
-              -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
-              -DSENTRY_PROJECT=${SENTRY_PROJECT} \
-              -P muse/buildscripts/ci/crashdumps/ci_generate_and_upload.cmake
 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v7
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
-        path: |
-          ./build.artifacts/
-          !./build.artifacts/symbols/**
+        path: ./build.artifacts/
 
     - name: Prepare ccache files for saving
       id: prepare-save-ccache
