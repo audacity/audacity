@@ -14,7 +14,7 @@ Item {
     required property real fadeX
     required property int fadeType
 
-    //! The fade line is always drawn, the handle only when this is true
+    //! The fade line is always drawn, the handle only when this is true or when its hit area is hovered
     property bool handleVisible: true
 
     readonly property alias pressed: mouseArea.dragging
@@ -64,14 +64,8 @@ Item {
 
         anchors.centerIn: parent
 
-        opacity: root.handleVisible ? 1 : 0
+        opacity: root.handleVisible || mouseArea.containsMouse || mouseArea.dragging ? 1 : 0
         visible: opacity > 0
-
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 80
-            }
-        }
 
         hovered: mouseArea.containsMouse || mouseArea.dragging
         iconCode: root.isFadeIn ? IconCode.FADE_HANDLE_IN : IconCode.FADE_HANDLE_OUT
@@ -101,39 +95,18 @@ Item {
         property real grabOffset: 0
         property bool cursorOverridden: false
 
-        // Active whether the handle is shown or not. Over it, a shown handle grows; a hidden one turns the mouse
-        // cursor into the hovered handle.
         anchors.fill: parent
 
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
 
-        function updateCursor() {
-            if (root.handleVisible) {
-                CustomCursorProvider.setStandardCursorShape(mouseArea, Qt.SizeHorCursor)
-            } else {
-                CustomCursorProvider.setIconCursorShape(mouseArea, ui.theme.iconsFont.family, icon.iconCode, icon.hoveredIconSize)
-            }
-        }
-
-        Component.onCompleted: updateCursor()
-
-        Connections {
-            target: root
-            function onHandleVisibleChanged() {
-                mouseArea.updateCursor()
-            }
-        }
+        Component.onCompleted: CustomCursorProvider.setStandardCursorShape(mouseArea, Qt.SizeHorCursor)
 
         Component.onDestruction: restoreCursor()
 
-        // While dragging, the mouse may go over the other handle, which would show its own cursor
+        // While dragging, the mouse may go over other items, which would show their own cursors
         function overrideCursor() {
-            if (root.handleVisible) {
-                CustomCursorProvider.overrideStandardCursor(Qt.SizeHorCursor)
-            } else {
-                CustomCursorProvider.overrideIconCursor(ui.theme.iconsFont.family, icon.iconCode, icon.hoveredIconSize)
-            }
+            CustomCursorProvider.overrideStandardCursor(Qt.SizeHorCursor)
             cursorOverridden = true
         }
 
@@ -145,8 +118,10 @@ Item {
         }
 
         onPressed: function (e) {
-            // The context menu opens on release, like the clips'
+            // The context menu opens on release, like the clips', and only where there is a fade: elsewhere, the
+            // press goes to the items below
             if (e.button === Qt.RightButton) {
+                e.accepted = root.fadeWidth > 0
                 return
             }
             dragging = true

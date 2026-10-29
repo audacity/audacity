@@ -17,11 +17,13 @@ Item {
     required property int fadeInType
     required property int fadeOutType
 
+    property bool clipSelected: false
+    property bool clipHovered: false
+
     //! The fades span the whole item, the handles only a band of it, starting at `handlesY`
     property real handlesY: 0
     //! Above it, the fades aren't drawn
     property real drawingTop: 0
-    property bool handlesVisible: false
 
     signal fadeEditStarted
     signal fadeInWidthChangeRequested(real width, bool completed)
@@ -74,7 +76,7 @@ Item {
         handleX: prv.handleX(prv.fadeInLineCenter - prv.collisionPush)
         handleY: root.handlesY
         handleSize: prv.handleSize
-        handleVisible: root.handlesVisible
+        handleVisible: root.clipSelected || (root.clipHovered && root.fadeInWidth > 0)
 
         onFadeEditStarted: root.fadeEditStarted()
 
@@ -108,7 +110,7 @@ Item {
         handleX: prv.handleX(prv.fadeOutLineCenter + prv.collisionPush)
         handleY: root.handlesY
         handleSize: prv.handleSize
-        handleVisible: root.handlesVisible
+        handleVisible: root.clipSelected || (root.clipHovered && root.fadeOutWidth > 0)
 
         onFadeEditStarted: root.fadeEditStarted()
 
