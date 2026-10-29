@@ -1215,6 +1215,8 @@ Rectangle {
         y: viewsColumn.y
         width: root.width
         height: viewsColumn.height
+        clipSelected: root.clipSelected && !root.moveActive
+        clipHovered: root.hover
         // The header covers the top of a collapsed clip when shown
         drawingTop: header.visible ? Math.max(0, header.y + header.height - y) : 0
         // Level with the trim and stretch handles, but dropping down with the header of a collapsed clip
@@ -1227,8 +1229,6 @@ Rectangle {
         fadeOutWidth: root.fadeOutDuration * root.context.zoom
         fadeInType: root.fadeInType
         fadeOutType: root.fadeOutType
-        // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
-        handlesVisible: root.clipSelected && !root.moveActive
 
         onFadeEditStarted: root.fadeEditStarted()
 
