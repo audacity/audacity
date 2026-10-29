@@ -23,6 +23,14 @@ class FadeGainTests : public ::testing::TestWithParam<FadeType>
 class InverseFadeGainTests : public ::testing::TestWithParam<std::pair<FadeType, FadeType> >
 {
 };
+
+class EqualPowerFadeGainTests : public ::testing::TestWithParam<FadeType>
+{
+};
+
+class EqualGainFadeGainTests : public ::testing::TestWithParam<FadeType>
+{
+};
 }
 
 TEST_P(FadeGainTests, GoesFromSilenceToUnity)
@@ -39,7 +47,8 @@ TEST_P(FadeGainTests, IsMonotonicallyIncreasing)
 }
 
 INSTANTIATE_TEST_SUITE_P(AllFadeTypes, FadeGainTests,
-                         ::testing::Values(FadeType::Linear, FadeType::Exponential, FadeType::Logarithmic));
+                         ::testing::Values(FadeType::Linear, FadeType::Exponential, FadeType::Logarithmic, FadeType::SquareRoot,
+                                           FadeType::EqualPower, FadeType::SCurve));
 
 TEST_P(InverseFadeGainTests, OuterFadeUndoesInnerFade)
 {
@@ -53,3 +62,27 @@ TEST_P(InverseFadeGainTests, OuterFadeUndoesInnerFade)
 INSTANTIATE_TEST_SUITE_P(LogarithmicAndExponential, InverseFadeGainTests,
                          ::testing::Values(std::pair { FadeType::Exponential, FadeType::Logarithmic },
                                            std::pair { FadeType::Logarithmic, FadeType::Exponential }));
+
+TEST_P(EqualPowerFadeGainTests, CrossfadeWithMirrorKeepsPowerConstant)
+{
+    for (auto step = 0; step <= TEST_NUM_STEPS; ++step) {
+        const auto fadeIn = ClipFades::fadeGain(GetParam(), positionAt(step));
+        const auto fadeOut = ClipFades::fadeGain(GetParam(), positionAt(TEST_NUM_STEPS - step));
+        EXPECT_NEAR(fadeIn * fadeIn + fadeOut * fadeOut, 1.0, TEST_TOLERANCE);
+    }
+}
+
+INSTANTIATE_TEST_SUITE_P(SquareRootAndEqualPower, EqualPowerFadeGainTests,
+                         ::testing::Values(FadeType::SquareRoot, FadeType::EqualPower));
+
+TEST_P(EqualGainFadeGainTests, CrossfadeWithMirrorKeepsGainConstant)
+{
+    for (auto step = 0; step <= TEST_NUM_STEPS; ++step) {
+        const auto fadeIn = ClipFades::fadeGain(GetParam(), positionAt(step));
+        const auto fadeOut = ClipFades::fadeGain(GetParam(), positionAt(TEST_NUM_STEPS - step));
+        EXPECT_NEAR(fadeIn + fadeOut, 1.0, TEST_TOLERANCE);
+    }
+}
+
+INSTANTIATE_TEST_SUITE_P(LinearAndSCurve, EqualGainFadeGainTests,
+                         ::testing::Values(FadeType::Linear, FadeType::SCurve));

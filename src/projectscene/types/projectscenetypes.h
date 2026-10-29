@@ -156,7 +156,10 @@ public:
     enum class Type {
         LINEAR = 0,
         EXPONENTIAL,
-        LOGARITHMIC
+        LOGARITHMIC,
+        SQUARE_ROOT,
+        EQUAL_POWER,
+        S_CURVE
     };
     Q_ENUM(Type)
 };
