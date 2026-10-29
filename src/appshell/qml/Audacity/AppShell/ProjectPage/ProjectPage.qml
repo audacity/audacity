@@ -147,6 +147,7 @@ DockPage {
 
     readonly property string verticalPanelsGroup: "VERTICAL_PANELS"
     readonly property string horizontalPanelsGroup: "HORIZONTAL_PANELS"
+    readonly property string toolPanelsGroup: "TOOL_PANELS"
 
     readonly property var verticalPanelDropDestinations: [
         {
@@ -426,7 +427,7 @@ DockPage {
         DockPanel {
             id: macroManagerPanel
 
-            readonly property int panelWidth: 280
+            readonly property int panelWidth: root.verticalPanelDefaultWidth
             readonly property int floatingMaximumWidth: 16777215
 
             objectName: pageModel.macroManagerPanelName()
@@ -446,6 +447,7 @@ DockPage {
             minimumWidth: panelWidth
             maximumWidth: floating ? floatingMaximumWidth : panelWidth
 
+            groupName: root.toolPanelsGroup
             location: Location.Right
 
             dropDestinations: [
@@ -477,7 +479,7 @@ DockPage {
             minimumWidth: root.verticalPanelDefaultWidth
             maximumWidth: root.verticalPanelDefaultWidth
 
-            groupName: root.verticalPanelsGroup
+            groupName: root.toolPanelsGroup
             location: Location.Right
 
             //! NOTE: hidden by default
