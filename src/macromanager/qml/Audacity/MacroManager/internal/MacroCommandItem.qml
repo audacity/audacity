@@ -61,7 +61,12 @@ Rectangle {
 
     property bool canMoveUp: false
     property bool canMoveDown: false
+    property bool isMoving: false
+    readonly property bool isEdited: root.innerNavigationActive || root.isMoving
 
+    signal navigationActivated
+    signal editingStarted
+    signal editingFinished
     signal editRequested
     signal deleteRequested
     signal moveUpRequested
@@ -69,8 +74,16 @@ Rectangle {
 
     implicitHeight: prv.height
 
+    onIsEditedChanged: {
+        if (root.isEdited) {
+            root.editingStarted()
+        } else {
+            root.editingFinished()
+        }
+    }
+
     color: hoverHandler.hovered ? ui.theme.extra["background_table_item_hover_color"] : ui.theme.extra["background_table_item_idle_color"]
-    opacity: root.Drag.active ? ui.theme.itemOpacityDisabled : 1.0
+    opacity: root.Drag.active || root.isMoving ? ui.theme.itemOpacityDisabled : 1.0
 
     Drag.dragType: Drag.Automatic
     Drag.supportedActions: Qt.MoveAction
@@ -138,6 +151,61 @@ Rectangle {
 
             iconCode: IconCode.TOOLBAR_GRIP
 
+            NavigationControl {
+                id: handleNavCtrl
+
+                name: "CommandHandle"
+                panel: root.navigationPanel
+                row: root.navigationRow
+                column: 0
+                enabled: root.enabled && root.visible
+
+                accessible.role: MUAccessible.Button
+                accessible.name: root.isMoving ? qsTrc("macromanager", "Moving %1. Use the up and down arrows to move it. Press Escape to stop.").arg(root.title) : qsTrc("macromanager", "Move %1").arg(root.title)
+
+                onTriggered: {
+                    root.isMoving = !root.isMoving
+                }
+
+                onActiveChanged: {
+                    if (handleNavCtrl.active) {
+                        root.navigationActivated()
+                    } else {
+                        root.isMoving = false
+                    }
+                }
+
+                onNavigationEvent: function (event) {
+                    if (!root.isMoving) {
+                        return
+                    }
+
+                    switch (event.type) {
+                    case NavigationEvent.Up:
+                        if (root.canMoveUp) {
+                            root.moveUpRequested()
+                        }
+                        event.accepted = true
+                        break
+                    case NavigationEvent.Down:
+                        if (root.canMoveDown) {
+                            root.moveDownRequested()
+                        }
+                        event.accepted = true
+                        break
+                    case NavigationEvent.Escape:
+                        root.isMoving = false
+                        event.accepted = true
+                        break
+                    }
+                }
+            }
+
+            NavigationFocusBorder {
+                navigationCtrl: handleNavCtrl
+                drawOutsideParent: false
+            }
+
             MouseArea {
                 id: handleArea
 
@@ -164,30 +232,88 @@ Rectangle {
             text: root.step
             horizontalAlignment: Qt.AlignLeft
             leftPadding: root.sideMargin
+
+            NavigationControl {
+                id: stepNavCtrl
+
+                name: "CommandStep"
+                panel: root.navigationPanel
+                row: root.navigationRow
+                column: 1
+                enabled: root.enabled && root.visible
+
+                accessible.role: MUAccessible.Cell
+                accessible.name: qsTrc("macromanager", "Step %1").arg(root.step)
+
+                onActiveChanged: {
+                    if (stepNavCtrl.active) {
+                        root.navigationActivated()
+                    }
+                }
+            }
+
+            NavigationFocusBorder {
+                navigationCtrl: stepNavCtrl
+                drawOutsideParent: false
+            }
         }
 
         SeparatorLine {}
 
-        RowLayout {
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.leftMargin: root.sideMargin
 
-            spacing: prv.iconTitleSpacing
+            NavigationControl {
+                id: commandNavCtrl
 
-            StyledIconLabel {
-                visible: root.isMacro
+                name: "CommandTitle"
+                panel: root.navigationPanel
+                row: root.navigationRow
+                column: 2
+                enabled: root.enabled && root.visible
 
-                iconCode: IconCode.ACCOUNT
+                accessible.role: MUAccessible.Cell
+                accessible.name: root.title
+
+                onTriggered: {
+                    if (root.hasParams) {
+                        root.editRequested()
+                    }
+                }
+
+                onActiveChanged: {
+                    if (commandNavCtrl.active) {
+                        root.navigationActivated()
+                    }
+                }
             }
 
-            StyledTextLabel {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+            NavigationFocusBorder {
+                navigationCtrl: commandNavCtrl
+                drawOutsideParent: false
+            }
 
-                text: root.title
-                horizontalAlignment: Qt.AlignLeft
-                elide: Text.ElideRight
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: root.sideMargin
+
+                spacing: prv.iconTitleSpacing
+
+                StyledIconLabel {
+                    visible: root.isMacro
+
+                    iconCode: IconCode.ACCOUNT
+                }
+
+                StyledTextLabel {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    text: root.title
+                    horizontalAlignment: Qt.AlignLeft
+                    elide: Text.ElideRight
+                }
             }
         }
 
@@ -200,14 +326,14 @@ Rectangle {
             NavigationControl {
                 id: actionsNavCtrl
 
-                name: "CommandRow"
+                name: "CommandActionsCell"
                 panel: root.navigationPanel
                 row: root.navigationRow
-                column: 0
+                column: 3
                 enabled: root.enabled && root.visible
 
-                accessible.role: MUAccessible.ListItem
-                accessible.name: root.title
+                accessible.role: MUAccessible.Cell
+                accessible.name: qsTrc("macromanager", "Actions for %1").arg(root.title)
 
                 onTriggered: {
                     root.innerNavigationActive = true
@@ -221,10 +347,7 @@ Rectangle {
                     }
 
                     root.innerNavigationActive = false
-
-                    if (root.ListView.view) {
-                        root.ListView.view.positionViewAtIndex(root.navigationRow, ListView.Contain)
-                    }
+                    root.navigationActivated()
                 }
             }
 

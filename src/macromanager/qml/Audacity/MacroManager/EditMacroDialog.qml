@@ -25,6 +25,7 @@ StyledDialogView {
     resizable: true
     margins: 0
     modal: false
+    closeOnEscape: !commandsTable.currentEditedItem
 
     QtObject {
         id: prv
