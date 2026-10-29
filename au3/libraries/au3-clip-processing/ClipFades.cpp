@@ -23,7 +23,8 @@ const auto fadeFloor = std::pow(10, ClipFades::fadeLogRangeDb / 20);
 
 std::optional<FadeType> fadeTypeFromValue(int value)
 {
-    for (const auto type : { FadeType::Linear, FadeType::Logarithmic, FadeType::Exponential }) {
+    for (const auto type : { FadeType::Linear, FadeType::Logarithmic, FadeType::Exponential,
+                             FadeType::SquareRoot, FadeType::EqualPower, FadeType::SCurve }) {
         if (value == static_cast<int>(type)) {
             return type;
         }
@@ -190,6 +191,14 @@ double ClipFades::fadeGain(FadeType type, double t)
         // Rounding may take the gain marginally below 0 at `t == 0`
         return std::max(0.0, 1.0 - 20.0 * std::log10(u) / ClipFades::fadeLogRangeDb);
     }
+    case FadeType::SquareRoot:
+        return std::sqrt(t);
+    case FadeType::EqualPower:
+        // Quarter of a sine period
+        return std::sin(std::numbers::pi / 2.0 * t);
+    case FadeType::SCurve:
+        // Half of a raised cosine period
+        return 0.5 * (1.0 - std::cos(std::numbers::pi * t));
     case FadeType::Linear:
     default:
         return t;

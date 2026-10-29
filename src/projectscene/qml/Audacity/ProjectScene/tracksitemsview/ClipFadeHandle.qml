@@ -46,6 +46,18 @@ Item {
             {
                 type: FadeType.LOGARITHMIC,
                 title: qsTrc("projectscene", "Logarithmic")
+            },
+            {
+                type: FadeType.SQUARE_ROOT,
+                title: qsTrc("projectscene", "Square root")
+            },
+            {
+                type: FadeType.EQUAL_POWER,
+                title: qsTrc("projectscene", "Equal power")
+            },
+            {
+                type: FadeType.S_CURVE,
+                title: qsTrc("projectscene", "S-curve")
             }
         ]
 

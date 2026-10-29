@@ -97,6 +97,12 @@ au::trackedit::FadeType fadeType(::FadeType type)
         return au::trackedit::FadeType::Exponential;
     case ::FadeType::Logarithmic:
         return au::trackedit::FadeType::Logarithmic;
+    case ::FadeType::SquareRoot:
+        return au::trackedit::FadeType::SquareRoot;
+    case ::FadeType::EqualPower:
+        return au::trackedit::FadeType::EqualPower;
+    case ::FadeType::SCurve:
+        return au::trackedit::FadeType::SCurve;
     case ::FadeType::Linear:
     default:
         return au::trackedit::FadeType::Linear;

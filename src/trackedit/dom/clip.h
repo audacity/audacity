@@ -15,6 +15,9 @@ enum class FadeType {
     Linear,
     Exponential,
     Logarithmic,
+    SquareRoot,
+    EqualPower,
+    SCurve,
 };
 
 struct Clip {
