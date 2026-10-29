@@ -218,23 +218,4 @@ shasum -a 256 ${WORKING_DIRECTORY}/${COMPRESSEDDMGNAME}
 
 rm ${WORKING_DIRECTORY}/${DMGNAME}
 
-# Fix rpath after packaging, needed for generating dump symbols
-SOURCE_BIN_FILE=${APP_PATH}/Contents/MacOS/${APPNAME}
-if [[ -f "$SOURCE_BIN_FILE" ]]
-then
-    change_rpath "$SOURCE_BIN_FILE"
-fi
-
-SOURCE_FRAMEWORKS=${APP_PATH}/Contents/Frameworks
-if [[ -d "$SOURCE_FRAMEWORKS" ]]
-then
-    for LIB_FILE in $SOURCE_FRAMEWORKS/*.dylib
-    do
-        if [[ -f "$LIB_FILE" ]]
-        then
-            change_rpath "$LIB_FILE"
-        fi
-    done
-fi
-
 ls ${WORKING_DIRECTORY}

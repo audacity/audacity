@@ -253,30 +253,23 @@ jobs:
       run: |
         cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/windows/package.cmake
 
-    - name: Generate and upload dump symbols
+    - name: Upload debug files
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
+      env:
+        SENTRY_URL: https://sentry.audacityteam.org
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: sentry
       run: |
-        APP_BIN=$(pwd)/build.release/Audacity4.pdb
-        APP_EXE=$(pwd)/build.release/Audacity4.exe
-        cmake -E copy_if_different build.install/bin/Audacity4.exe "${APP_EXE}"
-        trap 'cmake -E rm -f "${APP_EXE}"' EXIT
-
-        cmake -DAPP_BIN="${APP_BIN}" \
-              -DSENTRY_URL=https://sentry.audacityteam.org \
-              -DSENTRY_ORG=sentry \
-              -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
-              -DSENTRY_PROJECT=${SENTRY_PROJECT} \
-              -P muse/buildscripts/ci/crashdumps/ci_generate_and_upload.cmake
+        cmake -DFILES="build.release/Audacity4.pdb;build.install/bin/Audacity4.exe" \
+              -P muse/buildscripts/ci/tools/sentry/upload_debug_files.cmake
 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v7
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
-        path: |
-          ./build.artifacts/
-          !./build.artifacts/symbols/**
+        path: ./build.artifacts/
 
     - name: Prepare ccache files for saving
       id: prepare-save-ccache
