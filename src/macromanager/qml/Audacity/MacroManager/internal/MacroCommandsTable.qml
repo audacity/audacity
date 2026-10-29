@@ -17,10 +17,13 @@ ColumnLayout {
 
     readonly property string dragMimeType: "application/x-audacity-macro-command"
 
+    property var currentEditedItem: null
+
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "MacroCommandsTable"
-        direction: NavigationPanel.Vertical
+        direction: NavigationPanel.Both
         enabled: root.enabled && root.visible
+        accessible.role: MUAccessible.Table
         accessible.name: qsTrc("macromanager", "Macro commands")
     }
 
@@ -85,6 +88,8 @@ ColumnLayout {
             SeparatorLine {}
 
             StyledTextLabel {
+                id: stepHeader
+
                 Layout.preferredWidth: prv.stepWidth
                 Layout.fillHeight: true
 
@@ -92,11 +97,31 @@ ColumnLayout {
                 font: ui.theme.bodyBoldFont
                 horizontalAlignment: Qt.AlignLeft
                 leftPadding: prv.sideMargin
+
+                NavigationControl {
+                    id: stepHeaderNavCtrl
+
+                    name: "StepHeader"
+                    panel: root.navigationPanel
+                    row: 0
+                    column: 1
+                    enabled: root.enabled && root.visible
+
+                    accessible.role: MUAccessible.ColumnHeader
+                    accessible.name: stepHeader.text
+                }
+
+                NavigationFocusBorder {
+                    navigationCtrl: stepHeaderNavCtrl
+                    drawOutsideParent: false
+                }
             }
 
             SeparatorLine {}
 
             StyledTextLabel {
+                id: commandHeader
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -104,11 +129,31 @@ ColumnLayout {
                 font: ui.theme.bodyBoldFont
                 horizontalAlignment: Qt.AlignLeft
                 leftPadding: prv.sideMargin
+
+                NavigationControl {
+                    id: commandHeaderNavCtrl
+
+                    name: "CommandHeader"
+                    panel: root.navigationPanel
+                    row: 0
+                    column: 2
+                    enabled: root.enabled && root.visible
+
+                    accessible.role: MUAccessible.ColumnHeader
+                    accessible.name: commandHeader.text
+                }
+
+                NavigationFocusBorder {
+                    navigationCtrl: commandHeaderNavCtrl
+                    drawOutsideParent: false
+                }
             }
 
             SeparatorLine {}
 
             StyledTextLabel {
+                id: actionsHeader
+
                 Layout.preferredWidth: prv.actionsWidth
                 Layout.fillHeight: true
 
@@ -116,6 +161,24 @@ ColumnLayout {
                 font: ui.theme.bodyBoldFont
                 horizontalAlignment: Qt.AlignLeft
                 leftPadding: prv.sideMargin
+
+                NavigationControl {
+                    id: actionsHeaderNavCtrl
+
+                    name: "ActionsHeader"
+                    panel: root.navigationPanel
+                    row: 0
+                    column: 3
+                    enabled: root.enabled && root.visible
+
+                    accessible.role: MUAccessible.ColumnHeader
+                    accessible.name: actionsHeader.text
+                }
+
+                NavigationFocusBorder {
+                    navigationCtrl: actionsHeaderNavCtrl
+                    drawOutsideParent: false
+                }
             }
         }
     }
@@ -134,6 +197,8 @@ ColumnLayout {
             scrollBarPolicy: ScrollBar.AlwaysOn
 
             delegate: MacroCommandItem {
+                id: commandItem
+
                 required property int index
 
                 width: ListView.view.width
@@ -147,10 +212,22 @@ ColumnLayout {
                 dragRow: index
 
                 navigationPanel: root.navigationPanel
-                navigationRow: index
+                navigationRow: index + 1
 
                 canMoveUp: index > 0
                 canMoveDown: index < listView.count - 1
+
+                onNavigationActivated: {
+                    listView.positionViewAtIndex(index, ListView.Contain)
+                }
+
+                onEditingStarted: {
+                    root.currentEditedItem = commandItem
+                }
+
+                onEditingFinished: {
+                    root.currentEditedItem = null
+                }
 
                 onEditRequested: {
                     root.editRequested(index)
