@@ -3,6 +3,8 @@
 */
 #include "projecttoolbarmodel.h"
 
+#include "au3-musehub/MuseHubService.h"
+
 #include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 using namespace au::projectscene;
@@ -44,7 +46,14 @@ void ProjectToolBarModel::load()
     });
 
     dispatcher()->reg(this, "audio-setup", [this]() { emit openAudioSetupContextMenu(); });
-    dispatcher()->reg(this, "get-effects", [this]() { emit openGetEffectsDialog(); });
+    dispatcher()->reg(this, "get-effects", [this]() {
+        if (audacity::musehub::IsMuseHubRegistered()) {
+            platformInteractive()->openUrl(audacity::musehub::GetPluginsUrl());
+            return;
+        }
+
+        emit openGetEffectsDialog();
+    });
 
     m_loaded = true;
 }

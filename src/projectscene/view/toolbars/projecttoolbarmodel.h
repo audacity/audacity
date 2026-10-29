@@ -7,6 +7,7 @@
 #include "uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
 
 #include "modularity/ioc.h"
+#include "interactive/iplatforminteractive.h"
 #include "context/iglobalcontext.h"
 #include "context/iuicontextresolver.h"
 #include "au3cloud/iau3audiocomservice.h"
@@ -17,6 +18,8 @@ class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel, pub
     Q_OBJECT
 
     Q_PROPERTY(bool isCompactMode READ isCompactMode WRITE setIsCompactMode NOTIFY isCompactModeChanged)
+
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<context::IGlobalContext> context { this };
