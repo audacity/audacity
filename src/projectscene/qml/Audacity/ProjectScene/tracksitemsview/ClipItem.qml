@@ -368,6 +368,18 @@ Rectangle {
         tooltip.hide(true)
     }
 
+    // The spectrogram reflects the fades, but isn't otherwise told of their changes
+    function updateSpectrogramView() {
+        if (spectrogramViewLoader.item) {
+            spectrogramViewLoader.item.update()
+        }
+    }
+
+    onFadeInDurationChanged: updateSpectrogramView()
+    onFadeOutDurationChanged: updateSpectrogramView()
+    onFadeInTypeChanged: updateSpectrogramView()
+    onFadeOutTypeChanged: updateSpectrogramView()
+
     ClipContextMenuModel {
         id: singleClipContextMenuModel
         clipKey: root.clipKey
@@ -440,7 +452,7 @@ Rectangle {
         }
 
         onPositionChanged: function (e) {
-            clipItemMousePositionChanged(e.x, e.y)
+            clipItemMousePositionChanged(e.x, e.y);
 
             // propagate mouse position to the wave view adjusting the y position
             waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
