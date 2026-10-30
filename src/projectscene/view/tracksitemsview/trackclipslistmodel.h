@@ -100,6 +100,7 @@ private:
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
-    std::optional<trackedit::ClipKey> m_fadeEditedClip;
+    //! As it was before the fade edit
+    std::optional<trackedit::Clip> m_fadeEditedClip;
 };
 }

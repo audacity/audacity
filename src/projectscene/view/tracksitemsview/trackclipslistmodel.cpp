@@ -344,15 +344,23 @@ bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& new
 
 void TrackClipsListModel::startClipFadeEdit(const ClipKey& key)
 {
-    // So that a cancel can roll back
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+    trackedit::Clip clip = prj->clip(key.key);
+    if (!clip.isValid()) {
+        return;
+    }
+    // So that nothing writes the ongoing edit into the undo state it should leave as it was
     projectHistory()->startUserInteraction();
-    m_fadeEditedClip = key.key;
+    m_fadeEditedClip = std::move(clip);
 }
 
 bool TrackClipsListModel::changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change)
 {
     // E.g., the rest of a canceled drag
-    if (m_fadeEditedClip != key.key) {
+    if (!m_fadeEditedClip || m_fadeEditedClip->key != key.key) {
         return false;
     }
     const bool changed = change();
@@ -391,8 +399,12 @@ void TrackClipsListModel::cancelClipFadeEdit()
     if (!m_fadeEditedClip) {
         return;
     }
+
+    constexpr auto completed = false;
+    trackeditInteraction()->changeClipFadeIn(m_fadeEditedClip->key, m_fadeEditedClip->fadeInDuration, completed);
+    trackeditInteraction()->changeClipFadeOut(m_fadeEditedClip->key, m_fadeEditedClip->fadeOutDuration, completed);
     m_fadeEditedClip.reset();
-    trackeditInteraction()->cancelItemDragEdit();
+    projectHistory()->endUserInteraction();
 }
 
 bool TrackClipsListModel::isKeyboardTriggered() const
