@@ -35,6 +35,8 @@
 #include "../au3projectcontext.h"
 #include "../au3types.h"
 
+#include <wx/filefn.h>
+
 #include <random>
 
 using namespace au::au3;
@@ -204,7 +206,24 @@ bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
     // intentionally, to keep "Save As" correct — see commit 86c2f8f7.)
     SavedMasterEffectList::Get(project).UpdateCopy();
 
-    auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), m_lastSavedTracks.get());
+    const FilePath fileName = wxFromString(filePath.toString());
+
+    // Moving an existing file aside during replacement
+    std::optional<ProjectFileIO::BackupProject> backup;
+    if (fileName != projectFileIO.GetFileName() && wxFileExists(fileName)) {
+        backup.emplace(projectFileIO, fileName);
+        if (!backup->IsOk()) {
+            return false;
+        }
+    }
+
+    auto result = projectFileIO.SaveProject(fileName, m_lastSavedTracks.get());
+
+    // Once the project uses the new file, restoring the old one would delete it
+    if (backup && (result || projectFileIO.GetFileName() == fileName)) {
+        backup->Discard();
+    }
+
     if (result) {
         UndoManager::Get(project).StateSaved();
         // Update state only when save succeeded
