@@ -126,7 +126,8 @@ private:
 
     void UpdateIdFromDatabase();
 
-    void UnsafeUpdateProgress();
+    //! Must be called with mUploadQueueMutex held. The returned message is published after the lock is released.
+    std::optional<CloudStatusChangedMessage> UnsafeProgressMessage() const;
     void Publish(CloudStatusChangedMessage cloudStatus, bool canMerge);
 
     void MarkProjectSynced(DBProjectData::SyncStatusType syncStatus);

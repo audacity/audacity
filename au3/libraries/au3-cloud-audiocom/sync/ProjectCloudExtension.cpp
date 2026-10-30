@@ -223,30 +223,44 @@ void cloud::audiocom::sync::ProjectCloudExtension::OnSyncResumed(
     element->BlocksTotal         = missingBlocksCount;
     element->ProjectDataUploaded = !needsProjectUpload;
 
+    std::optional<CloudStatusChangedMessage> progress;
+
     {
         auto lock = std::lock_guard { mUploadQueueMutex };
         mUploadQueue.push_back(element);
+        progress = UnsafeProgressMessage();
+    }
+
+    if (progress.has_value()) {
+        Publish(*progress, true);
     }
 
     uploadOperation->Start();
-    UnsafeUpdateProgress();
 }
 
 void ProjectCloudExtension::OnUploadOperationCreated(
     std::shared_ptr<ProjectUploadOperation> uploadOperation)
 {
-    auto lock = std::lock_guard { mUploadQueueMutex };
-    assert(mUploadQueue.size() > 0);
+    std::optional<CloudStatusChangedMessage> progress;
 
-    if (mUploadQueue.empty()) {
-        return;
+    {
+        auto lock = std::lock_guard { mUploadQueueMutex };
+        assert(mUploadQueue.size() > 0);
+
+        if (mUploadQueue.empty()) {
+            return;
+        }
+
+        auto& element = *mUploadQueue.back();
+        element.Operation = uploadOperation;
+        uploadOperation->SetUploadData(element.Data);
+
+        progress = UnsafeProgressMessage();
     }
 
-    auto& element = *mUploadQueue.back();
-    element.Operation = uploadOperation;
-    uploadOperation->SetUploadData(element.Data);
-
-    UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
 }
 
 void ProjectCloudExtension::OnBlocksHashed(
@@ -300,107 +314,145 @@ void ProjectCloudExtension::OnSnapshotCreated(
         mSnapshotId = response.Snapshot.Id;
     }
 
-    auto lock    = std::lock_guard { mUploadQueueMutex };
-    auto element = UnsafeFindUploadQueueElement(uploadOperation);
+    std::optional<CloudStatusChangedMessage> progress;
 
-    if (!element) {
-        return;
+    {
+        auto lock    = std::lock_guard { mUploadQueueMutex };
+        auto element = UnsafeFindUploadQueueElement(uploadOperation);
+
+        if (!element) {
+            return;
+        }
+
+        element->BlocksTotal        = response.SyncState.MissingBlocks.size();
+        element->SnapshotResponse   = response;
+        element->AwaitingSnapshotId = false;
+
+        progress = UnsafeProgressMessage();
     }
 
-    element->BlocksTotal        = response.SyncState.MissingBlocks.size();
-    element->SnapshotResponse   = response;
-    element->AwaitingSnapshotId = false;
-
-    UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
 }
 
 void ProjectCloudExtension::OnProjectDataUploaded(
     const ProjectUploadOperation& uploadOperation)
 {
-    auto lock    = std::lock_guard { mUploadQueueMutex };
-    auto element = UnsafeFindUploadQueueElement(uploadOperation);
+    std::optional<CloudStatusChangedMessage> progress;
 
-    if (!element) {
-        return;
+    {
+        auto lock    = std::lock_guard { mUploadQueueMutex };
+        auto element = UnsafeFindUploadQueueElement(uploadOperation);
+
+        if (!element) {
+            return;
+        }
+
+        element->ProjectDataUploaded = true;
+
+        progress = UnsafeProgressMessage();
     }
 
-    element->ProjectDataUploaded = true;
-
-    UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
 }
 
 void ProjectCloudExtension::OnBlockUploaded(
     const ProjectUploadOperation& uploadOperation, std::string_view blockID,
     bool successful)
 {
-    auto lock    = std::lock_guard { mUploadQueueMutex };
-    auto element = UnsafeFindUploadQueueElement(uploadOperation);
+    std::optional<CloudStatusChangedMessage> progress;
 
-    if (!element) {
-        return;
+    {
+        auto lock    = std::lock_guard { mUploadQueueMutex };
+        auto element = UnsafeFindUploadQueueElement(uploadOperation);
+
+        if (!element) {
+            return;
+        }
+
+        element->BlocksHandled++;
+
+        progress = UnsafeProgressMessage();
     }
 
-    element->BlocksHandled++;
-
-    UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
 }
 
 void ProjectCloudExtension::OnSyncCompleted(
     const ProjectUploadOperation* uploadOperation,
     std::optional<CloudSyncError> error, AudiocomTrace trace)
 {
-    auto lock = std::lock_guard { mUploadQueueMutex };
+    std::optional<CloudStatusChangedMessage> progress;
+    bool snapshotCreated = false;
+    bool allSynced       = false;
 
-    auto element = uploadOperation != nullptr
-                   ? UnsafeFindUploadQueueElement(*uploadOperation)
-                   : nullptr;
+    {
+        auto lock = std::lock_guard { mUploadQueueMutex };
 
-    const bool snapshotCreated
-        =element != nullptr && element->SnapshotResponse.has_value();
+        auto element = uploadOperation != nullptr
+                       ? UnsafeFindUploadQueueElement(*uploadOperation)
+                       : nullptr;
 
-    if (element != nullptr) {
-        element->Synced = true;
-        element->AwaitingSnapshotId = false;
+        snapshotCreated = element != nullptr && element->SnapshotResponse.has_value();
 
-        if (
-            error.has_value() && error->Type == CloudSyncError::Aborted
-            && element->SnapshotResponse) {
-            auto& cloudDatabase = CloudProjectsDatabase::Get();
+        if (element != nullptr) {
+            element->Synced = true;
+            element->AwaitingSnapshotId = false;
 
-            const auto projectFilePath
-                =audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
+            if (
+                error.has_value() && error->Type == CloudSyncError::Aborted
+                && element->SnapshotResponse) {
+                auto& cloudDatabase = CloudProjectsDatabase::Get();
 
-            auto previousDbData
-                =cloudDatabase.GetProjectDataForPath(projectFilePath);
+                const auto projectFilePath
+                    =audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
 
-            DBProjectData dbData;
+                auto previousDbData
+                    =cloudDatabase.GetProjectDataForPath(projectFilePath);
 
-            if (previousDbData) {
-                dbData = *previousDbData;
+                DBProjectData dbData;
+
+                if (previousDbData) {
+                    dbData = *previousDbData;
+                }
+
+                const auto parentId = element->SnapshotResponse->Snapshot.ParentId;
+
+                dbData.SnapshotId = parentId;
+
+                cloudDatabase.UpdateProjectData(dbData);
+
+                {
+                    auto lock   = std::lock_guard { mIdentifiersMutex };
+                    mSnapshotId = parentId;
+                }
             }
+        }
 
-            const auto parentId = element->SnapshotResponse->Snapshot.ParentId;
+        // std::all_of returns true if the range is empty
+        allSynced = std::all_of(
+            mUploadQueue.begin(), mUploadQueue.end(),
+            [](auto& operation) { return operation->Synced; });
 
-            dbData.SnapshotId = parentId;
-
-            cloudDatabase.UpdateProjectData(dbData);
-
-            {
-                auto lock   = std::lock_guard { mIdentifiersMutex };
-                mSnapshotId = parentId;
-            }
+        if (allSynced) {
+            mUploadQueue.clear();
+        } else {
+            progress = UnsafeProgressMessage();
         }
     }
 
-    // std::all_of returns true if the range is empty
-    if (!std::all_of(
-            mUploadQueue.begin(), mUploadQueue.end(),
-            [](auto& operation) { return operation->Synced; })) {
-        UnsafeUpdateProgress();
-        return;
+    if (progress.has_value()) {
+        Publish(*progress, true);
     }
 
-    mUploadQueue.clear();
+    if (!allSynced) {
+        return;
+    }
 
     MarkProjectSynced(
         !error.has_value() ? DBProjectData::SyncStatusSynced
@@ -537,10 +589,10 @@ void ProjectCloudExtension::UpdateIdFromDatabase()
         false);
 }
 
-void ProjectCloudExtension::UnsafeUpdateProgress()
+std::optional<CloudStatusChangedMessage> ProjectCloudExtension::UnsafeProgressMessage() const
 {
     if (mUploadQueue.empty()) {
-        return;
+        return std::nullopt;
     }
 
     int64_t handledElements = 0;
@@ -554,11 +606,11 @@ void ProjectCloudExtension::UnsafeUpdateProgress()
 
     assert(totalElements > 0);
 
-    Publish(
-        { AudiocomTrace::ignore, // All right
-          ProjectSyncStatus::Syncing,
-          double(handledElements) / double(totalElements) },
-        true);
+    return CloudStatusChangedMessage {
+        AudiocomTrace::ignore, // All right
+        ProjectSyncStatus::Syncing,
+        double(handledElements) / double(totalElements)
+    };
 }
 
 void ProjectCloudExtension::Publish(
