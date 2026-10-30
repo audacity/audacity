@@ -34,6 +34,8 @@ private:
     {
     }
 
+    double compensateGain(const double currentGain, const double currentValue, const double newValue);
+
     using Setter = std::function<void (BassTrebleSettings&, double)>;
 
     QVariantMap m_paramsList;
