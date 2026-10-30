@@ -556,7 +556,10 @@ muse::Ret ProjectActionsController::openCloudProject(const QString& cloudProject
         return make_ok();
     }
 
-    Ret ret = openCloudProject(localPath.value_or(io::path_t {}), cloudProjectId, snapshotId);
+    const std::optional<std::string> requestedSnapshotId
+        = snapshotId.isEmpty() ? std::nullopt : std::optional<std::string>(snapshotId.toStdString());
+
+    Ret ret = openCloudProject(localPath.value_or(io::path_t {}), cloudProjectId.toStdString(), requestedSnapshotId);
     if (!ret) {
         openPageIfNeed(HOME_PAGE_URI);
     }
@@ -1198,7 +1201,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
 
     //! Step 5. Check, if the project is a known cloud project, then open it through the cloud flow
     if (const auto record = cloudProjectsProvider()->projectRecordForPath(actualPath)) {
-        return openCloudProject(actualPath, muse::String::fromStdString(record->projectId));
+        return openCloudProject(actualPath, record->projectId);
     }
 
     //! Step 6. Open project in the current window
@@ -1220,17 +1223,21 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     return project;
 }
 
-Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId,
-                                               const String& snapshotId, bool forceOverwrite)
+Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const std::optional<std::string>& projectId,
+                                               const std::optional<std::string>& snapshotId, bool forceOverwrite)
 {
     if (!audioComService()->enabled()) {
         LOGE() << "Cloud support is not available";
         return make_ret(Ret::Code::NotSupported);
     }
 
+    const std::string cloudProjectIdStr = projectId.value_or("");
+    const std::string snapshotIdStr = snapshotId.value_or("");
+
     if (std::holds_alternative<au::au3cloud::Authorizing>(authorization()->authState().val)) {
         commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, {
-            { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(cloudProjectOpenUrl(projectId, snapshotId)) },
+            { au3cloud::CLOUD_OPEN_URL_URL_PARAM,
+              Val(cloudProjectOpenUrl(String::fromStdString(cloudProjectIdStr), String::fromStdString(snapshotIdStr))) },
         });
         return muse::make_ok();
     }
@@ -1239,8 +1246,6 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         return make_ret(Ret::Code::Cancel);
     }
 
-    const std::string cloudProjectIdStr = projectId.toStdString();
-    const std::string snapshotIdStr = snapshotId.toStdString();
     auto [openRet, progress] = audioComService()->openCloudProject(localPath, cloudProjectIdStr, snapshotIdStr, forceOverwrite);
     if (!openRet) {
         handleCloudOpenError(openRet, localPath, cloudProjectIdStr);
@@ -1260,67 +1265,72 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         const io::path_t projectPath = !result.val.isNull() ? result.val.toPath() : localPath;
         doOpenProject(projectPath);
 
-        auto project = globalContext()->currentProject();
-        if (!project) {
-            return;
-        }
-
-        if (!ensureAuthorization()) {
-            return;
-        }
-
-        auto [syncRet, syncProgress] = audioComService()->resumeProjectSync(project);
-        if (!syncRet || !syncProgress || syncProgress->isCanceled()) {
-            return;
-        }
-
-        syncProgress->finished().onReceive(this, [this](const ProgressResult& result) {
-            if (!result.ret.success()) {
-                handleCloudSaveError(result.ret);
-                return;
-            }
-
-            const bool dismissable = false;
-            toastService()->show(trc("global", "Success"),
-                                 trc("project",
-                                     "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on audio.com"),
-                                 muse::ui::IconCode::Code::TICK,
-                                 dismissable,
-            {
-                { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
-                { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
-            }
-                                 ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
-                if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
-                    platformInteractive()->openUrl(url);
-                }
-            });
-        });
-
-        const bool dismissible = false;
-        const bool showProgressInfo = true;
-        toastService()->showWithProgress(
-            trc("project", "Resuming sync to audio.com…"),
-            {},
-            syncProgress,
-            muse::ui::IconCode::Code::CLOUD,
-            dismissible,
-        {
-            { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
-            { trc("global", "Stop"), muse::toast::ToastActionCode::Custom }
-        },
-            showProgressInfo
-            ).onResolve(this, [this, progress = syncProgress](const muse::toast::ToastResult& toastResult) {
-            if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
-                audioComService()->stopProjectSync();
-                progress->cancel();
-            }
-        });
+        resumeCloudSyncOfCurrentProject();
     });
 
     interactive()->showProgress(trc("project", "Syncing project from cloud…"), *progress);
 
     return make_ret(Ret::Code::Ok);
+}
+
+void ProjectActionsController::resumeCloudSyncOfCurrentProject()
+{
+    auto project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
+    if (!ensureAuthorization()) {
+        return;
+    }
+
+    auto [syncRet, syncProgress] = audioComService()->resumeProjectSync(project);
+    if (!syncRet || !syncProgress || syncProgress->isCanceled()) {
+        return;
+    }
+
+    syncProgress->finished().onReceive(this, [this](const ProgressResult& result) {
+        if (!result.ret.success()) {
+            handleCloudSaveError(result.ret);
+            return;
+        }
+
+        const bool dismissable = false;
+        toastService()->show(trc("global", "Success"),
+                             trc("project",
+                                 "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on audio.com"),
+                             muse::ui::IconCode::Code::TICK,
+                             dismissable,
+        {
+            { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
+            { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
+        }
+                             ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
+            if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
+                platformInteractive()->openUrl(url);
+            }
+        });
+    });
+
+    const bool dismissible = false;
+    const bool showProgressInfo = true;
+    toastService()->showWithProgress(
+        trc("project", "Resuming sync to audio.com…"),
+        {},
+        syncProgress,
+        muse::ui::IconCode::Code::CLOUD,
+        dismissible,
+    {
+        { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
+        { trc("global", "Stop"), muse::toast::ToastActionCode::Custom }
+    },
+        showProgressInfo
+        ).onResolve(this, [this, progress = syncProgress](const muse::toast::ToastResult& toastResult) {
+        if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
+            audioComService()->stopProjectSync();
+            progress->cancel();
+        }
+    });
 }
 
 Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
@@ -1953,7 +1963,7 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         retryRet = openCloudProject(localPath, {}, {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_LOAD_LATEST_SYNCED:
-        retryRet = openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), {}, true);
+        retryRet = openCloudProject(localPath, cloudProjectId, {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM:
         if (!cloudProjectId.empty()) {

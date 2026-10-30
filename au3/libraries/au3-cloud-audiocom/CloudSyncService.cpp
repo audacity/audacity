@@ -602,7 +602,8 @@ void CloudSyncService::SyncCloudSnapshot(
         // 2. Project sync was interrupted.
         if (
             mode == SyncMode::Normal
-            && localProjectInfo->SyncStatus == sync::DBProjectData::SyncStatusUploading) {
+            && (localProjectInfo->SyncStatus == sync::DBProjectData::SyncStatusUploading
+                || localProjectInfo->SyncStatus == sync::DBProjectData::SyncStatusPendingSnapshot)) {
             // There is not enough information to decide if the project has
             // diverged. Just open it, so the sync can resume. If the project has
             // diverged, the user will be prompted to resolve the conflict on the

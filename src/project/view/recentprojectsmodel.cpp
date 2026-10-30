@@ -90,7 +90,7 @@ void RecentProjectsModel::updateRecentProjects()
         QString fileSizeString = (fileSize.ret && fileSize.val > 0) ? DataFormatter::formatFileSize(fileSize.val).toQString() : QString();
 
         const bool isCloud = file.cloudRecord.has_value();
-        const QString cloudProjectId = isCloud ? QString::fromStdString(file.cloudRecord->projectId) : QString();
+        const QString cloudProjectId = isCloud ? QString::fromStdString(file.cloudRecord->projectId.value_or("")) : QString();
 
         obj[NAME_KEY] = file.displayName(false);
         obj[PATH_KEY] = file.path.toQString();
