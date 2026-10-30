@@ -9,6 +9,7 @@
 #include "global/types/color.h"
 #include "global/types/translatablestring.h"
 #include "trackedit/trackedittypes.h"
+#include "trackedit/dom/track.h"
 #include "types/projectscenetypes.h"
 
 namespace au::projectscene {
@@ -58,6 +59,14 @@ public:
     virtual std::vector<std::string> asymmetricStereoHeightsWorkspaces() const = 0;
     virtual void setAsymmetricStereoHeightsWorkspaces(std::vector<std::string>& workspaces) = 0;
     virtual muse::async::Notification asymmetricStereoHeightsWorkspacesChanged() const = 0;
+
+    virtual trackedit::TrackViewType defaultTrackViewType() const = 0;
+    virtual void setDefaultTrackViewType(trackedit::TrackViewType type) = 0;
+    virtual muse::async::Notification defaultTrackViewTypeChanged() const = 0;
+
+    virtual trackedit::TrackRulerType defaultRulerType() const = 0;
+    virtual void setDefaultRulerType(trackedit::TrackRulerType scale) = 0;
+    virtual muse::async::Notification defaultRulerTypeChanged() const = 0;
 
     virtual int selectionTimecodeFormat() const = 0;
     virtual void setSelectionTimecodeFormat(int) = 0;

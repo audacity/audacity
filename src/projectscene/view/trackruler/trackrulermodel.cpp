@@ -68,6 +68,8 @@ void TrackRulerModel::init()
         }
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    // Bindings may have read the ruler type before the track id was set
+    emit rulerTypeChanged();
     emit fullStepsChanged();
     emit smallStepsChanged();
 }

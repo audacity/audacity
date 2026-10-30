@@ -205,6 +205,9 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("editing", QT_TRANSLATE_NOOP("preferences",
                                               "Audio editing"), IconCode::Code::IBEAM, "Preferences/EditPreferencesPage.qml"),
 
+        makeItem("tracks", QT_TRANSLATE_NOOP("preferences", "Tracks"), IconCode::Code::WAVEFORM,
+                 "Preferences/TracksPreferencesPage.qml"),
+
         makeItem("playback-recording", QT_TRANSLATE_NOOP("preferences",
                                                          "Playback/Recording"), IconCode::Code::MICROPHONE,
                  "Preferences/PlaybackPreferencesPage.qml"),

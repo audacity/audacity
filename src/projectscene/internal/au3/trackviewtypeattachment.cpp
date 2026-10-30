@@ -3,6 +3,10 @@
  */
 #include "trackviewtypeattachment.h"
 
+#include "modularity/ioc.h"
+
+#include "projectscene/iprojectsceneconfiguration.h"
+
 #include "au3-wave-track/WaveTrack.h"
 
 namespace au::au3 {
@@ -31,6 +35,11 @@ void TrackViewTypeAttachment::CopyTo(Au3Track& track) const
 TrackViewTypeAttachment::TrackViewTypeAttachment(Au3Track& track)
     : mTrack{track.shared_from_this()}
 {
+    // Value read from the project file, if any, overrides this
+    muse::GlobalInject<au::projectscene::IProjectSceneConfiguration> configuration;
+    if (configuration()) {
+        mTrackViewType = configuration()->defaultTrackViewType();
+    }
 }
 
 void TrackViewTypeAttachment::Reparent(const std::shared_ptr<Au3Track>& parent)
