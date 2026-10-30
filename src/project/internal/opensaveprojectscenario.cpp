@@ -748,6 +748,14 @@ Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& ret) const
         }
         break;
     }
+    case Err::SaveInProgress:
+        interactive()->infoSync(trc("project", "Save in progress"),
+                                trc("project", "The previous save to audio.com is still in progress. Try again in a moment."),
+                                { interactive()->buttonData(IInteractive::Button::Ok) },
+                                static_cast<int>(IInteractive::Button::Ok),
+                                { IInteractive::Option::WithIcon },
+                                muse::trc("project", "Save in progress"));
+        break;
     case Err::ProjectNotSaved: {
         const int saveLocallyBtn = static_cast<int>(IInteractive::Button::CustomButton);
         IInteractive::ButtonDatas buttons {

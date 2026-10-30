@@ -101,11 +101,12 @@ std::string getCloudProjectPage(au::project::IAudacityProjectPtr project)
 
 struct ProjectUpToDate {};
 struct SyncAlreadyInProgress {};
+struct SaveInProgress {};
 struct StartNewSnapshot {};
 struct ResumePendingSnapshot {
     sync::DBProjectData dbProjectData;
 };
-using UploadPlan = std::variant<ProjectUpToDate, SyncAlreadyInProgress, StartNewSnapshot, ResumePendingSnapshot>;
+using UploadPlan = std::variant<ProjectUpToDate, SyncAlreadyInProgress, SaveInProgress, StartNewSnapshot, ResumePendingSnapshot>;
 
 std::optional<sync::DBProjectData> pendingSnapshotMatchingLocalHead(const muse::io::path_t& projectPath)
 {
@@ -168,7 +169,7 @@ UploadPlan resolveUploadPlan(au::project::IAudacityProjectPtr project,
                              UploadMode uploadMode)
 {
     if (extension.IsAwaitingSnapshotId()) {
-        return SyncAlreadyInProgress {};
+        return project->needSave().val ? UploadPlan { SaveInProgress {} } : UploadPlan { SyncAlreadyInProgress {} };
     }
 
     if (uploadMode != UploadMode::NormalUpdate) {
@@ -420,6 +421,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
     const auto plan = resolveUploadPlan(project, *projectCloudExtension, uploadMode);
     if (std::holds_alternative<ProjectUpToDate>(plan) || std::holds_alternative<SyncAlreadyInProgress>(plan)) {
         return muse::RetVal<muse::ProgressPtr>::make_ok(nullptr);
+    }
+
+    if (std::holds_alternative<SaveInProgress>(plan)) {
+        return make_ret(Err::SaveInProgress);
     }
 
     muse::ProgressPtr progress = createSyncProgress();
