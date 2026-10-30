@@ -25,6 +25,7 @@ public:
 
     QVector<QPointF> points() const;
     double defaultValue() const;
+    bool isDragging() const;
 
     Q_INVOKABLE void setPoint(int index, double x, double y, bool completed);
     Q_INVOKABLE void addPoint(double x, double y, bool completed);
