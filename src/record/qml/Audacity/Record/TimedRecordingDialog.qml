@@ -142,6 +142,63 @@ StyledDialogView {
         }
     }
 
+    component CompletionAction: ColumnLayout {
+        id: action
+
+        property string text: ""
+        property bool checked: false
+        property string path: ""
+
+        signal toggled(bool checked)
+        signal pathEdited(string path)
+        signal browseRequested
+
+        Layout.fillWidth: true
+
+        spacing: 8
+
+        CheckBox {
+            text: action.text
+            checked: action.checked
+
+            onClicked: {
+                action.toggled(!checked)
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            spacing: 4
+            enabled: action.checked
+
+            TextInputField {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 28
+
+                textSidePadding: 6
+                currentText: action.path
+
+                onTextEdited: function (newTextValue) {
+                    action.pathEdited(newTextValue)
+                }
+            }
+
+            FlatButton {
+                Layout.preferredHeight: 28
+
+                icon: IconCode.OPEN_FILE
+                text: qsTrc("ui", "Browse")
+                buttonType: FlatButton.Horizontal
+                orientation: Qt.Horizontal
+
+                onClicked: {
+                    action.browseRequested()
+                }
+            }
+        }
+    }
+
     ColumnLayout {
         id: content
 
@@ -295,51 +352,41 @@ StyledDialogView {
 
                 title: qsTrc("record", "When recording is done")
 
-                ColumnLayout {
-                    Layout.fillWidth: true
+                CompletionAction {
                     Layout.topMargin: 8
 
-                    spacing: 8
+                    text: qsTrc("record", "Save project")
+                    checked: setupModel.saveProjectEnabled
+                    path: setupModel.saveProjectPath
 
-                    CheckBox {
-                        text: qsTrc("record", "Save project")
-                        checked: setupModel.saveProjectEnabled
-
-                        onClicked: {
-                            setupModel.saveProjectEnabled = !checked
-                        }
+                    onToggled: function (checked) {
+                        setupModel.saveProjectEnabled = checked
                     }
 
-                    RowLayout {
-                        Layout.fillWidth: true
+                    onPathEdited: function (path) {
+                        setupModel.saveProjectPath = path
+                    }
 
-                        spacing: 4
-                        enabled: setupModel.saveProjectEnabled
+                    onBrowseRequested: {
+                        setupModel.browseSaveProjectPath()
+                    }
+                }
 
-                        TextInputField {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 28
+                CompletionAction {
+                    text: qsTrc("record", "Export audio")
+                    checked: setupModel.exportAudioEnabled
+                    path: setupModel.exportAudioPath
 
-                            textSidePadding: 6
-                            currentText: setupModel.saveProjectPath
+                    onToggled: function (checked) {
+                        setupModel.exportAudioEnabled = checked
+                    }
 
-                            onTextEdited: function (newTextValue) {
-                                setupModel.saveProjectPath = newTextValue
-                            }
-                        }
+                    onPathEdited: function (path) {
+                        setupModel.exportAudioPath = path
+                    }
 
-                        FlatButton {
-                            Layout.preferredHeight: 28
-
-                            icon: IconCode.OPEN_FILE
-                            text: qsTrc("ui", "Browse")
-                            buttonType: FlatButton.Horizontal
-                            orientation: Qt.Horizontal
-
-                            onClicked: {
-                                setupModel.browseSaveProjectPath()
-                            }
-                        }
+                    onBrowseRequested: {
+                        setupModel.browseExportAudioPath()
                     }
                 }
             }
@@ -376,6 +423,10 @@ StyledDialogView {
                 enabled: setupModel.canStart
 
                 onClicked: {
+                    if (!setupModel.confirmOverwrite()) {
+                        return
+                    }
+
                     root.ret = {
                         errcode: 0,
                         value: setupModel.scheduleData()

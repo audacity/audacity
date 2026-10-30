@@ -3,11 +3,15 @@
 */
 #include "timedrecordingcontroller.h"
 
+#include <algorithm>
+
 #include <QVariantMap>
 
 #include "framework/global/async/async.h"
 #include "framework/global/translation.h"
 #include "framework/ui/view/iconcodes.h"
+
+#include "trackedit/itrackeditproject.h"
 
 #include "../recordcommands.h"
 #include "timedrecordingformatter.h"
@@ -116,7 +120,14 @@ Ret TimedRecordingController::openSetupDialog()
     }
 
     const QVariantMap data = rv.val.toQVariant().toMap();
-    m_saveProjectPath = data.value("saveProjectPath").toString();
+    m_completionActions.saveProjectPath = data.value("saveProjectPath").toString();
+    m_completionActions.exportAudioPath = data.value("exportAudioPath").toString();
+    m_completionActions.exportFormat = data.value("exportFormat").toString().toStdString();
+
+    if (!m_completionActions.exportAudioPath.empty()) {
+        exportConfiguration()->setDirectoryPath(io::dirpath(m_completionActions.exportAudioPath));
+        exportConfiguration()->setCurrentFormat(m_completionActions.exportFormat);
+    }
 
     begin(scheduleFromDialogData(data));
     return make_ok();
@@ -278,24 +289,53 @@ void TimedRecordingController::finish(Outcome outcome)
 
 void TimedRecordingController::scheduleCompletionActions()
 {
-    async::Async::call(this, [this, project = m_project, saveProjectPath = m_saveProjectPath]() {
-        runCompletionActions(project.lock(), saveProjectPath);
+    async::Async::call(this, [this, project = m_project, actions = m_completionActions]() {
+        runCompletionActions(project.lock(), actions);
     });
 }
 
-void TimedRecordingController::runCompletionActions(const project::IAudacityProjectPtr& project, const muse::io::path_t& saveProjectPath)
+void TimedRecordingController::runCompletionActions(const project::IAudacityProjectPtr& project, const CompletionActions& actions)
 {
     if (!project || project != globalContext()->currentProject()) {
         return;
     }
 
-    if (!saveProjectPath.empty()) {
-        if (projectFilesController()->saveProject(saveProjectPath)) {
-            toastService()->show(muse::trc("record", "Project saved"), saveProjectPath.toStdString(), ui::IconCode::Code::SAVE);
+    if (!actions.saveProjectPath.empty()) {
+        if (projectFilesController()->saveProject(actions.saveProjectPath)) {
+            toastService()->show(muse::trc("record", "Project saved"), actions.saveProjectPath.toStdString(), ui::IconCode::Code::SAVE);
         } else {
-            toastService()->showError(muse::trc("record", "Couldn't save the project"), saveProjectPath.toStdString());
+            toastService()->showError(muse::trc("record", "Couldn't save the project"), actions.saveProjectPath.toStdString());
         }
     }
+
+    if (!actions.exportAudioPath.empty()) {
+        exportAudio(project, actions.exportAudioPath, actions.exportFormat);
+    }
+}
+
+void TimedRecordingController::exportAudio(const project::IAudacityProjectPtr& project, const muse::io::path_t& path,
+                                           const std::string& format)
+{
+    importexport::IExporter::Options options;
+    options[importexport::IExporter::OptionKey::Format] = Val(format);
+    options[importexport::IExporter::OptionKey::ProcessType] = Val(importexport::ExportProcessType::FULL_PROJECT_AUDIO);
+
+    const trackedit::ITrackeditProjectPtr trackeditProject = project->trackeditProject();
+    if (exportConfiguration()->exportSampleRate() <= 0 && trackeditProject) {
+        uint64_t sampleRate = 0;
+        for (const trackedit::Track& track : trackeditProject->trackList()) {
+            sampleRate = std::max(sampleRate, track.rate);
+        }
+        options[importexport::IExporter::OptionKey::ExportSampleRate] = Val(static_cast<int>(sampleRate));
+    }
+
+    const Ret ret = exporter()->exportData(path, options, nullptr, project);
+    if (!ret) {
+        toastService()->showError(muse::trc("record", "Couldn't export the audio"), ret.text().empty() ? path.toStdString() : ret.text());
+        return;
+    }
+
+    toastService()->show(muse::trc("record", "Audio exported"), path.toStdString(), ui::IconCode::Code::SHARE_FILE);
 }
 
 void TimedRecordingController::setState(State state)

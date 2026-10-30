@@ -3,9 +3,12 @@
 */
 #include "timedrecordingsetupmodel.h"
 
+#include <algorithm>
+
 #include <QLocale>
 #include <QRegularExpression>
 
+#include "framework/global/stringutils.h"
 #include "framework/global/translation.h"
 
 #include "project/types/projecttypes.h"
@@ -40,6 +43,14 @@ QString withProjectSuffix(const QString& path)
     return trimmed + "." + QString::fromStdString(au::project::AUP4);
 }
 
+QString exportBaseName(const QString& projectName)
+{
+    if (au::project::isAudacity4File(projectName) || au::project::isAudacityUnsavedFile(projectName)) {
+        return muse::io::completeBasename(projectName).toQString();
+    }
+    return projectName;
+}
+
 QDateTime currentDateTime()
 {
     QDateTime now = QDateTime::currentDateTime();
@@ -72,6 +83,11 @@ void TimedRecordingSetupModel::init()
         m_saveProjectPath = project->path().toQString();
     }
 
+    const muse::io::path_t exportDirectory = exportConfiguration()->directoryPath();
+    if (project && !exportDirectory.empty()) {
+        m_exportAudioPath = withExportExtension(exportDirectory.appendingComponent(exportBaseName(project->displayName())).toQString());
+    }
+
     emit scheduleChanged();
     m_clock.start();
 }
@@ -100,7 +116,52 @@ QVariantMap TimedRecordingSetupModel::scheduleData() const
         data["saveProjectPath"] = withProjectSuffix(m_saveProjectPath);
     }
 
+    if (m_exportAudioEnabled) {
+        data["exportAudioPath"] = withExportExtension(m_exportAudioPath);
+        data["exportFormat"] = QString::fromStdString(exportFormat());
+    }
+
     return data;
+}
+
+bool TimedRecordingSetupModel::confirmOverwrite()
+{
+    QStringList existing;
+
+    if (m_saveProjectEnabled) {
+        const QString path = withProjectSuffix(m_saveProjectPath);
+        const project::IAudacityProjectPtr project = globalContext()->currentProject();
+        const bool isCurrentProject = project && muse::io::path_t(path) == project->path();
+        if (!isCurrentProject && fileSystem()->exists(path)) {
+            existing << path;
+        }
+    }
+
+    if (m_exportAudioEnabled) {
+        const QString path = withExportExtension(m_exportAudioPath);
+        if (fileSystem()->exists(path)) {
+            existing << path;
+        }
+    }
+
+    if (existing.isEmpty()) {
+        return true;
+    }
+
+    const std::string question = existing.size() == 1
+                                 ? muse::qtrc("record", "This file already exists:\n%1\n\nDo you want to overwrite it?")
+                                 .arg(existing.front()).toStdString()
+                                 : muse::qtrc("record", "These files already exist:\n%1\n\nDo you want to overwrite them?")
+                                 .arg(existing.join('\n')).toStdString();
+
+    const int overwriteBtn = int(muse::IInteractive::Button::CustomButton) + 1;
+    const muse::IInteractive::ButtonDatas buttons {
+        muse::IInteractive::ButtonData(overwriteBtn, muse::trc("record", "Overwrite")),
+        interactive()->buttonData(muse::IInteractive::Button::Cancel)
+    };
+
+    const muse::IInteractive::Result result = interactive()->questionSync("", question, buttons);
+    return result.button() == overwriteBtn;
 }
 
 void TimedRecordingSetupModel::browseSaveProjectPath()
@@ -190,6 +251,22 @@ void TimedRecordingSetupModel::setEndTime(const QString& time)
     set(m_endTime, time);
 }
 
+void TimedRecordingSetupModel::browseExportAudioPath()
+{
+    QStringList patterns;
+    for (const std::string& extension : exportExtensions()) {
+        patterns << QString::fromStdString("*." + extension);
+    }
+    const std::vector<std::string> filter { exportFormat() + " (" + patterns.join(' ').toStdString() + ")" };
+
+    const muse::io::path_t path = interactive()->selectSavingFileSync(muse::trc("record", "Export audio"), m_exportAudioPath, filter);
+    if (path.empty()) {
+        return;
+    }
+
+    setExportAudioPath(withExportExtension(path.toQString()));
+}
+
 bool TimedRecordingSetupModel::saveProjectEnabled() const
 {
     return m_saveProjectEnabled;
@@ -208,6 +285,26 @@ QString TimedRecordingSetupModel::saveProjectPath() const
 void TimedRecordingSetupModel::setSaveProjectPath(const QString& path)
 {
     set(m_saveProjectPath, path);
+}
+
+bool TimedRecordingSetupModel::exportAudioEnabled() const
+{
+    return m_exportAudioEnabled;
+}
+
+void TimedRecordingSetupModel::setExportAudioEnabled(bool enabled)
+{
+    set(m_exportAudioEnabled, enabled);
+}
+
+QString TimedRecordingSetupModel::exportAudioPath() const
+{
+    return m_exportAudioPath;
+}
+
+void TimedRecordingSetupModel::setExportAudioPath(const QString& path)
+{
+    set(m_exportAudioPath, path);
 }
 
 QString TimedRecordingSetupModel::dateFormat() const
@@ -285,6 +382,38 @@ std::optional<QDateTime> TimedRecordingSetupModel::parseDateTime(const QString& 
     return QDateTime(d, t);
 }
 
+std::string TimedRecordingSetupModel::exportFormat() const
+{
+    const std::string format = exportConfiguration()->currentFormat();
+    if (!format.empty()) {
+        return format;
+    }
+
+    const std::vector<std::string> formats = exporter()->formatsList();
+    return formats.empty() ? std::string() : formats.front();
+}
+
+std::vector<std::string> TimedRecordingSetupModel::exportExtensions() const
+{
+    return exporter()->formatExtensions(exportFormat());
+}
+
+QString TimedRecordingSetupModel::withExportExtension(const QString& path) const
+{
+    const QString trimmed = path.trimmed();
+    const std::vector<std::string> extensions = exportExtensions();
+    if (trimmed.isEmpty() || extensions.empty()) {
+        return trimmed;
+    }
+
+    const std::string suffix = muse::strings::toLower(muse::io::suffix(trimmed));
+    if (std::find(extensions.begin(), extensions.end(), suffix) != extensions.end()) {
+        return trimmed;
+    }
+
+    return trimmed + "." + QString::fromStdString(extensions.front());
+}
+
 void TimedRecordingSetupModel::update()
 {
     const QDateTime now = currentDateTime();
@@ -292,7 +421,8 @@ void TimedRecordingSetupModel::update()
     const TimedRecordingSchedule::TimePoint nowTimePoint = TimedRecordingViewFormatter::toTimePoint(now);
 
     const bool scheduleValid = s && s->isValid(nowTimePoint);
-    const bool completionActionsValid = !m_saveProjectEnabled || !m_saveProjectPath.trimmed().isEmpty();
+    const bool completionActionsValid = (!m_saveProjectEnabled || !m_saveProjectPath.trimmed().isEmpty())
+                                        && (!m_exportAudioEnabled || !m_exportAudioPath.trimmed().isEmpty());
     const bool canStart = scheduleValid && completionActionsValid;
     QString summary;
     if (scheduleValid) {

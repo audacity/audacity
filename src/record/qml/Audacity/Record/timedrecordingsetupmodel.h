@@ -11,10 +11,13 @@
 #include <QVariantMap>
 #include <QtQml/qqmlregistration.h>
 
+#include "framework/global/io/ifilesystem.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
 
 #include "context/iglobalcontext.h"
+#include "importexport/export/iexportconfiguration.h"
+#include "importexport/export/iexporter.h"
 #include "project/iprojectconfiguration.h"
 #include "record/timedrecordingtypes.h"
 
@@ -39,19 +42,27 @@ class TimedRecordingSetupModel : public QObject, public muse::Contextable
     Q_PROPERTY(bool saveProjectEnabled READ saveProjectEnabled WRITE setSaveProjectEnabled NOTIFY scheduleChanged FINAL)
     Q_PROPERTY(QString saveProjectPath READ saveProjectPath WRITE setSaveProjectPath NOTIFY scheduleChanged FINAL)
 
+    Q_PROPERTY(bool exportAudioEnabled READ exportAudioEnabled WRITE setExportAudioEnabled NOTIFY scheduleChanged FINAL)
+    Q_PROPERTY(QString exportAudioPath READ exportAudioPath WRITE setExportAudioPath NOTIFY scheduleChanged FINAL)
+
     Q_PROPERTY(QString summary READ summary NOTIFY summaryChanged FINAL)
     Q_PROPERTY(bool canStart READ canStart NOTIFY summaryChanged FINAL)
 
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
+    muse::GlobalInject<importexport::IExportConfiguration> exportConfiguration;
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<importexport::IExporter> exporter{ this };
 
 public:
     explicit TimedRecordingSetupModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
     Q_INVOKABLE QVariantMap scheduleData() const;
+    Q_INVOKABLE bool confirmOverwrite();
     Q_INVOKABLE void browseSaveProjectPath();
+    Q_INVOKABLE void browseExportAudioPath();
 
     bool startNow() const;
     void setStartNow(bool startNow);
@@ -74,6 +85,11 @@ public:
     QString saveProjectPath() const;
     void setSaveProjectPath(const QString& path);
 
+    bool exportAudioEnabled() const;
+    void setExportAudioEnabled(bool enabled);
+    QString exportAudioPath() const;
+    void setExportAudioPath(const QString& path);
+
     QString dateFormat() const;
     int durationFormat() const;
 
@@ -90,6 +106,9 @@ private:
 
     std::optional<TimedRecordingSchedule> schedule() const;
     std::optional<QDateTime> parseDateTime(const QString& date, const QString& time) const;
+    std::string exportFormat() const;
+    std::vector<std::string> exportExtensions() const;
+    QString withExportExtension(const QString& path) const;
     void update();
 
     bool m_startNow = true;
@@ -103,6 +122,9 @@ private:
 
     bool m_saveProjectEnabled = false;
     QString m_saveProjectPath;
+
+    bool m_exportAudioEnabled = false;
+    QString m_exportAudioPath;
 
     QString m_dateFormat;
     QString m_summary;

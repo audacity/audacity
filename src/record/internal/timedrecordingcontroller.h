@@ -14,6 +14,8 @@
 #include "framework/toast/itoastservice.h"
 
 #include "context/iglobalcontext.h"
+#include "importexport/export/iexportconfiguration.h"
+#include "importexport/export/iexporter.h"
 #include "project/iaudacityproject.h"
 #include "project/iprojectfilescontroller.h"
 #include "record/irecord.h"
@@ -26,6 +28,7 @@ class TimedRecordingController : public ITimedRecordingController, public muse::
     public muse::Contextable
 {
     muse::GlobalInject<muse::toast::IToastService> toastService;
+    muse::GlobalInject<importexport::IExportConfiguration> exportConfiguration;
 
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
@@ -33,6 +36,7 @@ class TimedRecordingController : public ITimedRecordingController, public muse::
     muse::ContextInject<IRecordController> recordController{ this };
     muse::ContextInject<IRecord> record{ this };
     muse::ContextInject<project::IProjectFilesController> projectFilesController{ this };
+    muse::ContextInject<importexport::IExporter> exporter{ this };
 
 public:
     TimedRecordingController(const muse::modularity::ContextPtr& ctx)
@@ -49,6 +53,12 @@ public:
     void requestStop() override;
 
 private:
+    struct CompletionActions {
+        muse::io::path_t saveProjectPath;
+        muse::io::path_t exportAudioPath;
+        std::string exportFormat;
+    };
+
     enum class Outcome {
         Completed,
         Stopped,
@@ -65,14 +75,15 @@ private:
     void confirmStop();
     void finish(Outcome outcome);
     void scheduleCompletionActions();
-    void runCompletionActions(const project::IAudacityProjectPtr& project, const muse::io::path_t& saveProjectPath);
+    void runCompletionActions(const project::IAudacityProjectPtr& project, const CompletionActions& actions);
+    void exportAudio(const project::IAudacityProjectPtr& project, const muse::io::path_t& path, const std::string& format);
     void setState(State state);
 
     State m_state = State::Idle;
     muse::async::Notification m_stateChanged;
 
     TimedRecordingSchedule m_schedule;
-    muse::io::path_t m_saveProjectPath;
+    CompletionActions m_completionActions;
     std::weak_ptr<project::IAudacityProject> m_project;
     bool m_completionActionsPending = false;
     TimedRecordingSchedule::TimePoint m_startTime;
