@@ -8,6 +8,8 @@
 #include <vector>
 
 namespace au::importexport {
+static const std::string DEFAULT_EXPORT_FORMAT = "WAV (Microsoft)";
+
 enum class ExportProcessType {
     FULL_PROJECT_AUDIO = 0,
     SELECTED_AUDIO,

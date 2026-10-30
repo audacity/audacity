@@ -3,15 +3,11 @@
 */
 #include "timedrecordingcontroller.h"
 
-#include <algorithm>
-
 #include <QVariantMap>
 
 #include "framework/global/async/async.h"
 #include "framework/global/translation.h"
 #include "framework/ui/view/iconcodes.h"
-
-#include "trackedit/itrackeditproject.h"
 
 #include "../recordcommands.h"
 #include "timedrecordingformatter.h"
@@ -319,15 +315,6 @@ void TimedRecordingController::exportAudio(const project::IAudacityProjectPtr& p
     importexport::IExporter::Options options;
     options[importexport::IExporter::OptionKey::Format] = Val(format);
     options[importexport::IExporter::OptionKey::ProcessType] = Val(importexport::ExportProcessType::FULL_PROJECT_AUDIO);
-
-    const trackedit::ITrackeditProjectPtr trackeditProject = project->trackeditProject();
-    if (exportConfiguration()->exportSampleRate() <= 0 && trackeditProject) {
-        uint64_t sampleRate = 0;
-        for (const trackedit::Track& track : trackeditProject->trackList()) {
-            sampleRate = std::max(sampleRate, track.rate);
-        }
-        options[importexport::IExporter::OptionKey::ExportSampleRate] = Val(static_cast<int>(sampleRate));
-    }
 
     const Ret ret = exporter()->exportData(path, options, nullptr, project);
     if (!ret) {

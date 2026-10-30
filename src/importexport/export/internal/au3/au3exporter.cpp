@@ -43,6 +43,15 @@ ExportPlugin* formatPlugin(const std::string& format)
     return nullptr;
 }
 
+double exportedTracksSampleRate(const TrackList& trackList, bool selectedOnly)
+{
+    double rate = 0.0;
+    for (const WaveTrack* track : ExportUtils::FindExportWaveTracks(trackList, selectedOnly)) {
+        rate = std::max(rate, track->GetRate());
+    }
+    return rate;
+}
+
 std::vector<bool> prepareChannelMask(TrackList& trackList, bool selectedOnly)
 {
     const auto tracks = trackList.Any<WaveTrack>();
@@ -415,6 +424,10 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         }
     }
 
+    if (m_sampleRate <= 0) {
+        m_sampleRate = exportedTracksSampleRate(TrackList::Get(*au3Project), m_selectedOnly);
+    }
+
     m_tags = &Tags::Get(*au3Project);
 
     const muse::Ret mixed = prepareMix(*au3Project, options);
@@ -631,6 +644,10 @@ muse::Ret Au3Exporter::exportSeparateFiles(const muse::io::path_t& directory, mu
     const std::string extension = formatExtension(options);
     const Tags& projectTags = Tags::Get(*au3Project);
     auto& tracks = TrackList::Get(*au3Project);
+
+    if (m_sampleRate <= 0) {
+        m_sampleRate = exportedTracksSampleRate(tracks, false);
+    }
 
     if (byLabels) {
         m_selectedOnly = false;
