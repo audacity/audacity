@@ -441,7 +441,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
     auto done = std::make_shared<std::atomic<bool> >(false);
     m_uploadDone = done;
     m_uploadSubscription = projectCloudExtension->SubscribeStatusChanged(
-        [progress, done, project, weak = weak_from_this()](
+        [progress, done, project](
             const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
         if (done->load()) {
             return;
@@ -455,15 +455,8 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
             done->store(true);
             progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(::getCloudProjectPage(project))));
 
-            if (auto self = weak.lock()) {
-                muse::async::Async::call(self.get(), [project]() {
-                    auto* projectCloudExtension = cloudExtension(project);
-                    if (!projectCloudExtension) {
-                        return;
-                    }
-
-                    audacity::cloud::audiocom::sync::ResumeProjectUpload(*projectCloudExtension, {});
-                }, muse::runtime::mainThreadId());
+            if (auto* projectCloudExtension = cloudExtension(project)) {
+                audacity::cloud::audiocom::sync::ResumeProjectUpload(*projectCloudExtension, {});
             }
         }
 
@@ -471,7 +464,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
             done->store(true);
             progress->finish(make_ret(cloudSyncErrorToErr(message.Error)));
         }
-    }, false);
+    }, true);
 
     if (const auto* resume = std::get_if<ResumePendingSnapshot>(&plan)) {
         resumePendingSnapshotOrStartNew(project, progress, resume->dbProjectData, name, uploadMode,
@@ -777,7 +770,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::resumeProjectSync(au::projec
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
             progress->finish(make_ret(cloudSyncErrorToErr(message.Error)));
         }
-    }, false);
+    }, true);
 
     audacity::cloud::audiocom::sync::ResumeProjectUpload(*projectCloudExtension, {});
 
