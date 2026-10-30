@@ -848,16 +848,18 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
         return doSaveProjectLocally(projectFilePath, SaveMode::Save);
     }, toUploadMode(cloudSaveMode));
 
-    if (!uploadRet) {
-        handleCloudSaveError(uploadRet);
-        return uploadRet;
-    }
-
-    if (!progress) {
+    const bool nothingToUpload = uploadRet.code() == static_cast<int>(au3cloud::Err::ProjectUpToDate)
+                                 || uploadRet.code() == static_cast<int>(au3cloud::Err::SyncAlreadyInProgress);
+    if (nothingToUpload) {
         if (onSuccess) {
             onSuccess();
         }
         return make_ok();
+    }
+
+    if (!uploadRet) {
+        handleCloudSaveError(uploadRet);
+        return uploadRet;
     }
 
     progress->finished().onReceive(this, [this, projectFilePath, onSuccess](const ProgressResult& result) {
