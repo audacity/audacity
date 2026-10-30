@@ -31,6 +31,7 @@ Rectangle {
     required property int headerHeight
     property color clipColor: ui.theme.extra["clip_color_1"]
     property color clipSelectedColor: ui.theme.extra["clip_selected_color_1"]
+    property color clipTimeSelectionColor: "transparent"
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
     property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : classicHeaderColor
     property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.8) : classicHeaderHoveredColor
@@ -603,7 +604,7 @@ Rectangle {
                 anchors.top: header.top
                 anchors.bottom: header.bottom
 
-                color: waveView.transformColor(clipColor)
+                color: root.clipTimeSelectionColor
                 visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
             }
 

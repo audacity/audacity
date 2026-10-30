@@ -14,6 +14,7 @@
 #include "au3/wavepainterutils.h"
 #include "au3/samplespainterutils.h"
 #include "view/timeline/timelinecontext.h"
+#include "view/common/selectioncolor.h"
 
 using namespace au::projectscene;
 
@@ -165,11 +166,11 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
 {
     params.style.blankBrush = selected ? CLASSIC_BACKGROUND_SELECTED_COLOR : CLASSIC_BACKGROUND_COLOR;
     params.style.normalBackground = params.style.blankBrush;
-    params.style.selectedBackground = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+    params.style.selectedBackground = selected ? timeSelectionColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
 
     params.style.envelopeBackground = params.style.blankBrush;
     params.style.selectedEnvelopeBackground
-        = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+        = selected ? timeSelectionColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
 
     QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
     params.style.samplePen = baseSampleColor;
@@ -505,23 +506,6 @@ void WaveView::setDisplayBounds(const QVariant& displayBounds)
     m_displayBounds.second = maxBound;
 
     update();
-}
-
-QColor WaveView::transformColor(const QColor& originalColor) const
-{
-    int r = originalColor.red();
-    int g = originalColor.green();
-    int b = originalColor.blue();
-
-    int deltaRed = (r < 240) ? 51 : (255 - r);
-    int deltaGreen = (g < 240) ? 69 : (255 - g);
-    int deltaBlue = 77;
-
-    int newRed = qBound(0, r + deltaRed, 255);
-    int newGreen = qBound(0, g + deltaGreen, 255);
-    int newBlue = qBound(0, b + deltaBlue, 255);
-
-    return QColor(newRed, newGreen, newBlue);
 }
 
 void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)

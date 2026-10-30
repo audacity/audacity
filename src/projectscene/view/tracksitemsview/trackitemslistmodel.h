@@ -6,6 +6,7 @@
 #include <functional>
 
 #include <QAbstractListModel>
+#include <QColor>
 #include <QPointer>
 
 #include "framework/global/async/asyncable.h"
@@ -72,6 +73,7 @@ public:
     Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
 
     Q_INVOKABLE bool containsItem(const TrackItemKey& key) const;
+    Q_INVOKABLE QColor timeSelectionColor(const QColor& itemColor) const;
     Q_INVOKABLE virtual double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
 
     Q_INVOKABLE void setFocusedItem(const TrackItemKey& key);
