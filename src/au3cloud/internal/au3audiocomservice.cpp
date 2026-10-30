@@ -167,6 +167,10 @@ UploadPlan resolveUploadPlan(au::project::IAudacityProjectPtr project,
                              const audacity::cloud::audiocom::sync::ProjectCloudExtension& extension,
                              UploadMode uploadMode)
 {
+    if (extension.IsAwaitingSnapshotId()) {
+        return SyncAlreadyInProgress {};
+    }
+
     if (uploadMode != UploadMode::NormalUpdate) {
         return StartNewSnapshot {};
     }
@@ -483,66 +487,35 @@ void Au3AudioComService::startNewSnapshotUpload(au::project::IAudacityProjectPtr
         return;
     }
 
-    projectCloudExtension->OnSyncStarted();
+    if (projectSaveCallback && !projectSaveCallback()) {
+        progress->finish(make_ret(Err::ProjectNotSaved));
+        return;
+    }
 
-    std::thread([weak = weak_from_this(), project, progress, name, uploadMode = toAu3UploadMode(uploadMode),
-                 projectSaveCallback = std::move(projectSaveCallback)]() mutable {
-        auto self = weak.lock();
-        if (!self) {
-            //: Error message shown when a cloud operation is interrupted by the application closing
-            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Service destroyed")));
-            return;
-        }
+    auto& cloudDatabase = sync::CloudProjectsDatabase::Get();
+    const std::string projectPath = project->path().toStdString();
+    const std::string projectName = cloudDatabase.GetPendingCloudProjectName(projectPath).value_or(name);
 
-        auto* projectCloudExtension = cloudExtension(project);
-        IF_ASSERT_FAILED(projectCloudExtension) {
-            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project")));
-            return;
-        }
+    if (!projectCloudExtension->IsCloudProject()) {
+        cloudDatabase.AddPendingCloudProject(projectPath, projectName);
+    }
 
-        auto future = audacity::cloud::audiocom::sync::LocalProjectSnapshot::Create(
-            audacity::cloud::audiocom::GetServiceConfig(),
-            audacity::cloud::audiocom::GetOAuthService(),
-            *projectCloudExtension,
-            name,
-            uploadMode,
-            AudiocomTrace::SaveProjectSaveToCloudMenu);
+    if (!projectCloudExtension->OnSyncStarted()) {
+        progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Internal error")));
+        return;
+    }
 
-        if (!future.valid()) {
-            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Internal error")));
-            return;
-        }
+    const auto future = audacity::cloud::audiocom::sync::LocalProjectSnapshot::Create(
+        audacity::cloud::audiocom::GetServiceConfig(),
+        audacity::cloud::audiocom::GetOAuthService(),
+        *projectCloudExtension,
+        projectName,
+        toAu3UploadMode(uploadMode),
+        AudiocomTrace::SaveProjectSaveToCloudMenu);
 
-        auto result = future.get();
-        if (!result.Response) {
-            return;
-        }
-
-        if (projectSaveCallback) {
-            muse::async::Async::call(self.get(), [project, operation = result.Operation,
-                                                  projectSaveCallback = std::move(projectSaveCallback)]() {
-                bool ret = projectSaveCallback();
-                if (ret) {
-                    return;
-                }
-
-                if (operation) {
-                    operation->Abort();
-                    return;
-                }
-
-                auto* projectCloudExtension = cloudExtension(project);
-                if (!projectCloudExtension) {
-                    return;
-                }
-
-                projectCloudExtension->OnSyncCompleted(nullptr,
-                                                       audacity::cloud::audiocom::sync::CloudSyncError {
-                    audacity::cloud::audiocom::sync::CloudSyncError::Aborted, muse::trc("project", "Could not save project locally") },
-                                                       AudiocomTrace::SaveProjectSaveToCloudMenu);
-            }, muse::runtime::mainThreadId());
-        }
-    }).detach();
+    if (!future.valid()) {
+        progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Internal error")));
+    }
 }
 
 void Au3AudioComService::resumePendingSnapshotOrStartNew(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress,
@@ -604,12 +577,12 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError,
                                                          muse::trc("cloud", "Project is not saved to the cloud"));
     }
-    const std::string& projectId = cloudRecord.value().projectId;
-    const std::string& snapshotId = cloudRecord.value().snapshotId;
-    if (projectId.empty() || snapshotId.empty()) {
+    if (!cloudRecord->hasSnapshot()) {
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError,
                                                          muse::trc("cloud", "Project is not synced with the cloud"));
     }
+    const std::string projectId = cloudRecord->projectId.value();
+    const std::string snapshotId = cloudRecord->snapshotId.value();
 
     const std::string projectPage = ::getCloudProjectPage(project);
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
@@ -757,11 +730,21 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::resumeProjectSync(au::projec
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project"));
     }
 
-    const auto pendingSnapshots = sync::CloudProjectsDatabase::Get().GetPendingSnapshots(
-        projectCloudExtension->GetCloudProjectId());
+    auto& cloudDatabase = sync::CloudProjectsDatabase::Get();
+    const auto pendingSnapshots = cloudDatabase.GetPendingSnapshots(projectCloudExtension->GetCloudProjectId());
 
     if (pendingSnapshots.empty()) {
-        return muse::RetVal<muse::ProgressPtr>::make_ok(nullptr);
+        const std::string projectPath = project->path().toStdString();
+        const auto dbData = cloudDatabase.GetProjectDataForPath(projectPath);
+        const bool snapshotPending
+            = (dbData && dbData->SyncStatus == sync::DBProjectData::SyncStatusPendingSnapshot)
+              || cloudDatabase.GetPendingCloudProjectName(projectPath).has_value();
+
+        if (!snapshotPending) {
+            return muse::RetVal<muse::ProgressPtr>::make_ok(nullptr);
+        }
+
+        return uploadProject(project, project->displayName().toStdString(), nullptr, UploadMode::NormalUpdate);
     }
 
     auto progress = createSyncProgress();
@@ -915,12 +898,16 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
         }
     }
 
-    if (cloudProjectId.empty()) {
+    const bool pendingNewProject = cloudProjectId.empty()
+                                   && filesystem()->exists(localPath)
+                                   && sync::CloudProjectsDatabase::Get().GetPendingCloudProjectName(localPath.toStdString()).has_value();
+
+    if (cloudProjectId.empty() && !pendingNewProject) {
         return muse::RetVal<muse::ProgressPtr>::make_ret(
             muse::Ret::Code::UnknownError, muse::trc("cloud", "Project not found in cloud database"));
     }
 
-    if (!forceOverwrite) {
+    if (!forceOverwrite && !pendingNewProject) {
         const auto unsyncedRet = checkUnsyncedProject(cloudProjectId);
         if (!unsyncedRet) {
             return muse::RetVal<muse::ProgressPtr>::make_ret(unsyncedRet);
@@ -928,6 +915,13 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
     }
 
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+
+    if (pendingNewProject) {
+        muse::async::Async::call(this, [progress, localPath]() {
+            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(localPath)));
+        });
+        return muse::RetVal<muse::ProgressPtr>::make_ok(progress);
+    }
 
     auto progressCallback = [progress](double p) -> bool {
         if (progress->isCanceled()) {
@@ -1084,6 +1078,8 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
 
 muse::Ret Au3AudioComService::deleteCloudProject(const muse::io::path_t& localPath)
 {
+    sync::CloudProjectsDatabase::Get().RemovePendingCloudProject(localPath.toStdString());
+
     auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(localPath.toStdString());
     if (!dbData) {
         // Nothing cached for this path, treat as already deleted

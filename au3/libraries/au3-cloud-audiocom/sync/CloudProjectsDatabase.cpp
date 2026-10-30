@@ -106,8 +106,19 @@ const auto addProjectSyncedDialogShownColumn = R"(
 ALTER TABLE projects ADD COLUMN synced_dialog_shown INTEGER DEFAULT 1;
 )";
 
+const auto addPendingCloudProjectsTable
+    = R"(
+CREATE TABLE IF NOT EXISTS pending_cloud_projects
+(
+   local_path TEXT,
+   name TEXT,
+   PRIMARY KEY (local_path)
+);
+)";
+
 const char* migrations[] = {
     addProjectSyncedDialogShownColumn,
+    addPendingCloudProjectsTable,
 };
 } // namespace
 
@@ -488,6 +499,74 @@ void CloudProjectsDatabase::SetProjectUserSlug(
     }
 
     statement->Prepare(projectId, slug).Run();
+}
+
+void CloudProjectsDatabase::AddPendingCloudProject(
+    std::string_view localPath, std::string_view name)
+{
+    auto connection = GetConnection();
+
+    if (!connection) {
+        return;
+    }
+
+    auto statement = connection->CreateStatement(
+        "INSERT OR REPLACE INTO pending_cloud_projects (local_path, name) VALUES (?, ?)");
+
+    if (!statement) {
+        return;
+    }
+
+    statement->Prepare(localPath, name).Run();
+}
+
+std::optional<std::string> CloudProjectsDatabase::GetPendingCloudProjectName(
+    std::string_view localPath) const
+{
+    auto connection = GetConnection();
+
+    if (!connection) {
+        return {};
+    }
+
+    auto statement = connection->CreateStatement(
+        "SELECT name FROM pending_cloud_projects WHERE local_path = ? LIMIT 1");
+
+    if (!statement) {
+        return {};
+    }
+
+    auto result = statement->Prepare(localPath).Run();
+
+    for (auto row : result) {
+        std::string name;
+
+        if (!row.Get(0, name)) {
+            return {};
+        }
+
+        return name;
+    }
+
+    return {};
+}
+
+void CloudProjectsDatabase::RemovePendingCloudProject(std::string_view localPath)
+{
+    auto connection = GetConnection();
+
+    if (!connection) {
+        return;
+    }
+
+    auto statement = connection->CreateStatement(
+        "DELETE FROM pending_cloud_projects WHERE local_path = ?");
+
+    if (!statement) {
+        return;
+    }
+
+    statement->Prepare(localPath).Run();
 }
 
 bool CloudProjectsDatabase::IsProjectBlockLocked(

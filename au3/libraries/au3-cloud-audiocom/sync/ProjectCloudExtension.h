@@ -23,12 +23,12 @@
 #include "au3-registries/ClientData.h"
 #include "au3-utility/Observer.h"
 
+#include "CloudProjectsDatabase.h"
 #include "CloudSyncError.h"
 #include "CloudSyncDTO.h"
 #include "ProjectUploadOperation.h"
 
 class AudacityProject;
-class ProjectSerializer;
 
 enum class AudiocomTrace;
 
@@ -67,8 +67,9 @@ public:
 
     void OnLoad();
 
-    //! This method is called from the UI thread
-    void OnSyncStarted();
+    //! This method is called from the UI thread, after the project was saved.
+    //! Returns false if the saved document could not be read from the project file.
+    bool OnSyncStarted();
     //! This method is called from the UI thread
     void OnSyncResumed(
         std::shared_ptr<ProjectUploadOperation> uploadOperation, int64_t missingBlocksCount, bool needsProjectUpload);
@@ -94,11 +95,11 @@ public:
     void CancelSync();
 
     bool IsSyncing() const;
+    //! True while a snapshot requested by OnSyncStarted has not yet received its id from the server
+    bool IsAwaitingSnapshotId() const;
 
     std::string GetCloudProjectId() const;
     std::string GetSnapshotId() const;
-
-    void OnUpdateSaved(const ProjectSerializer& serializer);
 
     std::weak_ptr<AudacityProject> GetProject() const;
 
@@ -125,7 +126,7 @@ private:
     void UnsafeUpdateProgress();
     void Publish(CloudStatusChangedMessage cloudStatus, bool canMerge);
 
-    void MarkProjectSynced(bool success);
+    void MarkProjectSynced(DBProjectData::SyncStatusType syncStatus);
 
     UploadQueueElement*
     UnsafeFindUploadQueueElement(const ProjectUploadOperation& uploadOperation);
@@ -142,8 +143,8 @@ private:
     std::string mProjectId;
     std::string mSnapshotId;
 
-    std::mutex mUploadQueueMutex;
-    std::vector<std::shared_ptr<UploadQueueElement>> mUploadQueue;
+    mutable std::mutex mUploadQueueMutex;
+    std::vector<std::shared_ptr<UploadQueueElement> > mUploadQueue;
 
     mutable std::mutex mStatusMutex;
     CloudStatusChangedMessage mLastStatus;
