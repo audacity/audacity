@@ -13,6 +13,7 @@ target_sources(record PRIVATE
     irecordcontroller.h
     irecordmetercontroller.h
     irecord.h
+    itimedrecordingcontroller.h
     iaudioinput.h
     recordcommands.h
     timedrecordingtypes.h

@@ -46,6 +46,7 @@ void RecordModule::resolveImports()
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://record/timedrecording"), "Audacity.Record", "TimedRecordingDialog");
+        ir->registerQmlUri(muse::Uri("audacity://record/timedrecording/progress"), "Audacity.Record", "TimedRecordingProgressDialog");
     }
 
     auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
@@ -81,6 +82,7 @@ void RecordContext::registerExports()
 
     ioc()->registerExport<IRecordController>(mname, m_controller);
     ioc()->registerExport<IRecord>(mname, m_record);
+    ioc()->registerExport<ITimedRecordingController>(mname, m_timedRecordingController);
 }
 
 void RecordContext::resolveImports()

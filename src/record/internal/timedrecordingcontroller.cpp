@@ -3,20 +3,262 @@
 */
 #include "timedrecordingcontroller.h"
 
+#include <QVariantMap>
+
+#include "framework/global/translation.h"
+#include "framework/ui/view/iconcodes.h"
+
 #include "../recordcommands.h"
+#include "timedrecordingformatter.h"
 
 using namespace au::record;
 using namespace muse;
 
-static const UriQuery TIMED_RECORDING_SETUP_URI("audacity://record/timedrecording");
+namespace {
+const UriQuery SETUP_DIALOG_URI("audacity://record/timedrecording");
+const UriQuery PROGRESS_DIALOG_URI("audacity://record/timedrecording/progress");
+
+constexpr int TICK_INTERVAL_MS = 100;
+
+using TimePoint = TimedRecordingSchedule::TimePoint;
+
+TimePoint now()
+{
+    return std::chrono::system_clock::now();
+}
+
+TimedRecordingSchedule scheduleFromDialogValue(const Val& value)
+{
+    const QVariantMap data = value.toQVariant().toMap();
+
+    TimedRecordingSchedule schedule;
+    if (data.contains("startMs")) {
+        schedule.start = TimePoint { std::chrono::milliseconds { data.value("startMs").toLongLong() } };
+    }
+    if (data.contains("endMs")) {
+        schedule.end = TimePoint { std::chrono::milliseconds { data.value("endMs").toLongLong() } };
+    } else {
+        schedule.end = TimedRecordingSchedule::Duration(data.value("durationSeconds").toLongLong());
+    }
+    return schedule;
+}
+}
 
 void TimedRecordingController::init()
 {
     commandDispatcher()->onRequest(this, RECORD_TIMED_RECORDING_COMMAND, [this]() { return openSetupDialog(); });
+
+    m_ticker.setInterval(TICK_INTERVAL_MS);
+    QObject::connect(&m_ticker, &QTimer::timeout, &m_ticker, [this]() { onTick(); });
+
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        if (m_state == State::Recording && !recordController()->isRecording()) {
+            finish(Outcome::Stopped);
+        }
+    });
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        if (m_state != State::Idle) {
+            stopRecording(Outcome::Stopped);
+        }
+    });
+}
+
+ITimedRecordingController::State TimedRecordingController::state() const
+{
+    return m_state;
+}
+
+async::Notification TimedRecordingController::stateChanged() const
+{
+    return m_stateChanged;
+}
+
+std::chrono::system_clock::time_point TimedRecordingController::startTime() const
+{
+    return m_startTime;
+}
+
+std::chrono::system_clock::time_point TimedRecordingController::endTime() const
+{
+    return m_endTime;
+}
+
+void TimedRecordingController::requestStop()
+{
+    switch (m_state) {
+    case State::Idle:
+        return;
+    case State::Waiting:
+        finish(Outcome::Stopped);
+        return;
+    case State::Recording:
+        confirmStop();
+        return;
+    }
 }
 
 Ret TimedRecordingController::openSetupDialog()
 {
-    RetVal<Val> rv = interactive()->openSync(TIMED_RECORDING_SETUP_URI);
-    return rv.ret;
+    if (m_state != State::Idle) {
+        return make_ret(Ret::Code::Cancel);
+    }
+
+    RetVal<Val> rv = interactive()->openSync(SETUP_DIALOG_URI);
+    if (!rv.ret.success()) {
+        return rv.ret;
+    }
+
+    begin(scheduleFromDialogValue(rv.val));
+    return make_ok();
+}
+
+void TimedRecordingController::begin(const TimedRecordingSchedule& schedule)
+{
+    const TimePoint startedAt = now();
+    if (!schedule.isValid(startedAt)) {
+        failToStart(muse::trc("record", "The end time has already passed."));
+        return;
+    }
+
+    m_schedule = schedule;
+    m_startTime = schedule.startTime(startedAt);
+    m_endTime = schedule.endTime(startedAt);
+
+    setState(State::Waiting);
+    openProgressDialog();
+    m_ticker.start();
+    onTick();
+}
+
+void TimedRecordingController::openProgressDialog()
+{
+    interactive()->open(PROGRESS_DIALOG_URI)
+    .onResolve(this, [this](const Val&) { requestStop(); })
+    .onReject(this, [this](int, const std::string&) { requestStop(); });
+}
+
+void TimedRecordingController::onTick()
+{
+    const TimePoint tickedAt = now();
+
+    if (m_state == State::Waiting && tickedAt >= m_startTime) {
+        startRecording();
+    } else if (m_state == State::Recording && tickedAt >= m_endTime) {
+        stopRecording(Outcome::Completed);
+    }
+}
+
+void TimedRecordingController::startRecording()
+{
+    if (recordController()->isRecording()) {
+        failToStart(muse::trc("record", "Audacity was already recording."));
+        return;
+    }
+
+    commandDispatcher()->dispatch(RECORD_START_COMMAND).onResolve(this, [this](const rcommand::Response& response) {
+        if (m_state != State::Waiting) {
+            return;
+        }
+
+        if (!response.ret.success() || !recordController()->isRecording()) {
+            failToStart(response.ret.text().empty() ? muse::trc("record", "Recording couldn't be started.") : response.ret.text());
+            return;
+        }
+
+        const TimePoint startedAt = now();
+        m_startTime = startedAt;
+        m_endTime = m_schedule.endTime(startedAt);
+        setState(State::Recording);
+    });
+}
+
+void TimedRecordingController::failToStart(const std::string& reason)
+{
+    finish(Outcome::Failed);
+    toastService()->showError(muse::trc("record", "Timed recording couldn't start"), reason);
+}
+
+void TimedRecordingController::stopRecording(Outcome outcome)
+{
+    if (m_state == State::Recording && recordController()->isRecording()) {
+        finish(outcome);
+        commandDispatcher()->dispatch(RECORD_STOP_COMMAND);
+        return;
+    }
+
+    finish(outcome);
+}
+
+void TimedRecordingController::confirmStop()
+{
+    if (m_stopConfirmationOpen) {
+        return;
+    }
+    m_stopConfirmationOpen = true;
+
+    constexpr int confirmButton = int(IInteractive::Button::CustomButton) + 1;
+    const IInteractive::ButtonDatas buttons {
+        IInteractive::ButtonData(IInteractive::Button::Cancel, muse::trc("global", "Cancel")),
+        IInteractive::ButtonData(confirmButton, muse::trc("record", "Confirm"), true)
+    };
+
+    const std::string title = muse::trc("record", "Stop timed recording");
+    interactive()->warning(title, muse::trc("record", "Your timed recording will be stopped."), buttons, confirmButton,
+                           { IInteractive::Option::WithIcon }, title)
+    .onResolve(this, [this, confirmButton](const IInteractive::Result& result) {
+        m_stopConfirmationOpen = false;
+
+        if (m_state != State::Recording) {
+            return;
+        }
+
+        if (result.isButton(confirmButton)) {
+            stopRecording(Outcome::Stopped);
+            return;
+        }
+
+        if (!interactive()->isOpened(PROGRESS_DIALOG_URI).val) {
+            openProgressDialog();
+        }
+    });
+}
+
+void TimedRecordingController::finish(Outcome outcome)
+{
+    if (m_state == State::Idle) {
+        return;
+    }
+
+    const bool wasRecording = m_state == State::Recording;
+    const auto recorded
+        = wasRecording ? std::chrono::duration_cast<std::chrono::seconds>(now() - m_startTime) : std::chrono::seconds::zero();
+
+    m_ticker.stop();
+    setState(State::Idle);
+
+    interactive()->close(PROGRESS_DIALOG_URI);
+
+    switch (outcome) {
+    case Outcome::Completed:
+        toastService()->show(muse::trc("record", "Timed recording complete"),
+                             //: %1 is how long the timed recording lasted, e.g. "1h 30m"
+                             muse::mtrc("record", "Recorded for %1").arg(TimedRecordingFormatter::duration(recorded)).toStdString(),
+                             ui::IconCode::Code::TICK);
+        break;
+    case Outcome::Stopped:
+        toastService()->show(muse::trc("record", "Timed recording stopped"), "", ui::IconCode::Code::TICK);
+        break;
+    case Outcome::Failed:
+        break;
+    }
+}
+
+void TimedRecordingController::setState(State state)
+{
+    if (m_state == state) {
+        return;
+    }
+    m_state = state;
+    m_stateChanged.notify();
 }
