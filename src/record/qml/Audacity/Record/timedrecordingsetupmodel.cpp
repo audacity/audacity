@@ -6,6 +6,9 @@
 #include <QLocale>
 #include <QRegularExpression>
 
+#include "framework/global/translation.h"
+
+#include "project/types/projecttypes.h"
 #include "uicomponents/types/numerictypes.h"
 
 #include "timedrecordingviewformatter.h"
@@ -28,6 +31,15 @@ QString numericDateFormat()
     return format;
 }
 
+QString withProjectSuffix(const QString& path)
+{
+    const QString trimmed = path.trimmed();
+    if (trimmed.isEmpty() || au::project::isAudacity4File(trimmed)) {
+        return trimmed;
+    }
+    return trimmed + "." + QString::fromStdString(au::project::AUP4);
+}
+
 QDateTime currentDateTime()
 {
     QDateTime now = QDateTime::currentDateTime();
@@ -37,7 +49,7 @@ QDateTime currentDateTime()
 }
 
 TimedRecordingSetupModel::TimedRecordingSetupModel(QObject* parent)
-    : QObject(parent), m_dateFormat(numericDateFormat())
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this)), m_dateFormat(numericDateFormat())
 {
     m_clock.setInterval(CLOCK_INTERVAL_MS);
     connect(&m_clock, &QTimer::timeout, this, &TimedRecordingSetupModel::update);
@@ -54,6 +66,11 @@ void TimedRecordingSetupModel::init()
     m_durationSeconds = DEFAULT_DURATION_SECONDS;
     m_endDate = end.date().toString(m_dateFormat);
     m_endTime = end.time().toString(TIME_FORMAT);
+
+    const project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (project && !project->isNewlyCreated() && !project->isCloudProject()) {
+        m_saveProjectPath = project->path().toQString();
+    }
 
     emit scheduleChanged();
     m_clock.start();
@@ -78,7 +95,29 @@ QVariantMap TimedRecordingSetupModel::scheduleData() const
         data["endMs"] = msSinceEpoch(*end);
     }
     data["durationSeconds"] = static_cast<qint64>(m_durationSeconds);
+
+    if (m_saveProjectEnabled) {
+        data["saveProjectPath"] = withProjectSuffix(m_saveProjectPath);
+    }
+
     return data;
+}
+
+void TimedRecordingSetupModel::browseSaveProjectPath()
+{
+    muse::io::path_t defaultPath = m_saveProjectPath;
+    if (defaultPath.empty()) {
+        defaultPath = projectConfiguration()->defaultSavingFilePath(globalContext()->currentProject());
+    }
+
+    const std::vector<std::string> filter { muse::trc("project", "Audacity 4 files") + " (*." + project::AUP4 + ")" };
+    const muse::io::path_t path = interactive()->selectSavingFileSync(muse::trc("record", "Save project as"), defaultPath, filter);
+    if (path.empty()) {
+        return;
+    }
+
+    projectConfiguration()->setLastSavedProjectsPath(muse::io::dirpath(path));
+    setSaveProjectPath(withProjectSuffix(path.toQString()));
 }
 
 bool TimedRecordingSetupModel::startNow() const
@@ -149,6 +188,26 @@ QString TimedRecordingSetupModel::endTime() const
 void TimedRecordingSetupModel::setEndTime(const QString& time)
 {
     set(m_endTime, time);
+}
+
+bool TimedRecordingSetupModel::saveProjectEnabled() const
+{
+    return m_saveProjectEnabled;
+}
+
+void TimedRecordingSetupModel::setSaveProjectEnabled(bool enabled)
+{
+    set(m_saveProjectEnabled, enabled);
+}
+
+QString TimedRecordingSetupModel::saveProjectPath() const
+{
+    return m_saveProjectPath;
+}
+
+void TimedRecordingSetupModel::setSaveProjectPath(const QString& path)
+{
+    set(m_saveProjectPath, path);
 }
 
 QString TimedRecordingSetupModel::dateFormat() const
@@ -232,9 +291,11 @@ void TimedRecordingSetupModel::update()
     const std::optional<TimedRecordingSchedule> s = schedule();
     const TimedRecordingSchedule::TimePoint nowTimePoint = TimedRecordingViewFormatter::toTimePoint(now);
 
-    const bool canStart = s && s->isValid(nowTimePoint);
+    const bool scheduleValid = s && s->isValid(nowTimePoint);
+    const bool completionActionsValid = !m_saveProjectEnabled || !m_saveProjectPath.trimmed().isEmpty();
+    const bool canStart = scheduleValid && completionActionsValid;
     QString summary;
-    if (canStart) {
+    if (scheduleValid) {
         const std::optional<QDateTime> start = s->start ? std::optional(TimedRecordingViewFormatter::toDateTime(*s->start)) : std::nullopt;
         summary = TimedRecordingViewFormatter::summary(now, start, s->recordingDuration(nowTimePoint).count(), m_endAfterDuration);
     }

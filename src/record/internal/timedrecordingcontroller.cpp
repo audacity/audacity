@@ -5,6 +5,7 @@
 
 #include <QVariantMap>
 
+#include "framework/global/async/async.h"
 #include "framework/global/translation.h"
 #include "framework/ui/view/iconcodes.h"
 
@@ -27,10 +28,8 @@ TimePoint now()
     return std::chrono::system_clock::now();
 }
 
-TimedRecordingSchedule scheduleFromDialogValue(const Val& value)
+TimedRecordingSchedule scheduleFromDialogData(const QVariantMap& data)
 {
-    const QVariantMap data = value.toQVariant().toMap();
-
     TimedRecordingSchedule schedule;
     if (data.contains("startMs")) {
         schedule.start = TimePoint { std::chrono::milliseconds { data.value("startMs").toLongLong() } };
@@ -54,6 +53,13 @@ void TimedRecordingController::init()
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         if (m_state == State::Recording && !recordController()->isRecording()) {
             finish(Outcome::Stopped);
+        }
+    });
+
+    record()->recordingFinished().onNotify(this, [this]() {
+        if (m_completionActionsPending) {
+            m_completionActionsPending = false;
+            scheduleCompletionActions();
         }
     });
 
@@ -109,7 +115,10 @@ Ret TimedRecordingController::openSetupDialog()
         return rv.ret;
     }
 
-    begin(scheduleFromDialogValue(rv.val));
+    const QVariantMap data = rv.val.toQVariant().toMap();
+    m_saveProjectPath = data.value("saveProjectPath").toString();
+
+    begin(scheduleFromDialogData(data));
     return make_ok();
 }
 
@@ -122,6 +131,8 @@ void TimedRecordingController::begin(const TimedRecordingSchedule& schedule)
     }
 
     m_schedule = schedule;
+    m_completionActionsPending = false;
+    m_project = globalContext()->currentProject();
     m_startTime = schedule.startTime(startedAt);
     m_endTime = schedule.endTime(startedAt);
 
@@ -251,6 +262,39 @@ void TimedRecordingController::finish(Outcome outcome)
         break;
     case Outcome::Failed:
         break;
+    }
+
+    if (!wasRecording || outcome != Outcome::Completed) {
+        return;
+    }
+
+    if (recordController()->isRecording()) {
+        m_completionActionsPending = true;
+        return;
+    }
+
+    scheduleCompletionActions();
+}
+
+void TimedRecordingController::scheduleCompletionActions()
+{
+    async::Async::call(this, [this, project = m_project, saveProjectPath = m_saveProjectPath]() {
+        runCompletionActions(project.lock(), saveProjectPath);
+    });
+}
+
+void TimedRecordingController::runCompletionActions(const project::IAudacityProjectPtr& project, const muse::io::path_t& saveProjectPath)
+{
+    if (!project || project != globalContext()->currentProject()) {
+        return;
+    }
+
+    if (!saveProjectPath.empty()) {
+        if (projectFilesController()->saveProject(saveProjectPath)) {
+            toastService()->show(muse::trc("record", "Project saved"), saveProjectPath.toStdString(), ui::IconCode::Code::SAVE);
+        } else {
+            toastService()->showError(muse::trc("record", "Couldn't save the project"), saveProjectPath.toStdString());
+        }
     }
 }
 

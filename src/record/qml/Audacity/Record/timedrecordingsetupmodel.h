@@ -11,10 +11,15 @@
 #include <QVariantMap>
 #include <QtQml/qqmlregistration.h>
 
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
+#include "context/iglobalcontext.h"
+#include "project/iprojectconfiguration.h"
 #include "record/timedrecordingtypes.h"
 
 namespace au::record {
-class TimedRecordingSetupModel : public QObject
+class TimedRecordingSetupModel : public QObject, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT;
@@ -31,14 +36,22 @@ class TimedRecordingSetupModel : public QObject
     Q_PROPERTY(QString dateFormat READ dateFormat CONSTANT FINAL)
     Q_PROPERTY(int durationFormat READ durationFormat CONSTANT FINAL)
 
+    Q_PROPERTY(bool saveProjectEnabled READ saveProjectEnabled WRITE setSaveProjectEnabled NOTIFY scheduleChanged FINAL)
+    Q_PROPERTY(QString saveProjectPath READ saveProjectPath WRITE setSaveProjectPath NOTIFY scheduleChanged FINAL)
+
     Q_PROPERTY(QString summary READ summary NOTIFY summaryChanged FINAL)
     Q_PROPERTY(bool canStart READ canStart NOTIFY summaryChanged FINAL)
+
+    muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
 
 public:
     explicit TimedRecordingSetupModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
     Q_INVOKABLE QVariantMap scheduleData() const;
+    Q_INVOKABLE void browseSaveProjectPath();
 
     bool startNow() const;
     void setStartNow(bool startNow);
@@ -55,6 +68,11 @@ public:
     void setEndDate(const QString& date);
     QString endTime() const;
     void setEndTime(const QString& time);
+
+    bool saveProjectEnabled() const;
+    void setSaveProjectEnabled(bool enabled);
+    QString saveProjectPath() const;
+    void setSaveProjectPath(const QString& path);
 
     QString dateFormat() const;
     int durationFormat() const;
@@ -82,6 +100,9 @@ private:
     double m_durationSeconds = 0;
     QString m_endDate;
     QString m_endTime;
+
+    bool m_saveProjectEnabled = false;
+    QString m_saveProjectPath;
 
     QString m_dateFormat;
     QString m_summary;

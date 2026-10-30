@@ -289,6 +289,60 @@ StyledDialogView {
                 horizontalAlignment: Text.AlignLeft
                 text: setupModel.summary
             }
+
+            SchedulePanel {
+                Layout.fillWidth: true
+
+                title: qsTrc("record", "When recording is done")
+
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.topMargin: 8
+
+                    spacing: 8
+
+                    CheckBox {
+                        text: qsTrc("record", "Save project")
+                        checked: setupModel.saveProjectEnabled
+
+                        onClicked: {
+                            setupModel.saveProjectEnabled = !checked
+                        }
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+
+                        spacing: 4
+                        enabled: setupModel.saveProjectEnabled
+
+                        TextInputField {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 28
+
+                            textSidePadding: 6
+                            currentText: setupModel.saveProjectPath
+
+                            onTextEdited: function (newTextValue) {
+                                setupModel.saveProjectPath = newTextValue
+                            }
+                        }
+
+                        FlatButton {
+                            Layout.preferredHeight: 28
+
+                            icon: IconCode.OPEN_FILE
+                            text: qsTrc("ui", "Browse")
+                            buttonType: FlatButton.Horizontal
+                            orientation: Qt.Horizontal
+
+                            onClicked: {
+                                setupModel.browseSaveProjectPath()
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         SeparatorLine {}

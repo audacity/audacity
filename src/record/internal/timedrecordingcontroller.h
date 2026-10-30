@@ -14,6 +14,9 @@
 #include "framework/toast/itoastservice.h"
 
 #include "context/iglobalcontext.h"
+#include "project/iaudacityproject.h"
+#include "project/iprojectfilescontroller.h"
+#include "record/irecord.h"
 #include "record/irecordcontroller.h"
 #include "record/itimedrecordingcontroller.h"
 #include "record/timedrecordingtypes.h"
@@ -28,6 +31,8 @@ class TimedRecordingController : public ITimedRecordingController, public muse::
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<IRecordController> recordController{ this };
+    muse::ContextInject<IRecord> record{ this };
+    muse::ContextInject<project::IProjectFilesController> projectFilesController{ this };
 
 public:
     TimedRecordingController(const muse::modularity::ContextPtr& ctx)
@@ -59,12 +64,17 @@ private:
     void stopRecording(Outcome outcome);
     void confirmStop();
     void finish(Outcome outcome);
+    void scheduleCompletionActions();
+    void runCompletionActions(const project::IAudacityProjectPtr& project, const muse::io::path_t& saveProjectPath);
     void setState(State state);
 
     State m_state = State::Idle;
     muse::async::Notification m_stateChanged;
 
     TimedRecordingSchedule m_schedule;
+    muse::io::path_t m_saveProjectPath;
+    std::weak_ptr<project::IAudacityProject> m_project;
+    bool m_completionActionsPending = false;
     TimedRecordingSchedule::TimePoint m_startTime;
     TimedRecordingSchedule::TimePoint m_endTime;
 
