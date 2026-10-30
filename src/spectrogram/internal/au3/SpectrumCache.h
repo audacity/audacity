@@ -6,6 +6,7 @@
 #include "internal/iclipchannelreader.h"
 #include "spectrogramtypes.h"
 
+#include "au3-clip-processing/ClipFades.h"
 #include "au3-utility/MemoryX.h"
 #include "au3-wave-track/WaveClip.h" // to inherit WaveClipListener
 
@@ -60,6 +61,7 @@ public:
     double spp;      // samples per pixel
     double leftTrim{ .0 };
     double rightTrim{ .0 };
+    ClipFades::Snapshot fades;
     double start;      // relative to clip start
     std::optional<SpectrogramWindowType> windowType;
     int windowSize { 0 };

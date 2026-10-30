@@ -6,6 +6,7 @@
 #include "internal/iclipchannelreader.h"
 
 #include "au3-clip-processing/AudioSegmentSampleView.h"
+#include "au3-clip-processing/ClipFades.h"
 #include "au3-wave-track/WaveTrack.h"
 
 #include <mutex>
@@ -24,6 +25,7 @@ public:
 
 private:
     const WaveChannelInterval& m_waveChannelInterval;
+    const ClipFades::Snapshot m_fades;
     std::vector<AudioSegmentSampleView> m_sampleCacheHolders;
     std::mutex m_sampleCacheMutex;
 };
