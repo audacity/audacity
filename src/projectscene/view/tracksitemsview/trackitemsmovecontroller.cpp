@@ -199,8 +199,8 @@ void TrackItemsMoveController::moveByKeyboard(double timeOffset, int trackOffset
         if (focus.trackId != INVALID_TRACK && focus.isTrack()) {
             if (trackOffset != 0) {
                 trackeditInteraction()->moveTracks({ focus.trackId }, trackOffset < 0 ? TrackMoveDirection::Up : TrackMoveDirection::Down);
+                return;
             }
-            return;
         }
         const auto exists = [&project](const trackedit::TrackItemKey& key) {
             const auto track = project->track(key.trackId);
