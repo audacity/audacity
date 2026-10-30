@@ -8,7 +8,7 @@
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-label-track/LabelTrack.h"
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"

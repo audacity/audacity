@@ -125,7 +125,7 @@ set(MODULE_LINK
         au3-project-history
         au3-project-rate
         au3-realtime-effects
-        au3-stretching-sequence
+        au3-clip-processing
         au3-time-frequency-selection
         au3-time-track
         au3-track

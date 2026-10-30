@@ -10,7 +10,7 @@
 #include "au3-time-frequency-selection/SelectedRegion.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-clip-processing/PlayableSequenceFactory.h"
 #include "au3-audio-devices/AudioIOBase.h"
 #include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
@@ -633,7 +633,7 @@ TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool 
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+                PlayableSequenceFactory::Create(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     return result;

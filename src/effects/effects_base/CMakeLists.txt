@@ -147,7 +147,7 @@ set(MODULE_LINK
         au3-project-history
         au3-project-rate
         au3-realtime-effects
-        au3-stretching-sequence
+        au3-clip-processing
         au3-strings
         au3-track
         au3-transactions

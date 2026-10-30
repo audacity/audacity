@@ -16,9 +16,9 @@
 #include "au3-utility/CRTPBase.h"
 #include "au3-math/SampleFormat.h"
 #include "au3-math/SampleCount.h"
-#include "au3-stretching-sequence/ClipInterface.h"
+#include "au3-clip-processing/ClipInterface.h"
 #include "au3-xml/XMLTagHandler.h"
-#include "au3-stretching-sequence/AudioSegmentSampleView.h"
+#include "au3-clip-processing/AudioSegmentSampleView.h"
 
 #include <wx/longlong.h>
 
@@ -209,11 +209,12 @@ struct PitchAndSpeedPresetChange
 
 struct StretchRatioChange
 {
-    explicit StretchRatioChange(double newValue)
-        : newValue(newValue)
+    explicit StretchRatioChange(double oldValue, double newValue)
+        : oldValue(oldValue), newValue(newValue)
     {
     }
 
+    const double oldValue;
     const double newValue;
 };
 
@@ -443,6 +444,9 @@ public:
     [[nodiscard]] virtual Observer::Subscription
     SubscribeToPitchAndSpeedPresetChange(
         std::function<void(PitchAndSpeedPreset)> cb) const override;
+
+    [[nodiscard]] Observer::Subscription SubscribeToStretchRatioChange(
+        std::function<void(double oldRatio, double newRatio)> cb) const override;
 
     // Resample clip. This also will set the rate, but without changing
     // the length of the clip

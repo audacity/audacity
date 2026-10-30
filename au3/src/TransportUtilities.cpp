@@ -19,7 +19,7 @@
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
 #include "SampleTrack.h"
-#include "StretchingSequence.h"
+#include "PlayableSequenceFactory.h"
 #include "ViewInfo.h"
 #include "toolbars/ControlToolBar.h"
 #include "ProgressDialog.h"
@@ -214,7 +214,7 @@ TransportSequences MakeTransportTracks(
                            + (selectedOnly ? &Track::IsSelected : &Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+                PlayableSequenceFactory::Create(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     if (nonWaveToo) {

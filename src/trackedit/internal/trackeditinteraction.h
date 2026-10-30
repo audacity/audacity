@@ -35,6 +35,8 @@ private:
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex) override;
+    bool changeClipFadeIn(const ClipKey& clipKey, secs_t duration, bool completed) override;
+    bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration, bool completed) override;
     bool changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;

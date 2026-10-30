@@ -34,6 +34,11 @@ void TrackClipsListModel::onInit()
         });
     }
 
+    // Escape
+    trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this] {
+        cancelClipFadeEdit();
+    });
+
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList& keyList) {
         if (keyList.empty()) {
             resetSelectedClips();
@@ -335,6 +340,71 @@ ViewTrackItem* TrackClipsListModel::createDragGhost(const trackedit::TrackItemKe
 bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
 {
     return trackeditInteraction()->changeClipTitle(key.key, newTitle);
+}
+
+void TrackClipsListModel::startClipFadeEdit(const ClipKey& key)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+    trackedit::Clip clip = prj->clip(key.key);
+    if (!clip.isValid()) {
+        return;
+    }
+    // So that nothing writes the ongoing edit into the undo state it should leave as it was
+    projectHistory()->startUserInteraction();
+    m_fadeEditedClip = std::move(clip);
+}
+
+bool TrackClipsListModel::changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change)
+{
+    // E.g., the rest of a canceled drag
+    if (!m_fadeEditedClip || m_fadeEditedClip->key != key.key) {
+        return false;
+    }
+    const bool changed = change();
+    if (completed) {
+        m_fadeEditedClip.reset();
+        // In case the change failed and so pushed no state
+        projectHistory()->endUserInteraction();
+    }
+    return changed;
+}
+
+bool TrackClipsListModel::changeClipFadeIn(const ClipKey& key, double duration, bool completed)
+{
+    return changeClipFade(key, completed, [&] {
+        if (const TrackClipItem* item = clipItemByKey(key.key)) {
+            const double start = item->time().startTime;
+            duration = m_context->applyDetectedSnap(start + duration) - start;
+        }
+        return trackeditInteraction()->changeClipFadeIn(key.key, duration, completed);
+    });
+}
+
+bool TrackClipsListModel::changeClipFadeOut(const ClipKey& key, double duration, bool completed)
+{
+    return changeClipFade(key, completed, [&] {
+        if (const TrackClipItem* item = clipItemByKey(key.key)) {
+            const double end = item->time().endTime;
+            duration = end - m_context->applyDetectedSnap(end - duration);
+        }
+        return trackeditInteraction()->changeClipFadeOut(key.key, duration, completed);
+    });
+}
+
+void TrackClipsListModel::cancelClipFadeEdit()
+{
+    if (!m_fadeEditedClip) {
+        return;
+    }
+
+    constexpr auto completed = false;
+    trackeditInteraction()->changeClipFadeIn(m_fadeEditedClip->key, m_fadeEditedClip->fadeInDuration, completed);
+    trackeditInteraction()->changeClipFadeOut(m_fadeEditedClip->key, m_fadeEditedClip->fadeOutDuration, completed);
+    m_fadeEditedClip.reset();
+    projectHistory()->endUserInteraction();
 }
 
 bool TrackClipsListModel::isKeyboardTriggered() const

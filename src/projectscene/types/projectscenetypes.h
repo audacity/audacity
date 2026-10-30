@@ -149,6 +149,17 @@ public:
     Q_ENUM(Style)
 };
 
+class FadeTypes
+{
+    Q_GADGET
+public:
+    enum class Type {
+        LINEAR = 0,
+        LOGARITHMIC
+    };
+    Q_ENUM(Type)
+};
+
 class DirectionType
 {
     Q_GADGET

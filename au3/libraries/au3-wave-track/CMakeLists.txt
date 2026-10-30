@@ -49,7 +49,7 @@ PUBLIC
    au3-preferences
    au3-registries
    au3-sample-track
-   au3-stretching-sequence
+   au3-clip-processing
    au3-strings
    au3-utility
    au3-xml
