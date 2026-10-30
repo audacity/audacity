@@ -21,6 +21,7 @@ function.
 #include <algorithm>
 
 #include "FFmpeg.h"
+#include "FFmpegMetadata.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 #include "lib-ffmpeg-support/FifoBuffer.h"
 
@@ -1508,34 +1509,19 @@ bool FFmpegExporter::AddTags(const Tags* tags)
         return false;
     }
 
-    SetMetadata(tags, "album", TAG_ALBUM);
-    SetMetadata(tags, "comment", TAG_COMMENTS);
-    SetMetadata(tags, "genre", TAG_GENRE);
-    SetMetadata(tags, "title", TAG_TITLE);
-    SetMetadata(tags, "track", TAG_TRACK);
-
-    // Bug 2564: Add m4a tags
-    if (mEncFormatDesc->GetAudioCodec() == mFFmpeg->GetAVCodecID(AUDACITY_AV_CODEC_ID_AAC)) {
-        SetMetadata(tags, "artist", TAG_ARTIST);
-        SetMetadata(tags, "date", TAG_YEAR);
-    } else {
-        SetMetadata(tags, "author", TAG_ARTIST);
-        SetMetadata(tags, "year", TAG_YEAR);
+    for (const auto& [key, value] : FFmpegMetadata::ExportEntries(*tags)) {
+        SetMetadata(key, value);
     }
 
     return true;
 }
 
-void FFmpegExporter::SetMetadata(const Tags* tags, const char* name, const wxChar* tag)
+void FFmpegExporter::SetMetadata(const std::string& name, const wxString& value)
 {
-    if (tags->HasTag(tag)) {
-        wxString value = tags->GetTag(tag);
+    AVDictionaryWrapper metadata = mEncFormatCtx->GetMetadata();
 
-        AVDictionaryWrapper metadata = mEncFormatCtx->GetMetadata();
-
-        metadata.Set(name, mSupportsUTF8 ? value : value.mb_str(), 0);
-        mEncFormatCtx->SetMetadata(metadata);
-    }
+    metadata.Set(name, mSupportsUTF8 ? value : value.mb_str(), 0);
+    mEncFormatCtx->SetMetadata(metadata);
 }
 
 //----------------------------------------------------------------------------

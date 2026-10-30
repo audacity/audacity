@@ -33,7 +33,7 @@ ProjectMeta Au3Metadata::tags() const
         bool assigned = false;
         // assign to standard fields if matched
         for (int i = 0; i < project::standardTags.size(); ++i) {
-            if (key == project::standardTags[i]) {
+            if (row.first.IsSameAs(wxFromStdString(project::standardTags[i]), false)) {
                 au4Tags.*(kStdMembers[i]) = val;
                 assigned = true;
                 break;
