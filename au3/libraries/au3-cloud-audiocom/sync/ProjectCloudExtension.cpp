@@ -205,6 +205,15 @@ bool ProjectCloudExtension::OnSyncStarted()
     return true;
 }
 
+void ProjectCloudExtension::OnSyncAborted()
+{
+    auto lock = std::lock_guard { mUploadQueueMutex };
+
+    if (!mUploadQueue.empty() && mUploadQueue.back()->Operation == nullptr) {
+        mUploadQueue.pop_back();
+    }
+}
+
 void cloud::audiocom::sync::ProjectCloudExtension::OnSyncResumed(
     std::shared_ptr<ProjectUploadOperation> uploadOperation,
     int64_t missingBlocksCount, bool needsProjectUpload)

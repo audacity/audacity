@@ -515,6 +515,7 @@ muse::Ret Au3AudioComService::startNewSnapshotUpload(au::project::IAudacityProje
         AudiocomTrace::SaveProjectSaveToCloudMenu);
 
     if (!future.valid()) {
+        projectCloudExtension->OnSyncAborted();
         return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Internal error"));
     }
 

@@ -70,6 +70,9 @@ public:
     //! This method is called from the UI thread, after the project was saved.
     //! Returns false if the saved document could not be read from the project file.
     bool OnSyncStarted();
+    //! This method is called from the UI thread when no upload operation could be created
+    //! for the sync started by OnSyncStarted.
+    void OnSyncAborted();
     //! This method is called from the UI thread
     void OnSyncResumed(
         std::shared_ptr<ProjectUploadOperation> uploadOperation, int64_t missingBlocksCount, bool needsProjectUpload);
