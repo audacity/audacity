@@ -24,16 +24,16 @@ public:
     bool isBusy() const override;
     bool isCapturing() const override;
     bool isStreamActive(AudacityProject& project) const override;
-    double streamTime() const override;
+    double transportTime() const override;
     bool isMonitoring() const override;
     std::optional<audio::AudioStreamDescriptor> currentStream() const override;
 
-    int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, AudacityProject& project,
-                    const StartStreamOptions& options) override;
+    int startTransport(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, AudacityProject& project,
+                       const StartTransportOptions& options) override;
 
-    void stopStream() override;
-    void pauseStream(bool pause) override;
-    void seekStream(double time) override;
+    void stopTransport() override;
+    void pauseTransport(bool pause) override;
+    void seek(double time) override;
 
     std::shared_ptr<RealtimeEffectState> addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                 const std::string& effectId) override;
@@ -50,7 +50,7 @@ public:
     void setPlaybackVolume(float newPlaybackVolume) override;
     float getPlaybackVolume() const override;
 
-    bool canStopAudioStream(AudacityProject& project) const override;
+    bool canStopTransport(AudacityProject& project) const override;
 
     void handleDeviceChange() override;
     muse::String lastErrorString() const override;

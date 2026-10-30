@@ -53,7 +53,7 @@ callbacks for these events.
 
 *//****************************************************************//**
 
-\class AudioIOStartStreamOptions
+\class AudioIOStartTransportOptions
 \brief struct holding stream options, including a pointer to the
 time warp info and AudioIOListener and whether the playback is looped.
 
@@ -250,7 +250,7 @@ AudioIO::AudioIO()
     mAudioThreadSequenceBufferExchangeLoopActive
     .store(false, std::memory_order_relaxed);
 
-    mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_relaxed);
+    mBufferExchangeAcknowledge.store(Acknowledge::eNone, std::memory_order_relaxed);
 
     mPortStreamV19 = NULL;
 
@@ -304,7 +304,7 @@ AudioIO::AudioIO()
 
 void AudioIO::StartThread()
 {
-    mAudioThread = std::thread(AudioThread, ref(mFinishAudioThread));
+    mAudioThread = std::thread([this] { AudioThread(*this, ref(mFinishAudioThread)); });
 }
 
 AudioIO::~AudioIO()
@@ -475,24 +475,13 @@ static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
     }
 }
 
-bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
+bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
                                    unsigned int numPlaybackChannels, unsigned int numCaptureChannels)
 {
+    assert(options.pProject);
+
     auto sampleRate = options.rate;
     mNumPauseFrames = 0;
-    SetOwningProject(options.pProject);
-    bool success = false;
-    auto cleanup = finally([&]{
-        if (!success) {
-            ResetOwningProject();
-        }
-    });
-
-    // PRL:  Protection from crash reported by David Bailes, involving starting
-    // and stopping with frequent changes of active window, hard to reproduce
-    if (mOwningProject.expired()) {
-        return false;
-    }
 
     ResetMeters();
 
@@ -777,7 +766,41 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     }
 #endif
 
-    return success = (mLastPaError == paNoError);
+    return mLastPaError == paNoError;
+}
+
+void AudioIO::StopPortAudioStream()
+{
+    // Turn off HW playthrough if PortMixer is being used
+
+  #if defined(USE_PORTMIXER)
+    if (mPortMixer) {
+      #if __WXMAC__
+        if (Px_SupportsPlaythrough(mPortMixer) && mPreviousHWPlaythrough >= 0.0) {
+            Px_SetPlaythrough(mPortMixer, mPreviousHWPlaythrough);
+        }
+        mPreviousHWPlaythrough = -1.0;
+      #endif
+    }
+  #endif
+
+    if (mPortStreamV19) {
+        // DV: Pa_CloseStream will close Pa_AbortStream internally,
+        // but it doesn't hurt to do it ourselves.
+        // PA_AbortStream will silently fail if stream is stopped.
+        if (!Pa_IsStreamStopped(mPortStreamV19)) {
+            Pa_AbortStream(mPortStreamV19);
+        }
+
+        Pa_CloseStream(mPortStreamV19);
+
+        mPortStreamV19 = NULL;
+    }
+
+#if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3, 1, 0)
+    // Re-enable system sleep
+    wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
+#endif
 }
 
 wxString AudioIO::LastPaErrorString()
@@ -853,7 +876,7 @@ void AudioIO::ConfigureCaptureRouting(size_t inputChannelsCount)
     }
 }
 
-void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
+void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)
 {
     if (IsBusy()) {
         return;
@@ -887,14 +910,13 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
                                               static_cast<unsigned int>(playbackChannels),
                                               static_cast<unsigned int>(captureChannels));
 
-    const auto pOwningProject = mOwningProject.lock();
     if (!success) {
         wxLogMessage("Error opening recording device for monitoring. Error code: %s",
                      Get()->LastPaErrorString());
         return;
     }
 
-    Publish({ pOwningProject.get(), AudioIOEvent::MONITOR, true });
+    SetOwningProject(options.pProject);
 
     // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
     // Now start the PortAudio stream!
@@ -912,9 +934,25 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 
 void AudioIO::StopMonitoring()
 {
-    if (IsMonitoring()) {
-        StopStream();
-        WaitWhileBusy();
+    if (!IsMonitoring()) {
+        return;
+    }
+
+    // Monitoring never started the buffer exchange on the audio thread, nor
+    // any transport state: all there is to undo is what StartMonitoring
+    // (via StartPortAudioStream) set up.
+
+    StopMeters();
+    ResetMeters();
+
+    StopPortAudioStream();
+    mNumCaptureChannels = mNumPlaybackChannels = 0;
+
+    ResetOwningProject();
+
+    if (auto pListener = GetListener()) {
+        // Tell UI to hide sample rate
+        pListener->OnAudioIORate(0);
     }
 }
 
@@ -926,9 +964,9 @@ void AudioIO::WaitWhileBusy() const
     }
 }
 
-int AudioIO::StartStream(const TransportSequences& sequences,
-                         double t0, double t1, double mixerLimit,
-                         const AudioIOStartStreamOptions& options)
+int AudioIO::StartTransport(const TransportSequences& sequences,
+                            double t0, double t1, double mixerLimit,
+                            const AudioIOStartTransportOptions& options)
 {
     // precondition
     assert(std::all_of(
@@ -1132,6 +1170,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         }
     }
 
+    SetOwningProject(options.pProject);
     mpTransportState = std::make_unique<TransportState>(mOwningProject, mPlaybackSequences, mNumPlaybackChannels, mRate,
                                                         mPlaybackSamplesToCopy);
 
@@ -1202,7 +1241,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         // Probably not needed so urgently before portaudio thread start for usual
         // playback, since our ring buffers have been primed already with 4 sec
         // of audio, but then we might be scrubbing, so do it.
-        StartAudioThread();
+        StartBufferExchangeOnAudioThread();
 
         mForceFadeOut.store(false, std::memory_order_relaxed);
 
@@ -1213,12 +1252,18 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         if (err != paNoError) {
             mStreamToken = 0;
 
-            StopAudioThread();
+            WaitForBufferExchangeStartedOnAudioThread();
+            StopBufferExchangeOnAudioThread();
+            WaitForBufferExchangeStoppedOnAudioThread();
 
             if (pListener && mNumCaptureChannels > 0) {
                 pListener->OnAudioIOStopRecording();
             }
+            StopPortAudioStream();
+            mNumCaptureChannels = mNumPlaybackChannels = 0;
+
             StartStreamCleanup();
+            ResetOwningProject();
             // PRL: PortAudio error messages are sadly not internationalized
             BasicUI::ShowMessageBox(
                 TranslatableString::untranslatable(LAT1CTOWX(Pa_GetErrorText(err))));
@@ -1232,17 +1277,16 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         pListener->OnAudioIORate((int)mRate);
     }
 
-    auto pOwningProject = mOwningProject.lock();
     if (mNumPlaybackChannels > 0) {
-        Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, true });
+        Publish({ options.pProject.get(), AudioIOEvent::PLAYBACK, true });
     }
     if (mNumCaptureChannels > 0) {
-        Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, true });
+        Publish({ options.pProject.get(), AudioIOEvent::CAPTURE, true });
     }
 
     commit = true;
 
-    WaitForAudioThreadStarted();
+    WaitForBufferExchangeStartedOnAudioThread();
 
     return mStreamToken;
 }
@@ -1286,7 +1330,7 @@ void AudioIO::CallAfterRecording(PostRecordingAction action)
 }
 
 bool AudioIO::AllocateBuffers(
-    const AudioIOStartStreamOptions& options,
+    const AudioIOStartTransportOptions& options,
     const TransportSequences& sequences, double t0, double t1, double sampleRate)
 {
     bool success = false;
@@ -1553,8 +1597,12 @@ bool AudioIO::IsAvailable(AudacityProject& project) const
     return !pOwningProject || pOwningProject.get() == &project;
 }
 
-void AudioIO::StopStream()
+void AudioIO::StopTransport()
 {
+    if (mStreamToken == 0) {
+        return;
+    }
+
     StopMeters();
     ResetMeters();
 
@@ -1580,11 +1628,6 @@ void AudioIO::StopStream()
     if ( Pa_IsStreamStopped(mPortStreamV19) )
        return;
     */
-
-#if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3, 1, 0)
-    // Re-enable system sleep
-    wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
-#endif
 
     if (mAudioThreadSequenceBufferExchangeLoopRunning
         .load(std::memory_order_relaxed)) {
@@ -1630,37 +1673,13 @@ void AudioIO::StopStream()
     // DV: Seems that Pa_CloseStream calls Pa_AbortStream internally,
     // at least for PortAudio 19.7.0+
 
-    StopAudioThread();
+    StopBufferExchangeOnAudioThread();
 
-    // Turn off HW playthrough if PortMixer is being used
-
-  #if defined(USE_PORTMIXER)
-    if (mPortMixer) {
-      #if __WXMAC__
-        if (Px_SupportsPlaythrough(mPortMixer) && mPreviousHWPlaythrough >= 0.0) {
-            Px_SetPlaythrough(mPortMixer, mPreviousHWPlaythrough);
-        }
-        mPreviousHWPlaythrough = -1.0;
-      #endif
-    }
-  #endif
-
-    if (mPortStreamV19) {
-        // DV: Pa_CloseStream will close Pa_AbortStream internally,
-        // but it doesn't hurt to do it ourselves.
-        // PA_AbortStream will silently fail if stream is stopped.
-        if (!Pa_IsStreamStopped(mPortStreamV19)) {
-            Pa_AbortStream(mPortStreamV19);
-        }
-
-        Pa_CloseStream(mPortStreamV19);
-
-        mPortStreamV19 = NULL;
-    }
+    StopPortAudioStream();
 
     // We previously told AudioThread to stop processing, now let's
     // be sure it has really stopped before resetting mpTransportState
-    WaitForAudioThreadStopped();
+    WaitForBufferExchangeStoppedOnAudioThread();
 
     for ( auto& ext : Extensions()) {
         ext.StopOtherStream();
@@ -1668,16 +1687,17 @@ void AudioIO::StopStream()
 
     auto pListener = GetListener();
 
-    // If there's no token, we were just monitoring, so we can
-    // skip this next part...
-    if (mStreamToken > 0) {
-        // In either of the above cases, we want to make sure that any
-        // capture data that made it into the PortAudio callback makes it
-        // to the target RecordableSequence.  To do this, we ask the audio thread
-        // to call SequenceBufferExchange one last time (it normally would not do
-        // so since Pa_GetStreamActive() would now return false
-        ProcessOnceAndWait();
-    }
+    // We want to make sure that any
+    // capture data that made it into the PortAudio callback makes it
+    // to the target RecordableSequence.  To do this, we ask the audio thread
+    // to call SequenceBufferExchange one last time (it normally would not do
+    // so since Pa_GetStreamActive() would now return false
+    ProcessOnceAndWait();
+
+    // Now there won't be activity on the audio thread until we restart the stream and we can reset those two member variables.
+    const auto wasPlaying = mNumPlaybackChannels > 0;
+    const auto wasRecording = mNumCaptureChannels > 0;
+    mNumCaptureChannels = mNumPlaybackChannels = 0;
 
     // No longer need effects processing. This must be done after the stream is stopped
     // to prevent the callback from being invoked after the effects are finalized.
@@ -1694,75 +1714,73 @@ void AudioIO::StopStream()
     mPlaybackSchedule.mTimeQueue.Clear();
     mPlaybackTracks.clear();
 
-    if (mStreamToken > 0) {
+    //
+    // Offset all recorded sequences to account for latency
+    //
+    if (mCaptureSequences.size() > 0) {
+        mCaptureBuffers.clear();
+        mResample.clear();
+
         //
-        // Offset all recorded sequences to account for latency
+        // We only apply latency correction when we actually played back
+        // sequences during the recording. If we did not play back sequences,
+        // there's nothing we could be out of sync with. This also covers the
+        // case that we do not apply latency correction when recording the
+        // first sequence in a project.
         //
-        if (mCaptureSequences.size() > 0) {
-            mCaptureBuffers.clear();
-            mResample.clear();
 
-            //
-            // We only apply latency correction when we actually played back
-            // sequences during the recording. If we did not play back sequences,
-            // there's nothing we could be out of sync with. This also covers the
-            // case that we do not apply latency correction when recording the
-            // first sequence in a project.
-            //
+        for (auto& sequence : mCaptureSequences) {
+            // The calls to Flush
+            // may cause exceptions because of exhaustion of disk space.
+            // Stop those exceptions here, or else they propagate through too
+            // many parts of Audacity that are not effects or editing
+            // operations.  GuardedCall ensures that the user sees a warning.
 
-            for (auto& sequence : mCaptureSequences) {
-                // The calls to Flush
-                // may cause exceptions because of exhaustion of disk space.
-                // Stop those exceptions here, or else they propagate through too
-                // many parts of Audacity that are not effects or editing
-                // operations.  GuardedCall ensures that the user sees a warning.
+            // Also be sure to Flush each sequence, at the top of the
+            // guarded call, relying on the guarantee that the sequence will be
+            // left in a flushed state, though the append buffer may be lost.
 
-                // Also be sure to Flush each sequence, at the top of the
-                // guarded call, relying on the guarantee that the sequence will be
-                // left in a flushed state, though the append buffer may be lost.
+            GuardedCall([&] {
+                // use No-fail-guarantee that sequence is flushed,
+                // Partial-guarantee that some initial length of the recording
+                // is saved.
+                // See comments in SequenceBufferExchange().
+                sequence->Flush();
+            });
+        }
 
-                GuardedCall([&] {
-                    // use No-fail-guarantee that sequence is flushed,
-                    // Partial-guarantee that some initial length of the recording
-                    // is saved.
-                    // See comments in SequenceBufferExchange().
-                    sequence->Flush();
-                });
+        if (!mLostCaptureIntervals.empty()) {
+            // This scope may combine many insertions of silence
+            // into one transaction, lessening the number of checkpoints
+            std::optional<TransactionScope> pScope;
+            if (auto pOwningProject = mOwningProject.lock()) {
+                pScope.emplace(*pOwningProject, "Dropouts");
             }
-
-            if (!mLostCaptureIntervals.empty()) {
-                // This scope may combine many insertions of silence
-                // into one transaction, lessening the number of checkpoints
-                std::optional<TransactionScope> pScope;
-                if (auto pOwningProject = mOwningProject.lock()) {
-                    pScope.emplace(*pOwningProject, "Dropouts");
-                }
-                for (auto& interval : mLostCaptureIntervals) {
-                    auto& start = interval.first;
-                    auto duration = interval.second;
-                    for (auto& sequence : mCaptureSequences) {
-                        GuardedCall([&] {
-                            sequence->InsertSilence(start, duration);
-                        });
-                    }
-                }
-                if (pScope) {
-                    pScope->Commit();
+            for (auto& interval : mLostCaptureIntervals) {
+                auto& start = interval.first;
+                auto duration = interval.second;
+                for (auto& sequence : mCaptureSequences) {
+                    GuardedCall([&] {
+                        sequence->InsertSilence(start, duration);
+                    });
                 }
             }
-
-            if (pListener) {
-                pListener->OnCommitRecording();
+            if (pScope) {
+                pScope->Commit();
             }
+        }
+
+        if (pListener) {
+            pListener->OnCommitRecording();
         }
     }
 
-    if (pListener && mNumCaptureChannels > 0) {
+    if (pListener && wasRecording) {
         pListener->OnAudioIOStopRecording();
     }
 
-    BasicUI::CallAfter([this]{
-        if (mPortStreamV19 && mNumCaptureChannels > 0) {
+    BasicUI::CallAfter([this, wasRecording]{
+        if (mPortStreamV19 && wasRecording) {
             // Recording was restarted between StopStream and idle time
             // So the actions can keep waiting
             return;
@@ -1777,30 +1795,19 @@ void AudioIO::StopStream()
         DelayActions(false);
     });
 
-    //
-    // Only set token to 0 after we're totally finished with everything
-    //
-    bool wasMonitoring = mStreamToken == 0;
     mStreamToken = 0;
 
     {
         auto pOwningProject = mOwningProject.lock();
-        if (mNumPlaybackChannels > 0) {
+        if (wasPlaying) {
             Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, false });
         }
-        if (mNumCaptureChannels > 0) {
-            Publish({ pOwningProject.get(),
-                      wasMonitoring
-                      ? AudioIOEvent::MONITOR
-                      : AudioIOEvent::CAPTURE,
-                      false });
+        if (wasRecording) {
+            Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, false });
         }
     }
 
     ResetOwningProject();
-
-    mNumCaptureChannels = 0;
-    mNumPlaybackChannels = 0;
 
     mPlaybackSequences.clear();
     mCaptureSequences.clear();
@@ -1817,7 +1824,7 @@ void AudioIO::StopStream()
     mPlaybackSchedule.ResetMode();
 }
 
-void AudioIO::SeekStream(double seconds)
+void AudioIO::Seek(double seconds)
 {
     mSeek = seconds;
 }
@@ -1885,7 +1892,7 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     return supportedRate;
 }
 
-double AudioIO::GetStreamTime()
+double AudioIO::GetTransportTime()
 {
     // Sequence time readout for the main thread
     return mPlaybackSchedule.GetSequenceTime();
@@ -1898,34 +1905,33 @@ double AudioIO::GetStreamTime()
 //////////////////////////////////////////////////////////////////////
 
 //! Sits in a thread loop reading and writing audio.
-void AudioIO::AudioThread(std::atomic<bool>& finish)
+void AudioIO::AudioThread(AudioIO& audioIO, std::atomic<bool>& finish)
 {
     enum class ProcessingState {
-        eSkipProcessing, ePrimeProcessing, eMonitoringProcessing, eCallbackProcessing
+        eSkipProcessing, ePrimeProcessing, eCallbackProcessing
     } lastState = ProcessingState::eSkipProcessing;
-    AudioIO* const gAudioIO = AudioIO::Get();
     while (!finish.load(std::memory_order_acquire)) {
         using Clock = std::chrono::steady_clock;
         auto loopPassStart = Clock::now();
-        auto& schedule = gAudioIO->mPlaybackSchedule;
+        auto& schedule = audioIO.mPlaybackSchedule;
         const auto interval = schedule.GetPolicy().SleepInterval(schedule);
 
         // Set LoopActive outside the tests to avoid race condition
-        gAudioIO->mAudioThreadSequenceBufferExchangeLoopActive
+        audioIO.mAudioThreadSequenceBufferExchangeLoopActive
         .store(true, std::memory_order_relaxed);
-        if (gAudioIO->mAudioThreadShouldCallSequenceBufferExchangeOnce
+        if (audioIO.mAudioThreadShouldCallSequenceBufferExchangeOnce
             .load(std::memory_order_acquire)) {
-            gAudioIO->SequenceBufferExchange();
-            gAudioIO->mAudioThreadShouldCallSequenceBufferExchangeOnce
+            audioIO.SequenceBufferExchange();
+            audioIO.mAudioThreadShouldCallSequenceBufferExchangeOnce
             .store(false, std::memory_order_release);
 
             lastState = ProcessingState::ePrimeProcessing;
-        } else if (gAudioIO->mAudioThreadSequenceBufferExchangeLoopRunning
+        } else if (audioIO.mAudioThreadSequenceBufferExchangeLoopRunning
                    .load(std::memory_order_relaxed)) {
             if (lastState != ProcessingState::eCallbackProcessing) {
                 // Main thread has told us to start - acknowledge that we do
-                gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStart,
-                                                        std::memory_order_release);
+                audioIO.mBufferExchangeAcknowledge.store(Acknowledge::eStart,
+                                                         std::memory_order_release);
             }
             lastState = ProcessingState::eCallbackProcessing;
 
@@ -1935,24 +1941,19 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             // This is unlike the case with mAudioThreadShouldCallSequenceBufferExchangeOnce where the
             // store really means that the one-time exchange was done.
 
-            gAudioIO->SequenceBufferExchange();
+            audioIO.SequenceBufferExchange();
         } else {
             if ((lastState == ProcessingState::eCallbackProcessing)
-                || (lastState == ProcessingState::eMonitoringProcessing)
                 || (lastState == ProcessingState::ePrimeProcessing)) {
                 // Main thread has told us to stop; (actually: to neither process "once" nor "loop running")
                 // acknowledge that we received the order and that no more processing will be done.
-                gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStop,
-                                                        std::memory_order_release);
+                audioIO.mBufferExchangeAcknowledge.store(Acknowledge::eStop,
+                                                         std::memory_order_release);
             }
             lastState = ProcessingState::eSkipProcessing;
-
-            if (gAudioIO->IsMonitoring()) {
-                lastState = ProcessingState::eMonitoringProcessing;
-            }
         }
 
-        gAudioIO->mAudioThreadSequenceBufferExchangeLoopActive
+        audioIO.mAudioThreadSequenceBufferExchangeLoopActive
         .store(false, std::memory_order_relaxed);
 
         std::this_thread::sleep_until(loopPassStart + interval);
@@ -2417,7 +2418,7 @@ void AudioIO::DrainRecordBuffers()
         // but StopStream() contains that exception, and the logic in
         // AudacityException::DelayedHandlerAction prevents redundant message
         // boxes.
-        StopStream();
+        StopTransport();
         WaitWhileBusy();
 
         DefaultDelayedHandlerAction(pException);
@@ -3500,7 +3501,7 @@ int AudioIoCallback::CallbackDoSeek()
     // a single call to StopAudioThreadAndWait()
     //
     // CAUTION: when trying the above, you must also replace the setting of the
-    // atomic before the return, with a call to StartAudioThread()
+    // atomic before the return, with a call to StartBufferExchangeOnAudioThread()
     //
     // If that works, then we can remove mAudioThreadSequenceBufferExchangeLoopActive,
     // as it will become unused; consequently, the AudioThread loop would get simpler too.
@@ -3579,34 +3580,34 @@ auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt
     return *static_cast<AudioIOExt*>(mIterator->get());
 }
 
-void AudioIoCallback::StartAudioThread()
+void AudioIoCallback::StartBufferExchangeOnAudioThread()
 {
     mAudioThreadSequenceBufferExchangeLoopRunning.store(true, std::memory_order_release);
 }
 
-void AudioIoCallback::WaitForAudioThreadStarted()
+void AudioIoCallback::WaitForBufferExchangeStartedOnAudioThread()
 {
-    while (mAudioThreadAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStart)
+    while (mBufferExchangeAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStart)
     {
         using namespace std::chrono;
         std::this_thread::sleep_for(50ms);
     }
-    mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
+    mBufferExchangeAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
 
-void AudioIoCallback::StopAudioThread()
+void AudioIoCallback::StopBufferExchangeOnAudioThread()
 {
     mAudioThreadSequenceBufferExchangeLoopRunning.store(false, std::memory_order_release);
 }
 
-void AudioIoCallback::WaitForAudioThreadStopped()
+void AudioIoCallback::WaitForBufferExchangeStoppedOnAudioThread()
 {
-    while (mAudioThreadAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStop)
+    while (mBufferExchangeAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStop)
     {
         using namespace std::chrono;
         std::this_thread::sleep_for(50ms);
     }
-    mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
+    mBufferExchangeAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
 
 void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)

@@ -83,11 +83,11 @@ public:
         .WillByDefault(Invoke([this]() { return m_engineBusy; }));
         ON_CALL(*m_audioEngine, isCapturing())
         .WillByDefault(Return(false));
-        ON_CALL(*m_audioEngine, stopStream())
+        ON_CALL(*m_audioEngine, stopTransport())
         .WillByDefault(Invoke([this]() { m_engineBusy = false; }));
         ON_CALL(*m_audioEngine, recordingClipChanged())
         .WillByDefault(Return(m_recordingClipChanged));
-        ON_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+        ON_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
         .WillByDefault(Return(1));
 
         ON_CALL(*m_audioDriverController, inputDevices())
@@ -186,9 +186,9 @@ TEST_F(Au3RecordTests, LeadInRecordingStartsAtPlayheadPosition)
     .WillByDefault(Return(trackedit::secs_t(5.0)));
 
     double startedAt = -1.0;
-    audio::IAudioEngine::StartStreamOptions streamOptions;
-    EXPECT_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
-    .WillOnce(DoAll(SaveArg<1>(&startedAt), SaveArg<5>(&streamOptions), Return(1)));
+    audio::IAudioEngine::StartTransportOptions transportOptions;
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<1>(&startedAt), SaveArg<5>(&transportOptions), Return(1)));
 
     //! [THEN] The playhead is repositioned to the start of the lead-in (8s - 2s pre-roll)
     EXPECT_CALL(*m_commandDispatcher,
@@ -204,7 +204,7 @@ TEST_F(Au3RecordTests, LeadInRecordingStartsAtPlayheadPosition)
     //! [THEN] The stream starts recording at the playhead position, not at the
     //! stale selection start
     EXPECT_DOUBLE_EQ(startedAt, 8.0);
-    EXPECT_DOUBLE_EQ(streamOptions.leadInTime, 2.0);
+    EXPECT_DOUBLE_EQ(transportOptions.leadInTime, 2.0);
 }
 
 TEST_F(Au3RecordTests, LeadInRecordingAtZeroPlayheadFails)
@@ -214,7 +214,7 @@ TEST_F(Au3RecordTests, LeadInRecordingAtZeroPlayheadFails)
     ON_CALL(*m_playbackState, playbackPosition())
     .WillByDefault(Return(muse::secs_t(0.0)));
 
-    EXPECT_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
     .Times(0);
 
     //! [WHEN] Lead-in recording is initiated
@@ -235,7 +235,7 @@ TEST_F(Au3RecordTests, RecordingToNewTrackUsesConfiguredTrackName)
     ON_CALL(*m_recordConfiguration, recordingTrackNameOptions())
     .WillByDefault(Return(nameOptions));
 
-    EXPECT_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
     .WillOnce(Return(1));
 
     //! [WHEN] Recording is initiated
@@ -263,9 +263,9 @@ TEST_F(Au3RecordTests, RecordingWithBusyEngineStartsUnpausedAtPlayhead)
     //! [THEN] The old stream is stopped, the engine pause flag (which survives
     //! stream restarts) is cleared, and only then recording starts
     InSequence seq;
-    EXPECT_CALL(*m_audioEngine, stopStream());
-    EXPECT_CALL(*m_audioEngine, pauseStream(false));
-    EXPECT_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+    EXPECT_CALL(*m_audioEngine, stopTransport());
+    EXPECT_CALL(*m_audioEngine, pauseTransport(false));
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
     .WillOnce(DoAll(SaveArg<1>(&startedAt), Return(1)));
 
     //! [WHEN] Recording is initiated

@@ -1529,7 +1529,7 @@ TEST_F(PlaybackControllerTests, SuspendRecording_UsesPhysicalBackstopWhenControl
     EXPECT_CALL(*m_audioEngine, currentStream())
     .WillOnce(Return(recordingStream))
     .WillOnce(Return(std::nullopt));
-    EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
+    EXPECT_CALL(*m_audioEngine, stopTransport()).Times(1);
     EXPECT_CALL(*m_record, start()).Times(0);
 
     auto restoreStream = suspend(audio::AudioStreamKind::Recording);
@@ -1551,12 +1551,12 @@ TEST_F(PlaybackControllerTests, SuspendRecording_FailsClosedWhenPhysicalBackstop
     const audio::AudioStreamDescriptor recordingStream { audio::AudioStreamKind::Recording, nullptr, 44100.0 };
     EXPECT_CALL(*m_record, stop()).WillOnce(Return(muse::make_ok()));
     EXPECT_CALL(*m_audioEngine, currentStream()).WillRepeatedly(Return(recordingStream));
-    EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
+    EXPECT_CALL(*m_audioEngine, stopTransport()).Times(1);
 
     EXPECT_FALSE(suspend(audio::AudioStreamKind::Recording));
 }
 
-TEST_F(PlaybackControllerTests, SuspendPlaybackStopsStreamDuringTeardown)
+TEST_F(PlaybackControllerTests, SuspendPlaybackStopsTransportDuringTeardown)
 {
     const audio::AudioStreamDescriptor playbackStream { audio::AudioStreamKind::Playback, nullptr, 44100.0 };
     ON_CALL(*m_player, playbackStatus())
@@ -1564,7 +1564,7 @@ TEST_F(PlaybackControllerTests, SuspendPlaybackStopsStreamDuringTeardown)
     EXPECT_CALL(*m_audioEngine, currentStream())
     .WillOnce(Return(playbackStream))
     .WillOnce(Return(std::nullopt));
-    EXPECT_CALL(*m_audioEngine, stopStream()).Times(1);
+    EXPECT_CALL(*m_audioEngine, stopTransport()).Times(1);
 
     EXPECT_NE(suspend(audio::AudioStreamKind::Playback), nullptr);
 }

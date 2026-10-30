@@ -440,7 +440,7 @@ muse::Ret Au3Record::start()
         if (audioEngine()->isCapturing()) {
             return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
         }
-        audioEngine()->stopStream();
+        audioEngine()->stopTransport();
     }
 
     audioEngine()->stopMonitoring();
@@ -450,22 +450,22 @@ muse::Ret Au3Record::start()
 
 muse::Ret Au3Record::pause()
 {
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return make_ret(Err::RecordingStopError);
     }
 
-    audioEngine()->pauseStream(true);
+    audioEngine()->pauseTransport(true);
 
     return make_ok();
 }
 
 muse::Ret Au3Record::resume()
 {
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return make_ret(Err::RecordingResumeError);
     }
 
-    audioEngine()->pauseStream(false);
+    audioEngine()->pauseTransport(false);
 
     return make_ok();
 }
@@ -473,13 +473,13 @@ muse::Ret Au3Record::resume()
 muse::Ret Au3Record::stop()
 {
     //! NOTE: copied from ProjectAudioManager::Stop
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return make_ret(Err::RecordingStopError);
     }
 
-    audioEngine()->stopStream();
+    audioEngine()->stopTransport();
     //Make sure to unpause
-    audioEngine()->pauseStream(false);
+    audioEngine()->pauseTransport(false);
 
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
@@ -613,7 +613,7 @@ muse::Ret Au3Record::leadInRecording()
         if (audioEngine()->isCapturing()) {
             return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
         }
-        audioEngine()->stopStream();
+        audioEngine()->stopTransport();
     }
 
     audioEngine()->stopMonitoring();
@@ -696,7 +696,7 @@ Ret Au3Record::doRecord(Au3Project& project,
 
     // The engine's pause flag survives stream restarts; clear it so that a
     // recording initiated from a paused playback state starts immediately
-    audioEngine()->pauseStream(false);
+    audioEngine()->pauseTransport(false);
 
     // TODO: what is the meaning of the next line, do we need it?
     // projectAudioManager.SetAppending(!altAppearance);
@@ -944,13 +944,13 @@ Ret Au3Record::doRecord(Au3Project& project,
         pendingTracks.UpdatePendingTracks();
     }
 
-    au::audio::IAudioEngine::StartStreamOptions options;
+    au::audio::IAudioEngine::StartTransportOptions options;
     options.isDefaultPolicy = false;
     options.sampleRate = audioStreamSampleRate;
     options.leadInTime = leadInTime;
     options.crossfadeData = crossfadeData;
 
-    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, options);
+    int token = audioEngine()->startTransport(transportSequences, t0, t1, t1, project, options);
 
     success = (token > 0);
 
@@ -979,9 +979,9 @@ void Au3Record::commitRecording()
                                        trc("record", "Record"));
 }
 
-bool Au3Record::canStopAudioStream() const
+bool Au3Record::canStopTransport() const
 {
-    return audioEngine()->canStopAudioStream(projectRef());
+    return audioEngine()->canStopTransport(projectRef());
 }
 
 au::context::IPlaybackStatePtr Au3Record::playbackState() const
