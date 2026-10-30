@@ -15,6 +15,7 @@ target_sources(record PRIVATE
     irecord.h
     iaudioinput.h
     recordcommands.h
+    timedrecordingtypes.h
 
     #internal
     internal/recordcommandsregister.cpp

@@ -19,6 +19,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/recordcontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3record_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/timedrecordingformatter_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/timedrecordingschedule_tests.cpp
     )
 
 set(MODULE_TEST_INCLUDE
