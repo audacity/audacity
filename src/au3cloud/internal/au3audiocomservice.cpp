@@ -419,8 +419,12 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
     }
 
     const auto plan = resolveUploadPlan(project, *projectCloudExtension, uploadMode);
-    if (std::holds_alternative<ProjectUpToDate>(plan) || std::holds_alternative<SyncAlreadyInProgress>(plan)) {
-        return muse::RetVal<muse::ProgressPtr>::make_ok(nullptr);
+    if (std::holds_alternative<ProjectUpToDate>(plan)) {
+        return make_ret(Err::ProjectUpToDate);
+    }
+
+    if (std::holds_alternative<SyncAlreadyInProgress>(plan)) {
+        return make_ret(Err::SyncAlreadyInProgress);
     }
 
     if (std::holds_alternative<SaveInProgress>(plan)) {
@@ -753,7 +757,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::resumeProjectSync(au::projec
               || cloudDatabase.GetPendingCloudProjectName(projectPath).has_value();
 
         if (!snapshotPending) {
-            return muse::RetVal<muse::ProgressPtr>::make_ok(nullptr);
+            return make_ret(Err::ProjectUpToDate);
         }
 
         return uploadProject(project, project->displayName().toStdString(), nullptr, UploadMode::NormalUpdate);

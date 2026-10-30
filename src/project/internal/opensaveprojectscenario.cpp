@@ -792,6 +792,8 @@ Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& ret) const
         }
         break;
     }
+    case Err::ProjectUpToDate:
+    case Err::SyncAlreadyInProgress:
     case Err::SyncCancelled:
     case Err::Cancelled:
         break;
