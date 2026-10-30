@@ -58,9 +58,10 @@ void ProjectsPageModel::openProject(const QString& scorePath, const QString& dis
     });
 }
 
-void ProjectsPageModel::openCloudProject(const QString& cloudProjectId)
+void ProjectsPageModel::openCloudProject(const QString& cloudProjectId, const QString& projectPath)
 {
     if (cloudProjectId.isEmpty()) {
+        openProject(projectPath, QString());
         return;
     }
 
