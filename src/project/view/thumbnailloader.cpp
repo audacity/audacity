@@ -34,16 +34,6 @@ muse::io::path_t ThumbnailLoader::selectSource() const
     return DEFAULT_PLACEHOLDER;
 }
 
-void ThumbnailLoader::drawBorder(QPainter& painter) const
-{
-    if (!m_borderColor.isValid() || m_borderColor.alpha() == 0) {
-        return;
-    }
-    painter.setPen(QPen(m_borderColor, 1));
-    painter.setBrush(Qt::NoBrush);
-    painter.drawRect(QRectF(0, 0, m_width, m_height).adjusted(0.5, 0.5, -0.5, -0.5));
-}
-
 std::vector<float> ThumbnailLoader::parseWaveformData(const muse::io::path_t& source) const
 {
     muse::RetVal<muse::ByteArray> result = filesystem()->readFile(source);
@@ -126,7 +116,6 @@ QPixmap ThumbnailLoader::renderWaveformToPixmap(const muse::io::path_t& source)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     drawWaveform(painter, points);
-    drawBorder(painter);
 
     return pixmap;
 }
@@ -159,8 +148,6 @@ QPixmap ThumbnailLoader::renderFromImage(const muse::io::path_t& source)
 
     const QPointF center((m_width - scaledPixmap.width()) / 2.0, (m_height - scaledPixmap.height()) / 2.0);
     painter.drawPixmap(center, scaledPixmap);
-
-    drawBorder(painter);
 
     return finalPixmap;
 }
@@ -266,22 +253,6 @@ void ThumbnailLoader::setLineColor(const QColor& color)
     }
 
     m_lineColor = color;
-
-    loadThumbnail();
-}
-
-QColor ThumbnailLoader::borderColor() const
-{
-    return m_borderColor;
-}
-
-void ThumbnailLoader::setBorderColor(const QColor& color)
-{
-    if (m_borderColor == color) {
-        return;
-    }
-
-    m_borderColor = color;
 
     loadThumbnail();
 }
