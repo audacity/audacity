@@ -456,6 +456,7 @@ void TrackeditOperationController::cancelItemDragEdit()
         return;
     }
     labelsInteraction()->resetLabelStretchState();
+    m_boundaryEditChanged = false;
     projectHistory()->rollbackState();
     globalContext()->currentTrackeditProject()->reload();
 }
@@ -582,28 +583,36 @@ bool TrackeditOperationController::splitDeleteSelectedOnTracks(const TrackIdList
     return false;
 }
 
+bool TrackeditOperationController::accumulateBoundaryEdit(bool changed, bool completed)
+{
+    m_boundaryEditChanged = m_boundaryEditChanged || changed;
+    const bool gestureChanged = m_boundaryEditChanged;
+    if (completed) {
+        m_boundaryEditChanged = false;
+    }
+    return gestureChanged;
+}
+
 bool TrackeditOperationController::trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                  UndoPushType type)
 {
     const auto labelKeys = selectedLabels();
     deltaSec = clampBoundaryDeltaToSelectedItems(deltaSec, minClipDuration, labelKeys);
 
-    const auto success = clipsInteraction()->trimClipsLeft(clipKeyList, deltaSec, minClipDuration, completed);
-    if (!success) {
-        return success;
-    }
+    const bool changed = clipsInteraction()->trimClipsLeft(clipKeyList, deltaSec, minClipDuration, completed);
 
     bool hasLabels = isLabelsSelected();
-    if (hasLabels) {
+    if (hasLabels && (changed || completed)) {
         labelsInteraction()->stretchLabelsLeft(labelKeys, deltaSec, completed);
     }
 
-    if (completed) {
+    const bool gestureChanged = accumulateBoundaryEdit(changed, completed);
+    if (completed && gestureChanged) {
         std::string msg = hasLabels ? muse::trc("trackedit", "Trim items left") : muse::trc("trackedit", "Trim clip left");
         //: Undo history entry name; shown after Undo and Redo in the Edit menu
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Trim"), msg, type);
     }
-    return success;
+    return gestureChanged;
 }
 
 bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
@@ -612,20 +621,19 @@ bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList
     const auto labelKeys = selectedLabels();
     deltaSec = clampBoundaryDeltaToSelectedItems(deltaSec, minClipDuration, labelKeys);
 
-    const auto success = clipsInteraction()->trimClipsRight(clipKeyList, deltaSec, minClipDuration, completed);
-    if (!success) {
-        return success;
-    }
+    const bool changed = clipsInteraction()->trimClipsRight(clipKeyList, deltaSec, minClipDuration, completed);
 
     bool hasLabels = isLabelsSelected();
-    if (hasLabels) {
+    if (hasLabels && (changed || completed)) {
         labelsInteraction()->stretchLabelsRight(labelKeys, -deltaSec, completed);
     }
-    if (completed) {
+
+    const bool gestureChanged = accumulateBoundaryEdit(changed, completed);
+    if (completed && gestureChanged) {
         std::string msg = hasLabels ? muse::trc("trackedit", "Trim items right") : muse::trc("trackedit", "Trim clip right");
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Trim"), msg, type);
     }
-    return success;
+    return gestureChanged;
 }
 
 bool TrackeditOperationController::stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
@@ -634,22 +642,20 @@ bool TrackeditOperationController::stretchClipsLeft(const ClipKeyList& clipKeyLi
     const auto labelKeys = selectedLabels();
     deltaSec = clampBoundaryDeltaToSelectedItems(deltaSec, minClipDuration, labelKeys);
 
-    const auto success = clipsInteraction()->stretchClipsLeft(clipKeyList, deltaSec, minClipDuration, completed);
-    if (!success) {
-        return success;
-    }
+    const bool changed = clipsInteraction()->stretchClipsLeft(clipKeyList, deltaSec, minClipDuration, completed);
 
     bool hasLabels = isLabelsSelected();
-    if (hasLabels) {
+    if (hasLabels && (changed || completed)) {
         labelsInteraction()->stretchLabelsLeft(labelKeys, deltaSec, completed);
     }
 
-    if (completed) {
+    const bool gestureChanged = accumulateBoundaryEdit(changed, completed);
+    if (completed && gestureChanged) {
         auto [longDesc, msg] = stretchHistoryDescriptions(clipKeyList, hasLabels, true);
         projectHistory()->pushHistoryState(longDesc, msg, type);
     }
 
-    return success;
+    return gestureChanged;
 }
 
 bool TrackeditOperationController::stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration,
@@ -659,22 +665,20 @@ bool TrackeditOperationController::stretchClipsRight(const ClipKeyList& clipKeyL
     const auto labelKeys = selectedLabels();
     deltaSec = clampBoundaryDeltaToSelectedItems(deltaSec, minClipDuration, labelKeys);
 
-    const auto success = clipsInteraction()->stretchClipsRight(clipKeyList, deltaSec, minClipDuration, completed);
-    if (!success) {
-        return success;
-    }
+    const bool changed = clipsInteraction()->stretchClipsRight(clipKeyList, deltaSec, minClipDuration, completed);
 
     bool hasLabels = isLabelsSelected();
-    if (hasLabels) {
+    if (hasLabels && (changed || completed)) {
         labelsInteraction()->stretchLabelsRight(labelKeys, -deltaSec, completed);
     }
 
-    if (completed) {
+    const bool gestureChanged = accumulateBoundaryEdit(changed, completed);
+    if (completed && gestureChanged) {
         auto [longDesc, msg] = stretchHistoryDescriptions(clipKeyList, hasLabels, false);
         projectHistory()->pushHistoryState(longDesc, msg, type);
     }
 
-    return success;
+    return gestureChanged;
 }
 
 std::pair<std::string, std::string> TrackeditOperationController::stretchHistoryDescriptions(

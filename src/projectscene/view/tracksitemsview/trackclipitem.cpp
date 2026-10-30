@@ -21,6 +21,8 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     m_groupId = clip.groupId;
     m_pitch = clip.pitch;
     m_speed = clip.speed;
+    m_clipStartTime = clip.startTime;
+    m_clipEndTime = clip.endTime;
 
     emit titleChanged();
     emit pitchChanged();

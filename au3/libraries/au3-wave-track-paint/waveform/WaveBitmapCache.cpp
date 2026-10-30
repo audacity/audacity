@@ -13,6 +13,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstring>
+#include <utility>
 
 #include "au3-screen-geometry/ZoomInfo.h"
 
@@ -324,16 +325,56 @@ WaveBitmapCache& WaveBitmapCache::SetSelection(
     const auto empty = !selected || t0 > t1
                        || ((t1 - t0) < std::numeric_limits<double>::epsilon());
 
-    const auto first = empty ? int64_t(-1) : zoomInfo.TimeToPosition(t0);
-    const auto last
-        =empty ? int64_t(-1) : std::max(zoomInfo.TimeToPosition(t1), first + 1);
+    const auto toPixels = [&zoomInfo](bool isEmpty, double start, double end) {
+        if (isEmpty) {
+            return std::pair<int64_t, int64_t> { -1, -1 };
+        }
+        const int64_t first = zoomInfo.TimeToPosition(start);
+        const int64_t last = std::max<int64_t>(zoomInfo.TimeToPosition(end), first + 1);
+        return std::pair<int64_t, int64_t> { first, last };
+    };
 
-    if (mSelection.FirstPixel != first || mSelection.LastPixel != last) {
-        mSelection.FirstPixel = first;
-        mSelection.LastPixel = last;
+    const auto [first, last] = toPixels(empty, t0, t1);
 
-        Invalidate();
+    //! NOTE A zoom change alone moves the pixels but needs no invalidation:
+    //! tiles at other zoom levels are invalidated whenever the selection times change
+    const bool timesChanged = empty != mSelection.Empty
+                              || (!empty && (t0 != mSelection.StartTime || t1 != mSelection.EndTime));
+
+    if (timesChanged) {
+        const auto [oldFirst, oldLast] = toPixels(mSelection.Empty, mSelection.StartTime, mSelection.EndTime);
+        const bool oldValid = oldFirst < oldLast;
+        const bool newValid = first < last;
+
+        const auto pps = zoomInfo.GetZoom();
+
+        if (!oldValid && newValid) {
+            // No selection -> selection: invalidate newly selected range
+            InvalidatePixelRange(pps, first, last);
+        } else if (oldValid && !newValid) {
+            // Selection -> no selection: invalidate previously selected range
+            InvalidatePixelRange(pps, oldFirst, oldLast);
+        } else if (oldValid && newValid) {
+            // Both valid: only invalidate around moved boundaries
+            if (oldFirst != first) {
+                InvalidatePixelRange(
+                    pps, std::min(oldFirst, first), std::max(oldFirst, first));
+            }
+            if (oldLast != last) {
+                InvalidatePixelRange(
+                    pps, std::min(oldLast, last), std::max(oldLast, last));
+            }
+        }
+
+        InvalidateOtherZoomLevels(pps);
+
+        mSelection.Empty = empty;
+        mSelection.StartTime = t0;
+        mSelection.EndTime = t1;
     }
+
+    mSelection.FirstPixel = first;
+    mSelection.LastPixel = last;
 
     return *this;
 }
@@ -379,17 +420,39 @@ bool WaveBitmapCache::InitializeElement(
 
     auto rowData = element.Allocate(columnsCount, height);
 
-    for (int row = 0; row < height; ++row) {
-        auto colorFunction = mLookupHelper->ColorFunctions.data();
+    // Fill entire buffer with default (blank) color
+    {
+        auto ptr = rowData;
+        const auto totalPixels = static_cast<size_t>(height) * columnsCount;
+        for (size_t i = 0; i < totalPixels; ++i) {
+            *ptr++ = defaultColor.r;
+            *ptr++ = defaultColor.g;
+            *ptr++ = defaultColor.b;
+        }
+    }
 
-        for (size_t pixel = 0; pixel < columnsCount; ++pixel) {
-            const auto color = colorFunction->GetColor(row, defaultColor);
+    // Paint bands directly into the buffer, column by column.
+    // Later bands overwrite earlier ones, matching the priority order
+    // of ColorFunction::GetColor() without per-pixel band scanning.
+    const auto stride = columnsCount * 3;
+    const auto* colorFunctions = mLookupHelper->ColorFunctions.data();
 
-            *rowData++ = color.r;
-            *rowData++ = color.g;
-            *rowData++ = color.b;
+    for (size_t col = 0; col < columnsCount; ++col) {
+        const auto& func = colorFunctions[col];
+        const auto colByteOffset = col * 3;
 
-            ++colorFunction;
+        for (size_t b = 0; b < func.bandsCount; ++b) {
+            const auto& band = func.bands[b];
+            const auto from = std::max(0, band.from);
+            const auto to = std::min(height, band.to);
+
+            auto pixel = rowData + static_cast<size_t>(from) * stride + colByteOffset;
+            for (auto row = from; row < to; ++row) {
+                pixel[0] = band.color.r;
+                pixel[1] = band.color.g;
+                pixel[2] = band.color.b;
+                pixel += stride;
+            }
         }
     }
 

@@ -42,6 +42,7 @@
 
 #include "view/tracksitemsview/viewtrackslistmodel.h"
 #include "view/tracksitemsview/trackclipslistmodel.h"
+#include "view/tracksitemsview/waverenderertoggle.h"
 #include "view/tracksitemsview/trackitemsmovecontroller.h"
 #include "view/tracksitemsview/trackclipitem.h"
 #include "view/tracksitemsview/tracklabelslistmodel.h"
@@ -153,6 +154,7 @@ void ProjectSceneModule::registerUiTypes()
                                                    [](QQmlEngine*, QJSEngine*) -> QObject* {
         return new CustomCursorProvider();
     });
+    qmlRegisterSingletonInstance("Audacity.ProjectScene", 1, 0, "WaveRendererToggle", WaveRendererToggle::instance());
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
