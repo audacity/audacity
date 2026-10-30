@@ -269,6 +269,11 @@ jobs:
         PW=${{ secrets.APPLE_PASSWORD }}; if [ -z "$PW" ]; then PW=""; fi
         bash ./muse/buildscripts/ci/macos/notarize.sh -u $USER -p $PW
 
+    - name: Checksum
+      if: env.DO_BUILD == 'true'
+      run: |
+        bash ./muse/buildscripts/ci/tools/checksum.sh
+
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v7

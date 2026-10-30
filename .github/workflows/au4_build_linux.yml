@@ -240,6 +240,11 @@ jobs:
       run: |
         cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/linux/package.cmake
 
+    - name: Checksum
+      if: env.DO_BUILD == 'true'
+      run: |
+        bash ./muse/buildscripts/ci/tools/checksum.sh
+
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v7
