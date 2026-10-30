@@ -506,6 +506,7 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
     }
 
     projectHistory()->startUserInteraction();
+    m_editedItem = key.key;
 
     double mousePositionTime = m_context->mousePositionTime();
 
@@ -542,11 +543,17 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
 
     disconnectAutoScroll();
 
+    m_editedItem.reset();
     projectHistory()->endUserInteraction();
 }
 
 bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
 {
+    if (m_editedItem != key.key) {
+        return false;
+    }
+    m_editedItem.reset();
+
     ViewTrackItem* item = itemByKey(key.key);
     if (!item) {
         return false;
