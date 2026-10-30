@@ -18,6 +18,7 @@ TrackItemsContainer {
     TrackLabelsLayoutManager {
         id: layoutManager
         labelsModel: labelsModel
+        context: root.context
     }
 
     onInitRequired: function () {
