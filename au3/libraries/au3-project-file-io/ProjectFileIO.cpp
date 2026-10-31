@@ -2661,7 +2661,9 @@ void ProjectFileIO::SetBypass()
         // An example of when dead blocks will exist is when a user opens a permanent
         // project, adds a track (with samples) to it, and chooses not to save the
         // changes.
-        if (HadUnused()) {
+        // Delete them by the stored doc, so its blocks stay even when no track holds them; else one by one.
+        BlockIDs savedBlockids;
+        if (HadUnused() && !(ReadSavedDocBlockIDs(savedBlockids) && DeleteBlocks(savedBlockids, true))) {
             currConn->SetBypass(false);
         }
     }

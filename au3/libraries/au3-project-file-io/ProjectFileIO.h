@@ -322,10 +322,10 @@ private:
     bool mTemporary;
 
     // Project was compacted last time Compact() ran
-    bool mWasCompacted;
+    bool mWasCompacted { false };
 
     // Project had unused blocks during last Compact()
-    bool mHadUnused;
+    bool mHadUnused { false };
 
     Connection mPrevConn;
     FilePath mPrevFileName;
