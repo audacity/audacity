@@ -184,12 +184,6 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
 
     std::vector<std::string> filter {
         muse::trc("project", "Audacity 4 files") + " (*.aup4)"
-
-#ifdef Q_OS_MAC
-        + " (*)"
-#else
-        + " (*.)"
-#endif
     };
 
     muse::io::path_t selectedPath = interactive()->selectSavingFileSync(dialogTitle, defaultPath, filter);
@@ -211,7 +205,34 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
     }
     correctedPath += "aup4";
 
+    const bool suffixCorrected = correctedPath != selectedPath.toStdString();
     selectedPath = correctedPath;
+
+    // Another spelling of this project's own file is a plain save
+    if (isSameProjectFile(project->path(), selectedPath)) {
+        selectedPath = project->path();
+    }
+
+    if (selectedPath != project->path() && multiwindowsProvider()->isProjectAlreadyOpened(selectedPath)) {
+        interactive()->errorSync(muse::trc("project-file-io", "Error Saving Project"),
+                                 muse::trc("project/save",
+                                           "The project was not saved because the selected project is open in another window.\n"
+                                           "Please try again and select an original name."));
+        return askLocalPath(project, saveMode);
+    }
+
+    // The file dialog asked about the name before the suffix was corrected
+    if (suffixCorrected && selectedPath != project->path() && fileSystem()->exists(selectedPath)) {
+        const int overwriteBtn = int(IInteractive::Button::CustomButton) + 1;
+        const IInteractive::ButtonData overwriteBtnData(overwriteBtn, muse::trc("export", "Overwrite"));
+        IInteractive::Result result = interactive()->questionSync(io::filename(selectedPath).toStdString(),
+                                                                  muse::trc("export", "Do you want to overwrite?"),
+                                                                  { overwriteBtnData,
+                                                                    interactive()->buttonData(IInteractive::Button::Cancel) });
+        if (result.button() != overwriteBtn) {
+            return askLocalPath(project, saveMode);
+        }
+    }
 
     configuration()->setLastSavedProjectsPath(io::dirpath(selectedPath));
 

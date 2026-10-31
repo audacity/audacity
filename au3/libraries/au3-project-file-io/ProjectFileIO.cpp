@@ -951,11 +951,55 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
     return true;
 }
 
+namespace {
+class BlockIdsHandler final : public XMLTagHandler
+{
+public:
+    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override
+    {
+        if (tag == "waveblock") {
+            for (auto [attr, value] : attrs) {
+                long long blockid;
+                if (attr == "blockid" && value.TryGet(blockid)) {
+                    result.insert(blockid);
+                }
+            }
+        }
+        return true;
+    }
+
+    XMLTagHandler* HandleXMLChild(const std::string_view&) override
+    {
+        return this;
+    }
+
+    BlockIDs result;
+};
+}
+
+bool ProjectFileIO::ReadSavedDocBlockIDs(BlockIDs& blockids)
+{
+    int64_t rowId = -1;
+    if (!GetValue("SELECT ROWID FROM main.project WHERE id = 1;", rowId, true)) {
+        return false;
+    }
+
+    BufferedProjectBlobStream stream(DB(), "main", "project", rowId);
+    BlockIdsHandler handler;
+    if (!ProjectSerializer::Decode(stream, &handler) || stream.HadReadError()) {
+        return false;
+    }
+
+    blockids = std::move(handler.result);
+    return true;
+}
+
 bool ProjectFileIO::CopyTo(const FilePath& destpath,
                            const TranslatableString& msg,
                            bool isTemporary,
                            bool prune /* = false */,
-                           const std::vector<const TrackList*>& tracks /* = {} */)
+                           const std::vector<const TrackList*>& tracks /* = {} */,
+                           bool keepSavedDoc /* = false */)
 {
     using namespace BasicUI;
 
@@ -969,8 +1013,14 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
 
     WaveTrackUtilities::SampleBlockIDSet blockids;
 
+    // Collect the blockids of the stored project doc
+    if (keepSavedDoc) {
+        if (!ReadSavedDocBlockIDs(blockids)) {
+            return false;
+        }
+    }
     // Collect all active blockids
-    if (prune) {
+    else if (prune) {
         for (auto trackList : tracks) {
             if (trackList) {
                 WaveTrackUtilities::InspectBlocks(*trackList, {}, &blockids);
@@ -994,8 +1044,10 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
 
     // Create the project doc
     ProjectSerializer doc;
-    WriteXMLHeader(doc);
-    WriteXML(doc, tracks.empty() ? nullptr : tracks[0]);
+    if (!keepSavedDoc) {
+        WriteXMLHeader(doc);
+        WriteXML(doc, tracks.empty() ? nullptr : tracks[0]);
+    }
 
     auto db = DB();
     Connection destConn = nullptr;
@@ -1191,7 +1243,15 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
         // If we're compacting a temporary project (user initiated from the File
         // menu), then write the doc to the "autosave" table since temporary
         // projects do not have a "project" doc.
-        if (!WriteDoc(isTemporary ? "autosave" : "project", doc, "outbound")) {
+        if (keepSavedDoc) {
+            sql = "INSERT INTO outbound.project (id, dict, doc) SELECT id, dict, doc FROM main.project;";
+            if (sqlite3_exec(db, sql, nullptr, nullptr, nullptr) != SQLITE_OK) {
+                SetDBError(
+                    TranslatableString("project-file-io", "Failed to update the project file.\nThe following command failed:\n\n%1").arg(sql)
+                    );
+                return false;
+            }
+        } else if (!WriteDoc(isTemporary ? "autosave" : "project", doc, "outbound")) {
             return false;
         }
 
@@ -1579,7 +1639,8 @@ void ProjectFileIO::Compact(
     // REVIEW: Compact can fail on the CopyTo with no error messages.  That's OK?
     // LLL: We could display an error message or just ignore the failure and allow
     // the file to be compacted the next time it's saved.
-    if (CopyTo(tempName, TranslatableString("project-file-io", "Compacting project"), IsTemporary(), !tracks.empty(), tracks)) {
+    if (CopyTo(tempName, TranslatableString("project-file-io", "Compacting project"), IsTemporary(), !tracks.empty(), tracks,
+               !IsTemporary())) {
         // Must close the database to rename it
         if (CloseConnection()) {
             // Only use the new file if it is actually smaller than the original.
@@ -2390,18 +2451,6 @@ bool ProjectFileIO::SaveProject(
             return false;
         }
 
-        if (lastSaved) {
-            using namespace WaveTrackUtilities;
-            // Bug2605: Be sure not to save orphan blocks
-            bool recovered = mRecovered;
-            SampleBlockIDSet blockids;
-            InspectBlocks(*lastSaved, {}, &blockids);
-            // TODO: Not sure what to do if the deletion fails
-            DeleteBlocks(blockids, true);
-            // Don't set mRecovered if any were deleted
-            mRecovered = recovered;
-        }
-
         // Try to compact the original project file.
         auto empty = TrackList::Create(&mProject);
         Compact({ lastSaved ? lastSaved : empty.get() }, true);
@@ -2612,7 +2661,9 @@ void ProjectFileIO::SetBypass()
         // An example of when dead blocks will exist is when a user opens a permanent
         // project, adds a track (with samples) to it, and chooses not to save the
         // changes.
-        if (HadUnused()) {
+        // Delete them by the stored doc, so its blocks stay even when no track holds them; else one by one.
+        BlockIDs savedBlockids;
+        if (HadUnused() && !(ReadSavedDocBlockIDs(savedBlockids) && DeleteBlocks(savedBlockids, true))) {
             currConn->SetBypass(false);
         }
     }
