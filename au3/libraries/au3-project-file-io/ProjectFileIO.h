@@ -284,7 +284,8 @@ private:
     bool CopyTo(const FilePath& destpath, const TranslatableString& msg, bool isTemporary, bool prune = false, const std::vector<const TrackList*>& tracks = {} /*!<
          First track list (or if none, then the project's track list) are tracks to write into document blob;
          That list, plus any others, contain tracks whose sample blocks must be kept
-      */
+      */,
+                bool keepSavedDoc = false /*!< Copy the stored project doc and keep only the blocks it references */
                 );
 
     //! Just set stored errors
@@ -294,6 +295,9 @@ private:
     void SetDBError(const TranslatableString& msg, const TranslatableString& libraryError = {}, int errorCode = -1);
 
     bool ShouldCompact(const std::vector<const TrackList*>& tracks);
+
+    //! Collect the blockids that the stored project doc references
+    bool ReadSavedDocBlockIDs(BlockIDs& blockids);
 
 private:
     Connection& CurrConn();

@@ -305,9 +305,7 @@ void Au3ProjectAccessor::close()
             // without save.  Don't leave the document blob from the last
             // push of undo history, when that undo state may get purged
             // with deletion of some new sample blocks.
-            // REVIEW: UpdateSaved() might fail too.  Do we need to test
-            // for that and report it?
-            projectFileIO.UpdateSaved(m_lastSavedTracks.get());
+            projectFileIO.AutoSaveDelete();
         }
     }
 
