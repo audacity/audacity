@@ -3,6 +3,7 @@
 #include "modularity/ioc.h"
 #include "multiwindows/iprojectprovider.h"
 #include "context/iglobalcontext.h"
+#include "project/types/projecttypes.h"
 
 namespace au::project {
 class ProjectProvider : public muse::mi::IProjectProvider, public muse::Contextable
@@ -19,7 +20,7 @@ public:
         if (!project) {
             return false;
         }
-        return project->path() == path;
+        return isSameProjectFile(project->path(), path);
     }
 
     bool isAnyProjectOpened() const override
