@@ -208,6 +208,11 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
     const bool suffixCorrected = correctedPath != selectedPath.toStdString();
     selectedPath = correctedPath;
 
+    // Another spelling of this project's own file is a plain save
+    if (isSameProjectFile(project->path(), selectedPath)) {
+        selectedPath = project->path();
+    }
+
     if (selectedPath != project->path() && multiwindowsProvider()->isProjectAlreadyOpened(selectedPath)) {
         interactive()->errorSync(muse::trc("project-file-io", "Error Saving Project"),
                                  muse::trc("project/save",
