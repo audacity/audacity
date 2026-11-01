@@ -96,7 +96,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
 
          mpTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .Validator<FloatingPointValidator<double>>(
-               3, &m_PercentChange,
+               3, &mPercentChangeText,
                NumValidatorStyle::THREE_TRAILING_ZEROES,
                Percentage.min, Percentage.max )
             .AddTextBox(XXO("Percent C&hange:"), L"", 12);
@@ -223,14 +223,6 @@ bool EffectChangeSpeed::TransferDataToWindow(const EffectSettings &)
 
 bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
 {
-   // mUIParent->TransferDataFromWindow() loses some precision, so save and restore it.
-   double exactPercent = m_PercentChange;
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-   m_PercentChange = exactPercent;
-
    // TODO: just visit these effect settings the default way
    SetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.GET());
@@ -248,6 +240,7 @@ void EffectChangeSpeed::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))
       return;
 
    mpTextCtrl_PercentChange->GetValidator()->TransferFromWindow();
+   m_PercentChange = mPercentChangeText;
    UpdateUI();
 
    mbLoopDetect = true;
@@ -373,6 +366,7 @@ void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 void EffectChangeSpeed::Update_Text_PercentChange()
 // Update Text Percent control from percent change.
 {
+   mPercentChangeText = m_PercentChange;
    mpTextCtrl_PercentChange->GetValidator()->TransferToWindow();
 }
 
