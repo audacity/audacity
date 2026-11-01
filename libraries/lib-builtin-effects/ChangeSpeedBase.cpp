@@ -261,22 +261,26 @@ bool ChangeSpeedBase::ProcessOne(
    // sample the current buffer starts at.
    bool bResult = true;
    auto samplePos = start;
-   while (samplePos < end)
+
+   // Resampler may continue producing output after consuming all input
+   size_t outGenerated = 0;
+   while (samplePos < end || outGenerated > 0)
    {
       // Get a blockSize of samples (smaller than the size of the buffer)
       auto blockSize = limitSampleBufferSize(
          track.GetBestBlockSize(samplePos), end - samplePos);
 
       // Get the samples from the track and put them in the buffer
-      track.GetFloats(inBuffer.get(), samplePos, blockSize);
+      if (blockSize > 0)
+         track.GetFloats(inBuffer.get(), samplePos, blockSize);
 
       const auto results = resample.Process(
          mFactor, inBuffer.get(), blockSize, ((samplePos + blockSize) >= end),
          outBuffer.get(), outBufferSize);
-      const auto outgen = results.second;
+      outGenerated = results.second;
 
-      if (outgen > 0)
-         outputTrack.Append((samplePtr)outBuffer.get(), floatSample, outgen);
+      if (outGenerated > 0)
+         outputTrack.Append((samplePtr)outBuffer.get(), floatSample, outGenerated);
 
       // Increment samplePos
       samplePos += results.first;
