@@ -19637,6 +19637,13 @@ Anda perlu menjalankan versi Audacity tersebut untuk memulihkan proyek.</transla
         <source>Share</source>
         <translation>Bagikan</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Proyek ini tidak disimpan karena nama berkas yang ada akan menimpa proyek lainnya.
+Silakan coba lagi dan beri nama baru.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

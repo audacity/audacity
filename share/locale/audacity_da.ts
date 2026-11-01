@@ -19635,6 +19635,13 @@ Du skal køre den version af Audacity for at gendanne projektet.</translation>
         <source>Share</source>
         <translation>Del</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Projektet gemmes ikke, fordi det valgte projekt er åbent i et andet vindue.
+Forsøg venligst igen, og giv det et andet navn.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

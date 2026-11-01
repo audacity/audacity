@@ -19522,6 +19522,13 @@ Você precisa de executar essa versão do Autacity para recuperar o projeto.</tr
         <source>Share</source>
         <translation>Partilha</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>O projeto não foi guardado porque o projeto selecionado está aberto noutra janela.
+Por favor tente novamente e selecione um nome original.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

@@ -19631,6 +19631,13 @@ Bạn cần phiên bản Audacity đó để khôi phục dự án.</translation
         <source>Share</source>
         <translation>Chia sẻ</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Dự án này sẽ không được lưu vì dự án được lựa chọn đang mở ở một cửa sổ khác.
+Hãy thử lại và đặt một cái tên không bị trùng.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

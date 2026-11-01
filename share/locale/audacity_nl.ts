@@ -19628,6 +19628,13 @@ U moet die versie van Audacity uitvoeren om het project te herstellen.</translat
         <source>Share</source>
         <translation>Deel</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Het project is niet opgeslagen omdat het geselecteerde project geopend is in een ander venster.
+Probeer het opnieuw en selecteer een originele naam.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

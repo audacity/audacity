@@ -19517,6 +19517,13 @@ Du må bruke den versjonen av Audacity for å gjenopprette prosjektet.</translat
         <source>Share</source>
         <translation>Del</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Prosjektet ble ikke lagret fordi det valgte prosjektet er åpent i et annet vindu.
+Vennligst prøv igjen og velg et unikt navn.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

@@ -19633,6 +19633,13 @@ pohyblivej čiarke</translation>
         <source>Share</source>
         <translation>Zdieľať</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Projekt nebol uložený, pretože vybraný projekt je otvorený v inom okne.
+Skúste to znova a vyberte pôvodný názov.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>
