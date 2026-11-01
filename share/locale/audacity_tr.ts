@@ -19535,6 +19535,13 @@ Bu projeyi kurtarmak için 2.3.0 ya da projenin kaydedildiği sürümünü kulla
         <source>Share</source>
         <translation>Paylaş</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Proje, seçilmiş proje başka bir pencerede açık olduğundan kaydedilemedi.
+Lütfen özgün bir ad kullanarak yeniden deneyin.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

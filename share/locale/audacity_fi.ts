@@ -19638,6 +19638,13 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
         <source>Share</source>
         <translation>Jaa</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Projektia ei tallennettu, koska valittu projekti on avoinna toisessa ikkunassa.
+Yritä uudelleen ja valitse jokin toinen nimi.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

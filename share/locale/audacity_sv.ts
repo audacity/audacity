@@ -19638,6 +19638,13 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <source>Share</source>
         <translation>Dela</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Projektet sparades inte eftersom det valda projektet är öppet i ett annat fönster.
+Försök igen med ett annat namn.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

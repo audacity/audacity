@@ -19542,6 +19542,13 @@ A projekt helyreállításához az Audacity azon verzióját kell futtatnia.</tr
         <source>Share</source>
         <translation>Megosztás</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>A projektet nem mentetted, mert a megadott fájlnév felülírna egy másik projektet.
+Próbáld újra, és válassz egy eredeti nevet.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

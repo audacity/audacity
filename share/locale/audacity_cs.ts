@@ -19508,6 +19508,13 @@ Pro obnovení projektu musíte spustit tuto verzi Audacity.</translation>
         <source>Share</source>
         <translation>Sdílet</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Projekt nebyl uložen, protože vybraný projekt je otevřen v jiném okně.
+Zkuste to, prosím, znovu a vyberte původní název.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

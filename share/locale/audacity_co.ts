@@ -19638,6 +19638,13 @@ Ci vole à lancià sta versione d’Audacity per ricuperà u prughjettu.</transl
         <source>Share</source>
         <translation>Sparte</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>U prughjettu selezziunatu ùn hè statu micca arregistratu perchè ellu hè apertu in un’altra finestra.
+Pruvate torna è selezziunate un nome uriginale.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

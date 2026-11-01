@@ -19521,6 +19521,13 @@ Za obnovitev projekta morate zagnati tisto različico programa Audacity.</transl
         <source>Share</source>
         <translation>Deli</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Projekt ni shranjen, ker je izbrani projekt odprt v drugem oknu.
+Poskusite znova in izberite izvirno ime.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

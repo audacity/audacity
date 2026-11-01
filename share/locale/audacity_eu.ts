@@ -19521,6 +19521,13 @@ Audacityren bertsio hori exekutatu behar duzu proiektua berreskuratzeko.</transl
         <source>Share</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Proiektua ez da gorde hautatu duzun proiektua beste leiho batean irekita dagoelako.
+Saiatu berriro eta hautatu izen original bat.</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>

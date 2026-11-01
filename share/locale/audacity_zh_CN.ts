@@ -19641,6 +19641,13 @@ You need to run that version of Audacity to recover the project.</source>
         <source>Share</source>
         <translation>分享</translation>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>未保存项目，因为所选项目已在另一个窗口中打开。
+请重试并选择原始名称。</translation>
+    </message>
 </context>
 <context>
     <name>project/share</name>
