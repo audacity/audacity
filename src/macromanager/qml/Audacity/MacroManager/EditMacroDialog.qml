@@ -16,7 +16,7 @@ import "internal"
 StyledDialogView {
     id: root
 
-    property string macroName: ""
+    property string macroId: ""
 
     title: qsTrc("macromanager", "Edit macro")
 
@@ -62,8 +62,8 @@ StyledDialogView {
     }
 
     Component.onCompleted: {
-        availableCommandsModel.load(root.macroName)
-        macroCommandsModel.load(root.macroName)
+        availableCommandsModel.load(root.macroId)
+        macroCommandsModel.load(root.macroId)
     }
 
     onNavigationActivateRequested: {

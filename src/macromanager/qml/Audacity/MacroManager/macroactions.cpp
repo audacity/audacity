@@ -20,7 +20,7 @@ std::optional<std::string> MacroActions::requestNewName() const
     return requestName(UriQuery(MACRO_NAME_URI));
 }
 
-std::optional<std::string> MacroActions::rename(const std::string& name) const
+void MacroActions::rename(const std::string& name) const
 {
     UriQuery uri(MACRO_NAME_URI);
     uri.addParam("title", Val(qtrc("macromanager", "Rename macro")));
@@ -28,19 +28,16 @@ std::optional<std::string> MacroActions::rename(const std::string& name) const
 
     const std::optional<std::string> newName = requestName(uri);
     if (!newName) {
-        return std::nullopt;
+        return;
     }
 
     const Ret ret = repository()->rename(name, *newName);
     if (!ret) {
         interactive()->error(trc("macromanager", "The macro could not be renamed"), ret.text());
-        return std::nullopt;
     }
-
-    return newName;
 }
 
-bool MacroActions::remove(const std::string& name) const
+void MacroActions::remove(const std::string& name) const
 {
     ValList dependents;
     for (const std::string& dependent : repository()->referencingMacros(name)) {
@@ -53,16 +50,13 @@ bool MacroActions::remove(const std::string& name) const
 
     const RetVal<Val> result = interactive()->openSync(uri);
     if (!result.ret) {
-        return false;
+        return;
     }
 
     const Ret ret = repository()->remove(name);
     if (!ret) {
         interactive()->error(trc("macromanager", "The macro could not be deleted"), ret.text());
-        return false;
     }
-
-    return true;
 }
 
 void MacroActions::exportMacro(const Macro& macro) const

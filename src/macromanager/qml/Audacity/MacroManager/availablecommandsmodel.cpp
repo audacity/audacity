@@ -82,9 +82,9 @@ QString AvailableCommandsModel::searchText() const
     return m_searchText;
 }
 
-void AvailableCommandsModel::load(const QString& editedMacroName)
+void AvailableCommandsModel::load(const QString& editedMacroId)
 {
-    m_editedMacroName = editedMacroName;
+    m_editedMacroId = MacroId(editedMacroId.toStdString());
 
     commandsRegister()->commandInfoListChanged().onNotify(this, [this]() {
         reload();
@@ -161,7 +161,8 @@ void AvailableCommandsModel::appendCommands()
 
 void AvailableCommandsModel::appendMacros()
 {
-    const std::string edited = m_editedMacroName.toStdString();
+    const std::optional<Macro> editedMacro = m_editedMacroId ? repository()->macro(*m_editedMacroId) : std::nullopt;
+    const std::string edited = editedMacro ? editedMacro->name : std::string();
     const std::vector<std::string> dependents = repository()->dependentMacros(edited);
 
     for (const Macro& macro : repository()->macros()) {

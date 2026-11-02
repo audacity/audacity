@@ -4,6 +4,7 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 
 #include <QAbstractListModel>
 #include <QtQml/qqmlregistration.h>
@@ -49,7 +50,7 @@ public:
     bool isEmpty() const;
     bool isRunning() const;
 
-    Q_INVOKABLE void load(const QString& macroName);
+    Q_INVOKABLE void load(const QString& macroId);
     Q_INVOKABLE void add(const QString& code);
     Q_INVOKABLE void insert(int row, const QString& code);
     Q_INVOKABLE void addMacro(const QString& name);
@@ -85,6 +86,7 @@ private:
     QString titleOf(const muse::rcommand::Command& command) const;
     bool hasParams(const muse::rcommand::Command& command) const;
     void notifyStepsChanged(int fromRow, int toRow);
+    void syncFromRepository();
     void insertStep(int row, const MacroItem& item);
     void setStepParams(int row, const muse::rcommand::Params& params);
     void persist();
@@ -92,7 +94,9 @@ private:
     void requestEffectParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
     void requestSchemaParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
 
+    std::optional<MacroId> m_macroId;
     Macro m_macro;
+    bool m_saving = false;
     MacroActions m_actions;
     RunOnFilesLauncher m_runOnFilesLauncher;
 };

@@ -119,6 +119,33 @@ TEST_F(MacroManager_MacrosRepositoryTests, RenameUpdatesReferencesInDependentMac
     EXPECT_EQ(std::get<MacroReference>(parent->steps.front()).name, "kid");
 }
 
+TEST_F(MacroManager_MacrosRepositoryTests, MacroIdStaysTheSameAfterRename)
+{
+    ASSERT_TRUE(m_repository->save(Macro { "old", {} }));
+    const std::optional<MacroId> id = m_repository->macroId("old");
+    ASSERT_TRUE(id);
+
+    ASSERT_TRUE(m_repository->rename("old", "new"));
+
+    EXPECT_EQ(m_repository->macroId("new"), id);
+    EXPECT_FALSE(m_repository->macroId("old"));
+
+    const std::optional<Macro> renamed = m_repository->macro(*id);
+    ASSERT_TRUE(renamed);
+    EXPECT_EQ(renamed->name, "new");
+}
+
+TEST_F(MacroManager_MacrosRepositoryTests, MacroIdFindsNothingAfterRemove)
+{
+    ASSERT_TRUE(m_repository->save(Macro { "gone", {} }));
+    const std::optional<MacroId> id = m_repository->macroId("gone");
+    ASSERT_TRUE(id);
+
+    ASSERT_TRUE(m_repository->remove("gone"));
+
+    EXPECT_FALSE(m_repository->macro(*id));
+}
+
 TEST_F(MacroManager_MacrosRepositoryTests, RemoveDeletesOnlyTheRemovedMacro)
 {
     ASSERT_TRUE(m_repository->save(Macro { "my_macro", {} }));

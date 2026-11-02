@@ -217,8 +217,13 @@ void MacroManagerModel::reload()
 
 void MacroManagerModel::openEditor(const std::string& name)
 {
+    const std::optional<MacroId> id = repository()->macroId(name);
+    if (!id) {
+        return;
+    }
+
     UriQuery uri(EDIT_MACRO_URI);
-    uri.addParam("macroName", Val(name));
+    uri.addParam("macroId", Val(id->toString()));
 
     if (interactive()->isOpened(uri).val) {
         interactive()->raise(uri);

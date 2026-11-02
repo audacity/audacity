@@ -26,8 +26,8 @@ public:
         : muse::Contextable(owner) {}
 
     std::optional<std::string> requestNewName() const;
-    std::optional<std::string> rename(const std::string& name) const;
-    bool remove(const std::string& name) const;
+    void rename(const std::string& name) const;
+    void remove(const std::string& name) const;
     void exportMacro(const Macro& macro) const;
     muse::io::path_t selectImportFile() const;
 
