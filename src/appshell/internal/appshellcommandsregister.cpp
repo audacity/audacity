@@ -51,7 +51,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "About Audacity"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::Shortcut
     },
     CommandInfo{
         APP_ABOUT_QT_COMMAND,
@@ -60,7 +61,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "About Qt"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::Shortcut
     },
     CommandInfo{
         APP_ONLINE_HANDBOOK_COMMAND,
