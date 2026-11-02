@@ -7,6 +7,10 @@
 
 using namespace au::macromanager;
 
+namespace {
+const muse::Uri HOME_PAGE_URI("audacity://home");
+}
+
 RunOnFilesModel::RunOnFilesModel(QObject* parent)
     : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
@@ -81,6 +85,8 @@ void RunOnFilesModel::closeWindow()
         project->close();
         globalContext()->setCurrentProject(nullptr);
     }
+
+    interactive()->open(HOME_PAGE_URI);
 
     const std::shared_ptr<muse::mi::IMultiWindowsProvider> provider = multiWindowsProvider();
     const muse::modularity::ContextPtr ctx = iocContext();

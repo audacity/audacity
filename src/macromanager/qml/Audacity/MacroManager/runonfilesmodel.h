@@ -11,6 +11,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
+#include "framework/interactive/iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "macromanager/imacrorunner.h"
 
@@ -26,6 +27,7 @@ class RunOnFilesModel : public QAbstractListModel, public muse::Contextable, pub
 
     muse::ContextInject<IMacroRunner> runner = { this };
     muse::ContextInject<context::IGlobalContext> globalContext = { this };
+    muse::ContextInject<muse::IInteractive> interactive = { this };
 
 public:
     explicit RunOnFilesModel(QObject* parent = nullptr);
