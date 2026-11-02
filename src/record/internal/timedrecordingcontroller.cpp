@@ -117,16 +117,23 @@ void TimedRecordingController::requestStop()
 
 Ret TimedRecordingController::openSetupDialog()
 {
-    if (m_state != State::Idle) {
+    if (m_state != State::Idle || interactive()->isOpened(SETUP_DIALOG_URI).val) {
         return make_ret(Ret::Code::Cancel);
     }
 
-    RetVal<Val> rv = interactive()->openSync(SETUP_DIALOG_URI);
-    if (!rv.ret.success()) {
-        return rv.ret;
+    interactive()->open(SETUP_DIALOG_URI).onResolve(this, [this](const Val& val) {
+        onSetupAccepted(val.toQVariant().toMap());
+    });
+
+    return make_ok();
+}
+
+void TimedRecordingController::onSetupAccepted(const QVariantMap& data)
+{
+    if (m_state != State::Idle) {
+        return;
     }
 
-    const QVariantMap data = rv.val.toQVariant().toMap();
     m_completionActions.saveProjectPath = data.value("saveProjectPath").toString();
     m_completionActions.exportAudioPath = data.value("exportAudioPath").toString();
     m_completionActions.exportFormat = data.value("exportFormat").toString().toStdString();
@@ -145,7 +152,6 @@ Ret TimedRecordingController::openSetupDialog()
     }
 
     begin(scheduleFromDialogData(data));
-    return make_ok();
 }
 
 void TimedRecordingController::begin(const TimedRecordingSchedule& schedule)

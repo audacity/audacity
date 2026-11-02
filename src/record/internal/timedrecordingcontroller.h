@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QTimer>
+#include <QVariantMap>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
@@ -70,6 +71,7 @@ private:
     };
 
     muse::Ret openSetupDialog();
+    void onSetupAccepted(const QVariantMap& data);
     void begin(const TimedRecordingSchedule& schedule);
     void openProgressDialog();
     void onTick();
