@@ -128,6 +128,7 @@ void ApplicationActionController::init()
         { "toggle-transport", APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND, {} },
         { "toggle-tracks", APP_TOGGLE_TRACKS_PANEL_COMMAND, {} },
         { "toggle-history", APP_TOGGLE_HISTORY_PANEL_COMMAND, {} },
+        { "toggle-macro-manager", APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND, {} },
         { "toggle-statusbar", APP_TOGGLE_STATUSBAR_COMMAND, {} },
         { "restart", APP_RESTART_COMMAND, {} },
         { "fullscreen", APP_TOGGLE_FULLSCREEN_COMMAND, {} },

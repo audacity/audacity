@@ -263,6 +263,15 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(rcommand::Checkable::Yes)
     },
     CommandInfo{
+        APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Macro manager"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Show/hide macro manager"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes)
+    },
+    CommandInfo{
         APP_TOGGLE_STATUSBAR_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "&Status bar"),
