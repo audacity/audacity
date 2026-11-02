@@ -19,6 +19,7 @@
 #include "project/iaudacityproject.h"
 #include "project/iprojectfilescontroller.h"
 #include "record/irecord.h"
+#include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
 #include "record/itimedrecordingcontroller.h"
 #include "record/timedrecordingtypes.h"
@@ -29,6 +30,7 @@ class TimedRecordingController : public ITimedRecordingController, public muse::
 {
     muse::GlobalInject<muse::toast::IToastService> toastService;
     muse::GlobalInject<importexport::IExportConfiguration> exportConfiguration;
+    muse::GlobalInject<IRecordConfiguration> recordConfiguration;
 
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };

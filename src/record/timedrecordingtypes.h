@@ -4,10 +4,18 @@
 #pragma once
 
 #include <chrono>
+#include <cstdint>
 #include <optional>
 #include <variant>
 
 namespace au::record {
+struct TimedRecordingOptions {
+    int64_t durationSeconds = 60 * 60;
+    bool saveProject = false;
+    bool exportAudio = false;
+    bool quitAudacity = false;
+};
+
 struct TimedRecordingSchedule {
     using TimePoint = std::chrono::system_clock::time_point;
     using Duration = std::chrono::seconds;

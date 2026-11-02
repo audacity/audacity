@@ -20,7 +20,6 @@ using namespace au::record;
 
 namespace {
 constexpr int CLOCK_INTERVAL_MS = 1000;
-constexpr qint64 DEFAULT_DURATION_SECONDS = 60 * 60;
 
 const QString TIME_FORMAT("HH:mm:ss");
 const QStringList ALTERNATIVE_TIME_FORMATS { "H:mm:ss", "H:mm" };
@@ -69,14 +68,18 @@ TimedRecordingSetupModel::TimedRecordingSetupModel(QObject* parent)
 
 void TimedRecordingSetupModel::init()
 {
+    const TimedRecordingOptions options = recordConfiguration()->timedRecordingOptions();
     const QDateTime now = currentDateTime();
-    const QDateTime end = now.addSecs(DEFAULT_DURATION_SECONDS);
+    const QDateTime end = now.addSecs(options.durationSeconds);
 
     m_startDate = now.date().toString(m_dateFormat);
     m_startTime = now.time().toString(TIME_FORMAT);
-    m_durationSeconds = DEFAULT_DURATION_SECONDS;
+    m_durationSeconds = static_cast<double>(options.durationSeconds);
     m_endDate = end.date().toString(m_dateFormat);
     m_endTime = end.time().toString(TIME_FORMAT);
+    m_saveProjectEnabled = options.saveProject;
+    m_exportAudioEnabled = options.exportAudio;
+    m_quitAudacityEnabled = options.quitAudacity;
 
     const project::IAudacityProjectPtr project = globalContext()->currentProject();
     if (project && !project->isNewlyCreated() && !project->isCloudProject()) {

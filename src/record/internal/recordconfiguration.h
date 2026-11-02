@@ -34,6 +34,9 @@ public:
 
     RecordingTrackNameOptions recordingTrackNameOptions() const override;
 
+    TimedRecordingOptions timedRecordingOptions() const override;
+    void setTimedRecordingOptions(const TimedRecordingOptions& options) override;
+
 private:
     muse::async::Notification m_isMicMeteringOnChanged;
     muse::async::Notification m_isInputMonitoringOnChanged;

@@ -19,6 +19,7 @@
 #include "importexport/export/iexportconfiguration.h"
 #include "importexport/export/iexporter.h"
 #include "project/iprojectconfiguration.h"
+#include "record/irecordconfiguration.h"
 #include "record/timedrecordingtypes.h"
 
 namespace au::record {
@@ -53,6 +54,7 @@ class TimedRecordingSetupModel : public QObject, public muse::Contextable
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
     muse::GlobalInject<importexport::IExportConfiguration> exportConfiguration;
+    muse::GlobalInject<IRecordConfiguration> recordConfiguration;
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<importexport::IExporter> exporter{ this };

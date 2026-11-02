@@ -132,6 +132,13 @@ Ret TimedRecordingController::openSetupDialog()
     m_completionActions.exportFormat = data.value("exportFormat").toString().toStdString();
     m_completionActions.quitAudacity = data.value("quitAudacity").toBool();
 
+    TimedRecordingOptions options;
+    options.durationSeconds = data.value("durationSeconds").toLongLong();
+    options.saveProject = !m_completionActions.saveProjectPath.empty();
+    options.exportAudio = !m_completionActions.exportAudioPath.empty();
+    options.quitAudacity = m_completionActions.quitAudacity;
+    recordConfiguration()->setTimedRecordingOptions(options);
+
     if (!m_completionActions.exportAudioPath.empty()) {
         exportConfiguration()->setDirectoryPath(io::dirpath(m_completionActions.exportAudioPath));
         exportConfiguration()->setCurrentFormat(m_completionActions.exportFormat);
