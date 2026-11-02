@@ -64,7 +64,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Import…"),
         InputSchema({
-                { PROJECT_FILES_PARAM, Arg(DataType::Array, u"Paths of the media files to import; asks for files when omitted") },
+                { PROJECT_FILES_PARAM, Arg(DataType::List, u"Paths of the media files to import; asks for files when omitted") },
             }),
         Decoration()
     },
@@ -75,8 +75,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Import media files into a new project"),
         InputSchema({
-                { PROJECT_FILES_PARAM, Arg(DataType::Array, u"Paths of the media files to import") },
-                { PROJECT_REMOVE_AFTER_IMPORT_PARAM, Arg(DataType::Boolean, u"Remove the files after importing them") },
+                { PROJECT_FILES_PARAM, Arg(DataType::List, u"Paths of the media files to import") },
+                { PROJECT_REMOVE_AFTER_IMPORT_PARAM, Arg(DataType::Bool, u"Remove the files after importing them") },
             }),
         Decoration()
     },
@@ -172,7 +172,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Export labels"),
         InputSchema({
-                { PROJECT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Label track id; exports all label tracks when omitted") },
+                { PROJECT_TRACK_ID_PARAM, Arg(DataType::Int, u"Label track id; exports all label tracks when omitted") },
             }),
         Decoration()
     },

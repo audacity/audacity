@@ -23,7 +23,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         muse::TranslatableString("command_description", "Spectrogram settings…"),
         InputSchema({
-                    { TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM, Arg(DataType::Integer, u"Id of the track") },
+                    { TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM, Arg(DataType::Int, u"Id of the track") },
                 }),
         Decoration()
     },

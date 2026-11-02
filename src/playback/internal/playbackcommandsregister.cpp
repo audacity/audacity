@@ -104,7 +104,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Move the playhead to the given time"),
         InputSchema({
                 { PLAYBACK_SEEK_TIME_PARAM, Arg(DataType::Float, u"Time in seconds") },
-                { PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, Arg(DataType::Boolean, u"Start playback from the new position") },
+                { PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, Arg(DataType::Bool, u"Start playback from the new position") },
             }),
         Decoration()
     },
@@ -127,7 +127,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change audio host"),
         InputSchema({
-                { PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM, Arg(DataType::Integer, u"Index in the list of available audio hosts") },
+                { PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM, Arg(DataType::Int, u"Index in the list of available audio hosts") },
             }),
         Decoration(rcommand::Checkable::Yes)
     },
@@ -138,8 +138,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change playback device"),
         InputSchema({
-                { PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM, Arg(DataType::Integer, u"Index in the list of available output devices") },
-                { PLAYBACK_CHANGE_PLAYBACK_DEVICE_IS_DEFAULT_PARAM, Arg(DataType::Boolean, u"Use the system default device") },
+                { PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM, Arg(DataType::Int, u"Index in the list of available output devices") },
+                { PLAYBACK_CHANGE_PLAYBACK_DEVICE_IS_DEFAULT_PARAM, Arg(DataType::Bool, u"Use the system default device") },
             }),
         Decoration(rcommand::Checkable::Yes)
     },
@@ -150,8 +150,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change recording device"),
         InputSchema({
-                { PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM, Arg(DataType::Integer, u"Index in the list of available input devices") },
-                { PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM, Arg(DataType::Boolean, u"Use the system default device") },
+                { PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM, Arg(DataType::Int, u"Index in the list of available input devices") },
+                { PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM, Arg(DataType::Bool, u"Use the system default device") },
             }),
         Decoration(rcommand::Checkable::Yes)
     },
@@ -162,7 +162,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change input channels"),
         InputSchema({
-                { PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM, Arg(DataType::Integer, u"Number of input channels") },
+                { PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM, Arg(DataType::Int, u"Number of input channels") },
             }),
         Decoration(rcommand::Checkable::Yes)
     },
