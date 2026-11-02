@@ -235,6 +235,9 @@ async::Promise<Ret> MacroRunner::resetProject()
         commandDispatcher()->dispatch(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND)
         .onResolve(this, [this, resolve](const Response& deleteResponse) {
             clipboard()->clearTrackData();
+            if (deleteResponse.ret) {
+                projectHistory()->init();
+            }
             (void)resolve(deleteResponse.ret);
         });
 
