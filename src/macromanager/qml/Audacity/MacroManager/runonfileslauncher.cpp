@@ -12,6 +12,12 @@ using namespace muse;
 
 void RunOnFilesLauncher::launch(const Macro& macro)
 {
+    const Ret valid = runner()->validate(macro);
+    if (!valid) {
+        interactive()->error(trc("macromanager", "The macro could not be completed"), valid.text());
+        return;
+    }
+
     io::paths_t files = selectFiles();
     if (files.empty()) {
         return;

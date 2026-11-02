@@ -8,6 +8,7 @@
 #include "framework/interactive/iinteractive.h"
 #include "importexport/import/iimporter.h"
 #include "project/iprojectconfiguration.h"
+#include "macromanager/imacrorunner.h"
 #include "macromanager/irunonfilesrequests.h"
 
 namespace au::macromanager {
@@ -19,6 +20,7 @@ class RunOnFilesLauncher : public muse::Contextable
 
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<importexport::IImporter> importer{ this };
+    muse::ContextInject<IMacroRunner> runner{ this };
 
 public:
     explicit RunOnFilesLauncher(const muse::Contextable* owner)

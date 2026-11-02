@@ -3,11 +3,14 @@
 */
 #pragma once
 
+#include <QString>
+
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommanddispatcher.h"
+#include "framework/rcommand/icommandsregister.h"
 #include "framework/toast/itoastservice.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
@@ -20,8 +23,17 @@
 namespace au::macromanager {
 class MacroRunner : public IMacroRunner, public muse::Contextable, public muse::async::Asyncable
 {
+    struct MissingStep {
+        std::string macroName;
+        size_t stepNumber = 0;
+        QString item;
+
+        bool operator==(const MissingStep&) const = default;
+    };
+
     muse::GlobalInject<muse::toast::IToastService> toastService;
     muse::GlobalInject<IMacrosRepository> repository;
+    muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
 
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
@@ -34,6 +46,7 @@ public:
     explicit MacroRunner(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
+    muse::Ret validate(const Macro& macro) const override;
     muse::async::Promise<muse::Ret> run(const Macro& macro) override;
     muse::async::Promise<muse::Ret> runOnFiles(const Macro& macro, const muse::io::paths_t& files) override;
     void abort() override;
@@ -47,6 +60,8 @@ public:
 
 private:
     muse::Ret begin(const Macro& macro);
+    muse::Ret validateStepsExist(const Macro& macro) const;
+    void collectMissingSteps(const Macro& macro, std::vector<MissingStep>& missing) const;
     void finish(const Macro& macro, const muse::Ret& ret);
 
     muse::async::Promise<muse::Ret> runFiles(const Macro& macro, const muse::io::paths_t& files);
