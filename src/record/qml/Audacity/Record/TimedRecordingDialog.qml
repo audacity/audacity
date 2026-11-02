@@ -22,8 +22,21 @@ StyledDialogView {
         id: setupModel
     }
 
+    property NavigationPanel durationNavigation: NavigationPanel {
+        name: "TimedRecordingDuration"
+        section: root.navigationSection
+        order: 3
+        direction: NavigationPanel.Horizontal
+        enabled: setupModel.endAfterDuration
+        accessible.name: qsTrc("record", "Duration")
+    }
+
     Component.onCompleted: {
         setupModel.init()
+    }
+
+    onNavigationActivateRequested: {
+        startButton.navigation.requestActive()
     }
 
     component SchedulePanel: Rectangle {
@@ -31,6 +44,14 @@ StyledDialogView {
 
         property string title: ""
         default property alias panelData: panelContent.data
+
+        property NavigationPanel navigation: NavigationPanel {
+            name: panel.title
+            section: root.navigationSection
+            direction: NavigationPanel.Vertical
+            enabled: panel.enabled && panel.visible
+            accessible.name: panel.title
+        }
 
         implicitHeight: panelColumn.implicitHeight + 2 * 16
 
@@ -76,6 +97,9 @@ StyledDialogView {
         property string text: ""
         property string hint: ""
 
+        property NavigationPanel navigationPanel: null
+        property int navigationOrder: 0
+
         signal edited(string newText)
 
         spacing: 4
@@ -95,6 +119,10 @@ StyledDialogView {
             currentText: input.text
             hint: input.hint
 
+            navigation.panel: input.navigationPanel
+            navigation.order: input.navigationOrder
+            accessible.name: input.label
+
             onTextEdited: function (newTextValue) {
                 input.edited(newTextValue)
             }
@@ -107,6 +135,9 @@ StyledDialogView {
         property string date: ""
         property string time: ""
         property string dateHint: ""
+
+        property NavigationPanel navigationPanel: null
+        property int navigationOrderStart: 0
 
         signal dateEdited(string newDate)
         signal timeEdited(string newTime)
@@ -123,6 +154,9 @@ StyledDialogView {
             text: moment.date
             hint: moment.dateHint
 
+            navigationPanel: moment.navigationPanel
+            navigationOrder: moment.navigationOrderStart
+
             onEdited: function (newText) {
                 moment.dateEdited(newText)
             }
@@ -135,6 +169,9 @@ StyledDialogView {
             label: qsTrc("record", "Time")
             text: moment.time
             hint: "hh:mm:ss"
+
+            navigationPanel: moment.navigationPanel
+            navigationOrder: moment.navigationOrderStart + 2
 
             onEdited: function (newText) {
                 moment.timeEdited(newText)
@@ -149,6 +186,9 @@ StyledDialogView {
         property bool checked: false
         property string path: ""
 
+        property NavigationPanel navigationPanel: null
+        property int navigationOrderStart: 0
+
         signal toggled(bool checked)
         signal pathEdited(string path)
         signal browseRequested
@@ -160,6 +200,9 @@ StyledDialogView {
         CheckBox {
             text: action.text
             checked: action.checked
+
+            navigation.panel: action.navigationPanel
+            navigation.order: action.navigationOrderStart
 
             onClicked: {
                 action.toggled(!checked)
@@ -179,6 +222,10 @@ StyledDialogView {
                 textSidePadding: 6
                 currentText: action.path
 
+                navigation.panel: action.navigationPanel
+                navigation.order: action.navigationOrderStart + 1
+                accessible.name: action.text
+
                 onTextEdited: function (newTextValue) {
                     action.pathEdited(newTextValue)
                 }
@@ -191,6 +238,9 @@ StyledDialogView {
                 text: qsTrc("ui", "Browse")
                 buttonType: FlatButton.Horizontal
                 orientation: Qt.Horizontal
+
+                navigation.panel: action.navigationPanel
+                navigation.order: action.navigationOrderStart + 3
 
                 onClicked: {
                     action.browseRequested()
@@ -221,11 +271,14 @@ StyledDialogView {
                 spacing: 16
 
                 SchedulePanel {
+                    id: startPanel
+
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.preferredWidth: 1
 
                     title: qsTrc("record", "Start recording")
+                    navigation.order: 1
 
                     RowLayout {
                         spacing: 16
@@ -233,6 +286,9 @@ StyledDialogView {
                         RoundedRadioButton {
                             text: qsTrc("record", "Now")
                             checked: setupModel.startNow
+
+                            navigation.panel: startPanel.navigation
+                            navigation.order: 0
 
                             onToggled: {
                                 setupModel.startNow = true
@@ -243,6 +299,9 @@ StyledDialogView {
                             text: qsTrc("record", "At a time")
                             checked: !setupModel.startNow
 
+                            navigation.panel: startPanel.navigation
+                            navigation.order: 1
+
                             onToggled: {
                                 setupModel.startNow = false
                             }
@@ -251,6 +310,9 @@ StyledDialogView {
 
                     ScheduledMoment {
                         visible: !setupModel.startNow
+
+                        navigationPanel: startPanel.navigation
+                        navigationOrderStart: 2
 
                         date: setupModel.startDate
                         time: setupModel.startTime
@@ -267,11 +329,14 @@ StyledDialogView {
                 }
 
                 SchedulePanel {
+                    id: endPanel
+
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.preferredWidth: 1
 
                     title: qsTrc("record", "End recording")
+                    navigation.order: 2
 
                     RowLayout {
                         spacing: 16
@@ -279,6 +344,9 @@ StyledDialogView {
                         RoundedRadioButton {
                             text: qsTrc("record", "For a duration")
                             checked: setupModel.endAfterDuration
+
+                            navigation.panel: endPanel.navigation
+                            navigation.order: 0
 
                             onToggled: {
                                 setupModel.endAfterDuration = true
@@ -288,6 +356,9 @@ StyledDialogView {
                         RoundedRadioButton {
                             text: qsTrc("record", "At a time")
                             checked: !setupModel.endAfterDuration
+
+                            navigation.panel: endPanel.navigation
+                            navigation.order: 1
 
                             onToggled: {
                                 setupModel.endAfterDuration = false
@@ -315,6 +386,10 @@ StyledDialogView {
                             currentFormat: setupModel.durationFormat
                             showMenu: false
 
+                            navigation.panel: root.durationNavigation
+                            navigation.order: 0
+                            accessibleName: qsTrc("record", "Duration") + " "
+
                             onValueChangeRequested: function (newValue) {
                                 setupModel.durationSeconds = newValue
                             }
@@ -323,6 +398,9 @@ StyledDialogView {
 
                     ScheduledMoment {
                         visible: !setupModel.endAfterDuration
+
+                        navigationPanel: endPanel.navigation
+                        navigationOrderStart: 2
 
                         date: setupModel.endDate
                         time: setupModel.endTime
@@ -348,9 +426,12 @@ StyledDialogView {
             }
 
             SchedulePanel {
+                id: completionPanel
+
                 Layout.fillWidth: true
 
                 title: qsTrc("record", "When recording is done")
+                navigation.order: 4
 
                 CompletionAction {
                     Layout.topMargin: 8
@@ -358,6 +439,9 @@ StyledDialogView {
                     text: qsTrc("record", "Save project")
                     checked: setupModel.saveProjectEnabled
                     path: setupModel.saveProjectPath
+
+                    navigationPanel: completionPanel.navigation
+                    navigationOrderStart: 0
 
                     onToggled: function (checked) {
                         setupModel.saveProjectEnabled = checked
@@ -376,6 +460,9 @@ StyledDialogView {
                     text: qsTrc("record", "Export audio")
                     checked: setupModel.exportAudioEnabled
                     path: setupModel.exportAudioPath
+
+                    navigationPanel: completionPanel.navigation
+                    navigationOrderStart: 4
 
                     onToggled: function (checked) {
                         setupModel.exportAudioEnabled = checked
@@ -397,6 +484,9 @@ StyledDialogView {
                     enabled: setupModel.saveProjectEnabled || setupModel.exportAudioEnabled
                     checked: setupModel.quitAudacityEnabled
 
+                    navigation.panel: completionPanel.navigation
+                    navigation.order: 8
+
                     onClicked: {
                         setupModel.quitAudacityEnabled = !checked
                     }
@@ -413,7 +503,7 @@ StyledDialogView {
             Layout.margins: 8
 
             navigationPanel.section: root.navigationSection
-            navigationPanel.order: 1
+            navigationPanel.order: 5
 
             FlatButton {
                 text: qsTrc("global", "Cancel")
@@ -427,12 +517,15 @@ StyledDialogView {
             }
 
             FlatButton {
+                id: startButton
+
                 text: qsTrc("record", "Start timed recording")
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.CustomButton
                 accentButton: true
                 isNarrow: true
                 enabled: setupModel.canStart
+                toolTipDescription: setupModel.summary
 
                 onClicked: {
                     if (!setupModel.confirmOverwrite()) {

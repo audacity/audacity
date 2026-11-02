@@ -28,6 +28,17 @@ StyledDialogView {
         progressModel.init()
     }
 
+    onNavigationActivateRequested: {
+        stopButton.navigation.requestActive()
+    }
+
+    navigationSection.onNavigationEvent: function (event) {
+        if (event.type === NavigationEvent.Escape) {
+            event.accepted = true
+            progressModel.stop()
+        }
+    }
+
     ColumnLayout {
         id: content
 
@@ -100,11 +111,14 @@ StyledDialogView {
             navigationPanel.order: 1
 
             FlatButton {
+                id: stopButton
+
                 text: progressModel.isQuitting ? qsTrc("global", "Cancel") : qsTrc("record", "Stop")
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.CustomButton
                 accentButton: true
                 isNarrow: true
+                toolTipDescription: progressModel.isQuitting ? "" : progressModel.startText + ". " + progressModel.endText
 
                 onClicked: {
                     progressModel.stop()
