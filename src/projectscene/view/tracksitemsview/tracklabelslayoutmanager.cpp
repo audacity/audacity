@@ -170,6 +170,30 @@ void TrackLabelsLayoutManager::unsubscribeFromLabelsChanges()
     disconnect(m_labelsModel, &QAbstractListModel::rowsRemoved, this, &TrackLabelsLayoutManager::subscribeToLabelsChanges);
 }
 
+TimelineContext* TrackLabelsLayoutManager::timelineContext() const
+{
+    return m_context;
+}
+
+void TrackLabelsLayoutManager::setTimelineContext(TimelineContext* newContext)
+{
+    if (m_context == newContext) {
+        return;
+    }
+
+    if (m_context) {
+        disconnect(m_context, nullptr, this, nullptr);
+    }
+
+    m_context = newContext;
+
+    if (m_context) {
+        connect(m_context, &TimelineContext::zoomChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
+    }
+
+    emit timelineContextChanged();
+}
+
 QList<TrackLabelsLayoutManager::LabelInfo> TrackLabelsLayoutManager::collectLabelsInfo() const
 {
     QList<LabelInfo> labels;
