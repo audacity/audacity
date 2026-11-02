@@ -53,27 +53,13 @@ Rectangle {
         onClicked: function (mouse) {
             if (mouse.button === Qt.RightButton) {
                 menuButton.toggleMenu(root, mouse.x, mouse.y)
-                return
             }
-
-            singleClickTimer.restart()
         }
 
         onDoubleClicked: function (mouse) {
             if (mouse.button === Qt.LeftButton) {
-                singleClickTimer.stop()
-                root.runRequested()
+                root.editRequested()
             }
-        }
-    }
-
-    Timer {
-        id: singleClickTimer
-
-        interval: Qt.styleHints.mouseDoubleClickInterval
-
-        onTriggered: {
-            root.editRequested()
         }
     }
 
