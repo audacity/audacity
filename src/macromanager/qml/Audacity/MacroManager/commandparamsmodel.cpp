@@ -11,10 +11,12 @@ namespace {
 CommandParamsModel::ParamType toParamType(DataType type)
 {
     switch (type) {
-    case DataType::Integer: return CommandParamsModel::ParamType::Integer;
-    case DataType::Float: return CommandParamsModel::ParamType::Float;
-    case DataType::Boolean: return CommandParamsModel::ParamType::Boolean;
-    case DataType::Array: return CommandParamsModel::ParamType::Array;
+    case DataType::Int:
+    case DataType::Int64: return CommandParamsModel::ParamType::Integer;
+    case DataType::Float:
+    case DataType::Double: return CommandParamsModel::ParamType::Float;
+    case DataType::Bool: return CommandParamsModel::ParamType::Boolean;
+    case DataType::List: return CommandParamsModel::ParamType::Array;
     default: return CommandParamsModel::ParamType::String;
     }
 }

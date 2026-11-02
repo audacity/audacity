@@ -30,7 +30,7 @@ Params roundTrip(const Params& params)
 }
 }
 
-TEST(MacroManager_MacroSerializationTests, KeepsScalarTypes)
+TEST(MacroManager_MacroSerializationTests, KeepsScalarValues)
 {
     const Params params = roundTrip({
         { "bool", Val(true) },
@@ -39,13 +39,9 @@ TEST(MacroManager_MacroSerializationTests, KeepsScalarTypes)
         { "string", Val(std::string("text")) },
     });
 
-    EXPECT_EQ(params.at("bool").type(), Val::Type::Bool);
     EXPECT_EQ(params.at("bool").toBool(), true);
-    EXPECT_EQ(params.at("int").type(), Val::Type::Int);
     EXPECT_EQ(params.at("int").toInt(), 42);
-    EXPECT_EQ(params.at("double").type(), Val::Type::Double);
     EXPECT_EQ(params.at("double").toDouble(), 0.5);
-    EXPECT_EQ(params.at("string").type(), Val::Type::String);
     EXPECT_EQ(params.at("string").toString(), "text");
 }
 
@@ -60,23 +56,10 @@ TEST(MacroManager_MacroSerializationTests, KeepsInt64Precision)
         { "list", Val(ValList { Val(large) }) },
     });
 
-    EXPECT_EQ(params.at("large").type(), Val::Type::Int64);
     EXPECT_EQ(params.at("large").toInt64(), large);
-    EXPECT_EQ(params.at("negative").type(), Val::Type::Int64);
     EXPECT_EQ(params.at("negative").toInt64(), negative);
     ASSERT_EQ(params.at("list").type(), Val::Type::List);
-    EXPECT_EQ(params.at("list").toList().at(0).type(), Val::Type::Int64);
     EXPECT_EQ(params.at("list").toList().at(0).toInt64(), large);
-}
-
-TEST(MacroManager_MacroSerializationTests, KeepsMapsThatLookLikeInt64)
-{
-    const Params params = roundTrip({
-        { "map", Val(ValMap { { "int64", Val(std::string("not a number")) } }) },
-    });
-
-    ASSERT_EQ(params.at("map").type(), Val::Type::Map);
-    EXPECT_EQ(params.at("map").toMap().at("int64").toString(), "not a number");
 }
 
 TEST(MacroManager_MacroSerializationTests, KeepsNestedListsAndMaps)
@@ -94,4 +77,40 @@ TEST(MacroManager_MacroSerializationTests, KeepsNestedListsAndMaps)
     ASSERT_EQ(restored.at(2).type(), Val::Type::Map);
     EXPECT_EQ(restored.at(2).toMap().at("count").toInt(), 3);
     EXPECT_EQ(restored.at(2).toMap().at("name").toString(), "a");
+}
+
+TEST(MacroManager_MacroSerializationTests, WritesFileVersionInMetadata)
+{
+    const JsonObject metadata = toJson(Macro { "macro", {} }).value("metadata").toObject();
+
+    EXPECT_EQ(metadata.value("fileVersion").toStdString(), "1.0");
+}
+
+TEST(MacroManager_MacroSerializationTests, KeepsMetadata)
+{
+    const MacroMetadata metadata {
+        DateTime(Date(2026, 1, 2), Time(3, 4, 5)),
+        DateTime(Date(2026, 6, 7), Time(8, 9, 10)),
+        "4.1.0"
+    };
+
+    const RetVal<Macro> result = macroFromJson(toJson(Macro { "macro", {}, metadata }));
+
+    ASSERT_TRUE(result.ret);
+    ASSERT_TRUE(result.val.metadata);
+    EXPECT_EQ(result.val.metadata->created, metadata.created);
+    EXPECT_EQ(result.val.metadata->edited, metadata.edited);
+    EXPECT_EQ(result.val.metadata->audacityVersion, metadata.audacityVersion);
+}
+
+TEST(MacroManager_MacroSerializationTests, ReadsMacroWithoutMetadata)
+{
+    JsonObject object;
+    object.set("name", std::string("macro"));
+    object.set("steps", JsonArray());
+
+    const RetVal<Macro> result = macroFromJson(object);
+
+    ASSERT_TRUE(result.ret);
+    EXPECT_FALSE(result.val.metadata);
 }

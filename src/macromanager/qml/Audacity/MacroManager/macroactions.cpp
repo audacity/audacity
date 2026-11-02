@@ -12,7 +12,7 @@ using namespace muse;
 namespace {
 const Uri MACRO_NAME_URI("audacity://macromanager/macroname");
 const Uri DELETE_MACRO_URI("audacity://macromanager/deletemacro");
-const std::string MACRO_FILE_SUFFIX(".json");
+const std::string MACRO_FILE_SUFFIX(".aumacro");
 }
 
 std::optional<std::string> MacroActions::requestNewName() const

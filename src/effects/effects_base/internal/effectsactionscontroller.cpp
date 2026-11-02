@@ -250,7 +250,7 @@ Response EffectsActionsController::configureEffect(const Request& request, const
         return make_response(request, result.ret);
     }
 
-    return make_response(request, make_ok(), std::any(deserializeEffectParams(result.val)));
+    return make_response(request, make_ok(), deserializeEffectParams(result.val));
 }
 
 muse::Ret EffectsActionsController::repeatLastEffect()
