@@ -53,6 +53,28 @@ std::optional<Macro> MacrosRepository::macro(const std::string& name) const
     return *it;
 }
 
+std::optional<Macro> MacrosRepository::macro(const MacroId& id) const
+{
+    const auto it = std::ranges::find_if(m_userMacroFiles, [&id](const auto& entry) {
+        return entry.second.toStdString() == id.toString();
+    });
+    if (it == m_userMacroFiles.end()) {
+        return std::nullopt;
+    }
+
+    return macro(it->first);
+}
+
+std::optional<MacroId> MacrosRepository::macroId(const std::string& name) const
+{
+    const std::optional<io::path_t> path = userMacroFilePath(name);
+    if (!path) {
+        return std::nullopt;
+    }
+
+    return MacroId(path->toStdString());
+}
+
 std::vector<std::string> MacrosRepository::dependentMacros(const std::string& name) const
 {
     std::vector<std::string> dependents;

@@ -5,6 +5,7 @@
 
 #include <optional>
 #include <string>
+#include <utility>
 #include <variant>
 #include <vector>
 
@@ -12,6 +13,20 @@
 #include "framework/rcommand/commandtypes.h"
 
 namespace au::macromanager {
+class MacroId
+{
+public:
+    explicit MacroId(std::string value)
+        : m_value(std::move(value)) {}
+
+    const std::string& toString() const { return m_value; }
+
+    bool operator==(const MacroId&) const = default;
+
+private:
+    std::string m_value;
+};
+
 struct MacroStep {
     muse::rcommand::Command command;
     muse::rcommand::Params params;

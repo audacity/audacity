@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include <QAbstractListModel>
 #include <QtQml/qqmlregistration.h>
 
@@ -32,7 +34,7 @@ public:
 
     QString searchText() const;
 
-    Q_INVOKABLE void load(const QString& editedMacroName);
+    Q_INVOKABLE void load(const QString& editedMacroId);
     Q_INVOKABLE void setSearchText(const QString& text);
     Q_INVOKABLE QVariantMap itemAt(int row) const;
 
@@ -59,7 +61,7 @@ private:
     void appendMacros();
     bool matchesSearch(const Item& item) const;
 
-    QString m_editedMacroName;
+    std::optional<MacroId> m_editedMacroId;
     QString m_searchText;
     QList<Item> m_allItems;
     QList<Item> m_items;

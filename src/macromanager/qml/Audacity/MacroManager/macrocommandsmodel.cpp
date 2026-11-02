@@ -86,10 +86,18 @@ bool MacroCommandsModel::isRunning() const
     return runner()->isRunning();
 }
 
-void MacroCommandsModel::load(const QString& macroName)
+void MacroCommandsModel::load(const QString& macroId)
 {
+    m_macroId = MacroId(macroId.toStdString());
+
+    const std::optional<Macro> macro = repository()->macro(*m_macroId);
+    if (!macro) {
+        emit macroDeleted();
+        return;
+    }
+
     beginResetModel();
-    m_macro = repository()->macro(macroName.toStdString()).value_or(Macro { macroName.toStdString(), {} });
+    m_macro = *macro;
     endResetModel();
 
     emit nameChanged();
@@ -97,6 +105,12 @@ void MacroCommandsModel::load(const QString& macroName)
 
     runner()->isRunningChanged().onNotify(this, [this]() {
         emit isRunningChanged();
+    });
+
+    repository()->macrosChanged().onNotify(this, [this]() {
+        if (!m_saving) {
+            syncFromRepository();
+        }
     });
 }
 
@@ -211,13 +225,7 @@ void MacroCommandsModel::removeAllSteps()
 
 void MacroCommandsModel::rename()
 {
-    const std::optional<std::string> newName = m_actions.rename(m_macro.name);
-    if (!newName) {
-        return;
-    }
-
-    m_macro.name = *newName;
-    emit nameChanged();
+    m_actions.rename(m_macro.name);
 }
 
 void MacroCommandsModel::exportMacro()
@@ -227,9 +235,7 @@ void MacroCommandsModel::exportMacro()
 
 void MacroCommandsModel::deleteMacro()
 {
-    if (m_actions.remove(m_macro.name)) {
-        emit macroDeleted();
-    }
+    m_actions.remove(m_macro.name);
 }
 
 bool MacroCommandsModel::isRowValid(int row) const
@@ -265,6 +271,33 @@ void MacroCommandsModel::notifyStepsChanged(int fromRow, int toRow)
     emit dataChanged(index(fromRow), index(toRow), { StepRole });
 }
 
+void MacroCommandsModel::syncFromRepository()
+{
+    std::optional<Macro> macro = repository()->macro(*m_macroId);
+    if (!macro) {
+        emit macroDeleted();
+        return;
+    }
+
+    const bool renamed = macro->name != m_macro.name;
+
+    if (macro->steps.size() == m_macro.steps.size()) {
+        m_macro = std::move(*macro);
+        if (rowCount() > 0) {
+            emit dataChanged(index(0), index(rowCount() - 1));
+        }
+    } else {
+        beginResetModel();
+        m_macro = std::move(*macro);
+        endResetModel();
+        emit isEmptyChanged();
+    }
+
+    if (renamed) {
+        emit nameChanged();
+    }
+}
+
 void MacroCommandsModel::insertStep(int row, const MacroItem& item)
 {
     row = std::clamp(row, 0, rowCount());
@@ -295,7 +328,10 @@ void MacroCommandsModel::setStepParams(int row, const Params& params)
 
 void MacroCommandsModel::persist()
 {
+    m_saving = true;
     const Ret ret = repository()->save(m_macro);
+    m_saving = false;
+
     if (!ret) {
         interactive()->error(trc("macromanager", "The macro could not be saved"), ret.text());
     }
