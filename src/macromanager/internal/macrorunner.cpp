@@ -3,7 +3,11 @@
 */
 #include "macrorunner.h"
 
+#include <algorithm>
 #include <chrono>
+#include <iterator>
+
+#include <QStringList>
 
 #include "framework/global/translation.h"
 #include "framework/global/io/path.h"
@@ -27,6 +31,16 @@ async::Promise<Ret> resolved(const Ret& ret)
         return resolve(ret);
     });
 }
+}
+
+Ret MacroRunner::validate(const Macro& macro) const
+{
+    const Ret references = repository()->validateReferences(macro);
+    if (!references) {
+        return references;
+    }
+
+    return validateStepsExist(macro);
 }
 
 async::Promise<Ret> MacroRunner::run(const Macro& macro)
@@ -103,7 +117,7 @@ Ret MacroRunner::begin(const Macro& macro)
         return make_ret(Ret::Code::NotSupported, "no project is open");
     }
 
-    const Ret valid = repository()->validateReferences(macro);
+    const Ret valid = validate(macro);
     if (!valid) {
         showError(valid, macro.name);
         return valid;
@@ -117,6 +131,56 @@ Ret MacroRunner::begin(const Macro& macro)
     m_isRunningChanged.notify();
 
     return make_ok();
+}
+
+Ret MacroRunner::validateStepsExist(const Macro& macro) const
+{
+    std::vector<MissingStep> missing;
+    collectMissingSteps(macro, missing);
+
+    if (missing.empty()) {
+        return make_ok();
+    }
+
+    QStringList lines;
+    std::ranges::transform(missing, std::back_inserter(lines), [](const MissingStep& step) {
+        return qtrc("macromanager", "Step %1 of “%2”: %3")
+               .arg(step.stepNumber)
+               .arg(QString::fromStdString(step.macroName), step.item);
+    });
+
+    const QString message = qtrc("macromanager", "The macro uses steps that do not exist:\n%1").arg(lines.join("\n"));
+    return make_ret(Ret::Code::NotSupported, message.toStdString());
+}
+
+void MacroRunner::collectMissingSteps(const Macro& macro, std::vector<MissingStep>& missing) const
+{
+    const auto addMissing = [&missing](MissingStep step) {
+        if (std::ranges::find(missing, step) == missing.end()) {
+            missing.push_back(std::move(step));
+        }
+    };
+
+    for (size_t index = 0; index < macro.steps.size(); ++index) {
+        const MacroItem& item = macro.steps.at(index);
+
+        if (const MacroStep* step = std::get_if<MacroStep>(&item)) {
+            if (!commandsRegister()->commandInfo(step->command).isValid()) {
+                addMissing({ macro.name, index + 1, QString::fromStdString(step->command.toString()) });
+            }
+            continue;
+        }
+
+        const std::string& name = std::get<MacroReference>(item).name;
+        const std::optional<Macro> referenced = repository()->macro(name);
+        if (!referenced) {
+            const QString reference = qtrc("macromanager", "macro “%1”").arg(QString::fromStdString(name));
+            addMissing({ macro.name, index + 1, reference });
+            continue;
+        }
+
+        collectMissingSteps(*referenced, missing);
+    }
 }
 
 void MacroRunner::finish(const Macro& macro, const Ret& ret)

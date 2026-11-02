@@ -21,6 +21,7 @@ class IMacroRunner : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IMacroRunner() = default;
 
+    virtual muse::Ret validate(const Macro& macro) const = 0;
     virtual muse::async::Promise<muse::Ret> run(const Macro& macro) = 0;
     virtual muse::async::Promise<muse::Ret> runOnFiles(const Macro& macro, const muse::io::paths_t& files) = 0;
     virtual void abort() = 0;
