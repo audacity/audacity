@@ -10747,7 +10747,7 @@ Selecione uma área para reparar que tenha áudio em pelo menos um dos lados (qu
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="111"/>
         <source>Reverb</source>
-        <translation>Reverb</translation>
+        <translation>Reverberar</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="120"/>
@@ -11360,7 +11360,7 @@ Selecione uma área para reparar que tenha áudio em pelo menos um dos lados (qu
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="13"/>
         <source>Reverb</source>
-        <translation>Reverb</translation>
+        <translation>Reverberar</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="269"/>
