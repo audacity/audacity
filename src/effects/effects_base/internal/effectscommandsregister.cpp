@@ -144,13 +144,16 @@ void EffectsCommandsRegister::reload()
 
     for (const EffectMeta& meta : effects) {
         const muse::String title = utils::effectDisplayTitle(meta);
+        const Availabilities availabilities = meta.isLoadable() && meta.isActivated ? Availabilities(Availability::All)
+                                              : Availabilities(Availability::Dispatch);
 
         m_commandInfos.push_back(CommandInfo {
             makeEffectOpenCommand(meta.id),
             TranslatableString::untranslatable(title),
             TranslatableString::untranslatable(meta.description),
             InputSchema(),
-            Decoration()
+            Decoration(),
+            availabilities
         });
 
         m_commandInfos.push_back(CommandInfo {
@@ -160,7 +163,8 @@ void EffectsCommandsRegister::reload()
             //: Command description: shown as a tooltip; can be a full sentence. %1 is the effect name
             TranslatableString("command_description", "Apply %1 with the given parameters").arg(title),
             InputSchema(),
-            Decoration()
+            Decoration(),
+            availabilities
         });
 
         m_commandInfos.push_back(CommandInfo {
