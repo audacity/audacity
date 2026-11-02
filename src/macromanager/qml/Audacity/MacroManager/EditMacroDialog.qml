@@ -25,6 +25,7 @@ StyledDialogView {
     resizable: true
     margins: 0
     modal: false
+    alwaysAboveApp: true
     closeOnEscape: !commandsTable.currentEditedItem
 
     QtObject {

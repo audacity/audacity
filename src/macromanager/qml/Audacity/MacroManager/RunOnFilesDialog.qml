@@ -26,6 +26,7 @@ StyledDialogView {
     resizable: true
     margins: 0
     modal: false
+    alwaysAboveApp: true
 
     QtObject {
         id: prv
