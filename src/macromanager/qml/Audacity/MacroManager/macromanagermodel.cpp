@@ -220,5 +220,10 @@ void MacroManagerModel::openEditor(const std::string& name)
     UriQuery uri(EDIT_MACRO_URI);
     uri.addParam("macroName", Val(name));
 
+    if (interactive()->isOpened(uri).val) {
+        interactive()->raise(uri);
+        return;
+    }
+
     interactive()->open(uri);
 }
