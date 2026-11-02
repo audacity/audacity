@@ -4,10 +4,13 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <QFile>
 #include <QTemporaryDir>
 
 #include "global/modularity/ioc.h"
+#include "global/iapplication.h"
 #include "global/iglobalconfiguration.h"
+#include "global/tests/mocks/applicationmock.h"
 #include "global/tests/mocks/globalconfigurationmock.h"
 
 #include "macromanager/internal/macrosrepository.h"
@@ -31,8 +34,13 @@ protected:
         ON_CALL(*m_globalConfiguration, userAppDataPath()).WillByDefault(Return(io::path_t(m_directory.path())));
         ON_CALL(*m_globalConfiguration, appDataPath()).WillByDefault(Return(io::path_t(m_directory.path())));
 
+        m_application = std::make_shared<NiceMock<ApplicationMock> >();
+        ON_CALL(*m_application, fullVersion()).WillByDefault(Return(Version(4, 1, 0)));
+
         modularity::globalIoc()->unregister<IGlobalConfiguration>(MODULE);
         modularity::globalIoc()->registerExport<IGlobalConfiguration>(MODULE, m_globalConfiguration);
+        modularity::globalIoc()->unregister<IApplication>(MODULE);
+        modularity::globalIoc()->registerExport<IApplication>(MODULE, m_application);
 
         m_repository = makeRepository();
     }
@@ -40,6 +48,7 @@ protected:
     void TearDown() override
     {
         modularity::globalIoc()->unregister<IGlobalConfiguration>(MODULE);
+        modularity::globalIoc()->unregister<IApplication>(MODULE);
     }
 
     static std::shared_ptr<MacrosRepository> makeRepository()
@@ -60,6 +69,7 @@ protected:
 
     QTemporaryDir m_directory;
     std::shared_ptr<GlobalConfigurationMock> m_globalConfiguration;
+    std::shared_ptr<ApplicationMock> m_application;
     std::shared_ptr<MacrosRepository> m_repository;
 };
 
@@ -156,4 +166,35 @@ TEST_F(MacroManager_MacrosRepositoryTests, DependentMacrosFollowsReferencesTrans
     EXPECT_THAT(m_repository->dependentMacros("child"), ::testing::UnorderedElementsAre("parent", "grandparent"));
     EXPECT_THAT(m_repository->dependentMacros("parent"), ::testing::ElementsAre("grandparent"));
     EXPECT_THAT(m_repository->dependentMacros("unrelated"), ::testing::IsEmpty());
+}
+
+TEST_F(MacroManager_MacrosRepositoryTests, SaveWritesAumacroFile)
+{
+    ASSERT_TRUE(m_repository->save(Macro { "my macro", {} }));
+
+    EXPECT_TRUE(QFile::exists(m_directory.filePath("macros/my_macro.aumacro")));
+}
+
+TEST_F(MacroManager_MacrosRepositoryTests, SaveStampsMetadataOnNewMacro)
+{
+    ASSERT_TRUE(m_repository->save(Macro { "my macro", {} }));
+
+    const std::optional<Macro> macro = makeRepository()->macro("my macro");
+    ASSERT_TRUE(macro);
+    ASSERT_TRUE(macro->metadata);
+    EXPECT_EQ(macro->metadata->created, macro->metadata->edited);
+    EXPECT_EQ(macro->metadata->audacityVersion, "4.1.0");
+}
+
+TEST_F(MacroManager_MacrosRepositoryTests, SaveKeepsCreatedAndUpdatesEdited)
+{
+    const DateTime created(Date(2020, 1, 2), Time(3, 4, 5));
+    ASSERT_TRUE(m_repository->save(Macro { "my macro", {}, MacroMetadata { created, created, "4.0.0" } }));
+
+    const std::optional<Macro> macro = makeRepository()->macro("my macro");
+    ASSERT_TRUE(macro);
+    ASSERT_TRUE(macro->metadata);
+    EXPECT_EQ(macro->metadata->created, created);
+    EXPECT_NE(macro->metadata->edited, created);
+    EXPECT_EQ(macro->metadata->audacityVersion, "4.1.0");
 }

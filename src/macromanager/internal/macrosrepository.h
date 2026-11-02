@@ -6,6 +6,7 @@
 #include <map>
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/iapplication.h"
 #include "framework/global/iglobalconfiguration.h"
 #include "framework/global/io/ifilesystem.h"
 
@@ -14,6 +15,7 @@
 namespace au::macromanager {
 class MacrosRepository : public IMacrosRepository
 {
+    muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
@@ -38,6 +40,8 @@ public:
     muse::async::Notification macrosChanged() const override;
 
 private:
+    Macro edited(Macro macro) const;
+
     muse::io::path_t userMacrosPath() const;
     std::optional<muse::io::path_t> userMacroFilePath(const std::string& name) const;
     muse::io::path_t newUserMacroFilePath(const std::string& name) const;

@@ -318,7 +318,7 @@ void MacroCommandsModel::requestEffectParams(const Command& command, const Param
             return;
         }
 
-        onParams(response.val<Params>());
+        onParams(response.result);
     });
 }
 

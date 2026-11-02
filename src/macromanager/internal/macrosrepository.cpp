@@ -20,7 +20,7 @@ using namespace muse;
 
 namespace {
 const std::string MACROS_DIR("macros");
-const std::string MACRO_FILE_SUFFIX(".json");
+const std::string MACRO_FILE_SUFFIX(".aumacro");
 
 bool references(const Macro& macro, const std::string& name)
 {
@@ -135,7 +135,7 @@ Ret MacrosRepository::save(const Macro& macro)
     }
 
     const io::path_t path = userMacroFilePath(macro.name).value_or(newUserMacroFilePath(macro.name));
-    const Ret ret = writeMacroFile(macro, path);
+    const Ret ret = writeMacroFile(edited(macro), path);
     if (!ret) {
         LOGE() << "failed to save macro " << macro.name << ": " << ret.toString();
         return ret;
@@ -169,7 +169,7 @@ Ret MacrosRepository::remove(const std::string& name)
             return reference && reference->name == name;
         });
 
-        ret = writeMacroFile(updated, m_userMacroFiles.at(referencingName));
+        ret = writeMacroFile(edited(updated), m_userMacroFiles.at(referencingName));
     }
 
     reload();
@@ -196,7 +196,7 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
     Macro renamed = *existing;
     renamed.name = newName;
 
-    Ret ret = writeMacroFile(renamed, m_userMacroFiles.at(oldName));
+    Ret ret = writeMacroFile(edited(renamed), m_userMacroFiles.at(oldName));
 
     for (const Macro& dependent : m_macros) {
         if (!ret) {
@@ -215,7 +215,7 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
             }
         }
 
-        ret = writeMacroFile(updated, m_userMacroFiles.at(updated.name));
+        ret = writeMacroFile(edited(updated), m_userMacroFiles.at(updated.name));
     }
 
     reload();
@@ -227,6 +227,18 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
 async::Notification MacrosRepository::macrosChanged() const
 {
     return m_macrosChanged;
+}
+
+Macro MacrosRepository::edited(Macro macro) const
+{
+    const DateTime now = DateTime::currentDateTime();
+    macro.metadata = MacroMetadata {
+        macro.metadata ? macro.metadata->created : now,
+        now,
+        application()->fullVersion().toString().toStdString()
+    };
+
+    return macro;
 }
 
 io::path_t MacrosRepository::userMacrosPath() const
