@@ -49,6 +49,7 @@ public:
 
     std::chrono::system_clock::time_point startTime() const override;
     std::chrono::system_clock::time_point endTime() const override;
+    std::chrono::system_clock::time_point quitTime() const override;
 
     void requestStop() override;
 
@@ -57,6 +58,7 @@ private:
         muse::io::path_t saveProjectPath;
         muse::io::path_t exportAudioPath;
         std::string exportFormat;
+        bool quitAudacity = false;
     };
 
     enum class Outcome {
@@ -76,7 +78,10 @@ private:
     void finish(Outcome outcome);
     void scheduleCompletionActions();
     void runCompletionActions(const project::IAudacityProjectPtr& project, const CompletionActions& actions);
-    void exportAudio(const project::IAudacityProjectPtr& project, const muse::io::path_t& path, const std::string& format);
+    bool exportAudio(const project::IAudacityProjectPtr& project, const muse::io::path_t& path, const std::string& format);
+    void beginQuitCountdown();
+    void quitAudacity();
+    void cancelQuit();
     void setState(State state);
 
     State m_state = State::Idle;
@@ -88,6 +93,7 @@ private:
     bool m_completionActionsPending = false;
     TimedRecordingSchedule::TimePoint m_startTime;
     TimedRecordingSchedule::TimePoint m_endTime;
+    TimedRecordingSchedule::TimePoint m_quitTime;
 
     bool m_stopConfirmationOpen = false;
 

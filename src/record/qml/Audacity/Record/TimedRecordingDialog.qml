@@ -389,6 +389,18 @@ StyledDialogView {
                         setupModel.browseExportAudioPath()
                     }
                 }
+
+                SeparatorLine {}
+
+                CheckBox {
+                    text: qsTrc("record", "Quit Audacity")
+                    enabled: setupModel.saveProjectEnabled || setupModel.exportAudioEnabled
+                    checked: setupModel.quitAudacityEnabled
+
+                    onClicked: {
+                        setupModel.quitAudacityEnabled = !checked
+                    }
+                }
             }
         }
 

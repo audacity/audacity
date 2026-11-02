@@ -44,6 +44,7 @@ public:
     virtual bool isFileSupported(const muse::io::path_t& path) const = 0;
     virtual muse::Ret openProject(const ProjectFile& file) = 0;
     virtual bool closeOpenedProject(bool quitApp = false) = 0;
+    virtual bool quitDiscardingUnsavedChanges() = 0;
     virtual bool saveProject(const muse::io::path_t& path = muse::io::path_t()) = 0;
     virtual bool saveProjectLocally(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;
     virtual muse::Ret saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode = CloudSaveMode::NormalUpdate,

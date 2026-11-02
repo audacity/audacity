@@ -76,6 +76,7 @@ StyledDialogView {
             StyledTextLabel {
                 Layout.fillWidth: true
 
+                visible: !progressModel.isQuitting
                 horizontalAlignment: Text.AlignHCenter
                 text: progressModel.startText
             }
@@ -83,6 +84,7 @@ StyledDialogView {
             StyledTextLabel {
                 Layout.fillWidth: true
 
+                visible: !progressModel.isQuitting
                 horizontalAlignment: Text.AlignHCenter
                 text: progressModel.endText
             }
@@ -98,7 +100,7 @@ StyledDialogView {
             navigationPanel.order: 1
 
             FlatButton {
-                text: qsTrc("record", "Stop")
+                text: progressModel.isQuitting ? qsTrc("global", "Cancel") : qsTrc("record", "Stop")
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.CustomButton
                 accentButton: true

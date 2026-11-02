@@ -45,6 +45,8 @@ class TimedRecordingSetupModel : public QObject, public muse::Contextable
     Q_PROPERTY(bool exportAudioEnabled READ exportAudioEnabled WRITE setExportAudioEnabled NOTIFY scheduleChanged FINAL)
     Q_PROPERTY(QString exportAudioPath READ exportAudioPath WRITE setExportAudioPath NOTIFY scheduleChanged FINAL)
 
+    Q_PROPERTY(bool quitAudacityEnabled READ quitAudacityEnabled WRITE setQuitAudacityEnabled NOTIFY scheduleChanged FINAL)
+
     Q_PROPERTY(QString summary READ summary NOTIFY summaryChanged FINAL)
     Q_PROPERTY(bool canStart READ canStart NOTIFY summaryChanged FINAL)
 
@@ -90,6 +92,9 @@ public:
     QString exportAudioPath() const;
     void setExportAudioPath(const QString& path);
 
+    bool quitAudacityEnabled() const;
+    void setQuitAudacityEnabled(bool enabled);
+
     QString dateFormat() const;
     int durationFormat() const;
 
@@ -125,6 +130,8 @@ private:
 
     bool m_exportAudioEnabled = false;
     QString m_exportAudioPath;
+
+    bool m_quitAudacityEnabled = false;
 
     QString m_dateFormat;
     QString m_summary;

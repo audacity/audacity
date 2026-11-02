@@ -20,6 +20,7 @@ const UriQuery SETUP_DIALOG_URI("audacity://record/timedrecording");
 const UriQuery PROGRESS_DIALOG_URI("audacity://record/timedrecording/progress");
 
 constexpr int TICK_INTERVAL_MS = 100;
+constexpr std::chrono::seconds QUIT_COUNTDOWN(60);
 
 using TimePoint = TimedRecordingSchedule::TimePoint;
 
@@ -64,7 +65,9 @@ void TimedRecordingController::init()
     });
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
-        if (m_state != State::Idle) {
+        if (m_state == State::Quitting) {
+            cancelQuit();
+        } else if (m_state != State::Idle) {
             stopRecording(Outcome::Stopped);
         }
     });
@@ -90,6 +93,11 @@ std::chrono::system_clock::time_point TimedRecordingController::endTime() const
     return m_endTime;
 }
 
+std::chrono::system_clock::time_point TimedRecordingController::quitTime() const
+{
+    return m_quitTime;
+}
+
 void TimedRecordingController::requestStop()
 {
     switch (m_state) {
@@ -100,6 +108,9 @@ void TimedRecordingController::requestStop()
         return;
     case State::Recording:
         confirmStop();
+        return;
+    case State::Quitting:
+        cancelQuit();
         return;
     }
 }
@@ -119,6 +130,7 @@ Ret TimedRecordingController::openSetupDialog()
     m_completionActions.saveProjectPath = data.value("saveProjectPath").toString();
     m_completionActions.exportAudioPath = data.value("exportAudioPath").toString();
     m_completionActions.exportFormat = data.value("exportFormat").toString().toStdString();
+    m_completionActions.quitAudacity = data.value("quitAudacity").toBool();
 
     if (!m_completionActions.exportAudioPath.empty()) {
         exportConfiguration()->setDirectoryPath(io::dirpath(m_completionActions.exportAudioPath));
@@ -164,6 +176,8 @@ void TimedRecordingController::onTick()
         startRecording();
     } else if (m_state == State::Recording && tickedAt >= m_endTime) {
         stopRecording(Outcome::Completed);
+    } else if (m_state == State::Quitting && tickedAt >= m_quitTime) {
+        quitAudacity();
     }
 }
 
@@ -296,20 +310,27 @@ void TimedRecordingController::runCompletionActions(const project::IAudacityProj
         return;
     }
 
+    bool succeeded = true;
+
     if (!actions.saveProjectPath.empty()) {
         if (projectFilesController()->saveProject(actions.saveProjectPath)) {
             toastService()->show(muse::trc("record", "Project saved"), actions.saveProjectPath.toStdString(), ui::IconCode::Code::SAVE);
         } else {
             toastService()->showError(muse::trc("record", "Couldn't save the project"), actions.saveProjectPath.toStdString());
+            succeeded = false;
         }
     }
 
-    if (!actions.exportAudioPath.empty()) {
-        exportAudio(project, actions.exportAudioPath, actions.exportFormat);
+    if (!actions.exportAudioPath.empty() && !exportAudio(project, actions.exportAudioPath, actions.exportFormat)) {
+        succeeded = false;
+    }
+
+    if (actions.quitAudacity && succeeded) {
+        beginQuitCountdown();
     }
 }
 
-void TimedRecordingController::exportAudio(const project::IAudacityProjectPtr& project, const muse::io::path_t& path,
+bool TimedRecordingController::exportAudio(const project::IAudacityProjectPtr& project, const muse::io::path_t& path,
                                            const std::string& format)
 {
     importexport::IExporter::Options options;
@@ -319,10 +340,41 @@ void TimedRecordingController::exportAudio(const project::IAudacityProjectPtr& p
     const Ret ret = exporter()->exportData(path, options, nullptr, project);
     if (!ret) {
         toastService()->showError(muse::trc("record", "Couldn't export the audio"), ret.text().empty() ? path.toStdString() : ret.text());
-        return;
+        return false;
     }
 
     toastService()->show(muse::trc("record", "Audio exported"), path.toStdString(), ui::IconCode::Code::SHARE_FILE);
+    return true;
+}
+
+void TimedRecordingController::beginQuitCountdown()
+{
+    if (m_state != State::Idle) {
+        return;
+    }
+
+    m_quitTime = now() + QUIT_COUNTDOWN;
+
+    setState(State::Quitting);
+    openProgressDialog();
+    m_ticker.start();
+}
+
+void TimedRecordingController::quitAudacity()
+{
+    m_ticker.stop();
+    setState(State::Idle);
+
+    interactive()->close(PROGRESS_DIALOG_URI).onResolve(this, [this](const Ret&) {
+        projectFilesController()->quitDiscardingUnsavedChanges();
+    });
+}
+
+void TimedRecordingController::cancelQuit()
+{
+    m_ticker.stop();
+    setState(State::Idle);
+    interactive()->close(PROGRESS_DIALOG_URI);
 }
 
 void TimedRecordingController::setState(State state)

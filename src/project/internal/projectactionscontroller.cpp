@@ -712,6 +712,21 @@ muse::Ret ProjectActionsController::closeProject()
 
 bool ProjectActionsController::closeOpenedProject(const bool quitApp)
 {
+    return doCloseOpenedProject(quitApp, false);
+}
+
+bool ProjectActionsController::quitDiscardingUnsavedChanges()
+{
+    if (!doCloseOpenedProject(false, true)) {
+        return false;
+    }
+
+    commandDispatcher()->dispatch(appshell::APP_QUIT_COMMAND);
+    return true;
+}
+
+bool ProjectActionsController::doCloseOpenedProject(const bool quitApp, const bool discardUnsavedChanges)
+{
     if (m_isProjectClosing) {
         return false;
     }
@@ -726,7 +741,7 @@ bool ProjectActionsController::closeOpenedProject(const bool quitApp)
         return true;
     }
 
-    if (project->hasUnsavedChanges()) {
+    if (!discardUnsavedChanges && project->hasUnsavedChanges()) {
         const IInteractive::Button btn = askAboutSavingProject(project);
 
         if (btn == IInteractive::Button::Cancel) {

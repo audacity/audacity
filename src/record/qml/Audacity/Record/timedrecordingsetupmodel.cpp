@@ -121,6 +121,8 @@ QVariantMap TimedRecordingSetupModel::scheduleData() const
         data["exportFormat"] = QString::fromStdString(exportFormat());
     }
 
+    data["quitAudacity"] = quitAudacityEnabled();
+
     return data;
 }
 
@@ -305,6 +307,16 @@ QString TimedRecordingSetupModel::exportAudioPath() const
 void TimedRecordingSetupModel::setExportAudioPath(const QString& path)
 {
     set(m_exportAudioPath, path);
+}
+
+bool TimedRecordingSetupModel::quitAudacityEnabled() const
+{
+    return m_quitAudacityEnabled && (m_saveProjectEnabled || m_exportAudioEnabled);
+}
+
+void TimedRecordingSetupModel::setQuitAudacityEnabled(bool enabled)
+{
+    set(m_quitAudacityEnabled, enabled);
 }
 
 QString TimedRecordingSetupModel::dateFormat() const

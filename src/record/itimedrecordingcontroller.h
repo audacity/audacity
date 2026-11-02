@@ -17,7 +17,8 @@ public:
     enum class State {
         Idle,
         Waiting,
-        Recording
+        Recording,
+        Quitting
     };
 
     virtual ~ITimedRecordingController() = default;
@@ -27,6 +28,7 @@ public:
 
     virtual std::chrono::system_clock::time_point startTime() const = 0;
     virtual std::chrono::system_clock::time_point endTime() const = 0;
+    virtual std::chrono::system_clock::time_point quitTime() const = 0;
 
     virtual void requestStop() = 0;
 };

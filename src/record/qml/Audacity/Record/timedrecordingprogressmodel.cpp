@@ -52,6 +52,11 @@ bool TimedRecordingProgressModel::isRecording() const
     return m_isRecording;
 }
 
+bool TimedRecordingProgressModel::isQuitting() const
+{
+    return m_isQuitting;
+}
+
 QString TimedRecordingProgressModel::statusText() const
 {
     return m_statusText;
@@ -77,12 +82,19 @@ void TimedRecordingProgressModel::update()
     const QDateTime now = QDateTime::currentDateTime();
     const QDateTime start = TimedRecordingViewFormatter::toDateTime(controller()->startTime());
     const QDateTime end = TimedRecordingViewFormatter::toDateTime(controller()->endTime());
-    const bool isRecording = controller()->state() == ITimedRecordingController::State::Recording;
+    const ITimedRecordingController::State state = controller()->state();
+    const bool isRecording = state == ITimedRecordingController::State::Recording;
+    const bool isQuitting = state == ITimedRecordingController::State::Quitting;
 
     QString statusText;
     QString clockText;
     QString startText;
-    if (isRecording) {
+    if (isQuitting) {
+        const qint64 secondsToQuit = secondsUntil(now, TimedRecordingViewFormatter::toDateTime(controller()->quitTime()));
+        //: %1 is the time left until Audacity quits, e.g. "59s"
+        statusText = muse::qtrc("record", "Audacity will quit in %1").arg(TimedRecordingViewFormatter::duration(secondsToQuit));
+        clockText = TimedRecordingViewFormatter::clock(secondsToQuit);
+    } else if (isRecording) {
         //: %1 is the time left until the timed recording ends, e.g. "59m 50s"
         statusText = muse::qtrc("record", "Recording ends in %1").arg(TimedRecordingViewFormatter::duration(secondsUntil(now, end)));
         clockText = TimedRecordingViewFormatter::clock(start.secsTo(now));
@@ -99,12 +111,13 @@ void TimedRecordingProgressModel::update()
     //: %1 is a date and a time, e.g. "Sat 24 Oct 2026 at 13:23:30"
     const QString endText = muse::qtrc("record", "Ends: %1").arg(TimedRecordingViewFormatter::dateTime(end));
 
-    if (isRecording == m_isRecording && statusText == m_statusText && clockText == m_clockText && startText == m_startText
-        && endText == m_endText) {
+    if (isRecording == m_isRecording && isQuitting == m_isQuitting && statusText == m_statusText && clockText == m_clockText
+        && startText == m_startText && endText == m_endText) {
         return;
     }
 
     m_isRecording = isRecording;
+    m_isQuitting = isQuitting;
     m_statusText = statusText;
     m_clockText = clockText;
     m_startText = startText;
