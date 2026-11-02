@@ -1,6 +1,28 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
-# Audacity 4.0.1 release notes
+# Changes in version 4.0.2
+
+This is a patch release. It contains the following changes:
+
+- #12544 Fixed project corruption when loading projects that contain empty clips.
+- #12123 Fixed duplicate .aup4 extensions and errors when replacing projects during Save As.
+- #12436 Fixed project corruption when copying between projects.
+- #12436 Fixed incorrect pitch and clip loss when moving clips across tracks with different sample rates.
+- #12569 Fixed a crash when opening projects with sample snapping enabled.
+- #12573 Fixed a crash when selecting Repeat Last Effect after closing a project.
+- #12595 Fixed a crash when the Split shortcut is not set.
+- #12515 Fixed missing metadata in certain file formats, and incorrect title and artist fields.
+- #12539 Restored automatic saving during recording.
+- #12570 Restored trim, clear selection and zoom shortcuts. Added PgUp and PgDown timeline scrolling.
+- #12292 Fixed NTSC frame snapping.
+- #12181 Fixed point labels linking to adjacent labels and guidelines during label stretching
+- #12205 Fixed context menu access on collapsed clips.
+- #12431 Improved playback latency from input meter display.
+- #12151 Improved the status bar layout in narrow windows.
+- muse_framework#365 Linux: Fixed File > Import returning no files. (Thanks, @jonata!)
+- muse_framework#357 Fixed incorrect handling of CJK characters during text trimming. (Thanks, @xphenomenon!)
+
+# Changes in version 4.0.1
 
 Many of these fixes come from community contributors. Thank you all!
 
