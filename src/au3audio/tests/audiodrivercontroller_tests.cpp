@@ -13,7 +13,8 @@
 #include "audio/iaudiostreamsuspender.h"
 #include "mocks/audioenginemock.h"
 
-#include "../internal/au3audiodrivercontroller.h"
+#include "../internal/audiodrivercontroller.h"
+#include "../internal/portaudiodevices.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -53,7 +54,7 @@ private:
 };
 }
 
-class Au3AudioDriverControllerTests : public ::testing::Test
+class AudioDriverControllerTests : public ::testing::Test
 {
 public:
     void SetUp() override
@@ -110,7 +111,7 @@ public:
         m_controller.m_applying = applying;
     }
 
-    Au3AudioDriverController m_controller;
+    AudioDriverController m_controller { std::make_unique<PortAudioDevices>(), "AudioIO" };
     std::shared_ptr<NiceMock<audio::AudioEngineMock> > m_audioEngine;
     std::shared_ptr<NiceMock<muse::ApplicationMock> > m_application;
     muse::modularity::ContextPtr m_ownerContext;
@@ -127,7 +128,7 @@ public:
     int m_requesterProjectStorage = 0;
 };
 
-TEST_F(Au3AudioDriverControllerTests, Apply_DerivesStreamOwnerInsteadOfTrustingRequester)
+TEST_F(AudioDriverControllerTests, Apply_DerivesStreamOwnerInsteadOfTrustingRequester)
 {
     ON_CALL(*m_audioEngine, currentStream()).WillByDefault(Return(stream()));
     audio::AudioConfigurationChange change;
@@ -141,7 +142,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_DerivesStreamOwnerInsteadOfTrustingR
     EXPECT_EQ(m_requesterSuspension.suspendCalls, 0);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_MultipleFieldsUseOneSuspension)
+TEST_F(AudioDriverControllerTests, Apply_MultipleFieldsUseOneSuspension)
 {
     ON_CALL(*m_audioEngine, currentStream()).WillByDefault(Return(stream()));
     audio::AudioConfigurationChange change;
@@ -155,7 +156,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_MultipleFieldsUseOneSuspension)
     EXPECT_EQ(m_ownerSuspension.restoreCalls, 1);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_CustomSampleRateIsValidAndDoesNotReopenPlayback)
+TEST_F(AudioDriverControllerTests, Apply_CustomSampleRateIsValidAndDoesNotReopenPlayback)
 {
     ON_CALL(*m_audioEngine, currentStream()).WillByDefault(Return(stream()));
     audio::AudioConfigurationChange change;
@@ -168,7 +169,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_CustomSampleRateIsValidAndDoesNotReo
     EXPECT_EQ(m_ownerSuspension.suspendCalls, 0);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_RequesterScopedChangeDoesNotSuspendAnotherContextsStream)
+TEST_F(AudioDriverControllerTests, Apply_RequesterScopedChangeDoesNotSuspendAnotherContextsStream)
 {
     ON_CALL(*m_audioEngine, currentStream())
     .WillByDefault(Return(stream(audio::AudioStreamKind::Recording)));
@@ -181,7 +182,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_RequesterScopedChangeDoesNotSuspendA
     EXPECT_EQ(m_ownerSuspension.suspendCalls, 0);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_OrphanStreamIsForceStoppedInsteadOfWedgingSettings)
+TEST_F(AudioDriverControllerTests, Apply_OrphanStreamIsForceStoppedInsteadOfWedgingSettings)
 {
     auto orphan = stream();
     orphan.ownerProject = reinterpret_cast<AudacityProject*>(0x1234);
@@ -199,7 +200,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_OrphanStreamIsForceStoppedInsteadOfW
     EXPECT_EQ(m_ownerSuspension.suspendCalls, 0);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_OrphanStreamThatSurvivesStopFailsBeforeWritingSettings)
+TEST_F(AudioDriverControllerTests, Apply_OrphanStreamThatSurvivesStopFailsBeforeWritingSettings)
 {
     auto orphan = stream();
     orphan.ownerProject = reinterpret_cast<AudacityProject*>(0x1234);
@@ -213,7 +214,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_OrphanStreamThatSurvivesStopFailsBef
     EXPECT_EQ(m_controller.configuration().bufferLength, 100.0);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_RestoreFailureLeavesAppliedConfigurationAndReportsIt)
+TEST_F(AudioDriverControllerTests, Apply_RestoreFailureLeavesAppliedConfigurationAndReportsIt)
 {
     m_ownerSuspension.restoreResult = false;
     ON_CALL(*m_audioEngine, currentStream()).WillByDefault(Return(stream()));
@@ -228,7 +229,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_RestoreFailureLeavesAppliedConfigura
     EXPECT_EQ(m_controller.configuration().bufferLength, 50.0);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_RecordingIsSuspendedButNeverRestoredAsRecording)
+TEST_F(AudioDriverControllerTests, Apply_RecordingIsSuspendedButNeverRestoredAsRecording)
 {
     ON_CALL(*m_audioEngine, currentStream())
     .WillByDefault(Return(stream(audio::AudioStreamKind::Recording)));
@@ -242,7 +243,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_RecordingIsSuspendedButNeverRestored
     EXPECT_EQ(m_ownerSuspension.lastKind, audio::AudioStreamKind::Recording);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_SuspensionExceptionIsContainedAndDoesNotChangeConfiguration)
+TEST_F(AudioDriverControllerTests, Apply_SuspensionExceptionIsContainedAndDoesNotChangeConfiguration)
 {
     m_ownerSuspender->throwOnSuspend = true;
     ON_CALL(*m_audioEngine, currentStream()).WillByDefault(Return(stream()));
@@ -255,7 +256,7 @@ TEST_F(Au3AudioDriverControllerTests, Apply_SuspensionExceptionIsContainedAndDoe
     EXPECT_EQ(m_controller.configuration().bufferLength, 100.0);
 }
 
-TEST_F(Au3AudioDriverControllerTests, Apply_ReentrantRequestIsRejectedWithoutChangingConfiguration)
+TEST_F(AudioDriverControllerTests, Apply_ReentrantRequestIsRejectedWithoutChangingConfiguration)
 {
     setApplying(true);
     audio::AudioConfigurationChange change;

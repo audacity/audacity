@@ -15,8 +15,11 @@ set(MODULE_SRC
     # AU3
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioengine.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodrivercontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodrivercontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiodrivercontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiodrivercontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/iaudiodevices.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/portaudiodevices.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/portaudiodevices.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioiolistener.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiometer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiometer.h
