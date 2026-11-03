@@ -3,26 +3,41 @@
 */
 #pragma once
 
+#include <memory>
 #include <optional>
+#include <string>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/iapplication.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/settings.h"
 
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "audio/iaudioengine.h"
 #include "audio/iaudiostreamsuspender.h"
 #include "au3audio/isystemaudiodeviceslistener.h"
 
+#include "iaudiodevices.h"
+
 namespace au::au3audio {
-class Au3AudioDriverController final : public audio::IAudioDriverController, public muse::async::Asyncable
+//! The device configuration of an audio backend: the backend-specific parts are its IAudioDevices and its IAudioEngine.
+class AudioDriverController final : public audio::IAudioDriverController, public muse::async::Asyncable
 {
+    //! The engine of this backend; set it, as the global one forwards to whichever backend is active.
     muse::GlobalInject<audio::IAudioEngine> audioEngine;
     muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<ISystemAudioDevicesListener> systemAudioDevicesListener;
 
 public:
+    //! @param settingsGroup prefix of this backend's settings keys
+    AudioDriverController(std::unique_ptr<IAudioDevices> devices, const std::string& settingsGroup);
+
+    void setAudioEngine(const std::shared_ptr<audio::IAudioEngine>& engine) { audioEngine.set(engine); }
+
     void init();
+
+    //! Settings shared by all backends: the defaults for new projects
+    static void initSharedDefaults(uint64_t defaultSampleRate);
 
     audio::AudioConfiguration configuration() const override;
     muse::async::Channel<audio::AudioConfigurationDelta> configurationChanged() const override;
@@ -49,7 +64,22 @@ public:
     muse::async::Channel<std::string> usedInputDeviceChanged() const override;
 
 private:
-    friend class Au3AudioDriverControllerTests;
+    friend class AudioDriverControllerTests;
+
+    struct SettingsKeys {
+        explicit SettingsKeys(const std::string& group);
+        const muse::Settings::Key audioHost;
+        const muse::Settings::Key playbackDevice;
+        const muse::Settings::Key recordingDevice;
+        const muse::Settings::Key inputChannels;
+        const muse::Settings::Key automaticLatencyCompensation;
+        const muse::Settings::Key latencyDuration;
+        const muse::Settings::Key latencyCompensation;
+        const muse::Settings::Key asioUseDeviceSampleRate;
+    };
+
+    std::string effectiveOutputDevice(const std::string& api, const audio::AudioDeviceSelection& selection) const;
+    std::string effectiveInputDevice(const std::string& api, const audio::AudioDeviceSelection& selection) const;
 
     void initDefaults();
     void onSystemDevicesChanged();
@@ -72,6 +102,9 @@ private:
                             const muse::modularity::ContextPtr& requester, std::optional<double> requesterProjectRate,
                             bool refreshDeviceState, bool writeStarted, const audio::AudioStreamRestorer& restoreStream) noexcept;
     void publish(const audio::AudioConfigurationDelta& delta, bool deviceListChanged = false) noexcept;
+    const std::unique_ptr<IAudioDevices> m_devices;
+    const SettingsKeys m_keys;
+
     audio::AudioConfiguration m_configuration;
     bool m_applying = false;
     bool m_pendingSystemDevicesChange = false;
