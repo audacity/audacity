@@ -35,6 +35,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/uicontextresolver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackstate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackstate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/shortcutresolver.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/shortcutresolver.h
     )
 
 setup_module()
