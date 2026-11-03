@@ -11,6 +11,7 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "au3audiometer.h"
 #include "defaultplaybackpolicy.h"
 #include "au3audioiolistener.h"
 
@@ -170,6 +171,27 @@ void Au3AudioEngine::pauseTransport(const bool pause)
 void Au3AudioEngine::seek(double time)
 {
     AudioIO::Get()->Seek(time - AudioIO::Get()->GetTransportTime());
+}
+
+void Au3AudioEngine::setPlaybackMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter)
+{
+    ProjectAudioIO::Get(project).SetPlaybackMeter(meter ? std::make_shared<Au3AudioMeter>(meter) : nullptr);
+}
+
+void Au3AudioEngine::setCaptureMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter)
+{
+    ProjectAudioIO::Get(project).SetCaptureMeter(meter ? std::make_shared<Au3AudioMeter>(meter) : nullptr);
+}
+
+void Au3AudioEngine::stopMeters(AudacityProject& project)
+{
+    const auto& projectAudioIO = ProjectAudioIO::Get(project);
+    if (const auto& playbackMeter = projectAudioIO.GetPlaybackMeter()) {
+        playbackMeter->stop();
+    }
+    if (const auto& captureMeter = projectAudioIO.GetCaptureMeter()) {
+        captureMeter->stop();
+    }
 }
 
 void Au3AudioEngine::startMonitoring(AudacityProject& project)
