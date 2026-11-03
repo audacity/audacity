@@ -42,56 +42,6 @@ static UiActionList STATIC_ACTIONS = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Open Get effects dialog"),
              IconCode::Code::PLUGIN
-             ),
-    UiAction("action://effects/presets/apply",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "&Apply preset")
-             ),
-    UiAction("action://effects/presets/save_as",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Save preset as…")
-             ),
-    UiAction("action://effects/presets/save",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "&Save preset")
-             ),
-    UiAction("action://effects/presets/delete",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "&Delete preset"),
-             IconCode::Code::DELETE_TANK
-             ),
-    UiAction("action://effects/presets/import",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "&Import…"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Import preset")
-             ),
-    UiAction("action://effects/presets/export",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "&Export…"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Export preset")
-             ),
-    UiAction("action://effects/toggle_vendor_ui",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("effects", "Use vendor UI"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("effects", "Toggle between vendor UI and fallback UI"),
-             Checkable::Yes
              )
 };
 

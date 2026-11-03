@@ -62,10 +62,8 @@ void PresetsContextMenuModel::reload()
 
     MenuItemList items;
 
-    const Params instanceParams { { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) } };
-
-    items << makeMenuItem(make_query(EFFECTS_PRESET_IMPORT_COMMAND, instanceParams));
-    items << makeMenuItem(make_query(EFFECTS_PRESET_EXPORT_COMMAND, instanceParams));
+    items << makeMenuItem(ImportPresetCommand { .instanceId = m_instanceId });
+    items << makeMenuItem(ExportPresetCommand { .instanceId = m_instanceId });
 
     const EffectMeta effectMeta = effectsProvider()->meta(effectId);
     const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(effectMeta.family);
@@ -76,10 +74,7 @@ void PresetsContextMenuModel::reload()
     if (hasVendorUI) {
         items << makeSeparator();
 
-        MenuItem* item = makeMenuItem(make_query(EFFECTS_TOGGLE_VENDOR_UI_COMMAND, {
-            { EFFECTS_EFFECT_ID_PARAM, Val(effectId.toStdString()) },
-        }));
-
+        MenuItem* item = makeMenuItem(ToggleVendorUiCommand { .effectId = effectId.toStdString() });
         if (item) {
             item->setChecked(useVendorUI());
         }

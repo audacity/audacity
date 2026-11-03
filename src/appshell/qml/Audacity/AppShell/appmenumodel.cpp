@@ -211,7 +211,7 @@ void AppMenuModel::updateRenameItemsState()
 
 void AppMenuModel::updateRepeatLastEffectItem()
 {
-    MenuItem& item = findItem(effects::EFFECTS_REPEAT_LAST_EFFECT_COMMAND);
+    MenuItem& item = findItem(effects::RepeatLastEffectCommand::id);
     if (!item.isValid() || !m_lastProcessorId) {
         return;
     }
@@ -642,10 +642,10 @@ muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffect(const muse::String& t
 MenuItemList AppMenuModel::makeEffectsItems()
 {
     MenuItemList items {
-        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(effects::PluginManagerCommand {}),
         makeMenuItem(projectscene::PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND),
         makeSeparator(),
-        makeMenuItem(effects::EFFECTS_REPEAT_LAST_EFFECT_COMMAND),
+        makeMenuItem(effects::RepeatLastEffectCommand {}),
     };
 
     const muse::uicomponents::MenuItemList effectMenus = effectsMenuProvider()->destructiveEffectMenu(*this,
@@ -660,7 +660,7 @@ MenuItemList AppMenuModel::makeEffectsItems()
 MenuItemList AppMenuModel::makeGeneratorItems()
 {
     MenuItemList items {
-        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(effects::PluginManagerCommand {}),
         makeSeparator(),
     };
 
@@ -675,7 +675,7 @@ MenuItemList AppMenuModel::makeGeneratorItems()
 MenuItemList AppMenuModel::makeToolItems()
 {
     MenuItemList items {
-        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(effects::PluginManagerCommand {}),
         makeSeparator(),
         // makeMenuItem("manage-macros"),
     };
@@ -706,7 +706,7 @@ MenuItemList AppMenuModel::makeToolItems()
 MenuItemList AppMenuModel::makeAnalyzeItems()
 {
     MenuItemList items {
-        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(effects::PluginManagerCommand {}),
         makeSeparator(),
         // makeMenuItem("contrast-analyzer"),
         // makeMenuItem("plot-spectrum"),

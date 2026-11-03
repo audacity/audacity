@@ -30,29 +30,10 @@ static const ActionCode PLUGIN_MANAGER_CODE("plugin-manager");
 static const ActionCode GET_EFFECTS_CODE("get-effects");
 static const ActionQuery EFFECT_OPEN_QUERY("action://effects/open");
 static const ActionQuery EFFECT_APPLY_QUERY("action://effects/apply");
-static const ActionQuery TOGGLE_VENDOR_UI_QUERY("action://effects/toggle_vendor_ui");
-static const ActionQuery PRESET_APPLY_QUERY("action://effects/presets/apply");
-static const ActionQuery PRESET_SAVE_QUERY("action://effects/presets/save");
-static const ActionQuery PRESET_SAVE_AS_QUERY("action://effects/presets/save_as");
-static const ActionQuery PRESET_DELETE_QUERY("action://effects/presets/delete");
-static const ActionQuery PRESET_IMPORT_QUERY("action://effects/presets/import");
-static const ActionQuery PRESET_EXPORT_QUERY("action://effects/presets/export");
 
 static const muse::Uri PLUGIN_MANAGER_URI("audacity://effects/plugin_manager");
 
 namespace {
-CommandQuery queryParamsConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.empty()) {
-        return query;
-    }
-
-    const ActionQuery legacy(args.arg<std::string>(0));
-    query.setParams(legacy.params());
-    return query;
-}
-
 CommandQuery effectOpenConv(const Command& command, const ActionData& args)
 {
     IF_ASSERT_FAILED(!args.empty()) {
@@ -82,7 +63,7 @@ CommandQuery effectApplyConv(const Command& command, const ActionData& args, con
 
     CommandQuery query(makeEffectApplyCommand(it->id));
     for (const auto& [key, val] : legacy.params()) {
-        if (key != EFFECTS_EFFECT_ID_PARAM) {
+        if (key != "effectId") {
             query.addParam(key, val);
         }
     }
@@ -137,15 +118,35 @@ void EffectsActionsController::registerActions()
         });
     }
 
-    cd->onRequest(this, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, [this]() { return repeatLastEffect(); });
-    cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_COMMAND, [this]() { return openPluginManager(); });
-    cd->onRequest(this, EFFECTS_TOGGLE_VENDOR_UI_COMMAND, [this](const Params& params) { return toggleVendorUI(params); });
-    cd->onRequest(this, EFFECTS_PRESET_APPLY_COMMAND, [this](const Params& params) { return applyPreset(params); });
-    cd->onRequest(this, EFFECTS_PRESET_SAVE_COMMAND, [this](const Params& params) { return savePreset(params); });
-    cd->onRequest(this, EFFECTS_PRESET_SAVE_AS_COMMAND, [this](const Params& params) { return savePresetAs(params); });
-    cd->onRequest(this, EFFECTS_PRESET_DELETE_COMMAND, [this](const Params& params) { return deletePreset(params); });
-    cd->onRequest(this, EFFECTS_PRESET_IMPORT_COMMAND, [this](const Params& params) { return importPreset(params); });
-    cd->onRequest(this, EFFECTS_PRESET_EXPORT_COMMAND, [this](const Params& params) { return exportPreset(params); });
+    cd->onRequest<RepeatLastEffectCommand>(this, [this](const RepeatLastEffectCommand&) { return repeatLastEffect(); });
+    cd->onRequest<PluginManagerCommand>(this, [this](const PluginManagerCommand&) { return openPluginManager(); });
+    cd->onRequest<ToggleVendorUiCommand>(this, [this](const ToggleVendorUiCommand& command) {
+        return toggleVendorUI(EffectId::fromStdString(command.effectId));
+    });
+    cd->onRequest<ApplyPresetCommand>(this, [this](const ApplyPresetCommand& command) {
+        presetsScenario()->loadPreset(command.instanceId, au::au3::wxFromStdString(command.presetId));
+        return make_ok();
+    });
+    cd->onRequest<SavePresetCommand>(this, [this](const SavePresetCommand& command) {
+        presetsScenario()->savePreset(command.instanceId, au::au3::wxFromStdString(command.presetId));
+        return make_ok();
+    });
+    cd->onRequest<SavePresetAsCommand>(this, [this](const SavePresetAsCommand& command) {
+        presetsScenario()->savePresetAs(command.instanceId);
+        return make_ok();
+    });
+    cd->onRequest<DeletePresetCommand>(this, [this](const DeletePresetCommand& command) {
+        presetsScenario()->deletePreset(EffectId::fromStdString(command.effectId), au::au3::wxFromStdString(command.presetId));
+        return make_ok();
+    });
+    cd->onRequest<ImportPresetCommand>(this, [this](const ImportPresetCommand& command) {
+        presetsScenario()->importPreset(command.instanceId);
+        return make_ok();
+    });
+    cd->onRequest<ExportPresetCommand>(this, [this](const ExportPresetCommand& command) {
+        presetsScenario()->exportPreset(command.instanceId);
+        return make_ok();
+    });
 
     const Convertor applyConv = [this](const Command& command, const ActionData& args) {
         return effectApplyConv(command, args, effectsProvider()->effectMetaList());
@@ -153,17 +154,10 @@ void EffectsActionsController::registerActions()
 
     const std::vector<ActionToCommand> actionToCommand = {
         { EFFECT_OPEN_QUERY.toString(), Command(), effectOpenConv },
-        { REPEAT_LAST_EFFECT_CODE, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, {} },
-        { PLUGIN_MANAGER_CODE, EFFECTS_PLUGIN_MANAGER_COMMAND, {} },
+        { REPEAT_LAST_EFFECT_CODE, RepeatLastEffectCommand::id, {} },
+        { PLUGIN_MANAGER_CODE, PluginManagerCommand::id, {} },
         { GET_EFFECTS_CODE, EFFECTS_GET_EFFECTS_COMMAND, {} },
         { EFFECT_APPLY_QUERY.toString(), Command(), applyConv },
-        { TOGGLE_VENDOR_UI_QUERY.toString(), EFFECTS_TOGGLE_VENDOR_UI_COMMAND, queryParamsConv },
-        { PRESET_APPLY_QUERY.toString(), EFFECTS_PRESET_APPLY_COMMAND, queryParamsConv },
-        { PRESET_SAVE_QUERY.toString(), EFFECTS_PRESET_SAVE_COMMAND, queryParamsConv },
-        { PRESET_SAVE_AS_QUERY.toString(), EFFECTS_PRESET_SAVE_AS_COMMAND, queryParamsConv },
-        { PRESET_DELETE_QUERY.toString(), EFFECTS_PRESET_DELETE_COMMAND, queryParamsConv },
-        { PRESET_IMPORT_QUERY.toString(), EFFECTS_PRESET_IMPORT_COMMAND, queryParamsConv },
-        { PRESET_EXPORT_QUERY.toString(), EFFECTS_PRESET_EXPORT_COMMAND, queryParamsConv },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
@@ -213,82 +207,8 @@ muse::Ret EffectsActionsController::repeatLastEffect()
     return effectExecutionScenario()->repeatLastProcessor();
 }
 
-muse::Ret EffectsActionsController::applyPreset(const Params& params)
+muse::Ret EffectsActionsController::toggleVendorUI(const EffectId& effectId)
 {
-    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM) && params.contains(EFFECTS_PRESET_ID_PARAM)) {
-        return make_ret(Ret::Code::BadArgs);
-    }
-
-    EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
-    PresetId presetId = au::au3::wxFromStdString(params.at(EFFECTS_PRESET_ID_PARAM).toString());
-    presetsScenario()->loadPreset(effectInstanceId, presetId);
-    return make_ok();
-}
-
-muse::Ret EffectsActionsController::savePresetAs(const Params& params)
-{
-    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM)) {
-        return make_ret(Ret::Code::BadArgs);
-    }
-
-    EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
-    presetsScenario()->savePresetAs(effectInstanceId);
-    return make_ok();
-}
-
-muse::Ret EffectsActionsController::savePreset(const Params& params)
-{
-    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM) && params.contains(EFFECTS_PRESET_ID_PARAM)) {
-        return make_ret(Ret::Code::BadArgs);
-    }
-
-    const EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
-    const PresetId presetId = au::au3::wxFromStdString(params.at(EFFECTS_PRESET_ID_PARAM).toString());
-    presetsScenario()->savePreset(effectInstanceId, presetId);
-    return make_ok();
-}
-
-muse::Ret EffectsActionsController::deletePreset(const Params& params)
-{
-    IF_ASSERT_FAILED(params.contains(EFFECTS_EFFECT_ID_PARAM) && params.contains(EFFECTS_PRESET_ID_PARAM)) {
-        return make_ret(Ret::Code::BadArgs);
-    }
-
-    EffectId effectId = EffectId::fromStdString(params.at(EFFECTS_EFFECT_ID_PARAM).toString());
-    PresetId presetId = au::au3::wxFromStdString(params.at(EFFECTS_PRESET_ID_PARAM).toString());
-    presetsScenario()->deletePreset(effectId, presetId);
-    return make_ok();
-}
-
-muse::Ret EffectsActionsController::importPreset(const Params& params)
-{
-    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM)) {
-        return make_ret(Ret::Code::BadArgs);
-    }
-
-    EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
-    presetsScenario()->importPreset(effectInstanceId);
-    return make_ok();
-}
-
-muse::Ret EffectsActionsController::exportPreset(const Params& params)
-{
-    IF_ASSERT_FAILED(params.contains(EFFECTS_INSTANCE_ID_PARAM)) {
-        return make_ret(Ret::Code::BadArgs);
-    }
-
-    EffectInstanceId effectInstanceId = params.at(EFFECTS_INSTANCE_ID_PARAM).toInt();
-    presetsScenario()->exportPreset(effectInstanceId);
-    return make_ok();
-}
-
-muse::Ret EffectsActionsController::toggleVendorUI(const Params& params)
-{
-    IF_ASSERT_FAILED(params.contains(EFFECTS_EFFECT_ID_PARAM)) {
-        return make_ret(Ret::Code::BadArgs);
-    }
-
-    const EffectId effectId = EffectId::fromStdString(params.at(EFFECTS_EFFECT_ID_PARAM).toString());
     const EffectUIMode currentMode = configuration()->effectUIMode(effectId);
     const EffectUIMode newMode = (currentMode == EffectUIMode::VendorUI) ? EffectUIMode::FallbackUI : EffectUIMode::VendorUI;
     configuration()->setEffectUIMode(effectId, newMode);
