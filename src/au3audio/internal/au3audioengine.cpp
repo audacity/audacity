@@ -46,9 +46,14 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
         return options;
     } };
 
+Au3AudioEngine::Au3AudioEngine()
+{
+    // Notifications are subscribed to before init()
+    s_audioIOListener = std::make_shared<Au3AudioIOListener>();
+}
+
 void Au3AudioEngine::init()
 {
-    s_audioIOListener = std::make_shared<Au3AudioIOListener>();
     AudioIO::Init();
 
     m_streamStatusSubscription = AudioIO::Get()->Subscribe([this](const AudioIOEvent& event) {
