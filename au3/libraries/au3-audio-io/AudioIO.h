@@ -15,9 +15,10 @@
 
 #include "au3-audio-devices/AudioIOBase.h" // to inherit
 #include "au3-mixer/AudioIOSequences.h"
+#include "au3-recording/CaptureSink.h" // member variable
 #include "PlaybackSchedule.h" // member variable
 #include "au3-recording/RingBuffer.h"
-#include "au3-recording/CaptureRouting.h" // member variable
+#include "au3-recording/CaptureRouting.h"
 #include "au3-utility/LockFreeQueue.h"
 
 #include <functional>
@@ -237,18 +238,8 @@ public:
     std::thread mAudioThread;
     std::atomic<bool> mFinishAudioThread{ false };
 
-    std::vector<std::unique_ptr<Resample> > mResample;
-
     using RingBuffers = std::vector<std::unique_ptr<RingBuffer> >;
-    RingBuffers mCaptureBuffers;
-    RecordableSequences mCaptureSequences;
-    struct TrackChannelInfo {
-        size_t sequenceIndex{};
-        size_t channelIndex{};
-    };
-    std::vector<TrackChannelInfo> mCaptureChannelLayout;
-    std::vector<CaptureChannelSources> mTrackChannelSourceMap;
-    bool mCaptureNeedsMixdown{ false };
+    CaptureSink mCaptureSink;
     struct MonitoredTrack {
         int64_t trackId{};
         size_t channels{};
@@ -284,14 +275,12 @@ public:
     std::atomic<float> mMixerOutputVol{ 1.0 };
     std::atomic<float> mSoftwareRecordGain{ 1.0 };
     static int mNextStreamToken;
-    double mFactor;
     unsigned long mMaxFramesOutput;      // The actual number of frames output.
     /*! Read by a worker thread but unchanging during playback */
     bool mbMicroFades;
 
     double mSeek;
     PlaybackPolicy::Duration mPlaybackRingBufferSecs;
-    double mCaptureRingBufferSecs;
 
     /// Preferred batch size for replenishing the playback RingBuffer
     size_t mPlaybackSamplesToCopy;
@@ -302,7 +291,6 @@ public:
     /// Occupancy of the queue we try to maintain, with bigger batches if needed
     size_t mPlaybackQueueMinimum;
 
-    double mMinCaptureSecsToCopy;
     /*! Read by a worker thread but unchanging during playback */
     bool mSoftwarePlaythrough;
     /// True if Sound Activated Recording is enabled
@@ -315,8 +303,6 @@ public:
     size_t mNumPlaybackChannels;
     sampleFormat mCaptureFormat;
     double mCaptureRate{};
-    unsigned long long mLostSamples{ 0 };
-    unsigned long long mCapturedFrames{ 0 };
     std::atomic<bool> mAudioThreadShouldCallSequenceBufferExchangeOnce;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopRunning;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopActive;
@@ -387,29 +373,11 @@ public:
     // in recording, and not yet cleared at the end of the procedure to stop
     // recording.
     bool HasRecordingException() const
-    { return mRecordingException; }
+    { return mCaptureSink.HasRecordingException(); }
 
-protected:
-    // A flag tested and set in one thread, cleared in another.  Perhaps
-    // this guarantee of atomicity is more cautious than necessary.
-    wxAtomicInt mRecordingException {};
-    void SetRecordingException()
-    { wxAtomicInc(mRecordingException); }
-    void ClearRecordingException()
-    {
-        if (mRecordingException) {
-            wxAtomicDec(mRecordingException);
-        }
-    }
-
-    std::vector< std::pair<double, double> > mLostCaptureIntervals;
-    /*! Read by a worker thread but unchanging during playback */
-    bool mDetectDropouts{ true };
-
-public:
     // Pairs of starting time and duration
     const std::vector< std::pair<double, double> >& LostCaptureIntervals()
-    { return mLostCaptureIntervals; }
+    { return mCaptureSink.LostCaptureIntervals(); }
 
     // Used only for testing purposes in alpha builds
     bool mSimulateRecordingErrors{ false };
@@ -419,7 +387,6 @@ public:
     std::atomic<bool> mDetectUpstreamDropouts{ true };
 
 protected:
-    RecordingSchedule mRecordingSchedule{};
     PlaybackSchedule mPlaybackSchedule;
 
     struct TransportState;
@@ -636,8 +603,6 @@ private:
      */
     void SequenceBufferExchange();
 
-    void ResetCaptureRouting();
-    void ConfigureCaptureRouting(size_t requestedChannels);
 
     //! First part of SequenceBufferExchange
     void FillPlayBuffers();
@@ -654,14 +619,6 @@ private:
     * Returns the smallest of the buffer free space values in the event that
     * they are different. */
     size_t GetCommonlyFreePlayback();
-
-    /** \brief Get the number of audio samples ready in all of the recording
-     * buffers.
-     *
-     * Returns the smallest of the number of samples available for storage in
-     * the recording buffers (i.e. the number of samples that can be read from
-     * all record buffers without underflow). */
-    size_t GetCommonlyAvailCapture();
 
     /** \brief Allocate RingBuffer structures, and others, needed for playback
       * and recording.
