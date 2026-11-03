@@ -45,6 +45,20 @@ Item {
         return knob.stepSize
     }
 
+    function decimalsForStep(step) {
+        const text = step.toString()
+
+        if (text.indexOf(".") >= 0) {
+            return text.split(".")[1].length
+        }
+
+        return 0
+    }
+
+    function valueDecimals() {
+        return Math.max(decimalsForStep(knob.stepSize), decimalsForStep(precisionStepSize()))
+    }
+
     function normalizedValue(value) {
         return Number(value.toFixed(textEdit.decimals))
     }
@@ -150,12 +164,7 @@ Item {
 
             minValue: knob.from
             maxValue: knob.to
-            decimals: {
-                let s = root.precisionStepSize().toString()
-                if (s.indexOf('.') >= 0)
-                    return s.split('.')[1].length
-                return 0
-            }
+            decimals: root.valueDecimals()
             step: root.precisionStepSize()
 
             currentValue: +warper.value.toFixed(decimals)
