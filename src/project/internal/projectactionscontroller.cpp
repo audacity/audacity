@@ -1208,9 +1208,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
     }
 
     if (std::holds_alternative<au::au3cloud::Authorizing>(authorization()->authState().val)) {
-        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, {
-            { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(cloudProjectOpenUrl(projectId, snapshotId)) },
-        });
+        commandDispatcher()->dispatch(au3cloud::OpenUrlCommand { .url = cloudProjectOpenUrl(projectId, snapshotId).toStdString() });
         return muse::make_ok();
     }
 

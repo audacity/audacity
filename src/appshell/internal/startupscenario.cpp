@@ -116,7 +116,7 @@ void StartupScenario::setRemoveMediaFilesAfterImport(bool remove)
 void StartupScenario::setStartupUrl(const QString& url)
 {
     if (m_startupCompleted && !url.isEmpty()) {
-        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(url) } });
+        commandDispatcher()->dispatch(au3cloud::OpenUrlCommand { .url = url.toStdString() });
         return;
     }
     m_startupUrl = url;
@@ -216,7 +216,7 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
     }
 
     if (!m_startupUrl.isEmpty()) {
-        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(m_startupUrl) } });
+        commandDispatcher()->dispatch(au3cloud::OpenUrlCommand { .url = m_startupUrl.toStdString() });
         return;
     }
 

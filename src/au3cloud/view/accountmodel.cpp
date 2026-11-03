@@ -71,5 +71,5 @@ void AccountModel::openCreateAccountDialog() const
 
 void AccountModel::openProfile() const
 {
-    commandDispatcher()->dispatch(CLOUD_OPEN_PROFILE_PAGE_COMMAND);
+    commandDispatcher()->dispatch(OpenProfilePageCommand {});
 }

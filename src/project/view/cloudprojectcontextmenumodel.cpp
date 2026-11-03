@@ -39,9 +39,7 @@ void CloudProjectContextMenuModel::load()
 
     muse::uicomponents::MenuItemList items = {
         makeMenuItem(make_query(PROJECT_OPEN_CLOUD_COMMAND, projectIdParams)),
-        makeMenuItem(make_query(au3cloud::CLOUD_OPEN_PROJECT_PAGE_COMMAND, {
-            { au3cloud::CLOUD_OPEN_PROJECT_PAGE_ID_PARAM, muse::Val(m_projectId) },
-        })),
+        makeMenuItem(au3cloud::OpenProjectPageCommand { .projectId = m_projectId.toStdString() }),
         makeMenuItem(make_query(PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_FOR_PROJECT_COMMAND, projectIdParams)),
     };
 

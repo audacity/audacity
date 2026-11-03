@@ -60,7 +60,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             {},
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
-                commandDispatcher()->dispatch(au3cloud::CLOUD_SHOW_TOUR_PAGE_COMMAND);
+                commandDispatcher()->dispatch(au3cloud::ShowTourPageCommand {});
             }
         },
     };
