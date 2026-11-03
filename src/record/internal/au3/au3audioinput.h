@@ -8,7 +8,7 @@
 #include "framework/global/modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/au3audiometer.h"
+#include "audio/iaudiometer.h"
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "audio/iaudioengine.h"
 #include "context/iglobalcontext.h"
@@ -58,7 +58,7 @@ private:
     bool audioEngineShouldBeMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
-    const std::shared_ptr<au::au3::Au3AudioMeter> m_inputMeter;
+    const audio::IAudioMeterPtr m_inputMeter;
     int m_inputChannelsCount{};
     int m_focusedTrackChannels{};
 };
