@@ -58,7 +58,9 @@ on:
         default: ''
 
 concurrency:
-  group: au4_build_windows-${{ github.ref }}-${{ github.event.issue.number }}
+  # When called by another workflow, github.workflow is the caller's name: a '[AU4] Build: All'
+  # run and a direct run of this workflow on the same ref must not cancel each other.
+  group: ${{ github.workflow }}-au4_build_windows-${{ github.ref }}-${{ github.event.issue.number }}
   cancel-in-progress: true
 
 env:
