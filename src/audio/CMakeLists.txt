@@ -11,9 +11,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/audiomodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audiomodule.h
     ${CMAKE_CURRENT_LIST_DIR}/audiotypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/iaudiobackendregister.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudioengine.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiometer.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audioengineswitcher.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audioengineswitcher.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiometer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiometer.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/auqttimer.cpp
