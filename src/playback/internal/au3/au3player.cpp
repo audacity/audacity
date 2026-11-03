@@ -11,8 +11,8 @@
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-clip-processing/PlayableSequenceFactory.h"
-#include "au3-audio-io/AudioIOBase.h"
-#include "au3-audio-io/ProjectAudioIO.h"
+#include "au3-playable-track/PlayableTrack.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-project-rate/ProjectRate.h"
 
@@ -98,7 +98,6 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
     Au3Project& project = projectRef();
 
     const bool newDefault = true; //(mode == PlayMode::loopedPlay);
-    auto options = ProjectAudioIO::GetDefaultOptions(project, newDefault);
     bool backwards = false;
 
     auto& tracks = Au3TrackList::Get(project);
@@ -115,9 +114,10 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
         audioEngine()->stopTransport();
     }
 
-    auto& pStartTime = options.pStartTime;
+    //! NOTE: the default playback policy starts the stream at the play region start
+    const std::optional<double> pStartTime = std::max(0.0, playRegion.GetStart());
 
-    bool nonWaveToo = options.playNonWaveTracks;
+    const bool nonWaveToo = true;
 
     double t0 = selectedRegion.t0();
     double t1 = selectedRegion.t1();
