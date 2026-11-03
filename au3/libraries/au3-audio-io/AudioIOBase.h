@@ -59,7 +59,6 @@ struct AudioIOStartTransportOptions
     mutable std::optional<double> pStartTime;
     double leadInTime{ 0.0 };
 
-    bool playNonWaveTracks{ true };
     bool inputMonitoring{ false };
 
     static constexpr double DefaultSoundActivationLevelDb = -50.0;
