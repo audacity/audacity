@@ -101,24 +101,24 @@ TEST_F(ShortcutResolverTests, NoActiveShortcutWhenOnlyTimelineAndProjectNotFocus
     EXPECT_FALSE(m_resolver->selectActive(list).isValid());
 }
 
-TEST_F(ShortcutResolverTests, PlaybackWinsOverAppTrigger)
+TEST_F(ShortcutResolverTests, PlaybackWinsOverNavigationTrigger)
 {
     setProjectFocused(false);
 
     const ShortcutList list = {
-        make("APP", "command://app/trigger"),
+        make("NAVIGATION", "command://navigation/trigger-control"),
         make("PLAYBACK", "command://playback/toggle-play-stop"),
     };
 
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://playback/toggle-play-stop"));
 }
 
-TEST_F(ShortcutResolverTests, RecordWinsOverAppTrigger)
+TEST_F(ShortcutResolverTests, RecordWinsOverNavigationTrigger)
 {
     setProjectFocused(true);
 
     const ShortcutList list = {
-        make("APP", "command://app/trigger"),
+        make("NAVIGATION", "command://navigation/trigger-control"),
         make("RECORD", "command://record/stop"),
     };
 
@@ -131,10 +131,10 @@ TEST_F(ShortcutResolverTests, CommandWinsOverNoneCommandInSameScope)
 
     const ShortcutList list = {
         make("APP", rcommand::NONE_COMMAND.toString()),
-        make("APP", "command://app/trigger"),
+        make("APP", "command://app/enter"),
     };
 
-    EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://app/trigger"));
+    EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://app/enter"));
 }
 
 TEST_F(ShortcutResolverTests, EmptyListHasNoActiveShortcut)
