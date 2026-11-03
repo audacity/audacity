@@ -8,6 +8,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::audio {
+class AudioEngineSwitcher;
 class AudioThreadSecurer;
 class AudioModule : public muse::modularity::IModuleSetup
 {
@@ -20,5 +21,6 @@ private:
     void onInit(const muse::IApplication::RunMode& mode) override;
 
     const std::shared_ptr<AudioThreadSecurer> m_audioThreadSecurer;
+    const std::shared_ptr<AudioEngineSwitcher> m_audioEngineSwitcher;
 };
 }
