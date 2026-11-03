@@ -49,7 +49,7 @@ PRIVATE
    au3-preferences
    au3-project
    au3-project-rate
-   au3-stretching-sequence
+   au3-clip-processing
    au3-tags
    au3-time-frequency-selection
    au3-wave-track

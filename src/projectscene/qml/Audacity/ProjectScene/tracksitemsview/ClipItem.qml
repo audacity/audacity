@@ -67,6 +67,11 @@ Rectangle {
     required property var pressedSpectrogram
     required property bool splitToolActive
 
+    property real fadeInDuration: 0
+    property real fadeOutDuration: 0
+    required property int fadeInType
+    required property int fadeOutType
+
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
 
@@ -87,6 +92,11 @@ Rectangle {
     signal clipRightTrimRequested(bool completed, int action)
     signal clipLeftStretchRequested(bool completed, int action)
     signal clipRightStretchRequested(bool completed, int action)
+
+    signal fadeEditStarted
+    signal fadeInDurationChangeRequested(real duration, bool completed)
+    signal fadeOutDurationChangeRequested(real duration, bool completed)
+    signal fadeEditCanceled
 
     signal requestSelected
     signal requestSelectionReset
@@ -344,6 +354,18 @@ Rectangle {
         }
     }
 
+    // The spectrogram reflects the fades, but isn't otherwise told of their changes
+    function updateSpectrogramView() {
+        if (spectrogramViewLoader.item) {
+            spectrogramViewLoader.item.update()
+        }
+    }
+
+    onFadeInDurationChanged: updateSpectrogramView()
+    onFadeOutDurationChanged: updateSpectrogramView()
+    onFadeInTypeChanged: updateSpectrogramView()
+    onFadeOutTypeChanged: updateSpectrogramView()
+
     ClipContextMenuModel {
         id: singleClipContextMenuModel
         clipKey: root.clipKey
@@ -416,7 +438,7 @@ Rectangle {
         }
 
         onPositionChanged: function (e) {
-            clipItemMousePositionChanged(e.x, e.y)
+            clipItemMousePositionChanged(e.x, e.y);
 
             // propagate mouse position to the wave view adjusting the y position
             waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
@@ -456,9 +478,8 @@ Rectangle {
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
         z: headerDragArea.z + 1
-        height: !root.collapsed ? root.height / 3 : root.height / 2
-
-        anchors.top: root.top
+        y: clipHandles.y
+        height: clipHandles.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
@@ -514,12 +535,11 @@ Rectangle {
     MouseArea {
         id: rightTrimStretchEdgeHover
 
-        x: root.width - 5
+        x: root.width - 6
         z: headerDragArea.z + 1
         width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5) : 11
-        height: !root.collapsed ? root.height / 3 : root.height / 2
-
-        anchors.top: root.top
+        y: clipHandles.y
+        height: clipHandles.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
@@ -1003,13 +1023,30 @@ Rectangle {
                         automation.init()
                     }
 
+                    // While dragging, the mouse may go over other items, e.g. fade handles, which would show their own cursor
+                    property bool cursorOverridden: false
+
+                    function updateCursorOverride(dragging) {
+                        if (dragging && !cursorOverridden) {
+                            CustomCursorProvider.overrideStandardCursor(Qt.CrossCursor)
+                            cursorOverridden = true
+                        } else if (!dragging && cursorOverridden) {
+                            CustomCursorProvider.restoreCursor()
+                            cursorOverridden = false
+                        }
+                    }
+
+                    Component.onDestruction: updateCursorOverride(false)
+
                     onPointMoved: function (index, x, y, completed) {
+                        updateCursorOverride(!completed)
                         clipGainModel.setPoint(index, x, y, completed)
                         tooltip.value = gainToDb(y)
                         tooltip.show(true)
                     }
 
                     onPointAdded: function (x, y, completed) {
+                        updateCursorOverride(!completed)
                         clipGainModel.addPoint(x, y, completed)
                     }
 
@@ -1018,11 +1055,13 @@ Rectangle {
                     }
 
                     onDragCancelled: {
+                        updateCursorOverride(false)
                         clipGainModel.cancelDrag()
                         tooltip.hide(true)
                     }
 
                     onInteractionFinished: function () {
+                        updateCursorOverride(false)
                         if (!automation.hasActivePoint) {
                             tooltip.hide(true)
                         }
@@ -1155,6 +1194,45 @@ Rectangle {
             root.parent.z = 1
         } else {
             root.parent.z = 0
+        }
+    }
+
+    ClipFades {
+        id: fades
+
+        // The fades span the views, below the header
+        y: viewsColumn.y
+        width: root.width
+        height: viewsColumn.height
+        // The header covers the top of a collapsed clip when shown
+        drawingTop: header.visible ? Math.max(0, header.y + header.height - y) : 0
+        // Level with the trim and stretch handles, but dropping down with the header of a collapsed clip
+        handlesY: clipHandles.y - y + drawingTop
+
+        clipOffset: (waveView.itemStartTime - waveView.startTime) * root.context.zoom
+        clipWidth: (waveView.endTime - waveView.startTime) * root.context.zoom
+
+        fadeInWidth: root.fadeInDuration * root.context.zoom
+        fadeOutWidth: root.fadeOutDuration * root.context.zoom
+        fadeInType: root.fadeInType
+        fadeOutType: root.fadeOutType
+        // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
+        handlesVisible: root.clipSelected && !root.moveActive
+
+        onFadeEditStarted: root.fadeEditStarted()
+
+        onFadeInWidthChangeRequested: function (width, completed) {
+            root.fadeInDurationChangeRequested(width / root.context.zoom, completed)
+        }
+
+        onFadeOutWidthChangeRequested: function (width, completed) {
+            root.fadeOutDurationChangeRequested(width / root.context.zoom, completed)
+        }
+
+        onFadeEditCanceled: root.fadeEditCanceled()
+
+        onFadeHandlesMousePositionChanged: function (xWithinFadeHandles, yWithinFadeHandles) {
+            clipItemMousePositionChanged(xWithinFadeHandles, fades.y + yWithinFadeHandles)
         }
     }
 

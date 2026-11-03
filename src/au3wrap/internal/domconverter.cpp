@@ -1,6 +1,9 @@
 #include "domconverter.h"
 
+#include <algorithm>
+
 #include "au3-label-track/LabelTrack.h"
+#include "au3-clip-processing/ClipFades.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
@@ -86,6 +89,19 @@ bool trackMute(const Au3Track* track)
 }
 }
 
+namespace {
+au::trackedit::FadeType fadeType(::FadeType type)
+{
+    switch (type) {
+    case ::FadeType::Logarithmic:
+        return au::trackedit::FadeType::Logarithmic;
+    case ::FadeType::Linear:
+    default:
+        return au::trackedit::FadeType::Linear;
+    }
+}
+}
+
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
 {
     au::trackedit::Clip clip;
@@ -107,6 +123,12 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.optimizeForVoice = au3clip->GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
 
     clip.stretchToMatchTempo = au3clip->GetStretchToMatchProjectTempo();
+
+    const ClipFades& fades = ClipFades::Get(*au3clip);
+    clip.fadeInDuration = fades.fadeIn();
+    clip.fadeOutDuration = fades.fadeOut();
+    clip.fadeInType = fadeType(fades.fadeInType());
+    clip.fadeOutType = fadeType(fades.fadeOutType());
 
     return clip;
 }

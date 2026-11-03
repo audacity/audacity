@@ -38,7 +38,7 @@ PRIVATE
    au3-realtime-effects
    au3-sentry-reporting
    au3-sqlite-helpers
-   au3-stretching-sequence
+   au3-clip-processing
    au3-string-utils
    au3-track
    au3-transactions

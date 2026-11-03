@@ -75,7 +75,7 @@ set( LIBRARIES
    au3-time-and-pitch
    au3-mixer
    au3-channel
-   au3-stretching-sequence
+   au3-clip-processing
 #   au3-menus
 #   au3-note-track # not yet used in AU4
    au3-viewport

@@ -43,7 +43,7 @@ target_link_libraries(record PRIVATE
         au3-audio-io
         au3-project-file-io
         au3-project-rate
-        au3-stretching-sequence
+        au3-clip-processing
         au3-strings
         au3-time-frequency-selection
         au3-track

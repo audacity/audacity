@@ -391,6 +391,10 @@ TrackItemsContainer {
                                 clipTime: itemData.time
                                 pitch: itemData.pitch
                                 isPitchModified: itemData.isPitchModified
+                                fadeInDuration: itemData.fadeInDuration
+                                fadeOutDuration: itemData.fadeOutDuration
+                                fadeInType: itemData.fadeInType
+                                fadeOutType: itemData.fadeOutType
 
                                 currentClipStyle: clipsModel.clipStyle
                                 headerHeight: root.headerHeight
@@ -591,6 +595,22 @@ TrackItemsContainer {
                                 onSplitterPositionChangeRequested: function (position) {
                                     clipsContainer.updateChannelHeightRatio(position)
                                     clipsContainer.resetTargetHeightRatio()
+                                }
+
+                                onFadeEditStarted: {
+                                    clipsModel.startClipFadeEdit(itemData.key)
+                                }
+
+                                onFadeInDurationChangeRequested: function (duration, completed) {
+                                    clipsModel.changeClipFadeIn(itemData.key, duration, completed)
+                                }
+
+                                onFadeOutDurationChangeRequested: function (duration, completed) {
+                                    clipsModel.changeClipFadeOut(itemData.key, duration, completed)
+                                }
+
+                                onFadeEditCanceled: {
+                                    clipsModel.cancelClipFadeEdit()
                                 }
 
                                 onPitchChangeRequested: {
