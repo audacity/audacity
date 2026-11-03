@@ -29,7 +29,8 @@ class IAudioBackendRegister : MODULE_GLOBAL_INTERFACE
 public:
     virtual ~IAudioBackendRegister() = default;
 
-    //! The first registered backend becomes the active one.
+    //! The first registered backend becomes the active one, unless the AU_AUDIO_BACKEND
+    //! environment variable names another.
     virtual void registerBackend(const AudioBackend& backend) = 0;
 };
 }
