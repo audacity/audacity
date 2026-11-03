@@ -14,7 +14,7 @@ namespace au::au3audio {
 class Au3AudioEngine final : public au::audio::IAudioEngine
 {
 public:
-    Au3AudioEngine() = default;
+    Au3AudioEngine();
 
     muse::GlobalInject<au::record::IRecordConfiguration> recordConfiguration;
 

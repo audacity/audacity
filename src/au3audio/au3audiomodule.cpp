@@ -3,7 +3,10 @@
 */
 #include "au3audiomodule.h"
 
+#include "framework/global/log.h"
 #include "framework/global/modularity/ioc.h"
+
+#include "audio/iaudiobackendregister.h"
 
 #include "internal/au3audioengine.h"
 #include "internal/au3audiodrivercontroller.h"
@@ -43,9 +46,16 @@ void Au3AudioModule::registerExports()
     m_systemAudioDevicesListener = std::make_shared<StubSystemAudioDevicesListener>();
 #endif
 
-    globalIoc()->registerExport<audio::IAudioEngine>(mname, m_audioEngine);
-    globalIoc()->registerExport<audio::IAudioDriverController>(mname, m_audioDriverController);
     globalIoc()->registerExport<ISystemAudioDevicesListener>(mname, m_systemAudioDevicesListener);
+}
+
+void Au3AudioModule::resolveImports()
+{
+    const auto backendRegister = globalIoc()->resolve<audio::IAudioBackendRegister>(mname);
+    IF_ASSERT_FAILED(backendRegister) {
+        return;
+    }
+    backendRegister->registerBackend({ "portaudio", m_audioEngine, m_audioDriverController });
 }
 
 void Au3AudioModule::onInit(const muse::IApplication::RunMode&)
