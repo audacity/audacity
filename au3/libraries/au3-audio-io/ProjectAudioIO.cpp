@@ -15,11 +15,11 @@ Paul Licameli split from AudacityProject.cpp
 #include "au3-project/Project.h"
 #include "au3-project-rate/ProjectRate.h"
 
-AudioIOStartStreamOptions
+AudioIOStartTransportOptions
 ProjectAudioIO::DefaultOptionsFactory(AudacityProject& project, bool)
 {
     auto& projectAudioIO = Get(project);
-    AudioIOStartStreamOptions options{
+    AudioIOStartTransportOptions options{
         project.shared_from_this(), ProjectRate::Get(project).GetRate()
     };
     options.captureMeter = projectAudioIO.GetCaptureMeter();
@@ -31,7 +31,7 @@ ProjectAudioIO::DefaultOptionsFactory(AudacityProject& project, bool)
     return options;
 }
 
-AudioIOStartStreamOptions ProjectAudioIO::GetDefaultOptions(
+AudioIOStartTransportOptions ProjectAudioIO::GetDefaultOptions(
     AudacityProject& project, bool newDefaults)
 {
     return DefaultOptions::Call(project, newDefaults);

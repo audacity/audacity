@@ -17,7 +17,7 @@
 #include "audioconfigurationtypes.h"
 
 struct TransportSequences;
-struct AudioIOStartStreamOptions;
+struct AudioIOStartTransportOptions;
 class ChannelGroup;
 class RealtimeEffectState;
 namespace au::audio {
@@ -39,13 +39,13 @@ public:
     virtual std::optional<AudioStreamDescriptor> currentStream() const = 0;
     //! Whether the audio stream started by the given project is still running.
     //! Reports false as soon as the stream has played out its last buffer (or was stopped),
-    //! even before stopStream() has been called — whereas currentStream() also covers the
-    //! busy window that lasts until stopStream() releases the stream.
+    //! even before stopTransport() has been called — whereas currentStream() also covers the
+    //! busy window that lasts until stopTransport() releases the stream.
     virtual bool isStreamActive(AudacityProject& project) const = 0;
     //! Playback time of the active stream.
-    virtual double streamTime() const = 0;
+    virtual double transportTime() const = 0;
 
-    struct StartStreamOptions {
+    struct StartTransportOptions {
         bool isDefaultPolicy = true;
         double sampleRate = 0.0;
         double leadInTime = 0.0;
@@ -56,11 +56,11 @@ public:
 
     //! Returns a positive stream token on success, 0 otherwise.
     //! On success the token is recorded as the project's audio IO token.
-    virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
-                            AudacityProject& project, const StartStreamOptions& options) = 0;
-    virtual void stopStream() = 0;
-    virtual void pauseStream(bool pause) = 0;
-    virtual void seekStream(double time) = 0;
+    virtual int startTransport(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
+                               AudacityProject& project, const StartTransportOptions& options) = 0;
+    virtual void stopTransport() = 0;
+    virtual void pauseTransport(bool pause) = 0;
+    virtual void seek(double time) = 0;
 
     // Realtime effect stack of the live stream
     virtual std::shared_ptr<RealtimeEffectState> addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
@@ -78,7 +78,7 @@ public:
     virtual void setPlaybackVolume(float newPlaybackVolume) = 0;
     virtual float getPlaybackVolume() const = 0;
 
-    virtual bool canStopAudioStream(AudacityProject& project) const = 0;
+    virtual bool canStopTransport(AudacityProject& project) const = 0;
 
     virtual void handleDeviceChange() = 0;
 

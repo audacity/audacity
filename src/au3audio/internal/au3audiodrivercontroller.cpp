@@ -547,7 +547,7 @@ AudioStreamRestorer Au3AudioDriverController::suspendOrForceStop(const AudioStre
     if (!audioEngine()) {
         return {};
     }
-    audioEngine()->stopStream();
+    audioEngine()->stopTransport();
     if (audioEngine()->currentStream()) {
         return {};
     }

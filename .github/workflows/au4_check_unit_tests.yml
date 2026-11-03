@@ -93,6 +93,9 @@ jobs:
 
     - name: Run tests
       run: |
+        # A capture device for the audio tests: PortAudio ignores ALSA's
+        # predefined "null" device, but not an alias of it.
+        echo 'pcm.test_null { type null }' >> ~/.asoundrc
         cmake -P ${CI_DIR}/linux/ci_run_utests.cmake
       env:
         ASAN_OPTIONS: "detect_leaks=0"
