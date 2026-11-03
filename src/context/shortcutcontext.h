@@ -21,11 +21,9 @@
  */
 #pragma once
 
-#include <array>
 #include <string>
 
 #include "framework/shortcuts/shortcutcontext.h"
-#include "framework/global/containers.h"
 
 namespace au::context {
 // common shortcuts (re declared for convenience)
@@ -36,25 +34,4 @@ static const std::string CTX_PROJECT_FOCUSED = muse::shortcuts::CTX_PROJECT_FOCU
 
 //! NOTE special context for navigation shortcuts because the notation has its own navigation system
 static const std::string CTX_NOT_PROJECT_FOCUSED = muse::shortcuts::CTX_NOT_PROJECT_FOCUSED;
-
-class ShortcutContextPriority : public muse::shortcuts::IShortcutContextPriority
-{
-public:
-
-    bool hasLowerPriorityThan(const std::string& ctx1, const std::string& ctx2) const override
-    {
-        static const std::array<std::string, 7> CONTEXTS_BY_INCREASING_PRIORITY {
-            CTX_ANY,
-
-            CTX_PROJECT_OPENED,
-            CTX_NOT_PROJECT_FOCUSED,
-            CTX_PROJECT_FOCUSED,
-        };
-
-        size_t index1 = muse::indexOf(CONTEXTS_BY_INCREASING_PRIORITY, ctx1);
-        size_t index2 = muse::indexOf(CONTEXTS_BY_INCREASING_PRIORITY, ctx2);
-
-        return index1 < index2;
-    }
-};
 }

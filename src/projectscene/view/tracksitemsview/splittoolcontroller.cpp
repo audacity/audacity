@@ -11,6 +11,7 @@
 #include "view/common/customcursor.h"
 
 #include "internal/tapholdshortcut.h"
+#include "projectscene/projectscenecommands.h"
 #include "trackedit/trackeditcommands.h"
 #include "log.h"
 
@@ -28,7 +29,7 @@ void SplitToolController::init(QObject* root)
         setActive(!active());
     });
 
-    m_shortcut = std::make_unique<TapHoldShortcut>(iocContext(), "split-tool", root);
+    m_shortcut = std::make_unique<TapHoldShortcut>(iocContext(), PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, root);
 
     m_shortcut->pressed().onNotify(this, [this]() {
         m_prePressState = active();

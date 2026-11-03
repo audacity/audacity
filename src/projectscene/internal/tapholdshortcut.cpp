@@ -7,17 +7,17 @@
 #include <QKeyEvent>
 
 namespace au::projectscene {
-TapHoldShortcut::TapHoldShortcut(muse::modularity::ContextPtr ctx, const std::string& action, QObject* target)
-    : QObject(nullptr), muse::Contextable(ctx), m_action(action)
+TapHoldShortcut::TapHoldShortcut(muse::modularity::ContextPtr ctx, const muse::rcommand::Command& command, QObject* target)
+    : QObject(nullptr), muse::Contextable(ctx), m_command(command)
 {
     connect(&m_holdTimer, &QTimer::timeout, this, &TapHoldShortcut::onHoldTimeout);
     m_holdTimer.setSingleShot(true);
 
-    shortcutsRegister()->shortcutsChanged().onNotify(this, [this]() {
-        updateShortcut(m_action);
+    commandShortcutsRegister()->shortcutsChanged().onNotify(this, [this]() {
+        updateShortcut();
     });
 
-    updateShortcut(m_action);
+    updateShortcut();
 
     if (target) {
         target->installEventFilter(this);
@@ -26,10 +26,10 @@ TapHoldShortcut::TapHoldShortcut(muse::modularity::ContextPtr ctx, const std::st
     }
 }
 
-void TapHoldShortcut::setAction(const std::string& action)
+void TapHoldShortcut::setCommand(const muse::rcommand::Command& command)
 {
-    m_action = action;
-    updateShortcut(m_action);
+    m_command = command;
+    updateShortcut();
 }
 
 void TapHoldShortcut::setHoldDelay(int ms) { m_holdDelay = ms; }
@@ -108,15 +108,15 @@ void TapHoldShortcut::onHoldTimeout()
     }
 }
 
-void TapHoldShortcut::updateShortcut(const std::string& action)
+void TapHoldShortcut::updateShortcut()
 {
-    m_shortcut = shortcutsRegister()->shortcut(action);
+    m_shortcut = commandShortcutsRegister()->shortcut(m_command);
 }
 
 bool TapHoldShortcut::matchKeyEvent(QKeyEvent* ke) const
 {
     if (!m_shortcut.isValid() || m_shortcut.sequences.empty()
-        || !uicontextResolver()->isShortcutContextAllowed(m_shortcut.context)) {
+        || !shortcutsResolver()->selectActive({ m_shortcut }).isValid()) {
         return false;
     }
 
