@@ -34,9 +34,12 @@ BaseSection {
 
     property alias currentFontIndex: selectFontControl.currentIndex
     property alias bodyTextSize: bodyTextSizeControl.currentValue
+    property string interfaceScale: "auto"
+    property real systemInterfaceScale: 1.0
 
     signal fontChangeRequested(var newFontIndex)
     signal bodyTextSizeChangeRequested(var newBodyTextSize)
+    signal interfaceScaleChangeRequested(string newScale)
 
     ComboBoxWithTitle {
         id: selectFontControl
@@ -63,8 +66,8 @@ BaseSection {
         minValue: 10
         maxValue: 18
 
-        //: Abbreviation of "points", used to specify a font size
-        measureUnitsSymbol: qsTrc("global", "pt")
+        //: Abbreviation of "pixels", used to specify a font size
+        measureUnitsSymbol: qsTrc("global", "px")
 
         navigation.name: "BodyTextControl"
         navigation.panel: root.navigation
@@ -72,6 +75,33 @@ BaseSection {
 
         onValueEdited: function (newValue) {
             root.bodyTextSizeChangeRequested(newValue)
+        }
+    }
+
+    ComboBoxWithTitle {
+        id: interfaceScaleControl
+
+        //: The size of the whole interface: text, buttons, toolbars
+        title: qsTrc("preferences", "Interface scale (after restart)")
+        columnWidth: root.columnWidth
+
+        model: [
+            //: %1 is the scale that follows the desktop's font size, e.g. 125
+            { text: qsTrc("preferences", "Automatic (%1 %)").arg(Math.round(root.systemInterfaceScale * 100)), value: "auto" },
+            { text: "100 %", value: "1" },
+            { text: "125 %", value: "1.25" },
+            { text: "150 %", value: "1.5" },
+            { text: "175 %", value: "1.75" },
+            { text: "200 %", value: "2" }
+        ]
+        currentIndex: Math.max(0, control.indexOfValue(root.interfaceScale))
+
+        navigation.name: "InterfaceScaleBox"
+        navigation.panel: root.navigation
+        navigation.row: 3
+
+        onValueEdited: function (newIndex, newValue) {
+            root.interfaceScaleChangeRequested(newValue)
         }
     }
 }

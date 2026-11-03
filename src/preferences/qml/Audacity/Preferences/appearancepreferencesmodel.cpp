@@ -251,3 +251,22 @@ void AppearancePreferencesModel::setBodyTextSize(int size)
     uiConfiguration()->setBodyFontSize(size);
     emit bodyTextSizeChanged();
 }
+
+QString AppearancePreferencesModel::interfaceScale() const
+{
+    return QString::fromStdString(uiConfiguration()->interfaceScale());
+}
+
+double AppearancePreferencesModel::systemInterfaceScale() const
+{
+    return uiConfiguration()->systemInterfaceScale();
+}
+
+void AppearancePreferencesModel::setInterfaceScale(const QString& scale)
+{
+    if (scale == interfaceScale()) {
+        return;
+    }
+    uiConfiguration()->setInterfaceScale(scale.toStdString());
+    emit interfaceScaleChanged();
+}

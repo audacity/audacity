@@ -55,6 +55,8 @@ class AppearancePreferencesModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(int currentFontIndex READ currentFontIndex WRITE setCurrentFontIndex NOTIFY currentFontIndexChanged)
     Q_PROPERTY(int bodyTextSize READ bodyTextSize WRITE setBodyTextSize NOTIFY bodyTextSizeChanged)
+    Q_PROPERTY(QString interfaceScale READ interfaceScale WRITE setInterfaceScale NOTIFY interfaceScaleChanged)
+    Q_PROPERTY(double systemInterfaceScale READ systemInterfaceScale CONSTANT)
 
     Q_PROPERTY(ClipStyles::Style clipStyle READ clipStyle NOTIFY clipStyleChanged)
 
@@ -85,6 +87,8 @@ public:
 
     int currentFontIndex() const;
     int bodyTextSize() const;
+    QString interfaceScale() const;
+    double systemInterfaceScale() const;
 
     Q_INVOKABLE void resetAppearancePreferencesToDefault();
     Q_INVOKABLE void setNewColor(const QColor& newColor, ColorType colorType);
@@ -100,12 +104,14 @@ public slots:
     void setCurrentAccentColorIndex(int index);
     void setCurrentFontIndex(int index);
     void setBodyTextSize(int size);
+    void setInterfaceScale(const QString& scale);
 
 signals:
     void isFollowSystemThemeChanged();
     void themesChanged();
     void currentFontIndexChanged();
     void bodyTextSizeChanged();
+    void interfaceScaleChanged();
     void clipStyleChanged();
 
 private:
