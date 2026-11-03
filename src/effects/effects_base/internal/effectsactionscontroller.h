@@ -13,7 +13,7 @@
 #include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/iuiactionsregister.h"
-#include "framework/shortcuts/ishortcutsregister.h"
+#include "framework/shortcuts_v2/icommandshortcutsregister.h"
 
 #include "spectrogram/ispectraleffectsregister.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
@@ -38,7 +38,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
-    muse::ContextInject<muse::shortcuts::IShortcutsRegister> shortcutsRegister{ this };
+    muse::GlobalInject<muse::shortcuts::ICommandShortcutsRegister> commandShortcutsRegister;
     muse::ContextInject<IEffectExecutionScenario> effectExecutionScenario{ this };
     muse::ContextInject<IEffectPresetsScenario> presetsScenario{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
