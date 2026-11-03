@@ -128,14 +128,6 @@ private:
     bool isProjectOpened() const;
     bool isProjectOpenedAndFocused() const;
 
-    muse::Ret doGlobalCopy();
-    muse::Ret doGlobalCut();
-    muse::Ret doGlobalPaste();
-    muse::Ret doGlobalUndo();
-    muse::Ret doGlobalRedo();
-    muse::Ret doGlobalDelete();
-    muse::Ret doGlobalCancel();
-    muse::Ret doGlobalTrigger();
     muse::Ret doGlobalEnter();
     muse::Ret doGlobalShiftEnter();
     muse::Ret doGlobalContextMenu();
