@@ -6,10 +6,7 @@
 
 #include "global/async/async.h"
 
-#include "au3-audio-io/ProjectAudioIO.h"
-
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/au3audiometerfactory.h"
 
 #include "audio/audiotypes.h"
 #include "types/ratio.h"
@@ -21,7 +18,7 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
-    : muse::Contextable(ctx), m_inputMeter{au::au3::createAudioMeter()}
+    : muse::Contextable(ctx), m_inputMeter{audio::IAudioMeter::create()}
 {
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
@@ -88,8 +85,7 @@ void Au3AudioInput::initMeter()
         return;
     }
 
-    auto& projectAudioIO = ProjectAudioIO::Get(*project);
-    projectAudioIO.SetCaptureMeter(m_inputMeter);
+    audioEngine()->setCaptureMeter(*project, m_inputMeter);
 }
 
 float Au3AudioInput::recordVolume() const

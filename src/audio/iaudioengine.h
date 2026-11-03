@@ -15,6 +15,7 @@
 
 #include "au3wrap/au3types.h"
 #include "audioconfigurationtypes.h"
+#include "iaudiometer.h"
 
 struct TransportSequences;
 struct AudioIOStartTransportOptions;
@@ -69,6 +70,12 @@ public:
                                            const std::shared_ptr<RealtimeEffectState>& state) = 0;
     virtual std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                             size_t effectListIndex, const std::string& newEffectId) = 0;
+
+    //! The meters fed by streams started for this project.
+    virtual void setPlaybackMeter(AudacityProject& project, const IAudioMeterPtr& meter) = 0;
+    virtual void setCaptureMeter(AudacityProject& project, const IAudioMeterPtr& meter) = 0;
+    //! Clears the meter queues of the project's meters.
+    virtual void stopMeters(AudacityProject& project) = 0;
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;

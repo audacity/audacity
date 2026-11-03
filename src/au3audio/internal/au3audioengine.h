@@ -42,6 +42,10 @@ public:
     std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group, size_t effectListIndex,
                                                                     const std::string& newEffectId) override;
 
+    void setPlaybackMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter) override;
+    void setCaptureMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter) override;
+    void stopMeters(AudacityProject& project) override;
+
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
 

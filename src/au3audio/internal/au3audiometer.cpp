@@ -3,8 +3,8 @@
  */
 #include "au3audiometer.h"
 
-namespace au::au3 {
-Au3AudioMeter::Au3AudioMeter(std::unique_ptr<audio::IAudioMeter> audioMeter)
+namespace au::au3audio {
+Au3AudioMeter::Au3AudioMeter(audio::IAudioMeterPtr audioMeter)
     : m_audioMeter{std::move(audioMeter)}
 {
 }
@@ -29,11 +29,5 @@ void Au3AudioMeter::start(double sampleRate)
 void Au3AudioMeter::stop()
 {
     m_audioMeter->stop();
-}
-
-muse::async::Channel<audio::audioch_t, audio::MeterSignal> Au3AudioMeter::dataChanged(
-    const std::optional<audio::IAudioMeter::TrackId>& trackId)
-{
-    return m_audioMeter->dataChanged(trackId);
 }
 }

@@ -11,7 +11,6 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
-#include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track/Track.h"
 #include "au3-track/PendingTracks.h"
@@ -490,16 +489,7 @@ muse::Ret Au3Record::stop()
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
     Au3Project& project = projectRef();
-    auto& projectAudioIO = ProjectAudioIO::Get(project);
-    auto playbackMeter = projectAudioIO.GetPlaybackMeter();
-    if (playbackMeter) {
-        playbackMeter->stop();
-    }
-
-    auto captureMeter = projectAudioIO.GetCaptureMeter();
-    if (captureMeter) {
-        captureMeter->stop();
-    }
+    audioEngine()->stopMeters(project);
 
     return make_ok();
 }
