@@ -450,6 +450,8 @@ DockPage {
             groupName: root.toolPanelsGroup
             location: Location.Right
 
+            visible: false
+
             dropDestinations: [
                 {
                     "dock": tracksPanel,
