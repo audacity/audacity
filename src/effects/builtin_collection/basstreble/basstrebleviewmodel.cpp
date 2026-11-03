@@ -60,6 +60,7 @@ void BassTrebleViewModel::doReload()
         item["min"] = min;
         item["max"] = max;
         item["step"] = step;
+        item["decimals"] = 1;
 
         m_setters.insert(key, s);
 
