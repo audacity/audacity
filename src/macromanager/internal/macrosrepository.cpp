@@ -323,7 +323,8 @@ RetVal<Macro> MacrosRepository::readMacroFile(const io::path_t& path) const
     std::string error;
     const JsonDocument document = JsonDocument::fromJson(data.val, &error);
     if (!error.empty() || !document.isObject()) {
-        return RetVal<Macro>(make_ret(Ret::Code::UnknownError, "invalid macro file: " + error));
+        LOGE() << "invalid macro file " << path << ": " << error;
+        return RetVal<Macro>(make_ret(Ret::Code::UnknownError, trc("macromanager", "Invalid macro file")));
     }
 
     return macroFromJson(document.rootObject());

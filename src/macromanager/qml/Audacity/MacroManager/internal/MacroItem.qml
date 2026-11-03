@@ -104,7 +104,7 @@ Rectangle {
                 navigation.row: root.navigationRow
                 navigation.column: 0
                 navigation.name: "RunMacro"
-                navigation.accessible.name: qsTrc("macromanager", "Run macro")
+                navigation.accessible.name: qsTrc("macromanager", "Run macro “%1”").arg(root.title)
 
                 contentItem: RowLayout {
                     spacing: prv.runButtonSpacing
