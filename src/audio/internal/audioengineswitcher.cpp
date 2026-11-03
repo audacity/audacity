@@ -3,6 +3,8 @@
 */
 #include "audioengineswitcher.h"
 
+#include <cstdlib>
+
 #include "framework/global/log.h"
 
 using namespace au::audio;
@@ -16,7 +18,11 @@ void AudioEngineSwitcher::registerBackend(const AudioBackend& backend)
     }
 
     m_backends.push_back(backend);
-    if (!m_engine) {
+
+    // TODO: replace with a persistent user setting
+    const char* const requested = std::getenv("AU_AUDIO_BACKEND");
+    if (!m_engine || (requested && backend.id == requested)) {
+        LOGI() << "audio backend: " << backend.id;
         activate(backend);
     }
 }
