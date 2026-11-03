@@ -50,7 +50,8 @@ void BassTrebleViewModel::doReload()
     const BassTrebleSettings& bs = settings<BassTrebleSettings>();
 
     auto makeItem
-        = [this](const QString& key, const QString& title, const QString& unit, double value, double min, double max, const Setter& s) {
+        = [this](const QString& key, const QString& title, const QString& unit, double value, double min, double max, double step,
+                 const Setter& s) {
         QVariantMap item;
         item["key"] = key;
         item["title"] = title;
@@ -58,6 +59,7 @@ void BassTrebleViewModel::doReload()
         item["unit"] = unit;
         item["min"] = min;
         item["max"] = max;
+        item["step"] = step;
 
         m_setters.insert(key, s);
 
@@ -72,6 +74,7 @@ void BassTrebleViewModel::doReload()
                                     bs.mBass,
                                     BassTrebleEffect::Bass.min,
                                     BassTrebleEffect::Bass.max,
+                                    BassTrebleEffect::Bass.step,
                                     [this](BassTrebleSettings& settings, double v) {
         // Changes ignored to avoid parameter set loop when values are linked.
         if (m_ignores.value((QString)(char*)BassTrebleEffect::Bass.key, false)) {
@@ -92,6 +95,7 @@ void BassTrebleViewModel::doReload()
                                       bs.mTreble,
                                       BassTrebleEffect::Treble.min,
                                       BassTrebleEffect::Treble.max,
+                                      BassTrebleEffect::Treble.step,
                                       [this](BassTrebleSettings& settings, double v) {
         if (m_ignores.value((QString)(char*)BassTrebleEffect::Treble.key, false)) {
             m_ignores.insert((QString)(char*)BassTrebleEffect::Treble.key, false);
@@ -111,6 +115,7 @@ void BassTrebleViewModel::doReload()
                                     bs.mGain,
                                     BassTrebleEffect::Gain.min,
                                     BassTrebleEffect::Gain.max,
+                                    BassTrebleEffect::Gain.step,
                                     [this](BassTrebleSettings& settings, double v) {
         if (m_ignores.value((QString)(char*)BassTrebleEffect::Gain.key, false)) {
             m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, false);
