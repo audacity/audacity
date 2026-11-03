@@ -5,11 +5,15 @@
 
 #include <QTemporaryDir>
 
+#include <algorithm>
 #include <cstdint>
+#include <cstdlib>
 #include <fstream>
 #include <iterator>
+#include <memory>
 #include <optional>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -24,6 +28,8 @@
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-tags/Tags.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "mod-ffmpeg/FFmpegDefines.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3project.h"
@@ -53,6 +59,9 @@ struct MetadataFormat {
     const char* name; // As in FormatInfo::format
     const char* extension;
     Id3Location id3Location;
+    //! For FFmpeg's custom export, the container to use
+    const char* ffmpegContainer = nullptr;
+    bool needsFFmpeg = false;
 };
 
 std::ostream& operator<<(std::ostream& os, const MetadataFormat& format)
@@ -174,6 +183,38 @@ protected:
         return m_dir.filePath(QString("metadata.") + format.extension).toStdString();
     }
 
+    //! FFmpeg is loaded at runtime. CI installs it, so there a missing FFmpeg fails the test;
+    //! elsewhere the test is skipped.
+    void requireFFmpeg(const MetadataFormat& format)
+    {
+        if (!format.needsFFmpeg) {
+            return;
+        }
+        const std::string missing = missingFFmpegSupport(format);
+        if (missing.empty()) {
+            return;
+        }
+        if (std::getenv("CI")) {
+            FAIL() << missing << ", but CI is expected to install FFmpeg";
+        }
+        GTEST_SKIP() << missing;
+    }
+
+    static std::string missingFFmpegSupport(const MetadataFormat& format)
+    {
+        const std::shared_ptr<FFmpegFunctions> ffmpeg = FFmpegFunctions::Load();
+        if (!ffmpeg) {
+            return "FFmpeg is not available";
+        }
+        if (format.ffmpegContainer && !ffmpeg->GuessOutputFormat(format.ffmpegContainer, nullptr, nullptr)) {
+            return std::string("FFmpeg has no ") + format.ffmpegContainer + " muxer";
+        }
+        if (!std::get<0>(ExportPluginRegistry::Get().FindFormat(wxString(format.name)))) {
+            return std::string("FFmpeg cannot export ") + format.name;
+        }
+        return {};
+    }
+
     void exportWithTags(const MetadataFormat& format, const Tags& tags, const std::string& path)
     {
         auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(
@@ -195,6 +236,11 @@ protected:
             ASSERT_NE(editor, nullptr);
             parameters = ExportUtils::ParametersFromEditor(*editor);
         }
+        if (format.ffmpegContainer) {
+            setParameter(parameters, FEFormatID, std::string(format.ffmpegContainer));
+            //! PCM, because FFmpeg 4.4's Matroska muxer rejects the final FLAC packet the exporter writes
+            setParameter(parameters, FECodecID, std::string("pcm_s16le"));
+        }
         ASSERT_TRUE(plugin->GetFormatInfo(formatIndex).canMetaData);
 
         const std::unique_ptr<ExportProcessor> processor = plugin->CreateProcessor(formatIndex);
@@ -205,6 +251,18 @@ protected:
 
         NullExportDelegate delegate;
         ASSERT_EQ(processor->Process(delegate), ExportResult::Success);
+    }
+
+    static void setParameter(ExportProcessor::Parameters& parameters, int id, const ExportValue& value)
+    {
+        const auto it = std::find_if(parameters.begin(), parameters.end(), [id](const auto& parameter) {
+            return std::get<0>(parameter) == id;
+        });
+        if (it != parameters.end()) {
+            std::get<1>(*it) = value;
+        } else {
+            parameters.emplace_back(id, value);
+        }
     }
 
     void importTags(const std::string& path, Tags& tags)
@@ -225,6 +283,10 @@ protected:
 TEST_P(MetadataRoundTripTests, TagsSurviveExportAndImport)
 {
     const MetadataFormat& format = GetParam();
+    requireFFmpeg(format);
+    if (IsSkipped() || HasFatalFailure()) {
+        return;
+    }
     const std::string path = exportPath(format);
 
     //! [GIVEN] Tags with a value for each standard field, one of them non-ASCII
@@ -281,7 +343,7 @@ TEST_P(MetadataRoundTripTests, WritesId3v23Tag)
     EXPECT_EQ((*tag)[3], 3) << "ID3v2." << int((*tag)[3]);
 }
 
-//! FFmpeg formats are left out: FFmpeg is loaded at runtime and may be missing.
+//! The FFmpeg formats need FFmpeg installed; see requireFFmpeg.
 INSTANTIATE_TEST_SUITE_P(AllFormatsWithMetadata, MetadataRoundTripTests, ::testing::Values(
                              MetadataFormat { "MP3", "mp3", Id3Location::FileStart },
                              MetadataFormat { "MP2", "mp2", Id3Location::FileStart },
@@ -290,7 +352,10 @@ INSTANTIATE_TEST_SUITE_P(AllFormatsWithMetadata, MetadataRoundTripTests, ::testi
                              MetadataFormat { "FLAC", "flac", Id3Location::None },
                              MetadataFormat { "OGG", "ogg", Id3Location::None },
                              MetadataFormat { "Opus", "opus", Id3Location::None },
-                             MetadataFormat { "WavPack", "wv", Id3Location::None }),
+                             MetadataFormat { "WavPack", "wv", Id3Location::None },
+                             MetadataFormat { "M4A", "m4a", Id3Location::None, nullptr, true },
+                             MetadataFormat { "WMA", "wma", Id3Location::None, nullptr, true },
+                             MetadataFormat { "FFMPEG", "mka", Id3Location::None, "matroska", true }),
                          [](const ::testing::TestParamInfo<MetadataFormat>& info) {
     return std::string(info.param.name);
 });
