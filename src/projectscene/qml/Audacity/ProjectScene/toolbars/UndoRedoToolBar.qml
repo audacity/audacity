@@ -31,7 +31,7 @@ StyledToolBarView {
         id: controlComp
 
         StyledToolBarItem {
-            width: 30
+            width: ui.theme.defaultButtonSize
             height: width
 
             navigation.panel: root.navigationPanel
