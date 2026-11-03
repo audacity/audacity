@@ -55,8 +55,14 @@ Item {
         return 0
     }
 
-    function valueDecimals() {
-        return Math.max(decimalsForStep(knob.stepSize), decimalsForStep(precisionStepSize()))
+    function displayDecimals() {
+        const parameterDecimals = Number(parameter["decimals"])
+
+        if (isFinite(parameterDecimals) && parameterDecimals >= 0) {
+            return parameterDecimals
+        }
+
+        return decimalsForStep(precisionStepSize())
     }
 
     function normalizedValue(value) {
@@ -164,7 +170,7 @@ Item {
 
             minValue: knob.from
             maxValue: knob.to
-            decimals: root.valueDecimals()
+            decimals: root.displayDecimals()
             step: root.precisionStepSize()
 
             currentValue: +warper.value.toFixed(decimals)
