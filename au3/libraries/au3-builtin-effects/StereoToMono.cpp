@@ -9,6 +9,7 @@
 **********************************************************************/
 #include "StereoToMono.h"
 #include "au3-basic-ui/BasicUI.h"
+#include "au3-clip-processing/SequenceProcessingGraphFactory.h"
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-mixer/Mix.h"
 #include "au3-effects/MixAndRender.h"
@@ -112,8 +113,10 @@ bool StereoToMono::ProcessOne(
     const auto end = track.GetEndTime();
 
     Mixer::Inputs tracks;
+    // Mixed as played, e.g. with the gain envelopes of the clips
     tracks.emplace_back(
-        track.SharedPointer<const SampleTrack>(), GetEffectStages(track));
+        track.SharedPointer<const SampleTrack>(), GetEffectStages(track),
+        SequenceProcessingGraphFactory::CreateGraph(track, track.GetClipInterfaces()));
 
     Mixer mixer(
         move(tracks), std::nullopt,

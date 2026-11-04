@@ -11,6 +11,7 @@
 #pragma once
 
 #include "ClipInterface.h"
+#include "au3-mixer/Envelope.h"
 
 class FloatVectorClip : public ClipInterface
 {
@@ -46,6 +47,11 @@ public:
     double GetStretchRatio() const override
     {
         return stretchRatio;
+    }
+
+    const Envelope& GetEnvelope() const override
+    {
+        return mEnvelope;
     }
 
     int GetCentShift() const override
@@ -85,4 +91,6 @@ private:
 
     const int mSampleRate;
     const std::vector<std::vector<float> > mAudio;
+    //! Trivial, as the envelope of a new WaveClip
+    const Envelope mEnvelope { true, 1e-7, 4.0, 1.0 };
 };

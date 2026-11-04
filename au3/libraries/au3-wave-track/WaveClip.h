@@ -623,7 +623,7 @@ public:
     //! @}
 
     Envelope& GetEnvelope() noexcept { return *mEnvelope; }
-    const Envelope& GetEnvelope() const noexcept { return *mEnvelope; }
+    const Envelope& GetEnvelope() const noexcept override { return *mEnvelope; }
 
     //! @pre `p`
     void SetEnvelope(std::unique_ptr<Envelope> p);

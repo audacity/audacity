@@ -43,9 +43,8 @@ public:
     /*!
      @param pSource if not null, where the samples of `seq` are read, forward only
      */
-    MixerSource(const std::shared_ptr<const WideSampleSequence>& seq, std::shared_ptr<ISequenceProcessingNode> pSource,
-                size_t bufferSize, double rate, const MixerOptions::Warp& options, bool highQuality, bool mayThrow,
-                std::shared_ptr<TimesAndSpeed> pTimesAndSpeed);
+    MixerSource(const std::shared_ptr<const WideSampleSequence>& seq, std::shared_ptr<ISequenceProcessingNode> pSource, double rate,
+                const MixerOptions::Warp& options, bool highQuality, bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed);
     MixerSource(MixerSource&&) noexcept = default;
     ~MixerSource() override;
 
@@ -129,9 +128,6 @@ private:
 
     const ResampleParameters mResampleParameters;
     std::vector<std::unique_ptr<Resample> > mResample;
-
-    //! Gain envelopes are applied to input before other transformations
-    std::vector<double> mEnvValues;
 
     //! Remember how many channels were passed to Acquire()
     unsigned mMaxChannels{};

@@ -19,6 +19,7 @@
 #include <string_view>
 
 class ClipInterface;
+class Envelope;
 class XMLAttributeValueView;
 class XMLWriter;
 
@@ -107,6 +108,9 @@ public:
         size_t iChannel, sampleCount start, size_t length, bool mayThrow = true) const = 0;
 
     virtual size_t NChannels() const = 0;
+
+    //! The gain envelope, in the time of the track the clip is in
+    virtual const Envelope& GetEnvelope() const = 0;
 
     virtual int GetCentShift() const = 0;
 

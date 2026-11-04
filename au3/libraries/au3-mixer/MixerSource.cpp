@@ -130,16 +130,6 @@ size_t MixerSource::MixVariableRates(
                     dst.push_back(queue.data() + queueLen);
                 }
                 Read(nChannels, dst.data(), pos, getLen, backwards);
-                mpSeq->GetEnvelopeValues(
-                    mEnvValues.data(), getLen, (pos).as_double() / sequenceRate,
-                    backwards);
-                for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
-                    const auto queue = mSampleQueue[iChannel].data();
-                    for (decltype(getLen) i = 0; i < getLen; i++) {
-                        queue[(queueLen) + i] *= mEnvValues[i];
-                    }
-                }
-
                 if (backwards) {
                     pos -= getLen;
                 } else {
@@ -249,15 +239,6 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
 
     Read(nChannels, floatBuffers, pos, slen, backwards);
 
-    mpSeq->GetEnvelopeValues(mEnvValues.data(), slen, t, backwards);
-
-    for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
-        const auto pFloat = floatBuffers[iChannel];
-        for (size_t i = 0; i < slen; i++) {
-            pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
-        }
-    }
-
     if (backwards) {
         pos -= slen;
     } else {
@@ -297,7 +278,7 @@ void MixerSource::ZeroFill(
 
 MixerSource::MixerSource(
     const std::shared_ptr<const WideSampleSequence>& seq, std::shared_ptr<ISequenceProcessingNode> pSource,
-    size_t bufferSize, double rate, const MixerOptions::Warp& options, bool highQuality,
+    double rate, const MixerOptions::Warp& options, bool highQuality,
     bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed)
     : mpSeq{seq}
     , mpSource{std::move(pSource)}
@@ -311,7 +292,6 @@ MixerSource::MixerSource(
     , mQueueLen{0}
     , mResampleParameters{highQuality, mpSeq->GetRate(), rate, options}
     , mResample(mnChannels)
-    , mEnvValues(std::max(sQueueMaxLen, bufferSize))
 {
     assert(mTimesAndSpeed);
     auto t0 = mTimesAndSpeed->mT0;
@@ -331,9 +311,9 @@ bool MixerSource::AcceptsBuffers(const Buffers& buffers) const
     return AcceptsBlockSize(buffers.BufferSize());
 }
 
-bool MixerSource::AcceptsBlockSize(size_t blockSize) const
+bool MixerSource::AcceptsBlockSize(size_t) const
 {
-    return blockSize <= mEnvValues.size();
+    return true;
 }
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))

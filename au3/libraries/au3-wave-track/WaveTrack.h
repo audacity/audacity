@@ -110,8 +110,6 @@ public:
     double GetEndTime() const override;
     double GetRate() const override;
     bool HasTrivialEnvelope() const override;
-    void GetEnvelopeValues(
-        double* buffer, size_t bufferLen, double t0, bool backwards) const override;
     sampleFormat WidestEffectiveFormat() const override;
 
     ChannelGroup& DoGetChannelGroup() const override;
@@ -532,9 +530,6 @@ public:
     sampleFormat WidestEffectiveFormat() const override;
 
     bool HasTrivialEnvelope() const override;
-
-    void GetEnvelopeValues(
-        double* buffer, size_t bufferLen, double t0, bool backwards) const override;
 
     //
     // Getting information about the track's internal block sizes

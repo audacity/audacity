@@ -14,6 +14,8 @@ set( SOURCES
    AudioSegmentSampleView.h
    clip-graph/ClipBufferingNode.cpp
    clip-graph/ClipBufferingNode.h
+   clip-graph/ClipEnvelopeNode.cpp
+   clip-graph/ClipEnvelopeNode.h
    ClipFades.cpp
    ClipFades.h
    clip-graph/ClipFadesNode.cpp

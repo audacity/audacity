@@ -66,12 +66,6 @@ public:
         return true;
     }
 
-    void GetEnvelopeValues(
-        double* buffer, size_t bufferLen, double t0,
-        bool backwards) const override
-    {
-    }
-
     // AudioGraph::Channel
     AudioGraph::ChannelType GetChannelType() const override
     {
