@@ -32,6 +32,14 @@ public:
     void setCrossfadeDuration(double milliseconds) override;
     muse::async::Notification crossfadeDurationChanged() const override;
 
+    bool isSoundActivatedRecordingOn() const override;
+    void setIsSoundActivatedRecordingOn(bool enable) override;
+    muse::async::Notification isSoundActivatedRecordingOnChanged() const override;
+
+    double soundActivationLevel() const override;
+    void setSoundActivationLevel(double db) override;
+    muse::async::Notification soundActivationLevelChanged() const override;
+
     RecordingTrackNameOptions recordingTrackNameOptions() const override;
 
     TimedRecordingOptions timedRecordingOptions() const override;
@@ -42,5 +50,7 @@ private:
     muse::async::Notification m_isInputMonitoringOnChanged;
     muse::async::Notification m_leadInTimeDurationChanged;
     muse::async::Notification m_crossfadeDurationChanged;
+    muse::async::Notification m_isSoundActivatedRecordingOnChanged;
+    muse::async::Notification m_soundActivationLevelChanged;
 };
 }
