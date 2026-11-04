@@ -9,11 +9,12 @@
 #include "framework/global/async/async.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/ui/imainwindow.h"
-#include "framework/actions/iactionsdispatcher.h"
-#include "framework/actions/actiontypes.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 #include "appshell/istartupscenario.h"
 #include "appshell/internal/splashscreen/splashscreen.h"
+#include "au3cloud/cloudcommands.h"
+#include "project/projectcommands.h"
 #include "project/types/projecttypes.h"
 
 #include "commandlineparser.h"
@@ -174,29 +175,32 @@ void GuiApp::onSecondInstanceArgs(const QStringList& args)
         return;
     }
 
-    auto dispatcher = muse::modularity::ioc(ctx)->resolve<muse::actions::IActionsDispatcher>("app");
+    auto dispatcher = muse::modularity::ioc(ctx)->resolve<muse::rcommand::ICommandDispatcher>("app");
     if (!dispatcher) {
         return;
     }
 
     if (parsed->startup.startupUrl.has_value()) {
-        dispatcher->dispatch("open-url",
-                             muse::actions::ActionData::make_arg1<QString>(parsed->startup.startupUrl.value()));
+        dispatcher->dispatch(au::au3cloud::CLOUD_OPEN_URL_COMMAND, {
+            { au::au3cloud::CLOUD_OPEN_URL_URL_PARAM, muse::Val(parsed->startup.startupUrl.value().toStdString()) }
+        });
     }
 
     if (parsed->startup.projectUrl.has_value()) {
-        dispatcher->dispatch("file-open",
-                             muse::actions::ActionData::make_arg1<QUrl>(parsed->startup.projectUrl.value()));
+        dispatcher->dispatch(project::PROJECT_OPEN_COMMAND, {
+            { project::PROJECT_URL_PARAM, muse::Val(parsed->startup.projectUrl.value().toString().toStdString()) }
+        });
     }
 
     if (!parsed->startup.mediaFiles.empty()) {
-        QStringList files;
-        files.reserve(static_cast<int>(parsed->startup.mediaFiles.size()));
+        muse::ValList files;
+        files.reserve(parsed->startup.mediaFiles.size());
         for (const auto& file : parsed->startup.mediaFiles) {
-            files << file.toQString();
+            files.emplace_back(file.toStdString());
         }
-        dispatcher->dispatch("project-import-startup-media",
-                             muse::actions::ActionData::make_arg2<QStringList, bool>(
-                                 files, parsed->startup.removeMediaFilesAfterImport));
+        dispatcher->dispatch(project::PROJECT_IMPORT_STARTUP_MEDIA_COMMAND, {
+            { project::PROJECT_FILES_PARAM, muse::Val(files) },
+            { project::PROJECT_REMOVE_AFTER_IMPORT_PARAM, muse::Val(parsed->startup.removeMediaFilesAfterImport) }
+        });
     }
 }
