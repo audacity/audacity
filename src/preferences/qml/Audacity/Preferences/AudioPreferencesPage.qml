@@ -53,7 +53,8 @@ PreferencesPage {
             id: audioApiSection
 
             currentAudioApiIndex: apiModel.currentAudioApiIndex
-            audioApiList: apiModel.audioApiList()
+            // Each engine has its hosts
+            audioApiList: apiModel.currentAudioEngineIndex, apiModel.audioApiList()
             apiModel: apiModel
 
             navigation.section: root.navigationSection

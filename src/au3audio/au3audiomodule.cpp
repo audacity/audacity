@@ -72,9 +72,11 @@ void Au3AudioModule::resolveImports()
     IF_ASSERT_FAILED(backendRegister) {
         return;
     }
-    backendRegister->registerBackend({ "portaudio", m_audioEngine, m_audioDriverController });
+    backendRegister->registerBackend({ "portaudio", m_audioEngine, m_audioDriverController,
+                                       [this] { return m_audioDriverController->suspendStream(); }, "PortAudio" });
 #ifdef AU_USE_JUCE
-    backendRegister->registerBackend({ "juce", m_juceAudioEngine, m_juceDriverController });
+    backendRegister->registerBackend({ "juce", m_juceAudioEngine, m_juceDriverController,
+                                       [this] { return m_juceDriverController->suspendStream(); }, "JUCE" });
 #endif
 }
 

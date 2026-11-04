@@ -34,6 +34,9 @@ public:
 
     void setAudioEngine(const std::shared_ptr<audio::IAudioEngine>& engine) { audioEngine.set(engine); }
 
+    //! Stops the engine's stream, if any, as a change of the configuration does; see audio::AudioBackend::suspendStream
+    audio::AudioStreamRestorer suspendStream() const;
+
     void init();
 
     //! Settings shared by all backends: the defaults for new projects

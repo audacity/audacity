@@ -8,6 +8,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/audiodrivercontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/audioengineswitcher_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3audioio_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/audioenginemock.h
     )
@@ -24,6 +25,7 @@ endif()
 
 set(MODULE_TEST_LINK
     au3audio
+    audio
     au3wrap
     au3-audio-io
     portaudio::portaudio

@@ -20,6 +20,11 @@ using namespace au::au3;
 Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx), m_inputMeter{audio::IAudioMeter::create()}
 {
+    // The meter is the backend's
+    audioBackendSelector()->activeBackendChanged().onNotify(this, [this]() {
+        initMeter();
+    });
+
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
         if (!currentProject) {

@@ -4,25 +4,38 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "framework/global/async/asyncable.h"
 
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "audio/iaudiobackendregister.h"
+#include "audio/iaudiobackendselector.h"
 #include "audio/iaudioengine.h"
 
 namespace au::audio {
 //! The exported IAudioEngine and IAudioDriverController: forwards to the active backend.
 //! Owns the notifications and channels, relaying the active backend's, so that
 //! subscriptions survive a change of backend.
-class AudioEngineSwitcher final : public IAudioEngine, public IAudioDriverController, public IAudioBackendRegister
+class AudioEngineSwitcher final : public IAudioEngine, public IAudioDriverController, public IAudioBackendRegister,
+    public IAudioBackendSelector
 {
 public:
     AudioEngineSwitcher();
 
     // IAudioBackendRegister
     void registerBackend(const AudioBackend& backend) override;
+
+    //! Once the backends are registered and the settings loaded: activates the backend chosen last
+    void init();
+
+    // IAudioBackendSelector
+    std::vector<std::string> backends() const override;
+    std::string activeBackend() const override;
+    std::string backendTitle(const std::string& id) const override;
+    ApplyResult setActiveBackend(const std::string& id) override;
+    muse::async::Notification activeBackendChanged() const override;
 
     // IAudioEngine
     bool isBusy() const override;
@@ -105,6 +118,7 @@ private:
     IAudioDriverController& driver() const;
 
     std::vector<AudioBackend> m_backends;
+    std::string m_activeId;
     std::shared_ptr<IAudioEngine> m_engine;
     std::shared_ptr<IAudioDriverController> m_driver;
 
@@ -122,5 +136,6 @@ private:
     muse::async::Notification m_audioDeviceListChanged;
     muse::async::Channel<std::string> m_usedOutputDeviceChanged;
     muse::async::Channel<std::string> m_usedInputDeviceChanged;
+    muse::async::Notification m_activeBackendChanged;
 };
 }

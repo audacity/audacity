@@ -462,6 +462,23 @@ AudioStreamRestorer AudioDriverController::suspend(const AudioStreamDescriptor& 
     return suspender ? suspender->suspendForAudioConfiguration(stream.kind) : nullptr;
 }
 
+AudioStreamRestorer AudioDriverController::suspendStream() const
+{
+    const auto stream = audioEngine() ? audioEngine()->currentStream() : std::nullopt;
+    if (!stream) {
+        return [] { return true; };
+    }
+    if (auto restoreStream = suspendOrForceStop(*stream)) {
+        return restoreStream;
+    }
+    // E.g. monitoring for a project whose window is closing, which stopping the transport doesn't stop
+    audioEngine()->stopMonitoring();
+    if (audioEngine()->currentStream()) {
+        return {};
+    }
+    return [] { return true; };
+}
+
 AudioStreamRestorer AudioDriverController::suspendOrForceStop(const AudioStreamDescriptor& stream) const
 {
     if (auto restoreStream = suspend(stream)) {
