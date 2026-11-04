@@ -69,6 +69,8 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(bool hasMetadata READ hasMetadata NOTIFY hasMetadataChanged)
     Q_PROPERTY(int optionsCount READ optionsCount NOTIFY optionsCountChanged)
 
+    Q_PROPERTY(bool settingsOnly READ settingsOnly WRITE setSettingsOnly NOTIFY settingsOnlyChanged)
+
 public:
     explicit ExportPreferencesModel(QObject* parent = nullptr);
     ~ExportPreferencesModel();
@@ -76,6 +78,9 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void apply();
     Q_INVOKABLE void cancel();
+
+    bool settingsOnly() const;
+    void setSettingsOnly(bool settingsOnly);
 
     QString currentProcess() const;
     Q_INVOKABLE void setCurrentProcess(const QString& process);
@@ -137,6 +142,7 @@ public:
     muse::Ret warnAndDisableMasterFxBeforeExport() const;
 
 signals:
+    void settingsOnlyChanged();
     void currentProcessChanged();
     void processListChanged();
     void trimBlankSpaceChanged();
@@ -179,5 +185,6 @@ private:
     QString m_fileNamePrefix;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
     bool m_resetSampleRate = true;
+    bool m_settingsOnly = false;
 };
 }

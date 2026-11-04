@@ -199,6 +199,22 @@ void ExportPreferencesModel::cancel()
     }
 }
 
+bool ExportPreferencesModel::settingsOnly() const
+{
+    return m_settingsOnly;
+}
+
+void ExportPreferencesModel::setSettingsOnly(bool settingsOnly)
+{
+    if (m_settingsOnly == settingsOnly) {
+        return;
+    }
+
+    m_settingsOnly = settingsOnly;
+    emit settingsOnlyChanged();
+    emit currentProcessChanged();
+}
+
 QString ExportPreferencesModel::currentProcess() const
 {
     return processName(exportConfiguration()->processType());
@@ -275,6 +291,10 @@ bool ExportPreferencesModel::trimBlankSpaceEnabled() const
 
 bool ExportPreferencesModel::separateFilesExport() const
 {
+    if (m_settingsOnly) {
+        return false;
+    }
+
     const ExportProcessType type = exportConfiguration()->processType();
     return type == ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES
            || type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
@@ -282,7 +302,7 @@ bool ExportPreferencesModel::separateFilesExport() const
 
 bool ExportPreferencesModel::separateFilesByLabels() const
 {
-    return exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
+    return !m_settingsOnly && exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
 }
 
 QString ExportPreferencesModel::fileNamePrefix() const

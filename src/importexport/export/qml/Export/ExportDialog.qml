@@ -29,12 +29,21 @@ StyledDialogView {
     property int smallDropdownWidth: 364 * 0.65
     property int labelColumnWidth: 140
 
+    property bool settingsOnly: false
+    property string filePath: ""
+
     onNavigationActivateRequested: {
-        typeDropdown.navigation.requestActive()
+        if (root.settingsOnly) {
+            filenameField.navigation.requestActive()
+        } else {
+            typeDropdown.navigation.requestActive()
+        }
     }
 
     ExportPreferencesModel {
         id: exportPreferencesModel
+
+        settingsOnly: root.settingsOnly
 
         onExportCompleted: {
             root.accept()
@@ -51,6 +60,9 @@ StyledDialogView {
 
     Component.onCompleted: {
         exportPreferencesModel.init()
+        if (root.filePath !== "") {
+            exportPreferencesModel.setFileDialogPath(root.filePath)
+        }
         ffmpegPrefModel.init()
         dynamicOptionsModel.init()
     }
@@ -72,6 +84,8 @@ StyledDialogView {
 
             BaseSection {
                 id: typeSection
+
+                visible: !root.settingsOnly
 
                 //: Section heading in the Export dialog
                 title: qsTrc("export", "Export")
@@ -121,7 +135,9 @@ StyledDialogView {
                 }
             }
 
-            SeparatorLine {}
+            SeparatorLine {
+                visible: typeSection.visible
+            }
 
             BaseSection {
                 id: fileSection
@@ -631,11 +647,15 @@ StyledDialogView {
                 }
             }
 
-            SeparatorLine {}
+            SeparatorLine {
+                visible: renderingSection.visible
+            }
 
             BaseSection {
                 id: renderingSection
                 title: qsTrc("export", "Rendering")
+
+                visible: !root.settingsOnly
 
                 navigation.section: root.navigationSection
                 navigation.order: audioSection.navigation.order + 1
@@ -728,7 +748,7 @@ StyledDialogView {
             FlatButton {
                 id: okBtn
                 //: Label of the button that starts the export
-                text: qsTrc("global", "Export")
+                text: root.settingsOnly ? qsTrc("global", "Done") : qsTrc("global", "Export")
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.Apply
                 minWidth: 80
@@ -738,10 +758,22 @@ StyledDialogView {
                 navigation.order: 3
 
                 onClicked: {
-                    if (exportPreferencesModel.verifyExportPossible()) {
-                        exportPreferencesModel.apply()
-                        exportPreferencesModel.exportData()
+                    if (!exportPreferencesModel.verifyExportPossible()) {
+                        return
                     }
+
+                    exportPreferencesModel.apply()
+
+                    if (root.settingsOnly) {
+                        root.ret = {
+                            errcode: 0,
+                            value: exportPreferencesModel.suggestedFilePath
+                        }
+                        root.hide()
+                        return
+                    }
+
+                    exportPreferencesModel.exportData()
                 }
             }
         }
