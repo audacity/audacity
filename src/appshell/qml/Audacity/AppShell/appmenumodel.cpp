@@ -361,8 +361,9 @@ MenuItem* AppMenuModel::makeRecordMenu()
         makeMenuItem(record::RECORD_ON_NEW_TRACK_COMMAND),
         makeMenuItem(record::RECORD_LEAD_IN_RECORDING_COMMAND),
         makeMenuItem(record::RECORD_TIMED_RECORDING_COMMAND),
-        //! makeMenuItem("toggle-sound-activated-recording"),
-        //! makeMenuItem("set-sound-activation-level"),
+        makeSeparator(),
+        makeMenuItem(record::RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND),
+        makeMenuItem(record::RECORD_SET_SOUND_ACTIVATION_LEVEL_COMMAND),
     };
 
     return makeMenu(TranslatableString("appshell-menu-record", "&Record"), recordItems, "menu-record");

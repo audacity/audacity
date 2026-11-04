@@ -10,11 +10,14 @@
 #include "context/iuicontextresolver.h"
 #include "framework/ui/iuiactionsmodule.h"
 
+#include "record/irecordconfiguration.h"
+
 #include "recordcontroller.h"
 
 namespace au::record {
 class RecordUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
+    muse::GlobalInject<IRecordConfiguration> configuration;
     muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
 
 public:

@@ -11,12 +11,14 @@
 #include "framework/rcommand/imodulecommandsstate.h"
 
 #include "context/iglobalcontext.h"
+#include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
 
 namespace au::record {
 class RecordCommandsState : public muse::rcommand::IModuleCommandsState, public muse::Contextable, public muse::async::Asyncable
 {
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
+    muse::GlobalInject<IRecordConfiguration> configuration;
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<IRecordController> controller{ this };
 

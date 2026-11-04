@@ -864,10 +864,10 @@
         <key>rescan-devices</key>
     </SC>
     <SC>
-        <key>sound-activation-level</key>
+        <key>action://record/set-sound-activation-level</key>
     </SC>
     <SC>
-        <key>sound-activation</key>
+        <key>action://record/toggle-sound-activated-recording</key>
     </SC>
     <SC>
         <key>overdub</key>
