@@ -37,6 +37,8 @@ StyledDialogView {
             color: "transparent"
             border.width: 0
 
+            listening: true
+
             navigationPanel: NavigationPanel {
                 name: "SoundActivationLevelPanel"
                 direction: NavigationPanel.Horizontal

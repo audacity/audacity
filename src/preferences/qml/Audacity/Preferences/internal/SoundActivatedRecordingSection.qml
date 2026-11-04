@@ -37,6 +37,7 @@ BaseSection {
 
         enabled: recordingPreferencesModel.isSoundActivatedRecordingOn
         applyImmediately: true
+        listening: enabled && visible
 
         navigationPanel: root.navigation
         navigationOrderStart: 2
