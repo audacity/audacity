@@ -52,7 +52,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Apply preset"),
         InputSchema({
-                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
                 { EFFECTS_PRESET_ID_PARAM, Arg(DataType::String, u"Preset identifier") },
             }),
         Decoration()
@@ -64,7 +64,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Save preset"),
         InputSchema({
-                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
                 { EFFECTS_PRESET_ID_PARAM, Arg(DataType::String, u"Preset identifier") },
             }),
         Decoration()
@@ -76,7 +76,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Save preset as"),
         InputSchema({
-                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
             }),
         Decoration()
     },
@@ -99,7 +99,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Import preset"),
         InputSchema({
-                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
             }),
         Decoration()
     },
@@ -110,7 +110,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Export preset"),
         InputSchema({
-                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Integer, u"Effect instance identifier") },
+                { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
             }),
         Decoration()
     },

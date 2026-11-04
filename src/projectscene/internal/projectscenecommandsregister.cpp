@@ -94,7 +94,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Half-wave"),
         InputSchema({
-                { PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track identifier") },
+                { PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM, Arg(DataType::Int, u"Track identifier") },
             }),
         Decoration(IconCode::Code::WAVEFORM_HALFWAVE, rcommand::Checkable::Yes)
     },
@@ -114,8 +114,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Pitch and speed"),
         InputSchema({
-                { PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track identifier") },
-                { PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip identifier") },
+                { PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM, Arg(DataType::Int, u"Track identifier") },
+                { PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip identifier") },
             }),
         Decoration()
     },
@@ -208,7 +208,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Center view on playhead"),
         InputSchema({
                 { PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_ONLY_IF_NOT_VISIBLE_PARAM,
-                  Arg(DataType::Boolean, u"Skip when the playhead is already visible") },
+                  Arg(DataType::Bool, u"Skip when the playhead is already visible") },
             }),
         Decoration()
     },

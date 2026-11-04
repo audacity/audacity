@@ -76,8 +76,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Cut the given clip into the clipboard"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
-                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::CUT)
     },
@@ -88,8 +88,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Copy the given clip into the clipboard"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
-                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::COPY)
     },
@@ -100,8 +100,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Delete the given clip"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
-                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::DELETE_TANK)
     },
@@ -112,8 +112,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Cut the given clip into the clipboard and leave a gap"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
-                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::CUT)
     },
@@ -124,8 +124,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Delete the given clip and leave a gap"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
-                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::DELETE_TANK)
     },
@@ -145,8 +145,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Render pitch and speed"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
-                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration()
     },
@@ -157,8 +157,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Reset pitch and speed"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
-                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration()
     },
@@ -169,8 +169,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Stretch with tempo changes"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
-                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Integer, u"Clip id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(Checkable::Yes)
     },
@@ -181,8 +181,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Split the given tracks at the given positions"),
         InputSchema({
-                { TRACKEDIT_TRACK_IDS_PARAM, Arg(DataType::Array, u"Track ids") },
-                { TRACKEDIT_PIVOTS_PARAM, Arg(DataType::Array, u"Split positions in seconds") },
+                { TRACKEDIT_TRACK_IDS_PARAM, Arg(DataType::List, u"Track ids") },
+                { TRACKEDIT_PIVOTS_PARAM, Arg(DataType::List, u"Split positions in seconds") },
             }),
         Decoration(IconCode::Code::SPLIT_TOOL)
     },
@@ -320,7 +320,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Mix the selected tracks into one track"),
         InputSchema({
                 { TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM,
-                  Arg(DataType::Boolean, u"Keep the original tracks and add the mix as a new track") },
+                  Arg(DataType::Bool, u"Keep the original tracks and add the mix as a new track") },
             }),
         Decoration()
     },
@@ -451,7 +451,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Select the track at the given index"),
         InputSchema({
-                { TRACKEDIT_TRACK_INDEX_PARAM, Arg(DataType::Integer, u"Track index") },
+                { TRACKEDIT_TRACK_INDEX_PARAM, Arg(DataType::Int, u"Track index") },
             }),
         Decoration()
     },
@@ -480,7 +480,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change clip color"),
         InputSchema({
-                { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Integer, u"Color index") },
+                { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Int, u"Color index") },
             }),
         Decoration(IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED, Checkable::Yes)
     },
@@ -491,7 +491,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change track color"),
         InputSchema({
-                { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Integer, u"Color index") },
+                { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Int, u"Color index") },
             }),
         Decoration(IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED, Checkable::Yes)
     },
@@ -502,7 +502,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change track format"),
         InputSchema({
-                { TRACKEDIT_FORMAT_PARAM, Arg(DataType::Integer, u"Track format") },
+                { TRACKEDIT_FORMAT_PARAM, Arg(DataType::Int, u"Track format") },
             }),
         Decoration(Checkable::Yes)
     },
@@ -513,7 +513,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Change track sample rate"),
         InputSchema({
-                { TRACKEDIT_RATE_PARAM, Arg(DataType::Integer, u"Sample rate in Hz") },
+                { TRACKEDIT_RATE_PARAM, Arg(DataType::Int, u"Sample rate in Hz") },
             }),
         Decoration(Checkable::Yes)
     },
@@ -533,7 +533,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Waveform"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::WAVEFORM, Checkable::Yes)
     },
@@ -544,7 +544,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Spectrogram"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::SPECTROGRAM, Checkable::Yes)
     },
@@ -555,7 +555,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Multi-view"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::WAVEFORM_MULTIVIEW, Checkable::Yes)
     },
@@ -656,7 +656,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Merge the clips in the given time range on the given tracks"),
         InputSchema({
-                { TRACKEDIT_TRACK_IDS_PARAM, Arg(DataType::Array, u"Track ids") },
+                { TRACKEDIT_TRACK_IDS_PARAM, Arg(DataType::List, u"Track ids") },
                 { TRACKEDIT_START_PARAM, Arg(DataType::Float, u"Range start in seconds") },
                 { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Range end in seconds") },
             }),
@@ -669,7 +669,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Duplicate the given time range on the given tracks"),
         InputSchema({
-                { TRACKEDIT_TRACK_IDS_PARAM, Arg(DataType::Array, u"Track ids") },
+                { TRACKEDIT_TRACK_IDS_PARAM, Arg(DataType::List, u"Track ids") },
                 { TRACKEDIT_START_PARAM, Arg(DataType::Float, u"Range start in seconds") },
                 { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Range end in seconds") },
             }),
@@ -772,7 +772,7 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Split the given track at the playback position"),
         InputSchema({
-                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Integer, u"Track id") },
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::SPLIT_TOOL)
     },
