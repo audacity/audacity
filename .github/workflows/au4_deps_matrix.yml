@@ -95,7 +95,7 @@ jobs:
               sudo apt-get update
               sudo apt-get install -y \
                 libogg-dev libvorbis-dev libflac-dev libflac++-dev libopus-dev libopusfile-dev \
-                libmp3lame-dev libmpg123-dev libwavpack-dev libsndfile1-dev \
+                libmp3lame-dev libmpg123-dev libwavpack-dev libsndfile1-dev libid3tag0-dev \
                 portaudio19-dev libexpat1-dev zlib1g-dev libwxgtk3.2-dev \
                 pkg-config libfreetype-dev libharfbuzz-dev libpugixml-dev libutfcpp-dev
               echo "EXTDEPS_OVERRIDE_ALL=SYSTEM" >> "$GITHUB_ENV"
