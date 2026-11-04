@@ -19,7 +19,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         muse::TranslatableString("command_description", "Open the audio.com tour page, signing in first if needed"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::Shortcut | Availability::MCP
     },
     CommandInfo{
         CLOUD_OPEN_PROJECT_PAGE_COMMAND,
@@ -30,7 +31,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { CLOUD_OPEN_PROJECT_PAGE_ID_PARAM, Arg(DataType::String, u"Id of the cloud project") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         CLOUD_OPEN_AUDIO_PAGE_COMMAND,
@@ -41,7 +43,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { CLOUD_OPEN_AUDIO_PAGE_SLUG_PARAM, Arg(DataType::String, u"Slug of the audio") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         CLOUD_OPEN_PROFILE_PAGE_COMMAND,
@@ -50,7 +53,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         muse::TranslatableString("command_description", "Open the signed in user’s audio.com profile page"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::Shortcut | Availability::MCP
     },
     CommandInfo{
         CLOUD_OPEN_URL_COMMAND,
@@ -61,7 +65,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { CLOUD_OPEN_URL_URL_PARAM, Arg(DataType::String, u"The URL to handle") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
 };
 }

@@ -106,7 +106,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_SEEK_TIME_PARAM, Arg(DataType::Float, u"Time in seconds") },
                 { PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, Arg(DataType::Bool, u"Start playback from the new position") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::API | Availability::MCP
     },
     CommandInfo{
         PLAYBACK_CHANGE_PLAY_REGION_COMMAND,
@@ -118,7 +119,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_CHANGE_PLAY_REGION_START_PARAM, Arg(DataType::Float, u"Region start in seconds") },
                 { PLAYBACK_CHANGE_PLAY_REGION_END_PARAM, Arg(DataType::Float, u"Region end in seconds") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::API | Availability::MCP
     },
     CommandInfo{
         PLAYBACK_CHANGE_AUDIO_API_COMMAND,
@@ -129,7 +131,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM, Arg(DataType::Int, u"Index in the list of available audio hosts") },
             }),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::Dispatch | Availability::API | Availability::MCP
     },
     CommandInfo{
         PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND,
@@ -141,7 +144,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM, Arg(DataType::Int, u"Index in the list of available output devices") },
                 { PLAYBACK_CHANGE_PLAYBACK_DEVICE_IS_DEFAULT_PARAM, Arg(DataType::Bool, u"Use the system default device") },
             }),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::Dispatch | Availability::API | Availability::MCP
     },
     CommandInfo{
         PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND,
@@ -153,7 +157,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM, Arg(DataType::Int, u"Index in the list of available input devices") },
                 { PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM, Arg(DataType::Bool, u"Use the system default device") },
             }),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::Dispatch | Availability::API | Availability::MCP
     },
     CommandInfo{
         PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND,
@@ -164,7 +169,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM, Arg(DataType::Int, u"Number of input channels") },
             }),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::Dispatch | Availability::API | Availability::MCP
     },
     CommandInfo{
         PLAYBACK_RESCAN_DEVICES_COMMAND,
@@ -254,7 +260,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Mute/unmute focused track"),
         InputSchema(),
-        Decoration(IconCode::Code::MUTE)
+        Decoration(IconCode::Code::MUTE),
+        Availability::Dispatch | Availability::Shortcut
     },
     CommandInfo{
         PLAYBACK_TOGGLE_SOLO_FOCUSED_TRACK_COMMAND,
@@ -263,7 +270,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Solo/unsolo focused track"),
         InputSchema(),
-        Decoration(IconCode::Code::SOLO)
+        Decoration(IconCode::Code::SOLO),
+        Availability::Dispatch | Availability::Shortcut
     },
     CommandInfo{
         PLAYBACK_MUTE_ALL_TRACKS_COMMAND,
@@ -308,7 +316,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set playback level"),
         InputSchema(),
-        Decoration(IconCode::Code::AUDIO)
+        Decoration(IconCode::Code::AUDIO),
+        Availability::Dispatch
     },
     CommandInfo{
         PLAYBACK_METRONOME_COMMAND,
@@ -317,7 +326,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Toggle metronome playback"),
         InputSchema(),
-        Decoration(IconCode::Code::METRONOME, rcommand::Checkable::Yes)
+        Decoration(IconCode::Code::METRONOME, rcommand::Checkable::Yes),
+        Availability::Dispatch
     },
     CommandInfo{
         PLAYBACK_TIME_COMMAND,
@@ -326,7 +336,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set playback time"),
         InputSchema(),
-        Decoration(IconCode::Code::CLOCK)
+        Decoration(IconCode::Code::CLOCK),
+        Availability::Dispatch
     },
     CommandInfo{
         PLAYBACK_BPM_COMMAND,
@@ -335,7 +346,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set playback tempo"),
         InputSchema(),
-        Decoration(IconCode::Code::BPM)
+        Decoration(IconCode::Code::BPM),
+        Availability::Dispatch
     },
     CommandInfo{
         PLAYBACK_TIME_SIGNATURE_COMMAND,
@@ -344,7 +356,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set playback time signature"),
         InputSchema(),
-        Decoration(IconCode::Code::TIME_SIGNATURE)
+        Decoration(IconCode::Code::TIME_SIGNATURE),
+        Availability::Dispatch
     },
 };
 }

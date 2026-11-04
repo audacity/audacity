@@ -67,7 +67,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set record level"),
         InputSchema(),
-        Decoration(IconCode::Code::MICROPHONE)
+        Decoration(IconCode::Code::MICROPHONE),
+        Availability::Dispatch
     },
     CommandInfo{
         RECORD_TOGGLE_MIC_METERING_COMMAND,
