@@ -15,19 +15,27 @@ using ::testing::Return;
 using namespace muse;
 using namespace muse::shortcuts;
 
+static const std::string MODULE_NAME("context_tests");
+
 namespace au::context {
 class ShortcutResolverTests : public ::testing::Test
 {
 public:
     void SetUp() override
     {
-        m_resolver = std::make_unique<ShortcutResolver>(muse::modularity::globalCtx());
-
         m_uiContextResolver = std::make_shared<NiceMock<UiContextResolverMock> >();
-        m_resolver->uiContextResolver.set(m_uiContextResolver);
+        modularity::ioc(m_iocCtx)->registerExport<IUiContextResolver>(MODULE_NAME, m_uiContextResolver);
 
         m_navigationController = std::make_shared<NiceMock<muse::ui::NavigationControllerMock> >();
-        m_resolver->navigationController.set(m_navigationController);
+        modularity::ioc(m_iocCtx)->registerExport<muse::ui::INavigationController>(MODULE_NAME, m_navigationController);
+
+        m_resolver = std::make_unique<ShortcutResolver>(m_iocCtx);
+    }
+
+    void TearDown() override
+    {
+        m_resolver.reset();
+        modularity::removeIoC(m_iocCtx);
     }
 
     void setActiveSection(const QString& name)
@@ -49,6 +57,7 @@ public:
         return sc;
     }
 
+    const modularity::ContextPtr m_iocCtx = std::make_shared<modularity::Context>(1);
     std::unique_ptr<ShortcutResolver> m_resolver;
     std::shared_ptr<NiceMock<UiContextResolverMock> > m_uiContextResolver;
     std::shared_ptr<NiceMock<muse::ui::NavigationControllerMock> > m_navigationController;
