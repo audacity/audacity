@@ -21970,7 +21970,7 @@ Do you wish to continue?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="895"/>
         <source>Split stereo tracks to center mono</source>
-        <translation>Split stereo tracks to center mono</translation>
+        <translation>Split stereo tracks to centre mono</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
