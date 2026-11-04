@@ -22,7 +22,6 @@ qt_add_qml_module(macromanager_qml
         MacroManagerPanel.qml
         MacroManagerTitleBar.qml
         MacroNameDialog.qml
-        DeleteMacroDialog.qml
         EditMacroDialog.qml
         CommandParamsDialog.qml
         RunOnFilesDialog.qml

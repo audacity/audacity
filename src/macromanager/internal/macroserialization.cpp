@@ -3,6 +3,8 @@
 */
 #include "macroserialization.h"
 
+#include "framework/global/translation.h"
+
 using namespace au::macromanager;
 using namespace muse;
 using namespace muse::rcommand;
@@ -80,7 +82,7 @@ RetVal<Macro> au::macromanager::macroFromJson(const JsonObject& object)
 {
     const JsonValue name = object.value(NAME_KEY);
     if (!name.isString() || name.toStdString().empty()) {
-        return RetVal<Macro>(make_ret(Ret::Code::UnknownError, "macro has no name"));
+        return RetVal<Macro>(make_ret(Ret::Code::UnknownError, trc("macromanager", "macro has no name")));
     }
 
     Macro macro;
@@ -94,7 +96,7 @@ RetVal<Macro> au::macromanager::macroFromJson(const JsonObject& object)
         if (stepObject.contains(MACRO_KEY)) {
             const std::string macroName = stepObject.value(MACRO_KEY).toStdString();
             if (macroName.empty()) {
-                return RetVal<Macro>(make_ret(Ret::Code::UnknownError, "macro step has no macro name"));
+                return RetVal<Macro>(make_ret(Ret::Code::UnknownError, trc("macromanager", "macro step has no macro name")));
             }
 
             macro.steps.push_back(MacroReference { macroName });
@@ -103,7 +105,7 @@ RetVal<Macro> au::macromanager::macroFromJson(const JsonObject& object)
 
         const Command command(stepObject.value(COMMAND_KEY).toStdString());
         if (!command.isValid()) {
-            return RetVal<Macro>(make_ret(Ret::Code::UnknownError, "macro step has an invalid command"));
+            return RetVal<Macro>(make_ret(Ret::Code::UnknownError, trc("macromanager", "macro step has an invalid command")));
         }
 
         macro.steps.push_back(MacroStep { command, Params(stepObject.value(PARAMS_KEY).toVal().toMap()) });
