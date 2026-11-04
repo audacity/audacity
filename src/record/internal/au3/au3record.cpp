@@ -17,7 +17,7 @@
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
-#include "au3-clip-processing/PlayableSequenceFactory.h"
+#include "au3-clip-processing/SequenceProcessingGraphFactory.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-project-rate/ProjectRate.h"
 
@@ -175,8 +175,9 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
         const auto range = trackList.Any<Au3WaveTrack>()
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
-            result.playbackSequences.push_back(
-                PlayableSequenceFactory::Create(*pTrack, pTrack->GetClipInterfaces()));
+            result.playbackSequences.push_back(pTrack->SharedPointer<const Au3WaveTrack>());
+            result.playbackGraphs.push_back(
+                SequenceProcessingGraphFactory::CreateGraph(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     if (nonWaveToo) {

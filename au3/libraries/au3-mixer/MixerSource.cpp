@@ -15,6 +15,7 @@
 
 #include "au3-audio-graph/AudioGraphBuffers.h"
 #include "Envelope.h"
+#include "ISequenceProcessingNode.h"
 #include "au3-math/float_cast.h"
 #include "WideSampleSequence.h"
 
@@ -128,14 +129,7 @@ size_t MixerSource::MixVariableRates(
                 for (auto& queue : mSampleQueue) {
                     dst.push_back(queue.data() + queueLen);
                 }
-                constexpr auto iChannel = 0u;
-                if (!mpSeq->GetFloats(
-                        iChannel, nChannels, dst.data(), pos, getLen, backwards,
-                        FillFormat::fillZero, mMayThrow)) {
-                    // Now redundant in case of failure
-                    // for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
-                    // memset(dst[i], 0, sizeof(float) * getLen);
-                }
+                Read(nChannels, dst.data(), pos, getLen, backwards);
                 mpSeq->GetEnvelopeValues(
                     mEnvValues.data(), getLen, (pos).as_double() / sequenceRate,
                     backwards);
@@ -253,15 +247,7 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
         sampleCount { (backwards ? t - tEnd : tEnd - t) * sequenceRate + 0.5 }
         );
 
-    constexpr auto iChannel = 0u;
-    if (!mpSeq->GetFloats(
-            iChannel, nChannels, floatBuffers, pos, slen, backwards,
-            FillFormat::fillZero, mMayThrow)
-        ) {
-        // Now redundant in case of failure
-        // for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
-        // memset(floatBuffers[iChannel], 0, sizeof(float) * slen);
-    }
+    Read(nChannels, floatBuffers, pos, slen, backwards);
 
     mpSeq->GetEnvelopeValues(mEnvValues.data(), slen, t, backwards);
 
@@ -283,6 +269,24 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
     return slen;
 }
 
+void MixerSource::Read(unsigned nChannels, float* const* buffers, sampleCount start, size_t len, bool backwards)
+{
+    if (!mpSource) {
+        constexpr auto iChannel = 0u;
+        // Fills with zeros in case of failure
+        mpSeq->GetFloats(iChannel, nChannels, buffers, start, len, backwards, FillFormat::fillZero, mMayThrow);
+        return;
+    }
+    // The graph reads forward only
+    if (backwards) {
+        for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+            std::fill_n(buffers[iChannel], len, 0.f);
+        }
+        return;
+    }
+    mpSource->GetSamples(buffers, start, len);
+}
+
 void MixerSource::ZeroFill(
     size_t produced, size_t max, float& floatBuffer)
 {
@@ -292,10 +296,11 @@ void MixerSource::ZeroFill(
 }
 
 MixerSource::MixerSource(
-    const std::shared_ptr<const WideSampleSequence>& seq, size_t bufferSize,
-    double rate, const MixerOptions::Warp& options, bool highQuality,
+    const std::shared_ptr<const WideSampleSequence>& seq, std::shared_ptr<ISequenceProcessingNode> pSource,
+    size_t bufferSize, double rate, const MixerOptions::Warp& options, bool highQuality,
     bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed)
     : mpSeq{seq}
+    , mpSource{std::move(pSource)}
     , mnChannels{mpSeq->NChannels()}
     , mRate{rate}
     , mEnvelope{options.envelope}

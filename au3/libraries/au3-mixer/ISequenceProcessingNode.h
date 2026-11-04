@@ -9,7 +9,7 @@
 
 //! A node of the graph processing a sequence as it is played, i.e. all its clips together
 /*!
- * Positions are in samples, from the sequence's time 0, at its rate.
+ * Positions are in samples, from the sequence's time 0, at its rate. See `SequenceProcessingGraphFactory`.
  */
 class ISequenceProcessingNode
 {

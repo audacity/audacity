@@ -20,6 +20,7 @@
 #include "au3-math/Resample.h"
 #include <memory>
 
+class ISequenceProcessingNode;
 class SampleTrack;
 class WideSampleSequence;
 
@@ -39,8 +40,12 @@ public:
     /*!
      @pre `pTimesAndSpeed != nullptr`
      */
-    MixerSource(const std::shared_ptr<const WideSampleSequence>& seq, size_t bufferSize, double rate, const MixerOptions::Warp& options,
-                bool highQuality, bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed);
+    /*!
+     @param pSource if not null, where the samples of `seq` are read, forward only
+     */
+    MixerSource(const std::shared_ptr<const WideSampleSequence>& seq, std::shared_ptr<ISequenceProcessingNode> pSource,
+                size_t bufferSize, double rate, const MixerOptions::Warp& options, bool highQuality, bool mayThrow,
+                std::shared_ptr<TimesAndSpeed> pTimesAndSpeed);
     MixerSource(MixerSource&&) noexcept = default;
     ~MixerSource() override;
 
@@ -86,12 +91,16 @@ private:
     size_t MixVariableRates(
         unsigned nChannels, size_t maxOut, float* floatBuffers[]);
 
+    //! From `mpSource` if any, else from `mpSeq`
+    void Read(unsigned nChannels, float* const* buffers, sampleCount start, size_t len, bool backwards);
+
     /*!
      @pre `produced <= max`
      */
     void ZeroFill(size_t produced, size_t max, float& floatBuffer);
 
     const std::shared_ptr<const WideSampleSequence> mpSeq;
+    const std::shared_ptr<ISequenceProcessingNode> mpSource;
     size_t i;
 
     const size_t mnChannels;

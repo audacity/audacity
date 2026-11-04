@@ -18,7 +18,7 @@ add_unit_test(
       MockSampleBlockFactory.cpp
       MockSampleBlockFactory.h
       MockPlayableSequence.h
-      PlayableSequenceIntegrationTest.cpp
+      SequenceProcessingGraphIntegrationTest.cpp
       TestWaveClipMaker.cpp
       TestWaveClipMaker.h
       TestWaveTrackMaker.cpp

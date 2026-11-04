@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "ISequenceProcessingNode.h"
+#include "au3-mixer/ISequenceProcessingNode.h"
 
 #include <memory>
 #include <optional>

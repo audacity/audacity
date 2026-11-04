@@ -12,7 +12,7 @@
 #include "MockPlayableSequence.h"
 #include "MockSampleBlockFactory.h"
 #include "au3-math/SampleFormat.h"
-#include "PlayableSequenceFactory.h"
+#include "SequenceProcessingGraphFactory.h"
 #include "TestWaveClipMaker.h"
 #include "TestWaveTrackMaker.h"
 
@@ -27,7 +27,7 @@ TestWaveClipMaker clipMaker { sampleRate, sampleBlockFactory };
 TestWaveTrackMaker trackMaker { sampleRate, sampleBlockFactory };
 } // namespace
 
-TEST_CASE("PlayableSequence integration tests")
+TEST_CASE("Sequence processing graph integration tests")
 {
     const auto numChannels
         =GENERATE(1 /*, 2*/); // When wide WaveTrack is implemented this test
@@ -36,7 +36,7 @@ TEST_CASE("PlayableSequence integration tests")
         =std::make_shared<MockPlayableSequence>(sampleRate, numChannels);
 
     SECTION(
-        "PlayableSequence and WaveTrack have identical outputs when clips aren't stretched.")
+        "The graph and WaveTrack have identical outputs when clips aren't stretched.")
     {
         constexpr auto totalLength
             =sampleRate * 4; // 1s no clip, 1s minusClip, 1s no clip, 1s plusClip
@@ -48,15 +48,12 @@ TEST_CASE("PlayableSequence integration tests")
             +.5f, sampleRate, numChannels,
             [](auto& clip) { clip.SetPlayStartTime(3.0); });
 
-        const auto sut = PlayableSequenceFactory::Create(
+        const auto sut = SequenceProcessingGraphFactory::CreateGraph(
             *mockSequence, ClipConstHolders { minusClip, plusClip });
         const auto track = trackMaker.Track({ minusClip, plusClip });
         constexpr auto backwards = false;
         AudioContainer sutOutput(totalLength, numChannels);
-        REQUIRE(sut->DoGet(
-                    iChannel, numChannels,
-                    AudioContainerHelper::GetData<char>(sutOutput).data(), floatSample, 0u,
-                    totalLength, backwards));
+        sut->GetSamples(AudioContainerHelper::GetData<float>(sutOutput).data(), 0u, totalLength);
 
         AudioContainer waveTrackOutput(totalLength, numChannels);
         REQUIRE(track->DoGet(

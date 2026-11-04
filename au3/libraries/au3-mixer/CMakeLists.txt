@@ -30,6 +30,7 @@ set( SOURCES
    DownmixStage.h
    EffectStage.cpp
    EffectStage.h
+   ISequenceProcessingNode.h
    Envelope.cpp
    Envelope.h
    Mix.cpp

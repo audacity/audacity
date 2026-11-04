@@ -1,6 +1,6 @@
 #[[
-A library providing a time-stretching-capable implementation of
-`PlayableSequence`.
+A library providing the graphs that process sequences as they are played:
+time-stretching, fades, etc. of their clips.
 
 Please refer to this directory's readme for a presentation of the constraints
 inherent to such an implementation.
@@ -10,7 +10,6 @@ set( TARGET au3-clip-processing )
 
 set( SOURCES
    clip-graph/IClipProcessingNode.h
-   sequence-graph/ISequenceProcessingNode.h
    AudioSegmentSampleView.cpp
    AudioSegmentSampleView.h
    clip-graph/ClipBufferingNode.cpp
@@ -28,12 +27,10 @@ set( SOURCES
    sequence-graph/CrossFadingSmoother.cpp
    sequence-graph/CrossFadingSmoother.h
    PlaybackDirection.h
-   PlayableSequenceImpl.cpp
-   PlayableSequenceImpl.h
    sequence-graph/ClipTimelineNode.cpp
    sequence-graph/ClipTimelineNode.h
-   PlayableSequenceFactory.cpp
-   PlayableSequenceFactory.h
+   SequenceProcessingGraphFactory.cpp
+   SequenceProcessingGraphFactory.h
    ClipTimeAndPitchSource.cpp
    ClipTimeAndPitchSource.h
    TempoChange.cpp

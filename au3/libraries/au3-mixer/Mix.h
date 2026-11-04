@@ -23,6 +23,7 @@
 class sampleCount;
 class BoundedEnvelope;
 class EffectStage;
+class ISequenceProcessingNode;
 class MixerSource;
 class TrackList;
 class WideSampleSequence;
@@ -39,12 +40,15 @@ public:
     struct Input {
         Input(
             std::shared_ptr<const WideSampleSequence> pSequence = {},
-            Stages stages = {})
-            : pSequence{std::move(pSequence)}, stages{std::move(stages)}
+            Stages stages = {}, std::shared_ptr<ISequenceProcessingNode> pSource = {})
+            : pSequence{std::move(pSequence)}, stages{std::move(stages)}, pSource{std::move(pSource)}
         {}
 
         std::shared_ptr<const WideSampleSequence> pSequence;
         Stages stages;
+        //! If not null, where the samples of `pSequence` are read, e.g. the graph processing it as played; it must be
+        //! read by this input only
+        std::shared_ptr<ISequenceProcessingNode> pSource;
     };
     using Inputs = std::vector<Input>;
 

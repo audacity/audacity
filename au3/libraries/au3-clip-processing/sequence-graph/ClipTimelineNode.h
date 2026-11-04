@@ -4,7 +4,7 @@
 #pragma once
 
 #include "clip-graph/IClipProcessingNode.h"
-#include "ISequenceProcessingNode.h"
+#include "au3-mixer/ISequenceProcessingNode.h"
 
 #include <memory>
 #include <vector>

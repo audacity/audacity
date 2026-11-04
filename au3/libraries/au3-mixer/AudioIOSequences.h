@@ -77,6 +77,8 @@ struct MIXER_API RecordableSequence {
 
 using RecordableSequences = std::vector<std::shared_ptr<RecordableSequence> >;
 
+class ISequenceProcessingNode;
+
 //! This is defined just to enable `dynamic_cast` on it
 class MIXER_API OtherPlayableSequence
 {
@@ -86,6 +88,9 @@ public:
 
 struct MIXER_API TransportSequences final {
     ConstPlayableSequences playbackSequences;
+    //! For each of `playbackSequences`, if not null, the graph processing it as it is played, where its samples are
+    //! read. A graph is read by one player only.
+    std::vector<std::shared_ptr<ISequenceProcessingNode> > playbackGraphs;
     RecordableSequences captureSequences;
     std::vector<std::shared_ptr<const OtherPlayableSequence> >
     otherPlayableSequences;

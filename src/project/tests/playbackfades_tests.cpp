@@ -12,7 +12,8 @@
 #include "au3wrap/internal/au3project.h"
 #include "au3-project/Project.h"
 #include "au3-clip-processing/ClipFades.h"
-#include "au3-clip-processing/PlayableSequenceFactory.h"
+#include "au3-clip-processing/SequenceProcessingGraphFactory.h"
+#include "au3-mixer/Mix.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "testing/testcontext.h"
@@ -73,19 +74,19 @@ protected:
         m_accessor.close();
     }
 
-    std::vector<float> read(const PlayableSequence& sequence, sampleCount start, size_t len)
+    std::vector<float> read(ISequenceProcessingNode& graph, sampleCount start, size_t len)
     {
         std::vector<float> buffer(len);
-        const auto ptr = reinterpret_cast<samplePtr>(buffer.data());
-        EXPECT_TRUE(sequence.DoGet(0, 1, &ptr, floatSample, start, len, false));
+        float* const buffers[] { buffer.data() };
+        graph.GetSamples(buffers, start, len);
         return buffer;
     }
 };
 
 TEST_F(PlaybackFadesTests, LinearFadesAreAppliedReadingForward)
 {
-    const auto sequence = PlayableSequenceFactory::Create(*m_track, m_track->GetClipInterfaces());
-    const auto samples = read(*sequence, 0, clipEndSample);
+    const auto graph = SequenceProcessingGraphFactory::CreateGraph(*m_track, m_track->GetClipInterfaces());
+    const auto samples = read(*graph, 0, clipEndSample);
 
     constexpr auto halfwayGain = 0.5f;
     EXPECT_FLOAT_EQ(samples[clipStartSample - 1], 0.f);
@@ -93,6 +94,29 @@ TEST_F(PlaybackFadesTests, LinearFadesAreAppliedReadingForward)
     EXPECT_FLOAT_EQ(samples[clipStartSample + fadeInNumSamples], 1.f);
     EXPECT_FLOAT_EQ(samples[clipEndSample - fadeOutNumSamples - 1], 1.f);
     EXPECT_LT(samples[clipEndSample - 1], halfwayGain);
+}
+
+TEST_F(PlaybackFadesTests, MixersReadTheGraphOfAnInput)
+{
+    //! [GIVEN] a mixer of the track, reading the graph processing it
+    Mixer::Inputs inputs;
+    inputs.emplace_back(m_track, Mixer::Stages {},
+                        SequenceProcessingGraphFactory::CreateGraph(*m_track, m_track->GetClipInterfaces()));
+    constexpr auto numChannels = 1u;
+    constexpr auto startTime = 0.0;
+    constexpr auto stopTime = TEST_CLIP_START + TEST_CLIP_DURATION;
+    Mixer mixer { std::move(inputs), std::nullopt, true, Mixer::WarpOptions { &project() }, startTime, stopTime, numChannels,
+                  clipEndSample, false, TEST_SAMPLE_RATE, floatSample, false, nullptr, Mixer::ApplyVolume::Discard };
+
+    //! [WHEN] it mixes the track
+    ASSERT_EQ(mixer.Process(clipEndSample), clipEndSample);
+
+    //! [THEN] the fades are applied
+    const auto samples = reinterpret_cast<const float*>(mixer.GetBuffer(0));
+    constexpr auto halfwayGain = 0.5f;
+    EXPECT_FLOAT_EQ(samples[clipStartSample - 1], 0.f);
+    EXPECT_NEAR(samples[clipStartSample + fadeInNumSamples / 2], halfwayGain, TEST_TOLERANCE);
+    EXPECT_FLOAT_EQ(samples[clipStartSample + fadeInNumSamples], 1.f);
 }
 
 TEST_F(PlaybackFadesTests, FadesOfStretchedClipsAreInPlayTime)
@@ -105,8 +129,8 @@ TEST_F(PlaybackFadesTests, FadesOfStretchedClipsAreInPlayTime)
 
     //! [WHEN] it is read
     constexpr auto stretchedFadeInNumSamples = static_cast<size_t>(stretchedFadeIn * TEST_SAMPLE_RATE);
-    const auto sequence = PlayableSequenceFactory::Create(*m_track, m_track->GetClipInterfaces());
-    const auto samples = read(*sequence, 0, clipStartSample + 2 * stretchedFadeInNumSamples);
+    const auto graph = SequenceProcessingGraphFactory::CreateGraph(*m_track, m_track->GetClipInterfaces());
+    const auto samples = read(*graph, 0, clipStartSample + 2 * stretchedFadeInNumSamples);
 
     //! [THEN] halfway through the stretched fade-in, the level is half what it is after it (stretching changes it a bit)
     const auto levelAfterFadeIn = samples[clipStartSample + 3 * stretchedFadeInNumSamples / 2];
@@ -136,8 +160,8 @@ TEST_F(PlaybackFadesTests, JoiningKeepsTheOuterFadesAndRendersTheInnerOnes)
 
     //! [THEN] the outer fades are applied once, and the inner ones are still heard
     constexpr auto halfwayGain = 0.5f;
-    const auto sequence = PlayableSequenceFactory::Create(*m_track, m_track->GetClipInterfaces());
-    const auto samples = read(*sequence, 0, clipEndSample);
+    const auto graph = SequenceProcessingGraphFactory::CreateGraph(*m_track, m_track->GetClipInterfaces());
+    const auto samples = read(*graph, 0, clipEndSample);
     EXPECT_NEAR(samples[clipStartSample + fadeInNumSamples / 2], halfwayGain, TEST_TOLERANCE);
     EXPECT_NEAR(samples[splitSample - fadeOutNumSamples / 2], halfwayGain, TEST_TOLERANCE);
     EXPECT_NEAR(samples[splitSample + fadeInNumSamples / 2], halfwayGain, TEST_TOLERANCE);

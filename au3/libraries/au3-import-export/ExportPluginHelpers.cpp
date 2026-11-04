@@ -17,7 +17,7 @@
 #include "au3-effects/MixAndRender.h"
 #include "ExportUtils.h"
 #include "ExportPlugin.h"
-#include "au3-clip-processing/PlayableSequenceFactory.h"
+#include "au3-clip-processing/SequenceProcessingGraphFactory.h"
 
 //Create a mixer by computing the time warp factor
 std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(
@@ -30,8 +30,8 @@ std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(
     const auto& tracks = TrackList::Get(project);
     for (auto pTrack: ExportUtils::FindExportWaveTracks(tracks, selectionOnly)) {
         inputs.emplace_back(
-            PlayableSequenceFactory::Create(*pTrack, pTrack->GetClipInterfaces()),
-            GetEffectStages(*pTrack));
+            pTrack->SharedPointer<const WaveTrack>(), GetEffectStages(*pTrack),
+            SequenceProcessingGraphFactory::CreateGraph(*pTrack, pTrack->GetClipInterfaces()));
     }
     auto masterEffectStages = GetMasterEffectStages(project);
     //custom channel mapping isn't support with master effects on

@@ -1,6 +1,6 @@
 # Playable sequences
 
-A sequence made playable by `PlayableSequenceFactory` supports (continuous) forward and random sample access. Backward access, which AU3 used for scrubbing backwards, isn't supported.
+The graph that `SequenceProcessingGraphFactory` creates for a sequence supports (continuous) forward and random sample access. Backward access, which AU3 used for scrubbing backwards, isn't supported.
 
 Random access comes with computational overhead, due to the statefulness of the implementation. Indeed, the stretching implementation uses a Short-Time Fourier Transform (STFT), which, for the purpose of this explanation, can be simplified to a delay line of size 1. Now let's see which implications this has.
 

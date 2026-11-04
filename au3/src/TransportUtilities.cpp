@@ -19,7 +19,7 @@
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
 #include "SampleTrack.h"
-#include "PlayableSequenceFactory.h"
+#include "SequenceProcessingGraphFactory.h"
 #include "ViewInfo.h"
 #include "toolbars/ControlToolBar.h"
 #include "ProgressDialog.h"
@@ -213,8 +213,9 @@ TransportSequences MakeTransportTracks(
         const auto range = trackList.Any<WaveTrack>()
                            + (selectedOnly ? &Track::IsSelected : &Track::Any);
         for (auto pTrack : range) {
-            result.playbackSequences.push_back(
-                PlayableSequenceFactory::Create(*pTrack, pTrack->GetClipInterfaces()));
+            result.playbackSequences.push_back(pTrack->SharedPointer<const WaveTrack>());
+            result.playbackGraphs.push_back(
+                SequenceProcessingGraphFactory::CreateGraph(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     if (nonWaveToo) {

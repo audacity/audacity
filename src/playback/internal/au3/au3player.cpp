@@ -10,7 +10,7 @@
 #include "au3-time-frequency-selection/SelectedRegion.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "au3-clip-processing/PlayableSequenceFactory.h"
+#include "au3-clip-processing/SequenceProcessingGraphFactory.h"
 #include "au3-audio-devices/AudioIOBase.h"
 #include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
@@ -632,8 +632,9 @@ TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool 
         const auto range = trackList.Any<Au3WaveTrack>()
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
-            result.playbackSequences.push_back(
-                PlayableSequenceFactory::Create(*pTrack, pTrack->GetClipInterfaces()));
+            result.playbackSequences.push_back(pTrack->SharedPointer<const Au3WaveTrack>());
+            result.playbackGraphs.push_back(
+                SequenceProcessingGraphFactory::CreateGraph(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     return result;

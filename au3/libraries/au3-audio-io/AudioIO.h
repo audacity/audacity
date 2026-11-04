@@ -254,6 +254,8 @@ public:
     RingBuffers mPlaybackBuffers;
     std::vector<Track> mPlaybackTracks;
     ConstPlayableSequences mPlaybackSequences;
+    //! See `TransportSequences::playbackGraphs`
+    std::vector<std::shared_ptr<ISequenceProcessingNode> > mPlaybackGraphs;
     // Old volume is used in playback in linearly interpolating
     // the volume.
     float mOldPlaybackVolume;
