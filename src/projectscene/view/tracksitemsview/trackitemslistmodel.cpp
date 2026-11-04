@@ -92,6 +92,7 @@ void TrackItemsListModel::setMoveController(TrackItemsMoveController* controller
     m_moveController = controller;
     if (m_moveController) {
         connect(m_moveController, &TrackItemsMoveController::previewChanged, this, &TrackItemsListModel::onItemsMoveChanged);
+        connect(m_moveController, &TrackItemsMoveController::activeChanged, this, &TrackItemsListModel::onMoveActiveChanged);
     }
     emit moveControllerChanged();
     onItemsMoveChanged();

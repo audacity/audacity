@@ -48,6 +48,7 @@ public:
 
     bool active() const;
     bool keyboardActive() const;
+    bool rangeSelectionActive() const;
     bool isDragged(const trackedit::TrackItemKey& key) const;
     double timeOffset() const;
     trackedit::TrackItemKeyList itemsOnTrack(trackedit::TrackId trackId) const;
