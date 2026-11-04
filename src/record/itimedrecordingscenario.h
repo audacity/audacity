@@ -7,11 +7,12 @@
 
 #include "framework/global/async/notification.h"
 #include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/types/ret.h"
 
 namespace au::record {
-class ITimedRecordingController : MODULE_EXPORT_INTERFACE
+class ITimedRecordingScenario : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(ITimedRecordingController)
+    INTERFACE_ID(ITimedRecordingScenario)
 
 public:
     enum class State {
@@ -21,7 +22,9 @@ public:
         Quitting
     };
 
-    virtual ~ITimedRecordingController() = default;
+    virtual ~ITimedRecordingScenario() = default;
+
+    virtual muse::Ret openSetup() = 0;
 
     virtual State state() const = 0;
     virtual muse::async::Notification stateChanged() const = 0;

@@ -38,6 +38,7 @@ void RecordController::init()
     cd->onRequest(this, RECORD_TOGGLE_MIC_METERING_COMMAND, [this]() { return toggleMicMetering(); });
     cd->onRequest(this, RECORD_TOGGLE_INPUT_MONITORING_COMMAND, [this]() { return toggleInputMonitoring(); });
     cd->onRequest(this, RECORD_LEAD_IN_RECORDING_COMMAND, [this]() { return leadInRecording(); });
+    cd->onRequest(this, RECORD_TIMED_RECORDING_COMMAND, [this]() { return timedRecordingScenario()->openSetup(); });
 
     static const std::vector<ActionToCommand> actionToCommand = {
         { RECORD_START_QUERY.toString(), RECORD_START_COMMAND, {} },

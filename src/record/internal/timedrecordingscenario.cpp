@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "timedrecordingcontroller.h"
+#include "timedrecordingscenario.h"
 
 #include <QVariantMap>
 
@@ -44,10 +44,8 @@ TimedRecordingSchedule scheduleFromDialogData(const QVariantMap& data)
 }
 }
 
-void TimedRecordingController::init()
+void TimedRecordingScenario::init()
 {
-    commandDispatcher()->onRequest(this, RECORD_TIMED_RECORDING_COMMAND, [this]() { return openSetupDialog(); });
-
     m_ticker.setInterval(TICK_INTERVAL_MS);
     QObject::connect(&m_ticker, &QTimer::timeout, &m_ticker, [this]() { onTick(); });
 
@@ -73,32 +71,32 @@ void TimedRecordingController::init()
     });
 }
 
-ITimedRecordingController::State TimedRecordingController::state() const
+ITimedRecordingScenario::State TimedRecordingScenario::state() const
 {
     return m_state;
 }
 
-async::Notification TimedRecordingController::stateChanged() const
+async::Notification TimedRecordingScenario::stateChanged() const
 {
     return m_stateChanged;
 }
 
-std::chrono::system_clock::time_point TimedRecordingController::startTime() const
+std::chrono::system_clock::time_point TimedRecordingScenario::startTime() const
 {
     return m_startTime;
 }
 
-std::chrono::system_clock::time_point TimedRecordingController::endTime() const
+std::chrono::system_clock::time_point TimedRecordingScenario::endTime() const
 {
     return m_endTime;
 }
 
-std::chrono::system_clock::time_point TimedRecordingController::quitTime() const
+std::chrono::system_clock::time_point TimedRecordingScenario::quitTime() const
 {
     return m_quitTime;
 }
 
-void TimedRecordingController::requestStop()
+void TimedRecordingScenario::requestStop()
 {
     switch (m_state) {
     case State::Idle:
@@ -115,7 +113,7 @@ void TimedRecordingController::requestStop()
     }
 }
 
-Ret TimedRecordingController::openSetupDialog()
+Ret TimedRecordingScenario::openSetup()
 {
     if (m_state != State::Idle || interactive()->isOpened(SETUP_DIALOG_URI).val) {
         return make_ret(Ret::Code::Cancel);
@@ -128,7 +126,7 @@ Ret TimedRecordingController::openSetupDialog()
     return make_ok();
 }
 
-void TimedRecordingController::onSetupAccepted(const QVariantMap& data)
+void TimedRecordingScenario::onSetupAccepted(const QVariantMap& data)
 {
     if (m_state != State::Idle) {
         return;
@@ -154,7 +152,7 @@ void TimedRecordingController::onSetupAccepted(const QVariantMap& data)
     begin(scheduleFromDialogData(data));
 }
 
-void TimedRecordingController::begin(const TimedRecordingSchedule& schedule)
+void TimedRecordingScenario::begin(const TimedRecordingSchedule& schedule)
 {
     const TimePoint startedAt = now();
     if (!schedule.isValid(startedAt)) {
@@ -174,14 +172,14 @@ void TimedRecordingController::begin(const TimedRecordingSchedule& schedule)
     onTick();
 }
 
-void TimedRecordingController::openProgressDialog()
+void TimedRecordingScenario::openProgressDialog()
 {
     interactive()->open(PROGRESS_DIALOG_URI)
     .onResolve(this, [this](const Val&) { requestStop(); })
     .onReject(this, [this](int, const std::string&) { requestStop(); });
 }
 
-void TimedRecordingController::onTick()
+void TimedRecordingScenario::onTick()
 {
     const TimePoint tickedAt = now();
 
@@ -194,7 +192,7 @@ void TimedRecordingController::onTick()
     }
 }
 
-void TimedRecordingController::startRecording()
+void TimedRecordingScenario::startRecording()
 {
     if (recordController()->isRecording()) {
         failToStart(muse::trc("record", "Audacity was already recording."));
@@ -218,13 +216,13 @@ void TimedRecordingController::startRecording()
     });
 }
 
-void TimedRecordingController::failToStart(const std::string& reason)
+void TimedRecordingScenario::failToStart(const std::string& reason)
 {
     finish(Outcome::Failed);
     toastService()->showError(muse::trc("record", "Timed recording couldn't start"), reason);
 }
 
-void TimedRecordingController::stopRecording(Outcome outcome)
+void TimedRecordingScenario::stopRecording(Outcome outcome)
 {
     if (m_state == State::Recording && recordController()->isRecording()) {
         finish(outcome);
@@ -235,7 +233,7 @@ void TimedRecordingController::stopRecording(Outcome outcome)
     finish(outcome);
 }
 
-void TimedRecordingController::confirmStop()
+void TimedRecordingScenario::confirmStop()
 {
     if (m_stopConfirmationOpen) {
         return;
@@ -269,7 +267,7 @@ void TimedRecordingController::confirmStop()
     });
 }
 
-void TimedRecordingController::finish(Outcome outcome)
+void TimedRecordingScenario::finish(Outcome outcome)
 {
     if (m_state == State::Idle) {
         return;
@@ -310,14 +308,14 @@ void TimedRecordingController::finish(Outcome outcome)
     scheduleCompletionActions();
 }
 
-void TimedRecordingController::scheduleCompletionActions()
+void TimedRecordingScenario::scheduleCompletionActions()
 {
     async::Async::call(this, [this, project = m_project, actions = m_completionActions]() {
         runCompletionActions(project.lock(), actions);
     });
 }
 
-void TimedRecordingController::runCompletionActions(const project::IAudacityProjectPtr& project, const CompletionActions& actions)
+void TimedRecordingScenario::runCompletionActions(const project::IAudacityProjectPtr& project, const CompletionActions& actions)
 {
     if (!project || project != globalContext()->currentProject()) {
         return;
@@ -343,8 +341,8 @@ void TimedRecordingController::runCompletionActions(const project::IAudacityProj
     }
 }
 
-bool TimedRecordingController::exportAudio(const project::IAudacityProjectPtr& project, const muse::io::path_t& path,
-                                           const std::string& format)
+bool TimedRecordingScenario::exportAudio(const project::IAudacityProjectPtr& project, const muse::io::path_t& path,
+                                         const std::string& format)
 {
     importexport::IExporter::Options options;
     options[importexport::IExporter::OptionKey::Format] = Val(format);
@@ -360,7 +358,7 @@ bool TimedRecordingController::exportAudio(const project::IAudacityProjectPtr& p
     return true;
 }
 
-void TimedRecordingController::beginQuitCountdown()
+void TimedRecordingScenario::beginQuitCountdown()
 {
     if (m_state != State::Idle) {
         return;
@@ -373,7 +371,7 @@ void TimedRecordingController::beginQuitCountdown()
     m_ticker.start();
 }
 
-void TimedRecordingController::quitAudacity()
+void TimedRecordingScenario::quitAudacity()
 {
     m_ticker.stop();
     setState(State::Idle);
@@ -383,14 +381,14 @@ void TimedRecordingController::quitAudacity()
     });
 }
 
-void TimedRecordingController::cancelQuit()
+void TimedRecordingScenario::cancelQuit()
 {
     m_ticker.stop();
     setState(State::Idle);
     interactive()->close(PROGRESS_DIALOG_URI);
 }
 
-void TimedRecordingController::setState(State state)
+void TimedRecordingScenario::setState(State state)
 {
     if (m_state == state) {
         return;

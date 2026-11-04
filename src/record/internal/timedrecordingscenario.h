@@ -10,7 +10,6 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/types/ret.h"
 #include "framework/interactive/iinteractive.h"
-#include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/toast/itoastservice.h"
 
@@ -22,12 +21,11 @@
 #include "record/irecord.h"
 #include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
-#include "record/itimedrecordingcontroller.h"
+#include "record/itimedrecordingscenario.h"
 #include "record/timedrecordingtypes.h"
 
 namespace au::record {
-class TimedRecordingController : public ITimedRecordingController, public muse::rcommand::Commandable, public muse::async::Asyncable,
-    public muse::Contextable
+class TimedRecordingScenario : public ITimedRecordingScenario, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::toast::IToastService> toastService;
     muse::GlobalInject<importexport::IExportConfiguration> exportConfiguration;
@@ -42,10 +40,12 @@ class TimedRecordingController : public ITimedRecordingController, public muse::
     muse::ContextInject<importexport::IExporter> exporter{ this };
 
 public:
-    TimedRecordingController(const muse::modularity::ContextPtr& ctx)
+    TimedRecordingScenario(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
     void init();
+
+    muse::Ret openSetup() override;
 
     State state() const override;
     muse::async::Notification stateChanged() const override;
@@ -70,7 +70,6 @@ private:
         Failed
     };
 
-    muse::Ret openSetupDialog();
     void onSetupAccepted(const QVariantMap& data);
     void begin(const TimedRecordingSchedule& schedule);
     void openProgressDialog();

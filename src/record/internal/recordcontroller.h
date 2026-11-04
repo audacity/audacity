@@ -24,6 +24,7 @@
 
 #include "record/irecord.h"
 #include "record/irecordcontroller.h"
+#include "record/itimedrecordingscenario.h"
 
 namespace au::record {
 class RecordController : public IRecordController, public muse::actions::Actionable, public muse::rcommand::Commandable,
@@ -42,6 +43,7 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<ITimedRecordingScenario> timedRecordingScenario{ this };
 
     friend class RecordControllerTests;
 

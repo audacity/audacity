@@ -11,7 +11,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
-#include "record/itimedrecordingcontroller.h"
+#include "record/itimedrecordingscenario.h"
 
 namespace au::record {
 class TimedRecordingProgressModel : public QObject, public muse::async::Asyncable, public muse::Contextable
@@ -26,7 +26,7 @@ class TimedRecordingProgressModel : public QObject, public muse::async::Asyncabl
     Q_PROPERTY(QString startText READ startText NOTIFY changed FINAL)
     Q_PROPERTY(QString endText READ endText NOTIFY changed FINAL)
 
-    muse::ContextInject<ITimedRecordingController> controller{ this };
+    muse::ContextInject<ITimedRecordingScenario> scenario{ this };
 
 public:
     explicit TimedRecordingProgressModel(QObject* parent = nullptr);

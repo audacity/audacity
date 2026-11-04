@@ -34,7 +34,7 @@ TimedRecordingProgressModel::TimedRecordingProgressModel(QObject* parent)
 
 void TimedRecordingProgressModel::init()
 {
-    controller()->stateChanged().onNotify(this, [this]() {
+    scenario()->stateChanged().onNotify(this, [this]() {
         update();
     });
 
@@ -44,7 +44,7 @@ void TimedRecordingProgressModel::init()
 
 void TimedRecordingProgressModel::stop()
 {
-    controller()->requestStop();
+    scenario()->requestStop();
 }
 
 bool TimedRecordingProgressModel::isRecording() const
@@ -80,17 +80,17 @@ QString TimedRecordingProgressModel::endText() const
 void TimedRecordingProgressModel::update()
 {
     const QDateTime now = QDateTime::currentDateTime();
-    const QDateTime start = TimedRecordingViewFormatter::toDateTime(controller()->startTime());
-    const QDateTime end = TimedRecordingViewFormatter::toDateTime(controller()->endTime());
-    const ITimedRecordingController::State state = controller()->state();
-    const bool isRecording = state == ITimedRecordingController::State::Recording;
-    const bool isQuitting = state == ITimedRecordingController::State::Quitting;
+    const QDateTime start = TimedRecordingViewFormatter::toDateTime(scenario()->startTime());
+    const QDateTime end = TimedRecordingViewFormatter::toDateTime(scenario()->endTime());
+    const ITimedRecordingScenario::State state = scenario()->state();
+    const bool isRecording = state == ITimedRecordingScenario::State::Recording;
+    const bool isQuitting = state == ITimedRecordingScenario::State::Quitting;
 
     QString statusText;
     QString clockText;
     QString startText;
     if (isQuitting) {
-        const qint64 secondsToQuit = secondsUntil(now, TimedRecordingViewFormatter::toDateTime(controller()->quitTime()));
+        const qint64 secondsToQuit = secondsUntil(now, TimedRecordingViewFormatter::toDateTime(scenario()->quitTime()));
         //: %1 is the time left until Audacity quits, e.g. "59s"
         statusText = muse::qtrc("record", "Audacity will quit in %1").arg(TimedRecordingViewFormatter::duration(secondsToQuit));
         clockText = TimedRecordingViewFormatter::clock(secondsToQuit);
