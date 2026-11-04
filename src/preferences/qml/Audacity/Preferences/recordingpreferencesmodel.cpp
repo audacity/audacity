@@ -21,6 +21,9 @@ RecordingPreferencesModel::RecordingPreferencesModel(QObject* parent)
     recordConfiguration()->crossfadeDurationChanged().onNotify(this, [this]() {
         emit crossfadeDurationChanged();
     });
+    recordConfiguration()->isSoundActivatedRecordingOnChanged().onNotify(this, [this]() {
+        emit isSoundActivatedRecordingOnChanged();
+    });
 }
 
 bool RecordingPreferencesModel::isInputMonitoringOn() const
@@ -67,4 +70,14 @@ void RecordingPreferencesModel::setCrossfadeDuration(double milliseconds)
         return;
     }
     recordConfiguration()->setCrossfadeDuration(milliseconds);
+}
+
+bool RecordingPreferencesModel::isSoundActivatedRecordingOn() const
+{
+    return recordConfiguration()->isSoundActivatedRecordingOn();
+}
+
+void RecordingPreferencesModel::setIsSoundActivatedRecordingOn(bool enabled)
+{
+    recordConfiguration()->setIsSoundActivatedRecordingOn(enabled);
 }

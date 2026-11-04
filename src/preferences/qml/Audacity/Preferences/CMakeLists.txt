@@ -71,6 +71,7 @@ qt_add_qml_module(preferences_qml
         internal/IncrementalPropertyControlWithTitle.qml
         internal/KeyboardLayoutsSection.qml
         internal/LeadInRecordingSection.qml
+        internal/SoundActivatedRecordingSection.qml
         internal/LanguagesSection.qml
         internal/MeiSection.qml
         internal/MeterDbRangeSection.qml
