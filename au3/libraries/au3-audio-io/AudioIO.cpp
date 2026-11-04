@@ -1461,7 +1461,7 @@ bool AudioIO::AllocateBuffers(
                     assert(pSequence->FindChannelGroup());
                     // use sequence time for the end time, not real time!
                     double startTime, endTime;
-                    if (!sequences.leadInTimeSequences.empty()) {
+                    if (mRecordingSchedule.mLeadInTime > 0.0) {
                         startTime = mPlaybackSchedule.mT0;
                     } else {
                         startTime = t0;
