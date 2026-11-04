@@ -36,6 +36,11 @@ double FilterCurveModel::defaultValue() const
     return 0.0;
 }
 
+bool FilterCurveModel::isDragging() const
+{
+    return m_dragSnapshot.has_value();
+}
+
 void FilterCurveModel::setPoint(int index, double x, double y, bool completed)
 {
     if (index < 0 || index >= m_points.size()) {

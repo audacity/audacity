@@ -34,6 +34,8 @@ FilterCurveEqViewModel::FilterCurveEqViewModel(QObject* parent, int instanceId)
 {
     connect(this, &FilterCurveEqViewModel::freqRangeChanged, this, &FilterCurveEqViewModel::xTicksChanged);
     connect(this, &FilterCurveEqViewModel::linFreqScaleChanged, this, &FilterCurveEqViewModel::xTicksChanged);
+
+    qApp->installEventFilter(this);
 }
 
 void FilterCurveEqViewModel::doReload()
@@ -44,6 +46,19 @@ void FilterCurveEqViewModel::doReload()
     emit gridlinesVisibleChanged();
     emit dbRangeChanged();
     emit linFreqScaleChanged();
+}
+
+bool FilterCurveEqViewModel::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::ShortcutOverride && m_curveModel->isDragging()) {
+        auto* keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Escape) {
+            emit escapePressed();
+            event->accept();
+            return true;
+        }
+    }
+    return BuiltinEffectModel::eventFilter(watched, event);
 }
 
 FilterCurveModel* FilterCurveEqViewModel::curveModel() const

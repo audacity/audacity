@@ -82,6 +82,7 @@ Rectangle {
     signal clipStartEditRequested
     signal clipEndEditRequested
     signal cancelClipDragEditRequested
+    signal automationPointDragged
 
     signal clipLeftTrimRequested(bool completed, int action)
     signal clipRightTrimRequested(bool completed, int action)
@@ -342,6 +343,12 @@ Rectangle {
         if (spectrogramViewLoader.item) {
             spectrogramViewLoader.item.update()
         }
+    }
+
+    function cancelDrag() {
+        automation.cancelEdit()
+        clipGainModel.cancelDrag()
+        tooltip.hide(true)
     }
 
     ClipContextMenuModel {
@@ -999,14 +1006,13 @@ Rectangle {
                     ySplitValue: clipGainModel.ySplitValue
                     yAxisInverse: false
 
-                    Component.onCompleted: {
-                        automation.init()
-                    }
-
                     onPointMoved: function (index, x, y, completed) {
                         clipGainModel.setPoint(index, x, y, completed)
                         tooltip.value = gainToDb(y)
                         tooltip.show(true)
+                        if (!completed) {
+                            root.automationPointDragged()
+                        }
                     }
 
                     onPointAdded: function (x, y, completed) {
@@ -1015,11 +1021,6 @@ Rectangle {
 
                     onPointRemoved: function (index, completed) {
                         clipGainModel.removePoint(index, completed)
-                    }
-
-                    onDragCancelled: {
-                        clipGainModel.cancelDrag()
-                        tooltip.hide(true)
                     }
 
                     onInteractionFinished: function () {
