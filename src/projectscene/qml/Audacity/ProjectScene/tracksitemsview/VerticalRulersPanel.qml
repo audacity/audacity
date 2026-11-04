@@ -229,6 +229,7 @@ Rectangle {
 
                             sourceComponent: SpectrogramTrackRulers {
                                 trackId: model.trackId
+                                trackSampleRate: model.trackSampleRate
                                 isStereo: model.isStereo
                                 channelHeightRatio: trackViewState.channelHeightRatio
                             }

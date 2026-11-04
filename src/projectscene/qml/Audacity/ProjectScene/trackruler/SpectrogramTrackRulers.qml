@@ -11,6 +11,7 @@ Item {
     id: root
 
     required property int trackId
+    required property real trackSampleRate
     required property bool isStereo
     required property real channelHeightRatio
 
@@ -22,6 +23,7 @@ Item {
             height: root.isStereo ? root.height * root.channelHeightRatio : root.height
 
             trackId: root.trackId
+            trackSampleRate: root.trackSampleRate
         }
 
         SeparatorLine {
@@ -36,6 +38,7 @@ Item {
 
             visible: root.isStereo
             trackId: root.trackId
+            trackSampleRate: root.trackSampleRate
         }
     }
 }

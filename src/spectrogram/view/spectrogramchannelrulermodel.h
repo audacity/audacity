@@ -5,7 +5,6 @@
 
 #include "spectrogram/ispectrogramservice.h"
 #include "spectrogram/view/ispectrogramviewservice.h"
-#include "context/iglobalcontext.h"
 
 #include "shared/axis/axistypes.h"
 
@@ -23,6 +22,7 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
     Q_OBJECT
 
     Q_PROPERTY(int trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
+    Q_PROPERTY(double trackSampleRate READ trackSampleRate WRITE setTrackSampleRate NOTIFY trackSampleRateChanged FINAL)
     Q_PROPERTY(int labelHeight READ labelHeight WRITE setLabelHeight NOTIFY labelHeightChanged FINAL)
     Q_PROPERTY(double channelHeight READ channelHeight WRITE setChannelHeight NOTIFY channelHeightChanged FINAL)
     Q_PROPERTY(QVariantList majorTicks READ majorTicks NOTIFY ticksChanged FINAL)
@@ -34,7 +34,6 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfig;
 
-    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<ISpectrogramService> spectrogramService{ this };
     muse::ContextInject<ISpectrogramViewService> spectrogramViewService{ this };
 
@@ -43,6 +42,9 @@ public:
 
     int trackId() const;
     void setTrackId(int trackId);
+
+    double trackSampleRate() const;
+    void setTrackSampleRate(double rate);
 
     int labelHeight() const { return m_labelHeight; }
     void setLabelHeight(int height);
@@ -71,6 +73,7 @@ public:
 
 signals:
     void trackIdChanged();
+    void trackSampleRateChanged();
     void channelHeightChanged();
     void ticksChanged();
     void labelHeightChanged();
@@ -89,6 +92,7 @@ private:
     QVariantList tickListToVariants(const std::vector<au::shared::AxisTick>& ticks) const;
 
     int m_trackId = -1;
+    double m_trackSampleRate = 0.0;
     int m_labelHeight = 0;
     double m_channelHeight = 0.0;
     SpectrogramRulerTicks m_ticks;
