@@ -137,6 +137,7 @@ PreferencesPage {
             bodyTextSize: appearanceModel.bodyTextSize
             interfaceScale: appearanceModel.interfaceScale
             systemInterfaceScale: appearanceModel.systemInterfaceScale
+            interfaceScaleAvailable: appearanceModel.interfaceScaleAvailable
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 4

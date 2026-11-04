@@ -36,6 +36,7 @@ BaseSection {
     property alias bodyTextSize: bodyTextSizeControl.currentValue
     property string interfaceScale: "auto"
     property real systemInterfaceScale: 1.0
+    property bool interfaceScaleAvailable: true
 
     signal fontChangeRequested(var newFontIndex)
     signal bodyTextSizeChangeRequested(var newBodyTextSize)
@@ -80,6 +81,8 @@ BaseSection {
 
     ComboBoxWithTitle {
         id: interfaceScaleControl
+
+        visible: root.interfaceScaleAvailable
 
         //: The size of the whole interface: text, buttons, toolbars
         title: qsTrc("preferences", "Interface scale (after restart)")

@@ -14,7 +14,8 @@ StyledToolBarView {
     navigationPanel.accessible.name: qsTrc("projectscene", "Undo and redo")
 
     spacing: 0
-    rowHeight: 28
+    // The buttons follow the theme's (scaled) button size; a fixed row clipped them.
+    rowHeight: Math.max(28, ui.theme.defaultButtonSize)
 
     model: UndoRedoToolBarModel {}
 

@@ -57,6 +57,7 @@ class AppearancePreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(int bodyTextSize READ bodyTextSize WRITE setBodyTextSize NOTIFY bodyTextSizeChanged)
     Q_PROPERTY(QString interfaceScale READ interfaceScale WRITE setInterfaceScale NOTIFY interfaceScaleChanged)
     Q_PROPERTY(double systemInterfaceScale READ systemInterfaceScale CONSTANT)
+    Q_PROPERTY(bool interfaceScaleAvailable READ interfaceScaleAvailable CONSTANT)
 
     Q_PROPERTY(ClipStyles::Style clipStyle READ clipStyle NOTIFY clipStyleChanged)
 
@@ -89,6 +90,7 @@ public:
     int bodyTextSize() const;
     QString interfaceScale() const;
     double systemInterfaceScale() const;
+    bool interfaceScaleAvailable() const;
 
     Q_INVOKABLE void resetAppearancePreferencesToDefault();
     Q_INVOKABLE void setNewColor(const QColor& newColor, ColorType colorType);

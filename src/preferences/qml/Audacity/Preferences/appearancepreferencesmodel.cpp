@@ -262,6 +262,18 @@ double AppearancePreferencesModel::systemInterfaceScale() const
     return uiConfiguration()->systemInterfaceScale();
 }
 
+bool AppearancePreferencesModel::interfaceScaleAvailable() const
+{
+#ifdef WIN_PORTABLE
+    //! main() does not apply the scale in a portable build (its settings live
+    //! next to the executable, not where applyInterfaceScaleBeforeStart reads),
+    //! so the preference would promise a change that never happens.
+    return false;
+#else
+    return true;
+#endif
+}
+
 void AppearancePreferencesModel::setInterfaceScale(const QString& scale)
 {
     if (scale == interfaceScale()) {
