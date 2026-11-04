@@ -49,6 +49,9 @@ class TimedRecordingSetupModel : public QObject, public muse::Contextable
     Q_PROPERTY(bool quitAudacityEnabled READ quitAudacityEnabled WRITE setQuitAudacityEnabled NOTIFY scheduleChanged FINAL)
 
     Q_PROPERTY(QString summary READ summary NOTIFY summaryChanged FINAL)
+    Q_PROPERTY(QString scheduleError READ scheduleError NOTIFY summaryChanged FINAL)
+    Q_PROPERTY(bool startTimeInvalid READ startTimeInvalid NOTIFY summaryChanged FINAL)
+    Q_PROPERTY(bool endTimeInvalid READ endTimeInvalid NOTIFY summaryChanged FINAL)
     Q_PROPERTY(bool canStart READ canStart NOTIFY summaryChanged FINAL)
 
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
@@ -101,6 +104,9 @@ public:
     int durationFormat() const;
 
     QString summary() const;
+    QString scheduleError() const;
+    bool startTimeInvalid() const;
+    bool endTimeInvalid() const;
     bool canStart() const;
 
 signals:
@@ -137,6 +143,9 @@ private:
 
     QString m_dateFormat;
     QString m_summary;
+    QString m_scheduleError;
+    bool m_startTimeInvalid = false;
+    bool m_endTimeInvalid = false;
     bool m_canStart = false;
 
     QTimer m_clock;

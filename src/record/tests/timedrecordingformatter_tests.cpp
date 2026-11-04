@@ -127,4 +127,12 @@ TEST_F(TimedRecordingFormatterTests, StartInThePastStartsWhenConfirmed)
     EXPECT_EQ(TimedRecordingViewFormatter::summary(at(2026, 10, 24, 12, 0), at(2026, 10, 24, 11, 0), HOUR, false),
               "Starts when you press Start timed recording and records for 1h.");
 }
+
+TEST_F(TimedRecordingFormatterTests, PassedTimesAskForATimeAfterNow)
+{
+    EXPECT_EQ(TimedRecordingViewFormatter::startTimePassedError(at(2026, 10, 24, 12, 25, 14)),
+              "Start time has passed. Choose a time after 12:25:14.");
+    EXPECT_EQ(TimedRecordingViewFormatter::endTimePassedError(at(2026, 10, 24, 12, 25, 14)),
+              "End time has passed. Choose a time after 12:25:14.");
+}
 }

@@ -337,6 +337,21 @@ QString TimedRecordingSetupModel::summary() const
     return m_summary;
 }
 
+QString TimedRecordingSetupModel::scheduleError() const
+{
+    return m_scheduleError;
+}
+
+bool TimedRecordingSetupModel::startTimeInvalid() const
+{
+    return m_startTimeInvalid;
+}
+
+bool TimedRecordingSetupModel::endTimeInvalid() const
+{
+    return m_endTimeInvalid;
+}
+
 bool TimedRecordingSetupModel::canStart() const
 {
     return m_canStart;
@@ -435,7 +450,29 @@ void TimedRecordingSetupModel::update()
     const std::optional<TimedRecordingSchedule> s = schedule();
     const TimedRecordingSchedule::TimePoint nowTimePoint = TimedRecordingViewFormatter::toTimePoint(now);
 
-    const bool scheduleValid = s && s->isValid(nowTimePoint);
+    bool startTimeInvalid = false;
+    bool endTimeInvalid = false;
+    QString scheduleError;
+    if (s && s->start && *s->start <= nowTimePoint) {
+        startTimeInvalid = true;
+        scheduleError = TimedRecordingViewFormatter::startTimePassedError(now);
+    }
+
+    if (const TimedRecordingSchedule::TimePoint* end = s ? std::get_if<TimedRecordingSchedule::TimePoint>(&s->end) : nullptr) {
+        if (*end <= nowTimePoint) {
+            endTimeInvalid = true;
+            if (scheduleError.isEmpty()) {
+                scheduleError = TimedRecordingViewFormatter::endTimePassedError(now);
+            }
+        } else if (s->start && *end <= *s->start) {
+            endTimeInvalid = true;
+            if (scheduleError.isEmpty()) {
+                scheduleError = TimedRecordingViewFormatter::endBeforeStartError();
+            }
+        }
+    }
+
+    const bool scheduleValid = s && scheduleError.isEmpty() && s->isValid(nowTimePoint);
     const bool completionActionsValid = (!m_saveProjectEnabled || !m_saveProjectPath.trimmed().isEmpty())
                                         && (!m_exportAudioEnabled || !m_exportAudioPath.trimmed().isEmpty());
     const bool canStart = scheduleValid && completionActionsValid;
@@ -445,11 +482,15 @@ void TimedRecordingSetupModel::update()
         summary = TimedRecordingViewFormatter::summary(now, start, s->recordingDuration(nowTimePoint).count(), m_endAfterDuration);
     }
 
-    if (canStart == m_canStart && summary == m_summary) {
+    if (canStart == m_canStart && summary == m_summary && scheduleError == m_scheduleError
+        && startTimeInvalid == m_startTimeInvalid && endTimeInvalid == m_endTimeInvalid) {
         return;
     }
 
     m_canStart = canStart;
     m_summary = summary;
+    m_scheduleError = scheduleError;
+    m_startTimeInvalid = startTimeInvalid;
+    m_endTimeInvalid = endTimeInvalid;
     emit summaryChanged();
 }

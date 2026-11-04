@@ -22,6 +22,8 @@ StyledDialogView {
         id: setupModel
     }
 
+    readonly property color errorColor: ui.theme.extra["error_text_color"]
+
     property NavigationPanel durationNavigation: NavigationPanel {
         name: "TimedRecordingDuration"
         section: root.navigationSection
@@ -96,6 +98,7 @@ StyledDialogView {
         property string label: ""
         property string text: ""
         property string hint: ""
+        property bool hasError: false
 
         property NavigationPanel navigationPanel: null
         property int navigationOrder: 0
@@ -112,6 +115,8 @@ StyledDialogView {
         }
 
         TextInputField {
+            id: inputField
+
             Layout.fillWidth: true
             Layout.preferredHeight: 28
 
@@ -126,6 +131,17 @@ StyledDialogView {
             onTextEdited: function (newTextValue) {
                 input.edited(newTextValue)
             }
+
+            Rectangle {
+                anchors.fill: parent
+
+                visible: input.hasError
+
+                color: "transparent"
+                radius: inputField.background.radius
+                border.color: root.errorColor
+                border.width: 1
+            }
         }
     }
 
@@ -135,6 +151,7 @@ StyledDialogView {
         property string date: ""
         property string time: ""
         property string dateHint: ""
+        property bool hasError: false
 
         property NavigationPanel navigationPanel: null
         property int navigationOrderStart: 0
@@ -153,6 +170,7 @@ StyledDialogView {
             label: qsTrc("record", "Date")
             text: moment.date
             hint: moment.dateHint
+            hasError: moment.hasError
 
             navigationPanel: moment.navigationPanel
             navigationOrder: moment.navigationOrderStart
@@ -169,6 +187,7 @@ StyledDialogView {
             label: qsTrc("record", "Time")
             text: moment.time
             hint: "hh:mm:ss"
+            hasError: moment.hasError
 
             navigationPanel: moment.navigationPanel
             navigationOrder: moment.navigationOrderStart + 2
@@ -317,6 +336,7 @@ StyledDialogView {
                         date: setupModel.startDate
                         time: setupModel.startTime
                         dateHint: setupModel.dateFormat.toLowerCase()
+                        hasError: setupModel.startTimeInvalid
 
                         onDateEdited: function (newDate) {
                             setupModel.startDate = newDate
@@ -405,6 +425,7 @@ StyledDialogView {
                         date: setupModel.endDate
                         time: setupModel.endTime
                         dateHint: setupModel.dateFormat.toLowerCase()
+                        hasError: setupModel.endTimeInvalid
 
                         onDateEdited: function (newDate) {
                             setupModel.endDate = newDate
@@ -422,7 +443,8 @@ StyledDialogView {
                 Layout.preferredHeight: 16
 
                 horizontalAlignment: Text.AlignLeft
-                text: setupModel.summary
+                text: setupModel.scheduleError !== "" ? setupModel.scheduleError : setupModel.summary
+                color: setupModel.scheduleError !== "" ? root.errorColor : ui.theme.fontPrimaryColor
             }
 
             SchedulePanel {
@@ -525,7 +547,7 @@ StyledDialogView {
                 accentButton: true
                 isNarrow: true
                 enabled: setupModel.canStart
-                toolTipDescription: setupModel.summary
+                toolTipDescription: setupModel.scheduleError !== "" ? setupModel.scheduleError : setupModel.summary
 
                 onClicked: {
                     if (!setupModel.confirmOverwrite()) {

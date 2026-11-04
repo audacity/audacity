@@ -26,6 +26,10 @@ public:
     //! `start` is empty when the recording starts as soon as the user confirms.
     static QString summary(const QDateTime& now, const std::optional<QDateTime>& start, qint64 durationSeconds, bool endSetByDuration);
 
+    static QString startTimePassedError(const QDateTime& now);
+    static QString endTimePassedError(const QDateTime& now);
+    static QString endBeforeStartError();
+
     static QDateTime toDateTime(std::chrono::system_clock::time_point timePoint);
     static std::chrono::system_clock::time_point toTimePoint(const QDateTime& dateTime);
 

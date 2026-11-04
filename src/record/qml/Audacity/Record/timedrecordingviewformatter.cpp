@@ -67,6 +67,23 @@ QString TimedRecordingViewFormatter::summary(const QDateTime& now, const std::op
     return muse::qtrc("record", "Starts %1 and records for %2.").arg(startPhrase(now, *start), durationText);
 }
 
+QString TimedRecordingViewFormatter::startTimePassedError(const QDateTime& now)
+{
+    //: %1 is the current time of day, e.g. "12:25:14"
+    return muse::qtrc("record", "Start time has passed. Choose a time after %1.").arg(time(now));
+}
+
+QString TimedRecordingViewFormatter::endTimePassedError(const QDateTime& now)
+{
+    //: %1 is the current time of day, e.g. "12:25:14"
+    return muse::qtrc("record", "End time has passed. Choose a time after %1.").arg(time(now));
+}
+
+QString TimedRecordingViewFormatter::endBeforeStartError()
+{
+    return muse::qtrc("record", "End time must be after the start time.");
+}
+
 QDateTime TimedRecordingViewFormatter::toDateTime(std::chrono::system_clock::time_point timePoint)
 {
     return QDateTime::fromMSecsSinceEpoch(std::chrono::duration_cast<std::chrono::milliseconds>(timePoint.time_since_epoch()).count());
