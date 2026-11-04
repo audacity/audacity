@@ -10,12 +10,14 @@ constexpr const char16_t* REALTIME_VIEWER_URI
     = u"audacity://effects/realtime_viewer?instanceId=%1&effectState=%2&sync=false&modal=false&floating=true";
 }
 
-muse::Ret AbstractViewLauncher::doShowEffect(int instanceId, EffectFamily family, EffectViewMode mode) const
+muse::Ret AbstractViewLauncher::doShowEffect(int instanceId, EffectFamily family) const
 {
+    const Effect* effect = effectsProvider()->effect(instancesRegister()->effectIdByInstanceId(instanceId));
+
     muse::UriQuery uri(DESTRUCTIVE_EFFECT_VIEWER_URI);
     uri.addParam("instanceId", muse::Val(instanceId));
     uri.addParam("effectFamily", muse::Val(family));
-    uri.addParam("previewAllowed", muse::Val(mode == EffectViewMode::Apply));
+    uri.addParam("previewAllowed", muse::Val(!effect || !effect->IsBatchProcessing()));
     const auto ret = interactive()->openSync(uri);
     return ret.ret;
 }

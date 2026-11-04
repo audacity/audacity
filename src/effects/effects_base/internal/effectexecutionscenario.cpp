@@ -72,6 +72,17 @@ muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
 {
     au3::Au3Project& project = projectRef();
+
+    Effect* effect = effectsProvider()->effect(effectId);
+    if (effect) {
+        effect->SetBatchProcessing();
+    }
+    DEFER {
+        if (effect) {
+            effect->UnsetBatchProcessing();
+        }
+    };
+
     return performEffectWithShowError(project, effectId, EffectManager::kConfigured, params);
 }
 
@@ -83,6 +94,11 @@ muse::RetVal<std::string> EffectExecutionScenario::configureEffect(const EffectI
     if (!effect) {
         return RetVal<std::string>(make_ret(Err::EffectNotFound));
     }
+
+    effect->SetBatchProcessing();
+    DEFER {
+        effect->UnsetBatchProcessing();
+    };
 
     EffectManager& em = EffectManager::Get();
     EffectSettings* settings = em.GetDefaultSettings(au3::wxFromString(effectId), [&](const PluginID&) -> EffectSettingsManager* {
@@ -133,7 +149,7 @@ muse::RetVal<std::string> EffectExecutionScenario::configureEffect(const EffectI
     if (effect->IsInteractive()) {
         const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
         const EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, instance, access);
-        const Ret ret = effectViewController()->showEffect(effectId, instanceId, EffectViewMode::Configure);
+        const Ret ret = effectViewController()->showEffect(effectId, instanceId);
         effectInstancesRegister()->requestUpdateSettings(instanceId);
         effectInstancesRegister()->unregInstance(instanceId);
         if (!ret) {
@@ -434,7 +450,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
             EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, pInstanceEx, access);
-            muse::Ret ret = effectViewController()->showEffect(effectId, instanceId, EffectViewMode::Apply);
+            muse::Ret ret = effectViewController()->showEffect(effectId, instanceId);
             effectInstancesRegister()->requestUpdateSettings(instanceId);
             effectInstancesRegister()->unregInstance(instanceId);
             if (ret) {

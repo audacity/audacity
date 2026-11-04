@@ -4,9 +4,9 @@
 #include "extensionviewlauncher.h"
 
 namespace au::effects::extensions {
-muse::Ret ExtensionViewLauncher::showEffect(const EffectInstanceId& instanceId, EffectViewMode mode) const
+muse::Ret ExtensionViewLauncher::showEffect(const EffectInstanceId& instanceId) const
 {
-    return doShowEffect(instanceId, EffectFamily::Extension, mode);
+    return doShowEffect(instanceId, EffectFamily::Extension);
 }
 
 void ExtensionViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr&) const
