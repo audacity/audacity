@@ -163,6 +163,7 @@ public:
     void groupItems(const TrackItemKeyList& keys) override;
     void ungroupItems(const TrackItemKeyList& keys) override;
     ItemKeys itemsInGroup(int64_t id) const override;
+    ItemKeys rangeSelectionMoveItems() const override;
 
     muse::Progress progress() const override;
 

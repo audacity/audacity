@@ -132,6 +132,7 @@ public:
     MOCK_METHOD(void, groupItems, (const TrackItemKeyList&), (override));
     MOCK_METHOD(void, ungroupItems, (const TrackItemKeyList&), (override));
     MOCK_METHOD(ItemKeys, itemsInGroup, (int64_t), (const, override));
+    MOCK_METHOD(ItemKeys, rangeSelectionMoveItems, (), (const, override));
 
     MOCK_METHOD(muse::Progress, progress, (), (const, override));
 };

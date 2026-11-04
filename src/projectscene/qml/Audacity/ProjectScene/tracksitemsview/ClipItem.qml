@@ -41,7 +41,7 @@ Rectangle {
     property int currentClipStyle: ClipStyle.COLORFUL
     property bool isGrouped: false
     property bool clipSelected: false
-    property bool clipIntersectsSelection: false
+    property bool clipMovesWithSelection: false
     property bool clipFocused: false
     property bool isDataSelected: false
     property bool isMultiSelectionActive: false
@@ -116,10 +116,10 @@ Rectangle {
     radius: 4
     color: clipSelected ? clipSelectedColor : clipColor
     border.color: ui.theme.extra["black_color"]
-    opacity: root.moveActive && (clipSelected || clipIntersectsSelection) ? 0.5 : isAudible ? 1.0 : 0.3
+    opacity: root.moveActive && (clipSelected || clipMovesWithSelection) ? 0.5 : isAudible ? 1.0 : 0.3
 
     onMoveActiveChanged: {
-        root.parent.z = moveActive && (clipSelected || clipIntersectsSelection) ? 1 : 0
+        root.parent.z = moveActive && (clipSelected || clipMovesWithSelection) ? 1 : 0
     }
 
     property int borderWidth: 1
