@@ -131,6 +131,9 @@ void AvailableCommandsModel::reload()
     appendMacros();
 
     std::ranges::sort(m_allItems, [](const Item& a, const Item& b) {
+        if (a.isMacro != b.isMacro) {
+            return b.isMacro;
+        }
         return QString::localeAwareCompare(a.title, b.title) < 0;
     });
 
