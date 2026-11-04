@@ -18,6 +18,7 @@
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "playback/iplaybackcontroller.h"
 #include "trackedit/iselectioncontroller.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 
 namespace au::importexport {
 class ExportPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Contextable
@@ -27,6 +28,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };

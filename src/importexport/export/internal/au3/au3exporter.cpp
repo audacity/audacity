@@ -14,6 +14,7 @@
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-import-export/ExportUtils.h"
 #include "au3-mixer/MixerOptions.h"
+#include "au3-project-rate/ProjectRate.h"
 #include "au3-tags/Tags.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -832,6 +833,17 @@ int Au3Exporter::maxChannels() const
     }
 
     return 1;
+}
+
+int Au3Exporter::projectSampleRate() const
+{
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return 0;
+    }
+
+    const Au3Project* au3Project = reinterpret_cast<const Au3Project*>(project->au3ProjectPtr());
+    return au3Project ? static_cast<int>(ProjectRate::Get(*au3Project).GetRate()) : 0;
 }
 
 std::vector<int> Au3Exporter::sampleRateList() const

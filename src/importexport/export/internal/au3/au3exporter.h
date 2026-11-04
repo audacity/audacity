@@ -50,6 +50,7 @@ public:
 
     int maxChannels() const override;
     std::vector<int> sampleRateList() const override;
+    int projectSampleRate() const override;
     int optionsCount() const override;
 
     std::optional<ExportOption> option(int i) const override;

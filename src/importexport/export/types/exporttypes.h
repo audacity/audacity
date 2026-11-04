@@ -9,6 +9,7 @@
 
 namespace au::importexport {
 static const std::string DEFAULT_EXPORT_FORMAT = "WAV (Microsoft)";
+constexpr int DEFAULT_EXPORT_SAMPLE_RATE = 44100;
 
 enum class ExportProcessType {
     FULL_PROJECT_AUDIO = 0,

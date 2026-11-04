@@ -53,6 +53,7 @@ set(MODULE_LINK
         au3-import-export-modules
         au3-mod-ffmpeg
         au3-mixer
+        au3-project-rate
         au3-strings
         au3-tags
         au3-track
