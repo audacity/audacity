@@ -13,8 +13,15 @@ public:
     void setRecordMeterVisible(bool visible) override;
     [[nodiscard]] muse::async::Notification isRecordMeterVisibleChanged() const override;
 
+    [[nodiscard]] bool isSoundActivationMeterVisible() const override;
+    void setSoundActivationMeterVisible(bool visible) override;
+    [[nodiscard]] muse::async::Notification isSoundActivationMeterVisibleChanged() const override;
+
 private:
     muse::async::Notification m_isRecordMeterVisibleChanged;
     bool m_recordMeterVisible = false;
+
+    muse::async::Notification m_isSoundActivationMeterVisibleChanged;
+    bool m_soundActivationMeterVisible = false;
 };
 }
