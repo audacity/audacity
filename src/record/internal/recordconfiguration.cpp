@@ -13,6 +13,8 @@ const muse::Settings::Key MIC_METERING_KEY("record", "record/micMetering");
 const muse::Settings::Key INPUT_MONITORING_KEY("record", "record/inputMonitoring");
 const muse::Settings::Key LEAD_IN_TIME_DURATION_KEY("record", "record/leadInTimeDuration");
 const muse::Settings::Key CROSSFADE_DURATION_KEY("record", "record/crossfadeDuration");
+const muse::Settings::Key SOUND_ACTIVATED_RECORDING_KEY("record", "record/soundActivatedRecording");
+const muse::Settings::Key SOUND_ACTIVATION_LEVEL_KEY("record", "record/soundActivationLevel");
 
 //! NOTE: these keys deliberately match the au3 preference paths (bridged to the
 //! same settings storage), so values recorded by au3 code stay readable;
@@ -44,6 +46,16 @@ void RecordConfiguration::init()
     muse::settings()->setDefaultValue(CROSSFADE_DURATION_KEY, muse::Val(10.0));
     muse::settings()->valueChanged(CROSSFADE_DURATION_KEY).onReceive(nullptr, [this](const muse::Val&) {
         m_crossfadeDurationChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(SOUND_ACTIVATED_RECORDING_KEY, muse::Val(false));
+    muse::settings()->valueChanged(SOUND_ACTIVATED_RECORDING_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_isSoundActivatedRecordingOnChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(SOUND_ACTIVATION_LEVEL_KEY, muse::Val(-50.0));
+    muse::settings()->valueChanged(SOUND_ACTIVATION_LEVEL_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_soundActivationLevelChanged.notify();
     });
 }
 
@@ -105,6 +117,36 @@ void RecordConfiguration::setCrossfadeDuration(double milliseconds)
 muse::async::Notification RecordConfiguration::crossfadeDurationChanged() const
 {
     return m_crossfadeDurationChanged;
+}
+
+bool RecordConfiguration::isSoundActivatedRecordingOn() const
+{
+    return muse::settings()->value(SOUND_ACTIVATED_RECORDING_KEY).toBool();
+}
+
+void RecordConfiguration::setIsSoundActivatedRecordingOn(bool enable)
+{
+    muse::settings()->setSharedValue(SOUND_ACTIVATED_RECORDING_KEY, muse::Val(enable));
+}
+
+muse::async::Notification RecordConfiguration::isSoundActivatedRecordingOnChanged() const
+{
+    return m_isSoundActivatedRecordingOnChanged;
+}
+
+double RecordConfiguration::soundActivationLevel() const
+{
+    return muse::settings()->value(SOUND_ACTIVATION_LEVEL_KEY).toDouble();
+}
+
+void RecordConfiguration::setSoundActivationLevel(double db)
+{
+    muse::settings()->setSharedValue(SOUND_ACTIVATION_LEVEL_KEY, muse::Val(db));
+}
+
+muse::async::Notification RecordConfiguration::soundActivationLevelChanged() const
+{
+    return m_soundActivationLevelChanged;
 }
 
 RecordingTrackNameOptions RecordConfiguration::recordingTrackNameOptions() const
