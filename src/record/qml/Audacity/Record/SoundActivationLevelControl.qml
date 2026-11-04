@@ -12,6 +12,7 @@ Rectangle {
     id: root
 
     property bool applyImmediately: false
+    property alias listening: levelModel.listening
 
     property NavigationPanel navigationPanel: null
     property int navigationOrderStart: 0
@@ -90,8 +91,13 @@ Rectangle {
                     HorizontalVolumePressureMeter {
                         id: leftVolumePressure
 
+                        height: levelModel.recordingChannelsCount > 1 ? 6 : 14
+
                         meterModel: levelModel
                         showOverload: false
+
+                        currentVolumePressure: levelModel.leftChannelPressure
+                        currentRMS: levelModel.leftChannelRMS
                     }
 
                     HorizontalVolumePressureMeter {
@@ -99,6 +105,11 @@ Rectangle {
 
                         meterModel: levelModel
                         showOverload: false
+
+                        visible: levelModel.recordingChannelsCount > 1
+
+                        currentVolumePressure: levelModel.rightChannelPressure
+                        currentRMS: levelModel.rightChannelRMS
                     }
 
                     HorizontalVolumePressureRuler {

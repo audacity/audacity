@@ -25,3 +25,23 @@ muse::async::Notification RecordMeterController::isRecordMeterVisibleChanged() c
 {
     return m_isRecordMeterVisibleChanged;
 }
+
+bool RecordMeterController::isSoundActivationMeterVisible() const
+{
+    return m_soundActivationMeterVisible;
+}
+
+void RecordMeterController::setSoundActivationMeterVisible(bool visible)
+{
+    if (m_soundActivationMeterVisible == visible) {
+        return;
+    }
+
+    m_soundActivationMeterVisible = visible;
+    m_isSoundActivationMeterVisibleChanged.notify();
+}
+
+muse::async::Notification RecordMeterController::isSoundActivationMeterVisibleChanged() const
+{
+    return m_isSoundActivationMeterVisibleChanged;
+}

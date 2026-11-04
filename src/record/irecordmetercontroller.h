@@ -17,5 +17,9 @@ public:
     [[nodiscard]] virtual bool isRecordMeterVisible() const = 0;
     virtual void setRecordMeterVisible(bool visible) = 0;
     [[nodiscard]] virtual muse::async::Notification isRecordMeterVisibleChanged() const = 0;
+
+    [[nodiscard]] virtual bool isSoundActivationMeterVisible() const = 0;
+    virtual void setSoundActivationMeterVisible(bool visible) = 0;
+    [[nodiscard]] virtual muse::async::Notification isSoundActivationMeterVisibleChanged() const = 0;
 };
 }
