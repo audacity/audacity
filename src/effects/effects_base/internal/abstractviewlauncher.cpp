@@ -17,7 +17,7 @@ muse::Ret AbstractViewLauncher::doShowEffect(int instanceId, EffectFamily family
     muse::UriQuery uri(DESTRUCTIVE_EFFECT_VIEWER_URI);
     uri.addParam("instanceId", muse::Val(instanceId));
     uri.addParam("effectFamily", muse::Val(family));
-    uri.addParam("previewAllowed", muse::Val(!effect || !effect->IsBatchProcessing()));
+    uri.addParam("batchProcessing", muse::Val(effect && effect->IsBatchProcessing()));
     const auto ret = interactive()->openSync(uri);
     return ret.ret;
 }
