@@ -36,7 +36,6 @@ void MacroManagerModule::resolveImports()
     auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://macromanager/macroname"), "Audacity.MacroManager", "MacroNameDialog");
-        ir->registerQmlUri(muse::Uri("audacity://macromanager/deletemacro"), "Audacity.MacroManager", "DeleteMacroDialog");
         ir->registerQmlUri(muse::Uri("audacity://macromanager/editmacro"), "Audacity.MacroManager", "EditMacroDialog");
         ir->registerQmlUri(muse::Uri("audacity://macromanager/commandparams"), "Audacity.MacroManager", "CommandParamsDialog");
         ir->registerQmlUri(muse::Uri("audacity://macromanager/runonfiles"), "Audacity.MacroManager", "RunOnFilesDialog");

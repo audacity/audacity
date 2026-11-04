@@ -4,6 +4,7 @@
 #include "macroactions.h"
 
 #include "framework/global/io/path.h"
+#include "framework/global/stringutils.h"
 #include "framework/global/translation.h"
 
 using namespace au::macromanager;
@@ -11,7 +12,6 @@ using namespace muse;
 
 namespace {
 const Uri MACRO_NAME_URI("audacity://macromanager/macroname");
-const Uri DELETE_MACRO_URI("audacity://macromanager/deletemacro");
 const std::string MACRO_FILE_SUFFIX(".aumacro");
 }
 
@@ -39,17 +39,23 @@ void MacroActions::rename(const std::string& name) const
 
 void MacroActions::remove(const std::string& name) const
 {
-    ValList dependents;
-    for (const std::string& dependent : repository()->referencingMacros(name)) {
-        dependents.push_back(Val(dependent));
-    }
+    const std::vector<std::string> dependents = repository()->referencingMacros(name);
+    const QString macroName = QString::fromStdString(name);
+    const std::string text = dependents.empty()
+                             ? qtrc("macromanager", "\"%1\" will be deleted").arg(macroName).toStdString()
+                             : qtrc("macromanager", "\"%1\" is used by other macros. Deleting it will also remove it from: %2")
+                             .arg(macroName, QString::fromStdString(strings::join(dependents, ", "))).toStdString();
 
-    UriQuery uri(DELETE_MACRO_URI);
-    uri.addParam("macroName", Val(name));
-    uri.addParam("dependents", Val(dependents));
+    const IInteractive::Result result = interactive()->warningSync(
+        trc("macromanager", "Delete macro"), text,
+    {
+        IInteractive::ButtonData(IInteractive::Button::Cancel, trc("global", "Cancel")),
+        IInteractive::ButtonData(IInteractive::Button::Ok, trc("macromanager", "Confirm"), true)
+    },
+        int(IInteractive::Button::Ok), { IInteractive::Option::WithIcon },
+        trc("macromanager", "Delete macro"));
 
-    const RetVal<Val> result = interactive()->openSync(uri);
-    if (!result.ret) {
+    if (!result.isButton(IInteractive::Button::Ok)) {
         return;
     }
 
