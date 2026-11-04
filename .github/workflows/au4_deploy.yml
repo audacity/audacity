@@ -29,7 +29,6 @@ env:
   TAG_LABEL_SEPARATOR: '-'
   APP_DISPLAY_NAME: 'Audacity'
   STABLE_RELEASE_LABEL: ''
-  CHECKSUMS_FILE: 'CHECKSUMS.txt'
 
 jobs:
   plan:
@@ -101,6 +100,19 @@ jobs:
     - name: Collate release binaries
       run: |
         muse/buildscripts/ci/release/collate_release_binaries.sh
+
+    - name: Write CHECKSUMS.txt # the Name, Length, Hash table of the previous releases, from the verified checksums
+      working-directory: release
+      run: |
+        {
+          printf '%-40s %-10s %-64s\n' 'Name' 'Length' 'Hash'
+          printf '%-40s %-10s %-64s\n' '----' '------' '----'
+          while read -r hash file; do
+            printf '%-40s %-10s %-64s\n' "${file}" "$(stat -c%s "${file}")" "${hash}"
+          done < checksums.sha256.txt
+        } > CHECKSUMS.txt
+        rm checksums.sha256.txt
+        cat CHECKSUMS.txt
 
     - name: Create tag # as late as possible, so that a failure leaves no useless tag behind
       env:
