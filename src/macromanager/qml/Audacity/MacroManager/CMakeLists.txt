@@ -28,7 +28,6 @@ qt_add_qml_module(macromanager_qml
         internal/MacroManagerHeader.qml
         internal/MacroItem.qml
         internal/MacroTitleBar.qml
-        internal/CommandsSearchBar.qml
         internal/AvailableCommandsList.qml
         internal/MacroCommandsTable.qml
         internal/MacroCommandItem.qml

@@ -67,7 +67,7 @@ StyledDialogView {
     }
 
     onNavigationActivateRequested: {
-        searchBar.navigationPanel.requestActive()
+        searchField.navigationPanel.requestActive()
     }
 
     ColumnLayout {
@@ -89,22 +89,33 @@ StyledDialogView {
 
                 spacing: 0
 
-                CommandsSearchBar {
-                    id: searchBar
+                SearchField {
+                    id: searchField
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: prv.rowHeight
+                    Layout.preferredHeight: prv.buttonHeight
+                    Layout.margins: prv.sideMargin
 
-                    searchText: availableCommandsModel.searchText
-
-                    navigationPanel.section: root.navigationSection
-                    navigationPanel.order: 1
-
-                    onSearchTextChangeRequested: function (text) {
-                        availableCommandsModel.setSearchText(text)
+                    property NavigationPanel navigationPanel: NavigationPanel {
+                        name: "CommandsSearchBar"
+                        direction: NavigationPanel.Horizontal
+                        section: root.navigationSection
+                        order: 1
+                        enabled: searchField.enabled && searchField.visible
+                        accessible.name: qsTrc("macromanager", "Search commands")
                     }
 
-                    onSearchAccepted: {
+                    currentText: availableCommandsModel.searchText
+
+                    navigation.panel: searchField.navigationPanel
+                    navigation.order: 0
+                    navigation.name: "CommandsSearchField"
+
+                    onSearchTextChanged: {
+                        availableCommandsModel.setSearchText(searchField.searchText)
+                    }
+
+                    onAccepted: {
                         const count = availableCommandsModel.rowCount()
                         if (count === 0) {
                             return
