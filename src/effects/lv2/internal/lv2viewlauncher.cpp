@@ -20,9 +20,9 @@ Lv2ViewLauncher::Lv2ViewLauncher(const muse::modularity::ContextPtr& ctx)
     });
 }
 
-muse::Ret Lv2ViewLauncher::showEffect(const EffectInstanceId& instanceId, EffectViewMode mode) const
+muse::Ret Lv2ViewLauncher::showEffect(const EffectInstanceId& instanceId) const
 {
-    return doShowEffect(instanceId, EffectFamily::LV2, mode);
+    return doShowEffect(instanceId, EffectFamily::LV2);
 }
 
 void Lv2ViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) const

@@ -5,9 +5,9 @@
 
 using namespace au::effects;
 
-muse::Ret BuiltinViewLauncher::showEffect(const EffectInstanceId& instanceId, EffectViewMode mode) const
+muse::Ret BuiltinViewLauncher::showEffect(const EffectInstanceId& instanceId) const
 {
-    return doShowEffect(instanceId, EffectFamily::Builtin, mode);
+    return doShowEffect(instanceId, EffectFamily::Builtin);
 }
 
 void BuiltinViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) const
