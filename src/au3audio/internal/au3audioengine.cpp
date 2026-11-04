@@ -119,6 +119,8 @@ int Au3AudioEngine::startTransport(const TransportSequences& sequences, const do
 {
     AudioIOStartTransportOptions au3Options = ProjectAudioIO::GetDefaultOptions(project, options.isDefaultPolicy);
     au3Options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
+    au3Options.soundActivatedRecording = recordConfiguration()->isSoundActivatedRecordingOn();
+    au3Options.soundActivationLevelDb = recordConfiguration()->soundActivationLevel();
     au3Options.rate = options.sampleRate;
     au3Options.leadInTime = options.leadInTime;
     if (options.crossfadeData) {

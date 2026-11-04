@@ -16,6 +16,8 @@ using pan_t = float;
 using samples_t = uint64_t; //! TODO use double
 using sample_rate_t = uint64_t;
 
+constexpr double DEFAULT_SOUND_ACTIVATION_LEVEL_DB = -50.0;
+
 struct AudioSignalVal {
     float amplitude = 0.f;
     volume_dbfs_t pressure = 0.f;
