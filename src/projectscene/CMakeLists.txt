@@ -62,6 +62,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/common/trackviewstatemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/common/customcursor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/customcursor.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/selectioncolor.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/selectioncolor.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/addeffectmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/addeffectmenumodel.h

@@ -91,7 +91,6 @@ public:
     QVariant displayBounds() const;
     void setDisplayBounds(const QVariant& displayBounds);
 
-    Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
     Q_INVOKABLE void setLastClickPos(unsigned lastX, unsigned lastY, unsigned int x, const unsigned int y);
     Q_INVOKABLE void smoothLastClickPos(unsigned int x, const unsigned int y);
