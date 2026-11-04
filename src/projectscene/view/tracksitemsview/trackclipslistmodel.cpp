@@ -271,6 +271,20 @@ void TrackClipsListModel::titleEditRequestHandled(const ClipKey& key)
     tracksViewRequestsService()->clipTitleEditRequestHandled(key.key);
 }
 
+void TrackClipsListModel::onMoveActiveChanged()
+{
+    // Performance: the clips moving with a time selection don't change during a move,
+    // so they are collected once when it starts instead of on every metrics update
+    m_clipsMovingWithSelection.clear();
+    if (moveController() && moveController()->rangeSelectionActive()) {
+        m_clipsMovingWithSelection = trackeditInteraction()->rangeSelectionMoveItems().clips;
+    }
+
+    for (ViewTrackItem* item : std::as_const(m_items)) {
+        item->setMovesWithSelection(muse::contains(m_clipsMovingWithSelection, item->key().key));
+    }
+}
+
 void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 {
     TrackClipItem* item = static_cast<TrackClipItem*>(viewItem);
@@ -316,7 +330,7 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         time.selectionStartTime = selectionController()->dataSelectedStartTime();
         time.selectionEndTime = selectionController()->dataSelectedEndTime();
     }
-    item->setIntersectsSelection(muse::contains(selectionController()->clipsIntersectingRangeSelection(), item->key().key));
+    item->setMovesWithSelection(muse::contains(m_clipsMovingWithSelection, item->key().key));
 
     item->setTime(time);
     item->setX(m_context->timeToPosition(time.itemStartTime));

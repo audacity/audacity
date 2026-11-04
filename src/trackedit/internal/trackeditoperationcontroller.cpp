@@ -432,6 +432,12 @@ bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset,
     return true;
 }
 
+ItemKeys TrackeditOperationController::rangeSelectionMoveItems() const
+{
+    return withWholeGroups({ selectionController()->clipsIntersectingRangeSelection(),
+                             selectionController()->labelsIntersectingRangeSelection() });
+}
+
 ItemKeys TrackeditOperationController::withWholeGroups(const ItemKeys& items) const
 {
     std::unordered_set<int64_t> groupIds;

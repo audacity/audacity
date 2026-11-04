@@ -150,6 +150,7 @@ public:
     virtual void groupItems(const TrackItemKeyList& keys) = 0;
     virtual void ungroupItems(const TrackItemKeyList& keys) = 0;
     virtual ItemKeys itemsInGroup(int64_t id) const = 0;
+    virtual ItemKeys rangeSelectionMoveItems() const = 0;
 
     virtual muse::Progress progress() const = 0;
 };

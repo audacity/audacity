@@ -474,5 +474,31 @@ TEST_P(TrackeditOperationMoveTests, RangeSelectionMoveTakesTheWholeGroupAlong)
     EXPECT_EQ(m_trackEditProject->label(m_sourceLabel).startTime, 2.5);
 }
 
+TEST_P(TrackeditOperationMoveTests, RangeSelectionMoveItemsIncludeTheWholeGroup)
+{
+    //! [GIVEN] The source clip and a clip on another track are grouped, the label is not
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto other = factory.createTrackFromTemplate("other", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    const TrackId otherId = factory.addTrackToProject(other);
+    const ClipKey otherClip { otherId, other->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_trackEditProject, track(_)).WillByDefault([this](TrackId id) -> std::optional<Track> {
+        const auto* track = DomAccessor::findTrack(projectRef(), Au3TrackId(id));
+        return track ? std::optional<Track>(DomConverter::track(track)) : std::nullopt;
+    });
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault(Return(int64_t(7)));
+    m_operation->groupItems({ m_sourceClip, otherClip });
+
+    //! [GIVEN] A time selection lies within the source clip only
+    m_selection->setClipsIntersectingRangeSelection({ m_sourceClip });
+    m_selection->setLabelsIntersectingRangeSelection({});
+
+    //! [WHEN] The items a range move would take are asked for
+    const ItemKeys items = m_operation->rangeSelectionMoveItems();
+
+    //! [THEN] They are the clip under the selection and the rest of its group, without the ungrouped label
+    EXPECT_EQ(items.clips, (ClipKeyList { m_sourceClip, otherClip }));
+    EXPECT_TRUE(items.labels.empty());
+}
+
 INSTANTIATE_TEST_SUITE_P(SelectionOrder, TrackeditOperationMoveTests, Bool());
 }
