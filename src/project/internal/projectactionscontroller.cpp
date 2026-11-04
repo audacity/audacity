@@ -14,7 +14,6 @@
 #include "framework/global/types/ret.h"
 #include "framework/ui/view/iconcodes.h"
 #include "framework/interactive/iinteractive.h"
-#include "framework/rcommand/actiontocommand.h"
 
 #include "appshell/appshellcommands.h"
 #include "au3cloud/au3clouderrors.h"
@@ -44,13 +43,6 @@ static const muse::Uri CUSTOM_MAPPING("audacity://project/export/mapping");
 static const QString AUDACITY_URL_SCHEME("audacity");
 static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 
-static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
-static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
-static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
-static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("action://cloud/open-audio-file");
-static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_ACTION("action://cloud/update-audio-preview");
-static const muse::actions::ActionQuery UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION("action://cloud/update-audio-preview-for-project");
-
 namespace {
 QString cloudProjectOpenUrl(const muse::String& projectId, const muse::String& snapshotId)
 {
@@ -75,147 +67,6 @@ au::au3cloud::UploadMode toUploadMode(CloudSaveMode mode)
     }
 
     return au::au3cloud::UploadMode::NormalUpdate;
-}
-
-CommandQuery openConv(const Command& command, const muse::actions::ActionData& args)
-{
-    CommandQuery query(command);
-    if (const QUrl url = args.count() > 0 ? args.arg<QUrl>(0) : QUrl(); !url.isEmpty()) {
-        query.addParam(PROJECT_URL_PARAM, Val(url.toString()));
-    }
-    if (args.count() > 1) {
-        query.addParam(PROJECT_DISPLAY_NAME_PARAM, Val(args.arg<QString>(1)));
-    }
-    return query;
-}
-
-CommandQuery openCloudConv(const Command& command, const muse::actions::ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.count() > 0) {
-        query.addParam(PROJECT_ID_PARAM, Val(args.arg<QString>(0)));
-    }
-    if (args.count() > 1) {
-        query.addParam(PROJECT_SNAPSHOT_ID_PARAM, Val(args.arg<QString>(1)));
-    }
-    return query;
-}
-
-CommandQuery filesConv(const Command& command, const muse::actions::ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.count() > 0) {
-        ValList files;
-        for (const QString& file : args.arg<QStringList>(0)) {
-            files.emplace_back(file);
-        }
-        query.addParam(PROJECT_FILES_PARAM, Val(files));
-    }
-    if (args.count() > 1) {
-        query.addParam(PROJECT_REMOVE_AFTER_IMPORT_PARAM, Val(args.arg<bool>(1)));
-    }
-    return query;
-}
-
-CommandQuery trackIdConv(const Command& command, const muse::actions::ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.count() > 0) {
-        query.addParam(PROJECT_TRACK_ID_PARAM, Val(args.arg<au::trackedit::TrackId>(0)));
-    }
-    return query;
-}
-
-CommandQuery legacyQueryParamConv(const Command& command, const muse::actions::ActionData& args, const std::string& legacyName,
-                                  const std::string& paramName)
-{
-    CommandQuery query(command);
-    if (args.empty()) {
-        return query;
-    }
-
-    const muse::actions::ActionQuery legacy(args.arg<std::string>(0));
-    if (legacy.contains(legacyName)) {
-        query.addParam(paramName, legacy.param(legacyName));
-    }
-    return query;
-}
-
-CommandQuery audioIdConv(const Command& command, const muse::actions::ActionData& args)
-{
-    return legacyQueryParamConv(command, args, "audioId", PROJECT_AUDIO_ID_PARAM);
-}
-
-CommandQuery cloudProjectIdConv(const Command& command, const muse::actions::ActionData& args)
-{
-    return legacyQueryParamConv(command, args, "id", PROJECT_ID_PARAM);
-}
-
-const muse::actions::ActionCodeList& prohibitedWhileRecording()
-{
-    static const muse::actions::ActionCodeList codes {
-        "file-close",
-        "project-import",
-        "file-save",
-        "file-save-to-cloud",
-        "file-save-as",
-        "export-audio",
-        "export-labels",
-        "export-midi",
-        "file-share-audio",
-        "action://cloud/update-audio-preview",
-        "action://cloud/update-audio-preview-for-project",
-    };
-
-    return codes;
-}
-
-const std::unordered_set<muse::actions::ActionCode>& dontRequireOpenProject()
-{
-    static const std::unordered_set<muse::actions::ActionCode> codes {
-        "file-new",
-        "file-open",
-        "file-open-recent",
-        "project-import-startup-media",
-        "cloud-file-open",
-        "continue-last-session",
-        "clear-recent",
-        "action://cloud/open-audio-file",
-        "action://cloud/update-audio-preview-for-project",
-        "plugin-manager",
-        "project-show-in-folder",
-    };
-
-    return codes;
-}
-
-const std::unordered_set<muse::actions::ActionCode>& prohibitedOnNonCloudProject()
-{
-    static const std::unordered_set<muse::actions::ActionCode> codes {
-        "action://cloud/update-audio-preview",
-    };
-
-    return codes;
-}
-
-const muse::actions::ActionCodeList& prohibitedWithoutAudio()
-{
-    static const muse::actions::ActionCodeList codes {
-        "file-share-audio",
-        "action://cloud/update-audio-preview",
-        "export-audio",
-    };
-
-    return codes;
-}
-
-const muse::actions::ActionCodeList& prohibitedWithoutLabels()
-{
-    static const muse::actions::ActionCodeList codes {
-        "export-labels",
-    };
-
-    return codes;
 }
 }
 
@@ -259,110 +110,6 @@ void ProjectActionsController::init()
     cd->onRequest(this, PROJECT_OPEN_METADATA_DIALOG_COMMAND, [this]() { return openMetadataDialog(); });
     cd->onRequest(this, PROJECT_OPEN_CUSTOM_FFMPEG_OPTIONS_COMMAND, [this]() { return openCustomFFmpegOptions(); });
     cd->onRequest(this, PROJECT_OPEN_CUSTOM_MAPPING_COMMAND, [this]() { return openCustomMapping(); });
-
-    static const std::vector<ActionToCommand> actionToCommand = {
-        { "file-new", PROJECT_NEW_COMMAND, {} },
-        { "file-open", PROJECT_OPEN_COMMAND, openConv },
-        { "file-open-recent", PROJECT_OPEN_COMMAND, openConv },
-        { "cloud-file-open", PROJECT_OPEN_CLOUD_COMMAND, openCloudConv },
-        { "clear-recent", PROJECT_CLEAR_RECENT_COMMAND, {} },
-        { "project-import", PROJECT_IMPORT_COMMAND, filesConv },
-        { "project-import-startup-media", PROJECT_IMPORT_STARTUP_MEDIA_COMMAND, filesConv },
-        { "file-save", PROJECT_SAVE_COMMAND, {} },
-        { "file-save-to-cloud", PROJECT_SAVE_TO_CLOUD_COMMAND, {} },
-        { "file-save-as", PROJECT_SAVE_AS_COMMAND, {} },
-        { "file-close", PROJECT_CLOSE_COMMAND, {} },
-        { "file-share-audio", PROJECT_SHARE_AUDIO_COMMAND, {} },
-        { OPEN_CLOUD_AUDIO_FILE_URI.toString(), PROJECT_OPEN_CLOUD_AUDIO_FILE_COMMAND, audioIdConv },
-        { UPDATE_AUDIO_PREVIEW_ACTION.toString(), PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_COMMAND, {} },
-        { UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION.toString(), PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_FOR_PROJECT_COMMAND, cloudProjectIdConv },
-        { "export-audio", PROJECT_EXPORT_AUDIO_COMMAND, {} },
-        { "export-labels", PROJECT_EXPORT_LABELS_COMMAND, trackIdConv },
-        { "export-midi", PROJECT_EXPORT_MIDI_COMMAND, {} },
-        { "open-metadata-editor", PROJECT_OPEN_METADATA_DIALOG_COMMAND, {} },
-        { OPEN_METADATA_DIALOG, PROJECT_OPEN_METADATA_DIALOG_COMMAND, {} },
-        { OPEN_CUSTOM_FFMPEG_OPTIONS, PROJECT_OPEN_CUSTOM_FFMPEG_OPTIONS_COMMAND, {} },
-        { OPEN_CUSTOM_MAPPING, PROJECT_OPEN_CUSTOM_MAPPING_COMMAND, {} },
-    };
-
-    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
-
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
-        listenTrackeditProjectChanges();
-        listenCloudProjectChanges();
-    });
-
-    listenTrackeditProjectChanges();
-    listenCloudProjectChanges();
-
-    recordController()->isRecordingChanged().onNotify(this, [this]() {
-        m_actionEnabledChanged.send(prohibitedWhileRecording());
-    });
-}
-
-void ProjectActionsController::listenTrackeditProjectChanges()
-{
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return;
-    }
-
-    prj->hasAudioContent().ch.onReceive(this, [this](bool) {
-        m_actionEnabledChanged.send(prohibitedWithoutAudio());
-    }, muse::async::Asyncable::Mode::SetReplace);
-
-    prj->hasLabels().ch.onReceive(this, [this](bool) {
-        m_actionEnabledChanged.send(prohibitedWithoutLabels());
-    }, muse::async::Asyncable::Mode::SetReplace);
-
-    m_actionEnabledChanged.send(prohibitedWithoutAudio());
-    m_actionEnabledChanged.send(prohibitedWithoutLabels());
-}
-
-void ProjectActionsController::listenCloudProjectChanges()
-{
-    IAudacityProjectPtr prj = currentProject();
-    if (!prj) {
-        return;
-    }
-
-    prj->isCloudProjectChanged().onNotify(this, [this]() {
-        m_actionEnabledChanged.send({ UPDATE_AUDIO_PREVIEW_ACTION.toString() });
-    }, muse::async::Asyncable::Mode::SetReplace);
-
-    m_actionEnabledChanged.send({ UPDATE_AUDIO_PREVIEW_ACTION.toString() });
-}
-
-muse::async::Channel<muse::actions::ActionCodeList> ProjectActionsController::actionEnabledChanged() const
-{
-    return m_actionEnabledChanged;
-}
-
-bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
-{
-    const IAudacityProjectPtr project = currentProject();
-    if (!project) {
-        return muse::contains(dontRequireOpenProject(), code);
-    }
-
-    if (muse::contains(prohibitedOnNonCloudProject(), code) && !project->isCloudProject()) {
-        return false;
-    }
-
-    const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
-    if (muse::contains(prohibitedWithoutAudio(), code) && (!trackeditProject || !trackeditProject->hasAudioContent().val)) {
-        return false;
-    }
-
-    if (muse::contains(prohibitedWithoutLabels(), code) && (!trackeditProject || !trackeditProject->hasLabels().val)) {
-        return false;
-    }
-
-    if (muse::contains(prohibitedWhileRecording(), code) && recordController()->isRecording()) {
-        return false;
-    }
-
-    return true;
 }
 
 IAudacityProjectPtr ProjectActionsController::currentProject() const
@@ -1772,7 +1519,7 @@ bool ProjectActionsController::dispatchAudioPreviewToWindowWithProject(const mus
             continue;
         }
 
-        auto ctxDispatcher = muse::modularity::ioc(ctx)->resolve<muse::actions::IActionsDispatcher>("project");
+        auto ctxDispatcher = muse::modularity::ioc(ctx)->resolve<muse::rcommand::ICommandDispatcher>("project");
         IF_ASSERT_FAILED(ctxDispatcher) {
             return false;
         }
@@ -1781,9 +1528,7 @@ bool ProjectActionsController::dispatchAudioPreviewToWindowWithProject(const mus
             window->requestShowOnFront();
         }
 
-        muse::actions::ActionQuery action(UPDATE_AUDIO_PREVIEW_FOR_PROJECT_ACTION);
-        action.addParam("id", Val(projectId));
-        ctxDispatcher->dispatch(action);
+        ctxDispatcher->dispatch(PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_FOR_PROJECT_COMMAND, { { PROJECT_ID_PARAM, Val(projectId) } });
 
         return true;
     }

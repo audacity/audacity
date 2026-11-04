@@ -12,7 +12,6 @@
 #include "effectsviewtypes.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "context/iglobalcontext.h"
-#include "actions/actionable.h"
 #include "async/asyncable.h"
 #include "ui/qml/Muse/Ui/navigationpanel.h"
 #include "uicomponents/qml/Muse/UiComponents/dialogview.h"
@@ -20,8 +19,7 @@
 #include <QObject>
 
 namespace au::effects {
-class RealtimeEffectViewerDialogModel : public QObject, public muse::Contextable, public muse::async::Asyncable,
-    public muse::actions::Actionable
+class RealtimeEffectViewerDialogModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(QString effectState READ prop_effectState WRITE prop_setEffectState FINAL)

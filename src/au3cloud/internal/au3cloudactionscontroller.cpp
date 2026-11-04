@@ -5,35 +5,11 @@
 
 #include <variant>
 
-#include "framework/actions/actiontypes.h"
-#include "framework/rcommand/actiontocommand.h"
-
 #include "../cloudcommands.h"
 #include "cloudurlhandler.h"
 
 using namespace au::au3cloud;
-using namespace muse::actions;
 using namespace muse::rcommand;
-
-namespace {
-const ActionQuery SHOW_TOUR_PAGE_ACTION("action://cloud/show-tour-page");
-const ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("action://cloud/open-project-page");
-const ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("action://cloud/open-audio-page");
-const ActionQuery OPEN_CLOUD_PROFILE_PAGE_ACTION("action://cloud/open-profile-page");
-const ActionCode OPEN_URL_ACTION("open-url");
-
-CommandQuery queryParamsConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.empty()) {
-        return query;
-    }
-
-    const ActionQuery legacy(args.arg<std::string>(0));
-    query.setParams(legacy.params());
-    return query;
-}
-}
 
 Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPtr ctx)
     : muse::Contextable(ctx)
@@ -52,15 +28,6 @@ void Au3CloudActionsController::init()
     cd->onRequest(this, CLOUD_OPEN_AUDIO_PAGE_COMMAND, [this](const Params& params) { return openCloudAudioPage(params); });
     cd->onRequest(this, CLOUD_OPEN_PROFILE_PAGE_COMMAND, [this]() { return openCloudProfilePage(); });
     cd->onRequest(this, CLOUD_OPEN_URL_COMMAND, [this](const Params& params) { return openUrl(params); });
-
-    static const std::vector<ActionToCommand> actionToCommand = {
-        { SHOW_TOUR_PAGE_ACTION.toString(), CLOUD_SHOW_TOUR_PAGE_COMMAND, {} },
-        { OPEN_CLOUD_PROJECT_PAGE_ACTION.toString(), CLOUD_OPEN_PROJECT_PAGE_COMMAND, queryParamsConv },
-        { OPEN_CLOUD_AUDIO_PAGE_ACTION.toString(), CLOUD_OPEN_AUDIO_PAGE_COMMAND, queryParamsConv },
-        { OPEN_CLOUD_PROFILE_PAGE_ACTION.toString(), CLOUD_OPEN_PROFILE_PAGE_COMMAND, {} },
-        { OPEN_URL_ACTION, CLOUD_OPEN_URL_COMMAND, make_conv({ { CLOUD_OPEN_URL_URL_PARAM, param<QString> } }) },
-    };
-    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     authorization()->authState().ch.onReceive(this, [this](const AuthState& state) {
         if (std::holds_alternative<Authorizing>(state)) {
@@ -87,11 +54,6 @@ muse::Ret Au3CloudActionsController::openUrl(const Params& params)
 
     m_urlHandler->handle(url);
     return muse::make_ok();
-}
-
-bool Au3CloudActionsController::canReceiveAction(const ActionCode&) const
-{
-    return true;
 }
 
 muse::Ret Au3CloudActionsController::showTourPage()

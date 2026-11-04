@@ -28,8 +28,6 @@ target_sources(appshell PRIVATE
     istartupscenario.h
     appshelltypes.h
     appshellcommands.h
-    internal/applicationuiactions.cpp
-    internal/applicationuiactions.h
     internal/appshellcommandsregister.cpp
     internal/appshellcommandsregister.h
     internal/appshellcommandsstate.cpp

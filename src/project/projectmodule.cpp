@@ -23,14 +23,13 @@
 
 #include "framework/global/modularity/ioc.h"
 
-#include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/rcommand/icommandsregister.h"
 #include "framework/rcommand/icommandsstate.h"
 
+#include "internal/projectactionscontroller.h"
 #include "internal/projectconfiguration.h"
 #include "internal/projectcreator.h"
-#include "internal/projectuiactions.h"
 #include "internal/projectcommandsregister.h"
 #include "internal/projectcommandsstate.h"
 #include "internal/thumbnailcreator.h"
@@ -147,7 +146,6 @@ IContextSetup* ProjectModule::newContext(const muse::modularity::ContextPtr& ctx
 void ProjectContext::registerExports()
 {
     m_actionsController = std::make_shared<ProjectActionsController>(iocContext());
-    m_uiActions = std::make_shared<ProjectUiActions>(m_actionsController);
     m_thumbnailCreator = std::make_shared<ThumbnailCreator>();
     m_tagsAccessor = std::make_shared<Au3Metadata>(iocContext());
 
@@ -170,12 +168,6 @@ void ProjectContext::resolveImports()
 void ProjectContext::onInit(const muse::IApplication::RunMode&)
 {
     m_actionsController->init();
-    m_uiActions->init();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void ProjectContext::onDeinit()

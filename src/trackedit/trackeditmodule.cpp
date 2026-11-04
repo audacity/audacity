@@ -25,7 +25,6 @@
 
 #include "framework/global/modularity/ioc.h"
 
-#include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/global/api/iapiregister.h"
 #include "framework/rcommand/icommandsregister.h"
@@ -33,7 +32,6 @@
 
 #include "api/projectapi.h"
 
-#include "internal/trackedituiactions.h"
 #include "internal/trackeditactionscontroller.h"
 #include "internal/trackeditcommandsregister.h"
 #include "internal/trackeditcommandsstate.h"
@@ -63,7 +61,6 @@ using namespace au::trackedit;
 using namespace muse;
 using namespace muse::modularity;
 using namespace muse::ui;
-using namespace muse::actions;
 
 static const std::string mname("trackedit");
 
@@ -144,7 +141,6 @@ IContextSetup* TrackeditModule::newContext(const muse::modularity::ContextPtr& c
 void TrackeditContext::registerExports()
 {
     m_trackeditController = std::make_shared<TrackeditActionsController>(iocContext());
-    m_trackeditUiActions = std::make_shared<TrackeditUiActions>(iocContext(), m_trackeditController);
     m_selectionController = std::make_shared<Au3SelectionController>(iocContext());
     m_trackNavigationController = std::make_shared<TrackNavigationController>(iocContext());
     m_trackSpectrogramSettingsUpdater = std::make_shared<TrackSpectrogramSettingsUpdater>(iocContext());
@@ -174,16 +170,10 @@ void TrackeditContext::resolveImports()
 
 void TrackeditContext::onInit(const muse::IApplication::RunMode&)
 {
-    m_trackeditUiActions->init();
     m_trackeditController->init();
     m_selectionController->init();
     m_trackNavigationController->init();
     m_trackSpectrogramSettingsUpdater->init();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_trackeditUiActions);
-    }
 }
 
 void TrackeditContext::onDeinit()

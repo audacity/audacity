@@ -2,16 +2,13 @@
 #define AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 
 #include "framework/global/async/asyncable.h"
+#include "framework/global/async/notification.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
 #include "framework/global/iapplication.h"
 
-#include "framework/actions/actionable.h"
-#include "framework/actions/iactionsdispatcher.h"
-#include "framework/actions/actiontypes.h"
 #include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
-#include "framework/global/async/channel.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/imainwindow.h"
@@ -21,7 +18,6 @@
 #include "iopensaveprojectscenario.h"
 #include "framework/toast/itoastservice.h"
 #include "trackedit/iprojecthistory.h"
-#include "record/irecordcontroller.h"
 #include "importexport/export/internal/exportconfiguration.h"
 #include "importexport/import/iimporter.h"
 #include "au3cloud/iau3audiocomservice.h"
@@ -35,8 +31,8 @@
 #include "multiwindows/imultiwindowsprovider.h"
 
 namespace au::project {
-class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::rcommand::Commandable,
-    public muse::async::Asyncable, public muse::Contextable
+class ProjectActionsController : public IProjectFilesController, public muse::rcommand::Commandable, public muse::async::Asyncable,
+    public muse::Contextable
 {
     muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<IProjectConfiguration> configuration;
@@ -49,14 +45,12 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<au3cloud::IAuthorization> authorization;
     muse::GlobalInject<au3cloud::ICloudProjectsProvider> cloudProjectsProvider;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
-    muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<importexport::IImporter> importer { this };
     muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<effects::IMissingEffectChecker> missingEffectChecker { this };
@@ -65,8 +59,6 @@ public:
     ProjectActionsController(muse::modularity::ContextPtr ctx = nullptr);
 
     void init();
-
-    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
     [[nodiscard]] muse::Ret openProject(const ProjectFile& file) override;
     bool isUrlSupported(const QUrl& url) const override;
@@ -82,7 +74,6 @@ public:
     muse::async::Notification projectBeingDownloadedChanged() const override;
 
     bool isProjectOpened(const muse::io::path_t& projectPath) const;
-    muse::async::Channel<muse::actions::ActionCodeList> actionEnabledChanged() const;
 
 private:
     bool doCloseOpenedProject(bool quitApp, bool discardUnsavedChanges);
@@ -153,16 +144,12 @@ private:
 
     muse::Ret ensureAuthorization();
 
-    void listenTrackeditProjectChanges();
-    void listenCloudProjectChanges();
-
     bool m_isProjectSaving = false;
     bool m_isProjectClosing = false;
     bool m_isProjectProcessing = false;
 
     ProjectBeingDownloaded m_projectBeingDownloaded;
     muse::async::Notification m_projectBeingDownloadedChanged;
-    muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
 };
 }
 

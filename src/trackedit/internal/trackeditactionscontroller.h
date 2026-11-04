@@ -6,13 +6,10 @@
 #include <functional>
 #include <optional>
 
-#include "framework/global/async/asyncable.h"
-#include "framework/actions/actionable.h"
 #include "framework/rcommand/commandable.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/inavigationcontroller.h"
 
@@ -30,11 +27,8 @@
 
 #include "deletebehavioronboardingscenario.h"
 
-#include "../itrackeditactionscontroller.h"
-
 namespace au::trackedit {
-class TrackeditActionsController : public ITrackeditActionsController, public muse::actions::Actionable, public muse::rcommand::Commandable,
-    public muse::async::Asyncable, public muse::Contextable
+class TrackeditActionsController : public muse::rcommand::Commandable, public muse::Contextable
 {
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<trackedit::ITrackeditConfiguration> configuration;
@@ -42,7 +36,6 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
@@ -59,22 +52,11 @@ public:
 
     void init();
 
-    bool actionEnabled(const muse::actions::ActionCode& actionCode) const override;
-    muse::async::Channel<muse::actions::ActionCode> actionEnabledChanged() const override;
-
-    bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
-    muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
-    bool canReceiveAction(const muse::actions::ActionCode& actionCode) const override;
-
 private:
     friend class TrackeditActionsControllerTests;
 
-    void notifyActionEnabledChanged(const muse::actions::ActionCode& actionCode);
-    void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
-
     bool isFocusedItemClip() const;
     ClipKeyList clipsForInteraction() const;
-    bool canSilenceAudio() const;
 
     struct ContiguousClipsSpan {
         TrackId trackId = INVALID_TRACK;
@@ -82,13 +64,10 @@ private:
         secs_t end = 0.0;
     };
     std::optional<ContiguousClipsSpan> contiguousSelectedClipsSpan() const;
-    bool rangeSelectionCoversMultipleClips() const;
 
     bool isFocusedItemLabel() const;
     LabelKeyList labelsForInteraction() const;
     TrackItemKeyList itemsForInteraction() const;
-    bool anyItemGrouped(const TrackItemKeyList& items) const;
-    bool itemsShareOneGroup(const TrackItemKeyList& items) const;
 
     TrackId currentFocusedOrSelectedTrack() const;
     void focusTrack(const TrackId& trackId);
@@ -177,7 +156,7 @@ private:
     muse::Ret selectTrackByIndex(const muse::rcommand::Params& params);
     muse::Ret moveCursorToClosestZeroCrossing();
 
-    muse::Ret setClipColor(const muse::rcommand::Params& params, const std::function<void()>& onSet);
+    muse::Ret setClipColor(const muse::rcommand::Params& params);
     muse::Ret setTrackColor(const muse::rcommand::Params& params);
     muse::Ret setTrackFormat(const muse::rcommand::Params& params);
     muse::Ret setTrackRate(const muse::rcommand::Params& params);
@@ -204,9 +183,6 @@ private:
     TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
 
     context::IPlaybackStatePtr playbackState() const;
-
-    muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
-    muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     DeleteBehaviorOnboardingScenario m_deleteBehaviorOnboardingScenario;
 };

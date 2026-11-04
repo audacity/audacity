@@ -7,8 +7,6 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
 
-#include "framework/actions/iactionsdispatcher.h"
-#include "framework/actions/actionable.h"
 #include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iinteractive.h"
@@ -22,13 +20,12 @@
 #include "../iprojectsceneuistate.h"
 
 namespace au::projectscene {
-class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable,
-    public muse::rcommand::Commandable, public muse::async::Asyncable, public muse::Contextable
+class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::rcommand::Commandable,
+    public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
     muse::ContextInject<IProjectSceneUiState> projectSceneUiState { this };
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
@@ -53,14 +50,7 @@ public:
     muse::async::Notification realtimeEffectMoveUpRequested() const override;
     muse::async::Notification realtimeEffectMoveDownRequested() const override;
 
-    bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
-    muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
-    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
-    muse::async::Channel<muse::actions::ActionCode> actionEnabledChanged() const override;
-
 private:
-    void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
-
     template<typename ViewController>
     void registerViewCommand(const muse::rcommand::Command& command, ViewController * ProjectSceneActionsController::* view,
                              void (ViewController::* handler)());
@@ -86,8 +76,6 @@ private:
     muse::Ret toggleEffectsPanel();
     muse::Ret requestAudioSetupContextMenu();
 
-    muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
-    muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
     muse::async::Notification m_effectsPanelFocusRequested;
     muse::async::Notification m_audioSetupContextMenuRequested;
     muse::async::Notification m_timelineContextMenuRequested;

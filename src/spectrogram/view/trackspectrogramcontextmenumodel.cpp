@@ -48,8 +48,7 @@ muse::uicomponents::MenuItem* TrackSpectrogramContextMenuModel::makeSpectralEffe
     if (!effect) {
         return nullptr;
     }
-    const effects::EffectId effectId = effects::effectIdFromAction(muse::actions::ActionQuery(effect->action));
-    muse::uicomponents::MenuItem* const item = makeMenuItem(effects::makeEffectOpenCommand(effectId));
+    muse::uicomponents::MenuItem* const item = makeMenuItem(effects::makeEffectOpenCommand(effect->effectId));
     IF_ASSERT_FAILED(item) {
         return nullptr;
     }

@@ -4,9 +4,7 @@
 #pragma once
 
 #include "framework/global/modularity/imoduleinterface.h"
-#include "framework/global/async/channel.h"
 #include "framework/global/async/notification.h"
-#include "framework/actions/actiontypes.h"
 
 namespace au::projectscene {
 class ITimelineViewController;
@@ -30,10 +28,5 @@ public:
     virtual muse::async::Notification splitToolToggleRequested() const = 0;
     virtual muse::async::Notification realtimeEffectMoveUpRequested() const = 0;
     virtual muse::async::Notification realtimeEffectMoveDownRequested() const = 0;
-
-    virtual bool actionChecked(const muse::actions::ActionCode& actionCode) const = 0;
-    virtual muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const = 0;
-
-    virtual muse::async::Channel<muse::actions::ActionCode> actionEnabledChanged() const = 0;
 };
 }

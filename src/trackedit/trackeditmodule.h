@@ -8,7 +8,6 @@
 namespace au::trackedit {
 class TrackeditConfiguration;
 class TrackeditActionsController;
-class TrackeditUiActions;
 class Au3SelectionController;
 class TrackNavigationController;
 class TrackSpectrogramSettingsUpdater;
@@ -45,7 +44,6 @@ public:
 
 private:
     std::shared_ptr<TrackeditActionsController> m_trackeditController;
-    std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
     std::shared_ptr<Au3SelectionController> m_selectionController;
     std::shared_ptr<TrackNavigationController> m_trackNavigationController;
     std::shared_ptr<TrackSpectrogramSettingsUpdater> m_trackSpectrogramSettingsUpdater;

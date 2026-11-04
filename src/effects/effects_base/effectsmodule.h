@@ -11,7 +11,6 @@ class EffectsProvider;
 class EffectsMenuProvider;
 class EffectsConfiguration;
 class EffectsActionsController;
-class EffectsUiActions;
 class RealtimeEffectService;
 
 class EffectsModule : public muse::modularity::IModuleSetup
