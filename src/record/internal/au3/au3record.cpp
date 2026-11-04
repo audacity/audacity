@@ -12,7 +12,9 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
+#include "au3-audio-io/AudioIO.h"
 #include "au3-audio-io/ProjectAudioIO.h"
+#include "au3-label-track/LabelTrack.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track/Track.h"
 #include "au3-track/PendingTracks.h"
@@ -372,7 +374,13 @@ void Au3Record::init()
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.ClearPendingTracks();
 
+        const bool hasDropouts = labelDropouts();
+
         commitRecording();
+
+        if (hasDropouts) {
+            showDropoutsWarning();
+        }
     });
 }
 
@@ -952,6 +960,48 @@ void Au3Record::cancelRecording()
 {
     Au3Project& project = projectRef();
     PendingTracks::Get(project).ClearPendingTracks();
+}
+
+bool Au3Record::labelDropouts()
+{
+    const auto& intervals = AudioIO::Get()->LostCaptureIntervals();
+    if (intervals.empty()) {
+        return false;
+    }
+
+    auto& tracks = Au3TrackList::Get(projectRef());
+    //: Name of the label track marking where recorded audio was lost. Keep it short, about 11 Latin characters at most.
+    //: A dropout is a loss of a short sequence of audio sample data from the recording
+    const wxString name = tracks.MakeUniqueTrackName(wxFromString(muse::mtrc("record", "Dropouts")));
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks, name);
+
+    int number = 1;
+    for (const auto& [start, duration] : intervals) {
+        labelTrack->AddLabel(SelectedRegion { start, start + duration }, wxString::Format(wxT("%d"), number++));
+    }
+
+    globalContext()->currentTrackeditProject()->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
+    return true;
+}
+
+void Au3Record::showDropoutsWarning()
+{
+    constexpr int turnOffButton = int(IInteractive::Button::CustomButton) + 1;
+    const IInteractive::ButtonDatas buttons {
+        IInteractive::ButtonData(turnOffButton, trc("record", "Turn off dropout detection")),
+        interactive()->buttonData(IInteractive::Button::Ok)
+    };
+
+    const std::string text = trc("record", "Recorded audio was lost at the labeled locations. Possible causes:\n\n"
+                                           "• Other applications are competing with Audacity for processor time\n"
+                                           "• You are saving directly to a slow external storage device");
+
+    interactive()->warning(trc("record", "Recorded audio was lost"), text, buttons, int(IInteractive::Button::Ok))
+    .onResolve(this, [this, turnOffButton](const IInteractive::Result& result) {
+        if (result.isButton(turnOffButton)) {
+            recordConfiguration()->setDetectDropouts(false);
+        }
+    });
 }
 
 void Au3Record::commitRecording()
