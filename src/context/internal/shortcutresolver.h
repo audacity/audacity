@@ -26,8 +26,6 @@ public:
     muse::TranslatableString scopeTitle(const std::string& scopeCode) const override;
 
 private:
-    friend class ShortcutResolverTests;
-
     int scopePriority(const std::string& scope) const;
     bool isProjectFocused() const;
     bool isTrackViewFocused() const;
