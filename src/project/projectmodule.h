@@ -29,7 +29,6 @@
 namespace au::project {
 class ProjectConfiguration;
 class ProjectActionsController;
-class ProjectUiActions;
 class RecentFilesController;
 class ThumbnailCreator;
 class ProjectAutoSaver;
@@ -66,7 +65,6 @@ public:
 
 private:
     std::shared_ptr<ProjectActionsController> m_actionsController;
-    std::shared_ptr<ProjectUiActions> m_uiActions;
     std::shared_ptr<ThumbnailCreator> m_thumbnailCreator;
     std::shared_ptr<Au3Metadata> m_tagsAccessor;
 };

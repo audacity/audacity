@@ -23,7 +23,7 @@
 
 #include "framework/extensions/extensionstypes.h"
 
-#include "shortcutcontext.h"
+#include "framework/shortcuts_v2/shortcutcontext.h"
 #include "log.h"
 
 using namespace au::context;
@@ -169,11 +169,11 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
     //! ProjectOpened
     //!     ProjectFocused
 
-    if (CTX_PROJECT_OPENED == scContext) {
+    if (muse::shortcuts::CTX_PROJECT_OPENED == scContext) {
         return matchWithCurrent(context::UiCtxProjectOpened);
-    } else if (CTX_PROJECT_FOCUSED == scContext) {
+    } else if (muse::shortcuts::CTX_PROJECT_FOCUSED == scContext) {
         return matchWithCurrent(context::UiCtxProjectFocused);
-    } else if (CTX_NOT_PROJECT_FOCUSED == scContext) {
+    } else if (muse::shortcuts::CTX_NOT_PROJECT_FOCUSED == scContext) {
         return !matchWithCurrent(context::UiCtxProjectFocused);
     }
 

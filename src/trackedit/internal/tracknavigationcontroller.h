@@ -4,12 +4,10 @@
 
 #pragma once
 
-#include "framework/actions/actionable.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/rcommand/commandable.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/ui/inavigationcontroller.h"
 #include "playback/iplaybackcontroller.h"
@@ -26,10 +24,9 @@ enum class SelectionDirection {
     Down
 };
 
-class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::rcommand::Commandable,
-    public muse::async::Asyncable, public muse::Contextable
+class TrackNavigationController : public ITrackNavigationController, public muse::rcommand::Commandable, public muse::async::Asyncable,
+    public muse::Contextable
 {
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };

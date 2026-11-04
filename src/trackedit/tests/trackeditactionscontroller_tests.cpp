@@ -3,7 +3,7 @@
 */
 #include <gtest/gtest.h>
 
-#include "global/async/async.h"
+#include "global/async/asyncable.h"
 #include "trackedit/internal/trackeditactionscontroller.h"
 #include "trackedit/internal/tracksviewrequestsservice.h"
 
@@ -12,7 +12,6 @@
 #include "mocks/trackeditinteractionmock.h"
 #include "mocks/projecthistorymock.h"
 #include "mocks/trackeditprojectmock.h"
-#include "actions/tests/mocks/actionsdispatchermock.h"
 #include "framework/rcommand/tests/mocks/commanddispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
@@ -40,8 +39,6 @@ public:
         m_controller->projectHistory.set(m_projectHistory);
         m_requests = std::make_shared<TracksViewRequestsService>(m_testCtx);
         m_controller->tracksViewRequestsService.set(m_requests);
-        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
-        m_controller->dispatcher.set(m_dispatcher);
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
         m_controller->commandDispatcher.set(m_commandDispatcher);
 
@@ -143,7 +140,6 @@ public:
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
     std::shared_ptr<TrackeditInteractionMock> m_trackeditInteraction;
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
-    std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
     std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
     std::vector<Track> m_tracks;
     std::shared_ptr<TracksViewRequestsService> m_requests;
@@ -151,60 +147,6 @@ public:
     std::shared_ptr<project::AudacityProjectMock> m_project;
     std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
 };
-
-TEST_F(TrackeditActionsControllerTests, HistoryEventsRefreshTheGroupActions)
-{
-    //! [GIVEN] A controller listening to the history, whose events can restore group ids without touching the selection
-    muse::async::Channel<HistoryEvent> historyChanged;
-    ON_CALL(*m_projectHistory, historyChanged()).WillByDefault(Return(historyChanged));
-    m_controller->init();
-    std::vector<muse::actions::ActionCode> refreshed;
-    m_controller->actionEnabledChanged().onReceive(m_controller.get(), [&refreshed](const muse::actions::ActionCode& code) {
-        refreshed.push_back(code);
-    });
-
-    //! [GIVEN] The selection still holds keys of labels that the restored state recreated under new ids
-    const LabelKey staleLabel { 2, 20 };
-    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList { staleLabel }));
-
-    //! [EXPECT] Nothing asks for the group of an item while the history event is being delivered
-    EXPECT_CALL(*m_trackeditInteraction, itemGroupId(::testing::_)).Times(0);
-
-    //! [WHEN] The history reports a restored state
-    historyChanged.send(HistoryEvent::RestoredState);
-
-    //! [THEN] The group actions are not re-evaluated yet, before the selection controller resyncs its keys
-    EXPECT_FALSE(muse::contains(refreshed, muse::actions::ActionCode("group-items")));
-    EXPECT_FALSE(muse::contains(refreshed, muse::actions::ActionCode("ungroup-items")));
-    ::testing::Mock::VerifyAndClearExpectations(m_trackeditInteraction.get());
-
-    //! [WHEN] The selection was resynced and the queued refresh runs
-    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(LabelKeyList {}));
-    kors::async::QueuePool::instance()->processMessages();
-
-    //! [THEN] Both group actions are re-evaluated
-    EXPECT_TRUE(muse::contains(refreshed, muse::actions::ActionCode("group-items")));
-    EXPECT_TRUE(muse::contains(refreshed, muse::actions::ActionCode("ungroup-items")));
-}
-
-TEST_F(TrackeditActionsControllerTests, UngroupIsAvailableForASingleGroupedItem)
-{
-    //! [GIVEN] One selected clip that still carries a group id, the rest of its group having been removed
-    const ClipKey clipKey { 1, 10 };
-    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList { clipKey }));
-    ON_CALL(*m_trackeditInteraction, itemGroupId(clipKey)).WillByDefault(Return(int64_t(7)));
-
-    //! [THEN] Ungroup can clear that id, while Group needs more than one item
-    EXPECT_TRUE(m_controller->canReceiveAction("ungroup-items"));
-    EXPECT_FALSE(m_controller->canReceiveAction("group-items"));
-
-    //! [WHEN] The clip is not grouped
-    ON_CALL(*m_trackeditInteraction, itemGroupId(clipKey)).WillByDefault(Return(int64_t(-1)));
-
-    //! [THEN] Neither action applies to it alone
-    EXPECT_FALSE(m_controller->canReceiveAction("ungroup-items"));
-    EXPECT_FALSE(m_controller->canReceiveAction("group-items"));
-}
 
 TEST_F(TrackeditActionsControllerTests, MultiClipCopyHandsClipsAndLabelsToOneCopy)
 {
@@ -260,8 +202,9 @@ TEST_F(TrackeditActionsControllerTests, MultiClipCutHandsClipsAndLabelsToOneCut)
 
 TEST_F(TrackeditActionsControllerTests, KeyboardMoveRequestsPreviewInsteadOfEditingItems)
 {
+    muse::async::Asyncable receiver;
     std::vector<std::pair<secs_t, int> > steps;
-    m_requests->itemMoveRequested().onReceive(m_controller.get(), [&steps](secs_t timeOffset, int trackOffset) {
+    m_requests->itemMoveRequested().onReceive(&receiver, [&steps](secs_t timeOffset, int trackOffset) {
         steps.emplace_back(timeOffset, trackOffset);
     });
     EXPECT_CALL(*m_trackeditInteraction, moveClips(::testing::_, ::testing::_, ::testing::_)).Times(0);

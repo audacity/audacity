@@ -10,7 +10,6 @@
 
 #include "framework/global/types/string.h"
 #include "framework/global/types/ratio.h"
-#include "framework/actions/actiontypes.h"
 #include "framework/audioplugins/audiopluginstypes.h"
 
 class Effect;
@@ -264,26 +263,7 @@ struct EffectMeta {
 
 using EffectMetaList = std::vector<EffectMeta>;
 
-const std::string EFFECT_OPEN_ACTION = "action://effects/open?effectId=%1";
-const std::string REALTIME_EFFECT_ADD_ACTION = "action://effects/realtime-add?effectId=%1";
-const std::string REALTIME_EFFECT_REPLACE_ACTION = "action://effects/realtime-replace?effectId=%1";
-
 const std::string DESTRUCTIVE_EFFECT_VIEWER_URI = "audacity://effects/destructive_viewer?instanceId=%1&effectFamily=%2";
-
-inline std::string makeEffectAction(const std::string& action, const EffectId& id)
-{
-    return QString::fromStdString(action).arg(id).toStdString();
-}
-
-inline EffectId effectIdFromAction(const muse::actions::ActionQuery& action)
-{
-    return EffectId::fromStdString(action.param("effectId").toString());
-}
-
-inline EffectId effectIdFromAction(const QString& action)
-{
-    return effectIdFromAction(muse::actions::ActionQuery { action });
-}
 
 using PresetId = wxString;
 using PresetIdList = std::vector<PresetId>;

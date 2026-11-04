@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "framework/actions/actiontypes.h"
+#include "framework/global/types/string.h"
 #include "framework/global/types/uri.h"
 
 #include "shared/axis/axisscale.h"
@@ -112,7 +112,7 @@ enum class SpectralEffectId {
 
 struct SpectralEffect {
     SpectralEffectId spectralEffectId;
-    muse::actions::ActionCode action;
+    muse::String effectId;
     muse::String title;
 };
 

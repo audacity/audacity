@@ -34,7 +34,6 @@
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/translation.h"
-#include "framework/rcommand/actiontocommand.h"
 
 #include "au3cloud/cloudcommands.h"
 #include "project/projectcommands.h"
@@ -46,21 +45,11 @@
 
 using namespace au::appshell;
 using namespace muse;
-using namespace muse::actions;
 using namespace muse::rcommand;
 
 static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
 static const QString TIMELINE_SECTION_NAME("TimelineSection");
 static const QString VERTICAL_RULER_CONTROL_NAME("VerticalRuler");
-
-static CommandQuery quitConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.count() > 1) {
-        query.addParam(INSTALLER_PATH_PARAM, Val(args.arg<std::string>(1)));
-    }
-    return query;
-}
 
 void ApplicationActionController::preInit()
 {
@@ -109,45 +98,11 @@ void ApplicationActionController::init()
             return make_ok();
         });
     }
-
-    //! Note: This table won't be necessary after the actions to commands complete refactor.
-    //! It will be removed on https://github.com/audacity/audacity/issues/12321
-    static const std::vector<ActionToCommand> actionToCommand = {
-        { "quit", APP_QUIT_COMMAND, quitConv },
-        { "toggle-transport", APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND, {} },
-        { "toggle-tracks", APP_TOGGLE_TRACKS_PANEL_COMMAND, {} },
-        { "toggle-history", APP_TOGGLE_HISTORY_PANEL_COMMAND, {} },
-        { "toggle-statusbar", APP_TOGGLE_STATUSBAR_COMMAND, {} },
-        { "restart", APP_RESTART_COMMAND, {} },
-        { "fullscreen", APP_TOGGLE_FULLSCREEN_COMMAND, {} },
-        { "about-audacity", APP_ABOUT_COMMAND, {} },
-        { "about-qt", APP_ABOUT_QT_COMMAND, {} },
-        { "online-handbook", APP_ONLINE_HANDBOOK_COMMAND, {} },
-        { "ask-help", APP_ASK_HELP_COMMAND, {} },
-        { "preference-dialog", APP_PREFERENCES_COMMAND, {} },
-        { "revert-factory", APP_REVERT_FACTORY_COMMAND, {} },
-        { "audio-settings", APP_AUDIO_SETTINGS_COMMAND, {} },
-        { "shortcuts-preferences", APP_SHORTCUTS_PREFERENCES_COMMAND, {} },
-        { "editing-preferences", APP_EDITING_PREFERENCES_COMMAND, {} },
-        { "spectrogram-preferences", APP_SPECTROGRAM_PREFERENCES_COMMAND, {} },
-        { "action://context-menu", APP_CONTEXT_MENU_COMMAND, {} },
-    };
-    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 }
 
 muse::async::Channel<DockName> ApplicationActionController::dockToggleRequested() const
 {
     return m_dockToggleRequested;
-}
-
-const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
-{
-    static const std::vector<ActionCode> PROHIBITED_WHILE_RECORDING {
-        "quit",
-        "restart",
-    };
-
-    return PROHIBITED_WHILE_RECORDING;
 }
 
 void ApplicationActionController::onDragEnterEvent(QDragEnterEvent* event)
@@ -247,14 +202,6 @@ void ApplicationActionController::onDropEvent(QDropEvent* event)
             });
         });
     }
-}
-
-bool ApplicationActionController::canReceiveAction(const ActionCode& code) const
-{
-    if (recordController()->isRecording()) {
-        return !muse::contains(prohibitedActionsWhileRecording(), code);
-    }
-    return true;
 }
 
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)

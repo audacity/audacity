@@ -75,7 +75,7 @@ bool EffectsCommandsState::isSpectralEffect(const EffectId& effectId) const
 {
     const spectrogram::SpectralEffectList spectralEffects = spectralEffectsRegister()->spectralEffects();
     return std::any_of(spectralEffects.begin(), spectralEffects.end(), [&effectId](const spectrogram::SpectralEffect& spectralEffect) {
-        return effectIdFromAction(muse::actions::ActionQuery(spectralEffect.action)) == effectId;
+        return spectralEffect.effectId == effectId;
     });
 }
 

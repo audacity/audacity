@@ -25,7 +25,6 @@
 #include "internal/globalcontext.h"
 #include "internal/uicontextresolver.h"
 #include "internal/shortcutresolver.h"
-#include "shortcutcontext.h"
 
 using namespace au::context;
 using namespace muse::modularity;

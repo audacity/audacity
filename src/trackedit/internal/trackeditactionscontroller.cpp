@@ -11,8 +11,6 @@
 
 #include "framework/global/translation.h"
 #include "framework/global/defer.h"
-#include "framework/global/async/async.h"
-#include "framework/rcommand/actiontocommand.h"
 
 #include "effects/effects_base/effectscommands.h"
 #include "playback/playbackcommands.h"
@@ -23,8 +21,6 @@
 
 using namespace muse;
 using namespace au::trackedit;
-using namespace muse::async;
-using namespace muse::actions;
 using namespace muse::rcommand;
 
 namespace {
@@ -33,53 +29,6 @@ muse::UriQuery makePlaybackPosUri()
     muse::UriQuery uri("audacity://trackedit/custom_time");
     uri.addParam("title", muse::Val(muse::trc("trackedit", "Playback position")));
     return uri;
-}
-
-CommandQuery queryParamsConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.empty()) {
-        return query;
-    }
-
-    const ActionQuery legacy(args.arg<std::string>(0));
-    query.setParams(legacy.params());
-    return query;
-}
-
-CommandQuery clipKeyConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.empty()) {
-        return query;
-    }
-
-    const ClipKey clipKey = args.arg<ClipKey>(0);
-    query.addParam(TRACKEDIT_TRACK_ID_PARAM, Val(static_cast<int64_t>(clipKey.trackId)));
-    query.addParam(TRACKEDIT_CLIP_ID_PARAM, Val(static_cast<int64_t>(clipKey.itemId)));
-    return query;
-}
-
-CommandQuery trackSplitAtConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    IF_ASSERT_FAILED(args.count() == 2) {
-        return query;
-    }
-
-    ValList trackIds;
-    for (const TrackId& trackId : args.arg<TrackIdList>(0)) {
-        trackIds.push_back(Val(static_cast<int64_t>(trackId)));
-    }
-
-    ValList pivots;
-    for (const secs_t& pivot : args.arg<std::vector<secs_t> >(1)) {
-        pivots.push_back(Val(pivot.to_double()));
-    }
-
-    query.addParam(TRACKEDIT_TRACK_IDS_PARAM, Val(trackIds));
-    query.addParam(TRACKEDIT_PIVOTS_PARAM, Val(pivots));
-    return query;
 }
 
 template<typename Op, typename ... Args>
@@ -152,192 +101,9 @@ ICommandDispatcher::CallBackParamsRet applyToTrackRange(Op op)
                        secs_t(params.at(TRACKEDIT_END_PARAM).toDouble()));
     };
 }
-
-ActionCode legacyActionCode(const ActionQuery& query, const Params& params)
-{
-    ActionQuery legacy(query);
-    for (const auto& [key, val] : params) {
-        legacy.addParam(key, val);
-    }
-    return legacy.toString();
 }
-}
-
-static const ActionCode TRACKEDIT_COPY_CODE("action://trackedit/copy");
-static const ActionCode TRACKEDIT_CUT_CODE("action://trackedit/cut");
-static const ActionCode TRACKEDIT_UNDO("action://trackedit/undo");
-static const ActionCode TRACKEDIT_REDO("action://trackedit/redo");
-static const ActionCode TRACKEDIT_DELETE_CODE("action://trackedit/delete");
-static const ActionCode TRACKEDIT_CANCEL_CODE("action://trackedit/cancel");
-
-static const ActionCode TRACKEDIT_PASTE_DEFAULT_CODE("action://trackedit/paste-default");
-static const ActionCode TRACKEDIT_PASTE_OVERLAP_CODE("action://trackedit/paste-overlap");
-static const ActionCode TRACKEDIT_PASTE_INSERT_CODE("action://trackedit/paste-insert");
-static const ActionCode TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE("action://trackedit/paste-insert-all-tracks-ripple");
-
-static const ActionCode SPLIT_CODE("split");
-static const ActionCode SPLIT_INTO_NEW_TRACK_CODE("split-into-new-track");
-static const ActionCode JOIN_CODE("join");
-static const ActionCode DISJOIN_CODE("disjoin");
-static const ActionCode DUPLICATE_CODE("duplicate");
-
-static const ActionCode CUT_PER_CLIP_RIPPLE_CODE("cut-per-clip-ripple");
-static const ActionCode CUT_PER_TRACK_RIPPLE_CODE("cut-per-track-ripple");
-static const ActionCode CUT_ALL_TRACKS_RIPPLE_CODE("cut-all-tracks-ripple");
-
-static const ActionCode CUT_LEAVE_GAP_CODE("cut-leave-gap");
-static const ActionCode DELETE_LEAVE_GAP_CODE("delete-leave-gap");
-static const ActionCode DELETE_PER_CLIP_RIPPLE_CODE("delete-per-clip-ripple");
-static const ActionCode DELETE_PER_TRACK_RIPPLE_CODE("delete-per-track-ripple");
-static const ActionCode DELETE_ALL_TRACKS_RIPPLE_CODE("delete-all-tracks-ripple");
-
-static const ActionCode CLIP_CUT_CODE("clip-cut");
-static const ActionCode MULTI_CLIP_CUT_CODE("multi-clip-cut");
-static const ActionCode RANGE_SELECTION_CUT_CODE("clip-cut-selected");
-
-static const ActionCode CLIP_COPY_CODE("clip-copy");
-
-static const ActionCode CLIP_DELETE_CODE("clip-delete");
-static const ActionCode MULTI_CLIP_DELETE_CODE("multi-clip-delete");
-static const ActionCode RANGE_SELECTION_DELETE_CODE("clip-delete-selected");
-
-static const ActionCode OPEN_CLIP_AND_SPEED_CODE("clip-pitch-speed-open");
-static const ActionCode CLIP_RENDER_PITCH_AND_SPEED_CODE("clip-render-pitch-speed");
-static const ActionCode CLIP_RESET_PITCH_AND_SPEED_CODE("clip-reset-pitch-speed");
-static const ActionCode TRACK_SPLIT("track-split");
-static const ActionCode TRACK_SPLIT_AT("track-split-at");
-static const ActionCode SPLIT_CLIPS_AT_SILENCES("split-clips-at-silences");
-static const ActionCode SPLIT_RANGE_SELECTION_AT_SILENCES("split-range-selection-at-silences");
-static const ActionCode SPLIT_RANGE_SELECTION_INTO_NEW_TRACKS("split-range-selection-into-new-tracks");
-static const ActionCode SPLIT_CLIPS_INTO_NEW_TRACKS("split-clips-into-new-tracks");
-static const ActionCode MERGE_SELECTED_ON_TRACK("merge-selected-on-tracks");
-static const ActionCode DUPLICATE_RANGE_SELECTION_CODE("duplicate-selected");
-static const ActionCode DUPLICATE_CLIPS_CODE("duplicate-clips");
-static const ActionCode CLIP_SPLIT_CUT("clip-split-cut");
-static const ActionCode CLIP_SPLIT_DELETE("clip-split-delete");
-static const ActionCode RANGE_SELECTION_SPLIT_CUT("split-cut-selected");
-static const ActionCode RANGE_SELECTION_SPLIT_DELETE("split-delete-selected");
-static const ActionCode NEW_MONO_TRACK("new-mono-track");
-static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
-static const ActionCode NEW_LABEL_TRACK("new-label-track");
-static const ActionCode TRACK_DELETE("track-delete");
-static const ActionCode TRACK_DUPLICATE_CODE("track-duplicate");
-static const ActionCode TRACK_MOVE_UP("track-move-up");
-static const ActionCode TRACK_MOVE_DOWN("track-move-down");
-static const ActionCode TRACK_MOVE_TOP("track-move-top");
-static const ActionCode TRACK_MOVE_BOTTOM("track-move-bottom");
-static const ActionCode TRACK_SWAP_CHANNELS("track-swap-channels");
-static const ActionCode TRACK_SPLIT_STEREO_TO_LR("track-split-stereo-to-lr");
-static const ActionCode TRACK_SPLIT_STEREO_TO_CENTER("track-split-stereo-to-center");
-static const ActionCode TRACK_CHANGE_RATE_CUSTOM("track-change-rate-custom");
-static const ActionCode TRACK_MAKE_STEREO("track-make-stereo");
-static const ActionCode TRACK_RESAMPLE("track-resample");
-
-static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
-static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
-
-static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
-
-static const ActionCode GROUP_ITEMS_CODE("group-items");
-static const ActionCode UNGROUP_ITEMS_CODE("ungroup-items");
-static const ActionCode RENAME_ITEM_CODE("rename-item");
-
-static const ActionCode SELECT_ALL("select-all");
-static const ActionCode SELECT_CLEAR("clear-selection");
-static const ActionCode SELECT_ALL_TRACKS("select-all-tracks");
-static const ActionCode SELECT_LEFT_OF_PLAYBACK_POS("select-left-of-playback-position");
-static const ActionCode SELECT_RIGHT_OF_PLAYBACK_POS("select-right-of-playback-position");
-static const ActionCode SELECT_TRACK_START_TO_CURSOR("select-track-start-to-cursor");
-static const ActionCode SELECT_CURSOR_TO_TRACK_END("select-cursor-to-track-end");
-static const ActionCode SELECT_TRACK_START_TO_END("select-track-start-to-end");
-static const ActionQuery SET_SELECTION("action://trackedit/set-selection");
-static const ActionQuery SELECT_TRACK("action://trackedit/select-track");
-static const ActionCode SELECT_ZERO_CROSSING("zero-cross");
-
-static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
-static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
-static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/change-color");
-static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
-static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
-
-static const ActionQuery TOGGLE_GLOBAL_VIEW_SPECTROGRAM("action://trackedit/global-view-spectrogram");
-static const ActionQuery SET_TRACK_VIEW_WAVEFORM("action://trackedit/track-view-waveform");
-static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://trackedit/track-view-spectrogram");
-static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-multi");
-
-static const ActionCode LABEL_ADD_CODE("label-add");
-
-static const ActionCode TRACK_VIEW_ITEM_MOVE_LEFT_CODE("track-view-item-move-left");
-static const ActionCode TRACK_VIEW_ITEM_MOVE_RIGHT_CODE("track-view-item-move-right");
-static const ActionCode TRACK_VIEW_ITEM_MOVE_UP_CODE("track-view-item-move-up");
-static const ActionCode TRACK_VIEW_ITEM_MOVE_DOWN_CODE("track-view-item-move-down");
-static const ActionCode TRACK_VIEW_ITEM_EXTEND_LEFT_CODE("track-view-item-extend-left");
-static const ActionCode TRACK_VIEW_ITEM_EXTEND_RIGHT_CODE("track-view-item-extend-right");
-static const ActionCode TRACK_VIEW_ITEM_REDUCE_LEFT_CODE("track-view-item-reduce-left");
-static const ActionCode TRACK_VIEW_ITEM_REDUCE_RIGHT_CODE("track-view-item-reduce-right");
 
 constexpr double MIN_CLIP_WIDTH = 3.0;
-
-// In principle, disabled are actions that modify the data involved in playback.
-static const std::vector<ActionCode> actionsDisabledDuringRecording {
-    TRACKEDIT_CUT_CODE,
-    CUT_LEAVE_GAP_CODE,
-    CUT_PER_CLIP_RIPPLE_CODE,
-    CUT_PER_TRACK_RIPPLE_CODE,
-    CUT_ALL_TRACKS_RIPPLE_CODE,
-    TRACKEDIT_DELETE_CODE,
-    DELETE_LEAVE_GAP_CODE,
-    DELETE_PER_CLIP_RIPPLE_CODE,
-    DELETE_PER_TRACK_RIPPLE_CODE,
-    DELETE_ALL_TRACKS_RIPPLE_CODE,
-    SPLIT_CODE,
-    SPLIT_INTO_NEW_TRACK_CODE,
-    JOIN_CODE,
-    DUPLICATE_CODE,
-    CLIP_CUT_CODE,
-    MULTI_CLIP_CUT_CODE,
-    RANGE_SELECTION_CUT_CODE,
-    CLIP_DELETE_CODE,
-    MULTI_CLIP_DELETE_CODE,
-    RANGE_SELECTION_DELETE_CODE,
-    CLIP_RENDER_PITCH_AND_SPEED_CODE,
-    CLIP_RESET_PITCH_AND_SPEED_CODE,
-    TRACKEDIT_PASTE_DEFAULT_CODE,
-    TRACKEDIT_PASTE_OVERLAP_CODE,
-    TRACKEDIT_PASTE_INSERT_CODE,
-    TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE,
-    TRACK_SPLIT,
-    TRACK_SPLIT_AT,
-    SPLIT_CLIPS_AT_SILENCES,
-    SPLIT_RANGE_SELECTION_AT_SILENCES,
-    SPLIT_RANGE_SELECTION_INTO_NEW_TRACKS,
-    SPLIT_CLIPS_INTO_NEW_TRACKS,
-    MERGE_SELECTED_ON_TRACK,
-    DUPLICATE_RANGE_SELECTION_CODE,
-    DUPLICATE_CLIPS_CODE,
-    CLIP_SPLIT_CUT,
-    CLIP_SPLIT_DELETE,
-    RANGE_SELECTION_SPLIT_CUT,
-    RANGE_SELECTION_SPLIT_DELETE,
-    NEW_MONO_TRACK,
-    NEW_STEREO_TRACK,
-    NEW_LABEL_TRACK,
-    TRIM_AUDIO_OUTSIDE_SELECTION,
-    SILENCE_AUDIO_SELECTION,
-    TRACKEDIT_UNDO,
-    TRACKEDIT_REDO,
-    STRETCH_ENABLED_CODE,
-    TRACK_DELETE,
-    TRACK_DUPLICATE_CODE,
-    TRACK_SWAP_CHANNELS,
-    TRACK_SPLIT_STEREO_TO_LR,
-    TRACK_SPLIT_STEREO_TO_CENTER,
-    TRACK_CHANGE_RATE_CUSTOM,
-    TRACK_MAKE_STEREO,
-    TRACK_RESAMPLE,
-    GROUP_ITEMS_CODE,
-    UNGROUP_ITEMS_CODE,
-};
 
 void TrackeditActionsController::init()
 {
@@ -398,9 +164,7 @@ void TrackeditActionsController::init()
         return trackeditInteraction()->resetClipPitchAndSpeed(clipKey);
     }));
     cd->onRequest(this, TRACKEDIT_STRETCH_CLIP_TO_MATCH_TEMPO_COMMAND, applyToClip([this](const ClipKey& clipKey) {
-        const bool toggled = trackeditInteraction()->toggleStretchToMatchProjectTempo(clipKey);
-        notifyActionCheckedChanged(STRETCH_ENABLED_CODE);
-        return toggled;
+        return trackeditInteraction()->toggleStretchToMatchProjectTempo(clipKey);
     }));
 
     cd->onRequest(this, TRACKEDIT_TRACK_SPLIT_AT_COMMAND, [this](const Params& params) {
@@ -463,10 +227,10 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_ZERO_CROSS_COMMAND, [this]() { return moveCursorToClosestZeroCrossing(); });
 
     cd->onRequest(this, TRACKEDIT_CLIP_CHANGE_COLOR_AUTO_COMMAND, [this](const Params& params) {
-        return setClipColor(params, [this, params]() { notifyActionCheckedChanged(legacyActionCode(AUTO_COLOR_QUERY, params)); });
+        return setClipColor(params);
     });
     cd->onRequest(this, TRACKEDIT_CLIP_CHANGE_COLOR_COMMAND, [this](const Params& params) {
-        return setClipColor(params, [this, params]() { notifyActionCheckedChanged(legacyActionCode(CHANGE_COLOR_QUERY, params)); });
+        return setClipColor(params);
     });
     cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, [this](const Params& params) { return setTrackColor(params); });
     cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND, [this](const Params& params) { return setTrackFormat(params); });
@@ -494,167 +258,6 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_RIGHT_COMMAND, [this]() { return extendFocusedItemBoundaryRight(); });
     cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_LEFT_COMMAND, [this]() { return reduceFocusedItemBoundaryLeft(); });
     cd->onRequest(this, TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_RIGHT_COMMAND, [this]() { return reduceFocusedItemBoundaryRight(); });
-
-    static const std::vector<ActionToCommand> actionToCommand = {
-        { TRACKEDIT_UNDO, TRACKEDIT_UNDO_COMMAND, {} },
-        { TRACKEDIT_REDO, TRACKEDIT_REDO_COMMAND, {} },
-        { TRACKEDIT_CANCEL_CODE, TRACKEDIT_CANCEL_COMMAND, {} },
-        { TRACKEDIT_PASTE_OVERLAP_CODE, TRACKEDIT_PASTE_OVERLAP_COMMAND, {} },
-        { TRACKEDIT_PASTE_INSERT_CODE, TRACKEDIT_PASTE_INSERT_COMMAND, {} },
-        { TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE, TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_COMMAND, {} },
-        { CLIP_CUT_CODE, TRACKEDIT_CLIP_CUT_COMMAND, clipKeyConv },
-        { CLIP_COPY_CODE, TRACKEDIT_CLIP_COPY_COMMAND, clipKeyConv },
-        { CLIP_DELETE_CODE, TRACKEDIT_CLIP_DELETE_COMMAND, clipKeyConv },
-        { CLIP_SPLIT_CUT, TRACKEDIT_CLIP_SPLIT_CUT_COMMAND, clipKeyConv },
-        { CLIP_SPLIT_DELETE, TRACKEDIT_CLIP_SPLIT_DELETE_COMMAND, clipKeyConv },
-        { OPEN_CLIP_AND_SPEED_CODE, TRACKEDIT_CLIP_PITCH_SPEED_OPEN_COMMAND, {} },
-        { CLIP_RENDER_PITCH_AND_SPEED_CODE, TRACKEDIT_CLIP_RENDER_PITCH_SPEED_COMMAND, clipKeyConv },
-        { CLIP_RESET_PITCH_AND_SPEED_CODE, TRACKEDIT_CLIP_RESET_PITCH_SPEED_COMMAND, clipKeyConv },
-        { STRETCH_ENABLED_CODE, TRACKEDIT_STRETCH_CLIP_TO_MATCH_TEMPO_COMMAND, clipKeyConv },
-        { TRACK_SPLIT_AT, TRACKEDIT_TRACK_SPLIT_AT_COMMAND, trackSplitAtConv },
-        { MERGE_SELECTED_ON_TRACK, TRACKEDIT_MERGE_SELECTED_ON_TRACKS_COMMAND, {} },
-        { DUPLICATE_RANGE_SELECTION_CODE, TRACKEDIT_DUPLICATE_SELECTED_COMMAND, {} },
-        { TRACK_DELETE, TRACKEDIT_TRACK_DELETE_COMMAND, {} },
-        { TRACKEDIT_COPY_CODE, TRACKEDIT_COPY_COMMAND, {} },
-        { TRACKEDIT_CUT_CODE, TRACKEDIT_CUT_COMMAND, {} },
-        { TRACKEDIT_DELETE_CODE, TRACKEDIT_DELETE_COMMAND, {} },
-        { TRACKEDIT_PASTE_DEFAULT_CODE, TRACKEDIT_PASTE_DEFAULT_COMMAND, {} },
-        { SPLIT_CODE, TRACKEDIT_SPLIT_COMMAND, {} },
-        { SPLIT_INTO_NEW_TRACK_CODE, TRACKEDIT_SPLIT_INTO_NEW_TRACK_COMMAND, {} },
-        { JOIN_CODE, TRACKEDIT_JOIN_COMMAND, {} },
-        { DISJOIN_CODE, TRACKEDIT_DISJOIN_COMMAND, {} },
-        { DUPLICATE_CODE, TRACKEDIT_DUPLICATE_COMMAND, {} },
-        { CUT_LEAVE_GAP_CODE, TRACKEDIT_CUT_LEAVE_GAP_COMMAND, {} },
-        { CUT_PER_CLIP_RIPPLE_CODE, TRACKEDIT_CUT_PER_CLIP_RIPPLE_COMMAND, {} },
-        { CUT_PER_TRACK_RIPPLE_CODE, TRACKEDIT_CUT_PER_TRACK_RIPPLE_COMMAND, {} },
-        { CUT_ALL_TRACKS_RIPPLE_CODE, TRACKEDIT_CUT_ALL_TRACKS_RIPPLE_COMMAND, {} },
-        { DELETE_LEAVE_GAP_CODE, TRACKEDIT_DELETE_LEAVE_GAP_COMMAND, {} },
-        { DELETE_PER_CLIP_RIPPLE_CODE, TRACKEDIT_DELETE_PER_CLIP_RIPPLE_COMMAND, {} },
-        { DELETE_PER_TRACK_RIPPLE_CODE, TRACKEDIT_DELETE_PER_TRACK_RIPPLE_COMMAND, {} },
-        { DELETE_ALL_TRACKS_RIPPLE_CODE, TRACKEDIT_DELETE_ALL_TRACKS_RIPPLE_COMMAND, {} },
-        { NEW_MONO_TRACK, TRACKEDIT_NEW_MONO_TRACK_COMMAND, {} },
-        { NEW_STEREO_TRACK, TRACKEDIT_NEW_STEREO_TRACK_COMMAND, {} },
-        { NEW_LABEL_TRACK, TRACKEDIT_NEW_LABEL_TRACK_COMMAND, {} },
-        { TRACK_DUPLICATE_CODE, TRACKEDIT_TRACK_DUPLICATE_COMMAND, {} },
-        { TRACK_MOVE_UP, TRACKEDIT_TRACK_MOVE_UP_COMMAND, {} },
-        { TRACK_MOVE_DOWN, TRACKEDIT_TRACK_MOVE_DOWN_COMMAND, {} },
-        { TRACK_MOVE_TOP, TRACKEDIT_TRACK_MOVE_TOP_COMMAND, {} },
-        { TRACK_MOVE_BOTTOM, TRACKEDIT_TRACK_MOVE_BOTTOM_COMMAND, {} },
-        { TRACK_SWAP_CHANNELS, TRACKEDIT_TRACK_SWAP_CHANNELS_COMMAND, {} },
-        { TRACK_SPLIT_STEREO_TO_LR, TRACKEDIT_TRACK_SPLIT_STEREO_TO_LR_COMMAND, {} },
-        { TRACK_SPLIT_STEREO_TO_CENTER, TRACKEDIT_TRACK_SPLIT_STEREO_TO_CENTER_COMMAND, {} },
-        { TRACK_CHANGE_RATE_CUSTOM, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, {} },
-        { TRACK_MAKE_STEREO, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, {} },
-        { TRACK_RESAMPLE, TRACKEDIT_TRACK_RESAMPLE_COMMAND, {} },
-        { TRIM_AUDIO_OUTSIDE_SELECTION, TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND, {} },
-        { SILENCE_AUDIO_SELECTION, TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND, {} },
-        { GROUP_ITEMS_CODE, TRACKEDIT_GROUP_ITEMS_COMMAND, {} },
-        { UNGROUP_ITEMS_CODE, TRACKEDIT_UNGROUP_ITEMS_COMMAND, {} },
-        { SELECT_ALL, TRACKEDIT_SELECT_ALL_COMMAND, {} },
-        { SELECT_CLEAR, TRACKEDIT_CLEAR_SELECTION_COMMAND, {} },
-        { SELECT_ALL_TRACKS, TRACKEDIT_SELECT_ALL_TRACKS_COMMAND, {} },
-        { SELECT_LEFT_OF_PLAYBACK_POS, TRACKEDIT_SELECT_LEFT_OF_PLAYBACK_POSITION_COMMAND, {} },
-        { SELECT_RIGHT_OF_PLAYBACK_POS, TRACKEDIT_SELECT_RIGHT_OF_PLAYBACK_POSITION_COMMAND, {} },
-        { SELECT_TRACK_START_TO_CURSOR, TRACKEDIT_SELECT_TRACK_START_TO_CURSOR_COMMAND, {} },
-        { SELECT_CURSOR_TO_TRACK_END, TRACKEDIT_SELECT_CURSOR_TO_TRACK_END_COMMAND, {} },
-        { SELECT_TRACK_START_TO_END, TRACKEDIT_SELECT_TRACK_START_TO_END_COMMAND, {} },
-        { SET_SELECTION.toString(), TRACKEDIT_SET_SELECTION_COMMAND, queryParamsConv },
-        { SELECT_TRACK.toString(), TRACKEDIT_SELECT_TRACK_COMMAND, queryParamsConv },
-        { SELECT_ZERO_CROSSING, TRACKEDIT_ZERO_CROSS_COMMAND, {} },
-        { AUTO_COLOR_QUERY.toString(), TRACKEDIT_CLIP_CHANGE_COLOR_AUTO_COMMAND, {} },
-        { CHANGE_COLOR_QUERY.toString(), TRACKEDIT_CLIP_CHANGE_COLOR_COMMAND, queryParamsConv },
-        { TRACK_CHANGE_COLOR_QUERY.toString(), TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, queryParamsConv },
-        { TRACK_CHANGE_FORMAT_QUERY.toString(), TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND, queryParamsConv },
-        { TRACK_CHANGE_RATE_QUERY.toString(), TRACKEDIT_TRACK_CHANGE_RATE_COMMAND, queryParamsConv },
-        { TOGGLE_GLOBAL_VIEW_SPECTROGRAM.toString(), TRACKEDIT_GLOBAL_VIEW_SPECTROGRAM_COMMAND, {} },
-        { SET_TRACK_VIEW_WAVEFORM.toString(), TRACKEDIT_TRACK_VIEW_WAVEFORM_COMMAND, queryParamsConv },
-        { SET_TRACK_VIEW_SPECTROGRAM.toString(), TRACKEDIT_TRACK_VIEW_SPECTROGRAM_COMMAND, queryParamsConv },
-        { SET_TRACK_VIEW_MULTI.toString(), TRACKEDIT_TRACK_VIEW_MULTI_COMMAND, queryParamsConv },
-        { LABEL_ADD_CODE, TRACKEDIT_LABEL_ADD_COMMAND, {} },
-        { RENAME_ITEM_CODE, TRACKEDIT_RENAME_ITEM_COMMAND, {} },
-        { TRACK_VIEW_ITEM_MOVE_LEFT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_LEFT_COMMAND, {} },
-        { TRACK_VIEW_ITEM_MOVE_RIGHT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_RIGHT_COMMAND, {} },
-        { TRACK_VIEW_ITEM_MOVE_UP_CODE, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_UP_COMMAND, {} },
-        { TRACK_VIEW_ITEM_MOVE_DOWN_CODE, TRACKEDIT_TRACK_VIEW_ITEM_MOVE_DOWN_COMMAND, {} },
-        { TRACK_VIEW_ITEM_EXTEND_LEFT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_LEFT_COMMAND, {} },
-        { TRACK_VIEW_ITEM_EXTEND_RIGHT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_RIGHT_COMMAND, {} },
-        { TRACK_VIEW_ITEM_REDUCE_LEFT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_LEFT_COMMAND, {} },
-        { TRACK_VIEW_ITEM_REDUCE_RIGHT_CODE, TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_RIGHT_COMMAND, {} },
-    };
-    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
-
-    projectHistory()->historyChanged().onReceive(this, [this](auto) {
-        notifyActionEnabledChanged(TRACKEDIT_UNDO);
-        notifyActionEnabledChanged(TRACKEDIT_REDO);
-        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-
-        //! NOTE Undo/redo can recreate labels under new ids; the selection controller resyncs its keys
-        //! in its own history receiver, which may run after this one. Evaluate the group actions once it has.
-        muse::async::Async::call(this, [this]() {
-            notifyActionEnabledChanged(GROUP_ITEMS_CODE);
-            notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
-        });
-    });
-
-    globalContext()->isRecordingChanged().onNotify(this, [this]() {
-        for (const auto& actionCode : actionsDisabledDuringRecording) {
-            notifyActionEnabledChanged(actionCode);
-        }
-    });
-
-    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
-        notifyActionEnabledChanged(GROUP_ITEMS_CODE);
-        notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
-        notifyActionEnabledChanged(JOIN_CODE);
-        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-        notifyActionEnabledChanged(RENAME_ITEM_CODE);
-    });
-
-    selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList&) {
-        notifyActionEnabledChanged(GROUP_ITEMS_CODE);
-        notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
-        notifyActionEnabledChanged(RENAME_ITEM_CODE);
-    });
-
-    selectionController()->clipsIntersectingRangeSelectionChanged().onReceive(this, [this](const trackedit::ClipKeyList&) {
-        notifyActionEnabledChanged(JOIN_CODE);
-    });
-
-    selectionController()->selectedTracksChanged().onReceive(this, [this](const trackedit::TrackIdList&) {
-        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-    });
-
-    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t) {
-        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-    });
-
-    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t) {
-        notifyActionEnabledChanged(SILENCE_AUDIO_SELECTION);
-    });
-}
-
-bool TrackeditActionsController::actionEnabled(const muse::actions::ActionCode& actionCode) const
-{
-    if (!canReceiveAction(actionCode)) {
-        return false;
-    }
-
-    return true;
-}
-
-muse::async::Channel<muse::actions::ActionCode> TrackeditActionsController::actionEnabledChanged() const
-{
-    return m_actionEnabledChanged;
-}
-
-void TrackeditActionsController::notifyActionEnabledChanged(const ActionCode& actionCode)
-{
-    m_actionEnabledChanged.send(actionCode);
-}
-
-void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
-{
-    m_actionCheckedChanged.send(actionCode);
 }
 
 bool TrackeditActionsController::isFocusedItemClip() const
@@ -691,29 +294,6 @@ bool TrackeditActionsController::isFocusedItemLabel() const
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     return prj ? prj->track(focusedItemKey->trackId)->type == TrackType::Label : false;
-}
-
-bool TrackeditActionsController::anyItemGrouped(const TrackItemKeyList& items) const
-{
-    return std::any_of(items.begin(), items.end(), [this](const TrackItemKey& key) {
-        return trackeditInteraction()->itemGroupId(key) != -1;
-    });
-}
-
-bool TrackeditActionsController::itemsShareOneGroup(const TrackItemKeyList& items) const
-{
-    if (items.empty()) {
-        return false;
-    }
-
-    const int64_t groupId = trackeditInteraction()->itemGroupId(items.front());
-    if (groupId == -1) {
-        return false;
-    }
-
-    return std::all_of(items.begin(), items.end(), [this, groupId](const TrackItemKey& key) {
-        return trackeditInteraction()->itemGroupId(key) == groupId;
-    });
 }
 
 TrackItemKeyList TrackeditActionsController::itemsForInteraction() const
@@ -963,7 +543,7 @@ muse::Ret TrackeditActionsController::doGlobalDelete()
     if (frequencySelectionController()->showsSpectrogram(frequencySelection.trackId) && frequencySelection.isValid()) {
         using namespace spectrogram;
         if (const std::optional<SpectralEffect> effect = spectralEffectsRegister()->spectralEffect(SpectralEffectId::DeleteSelection)) {
-            commandDispatcher()->dispatch(effects::makeEffectOpenCommand(effects::effectIdFromAction(ActionQuery(effect->action))));
+            commandDispatcher()->dispatch(effects::makeEffectOpenCommand(effect->effectId));
             return make_ok();
         }
     }
@@ -1306,20 +886,6 @@ std::optional<TrackeditActionsController::ContiguousClipsSpan> TrackeditActionsC
     }
 
     return ContiguousClipsSpan { trackId, begin, end };
-}
-
-bool TrackeditActionsController::rangeSelectionCoversMultipleClips() const
-{
-    ClipKeyList clips = selectionController()->clipsIntersectingRangeSelection();
-    std::sort(clips.begin(), clips.end());
-
-    for (size_t i = 1; i < clips.size(); ++i) {
-        if (clips[i].trackId == clips[i - 1].trackId) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 muse::Ret TrackeditActionsController::doGlobalDisjoin()
@@ -1886,18 +1452,12 @@ muse::Ret TrackeditActionsController::openClipPitchAndSpeed()
 muse::Ret TrackeditActionsController::groupItems()
 {
     trackeditInteraction()->groupItems(itemsForInteraction());
-
-    notifyActionEnabledChanged(GROUP_ITEMS_CODE);
-    notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
     return make_ok();
 }
 
 muse::Ret TrackeditActionsController::ungroupItems()
 {
     trackeditInteraction()->ungroupItems(itemsForInteraction());
-
-    notifyActionEnabledChanged(GROUP_ITEMS_CODE);
-    notifyActionEnabledChanged(UNGROUP_ITEMS_CODE);
     return make_ok();
 }
 
@@ -2059,7 +1619,7 @@ muse::Ret TrackeditActionsController::moveCursorToClosestZeroCrossing()
     return make_ok();
 }
 
-muse::Ret TrackeditActionsController::setClipColor(const Params& params, const std::function<void()>& onSet)
+muse::Ret TrackeditActionsController::setClipColor(const Params& params)
 {
     auto selectedClips = clipsForInteraction();
     if (selectedClips.empty()) {
@@ -2073,7 +1633,6 @@ muse::Ret TrackeditActionsController::setClipColor(const Params& params, const s
     if (!changed) {
         return Ret(false);
     }
-    onSet();
     return make_ok();
 }
 
@@ -2090,7 +1649,6 @@ muse::Ret TrackeditActionsController::setTrackColor(const Params& params)
     if (!changed) {
         return Ret(false);
     }
-    notifyActionCheckedChanged(legacyActionCode(TRACK_CHANGE_COLOR_QUERY, params));
     return make_ok();
 }
 
@@ -2107,9 +1665,6 @@ muse::Ret TrackeditActionsController::setTrackFormat(const Params& params)
 
     const int format = params.at(TRACKEDIT_FORMAT_PARAM).toInt();
     const bool changed = trackeditInteraction()->changeTracksFormat(tracks, static_cast<TrackFormat>(format));
-    if (changed) {
-        notifyActionCheckedChanged(legacyActionCode(TRACK_CHANGE_FORMAT_QUERY, params));
-    }
     return Ret(changed);
 }
 
@@ -2161,9 +1716,6 @@ muse::Ret TrackeditActionsController::setTrackRate(const Params& params)
 
     const int rate = params.at(TRACKEDIT_RATE_PARAM).toInt();
     const bool changed = trackeditInteraction()->changeTracksRate(tracks, rate);
-    if (changed) {
-        notifyActionCheckedChanged(legacyActionCode(TRACK_CHANGE_RATE_QUERY, params));
-    }
     return Ret(changed);
 }
 
@@ -2195,19 +1747,6 @@ muse::Ret TrackeditActionsController::changeTrackView(const TrackId& trackId, Tr
         return make_ret(Ret::Code::NotSupported);
     }
     prj->viewState()->setTrackViewType(trackId, trackView);
-    switch (trackView) {
-    case TrackViewType::Waveform:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_WAVEFORM.toString());
-        break;
-    case TrackViewType::Spectrogram:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_SPECTROGRAM.toString());
-        break;
-    case TrackViewType::WaveformAndSpectrogram:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_MULTI.toString());
-        break;
-    default:
-        assert(false);
-    }
     return make_ok();
 }
 
@@ -2331,65 +1870,6 @@ muse::Ret TrackeditActionsController::mixAndRender(bool toNewTrack)
     }
 
     return trackeditInteraction()->mixAndRender(tracks, toNewTrack).ret;
-}
-
-bool TrackeditActionsController::actionChecked(const ActionCode&) const
-{
-    //! TODO AU4
-    return false;
-}
-
-Channel<ActionCode> TrackeditActionsController::actionCheckedChanged() const
-{
-    return m_actionCheckedChanged;
-}
-
-bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) const
-{
-    if (globalContext()->currentProject() == nullptr) {
-        return false;
-    } else if (globalContext()->isRecording() && muse::contains(actionsDisabledDuringRecording, actionCode)) {
-        return false;
-    } else if (actionCode == TRACKEDIT_UNDO) {
-        return trackeditInteraction()->canUndo();
-    } else if (actionCode == TRACKEDIT_REDO) {
-        return trackeditInteraction()->canRedo();
-    } else if (actionCode == GROUP_ITEMS_CODE) {
-        const TrackItemKeyList items = itemsForInteraction();
-        return items.size() > 1 && !itemsShareOneGroup(items);
-    } else if (actionCode == UNGROUP_ITEMS_CODE) {
-        return anyItemGrouped(itemsForInteraction());
-    } else if (actionCode == JOIN_CODE) {
-        if (!selectionController()->timeSelectionIsEmpty()) {
-            return rangeSelectionCoversMultipleClips();
-        }
-        return contiguousSelectedClipsSpan().has_value();
-    } else if (actionCode == SILENCE_AUDIO_SELECTION) {
-        return canSilenceAudio();
-    } else if (actionCode == RENAME_ITEM_CODE) {
-        return clipsForInteraction().size() + labelsForInteraction().size() == 1;
-    }
-
-    return true;
-}
-
-bool TrackeditActionsController::canSilenceAudio() const
-{
-    if (!selectionController()->timeSelectionIsEmpty()) {
-        return !trackeditInteraction()->tracksDataIsSilent(selectionController()->selectedTracks(),
-                                                           selectionController()->dataSelectedStartTime(),
-                                                           selectionController()->dataSelectedEndTime());
-    }
-
-    for (const auto& clipKey : selectionController()->selectedClips()) {
-        const secs_t begin = trackeditInteraction()->clipStartTime(clipKey);
-        const secs_t end = trackeditInteraction()->clipEndTime(clipKey);
-        if (!trackeditInteraction()->tracksDataIsSilent({ clipKey.trackId }, begin, end)) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 void TrackeditActionsController::moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset)

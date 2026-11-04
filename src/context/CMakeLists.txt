@@ -27,7 +27,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iglobalcontext.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackstate.h
     ${CMAKE_CURRENT_LIST_DIR}/uicontext.h
-    ${CMAKE_CURRENT_LIST_DIR}/shortcutcontext.h
     ${CMAKE_CURRENT_LIST_DIR}/iuicontextresolver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/globalcontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/globalcontext.h

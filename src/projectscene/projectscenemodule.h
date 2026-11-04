@@ -9,7 +9,6 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::projectscene {
-class ProjectSceneUiActions;
 class ProjectSceneActionsController;
 class ProjectSceneConfiguration;
 class RealtimeEffectPanelTrackSelection;
@@ -44,7 +43,6 @@ public:
     void onDeinit() override;
 
 private:
-    std::shared_ptr<ProjectSceneUiActions> m_uiActions;
     std::shared_ptr<ProjectSceneActionsController> m_projectSceneActionsController;
     std::shared_ptr<RealtimeEffectPanelTrackSelection> m_realtimeEffectPanelTrackSelection;
     std::shared_ptr<ProjectSceneUiState> m_uiState;

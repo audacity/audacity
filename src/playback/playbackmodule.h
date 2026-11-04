@@ -11,7 +11,6 @@
 namespace au::playback {
 class PlaybackConfiguration;
 class PlaybackController;
-class PlaybackUiActions;
 class PlaybackUiState;
 class PlaybackMeterController;
 class Au3Playback;
@@ -47,7 +46,6 @@ public:
 
 private:
     std::shared_ptr<PlaybackController> m_controller;
-    std::shared_ptr<PlaybackUiActions> m_uiActions;
     std::shared_ptr<Au3Playback> m_playback;
     std::shared_ptr<PlaybackUiState> m_uiState;
 };

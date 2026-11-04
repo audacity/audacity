@@ -10,7 +10,6 @@
 
 #include "framework/global/async/async.h"
 #include "framework/global/containers.h"
-#include "framework/rcommand/actiontocommand.h"
 
 #include "au3wrap/internal/domaccessor.h"
 
@@ -31,24 +30,6 @@
 using namespace au::trackedit;
 using namespace muse;
 using namespace muse::rcommand;
-
-static const muse::actions::ActionCode TRACK_VIEW_NEXT_PANEL_CODE("track-view-next-panel");
-static const muse::actions::ActionCode TRACK_VIEW_PREV_PANEL_CODE("track-view-prev-panel");
-
-static const muse::actions::ActionCode TRACK_VIEW_FIRST_TRACK_CODE("track-view-first-track");
-static const muse::actions::ActionCode TRACK_VIEW_LAST_TRACK_CODE("track-view-last-track");
-
-static const muse::actions::ActionCode TRACK_VIEW_REPLACE_SELECTION_CODE("track-view-replace-selection");
-static const muse::actions::ActionCode TRACK_VIEW_TOGGLE_SELECTION_CODE("track-view-toggle-selection");
-static const muse::actions::ActionCode TRACK_VIEW_RANGE_SELECTION_CODE("track-view-range-selection");
-static const muse::actions::ActionCode TRACK_VIEW_TRACK_SELECTION_PREV_CODE("track-view-extend-track-selection-prev");
-static const muse::actions::ActionCode TRACK_VIEW_TRACK_SELECTION_NEXT_CODE("track-view-extend-track-selection-next");
-
-static const muse::actions::ActionCode TRACK_VIEW_ABOVE_ITEM_CODE("track-view-above-item");
-static const muse::actions::ActionCode TRACK_VIEW_BELOW_ITEM_CODE("track-view-below-item");
-
-static const muse::actions::ActionCode TRACK_VIEW_ITEM_CONTEXT_MENU_CODE("track-view-item-context-menu");
-static const muse::actions::ActionCode TRACK_VIEW_RULER_CONTEXT_MENU_CODE("track-view-ruler-context-menu");
 
 void TrackNavigationController::init()
 {
@@ -71,23 +52,6 @@ void TrackNavigationController::init()
 
     cd->onRequest(this, TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND, [this]() { return openContextMenuForFocusedItem(); });
     cd->onRequest(this, TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND, [this]() { return openContextMenuForFocusedRuler(); });
-
-    static const std::vector<ActionToCommand> actionToCommand = {
-        { TRACK_VIEW_NEXT_PANEL_CODE, TRACK_NAVIGATION_NEXT_PANEL_COMMAND, {} },
-        { TRACK_VIEW_PREV_PANEL_CODE, TRACK_NAVIGATION_PREV_PANEL_COMMAND, {} },
-        { TRACK_VIEW_FIRST_TRACK_CODE, TRACK_NAVIGATION_FIRST_TRACK_COMMAND, {} },
-        { TRACK_VIEW_LAST_TRACK_CODE, TRACK_NAVIGATION_LAST_TRACK_COMMAND, {} },
-        { TRACK_VIEW_ABOVE_ITEM_CODE, TRACK_NAVIGATION_ABOVE_ITEM_COMMAND, {} },
-        { TRACK_VIEW_BELOW_ITEM_CODE, TRACK_NAVIGATION_BELOW_ITEM_COMMAND, {} },
-        { TRACK_VIEW_REPLACE_SELECTION_CODE, TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND, {} },
-        { TRACK_VIEW_TOGGLE_SELECTION_CODE, TRACK_NAVIGATION_TOGGLE_SELECTION_COMMAND, {} },
-        { TRACK_VIEW_RANGE_SELECTION_CODE, TRACK_NAVIGATION_RANGE_SELECTION_COMMAND, {} },
-        { TRACK_VIEW_TRACK_SELECTION_PREV_CODE, TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_PREV_COMMAND, {} },
-        { TRACK_VIEW_TRACK_SELECTION_NEXT_CODE, TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_NEXT_COMMAND, {} },
-        { TRACK_VIEW_ITEM_CONTEXT_MENU_CODE, TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND, {} },
-        { TRACK_VIEW_RULER_CONTEXT_MENU_CODE, TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND, {} },
-    };
-    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     playbackController()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
         m_selectionStart = std::nullopt;

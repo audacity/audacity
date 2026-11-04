@@ -4,7 +4,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "actions/tests/mocks/actionsdispatchermock.h"
 #include "global/tests/mocks/applicationmock.h"
 #include "interactive/tests/mocks/interactivemock.h"
 #include "rcommand/tests/mocks/commanddispatchermock.h"
@@ -13,6 +12,7 @@
 #include "project/tests/mocks/projectfilescontrollermock.h"
 #include "multiwindows/tests/mocks/multiwindowsprovidermock.h"
 
+#include "../appshellcommands.h"
 #include "../internal/applicationactioncontroller.h"
 
 using ::testing::_;
@@ -27,7 +27,6 @@ namespace au::appshell {
 class FactoryResetActionTests : public ::testing::Test
 {
 public:
-    using ActionCB = muse::actions::IActionsDispatcher::ActionCallBackWithNameAndData;
     using CommandCB = muse::rcommand::ICommandDispatcher::CallBack;
     using WarningPromise = muse::async::Promise<IInteractive::Result>;
     using QuestionPromise = muse::async::Promise<IInteractive::Result>;
@@ -35,15 +34,6 @@ public:
     void SetUp() override
     {
         m_controller = new ApplicationActionController(muse::modularity::globalCtx());
-
-        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
-        m_controller->dispatcher.set(m_dispatcher);
-
-        ON_CALL(*m_dispatcher, reg(_, _, testing::An<const ActionCB&>()))
-        .WillByDefault([this](muse::actions::Actionable*, const muse::actions::ActionCode& code,
-                              const ActionCB& cb) {
-            m_registeredActions[code] = cb;
-        });
 
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
         m_controller->commandDispatcher.set(m_commandDispatcher);
@@ -130,9 +120,9 @@ public:
 
     void triggerRevertToFactory()
     {
-        auto it = m_registeredActions.find("revert-factory");
-        ASSERT_NE(it, m_registeredActions.end()) << "'revert-factory' action not registered";
-        it->second("revert-factory", muse::actions::ActionData());
+        auto it = m_registeredCommands.find(APP_REVERT_FACTORY_COMMAND);
+        ASSERT_NE(it, m_registeredCommands.end()) << "revert-factory command not registered";
+        it->second(muse::rcommand::Request { 0, APP_REVERT_FACTORY_COMMAND, {} });
     }
 
     void confirmWarningDialog()
@@ -166,7 +156,6 @@ public:
 protected:
     ApplicationActionController* m_controller = nullptr;
 
-    std::shared_ptr<NiceMock<muse::actions::ActionsDispatcherMock> > m_dispatcher;
     std::shared_ptr<NiceMock<muse::rcommand::CommandDispatcherMock> > m_commandDispatcher;
     std::shared_ptr<NiceMock<InteractiveMock> > m_interactive;
     std::shared_ptr<NiceMock<ApplicationMock> > m_application;
@@ -174,7 +163,6 @@ protected:
     std::shared_ptr<NiceMock<au::project::ProjectFilesControllerMock> > m_projectFilesController;
     std::shared_ptr<NiceMock<muse::mi::MultiWindowsProviderMock> > m_multiWindowsProvider;
 
-    std::map<std::string, ActionCB> m_registeredActions;
     std::map<muse::rcommand::Command, CommandCB> m_registeredCommands;
     WarningPromise::Resolve m_warningResolve;
     QuestionPromise::Resolve m_questionResolve;

@@ -29,8 +29,6 @@ target_sources(record PRIVATE
     internal/recordcontroller.h
     internal/recordmetercontroller.cpp
     internal/recordmetercontroller.h
-    internal/recorduiactions.cpp
-    internal/recorduiactions.h
     internal/timedrecordingscenario.cpp
     internal/timedrecordingscenario.h
     internal/timedrecordingformatter.cpp

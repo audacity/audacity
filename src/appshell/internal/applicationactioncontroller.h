@@ -29,12 +29,9 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/iapplicationeventcontroller.h"
-#include "framework/actions/actionable.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iplatforminteractive.h"
-#include "framework/ui/iuiactionsregister.h"
 #include "framework/ui/imainwindow.h"
 #include "framework/ui/inavigationcontroller.h"
 #include "framework/update/iappupdateservice.h"
@@ -56,8 +53,8 @@
 class QFileOpenEvent;
 
 namespace au::appshell {
-class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
-    public muse::rcommand::Commandable, public muse::async::Asyncable, public muse::Contextable
+class ApplicationActionController : public QObject, public IApplicationActionController, public muse::rcommand::Commandable,
+    public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<IAppShellConfiguration> configuration;
@@ -65,9 +62,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
     muse::GlobalInject<muse::IApplicationEventController> applicationEventController;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
-    muse::ContextInject<muse::ui::IUiActionsRegister> actionsRegister { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
@@ -89,15 +84,12 @@ public:
     void preInit();
     void init();
     void processPendingEvents();
-    const std::vector<muse::actions::ActionCode>& prohibitedActionsWhileRecording() const;
 
     muse::ValCh<bool> isFullScreen() const;
 
     void onDragEnterEvent(QDragEnterEvent* event) override;
     void onDragMoveEvent(QDragMoveEvent* event) override;
     void onDropEvent(QDropEvent* event) override;
-
-    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
     muse::async::Channel<DockName> dockToggleRequested() const override;
 
@@ -131,7 +123,6 @@ private:
 
     bool m_quiting = false;
 
-    muse::async::Channel<muse::actions::ActionCodeList> m_actionsReceiveAvailableChanged;
     muse::async::Channel<DockName> m_dockToggleRequested;
 };
 }
