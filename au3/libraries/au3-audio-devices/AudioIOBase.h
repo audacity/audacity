@@ -64,6 +64,10 @@ struct AudioIOStartTransportOptions
     bool playNonWaveTracks{ true };
     bool inputMonitoring{ false };
 
+    static constexpr double DefaultSoundActivationLevelDb = -50.0;
+    bool soundActivatedRecording{ false };
+    double soundActivationLevelDb{ DefaultSoundActivationLevelDb };
+
     // contents may get swapped with empty vector
     PRCrossfadeData* pCrossfadeData{};
 
@@ -276,6 +280,9 @@ public:
     /** \brief Find out if playback / recording is currently paused */
     bool IsPaused() const;
 
+    /** \brief Find out if playback / recording is paused or suspended by sound activated recording */
+    bool IsHalted() const;
+
     /** \brief  Returns true if audio i/o is busy starting, stopping, playing,
      * or recording.
      *
@@ -324,6 +331,8 @@ protected:
 
     /// True if audio playback is paused
     std::atomic<bool> mPaused{ false };
+    /// True while sound activated recording waits for the input to exceed the activation level
+    std::atomic<bool> mSoundActivationSuspended{ false };
 
     /*! Read by worker threads but unchanging during playback */
     std::atomic<int> mStreamToken{ 0 };
