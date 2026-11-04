@@ -4,6 +4,7 @@
 
 #include "au3record.h"
 
+#include <algorithm>
 #include <cfloat>
 
 #include "au3-strings/TranslatableString.h"
@@ -196,6 +197,26 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
     return result;
 }
 
+//! Overdub plays every track except the ones being recorded into, so the user
+//! never hears the old audio of an armed track; without overdub nothing plays
+TransportSequences MakeRecordingTransportTracks(Au3TrackList& trackList, const WritableSampleTrackArray& recordingTracks,
+                                                bool overdub)
+{
+    TransportSequences result;
+    if (overdub) {
+        result = MakeTransportTracks(trackList, false, true);
+        auto& playback = result.playbackSequences;
+        playback.erase(std::remove_if(playback.begin(), playback.end(), [&recordingTracks](const auto& playbackSequence) {
+            return std::any_of(recordingTracks.begin(), recordingTracks.end(), [&playbackSequence](const auto& recordingTrack) {
+                return playbackSequence->FindChannelGroup() == recordingTrack->FindChannelGroup();
+            });
+        }), playback.end());
+    }
+
+    std::copy(recordingTracks.begin(), recordingTracks.end(), back_inserter(result.captureSequences));
+    return result;
+}
+
 void Au3Record::init()
 {
     m_audioInput = std::make_shared<Au3AudioInput>(iocContext());
@@ -359,14 +380,6 @@ muse::Ret Au3Record::start()
 {
     //! NOTE: copied from ProjectAudioManager::OnRecord
 
-    //! TODO: should be configurable
-    bool altAppearance = false;
-
-    // TODO: should preferNewTrack be an option?
-    // bool bPreferNewTrack = false;
-    // gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
-    const bool appendRecord = true;//(altAppearance == bPreferNewTrack);
-
     if (!audioDriverController() || audioDriverController()->inputDevices().empty()
         || audioDriverController()->inputChannelsAvailable() <= 0) {
         return make_ret(Err::NoRecordingDevice);
@@ -393,48 +406,23 @@ muse::Ret Au3Record::start()
         return make_ret(Err::MismatchedSamplingRatesError);
     }
 
-    if (appendRecord) {
-        const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
 
-        // Try to find wave tracks to record into.  (If any are selected,
-        // try to choose only from them; else if wave tracks exist, may record into any.)
-        existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
-        if (!existingTracks.empty()) {
-            projectRate = rateOfSelected;
-        } else {
-            if (anySelected && rateOfSelected != projectRate) {
-                return make_ret(Err::TooFewCompatibleTracksSelected);
-            }
-
-            existingTracks = ChooseExistingRecordingTracks(project, false, projectRate, recordingChannels);
+    // Try to find wave tracks to record into.  (If any are selected,
+    // try to choose only from them; else if wave tracks exist, may record into any.)
+    existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
+    if (!existingTracks.empty()) {
+        projectRate = rateOfSelected;
+    } else {
+        if (anySelected && rateOfSelected != projectRate) {
+            return make_ret(Err::TooFewCompatibleTracksSelected);
         }
+
+        existingTracks = ChooseExistingRecordingTracks(project, false, projectRate, recordingChannels);
     }
 
-    bool useDuplex = true;
-    // gPrefs->Read(wxT("/AudioIO/Duplex"), &useDuplex, true); // todo
-
-    TransportSequences transportTracks;
-    if (useDuplex) {
-        // Remove recording tracks from the list of tracks for duplex ("overdub")
-        // playback.
-        /* TODO: set up stereo tracks if that is how the user has set up
-          * their preferences, and choose sample format based on prefs */
-        transportTracks = MakeTransportTracks(Au3TrackList::Get(project), false, true);
-        for (const auto& wt : existingTracks) {
-            auto end = transportTracks.playbackSequences.end();
-            auto it = std::find_if(
-                transportTracks.playbackSequences.begin(), end,
-                [&wt](const auto& playbackSequence) {
-                return playbackSequence->FindChannelGroup() == wt->FindChannelGroup();
-            });
-            if (it != end) {
-                transportTracks.playbackSequences.erase(it);
-            }
-        }
-    }
-
-    std::copy(existingTracks.begin(), existingTracks.end(),
-              back_inserter(transportTracks.captureSequences));
+    const TransportSequences transportTracks
+        = MakeRecordingTransportTracks(Au3TrackList::Get(project), existingTracks, recordConfiguration()->isOverdubOn());
 
     if (audioEngine()->isBusy()) {
         if (audioEngine()->isCapturing()) {
@@ -445,7 +433,7 @@ muse::Ret Au3Record::start()
 
     audioEngine()->stopMonitoring();
 
-    return doRecord(project, transportTracks, t0, t1, altAppearance, projectRate);
+    return doRecord(project, transportTracks, t0, t1, false, projectRate);
 }
 
 muse::Ret Au3Record::pause()
@@ -597,15 +585,9 @@ muse::Ret Au3Record::leadInRecording()
         }
     }
 
-    // Set up transport sequences
     // Unlike AU3, we do NOT clear tracks — AU4 uses non-destructive recording
-    // Play all tracks (duplex) so user hears context during lead-in time
-    TransportSequences transportTracks;
-    transportTracks = MakeTransportTracks(Au3TrackList::Get(project), false, true);
-
-    // Recording tracks are also capture targets
-    std::copy(tracks.begin(), tracks.end(),
-              back_inserter(transportTracks.captureSequences));
+    const TransportSequences transportTracks
+        = MakeRecordingTransportTracks(Au3TrackList::Get(project), tracks, recordConfiguration()->isOverdubOn());
 
     selectionController()->resetSelectedClips();
 
