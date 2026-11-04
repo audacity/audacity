@@ -11,6 +11,7 @@
 #include <QVariantMap>
 #include <QtQml/qqmlregistration.h>
 
+#include "framework/global/async/asyncable.h"
 #include "framework/global/io/ifilesystem.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
@@ -23,7 +24,7 @@
 #include "record/timedrecordingtypes.h"
 
 namespace au::record {
-class TimedRecordingSetupModel : public QObject, public muse::Contextable
+class TimedRecordingSetupModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT;
@@ -69,7 +70,7 @@ public:
     Q_INVOKABLE QVariantMap scheduleData() const;
     Q_INVOKABLE bool confirmOverwrite();
     Q_INVOKABLE void browseSaveProjectPath();
-    Q_INVOKABLE void browseExportAudioPath();
+    Q_INVOKABLE void openExportSettings();
 
     bool startNow() const;
     void setStartNow(bool startNow);

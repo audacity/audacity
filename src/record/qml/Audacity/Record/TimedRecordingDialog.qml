@@ -204,6 +204,9 @@ StyledDialogView {
         property string text: ""
         property bool checked: false
         property string path: ""
+        property bool pathEditable: true
+        property string buttonText: qsTrc("ui", "Browse")
+        property int buttonIcon: IconCode.OPEN_FILE
 
         property NavigationPanel navigationPanel: null
         property int navigationOrderStart: 0
@@ -234,9 +237,24 @@ StyledDialogView {
             spacing: 4
             enabled: action.checked
 
+            StyledTextLabel {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 28
+
+                visible: !action.pathEditable
+                opacity: enabled ? 1 : ui.theme.itemOpacityDisabled
+
+                leftPadding: 8
+                horizontalAlignment: Text.AlignLeft
+                elide: Text.ElideMiddle
+                text: action.path
+            }
+
             TextInputField {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 28
+
+                visible: action.pathEditable
 
                 textSidePadding: 6
                 currentText: action.path
@@ -253,8 +271,9 @@ StyledDialogView {
             FlatButton {
                 Layout.preferredHeight: 28
 
-                icon: IconCode.OPEN_FILE
-                text: qsTrc("ui", "Browse")
+                icon: action.buttonIcon
+                text: action.buttonText
+                toolTipDescription: action.pathEditable ? "" : action.path
                 buttonType: FlatButton.Horizontal
                 orientation: Qt.Horizontal
 
@@ -482,6 +501,10 @@ StyledDialogView {
                     text: qsTrc("record", "Export audio")
                     checked: setupModel.exportAudioEnabled
                     path: setupModel.exportAudioPath
+                    pathEditable: false
+                    //: Button that opens the export settings: where the audio is exported to and in what format
+                    buttonText: qsTrc("record", "Settings")
+                    buttonIcon: IconCode.SETTINGS_COG
 
                     navigationPanel: completionPanel.navigation
                     navigationOrderStart: 4
@@ -490,12 +513,8 @@ StyledDialogView {
                         setupModel.exportAudioEnabled = checked
                     }
 
-                    onPathEdited: function (path) {
-                        setupModel.exportAudioPath = path
-                    }
-
                     onBrowseRequested: {
-                        setupModel.browseExportAudioPath()
+                        setupModel.openExportSettings()
                     }
                 }
 

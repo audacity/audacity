@@ -21,6 +21,8 @@ using namespace au::record;
 namespace {
 constexpr int CLOCK_INTERVAL_MS = 1000;
 
+const muse::UriQuery EXPORT_SETTINGS_URI("audacity://project/export");
+
 const QString TIME_FORMAT("HH:mm:ss");
 const QStringList ALTERNATIVE_TIME_FORMATS { "H:mm:ss", "H:mm" };
 
@@ -256,20 +258,18 @@ void TimedRecordingSetupModel::setEndTime(const QString& time)
     set(m_endTime, time);
 }
 
-void TimedRecordingSetupModel::browseExportAudioPath()
+void TimedRecordingSetupModel::openExportSettings()
 {
-    QStringList patterns;
-    for (const std::string& extension : exportExtensions()) {
-        patterns << QString::fromStdString("*." + extension);
-    }
-    const std::vector<std::string> filter { exportFormat() + " (" + patterns.join(' ').toStdString() + ")" };
+    muse::UriQuery uri(EXPORT_SETTINGS_URI);
+    uri.addParam("settingsOnly", muse::Val(true));
+    uri.addParam("filePath", muse::Val(withExportExtension(m_exportAudioPath).toStdString()));
 
-    const muse::io::path_t path = interactive()->selectSavingFileSync(muse::trc("record", "Export audio"), m_exportAudioPath, filter);
-    if (path.empty()) {
-        return;
-    }
-
-    setExportAudioPath(withExportExtension(path.toQString()));
+    interactive()->open(uri).onResolve(this, [this](const muse::Val& value) {
+        const QString path = value.toQString();
+        if (!path.isEmpty()) {
+            setExportAudioPath(path);
+        }
+    });
 }
 
 bool TimedRecordingSetupModel::saveProjectEnabled() const
