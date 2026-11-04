@@ -61,10 +61,9 @@ private:
         int64_t FirstPixel { -1 };
         int64_t LastPixel { -1 };
 
-        bool IsValid() const noexcept
-        {
-            return FirstPixel < LastPixel;
-        }
+        bool Empty { true };
+        double StartTime { 0.0 };
+        double EndTime { 0.0 };
     } mSelection;
 
     std::unique_ptr<LookupHelper> mLookupHelper;

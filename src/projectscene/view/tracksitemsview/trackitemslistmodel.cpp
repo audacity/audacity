@@ -97,6 +97,7 @@ void TrackItemsListModel::setMoveController(TrackItemsMoveController* controller
 
 void TrackItemsListModel::updateItemsMetrics()
 {
+    prepareItemsMetrics();
     for (int i = 0; i < m_items.size(); ++i) {
         updateItemMetrics(m_items[i]);
     }
@@ -612,6 +613,7 @@ void TrackItemsListModel::onItemsMoveChanged()
         }
     }
 
+    prepareItemsMetrics();
     updateDragGhostsMetrics();
 }
 

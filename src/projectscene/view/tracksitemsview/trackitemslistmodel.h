@@ -98,6 +98,8 @@ protected:
     };
 
     void updateItemsMetrics();
+    //! Called before items' metrics are updated, to refresh what they share
+    virtual void prepareItemsMetrics() {}
     virtual void updateItemMetrics(ViewTrackItem* item) = 0;
 
     void setSelectedItems(const QList<ViewTrackItem*>& items);

@@ -1,5 +1,9 @@
 #include "minmaxrmspainter.h"
 
+#include <cstring>
+
+#include "au3-mixer/Envelope.h"
+#include "au3-wave-track-paint/GraphicsDataCache.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "wavepainterutils.h"
 #include "WaveformPainter.h"
@@ -29,19 +33,100 @@ float getDBValue(float value, float dbRange)
 
     return value;
 }
+
+//! Changes whenever the envelope's effect on the waveform may have changed.
+//! Envelope::GetVersion() is not bumped by every mutation (SetOffset,
+//! InsertSpace, EnvPoint::SetVal...), so what GetValues() reads is hashed instead.
+uint64_t envelopeFingerprint(const Envelope& envelope)
+{
+    uint64_t hash = 14695981039346656037ull;
+    auto mix = [&hash](double value) {
+        uint64_t bits = 0;
+        std::memcpy(&bits, &value, sizeof(bits));
+        hash = (hash ^ bits) * 1099511628211ull;
+        hash ^= hash >> 29;
+    };
+
+    mix(envelope.GetDefaultValue());
+    mix(envelope.GetOffset());
+    mix(envelope.GetTrackLen());
+    mix(envelope.GetExponential() ? 1.0 : 0.0);
+
+    const size_t count = envelope.GetNumberOfPoints();
+    mix(static_cast<double>(count));
+    for (size_t i = 0; i < count; ++i) {
+        const EnvPoint& point = envelope[static_cast<int>(i)];
+        mix(point.GetT());
+        mix(point.GetVal());
+    }
+
+    return hash;
+}
 }
 
 namespace au::projectscene {
-void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey, const IWavePainter::Params& params)
+std::shared_ptr<au::au3::Au3WaveClip> MinMaxRMSPainter::findClip(const trackedit::ClipKey& clipKey) const
 {
-    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-
-    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
-    if (!track) {
-        return;
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return nullptr;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.itemId);
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
+    return track ? au::au3::DomAccessor::findWaveClip(track, clipKey.itemId) : nullptr;
+}
+
+IMinMaxRMSPainter::ClipData MinMaxRMSPainter::clipData(const trackedit::ClipKey& clipKey)
+{
+    const std::shared_ptr<WaveClip> waveClip = findClip(clipKey);
+    if (!waveClip) {
+        return {};
+    }
+
+    ClipData data;
+    data.valid = true;
+    data.channelCount = waveClip->NChannels();
+    data.playStartTime = waveClip->GetPlayStartTime();
+    data.playEndTime = waveClip->GetPlayEndTime();
+    data.trimLeft = waveClip->GetTrimLeft();
+    data.sequenceEndTime = waveClip->GetSequenceEndTime();
+    data.samplesPerSecond = waveClip->GetRate() / waveClip->GetStretchRatio();
+    data.tileWidth = GraphicsDataCacheBase::CacheElementWidth;
+
+    data.dataVersion = WaveformPainter::Get(*waveClip).Generation();
+    const Envelope& envelope = waveClip->GetEnvelope();
+    if (envelope.GetNumberOfPoints() > 0 || envelope.GetDefaultValue() != 1.0) {
+        data.dataVersion = (data.dataVersion * 1099511628211ull) ^ envelopeFingerprint(envelope);
+    }
+
+    return data;
+}
+
+bool MinMaxRMSPainter::columns(const trackedit::ClipKey& clipKey, size_t channelIndex, const IWavePainter::Params& params,
+                               const WaveMetrics& metrics, std::vector<WaveColumnVertex>& columns)
+{
+    const std::shared_ptr<WaveClip> waveClip = findClip(clipKey);
+    if (!waveClip) {
+        columns.clear();
+        return true;
+    }
+
+    WavePaintParameters paintParams;
+    paintParams
+    .SetDisplayParameters(metrics.height, params.displayBounds.first, params.displayBounds.second, params.showClipping)
+    .SetDBParameters(std::abs(params.dbRange), !params.isLinear)
+    .SetShowRMS(params.showRMS);
+    paintParams.SetEnvelope(waveClip->GetEnvelope());
+
+    bool complete = true;
+    WaveformPainter::Get(*waveClip).GetColumnData(channelIndex, paintParams, metrics, columns, &complete);
+    return complete;
+}
+
+void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey, const IWavePainter::Params& params)
+{
+    const std::shared_ptr<WaveClip> waveClip = findClip(clipKey);
     if (!waveClip) {
         return;
     }

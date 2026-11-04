@@ -13,11 +13,11 @@
 
 #include <algorithm>
 #include <cassert>
-// Linux requires explicit include for std::round and std::memmove
-#ifdef __linux__
 #include <cmath>
 #include <cstring>
-#endif
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #include "au3-math/RoundUpUnsafe.h"
 #include "au3-math/SampleFormat.h"
@@ -185,7 +185,8 @@ WaveDataCache::DataProvider
 MakeDefaultDataProvider(const WaveClip& clip, int channelIndex)
 {
     return [sequence = clip.GetSequence(channelIndex), clip = &clip,
-            channelIndex, appendBufferHelper = AppendBufferHelper()](
+            channelIndex, appendBufferHelper = AppendBufferHelper(),
+            summaries64k = std::unordered_map<SampleBlockID, std::vector<float> >()](
         int64_t requiredSample, WaveCacheSampleBlock::Type dataType,
         WaveCacheSampleBlock& outBlock) mutable
     {
@@ -253,7 +254,41 @@ MakeDefaultDataProvider(const WaveClip& clip, int channelIndex)
             float* ptr
                 =static_cast<float*>(outBlock.GetWritePointer(framesCount * 3));
 
-            inputBlock.sb->GetSummary64k(ptr, 0, framesCount);
+            //! NOTE: Every summary read is a database query, and a view of a
+            //! long project needs one per block on each zoom step. The 64k
+            //! summaries are a few frames per block, so they are kept: a block
+            //! never changes once written and its id is never reused. Ids no
+            //! longer in the sequence are dropped once the cache doubles.
+            const SampleBlockID blockId = inputBlock.sb->GetBlockID();
+            if (blockId <= 0) {
+                // Silent block: nothing is read from the database
+                inputBlock.sb->GetSummary64k(ptr, 0, framesCount);
+                break;
+            }
+
+            auto it = summaries64k.find(blockId);
+            if (it == summaries64k.end() || it->second.size() != framesCount * 3) {
+                const auto& blocks = sequence->GetBlockArray();
+                if (summaries64k.size() > 2 * blocks.size()) {
+                    std::unordered_set<SampleBlockID> liveIds;
+                    for (const auto& block : blocks) {
+                        liveIds.insert(block.sb->GetBlockID());
+                    }
+                    std::erase_if(summaries64k, [&](const auto& entry) {
+                            return !liveIds.contains(entry.first);
+                        });
+                }
+
+                std::vector<float> summary(framesCount * 3);
+                if (!inputBlock.sb->GetSummary64k(summary.data(), 0, framesCount)) {
+                    // A failed read yields zeros: do not keep them
+                    std::copy(summary.begin(), summary.end(), ptr);
+                    break;
+                }
+                it = summaries64k.insert_or_assign(blockId, std::move(summary)).first;
+            }
+
+            std::copy(it->second.begin(), it->second.end(), ptr);
         }
         break;
         default:

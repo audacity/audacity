@@ -36,6 +36,9 @@ public:
     bool isSpeedModified() const;
     double speed() const;
 
+    double clipStartTime() const { return m_clipStartTime; }
+    double clipEndTime() const { return m_clipEndTime; }
+
 signals:
     void groupIdChanged();
     void pitchChanged();
@@ -46,5 +49,7 @@ private:
     int m_groupId = -1;
     int m_pitch = 0;
     double m_speed = 1.0;
+    double m_clipStartTime = 0.0;
+    double m_clipEndTime = 0.0;
 };
 }

@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+
 #include "framework/global/modularity/ioc.h"
 
 #include "ui/iuiconfiguration.h"
@@ -78,17 +80,21 @@ private:
 
     void update();
     void updatePendingTitleEdit();
+    void prepareItemsMetrics() override;
     void updateItemMetrics(ViewTrackItem* item) override;
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
     trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
+    std::optional<trackedit::Clip> currentClip(const trackedit::ClipKey& key) const;
 
     bool isKeyboardTriggered() const;
 
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
+
+    trackedit::ClipKeyList m_cachedIntersectingClips;
 };
 }

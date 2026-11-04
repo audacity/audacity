@@ -39,6 +39,7 @@ Rectangle {
     readonly property color classicHeaderHoveredColor: ui.theme.extra["classic_clip_header_hover_color"]
     property int currentClipStyle: ClipStyle.COLORFUL
     property bool isGrouped: false
+    property bool isDragGhost: false
     property bool clipSelected: false
     property bool clipIntersectsSelection: false
     property bool clipFocused: false
@@ -307,7 +308,7 @@ Rectangle {
 
     function mousePressAndHold(x, y) {
         root.altPressed ? waveView.smoothLastClickPos(x, y - header.height) : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
-        waveView.update()
+        waveView.forceRepaint()
     }
 
     function mouseReleased() {
@@ -338,7 +339,7 @@ Rectangle {
     }
 
     function updateViews() {
-        waveView.update()
+        waveView.forceRepaint()
         if (spectrogramViewLoader.item) {
             spectrogramViewLoader.item.update()
         }
@@ -575,9 +576,22 @@ Rectangle {
     Rectangle {
         id: inner
 
-        anchors.fill: parent
+        // When the layer below is on, it renders this subtree into a texture, and
+        // textures have integer sizes: with a fractional width the content gets
+        // rescaled to fit, which visibly shimmers while trimming. Keep the layered
+        // subtree at an integer size so the texture always maps 1:1.
+        x: 0
+        y: 0
+        width: Math.floor(root.width)
+        height: Math.floor(root.height)
 
-        layer.enabled: true
+        color: "transparent"
+
+        //! NOTE: The header and the waveform round their own corners: the layer
+        //! re-renders a clip offscreen whenever it changes, for every clip on
+        //! every zoom step. It is still needed to round the spectrogram, and to
+        //! fade a translucent clip as a whole rather than each part separately.
+        layer.enabled: root.isSpectrogramViewVisible || root.opacity < 1
         layer.effect: RoundedCornersEffect {
             radius: root.radius
         }
@@ -591,17 +605,24 @@ Rectangle {
             height: root.headerHeight
             z: 2
 
+            topLeftRadius: root.radius
+            topRightRadius: root.radius
+
             visible: !root.collapsed || root.hover || menuBtn.isMenuOpened
 
             Rectangle {
                 id: headerSelectionRectangle
 
-                x: root.selectionStart
+                x: waveView.drawnSelectionValid ? waveView.drawnSelectionStart : root.selectionStart
                 z: 0 // Ensure this is below the header content
-                width: Math.min(root.selectionWidth, header.width)
+                width: waveView.drawnSelectionValid ? waveView.drawnSelectionEnd - waveView.drawnSelectionStart : Math.min(root.selectionWidth, header.width)
 
                 anchors.top: header.top
                 anchors.bottom: header.bottom
+
+                // Rounded only where it reaches the header's corners
+                topLeftRadius: x <= 0 ? root.radius : 0
+                topRightRadius: x + width >= header.width ? root.radius : 0
 
                 color: waveView.transformColor(clipColor)
                 visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
@@ -889,9 +910,12 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                fillColor: waveView.backgroundColor
-
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+
+                cornerRadius: root.radius
+                // Without a header above, the waveform reaches the clip's top corners
+                roundTopCorners: root.collapsed || !header.visible
+                dragGhost: root.isDragGhost
 
                 clipColor: root.clipColor
                 clipSelectedColor: root.clipSelectedColor
@@ -906,12 +930,12 @@ Rectangle {
                 function onWaveViewPositionChanged(x, y) {
                     if (waveView.isIsolationMode) {
                         waveView.setIsolatedPoint(x, y)
-                        waveView.update()
+                        waveView.forceRepaint()
                     } else if (root.multiSampleEdit && !root.altPressed) {
                         var lastX = root.lastSample.x
                         var lastY = root.lastSample.y
                         waveView.setLastClickPos(lastX, lastY, x, y)
-                        waveView.update()
+                        waveView.forceRepaint()
                     } else {
                         waveView.setLastMousePos(x, y)
                     }
