@@ -43,6 +43,17 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
+        RECORD_SECOND_CHOICE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short.
+        //: Records the other way than Record: on a new track, or on the current track when "Record on a new track" is turned on
+        TranslatableString("command", "Record (second choice)"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description",
+                           "Record on a new track, or on the current track when “Record on a new track” is turned on in Preferences"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
         RECORD_PAUSE_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Pause"),

@@ -25,14 +25,16 @@ const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-record
 const ActionCode RECORD_ON_CURRENT_TRACK_CODE("record-on-current-track");
 const ActionCode RECORD_ON_NEW_TRACK_CODE("record-on-new-track");
 const ActionCode RECORD_TIMED_RECORDING_CODE("timer-record");
+const ActionCode RECORD_SECOND_CHOICE_CODE("record-second-choice");
 }
 
 void RecordController::init()
 {
     auto cd = commandDispatcher();
     cd->onRequest(this, RECORD_START_COMMAND, [this]() { return toggleRecord(); });
-    cd->onRequest(this, RECORD_ON_CURRENT_TRACK_COMMAND, [this]() { return toggleRecord(); });
+    cd->onRequest(this, RECORD_ON_CURRENT_TRACK_COMMAND, [this]() { return toggleRecord(false); });
     cd->onRequest(this, RECORD_ON_NEW_TRACK_COMMAND, [this]() { return recordOnNewTrack(); });
+    cd->onRequest(this, RECORD_SECOND_CHOICE_COMMAND, [this]() { return toggleRecordSecondChoice(); });
     cd->onRequest(this, RECORD_PAUSE_COMMAND, [this]() { return pause(); });
     cd->onRequest(this, RECORD_STOP_COMMAND, [this]() { return stop(); });
     cd->onRequest(this, RECORD_TOGGLE_MIC_METERING_COMMAND, [this]() { return toggleMicMetering(); });
@@ -44,6 +46,7 @@ void RecordController::init()
         { RECORD_START_QUERY.toString(), RECORD_START_COMMAND, {} },
         { RECORD_ON_CURRENT_TRACK_CODE, RECORD_ON_CURRENT_TRACK_COMMAND, {} },
         { RECORD_ON_NEW_TRACK_CODE, RECORD_ON_NEW_TRACK_COMMAND, {} },
+        { RECORD_SECOND_CHOICE_CODE, RECORD_SECOND_CHOICE_COMMAND, {} },
         { RECORD_PAUSE_QUERY.toString(), RECORD_PAUSE_COMMAND, {} },
         { RECORD_STOP_QUERY.toString(), RECORD_STOP_COMMAND, {} },
         { RECORD_TOGGLE_MIC_METERING.toString(), RECORD_TOGGLE_MIC_METERING_COMMAND, {} },
@@ -107,6 +110,16 @@ Notification RecordController::isRecordingChanged() const
 
 Ret RecordController::toggleRecord()
 {
+    return toggleRecord(configuration()->recordOnNewTrack());
+}
+
+Ret RecordController::toggleRecordSecondChoice()
+{
+    return toggleRecord(!configuration()->recordOnNewTrack());
+}
+
+Ret RecordController::toggleRecord(bool onNewTrack)
+{
     if (m_currentRecordStatus == RecordStatus::Paused) {
         return resume();
     }
@@ -115,7 +128,7 @@ Ret RecordController::toggleRecord()
         return stop();
     }
 
-    return start();
+    return onNewTrack ? startWithNewTrack() : start();
 }
 
 Ret RecordController::recordOnNewTrack()
@@ -340,7 +353,8 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
 
     if (code == RECORD_START_QUERY.toString()
         || code == RECORD_ON_CURRENT_TRACK_CODE
-        || code == RECORD_ON_NEW_TRACK_CODE) {
+        || code == RECORD_ON_NEW_TRACK_CODE
+        || code == RECORD_SECOND_CHOICE_CODE) {
         return !playbackController()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
     }
 
