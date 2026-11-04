@@ -79,7 +79,7 @@ const UiActionList RecordUiActions::m_mainActions = {
              ),
     UiAction(RECORD_LEAD_IN_RECORDING_QUERY.toString(),
              au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
+             au::context::CTX_PROJECT_OPENED,
              //: Action title: shown as a menu item or a button label; keep it short
              TranslatableString("action", "Lead-in Recording"),
              //: Action description: shown as a tooltip; can be a full sentence
