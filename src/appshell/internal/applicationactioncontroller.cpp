@@ -101,8 +101,6 @@ void ApplicationActionController::init()
     cd->onRequest(this, APP_EDITING_PREFERENCES_COMMAND, [this]() { return openEditingPreferencesDialog(); });
     cd->onRequest(this, APP_SPECTROGRAM_PREFERENCES_COMMAND, [this]() { return openSpectrogramPreferencesDialog(); });
 
-    cd->onRequest(this, APP_ENTER_COMMAND, [this]() { return doGlobalEnter(); });
-    cd->onRequest(this, APP_SHIFT_ENTER_COMMAND, [this]() { return doGlobalShiftEnter(); });
     cd->onRequest(this, APP_CONTEXT_MENU_COMMAND, [this]() { return doGlobalContextMenu(); });
 
     for (const auto& [command, dockName] : toggleDockCommands()) {
@@ -133,8 +131,6 @@ void ApplicationActionController::init()
         { "shortcuts-preferences", APP_SHORTCUTS_PREFERENCES_COMMAND, {} },
         { "editing-preferences", APP_EDITING_PREFERENCES_COMMAND, {} },
         { "spectrogram-preferences", APP_SPECTROGRAM_PREFERENCES_COMMAND, {} },
-        { "action://enter", APP_ENTER_COMMAND, {} },
-        { "action://shift-enter", APP_SHIFT_ENTER_COMMAND, {} },
         { "action://context-menu", APP_CONTEXT_MENU_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
@@ -557,47 +553,6 @@ bool ApplicationActionController::isProjectOpened() const
     bool hasProject = globalContext()->currentProject() != nullptr;
     bool isOpened = uiContextResolver()->matchWithCurrent(context::UiCtxProjectOpened);
     return hasProject && isOpened;
-}
-
-bool ApplicationActionController::isProjectOpenedAndFocused() const
-{
-    bool isOpened = isProjectOpened();
-    bool isFocused = uiContextResolver()->matchWithCurrent(context::UiCtxProjectFocused);
-    return isOpened && isFocused;
-}
-
-muse::Ret ApplicationActionController::doGlobalEnter()
-{
-    const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
-    if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
-        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-        return make_ok();
-    }
-
-    if (isProjectOpenedAndFocused()) {
-        commandDispatcher()->dispatch(trackedit::TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND);
-        return make_ok();
-    }
-
-    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalShiftEnter()
-{
-    const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
-    if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
-        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-        return make_ok();
-    }
-
-    if (isProjectOpenedAndFocused()) {
-        commandDispatcher()->dispatch(trackedit::TRACK_NAVIGATION_RANGE_SELECTION_COMMAND);
-        return make_ok();
-    }
-
-    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-    return make_ok();
 }
 
 muse::Ret ApplicationActionController::doGlobalContextMenu()

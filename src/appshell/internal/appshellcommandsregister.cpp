@@ -137,24 +137,6 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration()
     },
     CommandInfo{
-        APP_ENTER_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "&Enter"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Trigger the focused control or select the focused track item"),
-        InputSchema(),
-        Decoration()
-    },
-    CommandInfo{
-        APP_SHIFT_ENTER_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Shift+&Enter"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Trigger the focused control or make a range selection of track items"),
-        InputSchema(),
-        Decoration()
-    },
-    CommandInfo{
         APP_CONTEXT_MENU_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Open item context menu"),

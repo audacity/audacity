@@ -15,14 +15,12 @@
             { "command": "command://navigation/nextrow-control", "sequences": ["PgDown"] },
             { "command": "command://navigation/prevrow-control", "sequences": ["PgUp"] },
             { "command": "command://navigation/escape", "sequences": ["Esc"] },
-            { "command": "command://navigation/trigger-control", "sequences": ["Space"] }
+            { "command": "command://navigation/trigger-control", "sequences": ["Space", "Return", "Enter", "Shift+Return", "Shift+Enter"] }
         ]
     },
     {
         "scope": "APP",
         "shortcuts": [
-            { "command": "command://app/enter", "sequences": ["Return", "Enter"] },
-            { "command": "command://app/shift-enter", "sequences": ["Shift+Return", "Shift+Enter"] },
             { "command": "command://app/quit", "sequences": ["Ctrl+Q"] }
         ]
     },
@@ -41,7 +39,6 @@
             { "command": "command://track-navigation/first-track", "sequences": ["Ctrl+Home"] },
             { "command": "command://track-navigation/last-track", "sequences": ["Ctrl+End"] },
             { "command": "command://track-navigation/toggle-selection", "sequences": ["Ctrl+Enter", "Ctrl+Return"] },
-            { "command": "command://track-navigation/range-selection", "sequences": [] },
             { "command": "command://track-navigation/extend-track-selection-prev", "sequences": ["Shift+Up"] },
             { "command": "command://track-navigation/extend-track-selection-next", "sequences": ["Shift+Down"] },
             { "command": "command://projectscene/toggle-split-tool", "sequences": ["S"] },
@@ -61,6 +58,13 @@
             { "command": "command://trackedit/track-view-item-reduce-right", "sequences": ["Ctrl+Shift+Right"] },
             { "command": "command://trackedit/track-view-item-move-up", "sequences": ["Ctrl+Up"] },
             { "command": "command://trackedit/track-view-item-move-down", "sequences": ["Ctrl+Down"] }
+        ]
+    },
+    {
+        "scope": "TRACK_NAVIGATION_SECTION",
+        "shortcuts": [
+            { "command": "command://track-navigation/replace-selection", "sequences": ["Return", "Enter"] },
+            { "command": "command://track-navigation/range-selection", "sequences": ["Shift+Return", "Shift+Enter"] }
         ]
     },
     {
