@@ -23,6 +23,8 @@ void RecordController::init()
     cd->onRequest(this, RECORD_TOGGLE_INPUT_MONITORING_COMMAND, [this]() { return toggleInputMonitoring(); });
     cd->onRequest(this, RECORD_LEAD_IN_RECORDING_COMMAND, [this]() { return leadInRecording(); });
     cd->onRequest(this, RECORD_TIMED_RECORDING_COMMAND, [this]() { return timedRecordingScenario()->openSetup(); });
+    cd->onRequest(this, RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND, [this]() { return toggleSoundActivatedRecording(); });
+    cd->onRequest(this, RECORD_SET_SOUND_ACTIVATION_LEVEL_COMMAND, [this]() { return openSoundActivationLevelDialog(); });
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
@@ -266,6 +268,26 @@ muse::async::Notification RecordController::isInputMonitoringOnChanged() const
 bool RecordController::isInputMonitoringOn() const
 {
     return configuration()->isInputMonitoringOn();
+}
+
+Ret RecordController::toggleSoundActivatedRecording()
+{
+    if (isRecording()) {
+        return make_ret(Ret::Code::NotAllowed);
+    }
+
+    configuration()->setIsSoundActivatedRecordingOn(!configuration()->isSoundActivatedRecordingOn());
+    return make_ok();
+}
+
+Ret RecordController::openSoundActivationLevelDialog()
+{
+    if (isRecording()) {
+        return make_ret(Ret::Code::NotAllowed);
+    }
+
+    interactive()->open("audacity://record/sound-activation-level");
+    return make_ok();
 }
 
 bool RecordController::isLeadInRecording() const
