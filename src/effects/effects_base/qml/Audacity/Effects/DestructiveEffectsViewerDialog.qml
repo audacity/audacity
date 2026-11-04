@@ -17,7 +17,7 @@ EffectStyledDialogView {
     id: root
 
     property int effectFamily: EffectFamily.Unknown
-    property bool previewAllowed: true
+    property bool batchProcessing: false
 
     title: viewerModel.title
     navigationSection.name: title
@@ -52,7 +52,7 @@ EffectStyledDialogView {
         property bool showBottomPanel: true
 
         property bool isApplyAllowed: viewerModel.effectFamily !== EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
-        property bool isPreviewAllowed: root.previewAllowed && (!viewer || viewer.isPreviewAllowed !== false)
+        property bool isPreviewAllowed: !root.batchProcessing && (!viewer || viewer.isPreviewAllowed !== false)
         property bool shouldRollbackOnClose: true
 
         function closeWindow(accept) {
@@ -363,8 +363,11 @@ EffectStyledDialogView {
                             navigation.panel: bbox.navigationPanel
                             navigation.order: cancelBtn.navigation.order + 1
 
+                            text: root.batchProcessing ?
+                            //: Label of the dialog button that saves the effect settings of a macro step
+                            qsTrc("global", "Save") :
                             //: Label of the dialog button that applies the effect
-                            text: qsTrc("global", "Apply")
+                            qsTrc("global", "Apply")
                             buttonRole: ButtonBoxModel.AcceptRole
                             buttonId: ButtonBoxModel.Apply
                             accentButton: true
