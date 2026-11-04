@@ -11,8 +11,12 @@
 #include "playback/tests/mocks/playbackcontrollermock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "interactive/tests/mocks/interactivemock.h"
+#include "trackedit/tests/mocks/tracksinteractionmock.h"
+#include "trackedit/tests/mocks/tracknavigationcontrollermock.h"
+#include "audio/tests/mocks/audiodrivercontrollermock.h"
 
 #include "mocks/recordmock.h"
+#include "mocks/recordconfigurationmock.h"
 
 using ::testing::_;
 using ::testing::InSequence;
@@ -33,12 +37,25 @@ public:
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
         m_interactive = std::make_shared<NiceMock<muse::InteractiveMock> >();
         m_record = std::make_shared<NiceMock<RecordMock> >();
+        m_configuration = std::make_shared<NiceMock<RecordConfigurationMock> >();
+        m_tracksInteraction = std::make_shared<NiceMock<trackedit::TracksInteractionMock> >();
+        m_trackNavigationController = std::make_shared<NiceMock<trackedit::TrackNavigationControllerMock> >();
+        m_audioDriverController = std::make_shared<NiceMock<audio::AudioDriverControllerMock> >();
 
         m_controller->globalContext.set(m_globalContext);
         m_controller->playbackController.set(m_playbackController);
         m_controller->selectionController.set(m_selectionController);
         m_controller->interactive.set(m_interactive);
         m_controller->record.set(m_record);
+        m_controller->configuration.set(m_configuration);
+        m_controller->tracksInteraction.set(m_tracksInteraction);
+        m_controller->trackNavigationController.set(m_trackNavigationController);
+        m_controller->audioDriverController.set(m_audioDriverController);
+
+        audio::AudioConfiguration audioConfiguration;
+        audioConfiguration.inputChannels = 2;
+        ON_CALL(*m_audioDriverController, configuration())
+        .WillByDefault(Return(audioConfiguration));
 
         ON_CALL(*m_globalContext, playbackState())
         .WillByDefault(Return(m_playbackState));
@@ -61,6 +78,11 @@ public:
         m_controller->toggleRecord();
     }
 
+    void toggleRecordSecondChoice()
+    {
+        m_controller->toggleRecordSecondChoice();
+    }
+
     void pause()
     {
         m_controller->pause();
@@ -79,6 +101,10 @@ public:
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
     std::shared_ptr<muse::InteractiveMock> m_interactive;
     std::shared_ptr<RecordMock> m_record;
+    std::shared_ptr<RecordConfigurationMock> m_configuration;
+    std::shared_ptr<trackedit::TracksInteractionMock> m_tracksInteraction;
+    std::shared_ptr<trackedit::TrackNavigationControllerMock> m_trackNavigationController;
+    std::shared_ptr<audio::AudioDriverControllerMock> m_audioDriverController;
 };
 
 TEST_F(RecordControllerTests, LeadInRecordingStartsFromPlayheadNotSelectionStart)
@@ -187,5 +213,54 @@ TEST_F(RecordControllerTests, PauseWhilePausedResumesRecording)
 
     //! [THEN] The recording is running again
     EXPECT_TRUE(recordStatusIsRunning());
+}
+
+TEST_F(RecordControllerTests, RecordAppendsToTheCurrentTrackByDefault)
+{
+    //! [GIVEN] "Record on a new track" is off
+    ON_CALL(*m_configuration, recordOnNewTrack())
+    .WillByDefault(Return(false));
+
+    //! [THEN] No track is added before recording starts
+    EXPECT_CALL(*m_tracksInteraction, addWaveTrack(_))
+    .Times(0);
+    EXPECT_CALL(*m_record, start())
+    .WillOnce(Return(muse::make_ok()));
+
+    //! [WHEN] Record is triggered
+    toggleRecord();
+}
+
+TEST_F(RecordControllerTests, RecordOnANewTrackPreferenceAddsATrack)
+{
+    //! [GIVEN] "Record on a new track" is on and the input has two channels
+    ON_CALL(*m_configuration, recordOnNewTrack())
+    .WillByDefault(Return(true));
+
+    //! [THEN] A stereo track is added and recording starts
+    InSequence seq;
+    EXPECT_CALL(*m_tracksInteraction, addWaveTrack(2))
+    .WillOnce(Return(trackedit::TrackId(1)));
+    EXPECT_CALL(*m_record, start())
+    .WillOnce(Return(muse::make_ok()));
+
+    //! [WHEN] Record is triggered
+    toggleRecord();
+}
+
+TEST_F(RecordControllerTests, SecondChoiceDoesTheOppositeOfRecord)
+{
+    //! [GIVEN] "Record on a new track" is on
+    ON_CALL(*m_configuration, recordOnNewTrack())
+    .WillByDefault(Return(true));
+
+    //! [THEN] Recording appends to the current track instead
+    EXPECT_CALL(*m_tracksInteraction, addWaveTrack(_))
+    .Times(0);
+    EXPECT_CALL(*m_record, start())
+    .WillOnce(Return(muse::make_ok()));
+
+    //! [WHEN] The second choice (Shift+R or Shift+click) is triggered
+    toggleRecordSecondChoice();
 }
 }

@@ -210,7 +210,7 @@ void PlaybackToolBarModel::updateRecordState()
     item->setIconColor(iconColor);
     item->setBackgroundColor(backgroundColor);
 
-    item->setCommand(record::RECORD_ON_NEW_TRACK_COMMAND, Qt::ShiftModifier);
+    item->setCommand(record::RECORD_SECOND_CHOICE_COMMAND, Qt::ShiftModifier);
 }
 
 void PlaybackToolBarModel::updateLoopState()
