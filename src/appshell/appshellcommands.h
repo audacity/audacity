@@ -29,8 +29,6 @@ inline static const muse::rcommand::Command APP_QUIT_COMMAND("command://app/quit
 inline static const std::string INSTALLER_PATH_PARAM("installer_path");
 
 inline static const muse::rcommand::Command APP_RESTART_COMMAND("command://app/restart");
-inline static const muse::rcommand::Command APP_ENTER_COMMAND("command://app/enter");
-inline static const muse::rcommand::Command APP_SHIFT_ENTER_COMMAND("command://app/shift-enter");
 inline static const muse::rcommand::Command APP_CONTEXT_MENU_COMMAND("command://app/context-menu");
 
 inline static const muse::rcommand::Command APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND("command://app/toggle-transport-toolbar");

@@ -126,10 +126,7 @@ private:
     muse::Ret revertToFactorySettings();
 
     bool isProjectOpened() const;
-    bool isProjectOpenedAndFocused() const;
 
-    muse::Ret doGlobalEnter();
-    muse::Ret doGlobalShiftEnter();
     muse::Ret doGlobalContextMenu();
 
     bool m_quiting = false;

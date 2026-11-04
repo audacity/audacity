@@ -19,6 +19,7 @@ static const std::string APP_SCOPE = "APP";
 static const std::string PLAYBACK_SCOPE = "PLAYBACK";
 static const std::string RECORD_SCOPE = "RECORD";
 static const std::string TIMELINE_SCOPE = "TIMELINE";
+static const std::string TRACK_NAVIGATION_SECTION_SCOPE = "TRACK_NAVIGATION_SECTION";
 static const std::string PROJECT_SCOPE = "PROJECT";
 static const std::string PROJECTSCENE_SCOPE = "PROJECTSCENE";
 static const std::string TRACKEDIT_SCOPE = "TRACKEDIT";
@@ -37,6 +38,8 @@ static const std::string UPDATE_SCOPE = "UPDATE";
 static const std::string DIAGNOSTICS_SCOPE = "DIAGNOSTICS";
 static const std::string TESTFLOW_SCOPE = "TESTFLOW";
 
+static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
+
 //! NOTE The priority is used only when one key sequence matches enabled shortcuts in different scopes,
 //! so only the scopes that clash with another scope are ranked here; all other scopes get 0.
 int ShortcutResolver::scopePriority(const std::string& scope) const
@@ -53,12 +56,22 @@ int ShortcutResolver::scopePriority(const std::string& scope) const
         return isProjectFocused() ? 3 : -1;
     }
 
+    if (scope == TRACK_NAVIGATION_SECTION_SCOPE) {
+        return isTrackViewFocused() ? 4 : -1;
+    }
+
     return 0;
 }
 
 bool ShortcutResolver::isProjectFocused() const
 {
     return uiContextResolver()->matchWithCurrent(UiCtxProjectFocused);
+}
+
+bool ShortcutResolver::isTrackViewFocused() const
+{
+    const muse::ui::INavigationSection* section = navigationController()->activeSection();
+    return section && section->name() == TRACK_VIEW_SECTION_NAME && isProjectFocused();
 }
 
 Shortcut ShortcutResolver::selectActive(const ShortcutList& list) const
@@ -83,6 +96,7 @@ TranslatableString ShortcutResolver::scopeTitle(const std::string& scopeCode) co
         { PLAYBACK_SCOPE, TranslatableString("shortcuts", "PLAYBACK") },
         { RECORD_SCOPE, TranslatableString("shortcuts", "RECORDING") },
         { TIMELINE_SCOPE, TranslatableString("shortcuts", "TIMELINE") },
+        { TRACK_NAVIGATION_SECTION_SCOPE, TranslatableString("shortcuts", "TRACK VIEW") },
         { PROJECT_SCOPE, TranslatableString("shortcuts", "PROJECT") },
         { PROJECTSCENE_SCOPE, TranslatableString("shortcuts", "PROJECT VIEW") },
         { TRACKEDIT_SCOPE, TranslatableString("shortcuts", "EDITING") },

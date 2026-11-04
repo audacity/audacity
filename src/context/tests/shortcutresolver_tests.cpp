@@ -5,6 +5,8 @@
 
 #include "context/internal/shortcutresolver.h"
 
+#include "framework/ui/tests/mocks/navigationmocks.h"
+
 #include "mocks/uicontextresolvermock.h"
 
 using ::testing::NiceMock;
@@ -23,6 +25,15 @@ public:
 
         m_uiContextResolver = std::make_shared<NiceMock<UiContextResolverMock> >();
         m_resolver->uiContextResolver.set(m_uiContextResolver);
+
+        m_navigationController = std::make_shared<NiceMock<muse::ui::NavigationControllerMock> >();
+        m_resolver->navigationController.set(m_navigationController);
+    }
+
+    void setActiveSection(const QString& name)
+    {
+        ON_CALL(m_section, name()).WillByDefault(Return(name));
+        ON_CALL(*m_navigationController, activeSection()).WillByDefault(Return(&m_section));
     }
 
     void setProjectFocused(bool focused)
@@ -40,6 +51,13 @@ public:
 
     std::unique_ptr<ShortcutResolver> m_resolver;
     std::shared_ptr<NiceMock<UiContextResolverMock> > m_uiContextResolver;
+    std::shared_ptr<NiceMock<muse::ui::NavigationControllerMock> > m_navigationController;
+    NiceMock<muse::ui::NavigationSectionMock> m_section;
+
+    const ShortcutList m_shiftEnter = {
+        make("NAVIGATION", "command://navigation/trigger-control"),
+        make("TRACK_NAVIGATION_SECTION", "command://track-navigation/range-selection"),
+    };
 };
 
 TEST_F(ShortcutResolverTests, TimelineWinsOverNavigationWhenProjectFocused)
@@ -131,10 +149,10 @@ TEST_F(ShortcutResolverTests, CommandWinsOverNoneCommandInSameScope)
 
     const ShortcutList list = {
         make("APP", rcommand::NONE_COMMAND.toString()),
-        make("APP", "command://app/enter"),
+        make("APP", "command://app/quit"),
     };
 
-    EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://app/enter"));
+    EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://app/quit"));
 }
 
 TEST_F(ShortcutResolverTests, EmptyListHasNoActiveShortcut)
@@ -145,5 +163,36 @@ TEST_F(ShortcutResolverTests, EmptyListHasNoActiveShortcut)
 TEST_F(ShortcutResolverTests, ScopeTitleIsCaseInsensitive)
 {
     EXPECT_EQ(m_resolver->scopeTitle("timeline").str, m_resolver->scopeTitle("TIMELINE").str);
+}
+
+TEST_F(ShortcutResolverTests, TrackNavigationSectionWinsWhenTrackViewFocused)
+{
+    setProjectFocused(true);
+    setActiveSection("TrackViewSection");
+
+    EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://track-navigation/range-selection"));
+}
+
+TEST_F(ShortcutResolverTests, NavigationWinsWhenTimelineRulerFocused)
+{
+    setProjectFocused(true);
+    setActiveSection("TimelineSection");
+
+    EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://navigation/trigger-control"));
+}
+
+TEST_F(ShortcutResolverTests, NavigationWinsWhenTrackHeaderControlsFocused)
+{
+    setProjectFocused(false);
+    setActiveSection("TrackViewSection");
+
+    EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://navigation/trigger-control"));
+}
+
+TEST_F(ShortcutResolverTests, NavigationWinsWhenNoSectionIsActive)
+{
+    setProjectFocused(false);
+
+    EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://navigation/trigger-control"));
 }
 }
