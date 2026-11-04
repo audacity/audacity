@@ -3,33 +3,22 @@
 */
 #include "macrooutputnames.h"
 
-#include <set>
+#include <algorithm>
+#include <iterator>
+
+#include "importexport/export/exportutils.h"
 
 using namespace muse;
 
-namespace {
-std::string outputKey(const std::string& name)
-{
-    return io::escapeFileName(name).toQString().toLower().toStdString();
-}
-}
-
 std::vector<std::string> au::macromanager::uniqueOutputNames(const io::paths_t& files)
 {
-    std::set<std::string> usedKeys;
+    importexport::utils::UniqueFileNames usedNames;
     std::vector<std::string> names;
     names.reserve(files.size());
 
-    for (const io::path_t& file : files) {
-        const std::string baseName = io::completeBasename(file).toStdString();
-
-        std::string name = baseName;
-        for (int suffix = 2; !usedKeys.insert(outputKey(name)).second; ++suffix) {
-            name = baseName + "_" + std::to_string(suffix);
-        }
-
-        names.push_back(name);
-    }
+    std::ranges::transform(files, std::back_inserter(names), [&usedNames](const io::path_t& file) {
+        return usedNames.registerName(io::escapeFileName(io::completeBasename(file)).toStdString());
+    });
 
     return names;
 }

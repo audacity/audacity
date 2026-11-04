@@ -26,6 +26,8 @@ target_sources(macromanager PRIVATE
     internal/runonfilesstarter.h
 )
 
+target_link_libraries(macromanager PRIVATE exporter)
+
 add_subdirectory(qml/Audacity/MacroManager)
 
 if (AU_BUILD_MACROMANAGER_TESTS)
