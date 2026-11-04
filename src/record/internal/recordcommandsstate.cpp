@@ -43,6 +43,10 @@ void RecordCommandsState::init()
         updateCommandStates({ RECORD_TOGGLE_INPUT_MONITORING_COMMAND });
     });
 
+    configuration()->isSoundActivatedRecordingOnChanged().onNotify(this, [this]() {
+        updateCommandStates({ RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND });
+    });
+
     updateCommandStates();
 }
 
@@ -53,6 +57,7 @@ void RecordCommandsState::deinit()
     controller()->isRecordingChanged().disconnect(this);
     controller()->isMicMeteringOnChanged().disconnect(this);
     controller()->isInputMonitoringOnChanged().disconnect(this);
+    configuration()->isSoundActivatedRecordingOnChanged().disconnect(this);
 }
 
 void RecordCommandsState::updateCommandStates(const std::vector<Command>& commands)
@@ -98,6 +103,10 @@ CommandState RecordCommandsState::commandState(const Command& command) const
 
     if (command == RECORD_TOGGLE_INPUT_MONITORING_COMMAND) {
         return CommandState(true, controller()->isInputMonitoringOn());
+    }
+
+    if (command == RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND) {
+        return CommandState(true, configuration()->isSoundActivatedRecordingOn());
     }
 
     return CommandState(true);

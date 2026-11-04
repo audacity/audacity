@@ -5,6 +5,7 @@
 
 #include "modularity/ioc.h"
 
+#include "framework/interactive/iinteractiveuriregister.h"
 #include "ui/iuiactionsregister.h"
 #include "rcommand/icommandsregister.h"
 #include "rcommand/icommandsstate.h"
@@ -41,6 +42,11 @@ void RecordModule::registerExports()
 
 void RecordModule::resolveImports()
 {
+    auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
+    if (ir) {
+        ir->registerQmlUri(Uri("audacity://record/sound-activation-level"), "Audacity.Record", "SoundActivationLevelDialog");
+    }
+
     auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
     if (cr) {
         cr->reg(std::make_shared<RecordCommandsRegister>());

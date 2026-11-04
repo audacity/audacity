@@ -94,6 +94,8 @@ private:
     void stopPlaybackIfPaused();
     muse::Ret toggleMicMetering();
     muse::Ret toggleInputMonitoring();
+    muse::Ret toggleSoundActivatedRecording();
+    muse::Ret openSoundActivationLevelDialog();
 
     void setCurrentRecordStatus(RecordStatus status);
 
