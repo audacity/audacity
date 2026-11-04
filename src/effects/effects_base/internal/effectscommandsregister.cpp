@@ -32,7 +32,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Action description: shown as a tooltip; can be a full sentence
         TranslatableString("action_description", "Plugin manager"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::Shortcut | Availability::MCP
     },
     CommandInfo{
         EFFECTS_TOGGLE_VENDOR_UI_COMMAND,
@@ -43,7 +44,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { EFFECTS_EFFECT_ID_PARAM, Arg(DataType::String, u"Effect identifier") },
             }),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::Dispatch
     },
     CommandInfo{
         EFFECTS_PRESET_APPLY_COMMAND,
@@ -55,7 +57,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
                 { EFFECTS_PRESET_ID_PARAM, Arg(DataType::String, u"Preset identifier") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         EFFECTS_PRESET_SAVE_COMMAND,
@@ -67,7 +70,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
                 { EFFECTS_PRESET_ID_PARAM, Arg(DataType::String, u"Preset identifier") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         EFFECTS_PRESET_SAVE_AS_COMMAND,
@@ -78,7 +82,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         EFFECTS_PRESET_DELETE_COMMAND,
@@ -90,7 +95,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { EFFECTS_EFFECT_ID_PARAM, Arg(DataType::String, u"Effect identifier") },
                 { EFFECTS_PRESET_ID_PARAM, Arg(DataType::String, u"Preset identifier") },
             }),
-        Decoration(IconCode::Code::DELETE_TANK)
+        Decoration(IconCode::Code::DELETE_TANK),
+        Availability::Dispatch
     },
     CommandInfo{
         EFFECTS_PRESET_IMPORT_COMMAND,
@@ -101,7 +107,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         EFFECTS_PRESET_EXPORT_COMMAND,
@@ -112,7 +119,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { EFFECTS_INSTANCE_ID_PARAM, Arg(DataType::Int, u"Effect instance identifier") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
 };
 }
@@ -150,7 +158,8 @@ void EffectsCommandsRegister::reload()
             TranslatableString::untranslatable(title),
             TranslatableString::untranslatable(meta.description),
             InputSchema(),
-            Decoration()
+            Decoration(),
+            Availability::Dispatch | Availability::Shortcut
         });
 
         m_commandInfos.push_back(CommandInfo {
