@@ -163,8 +163,8 @@ ProjectsView {
             gridAccessibleName: qsTrc("project", "Cloud projects grid")
             listAccessibleName: qsTrc("project", "Cloud projects list")
 
-            onOpenCloudProjectRequested: function (projectId) {
-                root.openCloudProjectRequested(projectId)
+            onOpenCloudProjectRequested: function (projectId, projectPath) {
+                root.openCloudProjectRequested(projectId, projectPath)
             }
         }
     }

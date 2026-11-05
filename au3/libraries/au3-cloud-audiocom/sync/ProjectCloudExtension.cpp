@@ -25,7 +25,6 @@
 #include "au3-project/Project.h"
 
 #include "au3-project-file-io/ProjectFileIO.h"
-#include "au3-project-file-io/ProjectSerializer.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-import-export/ExportUtils.h"
@@ -58,7 +57,31 @@ struct ProjectCloudExtension::UploadQueueElement final
     bool ProjectDataUploaded { false };
     bool ReadyForUpload { false };
     bool Synced { false };
+    bool AwaitingSnapshotId { false };
 };
+
+std::vector<uint8_t> ReadSavedProjectDocument(ProjectFileIO& projectFileIO)
+{
+    std::vector<uint8_t> dict;
+    std::vector<uint8_t> doc;
+
+    if (!projectFileIO.ReadDoc("project", dict, doc)) {
+        return {};
+    }
+
+    std::vector<uint8_t> data(sizeof(uint64_t) + dict.size() + doc.size());
+
+    const uint64_t dictSize = dict.size();
+    const uint64_t dictSizeData
+        =IsLittleEndian() ? dictSize : SwapIntBytes(dictSize);
+
+    std::memcpy(data.data(), &dictSizeData, sizeof(uint64_t));
+
+    const auto docBegin = std::copy(dict.begin(), dict.end(), data.begin() + sizeof(uint64_t));
+    std::copy(doc.begin(), doc.end(), docBegin);
+
+    return data;
+}
 
 struct ProjectCloudExtension::CloudStatusChangedNotifier final : private Observer::Publisher<CloudStatusChangedMessage>
 {
@@ -144,11 +167,21 @@ void ProjectCloudExtension::OnLoad()
     UpdateIdFromDatabase();
 }
 
-void ProjectCloudExtension::OnSyncStarted()
+bool ProjectCloudExtension::OnSyncStarted()
 {
+    auto& projectFileIO = ProjectFileIO::Get(mProject);
+
+    auto projectSnapshot = ReadSavedProjectDocument(projectFileIO);
+
+    if (projectSnapshot.empty()) {
+        return false;
+    }
+
     auto element = std::make_shared<UploadQueueElement>();
 
-    element->Data.Tracks = TrackList::Create(nullptr);
+    element->AwaitingSnapshotId   = true;
+    element->Data.ProjectSnapshot = std::move(projectSnapshot);
+    element->Data.Tracks          = TrackList::Create(nullptr);
 
     for (auto pTrack : TrackList::Get(mProject)) {
         if (pTrack->GetId() == TrackId {}) {
@@ -158,8 +191,27 @@ void ProjectCloudExtension::OnSyncStarted()
         element->Data.Tracks->Add(pTrack->Duplicate());
     }
 
+    auto& cloudDatabase = CloudProjectsDatabase::Get();
+
+    if (auto dbData = cloudDatabase.GetProjectData(GetCloudProjectId())) {
+        dbData->LocalPath   = audacity::ToUTF8(projectFileIO.GetFileName());
+        dbData->SyncStatus  = DBProjectData::SyncStatusPendingSnapshot;
+        cloudDatabase.UpdateProjectData(*dbData);
+    }
+
     auto lock = std::lock_guard { mUploadQueueMutex };
     mUploadQueue.push_back(std::move(element));
+
+    return true;
+}
+
+void ProjectCloudExtension::OnSyncAborted()
+{
+    auto lock = std::lock_guard { mUploadQueueMutex };
+
+    if (!mUploadQueue.empty() && mUploadQueue.back()->Operation == nullptr) {
+        mUploadQueue.pop_back();
+    }
 }
 
 void cloud::audiocom::sync::ProjectCloudExtension::OnSyncResumed(
@@ -171,27 +223,44 @@ void cloud::audiocom::sync::ProjectCloudExtension::OnSyncResumed(
     element->BlocksTotal         = missingBlocksCount;
     element->ProjectDataUploaded = !needsProjectUpload;
 
+    std::optional<CloudStatusChangedMessage> progress;
+
     {
         auto lock = std::lock_guard { mUploadQueueMutex };
         mUploadQueue.push_back(element);
+        progress = UnsafeProgressMessage();
+    }
+
+    if (progress.has_value()) {
+        Publish(*progress, true);
     }
 
     uploadOperation->Start();
-    UnsafeUpdateProgress();
 }
 
 void ProjectCloudExtension::OnUploadOperationCreated(
     std::shared_ptr<ProjectUploadOperation> uploadOperation)
 {
-    auto lock = std::lock_guard { mUploadQueueMutex };
-    assert(mUploadQueue.size() > 0);
+    std::optional<CloudStatusChangedMessage> progress;
 
-    if (mUploadQueue.empty()) {
-        return;
+    {
+        auto lock = std::lock_guard { mUploadQueueMutex };
+        assert(mUploadQueue.size() > 0);
+
+        if (mUploadQueue.empty()) {
+            return;
+        }
+
+        auto& element = *mUploadQueue.back();
+        element.Operation = uploadOperation;
+        uploadOperation->SetUploadData(element.Data);
+
+        progress = UnsafeProgressMessage();
     }
 
-    mUploadQueue.back()->Operation = uploadOperation;
-    UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
 }
 
 void ProjectCloudExtension::OnBlocksHashed(
@@ -234,6 +303,7 @@ void ProjectCloudExtension::OnSnapshotCreated(
     dbData.SavesCount++;
 
     cloudDatabase.UpdateProjectData(dbData);
+    cloudDatabase.RemovePendingCloudProject(projectFilePath);
     cloudDatabase.SetProjectUserSlug(
         response.Project.Id, response.Project.Username);
 
@@ -244,104 +314,150 @@ void ProjectCloudExtension::OnSnapshotCreated(
         mSnapshotId = response.Snapshot.Id;
     }
 
-    auto lock    = std::lock_guard { mUploadQueueMutex };
-    auto element = UnsafeFindUploadQueueElement(uploadOperation);
+    std::optional<CloudStatusChangedMessage> progress;
 
-    if (!element) {
-        return;
+    {
+        auto lock    = std::lock_guard { mUploadQueueMutex };
+        auto element = UnsafeFindUploadQueueElement(uploadOperation);
+
+        if (!element) {
+            return;
+        }
+
+        element->BlocksTotal        = response.SyncState.MissingBlocks.size();
+        element->SnapshotResponse   = response;
+        element->AwaitingSnapshotId = false;
+
+        progress = UnsafeProgressMessage();
     }
 
-    element->BlocksTotal      = response.SyncState.MissingBlocks.size();
-    element->SnapshotResponse = response;
-
-    UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
 }
 
 void ProjectCloudExtension::OnProjectDataUploaded(
     const ProjectUploadOperation& uploadOperation)
 {
-    auto lock    = std::lock_guard { mUploadQueueMutex };
-    auto element = UnsafeFindUploadQueueElement(uploadOperation);
+    std::optional<CloudStatusChangedMessage> progress;
 
-    if (!element) {
-        return;
+    {
+        auto lock    = std::lock_guard { mUploadQueueMutex };
+        auto element = UnsafeFindUploadQueueElement(uploadOperation);
+
+        if (!element) {
+            return;
+        }
+
+        element->ProjectDataUploaded = true;
+
+        progress = UnsafeProgressMessage();
     }
 
-    element->ProjectDataUploaded = true;
-
-    UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
 }
 
 void ProjectCloudExtension::OnBlockUploaded(
     const ProjectUploadOperation& uploadOperation, std::string_view blockID,
     bool successful)
 {
-    auto lock    = std::lock_guard { mUploadQueueMutex };
-    auto element = UnsafeFindUploadQueueElement(uploadOperation);
+    std::optional<CloudStatusChangedMessage> progress;
 
-    if (!element) {
-        return;
+    {
+        auto lock    = std::lock_guard { mUploadQueueMutex };
+        auto element = UnsafeFindUploadQueueElement(uploadOperation);
+
+        if (!element) {
+            return;
+        }
+
+        element->BlocksHandled++;
+
+        progress = UnsafeProgressMessage();
     }
 
-    element->BlocksHandled++;
-
-    UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
 }
 
 void ProjectCloudExtension::OnSyncCompleted(
     const ProjectUploadOperation* uploadOperation,
     std::optional<CloudSyncError> error, AudiocomTrace trace)
 {
-    auto lock = std::lock_guard { mUploadQueueMutex };
+    std::optional<CloudStatusChangedMessage> progress;
+    bool snapshotCreated = false;
+    bool allSynced       = false;
 
-    auto element = uploadOperation != nullptr
-                   ? UnsafeFindUploadQueueElement(*uploadOperation)
-                   : nullptr;
+    {
+        auto lock = std::lock_guard { mUploadQueueMutex };
 
-    if (element != nullptr) {
-        element->Synced = true;
+        auto element = uploadOperation != nullptr
+                       ? UnsafeFindUploadQueueElement(*uploadOperation)
+                       : nullptr;
 
-        if (
-            error.has_value() && error->Type == CloudSyncError::Aborted
-            && element->SnapshotResponse) {
-            auto& cloudDatabase = CloudProjectsDatabase::Get();
+        snapshotCreated = element != nullptr && element->SnapshotResponse.has_value();
 
-            const auto projectFilePath
-                =audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
+        if (element != nullptr) {
+            element->Synced = true;
+            element->AwaitingSnapshotId = false;
 
-            auto previousDbData
-                =cloudDatabase.GetProjectDataForPath(projectFilePath);
+            if (
+                error.has_value() && error->Type == CloudSyncError::Aborted
+                && element->SnapshotResponse) {
+                auto& cloudDatabase = CloudProjectsDatabase::Get();
 
-            DBProjectData dbData;
+                const auto projectFilePath
+                    =audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
 
-            if (previousDbData) {
-                dbData = *previousDbData;
+                auto previousDbData
+                    =cloudDatabase.GetProjectDataForPath(projectFilePath);
+
+                DBProjectData dbData;
+
+                if (previousDbData) {
+                    dbData = *previousDbData;
+                }
+
+                const auto parentId = element->SnapshotResponse->Snapshot.ParentId;
+
+                dbData.SnapshotId = parentId;
+
+                cloudDatabase.UpdateProjectData(dbData);
+
+                {
+                    auto lock   = std::lock_guard { mIdentifiersMutex };
+                    mSnapshotId = parentId;
+                }
             }
+        }
 
-            const auto parentId = element->SnapshotResponse->Snapshot.ParentId;
+        // std::all_of returns true if the range is empty
+        allSynced = std::all_of(
+            mUploadQueue.begin(), mUploadQueue.end(),
+            [](auto& operation) { return operation->Synced; });
 
-            dbData.SnapshotId = parentId;
-
-            cloudDatabase.UpdateProjectData(dbData);
-
-            {
-                auto lock   = std::lock_guard { mIdentifiersMutex };
-                mSnapshotId = parentId;
-            }
+        if (allSynced) {
+            mUploadQueue.clear();
+        } else {
+            progress = UnsafeProgressMessage();
         }
     }
 
-    // std::all_of returns true if the range is empty
-    if (!std::all_of(
-            mUploadQueue.begin(), mUploadQueue.end(),
-            [](auto& operation) { return operation->Synced; })) {
-        UnsafeUpdateProgress();
+    if (progress.has_value()) {
+        Publish(*progress, true);
+    }
+
+    if (!allSynced) {
         return;
     }
 
-    mUploadQueue.clear();
-
-    MarkProjectSynced(!error.has_value());
+    MarkProjectSynced(
+        !error.has_value() ? DBProjectData::SyncStatusSynced
+        : snapshotCreated ? DBProjectData::SyncStatusUploading
+        : DBProjectData::SyncStatusPendingSnapshot);
 
     Publish(
         { trace,
@@ -388,6 +504,15 @@ bool ProjectCloudExtension::IsSyncing() const
     return mLastStatus.Status == ProjectSyncStatus::Syncing;
 }
 
+bool ProjectCloudExtension::IsAwaitingSnapshotId() const
+{
+    auto lock = std::lock_guard { mUploadQueueMutex };
+
+    return std::any_of(
+        mUploadQueue.begin(), mUploadQueue.end(),
+        [](const auto& element) { return element->AwaitingSnapshotId; });
+}
+
 std::string ProjectCloudExtension::GetCloudProjectId() const
 {
     auto lock = std::lock_guard { mIdentifiersMutex };
@@ -400,57 +525,6 @@ std::string ProjectCloudExtension::GetSnapshotId() const
     auto lock = std::lock_guard { mIdentifiersMutex };
 
     return mSnapshotId;
-}
-
-void ProjectCloudExtension::OnUpdateSaved(const ProjectSerializer& serializer)
-{
-    auto lock = std::lock_guard { mUploadQueueMutex };
-
-    if (mUploadQueue.empty()) {
-        return;
-    }
-
-    const size_t dictSize    = serializer.GetDict().GetSize();
-    const size_t projectSize = serializer.GetData().GetSize();
-
-    std::vector<uint8_t> data;
-    data.resize(projectSize + dictSize + sizeof(uint64_t));
-
-    const uint64_t dictSizeData
-        =IsLittleEndian() ? dictSize : SwapIntBytes(dictSize);
-
-    std::memcpy(data.data(), &dictSizeData, sizeof(uint64_t));
-
-    uint64_t offset = sizeof(uint64_t);
-
-    for (const auto [chunkData, size] : serializer.GetDict()) {
-        std::memcpy(data.data() + offset, chunkData, size);
-        offset += size;
-    }
-
-    for (const auto [chunkData, size] : serializer.GetData()) {
-        std::memcpy(data.data() + offset, chunkData, size);
-        offset += size;
-    }
-
-    mUploadQueue.back()->Data.ProjectSnapshot = std::move(data);
-
-    if (mUploadQueue.back()->Operation) {
-        mUploadQueue.back()->Operation->SetUploadData(mUploadQueue.back()->Data);
-
-        auto dbData = CloudProjectsDatabase::Get().GetProjectData(mProjectId);
-
-        if (dbData) {
-            dbData->LocalPath
-                =audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
-            CloudProjectsDatabase::Get().UpdateProjectData(*dbData);
-        }
-    } else {
-        Publish(
-            { AudiocomTrace::ignore, // TODO Is this correct ?
-              ProjectSyncStatus::Failed },
-            false);
-    }
 }
 
 std::weak_ptr<AudacityProject> ProjectCloudExtension::GetProject() const
@@ -515,10 +589,10 @@ void ProjectCloudExtension::UpdateIdFromDatabase()
         false);
 }
 
-void ProjectCloudExtension::UnsafeUpdateProgress()
+std::optional<CloudStatusChangedMessage> ProjectCloudExtension::UnsafeProgressMessage() const
 {
     if (mUploadQueue.empty()) {
-        return;
+        return std::nullopt;
     }
 
     int64_t handledElements = 0;
@@ -532,11 +606,11 @@ void ProjectCloudExtension::UnsafeUpdateProgress()
 
     assert(totalElements > 0);
 
-    Publish(
-        { AudiocomTrace::ignore, // All right
-          ProjectSyncStatus::Syncing,
-          double(handledElements) / double(totalElements) },
-        true);
+    return CloudStatusChangedMessage {
+        AudiocomTrace::ignore, // All right
+        ProjectSyncStatus::Syncing,
+        double(handledElements) / double(totalElements)
+    };
 }
 
 void ProjectCloudExtension::Publish(
@@ -570,27 +644,24 @@ void ProjectCloudExtension::Publish(
     }
 }
 
-void ProjectCloudExtension::MarkProjectSynced(bool success)
+void ProjectCloudExtension::MarkProjectSynced(DBProjectData::SyncStatusType syncStatus)
 {
     auto& cloudDatabase = CloudProjectsDatabase::Get();
 
     const auto projectFilePath
         =audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
 
-    auto previousDbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
+    auto dbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
 
-    DBProjectData dbData;
-
-    if (previousDbData) {
-        dbData = *previousDbData;
+    if (!dbData) {
+        return;
     }
 
-    dbData.LastModified = wxDateTime::Now().GetTicks();
-    dbData.LastRead     = dbData.LastModified;
-    dbData.SyncStatus   = success ? DBProjectData::SyncStatusSynced
-                          : DBProjectData::SyncStatusUploading;
+    dbData->LastModified = wxDateTime::Now().GetTicks();
+    dbData->LastRead     = dbData->LastModified;
+    dbData->SyncStatus   = syncStatus;
 
-    cloudDatabase.UpdateProjectData(dbData);
+    cloudDatabase.UpdateProjectData(*dbData);
 }
 
 ProjectCloudExtension::UploadQueueElement*

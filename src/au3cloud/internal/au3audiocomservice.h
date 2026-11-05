@@ -84,8 +84,8 @@ public:
 
 private:
     muse::ProgressPtr createSyncProgress();
-    void startNewSnapshotUpload(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress, const std::string& name,
-                                UploadMode uploadMode, std::function<bool()> projectSaveCallback);
+    muse::Ret startNewSnapshotUpload(au::project::IAudacityProjectPtr project, const std::string& name, UploadMode uploadMode,
+                                     std::function<bool()> projectSaveCallback);
     void resumePendingSnapshotOrStartNew(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress,
                                          const audacity::cloud::audiocom::sync::DBProjectData& pendingSnapshotData, const std::string& name,
                                          UploadMode uploadMode, std::function<bool()> projectSaveCallback);

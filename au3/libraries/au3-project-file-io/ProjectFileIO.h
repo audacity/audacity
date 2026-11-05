@@ -231,6 +231,9 @@ public:
     //! Return a strings representation of the active project XML doc
     wxString GenerateDoc();
 
+    //! Read the dictionary and document blobs of the row written by WriteDoc
+    bool ReadDoc(const char* table, std::vector<uint8_t>& dict, std::vector<uint8_t>& doc, const char* schema = "main");
+
 private:
     void OnCheckpointFailure();
 

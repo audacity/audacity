@@ -45,7 +45,7 @@ Item {
 
     signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
-    signal openCloudProjectRequested(var projectId)
+    signal openCloudProjectRequested(var projectId, var projectPath)
 
     clip: true
 
@@ -174,7 +174,7 @@ Item {
                         root.createNewProjectRequested()
                     } else if (!isNoResultsFound) {
                         if (item.isCloud) {
-                            root.openCloudProjectRequested(item.itemId)
+                            root.openCloudProjectRequested(item.itemId, item.path)
                         } else {
                             root.openProjectRequested(item.path, item.name)
                         }
