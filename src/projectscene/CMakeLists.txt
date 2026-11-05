@@ -110,6 +110,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/snaptoolbaritem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/snaptoolbaritem.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audioenginetoolbaritem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audioenginetoolbaritem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/workspacestoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/workspacestoolbarmodel.h
 
