@@ -27,8 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: linux,   mode: prebuilt, arch: x86_64,  runner: ubuntu-22.04,     qt_host: linux,         qt_arch: linux_gcc_64 }
-          - { os: linux,   mode: source,   arch: x86_64,  runner: ubuntu-22.04,     qt_host: linux,         qt_arch: linux_gcc_64 }
+          - { os: linux,   mode: prebuilt, arch: x86_64,  runner: ubuntu-24.04,     qt_host: linux,         qt_arch: linux_gcc_64 }
+          - { os: linux,   mode: source,   arch: x86_64,  runner: ubuntu-24.04,     qt_host: linux,         qt_arch: linux_gcc_64 }
           - { os: linux,   mode: prebuilt, arch: aarch64, runner: ubuntu-24.04-arm, qt_host: linux_arm64,   qt_arch: linux_gcc_arm64 }
           - { os: linux,   mode: source,   arch: aarch64, runner: ubuntu-24.04-arm, qt_host: linux_arm64,   qt_arch: linux_gcc_arm64 }
           - { os: linux,   mode: system,   arch: x86_64,  runner: ubuntu-24.04,     qt_host: linux,         qt_arch: linux_gcc_64 }
