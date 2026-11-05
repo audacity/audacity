@@ -7,6 +7,7 @@ import Muse.UiComponents
 
 import Audacity.AppShell
 import Audacity.Playback
+import Audacity.Record
 
 PreferencesPage {
     id: root
@@ -98,6 +99,23 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 4
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine {}
+
+        SoundActivatedRecordingSection {
+            recordingPreferencesModel: recordingPreferencesModel
+
+            enabled: !(playbackState.isPaused || playbackState.isPlaying)
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 5
 
             onFocusChanged: {
                 if (activeFocus) {

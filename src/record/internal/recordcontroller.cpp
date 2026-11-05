@@ -21,6 +21,8 @@ const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
 const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
 const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
+const ActionQuery RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_QUERY("action://record/toggle-sound-activated-recording");
+const ActionQuery RECORD_SET_SOUND_ACTIVATION_LEVEL_QUERY("action://record/set-sound-activation-level");
 
 const ActionCode RECORD_ON_CURRENT_TRACK_CODE("record-on-current-track");
 const ActionCode RECORD_ON_NEW_TRACK_CODE("record-on-new-track");
@@ -37,6 +39,8 @@ void RecordController::init()
     cd->onRequest(this, RECORD_TOGGLE_MIC_METERING_COMMAND, [this]() { return toggleMicMetering(); });
     cd->onRequest(this, RECORD_TOGGLE_INPUT_MONITORING_COMMAND, [this]() { return toggleInputMonitoring(); });
     cd->onRequest(this, RECORD_LEAD_IN_RECORDING_COMMAND, [this]() { return leadInRecording(); });
+    cd->onRequest(this, RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND, [this]() { return toggleSoundActivatedRecording(); });
+    cd->onRequest(this, RECORD_SET_SOUND_ACTIVATION_LEVEL_COMMAND, [this]() { return openSoundActivationLevelDialog(); });
 
     static const std::vector<ActionToCommand> actionToCommand = {
         { RECORD_START_QUERY.toString(), RECORD_START_COMMAND, {} },
@@ -47,6 +51,8 @@ void RecordController::init()
         { RECORD_TOGGLE_MIC_METERING.toString(), RECORD_TOGGLE_MIC_METERING_COMMAND, {} },
         { RECORD_TOGGLE_INPUT_MONITORING.toString(), RECORD_TOGGLE_INPUT_MONITORING_COMMAND, {} },
         { RECORD_LEAD_IN_RECORDING_QUERY.toString(), RECORD_LEAD_IN_RECORDING_COMMAND, {} },
+        { RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_QUERY.toString(), RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND, {} },
+        { RECORD_SET_SOUND_ACTIVATION_LEVEL_QUERY.toString(), RECORD_SET_SOUND_ACTIVATION_LEVEL_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
@@ -292,6 +298,18 @@ muse::async::Notification RecordController::isInputMonitoringOnChanged() const
 bool RecordController::isInputMonitoringOn() const
 {
     return configuration()->isInputMonitoringOn();
+}
+
+Ret RecordController::toggleSoundActivatedRecording()
+{
+    configuration()->setIsSoundActivatedRecordingOn(!configuration()->isSoundActivatedRecordingOn());
+    return make_ok();
+}
+
+Ret RecordController::openSoundActivationLevelDialog()
+{
+    interactive()->open("audacity://record/sound-activation-level");
+    return make_ok();
 }
 
 bool RecordController::isLeadInRecording() const

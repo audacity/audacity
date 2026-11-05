@@ -52,6 +52,8 @@ public:
         std::vector<std::vector<float> >* crossfadeData = nullptr;
         //! Does not change the play region.
         std::optional<double> streamStartTime;
+        bool soundActivatedRecording = false;
+        double soundActivationLevelDb = -50.0;
     };
 
     //! Returns a positive stream token on success, 0 otherwise.

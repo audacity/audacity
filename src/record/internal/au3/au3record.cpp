@@ -4,6 +4,7 @@
 
 #include "au3record.h"
 
+#include <algorithm>
 #include <cfloat>
 
 #include "au3-strings/TranslatableString.h"
@@ -949,6 +950,10 @@ Ret Au3Record::doRecord(Au3Project& project,
     options.sampleRate = audioStreamSampleRate;
     options.leadInTime = leadInTime;
     options.crossfadeData = crossfadeData;
+    options.soundActivatedRecording = recordConfiguration()->isSoundActivatedRecordingOn();
+    options.soundActivationLevelDb = std::max(recordConfiguration()->soundActivationLevel(),
+                                              playback::meterLowerBoundDb(playbackConfiguration()->playbackMeterType(),
+                                                                          playbackConfiguration()->playbackMeterDbRange()));
 
     int token = audioEngine()->startTransport(transportSequences, t0, t1, t1, project, options);
 

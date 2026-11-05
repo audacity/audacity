@@ -1010,27 +1010,13 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     //       captureFormat == mCaptureFormat) {
 
     mSoftwarePlaythrough = options.inputMonitoring;
-    mPauseRec = SoundActivatedRecord.Read();
+    mPauseRec = options.soundActivatedRecording && !sequences.captureSequences.empty();
     gPrefs->Read(wxT("/AudioIO/Microfades"), &mbMicroFades, false);
-    int silenceLevelDB;
-    gPrefs->Read(wxT("/AudioIO/SilenceLevel"), &silenceLevelDB, -50);
-    int dBRange = DecibelScaleCutoff.Read();
-    if (silenceLevelDB < -dBRange) {
-        silenceLevelDB = -dBRange + 3;
-        // meter range was made smaller than SilenceLevel
-        // so set SilenceLevel reasonable
-
-        // PRL:  update prefs, or correct it only in-session?
-        // The behavior (as of 2.3.1) was the latter, the code suggested that
-        // the intent was the former;  I preserve the behavior, but uncomment
-        // this if you disagree.
-        // gPrefs->Write(wxT("/AudioIO/SilenceLevel"), silenceLevelDB);
-        // gPrefs->Flush();
-    }
-    mSilenceLevel = DB_TO_LINEAR(silenceLevelDB); // meter goes -dBRange dB -> 0dB
+    mSilenceLevel = DB_TO_LINEAR(options.soundActivationLevelDb);
 
     // Clamp lead-in time so we don't play before time 0
     const auto leadInTime = std::max(0.0, std::min(t0, options.leadInTime));
+    mSoundActivationSuspended.store(mPauseRec && leadInTime <= 0.0, std::memory_order_relaxed);
     mRecordingSchedule = {};
     mRecordingSchedule.mLeadInTime = leadInTime;
     mRecordingSchedule.mLatencyCompensation = AudioIOLatencyCompensation.Read() / 1000.0;
@@ -1698,6 +1684,7 @@ void AudioIO::StopTransport()
     const auto wasPlaying = mNumPlaybackChannels > 0;
     const auto wasRecording = mNumCaptureChannels > 0;
     mNumCaptureChannels = mNumPlaybackChannels = 0;
+    mSoundActivationSuspended.store(false, std::memory_order_relaxed);
 
     // No longer need effects processing. This must be done after the stream is stopped
     // to prevent the callback from being invoked after the effects are finalized.
@@ -1831,7 +1818,7 @@ void AudioIO::Seek(double seconds)
 
 void AudioIO::SetPaused(bool state, bool publish)
 {
-    if (state != IsPaused()) {
+    if (state != mPaused.load(std::memory_order_relaxed)) {
         if (auto pOwningProject = mOwningProject.lock()) {
             // The realtime effects manager may remain "active" but becomes
             // "suspended" or "resumed".
@@ -2734,19 +2721,17 @@ int audacityAudioCallback(const void* inputBuffer, void* outputBuffer,
         timeInfo, statusFlags, userData);
 }
 
-// Stop recording if 'silence' is detected
-// Start recording if sound detected.
-//
-//   By using CallAfter(), we can schedule the call to the toolbar
-//   to run in the main GUI thread after the next event loop iteration.
-//   That's important, because Pause() updates GUI, such as status bar,
-//   and that should NOT happen in this audio non-gui thread.
+// Suspend recording while the input stays below the activation level
 void AudioIoCallback::CheckSoundActivatedRecordingLevel(
     float* inputSamples,
     unsigned long framesPerBuffer)
 {
     // Quick returns if next to nothing to do.
     if (!mPauseRec) {
+        return;
+    }
+
+    if (mPlaybackSchedule.GetSequenceTime() < mPlaybackSchedule.mT0 + mRecordingSchedule.mLeadInTime) {
         return;
     }
 
@@ -2758,13 +2743,7 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
         }
     }
 
-    bool bShouldBePaused = maxPeak < mSilenceLevel;
-    if (bShouldBePaused != IsPaused()) {
-        auto pListener = GetListener();
-        if (pListener) {
-            pListener->OnSoundActivationThreshold();
-        }
-    }
+    mSoundActivationSuspended.store(maxPeak < mSilenceLevel, std::memory_order_relaxed);
 }
 
 // Limit values to -1.0..+1.0
@@ -3412,13 +3391,6 @@ int AudioIoCallback::AudioCallback(
 
         SendVuInputMeterData(inputSamples, framesPerBuffer, callbackTime);
 
-        // This function may queue up a pause or resume.
-        // TODO this is a bit dodgy as it toggles the Pause, and
-        // relies on an idle event to have handled that, so could
-        // queue up multiple toggle requests and so do nothing.
-        // Eventually it will sort itself out by random luck, but
-        // the net effect is a delay in starting/stopping sound activated
-        // recording.
         CheckSoundActivatedRecordingLevel(
             inputSamples,
             framesPerBuffer);

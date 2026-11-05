@@ -64,6 +64,9 @@ struct AudioIOStartTransportOptions
     bool playNonWaveTracks{ true };
     bool inputMonitoring{ false };
 
+    bool soundActivatedRecording{ false };
+    double soundActivationLevelDb{ -50.0 };
+
     // contents may get swapped with empty vector
     PRCrossfadeData* pCrossfadeData{};
 
@@ -324,6 +327,8 @@ protected:
 
     /// True if audio playback is paused
     std::atomic<bool> mPaused{ false };
+    /// True while sound activated recording waits for the input to exceed the activation level
+    std::atomic<bool> mSoundActivationSuspended{ false };
 
     /*! Read by worker threads but unchanging during playback */
     std::atomic<int> mStreamToken{ 0 };

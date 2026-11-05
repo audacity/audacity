@@ -21,6 +21,8 @@ static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
 static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
 static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
 static const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
+static const ActionQuery RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_QUERY("action://record/toggle-sound-activated-recording");
+static const ActionQuery RECORD_SET_SOUND_ACTIVATION_LEVEL_QUERY("action://record/set-sound-activation-level");
 
 const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_START_QUERY.toString(),
@@ -102,6 +104,23 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Record on new track")
              ),
+    UiAction(RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Turn on sound activated recording"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Turn on sound activated recording"),
+             Checkable::Yes
+             ),
+    UiAction(RECORD_SET_SOUND_ACTIVATION_LEVEL_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short
+             TranslatableString("action", "Set sound activation level…"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description", "Set sound activation level")
+             ),
 };
 
 RecordUiActions::RecordUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<RecordController> controller)
@@ -138,6 +157,10 @@ void RecordUiActions::init()
     m_controller->isInputMonitoringOnChanged().onNotify(this, [this]() {
         m_actionCheckedChanged.send(ActionCodeList { RECORD_TOGGLE_INPUT_MONITORING.toString() });
     });
+
+    configuration()->isSoundActivatedRecordingOnChanged().onNotify(this, [this]() {
+        m_actionCheckedChanged.send(ActionCodeList { RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_QUERY.toString() });
+    });
 }
 
 const UiActionList& RecordUiActions::actionsList() const
@@ -162,6 +185,10 @@ bool RecordUiActions::actionChecked(const UiAction& act) const
 
     if (act.code == RECORD_TOGGLE_INPUT_MONITORING.toString()) {
         return m_controller->isInputMonitoringOn();
+    }
+
+    if (act.code == RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_QUERY.toString()) {
+        return configuration()->isSoundActivatedRecordingOn();
     }
 
     return false;
