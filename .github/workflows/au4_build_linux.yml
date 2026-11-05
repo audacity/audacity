@@ -60,7 +60,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { runner: ubuntu-22.04,     arch: x86_64,  qt_host: linux,       qt_arch: linux_gcc_64 }
+          - { runner: ubuntu-24.04,     arch: x86_64,  qt_host: linux,       qt_arch: linux_gcc_64 }
           - { runner: ubuntu-24.04-arm, arch: aarch64, qt_host: linux_arm64, qt_arch: linux_gcc_arm64 }
     runs-on: ${{ matrix.runner }}
     steps:
@@ -271,7 +271,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { runner: ubuntu-22.04,     arch: x86_64,  qt_host: linux,       qt_arch: linux_gcc_64 }
+          - { runner: ubuntu-24.04,     arch: x86_64,  qt_host: linux,       qt_arch: linux_gcc_64 }
           - { runner: ubuntu-24.04-arm, arch: aarch64, qt_host: linux_arm64, qt_arch: linux_gcc_arm64 }
     runs-on: ${{ matrix.runner }}
     steps:
