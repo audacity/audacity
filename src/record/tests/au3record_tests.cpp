@@ -17,6 +17,7 @@
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
 #include "au3audio/tests/mocks/audioenginemock.h"
+#include "playback/tests/mocks/playbackconfigurationmock.h"
 #include "audio/tests/mocks/audiodrivercontrollermock.h"
 #include "mocks/recordconfigurationmock.h"
 
@@ -62,6 +63,7 @@ public:
         m_audioEngine = std::make_shared<NiceMock<audio::AudioEngineMock> >();
         m_recordConfiguration = std::make_shared<NiceMock<RecordConfigurationMock> >();
         m_audioDriverController = std::make_shared<NiceMock<audio::AudioDriverControllerMock> >();
+        m_playbackConfiguration = std::make_shared<NiceMock<playback::PlaybackConfigurationMock> >();
         m_trackeditProject = std::make_shared<NiceMock<trackedit::TrackeditProjectMock> >();
         m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
 
@@ -71,6 +73,7 @@ public:
         m_record->audioEngine.set(m_audioEngine);
         m_record->recordConfiguration.set(m_recordConfiguration);
         m_record->audioDriverController.set(m_audioDriverController);
+        m_record->playbackConfiguration.set(m_playbackConfiguration);
 
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_currentProject));
@@ -104,6 +107,11 @@ public:
         .WillByDefault(Return(2.0));
         ON_CALL(*m_recordConfiguration, crossfadeDuration())
         .WillByDefault(Return(0.0));
+
+        ON_CALL(*m_playbackConfiguration, playbackMeterType())
+        .WillByDefault(Return(playback::PlaybackMeterType::MeterType::DbLog));
+        ON_CALL(*m_playbackConfiguration, playbackMeterDbRange())
+        .WillByDefault(Return(playback::PlaybackMeterDbRange::DbRange::Range60));
 
         initTestProject();
     }
@@ -165,6 +173,7 @@ public:
     std::shared_ptr<audio::AudioEngineMock> m_audioEngine;
     std::shared_ptr<RecordConfigurationMock> m_recordConfiguration;
     std::shared_ptr<audio::AudioDriverControllerMock> m_audioDriverController;
+    std::shared_ptr<playback::PlaybackConfigurationMock> m_playbackConfiguration;
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
 
@@ -274,5 +283,50 @@ TEST_F(Au3RecordTests, RecordingWithBusyEngineStartsUnpausedAtPlayhead)
 
     //! [THEN] Recording starts at the playhead position
     EXPECT_DOUBLE_EQ(startedAt, 8.0);
+}
+
+TEST_F(Au3RecordTests, SoundActivationLevelIsClampedToTheMeterRange)
+{
+    //! [GIVEN] Sound activated recording at -50 dB and a meter showing only down to -36 dB
+    addSelectedMonoTrack();
+    ON_CALL(*m_recordConfiguration, isSoundActivatedRecordingOn())
+    .WillByDefault(Return(true));
+    ON_CALL(*m_recordConfiguration, soundActivationLevel())
+    .WillByDefault(Return(-50.0));
+    ON_CALL(*m_playbackConfiguration, playbackMeterDbRange())
+    .WillByDefault(Return(playback::PlaybackMeterDbRange::DbRange::Range36));
+
+    audio::IAudioEngine::StartTransportOptions transportOptions;
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<5>(&transportOptions), Return(1)));
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The engine gets the level the meter can show
+    EXPECT_TRUE(transportOptions.soundActivatedRecording);
+    EXPECT_DOUBLE_EQ(transportOptions.soundActivationLevelDb, -36.0);
+}
+
+TEST_F(Au3RecordTests, SoundActivationLevelWithinTheMeterRangeIsKept)
+{
+    //! [GIVEN] Sound activated recording at -50 dB and a meter showing down to -60 dB
+    addSelectedMonoTrack();
+    ON_CALL(*m_recordConfiguration, isSoundActivatedRecordingOn())
+    .WillByDefault(Return(true));
+    ON_CALL(*m_recordConfiguration, soundActivationLevel())
+    .WillByDefault(Return(-50.0));
+
+    audio::IAudioEngine::StartTransportOptions transportOptions;
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<5>(&transportOptions), Return(1)));
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The engine gets the configured level
+    EXPECT_DOUBLE_EQ(transportOptions.soundActivationLevelDb, -50.0);
 }
 }
