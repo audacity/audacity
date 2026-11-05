@@ -2,6 +2,8 @@
  * Audacity: A Digital Audio Editor
  */
 
+#include <array>
+
 #include <gtest/gtest.h>
 #include <QFile>
 #include <QTemporaryDir>
@@ -9,6 +11,7 @@
 #include "au3wrap/internal/au3project.h"
 #include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-track/TimeWarper.h"
 #include "au3-clip-processing/ClipFades.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -35,6 +38,18 @@ wxString projectXml()
         TEST_SAMPLE_RATE, TEST_FADE_IN, TEST_FADE_OUT, TEST_SAMPLE_RATE,
         TEST_SAMPLE_RATE);
 }
+
+void setFades(WaveClip& clip, double fadeIn, double fadeOut, FadeType fadeOutType = FadeType::Linear)
+{
+    auto& fades = ClipFades::Get(clip);
+    fades.setFadeIn(fadeIn);
+    fades.setFadeOutType(fadeOutType);
+    fades.setFadeOut(fadeOut);
+}
+
+//! The fades either side of the split lines of `splitInThreeWithInnerFades`, left to right:
+//! fade-out of the first clip, fade-in and fade-out of the second, fade-in of the third
+constexpr std::array<double, 4> INNER_FADES { 0.05, 0.04, 0.06, 0.07 };
 }
 
 namespace au::project {
@@ -74,6 +89,50 @@ protected:
         const auto clips = track.SortedIntervalArray();
         EXPECT_EQ(clips.size(), 1);
         return *clips.front();
+    }
+
+    //! Some silence to paste, as the effects' processed audio
+    std::shared_ptr<WaveTrack> processedAudio(double duration)
+    {
+        const auto processed = WaveTrackFactory::Get(project()).Create(floatSample, TEST_SAMPLE_RATE);
+        processed->InsertSilence(0.0, duration);
+        processed->Flush();
+        return processed;
+    }
+
+    //! Splits the clip at 0.3 and 0.6, with `INNER_FADES` on either side of the split lines,
+    //! some logarithmic, and the outer fades of the clip
+    void splitInThreeWithInnerFades()
+    {
+        WaveTrack& track = firstTrack();
+        ASSERT_TRUE(track.SplitAt(0.3).first);
+        ASSERT_TRUE(track.SplitAt(0.6).first);
+        const auto clips = track.SortedIntervalArray();
+        ASSERT_EQ(clips.size(), 3);
+        setFades(*clips[0], TEST_FADE_IN, INNER_FADES[0]);
+        setFades(*clips[1], INNER_FADES[1], INNER_FADES[2], FadeType::Logarithmic);
+        setFades(*clips[2], INNER_FADES[3], TEST_FADE_OUT, FadeType::Logarithmic);
+    }
+
+    //! Three clips split at `firstSplit` and `secondSplit` and ending at `end`, with the fades of `splitInThreeWithInnerFades`
+    void expectSplitInThreeWithInnerFades(double firstSplit, double secondSplit, double end)
+    {
+        const auto clips = firstTrack().SortedIntervalArray();
+        ASSERT_EQ(clips.size(), 3);
+        EXPECT_NEAR(clips[0]->GetPlayEndTime(), firstSplit, 1e-9);
+        EXPECT_NEAR(clips[1]->GetPlayEndTime(), secondSplit, 1e-9);
+        EXPECT_NEAR(clips[2]->GetPlayEndTime(), end, 1e-9);
+        const auto& first = ClipFades::Get(*clips[0]);
+        const auto& second = ClipFades::Get(*clips[1]);
+        const auto& third = ClipFades::Get(*clips[2]);
+        EXPECT_DOUBLE_EQ(first.fadeIn(), TEST_FADE_IN);
+        EXPECT_DOUBLE_EQ(first.fadeOut(), INNER_FADES[0]);
+        EXPECT_DOUBLE_EQ(second.fadeIn(), INNER_FADES[1]);
+        EXPECT_DOUBLE_EQ(second.fadeOut(), INNER_FADES[2]);
+        EXPECT_EQ(second.fadeOutType(), FadeType::Logarithmic);
+        EXPECT_DOUBLE_EQ(third.fadeIn(), INNER_FADES[3]);
+        EXPECT_DOUBLE_EQ(third.fadeOut(), TEST_FADE_OUT);
+        EXPECT_EQ(third.fadeOutType(), FadeType::Logarithmic);
     }
 };
 
@@ -216,5 +275,107 @@ TEST_F(ClipFadesPersistenceTests, CopyingPartOfAFadeKeepsItOnlyWithItsEdge)
     const auto& withoutEdgeClip = onlyClip(*std::static_pointer_cast<WaveTrack>(withoutEdge));
     EXPECT_DOUBLE_EQ(ClipFades::Get(withoutEdgeClip).fadeIn(), 0.0);
     EXPECT_DOUBLE_EQ(ClipFades::Get(withoutEdgeClip).fadeOut(), 0.0);
+}
+
+//! `WaveTrack::ClearAndPaste` is how Equalization, Noise Reduction, Change Tempo, Change Pitch, Paulstretch,
+//! the Nyquist effects and the generators write their result back: the region is cleared, and the
+//! processed audio, in a track of its own, is pasted in its place.
+TEST_F(ClipFadesPersistenceTests, ClearAndPasteOverTheWholeClipKeepsItsFades)
+{
+    //! [GIVEN] processed audio for the whole clip
+    WaveTrack& track = firstTrack();
+    const WaveClip& clip = onlyClip(track);
+    const auto t0 = clip.GetPlayStartTime();
+    const auto t1 = clip.GetPlayEndTime();
+    const auto processed = processedAudio(t1 - t0);
+
+    //! [WHEN] it replaces the clip's audio, as the effects do
+    constexpr auto preserveSplits = true;
+    constexpr auto merge = true;
+    track.ClearAndPaste(t0, t1, *processed, preserveSplits, merge);
+
+    //! [THEN] the clip still has its fades
+    const auto& fades = ClipFades::Get(onlyClip(track));
+    EXPECT_DOUBLE_EQ(fades.fadeIn(), TEST_FADE_IN);
+    EXPECT_DOUBLE_EQ(fades.fadeOut(), TEST_FADE_OUT);
+}
+
+TEST_F(ClipFadesPersistenceTests, ClearAndPasteBetweenContiguousClipsKeepsTheirFades)
+{
+    //! [GIVEN] the clip split in three: the first keeps the fade-in, the last keeps the fade-out
+    WaveTrack& track = firstTrack();
+    constexpr auto t0 = 0.3;
+    constexpr auto t1 = 0.6;
+    ASSERT_TRUE(track.SplitAt(t0).first);
+    ASSERT_TRUE(track.SplitAt(t1).first);
+    ASSERT_EQ(track.SortedIntervalArray().size(), 3);
+    ASSERT_DOUBLE_EQ(ClipFades::Get(*track.SortedIntervalArray().front()).fadeIn(), TEST_FADE_IN);
+    ASSERT_DOUBLE_EQ(ClipFades::Get(*track.SortedIntervalArray().back()).fadeOut(), TEST_FADE_OUT);
+
+    //! [WHEN] the middle clip's audio is replaced, as the effects do
+    const auto processed = processedAudio(t1 - t0);
+    constexpr auto preserveSplits = true;
+    constexpr auto merge = true;
+    track.ClearAndPaste(t0, t1, *processed, preserveSplits, merge);
+
+    //! [THEN] whatever clips remain, the track still fades in at its start and out at its end
+    const auto clips = track.SortedIntervalArray();
+    ASSERT_FALSE(clips.empty());
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*clips.front()).fadeIn(), TEST_FADE_IN);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*clips.back()).fadeOut(), TEST_FADE_OUT);
+}
+
+TEST_F(ClipFadesPersistenceTests, ClearAndPasteOverSplitLinesKeepsTheFadesAtTheirEdges)
+{
+    ASSERT_NO_FATAL_FAILURE(splitInThreeWithInnerFades());
+
+    //! [WHEN] audio across both split lines is replaced, as the effects do
+    constexpr auto t0 = 0.2;
+    constexpr auto t1 = 0.8;
+    constexpr auto preserveSplits = true;
+    constexpr auto merge = true;
+    firstTrack().ClearAndPaste(t0, t1, *processedAudio(t1 - t0), preserveSplits, merge);
+
+    //! [THEN] the split lines are back, and every edge has its fade back
+    expectSplitInThreeWithInnerFades(0.3, 0.6, 1.0);
+}
+
+TEST_F(ClipFadesPersistenceTests, ClearAndPasteNotPreservingSplitLinesKeepsOnlyTheOuterFades)
+{
+    WaveTrack& track = firstTrack();
+    ASSERT_NO_FATAL_FAILURE(splitInThreeWithInnerFades());
+
+    //! [WHEN] audio across both split lines is replaced, without preserving them
+    constexpr auto t0 = 0.2;
+    constexpr auto t1 = 0.8;
+    constexpr auto preserveSplits = false;
+    constexpr auto merge = true;
+    track.ClearAndPaste(t0, t1, *processedAudio(t1 - t0), preserveSplits, merge);
+
+    //! [THEN] one clip remains, with the outer fades only
+    const auto& fades = ClipFades::Get(onlyClip(track));
+    EXPECT_DOUBLE_EQ(fades.fadeIn(), TEST_FADE_IN);
+    EXPECT_DOUBLE_EQ(fades.fadeOut(), TEST_FADE_OUT);
+    EXPECT_EQ(fades.fadeOutType(), FadeType::Logarithmic);
+}
+
+//! As Change Speed does: the region gets shorter, and what was in it gets closer
+TEST_F(ClipFadesPersistenceTests, ClearAndPasteWithTimeWarperMovesTheFadesWithTheirEdges)
+{
+    ASSERT_NO_FATAL_FAILURE(splitInThreeWithInnerFades());
+
+    //! [WHEN] [0.2, 0.8] is played one and a half times as fast, leaving every clip room for its fades
+    constexpr auto t0 = 0.2;
+    constexpr auto t1 = 0.8;
+    constexpr auto newT1 = 0.6;
+    const RegionTimeWarper warper { t0, t1, std::make_unique<LinearTimeWarper>(t0, t0, t1, newT1) };
+    constexpr auto preserveSplits = true;
+    constexpr auto merge = true;
+    firstTrack().ClearAndPaste(t0, t1, *processedAudio(newT1 - t0), preserveSplits, merge, &warper);
+
+    //! [THEN] the split lines are where the warper put them, the end has moved back by as much as the region shortened,
+    //! and the fades have followed
+    constexpr auto scale = (newT1 - t0) / (t1 - t0);
+    expectSplitInThreeWithInnerFades(t0 + (0.3 - t0) * scale, t0 + (0.6 - t0) * scale, 1.0 - (t1 - newT1));
 }
 }
