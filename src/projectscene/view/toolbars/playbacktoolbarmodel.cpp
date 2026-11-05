@@ -14,6 +14,7 @@
 #include "record/qml/Audacity/Record/playbacktoolbarrecordlevelitem.h"
 #include "record/recordcommands.h"
 #include "projectscene/view/toolbars/snaptoolbaritem.h"
+#include "projectscene/view/toolbars/audioenginetoolbaritem.h"
 
 #include "playbacktoolbarconfig.h"
 
@@ -310,6 +311,12 @@ void PlaybackToolBarModel::updateActions()
 
         items << item;
     }
+
+    // Always shown, for demos: not part of what can be customized
+    items << AbstractToolBarModel::makeSeparator();
+    auto* audioEngineItem = new AudioEngineToolBarItem(static_cast<ToolBarItemType::Type>(AUDIO_ENGINE), this);
+    audioEngineItem->setIsTransparent(false);
+    items << audioEngineItem;
 
     setItems(items);
 }

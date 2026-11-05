@@ -78,6 +78,8 @@ Item {
                 return projectControlComp
             case PlaybackToolBarModel.SNAP:
                 return snapComp
+            case PlaybackToolBarModel.AUDIO_ENGINE:
+                return audioEngineComp
             }
 
             return null
@@ -328,6 +330,29 @@ Item {
 
                 onHandleMenuItem: function (itemId) {
                     itemData.handleMenuItem(itemId)
+                }
+            }
+        }
+
+        Component {
+            id: audioEngineComp
+
+            DropdownWithTitle {
+                property var itemData: null
+
+                width: 240
+                height: 28
+
+                title: qsTrc("projectscene", "Audio engine")
+                dropdownAccessibleName: qsTrc("projectscene", "Audio engine")
+
+                current: Boolean(itemData) ? itemData.currentEngine : ""
+                model: Boolean(itemData) ? itemData.engines : null
+
+                allowOptionToggle: false
+
+                onHandleMenuItem: function (itemId) {
+                    Qt.callLater(itemData.selectEngine, itemId)
                 }
             }
         }
