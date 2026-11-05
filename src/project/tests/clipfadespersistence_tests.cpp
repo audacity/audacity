@@ -217,4 +217,56 @@ TEST_F(ClipFadesPersistenceTests, CopyingPartOfAFadeKeepsItOnlyWithItsEdge)
     EXPECT_DOUBLE_EQ(ClipFades::Get(withoutEdgeClip).fadeIn(), 0.0);
     EXPECT_DOUBLE_EQ(ClipFades::Get(withoutEdgeClip).fadeOut(), 0.0);
 }
+
+//! `WaveTrack::ClearAndPaste` is how Equalization, Noise Reduction, Change Tempo, Change Pitch, Paulstretch,
+//! the Nyquist effects and the generators write their result back: the region is cleared, and the
+//! processed audio, in a track of its own, is pasted in its place.
+TEST_F(ClipFadesPersistenceTests, ClearAndPasteOverTheWholeClipKeepsItsFades)
+{
+    //! [GIVEN] processed audio for the whole clip
+    WaveTrack& track = firstTrack();
+    const WaveClip& clip = onlyClip(track);
+    const auto t0 = clip.GetPlayStartTime();
+    const auto t1 = clip.GetPlayEndTime();
+    const auto processed = WaveTrackFactory::Get(project()).Create(floatSample, TEST_SAMPLE_RATE);
+    processed->InsertSilence(0.0, t1 - t0);
+    processed->Flush();
+
+    //! [WHEN] it replaces the clip's audio, as the effects do
+    constexpr auto preserveSplits = true;
+    constexpr auto merge = true;
+    track.ClearAndPaste(t0, t1, *processed, preserveSplits, merge);
+
+    //! [THEN] the clip still has its fades
+    const auto& fades = ClipFades::Get(onlyClip(track));
+    EXPECT_DOUBLE_EQ(fades.fadeIn(), TEST_FADE_IN);
+    EXPECT_DOUBLE_EQ(fades.fadeOut(), TEST_FADE_OUT);
+}
+
+TEST_F(ClipFadesPersistenceTests, ClearAndPasteBetweenContiguousClipsKeepsTheirFades)
+{
+    //! [GIVEN] the clip split in three: the first keeps the fade-in, the last keeps the fade-out
+    WaveTrack& track = firstTrack();
+    constexpr auto t0 = 0.3;
+    constexpr auto t1 = 0.6;
+    ASSERT_TRUE(track.SplitAt(t0).first);
+    ASSERT_TRUE(track.SplitAt(t1).first);
+    ASSERT_EQ(track.SortedIntervalArray().size(), 3);
+    ASSERT_DOUBLE_EQ(ClipFades::Get(*track.SortedIntervalArray().front()).fadeIn(), TEST_FADE_IN);
+    ASSERT_DOUBLE_EQ(ClipFades::Get(*track.SortedIntervalArray().back()).fadeOut(), TEST_FADE_OUT);
+
+    //! [WHEN] the middle clip's audio is replaced, as the effects do
+    const auto processed = WaveTrackFactory::Get(project()).Create(floatSample, TEST_SAMPLE_RATE);
+    processed->InsertSilence(0.0, t1 - t0);
+    processed->Flush();
+    constexpr auto preserveSplits = true;
+    constexpr auto merge = true;
+    track.ClearAndPaste(t0, t1, *processed, preserveSplits, merge);
+
+    //! [THEN] whatever clips remain, the track still fades in at its start and out at its end
+    const auto clips = track.SortedIntervalArray();
+    ASSERT_FALSE(clips.empty());
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*clips.front()).fadeIn(), TEST_FADE_IN);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*clips.back()).fadeOut(), TEST_FADE_OUT);
+}
 }
