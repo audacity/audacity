@@ -214,6 +214,9 @@ void FrequencySelectionController::setCenterFrequency(double newCenterFrequency,
         return;
     }
     const auto [minFreq, maxFreq] = spectrogramBounds(*m_config, sampleRate);
+    if (maxFreq <= minFreq) {
+        return;
+    }
     NumberScale numberScale(m_config->scale(), minFreq, maxFreq);
     const auto centerFrequencyPos = numberScale.valueToPosition(newCenterFrequency);
 
