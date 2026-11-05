@@ -37,6 +37,7 @@
 
 #include <wx/filefn.h>
 
+#include <cmath>
 #include <random>
 
 using namespace au::au3;
@@ -134,8 +135,6 @@ muse::Ret Au3ProjectAccessor::open()
 
 muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignoreAutosave)
 {
-    muse::Ret ret = muse::make_ok();
-
     auto& project = m_data->projectRef();
     auto& projectFileIO = ProjectFileIO::Get(project);
     std::string sstr = filePath.toStdString();
@@ -143,38 +142,85 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
 
     std::optional<ProjectFileIO::TentativeConnection> conn;
 
+    //! NOTE: A failed load must not delete its sample blocks from the file, recovery needs them.
+    bool committed = false;
+    DEFER {
+        if (committed) {
+            return;
+        }
+        // Lock all loaded data in the project to prevent deleting on close
+        Au3TrackList& tracks = Au3TrackList::Get(project);
+        for (auto pLeader : tracks.Any<WaveTrack>()) {
+            for (auto pChannel : Au3TrackList::Channels(pLeader)) {
+                WaveTrackUtilities::CloseLock(*pChannel);
+            }
+        }
+        tracks.Clear();
+    };
+
     try {
-        conn.emplace(projectFileIO.LoadProject(fileName, ignoreAutosave).value());
-    } catch (AudacityException& exception) {
+        auto loaded = projectFileIO.LoadProject(fileName, ignoreAutosave);
+        if (loaded) {
+            conn.emplace(std::move(*loaded));
+        }
+    } catch (AudacityException&) {
         LOGE() << "Project loading failed: " << filePath << " with exception";
-        ret = project::make_ret(project::Err::AudacityExceptionError, filePath.toString());
-        return ret;
-    } catch (std::bad_optional_access)
-    {
-        auto ret = muse::Ret(projectFileIO.GetLastErrorCode());
-        ret.setData("title", muse::mtrc("project", "Project loading failed").toStdString());
-        ret.setData("body", projectFileIO.GetLastError().translated().toStdString());
-        ret.setData("path", filePath);
+        return project::make_ret(project::Err::AudacityExceptionError, filePath);
+    }
+
+    if (!conn) {
+        const std::string reason = projectFileIO.GetLastError().translated().toStdString();
+        LOGE() << "Project loading failed: " << filePath << ": " << reason;
+        muse::Ret ret = project::make_ret(project::Err::ProjectLoadError, filePath);
+        const int sqliteCode = projectFileIO.GetLastErrorCode();
+        if (sqliteCode != 0) {
+            ret.setCode(sqliteCode);
+        }
+        if (!reason.empty()) {
+            ret.setData("body", reason);
+        }
         return ret;
     }
 
-    muse::Defer([&conn]() {
-        conn->Commit();
-    });
-
-    const bool bParseSuccess = conn.has_value();
-    if (!bParseSuccess) {
-        LOGE() << "failed load project: " << filePath;
-        ret = make_ret(muse::Ret::Code::UnknownError, "Failed to load project: " + filePath.toString());
-        return false;
+    if (!projectFileIO.HasDocument() && projectFileIO.HasSampleBlocks()) {
+        LOGE() << "project has audio but no document: " << filePath;
+        return project::make_ret(project::Err::NoDocument, filePath);
     }
 
-    //! TODO Look like, need doing all from method  ProjectFileManager::FixTracks
-    //! and maybe what is done before this method (ProjectFileManager::ReadProjectFile)
+    //! Refuse loading the project if any damage detected to prevent further corruption
     Au3TrackList& tracks = Au3TrackList::Get(project);
+    // For simplicity, damage contains the last error, and does not accumulate if multiple errors
+    // occured
+    muse::String damage;
     for (auto pTrack : tracks) {
-        pTrack->LinkConsistencyFix();
+        if (!pTrack->LinkConsistencyFix()) {
+            damage = muse::mtrc("project", "A channel of a stereo track is missing.");
+        }
     }
+    for (auto pTrack : tracks) {
+        if (const auto message = pTrack->GetErrorOpening()) {
+            damage = wxToString(message->Translation());
+        }
+    }
+    for (auto pWaveTrack : tracks.Any<WaveTrack>()) {
+        for (const auto& clip : pWaveTrack->Intervals()) {
+            // Is audible length negative
+            // This could happen if a clip was placed on a track with a different samplerate without resampling
+            if (std::floor(clip->GetPlayDuration() * clip->GetRate() + 0.5) < 0) {
+                damage = muse::mtrc("project", "A clip has negative length after trimming");
+            }
+        }
+    }
+    if (!damage.isEmpty()) {
+        LOGE() << "project is damaged: " << filePath << ": " << damage;
+        muse::Ret ret = project::make_ret(project::Err::CorruptionUponOpeningError, filePath);
+        ret.setData("body", muse::mtrc("project", "“%1” is damaged: %2")
+                    .arg(muse::io::toNativeSeparators(filePath).toString(), damage).toStdString());
+        return ret;
+    }
+
+    conn->Commit();
+    committed = true;
 
     // Update saved state BEFORE sanitizing
     // Saved state should represent what is stored on disk
@@ -187,7 +233,7 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
         WaveTrackUtilities::Sanitize(*pWaveTrack);
     }
 
-    return ret;
+    return muse::make_ok();
 }
 
 void Au3ProjectAccessor::saveThumbnail(std::vector<uint8_t> pngData)
