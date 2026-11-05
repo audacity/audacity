@@ -1013,10 +1013,10 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     mPauseRec = options.soundActivatedRecording && !sequences.captureSequences.empty();
     gPrefs->Read(wxT("/AudioIO/Microfades"), &mbMicroFades, false);
     mSilenceLevel = DB_TO_LINEAR(options.soundActivationLevelDb);
-    mSoundActivationSuspended.store(mPauseRec, std::memory_order_relaxed);
 
     // Clamp lead-in time so we don't play before time 0
     const auto leadInTime = std::max(0.0, std::min(t0, options.leadInTime));
+    mSoundActivationSuspended.store(mPauseRec && leadInTime <= 0.0, std::memory_order_relaxed);
     mRecordingSchedule = {};
     mRecordingSchedule.mLeadInTime = leadInTime;
     mRecordingSchedule.mLatencyCompensation = AudioIOLatencyCompensation.Read() / 1000.0;
@@ -2729,6 +2729,10 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
 {
     // Quick returns if next to nothing to do.
     if (!mPauseRec) {
+        return;
+    }
+
+    if (mPlaybackSchedule.GetSequenceTime() < mPlaybackSchedule.mT0 + mRecordingSchedule.mLeadInTime) {
         return;
     }
 
