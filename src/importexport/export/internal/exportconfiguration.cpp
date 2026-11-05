@@ -83,6 +83,7 @@ void ExportConfiguration::init()
         m_directoryPathChanged.notify();
     });
 
+    muse::settings()->setDefaultValue(EXPORT_FORMAT, muse::Val(DEFAULT_EXPORT_FORMAT));
     muse::settings()->valueChanged(EXPORT_FORMAT).onReceive(nullptr, [this] (const muse::Val&) {
         m_currentFormatChanged.notify();
     });

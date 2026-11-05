@@ -72,6 +72,7 @@ public:
     bool isUrlSupported(const QUrl& url) const override;
     bool isFileSupported(const muse::io::path_t& path) const override;
     bool closeOpenedProject(bool quitApp = false) override;
+    bool quitDiscardingUnsavedChanges() override;
     bool saveProject(const muse::io::path_t& path = muse::io::path_t()) override;
     bool saveProjectLocally(const muse::io::path_t& filePath = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
     muse::Ret saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode = CloudSaveMode::NormalUpdate,
@@ -84,6 +85,7 @@ public:
     muse::async::Channel<muse::actions::ActionCodeList> actionEnabledChanged() const;
 
 private:
+    bool doCloseOpenedProject(bool quitApp, bool discardUnsavedChanges);
     project::IAudacityProjectPtr currentProject() const;
 
     muse::Ret newProject();

@@ -24,6 +24,7 @@ const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-record
 
 const ActionCode RECORD_ON_CURRENT_TRACK_CODE("record-on-current-track");
 const ActionCode RECORD_ON_NEW_TRACK_CODE("record-on-new-track");
+const ActionCode RECORD_TIMED_RECORDING_CODE("timer-record");
 }
 
 void RecordController::init()
@@ -37,6 +38,7 @@ void RecordController::init()
     cd->onRequest(this, RECORD_TOGGLE_MIC_METERING_COMMAND, [this]() { return toggleMicMetering(); });
     cd->onRequest(this, RECORD_TOGGLE_INPUT_MONITORING_COMMAND, [this]() { return toggleInputMonitoring(); });
     cd->onRequest(this, RECORD_LEAD_IN_RECORDING_COMMAND, [this]() { return leadInRecording(); });
+    cd->onRequest(this, RECORD_TIMED_RECORDING_COMMAND, [this]() { return timedRecordingScenario()->openSetup(); });
 
     static const std::vector<ActionToCommand> actionToCommand = {
         { RECORD_START_QUERY.toString(), RECORD_START_COMMAND, {} },
@@ -47,6 +49,7 @@ void RecordController::init()
         { RECORD_TOGGLE_MIC_METERING.toString(), RECORD_TOGGLE_MIC_METERING_COMMAND, {} },
         { RECORD_TOGGLE_INPUT_MONITORING.toString(), RECORD_TOGGLE_INPUT_MONITORING_COMMAND, {} },
         { RECORD_LEAD_IN_RECORDING_QUERY.toString(), RECORD_LEAD_IN_RECORDING_COMMAND, {} },
+        { RECORD_TIMED_RECORDING_CODE, RECORD_TIMED_RECORDING_COMMAND, {} },
     };
     registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
@@ -341,7 +344,7 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
         return !playbackController()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
     }
 
-    if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString()) {
+    if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString() || code == RECORD_TIMED_RECORDING_CODE) {
         return !playbackController()->isPlaying() && !isRecording();
     }
 

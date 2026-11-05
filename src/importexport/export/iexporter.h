@@ -60,6 +60,7 @@ public:
 
     virtual int maxChannels() const = 0;
     virtual std::vector<int> sampleRateList() const = 0;
+    virtual int projectSampleRate() const = 0;
     virtual int optionsCount() const = 0;
 
     virtual std::optional<ExportOption> option(int i) const = 0;

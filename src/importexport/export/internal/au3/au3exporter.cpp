@@ -14,6 +14,7 @@
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-import-export/ExportUtils.h"
 #include "au3-mixer/MixerOptions.h"
+#include "au3-project-rate/ProjectRate.h"
 #include "au3-tags/Tags.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -41,6 +42,15 @@ ExportPlugin* formatPlugin(const std::string& format)
     }
 
     return nullptr;
+}
+
+double exportedTracksSampleRate(const TrackList& trackList, bool selectedOnly)
+{
+    double rate = 0.0;
+    for (const WaveTrack* track : ExportUtils::FindExportWaveTracks(trackList, selectedOnly)) {
+        rate = std::max(rate, track->GetRate());
+    }
+    return rate;
 }
 
 std::vector<bool> prepareChannelMask(TrackList& trackList, bool selectedOnly)
@@ -415,6 +425,10 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         }
     }
 
+    if (m_sampleRate <= 0) {
+        m_sampleRate = exportedTracksSampleRate(TrackList::Get(*au3Project), m_selectedOnly);
+    }
+
     m_tags = &Tags::Get(*au3Project);
 
     const muse::Ret mixed = prepareMix(*au3Project, options);
@@ -632,6 +646,10 @@ muse::Ret Au3Exporter::exportSeparateFiles(const muse::io::path_t& directory, mu
     const Tags& projectTags = Tags::Get(*au3Project);
     auto& tracks = TrackList::Get(*au3Project);
 
+    if (m_sampleRate <= 0) {
+        m_sampleRate = exportedTracksSampleRate(tracks, false);
+    }
+
     if (byLabels) {
         m_selectedOnly = false;
         const muse::Ret mixed = prepareMix(*au3Project, options);
@@ -815,6 +833,17 @@ int Au3Exporter::maxChannels() const
     }
 
     return 1;
+}
+
+int Au3Exporter::projectSampleRate() const
+{
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return 0;
+    }
+
+    const Au3Project* au3Project = reinterpret_cast<const Au3Project*>(project->au3ProjectPtr());
+    return au3Project ? static_cast<int>(ProjectRate::Get(*au3Project).GetRate()) : 0;
 }
 
 std::vector<int> Au3Exporter::sampleRateList() const

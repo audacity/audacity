@@ -13,6 +13,7 @@ class RecordConfiguration;
 class RecordController;
 class RecordMeterController;
 class RecordUiActions;
+class TimedRecordingScenario;
 class Au3Record;
 
 class RecordModule : public muse::modularity::IModuleSetup
@@ -46,6 +47,7 @@ private:
     std::shared_ptr<RecordController> m_controller;
     std::shared_ptr<RecordUiActions> m_uiActions;
     std::shared_ptr<Au3Record> m_record;
+    std::shared_ptr<TimedRecordingScenario> m_timedRecordingScenario;
 };
 }
 

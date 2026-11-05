@@ -199,6 +199,22 @@ void ExportPreferencesModel::cancel()
     }
 }
 
+bool ExportPreferencesModel::settingsOnly() const
+{
+    return m_settingsOnly;
+}
+
+void ExportPreferencesModel::setSettingsOnly(bool settingsOnly)
+{
+    if (m_settingsOnly == settingsOnly) {
+        return;
+    }
+
+    m_settingsOnly = settingsOnly;
+    emit settingsOnlyChanged();
+    emit currentProcessChanged();
+}
+
 QString ExportPreferencesModel::currentProcess() const
 {
     return processName(exportConfiguration()->processType());
@@ -275,6 +291,10 @@ bool ExportPreferencesModel::trimBlankSpaceEnabled() const
 
 bool ExportPreferencesModel::separateFilesExport() const
 {
+    if (m_settingsOnly) {
+        return false;
+    }
+
     const ExportProcessType type = exportConfiguration()->processType();
     return type == ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES
            || type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
@@ -282,7 +302,7 @@ bool ExportPreferencesModel::separateFilesExport() const
 
 bool ExportPreferencesModel::separateFilesByLabels() const
 {
-    return exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
+    return !m_settingsOnly && exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
 }
 
 QString ExportPreferencesModel::fileNamePrefix() const
@@ -643,6 +663,14 @@ void ExportPreferencesModel::updateCurrentSampleRate()
         }
     }
 
+    if (sampleRate <= 0) {
+        sampleRate = exporter()->projectSampleRate();
+    }
+
+    if (sampleRate <= 0) {
+        sampleRate = DEFAULT_EXPORT_SAMPLE_RATE;
+    }
+
     std::sort(sampleRateList.begin(), sampleRateList.end());
     auto it = std::find(sampleRateList.begin(), sampleRateList.end(), sampleRate);
     int index = -1;
@@ -673,7 +701,8 @@ void ExportPreferencesModel::updateExportChannels()
 
     const auto project = globalContext()->currentTrackeditProject();
     if (project) {
-        const bool hasStereo = au::trackedit::utils::hasStereoTrack(project->trackList());
+        const bool recordsStereo = m_settingsOnly && audioDriverController()->configuration().inputChannels >= 2;
+        const bool hasStereo = recordsStereo || au::trackedit::utils::hasStereoTrack(project->trackList());
         ExportChannelsPref::ExportChannels recommended = hasStereo
                                                          ? ExportChannelsPref::ExportChannels::STEREO
                                                          : ExportChannelsPref::ExportChannels::MONO;

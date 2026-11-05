@@ -13,8 +13,10 @@ target_sources(record PRIVATE
     irecordcontroller.h
     irecordmetercontroller.h
     irecord.h
+    itimedrecordingscenario.h
     iaudioinput.h
     recordcommands.h
+    timedrecordingtypes.h
 
     #internal
     internal/recordcommandsregister.cpp
@@ -29,6 +31,10 @@ target_sources(record PRIVATE
     internal/recordmetercontroller.h
     internal/recorduiactions.cpp
     internal/recorduiactions.h
+    internal/timedrecordingscenario.cpp
+    internal/timedrecordingscenario.h
+    internal/timedrecordingformatter.cpp
+    internal/timedrecordingformatter.h
 
     #internal/au3
     internal/au3/au3audioinput.cpp

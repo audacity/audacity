@@ -351,14 +351,6 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
 
     // record menu
-    UiAction("set-up-timed-recording",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Set up timed recording"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Set up timed recording")
-             ),
     UiAction("toggle-sound-activated-recording",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,

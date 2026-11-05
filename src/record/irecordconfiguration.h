@@ -8,6 +8,7 @@
 #include "global/modularity/imoduleinterface.h"
 #include "global/async/notification.h"
 #include "draw/types/color.h"
+#include "record/timedrecordingtypes.h"
 
 namespace au::record {
 //! Naming scheme for newly recorded tracks
@@ -43,5 +44,8 @@ public:
     virtual muse::async::Notification crossfadeDurationChanged() const = 0;
 
     virtual RecordingTrackNameOptions recordingTrackNameOptions() const = 0;
+
+    virtual TimedRecordingOptions timedRecordingOptions() const = 0;
+    virtual void setTimedRecordingOptions(const TimedRecordingOptions& options) = 0;
 };
 }
