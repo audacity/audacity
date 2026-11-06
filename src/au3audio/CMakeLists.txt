@@ -90,8 +90,23 @@ endif()
 
 if (AU_USE_JUCE)
     set(JUCE_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/gainpannode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/gainpannode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/ieffectscontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/imutesolocontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/mutesolonode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/mutesolonode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/sequentialmixnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/sequentialmixnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/stereo.h
     )
     set(MODULE_SRC ${MODULE_SRC} ${JUCE_SRC})
     # JUCE headers clash with the `using namespace muse` of other unity-combined sources
@@ -99,6 +114,7 @@ if (AU_USE_JUCE)
     set(MODULE_LINK ${MODULE_LINK}
         juce
         au3-clip-processing
+        au3-mixer
     )
     set(MODULE_DEF ${MODULE_DEF} AU_USE_JUCE)
 endif()
