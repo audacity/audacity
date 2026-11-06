@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       platforms:
-        description: 'Platforms to build: linux macos windows'
+        description: 'Platforms to build: linux macos windows sources'
         required: true
-        default: 'linux macos windows'
+        default: 'linux macos windows sources'
       build_mode:
         description: 'Build mode: devel, nightly, testing, stable'
         required: true
@@ -23,10 +23,10 @@ on:
   workflow_call:
     inputs:
       platforms:
-        description: 'Platforms to build: linux macos windows'
+        description: 'Platforms to build: linux macos windows sources'
         type: string
         required: true
-        default: 'linux macos windows'
+        default: 'linux macos windows sources'
       build_mode:
         description: 'Build mode: devel, nightly, testing, stable'
         type: string
@@ -89,4 +89,13 @@ jobs:
     with:
       build_mode: ${{ inputs.build_mode }}
       sentry_project: ${{ inputs.sentry_project }}
+      build_number: ${{ needs.generate_build_number.outputs.build_number }}
+
+  sources:
+    name: Sources
+    needs: generate_build_number
+    if: contains(inputs.platforms, 'sources')
+    uses: ./.github/workflows/au4_build_sources.yml
+    with:
+      build_mode: ${{ inputs.build_mode }}
       build_number: ${{ needs.generate_build_number.outputs.build_number }}

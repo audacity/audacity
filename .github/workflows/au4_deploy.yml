@@ -10,9 +10,9 @@ on:
   workflow_dispatch:
     inputs:
       platforms:
-        description: 'Platforms to build: linux macos windows'
+        description: 'Platforms to build: linux macos windows sources'
         required: true
-        default: 'linux macos windows'
+        default: 'linux macos windows sources'
       release_type:
         description: 'Release type: alpha, beta, rc, stable, or any label with chars A-Za-z0-9._ for testing'
         required: true
