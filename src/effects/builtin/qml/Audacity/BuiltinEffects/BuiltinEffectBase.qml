@@ -14,6 +14,9 @@ Rectangle {
     property bool usedDestructively: true
     required property int numNavigationPanels
 
+    //! Emit to apply the effect and close the dialog, as if the Apply button was clicked
+    signal applyRequested()
+
     color: ui.theme.backgroundPrimaryColor
 
     function init() {

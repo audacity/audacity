@@ -117,7 +117,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     const spectrogram::FrequencySelection frequencySelection = frequencySelectionController()->frequencySelection();
 
     const trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
-    const auto numSelectedClips = selectedClips.size();
+    auto numSelectedClips = selectedClips.size();
+    std::vector<int64_t> clipIdsInTimeRange;
+    std::optional<std::pair<secs_t, secs_t> > clipSpan;
 
     {
         //! NOTE Step 1.2 - get effect
@@ -126,11 +128,28 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             return make_ret(Err::EffectNotFound);
         }
 
+        //! NOTE Step 1.3 - process a clip selection as one time range, if the effect wants that.
+        //! The selection itself is left as it is: the clips' tracks are already selected.
+        if (numSelectedClips != 0 && effect->processClipSelectionAsTimeRange()) {
+            const std::optional<secs_t> start = selectionController()->leftMostSelectedClipStartTime();
+            const std::optional<secs_t> end = selectionController()->rightMostSelectedClipEndTime();
+            if (start && end && *end > *start) {
+                clipSpan = { *start, *end };
+                for (const trackedit::ClipKey& clip : selectedClips) {
+                    clipIdsInTimeRange.push_back(clip.itemId);
+                }
+                numSelectedClips = 0;
+            }
+        }
+
         if (numSelectedClips > 1 && !effectsProvider()->paramsAreInputAgnostic(effectId)) {
             return make_ret(Err::EffectMultipleClipSelectionNotSupported);
         }
 
-        if (numSelectedClips != 0) {
+        if (clipSpan) {
+            t0 = clipSpan->first;
+            t1 = clipSpan->second;
+        } else if (numSelectedClips != 0) {
             // If multiple clips are selected, we have checked that the effect supports it, in which case these global time boundaries shouldn't be relevant.
             // If this is just a single-clip selection, though, that will just be start and end times of the selected clip.
             t0 = selectionController()->selectedClipStartTime().value_or(0.0);
@@ -304,6 +323,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         effect->mProjectRate = tp.projectRate;
         effect->mT0 = tp.t0;
         effect->mT1 = tp.t1;
+        effect->mSelectedClipIds = clipIdsInTimeRange;
 
         effect->SetTracks(&au3::Au3TrackList::Get(project));
         // Update track/group counts
@@ -373,6 +393,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! NOTE Step 7 - cleanup
     //! ============================================================================
 
+    effect->mSelectedClipIds.clear();
     // Don't hold a dangling pointer when done
     effect->SetTracks(nullptr);
     effect->mPresetNames.clear();
@@ -397,6 +418,15 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             const auto shortDesc = effectsProvider()->effectName(effectId.toStdString());
             const auto longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String { shortDesc.c_str() }).toStdString();
             projectHistory()->pushHistoryState(longDesc, shortDesc);
+
+            //! NOTE Like Au3, make the time selection cover the processed range
+            //! if the effect changed its end (e.g. Repeat, Paulstretch).
+            //! Only after the push: a complete selection change saves into the current history state,
+            //! which before the push is the state from before the effect.
+            if (numSelectedClips == 0 && !clipSpan && effect->GetType() != EffectTypeGenerate
+                && effect->mT1 > effect->mT0 && !muse::RealIsEqual(effect->mT1, tp.t1)) {
+                selectionController()->setDataSelectedEndTime(effect->mT1, true);
+            }
         }
 
         //! NOTE Step 8.2 - remember a successful effect

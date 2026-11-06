@@ -3,6 +3,7 @@
 #include "au3-label-track/LabelTrack.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+#include <algorithm>
 #include <cmath>
 
 const EffectParameterMethods& RepeatBase::Parameters() const
@@ -62,13 +63,11 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
     outputs.Get().Any().VisitWhile(
         bGoodResult,
         [&](LabelTrack& track) {
-        assert(false && "please adjust to SyncLock removal");
-        // TODO: please adjust to SyncLock removal
-        // if (SyncLock::IsSelectedOrSyncLockSelected(track)) {
-        //     if (!track.Repeat(mT0, mT1, repeatCount)) {
-        //         bGoodResult = false;
-        //     }
-        // }
+        if (track.GetSelected()) {
+            if (!track.Repeat(mT0, mT1, repeatCount)) {
+                bGoodResult = false;
+            }
+        }
     },
         [&](auto&& fallthrough) {
         return [&](WaveTrack& track) {
@@ -88,12 +87,44 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
             auto firstTemp
                 =std::static_pointer_cast<WaveTrack>(track.Copy(mT0, mT1));
 
+            // Au4: leave out unselected clips that lie between selected ones.
+            // The copy's clips get new IDs and start at time 0, so match them to the selected clips by position.
+            if (!mSelectedClipIds.empty()) {
+                std::vector<double> selectedStarts;
+                for (const auto& clip : track.Intervals()) {
+                    if (std::find(mSelectedClipIds.begin(), mSelectedClipIds.end(), clip->GetId())
+                        != mSelectedClipIds.end()) {
+                        selectedStarts.push_back(std::max(clip->GetPlayStartTime(), mT0) - mT0);
+                    }
+                }
+                // None found, e.g. preview mixes the selection into new clips: keep everything
+                if (!selectedStarts.empty()) {
+                    const auto eps = 0.5 / track.GetRate();
+                    const auto intervals = std::vector(
+                        firstTemp->Intervals().begin(), firstTemp->Intervals().end());
+                    for (const auto& clip : intervals) {
+                        const bool isSelected = std::any_of(
+                            selectedStarts.begin(), selectedStarts.end(), [&](double start) {
+                            return std::abs(clip->GetPlayStartTime() - start) < eps;
+                        });
+                        if (!isSelected) {
+                            firstTemp->RemoveInterval(clip);
+                        }
+                    }
+                }
+            }
+
             auto t0 = tc;
             for (size_t j = 0; j < repeatCount; ++j) {
-                if (TrackProgress(nTrack, j / repeatCount)) {
+                if (TrackProgress(nTrack, static_cast<double>(j) / repeatCount)) {
                     // TrackProgress returns true on Cancel.
                     bGoodResult = false;
                     return;
+                }
+                // Copies keep the source clip's ID: give each pasted repeat its own,
+                // or Au4 can't tell the clips apart (e.g. undo leaves them on screen)
+                for (const auto& clip : firstTemp->Intervals()) {
+                    clip->SetId(WaveClip::NewID());
                 }
                 const bool moveClips = false; // this need check
                 track.Paste(t0, *firstTemp, moveClips);
