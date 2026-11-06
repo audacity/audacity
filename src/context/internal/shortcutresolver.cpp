@@ -91,29 +91,52 @@ Shortcut ShortcutResolver::selectActive(const ShortcutList& list) const
 TranslatableString ShortcutResolver::scopeTitle(const std::string& scopeCode) const
 {
     static const std::map<std::string, TranslatableString> scopeTitles = {
-        { NAVIGATION_SCOPE, TranslatableString("shortcuts", "NAVIGATION") },
-        { APP_SCOPE, TranslatableString("shortcuts", "APP") },
-        { PLAYBACK_SCOPE, TranslatableString("shortcuts", "PLAYBACK") },
-        { RECORD_SCOPE, TranslatableString("shortcuts", "RECORDING") },
-        { TIMELINE_SCOPE, TranslatableString("shortcuts", "TIMELINE") },
-        { TRACK_NAVIGATION_SECTION_SCOPE, TranslatableString("shortcuts", "TRACK VIEW") },
-        { PROJECT_SCOPE, TranslatableString("shortcuts", "PROJECT") },
-        { PROJECTSCENE_SCOPE, TranslatableString("shortcuts", "PROJECT VIEW") },
-        { TRACKEDIT_SCOPE, TranslatableString("shortcuts", "EDITING") },
-        { TRACK_NAVIGATION_SCOPE, TranslatableString("shortcuts", "TRACK NAVIGATION") },
-        { EFFECTS_SCOPE, TranslatableString("shortcuts", "EFFECTS") },
-        { SPECTROGRAM_SCOPE, TranslatableString("shortcuts", "SPECTROGRAM") },
-        { CLOUD_SCOPE, TranslatableString("shortcuts", "CLOUD") },
-        { AUDIO_SCOPE, TranslatableString("shortcuts", "AUDIO") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that move the keyboard focus between panels and controls
+        { NAVIGATION_SCOPE, TranslatableString("shortcuts", "Navigation") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that act on the whole application
+        { APP_SCOPE, TranslatableString("shortcuts", "App") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that control playback
+        { PLAYBACK_SCOPE, TranslatableString("shortcuts", "Playback") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that control recording
+        { RECORD_SCOPE, TranslatableString("shortcuts", "Recording") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that work only while the timeline has the keyboard focus
+        { TIMELINE_SCOPE, TranslatableString("shortcuts", "Timeline") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that work only while a track or a track item has the keyboard focus
+        { TRACK_NAVIGATION_SECTION_SCOPE, TranslatableString("shortcuts", "Track view") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that manage the project file
+        { PROJECT_SCOPE, TranslatableString("shortcuts", "Project") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that change how the project is shown
+        { PROJECTSCENE_SCOPE, TranslatableString("shortcuts", "Project view") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that edit audio, clips, labels and tracks
+        { TRACKEDIT_SCOPE, TranslatableString("shortcuts", "Editing") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that move the keyboard focus between tracks and track items
+        { TRACK_NAVIGATION_SCOPE, TranslatableString("shortcuts", "Track navigation") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that open or apply effects
+        { EFFECTS_SCOPE, TranslatableString("shortcuts", "Effects") },
+        //: Group heading in Preferences > Shortcuts for shortcuts of the spectrogram view
+        { SPECTROGRAM_SCOPE, TranslatableString("shortcuts", "Spectrogram") },
+        //: Group heading in Preferences > Shortcuts for shortcuts of the cloud service
+        { CLOUD_SCOPE, TranslatableString("shortcuts", "Cloud") },
+        //: Group heading in Preferences > Shortcuts for shortcuts of the audio engine and audio devices
+        { AUDIO_SCOPE, TranslatableString("shortcuts", "Audio") },
+        //: Group heading in Preferences > Shortcuts for shortcuts of VST plugins; "VST" is a product name, do not translate it
         { VST_SCOPE, TranslatableString("shortcuts", "VST") },
-        { DOCK_SCOPE, TranslatableString("shortcuts", "DOCK") },
-        { WORKSPACE_SCOPE, TranslatableString("shortcuts", "WORKSPACE") },
-        { EXTENSIONS_SCOPE, TranslatableString("shortcuts", "EXTENSIONS") },
-        { SHORTCUTS_SCOPE, TranslatableString("shortcuts", "SHORTCUTS") },
-        { MULTIWINDOWS_SCOPE, TranslatableString("shortcuts", "WINDOWS") },
-        { UPDATE_SCOPE, TranslatableString("shortcuts", "UPDATE") },
-        { DIAGNOSTICS_SCOPE, TranslatableString("shortcuts", "DIAGNOSTICS") },
-        { TESTFLOW_SCOPE, TranslatableString("shortcuts", "TESTFLOW") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that show, hide or move panels and toolbars
+        { DOCK_SCOPE, TranslatableString("shortcuts", "Dock") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that change the workspace (the layout of panels and toolbars)
+        { WORKSPACE_SCOPE, TranslatableString("shortcuts", "Workspace") },
+        //: Group heading in Preferences > Shortcuts for shortcuts of extensions (add-ons that users install)
+        { EXTENSIONS_SCOPE, TranslatableString("shortcuts", "Extensions") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that manage the shortcuts themselves
+        { SHORTCUTS_SCOPE, TranslatableString("shortcuts", "Shortcuts") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that manage application windows
+        { MULTIWINDOWS_SCOPE, TranslatableString("shortcuts", "Windows") },
+        //: Group heading in Preferences > Shortcuts for shortcuts that check for or install application updates
+        { UPDATE_SCOPE, TranslatableString("shortcuts", "Update") },
+        //: Group heading in Preferences > Shortcuts for shortcuts of diagnostic tools for developers
+        { DIAGNOSTICS_SCOPE, TranslatableString("shortcuts", "Diagnostics") },
+        //: Group heading in Preferences > Shortcuts for shortcuts of the automated test tool for developers; "Testflow" is a tool name, do not translate it
+        { TESTFLOW_SCOPE, TranslatableString("shortcuts", "Testflow") },
     };
 
     const std::string upperScopeCode = strings::toUpper(scopeCode);
