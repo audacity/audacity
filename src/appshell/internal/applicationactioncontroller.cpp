@@ -369,7 +369,7 @@ void ApplicationActionController::handleFileOpenEvent(const QFileOpenEvent* even
             }
             mw->requestShowOnFront();
         }
-        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(urlStr) } });
+        commandDispatcher()->dispatch(au3cloud::OpenUrlCommand { .url = urlStr.toStdString() });
     } else {
         startupScenario()->setStartupUrl(urlStr);
     }

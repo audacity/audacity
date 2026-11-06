@@ -71,23 +71,14 @@ void EffectSaveContextMenu::reload()
 
     MenuItemList items;
 
-    {
-        MenuItem* item = makeMenuItem(make_query(EFFECTS_PRESET_SAVE_COMMAND, {
-            { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) },
-            { EFFECTS_PRESET_ID_PARAM, Val(currentPreset) },
-        }), muse::TranslatableString("effects", "Save"));
-        if (!m_canSave) {
-            item->setEnabled(false);
-        }
-        items << item;
+    MenuItem* saveItem = makeMenuItem(SavePresetCommand { .instanceId = m_instanceId, .presetId = currentPreset },
+                                      muse::TranslatableString("effects", "Save"));
+    if (!m_canSave) {
+        saveItem->setEnabled(false);
     }
+    items << saveItem;
 
-    {
-        MenuItem* item = makeMenuItem(make_query(EFFECTS_PRESET_SAVE_AS_COMMAND, {
-            { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) },
-        }), muse::TranslatableString("effects", "Save as…"));
-        items << item;
-    }
+    items << makeMenuItem(SavePresetAsCommand { .instanceId = m_instanceId }, muse::TranslatableString("effects", "Save as…"));
 
     setItems(items);
 }

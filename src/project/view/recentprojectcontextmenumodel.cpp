@@ -58,9 +58,8 @@ void RecentProjectContextMenuModel::load()
 
     muse::uicomponents::MenuItemList items = { openItem };
     if (isCloudProject) {
-        muse::uicomponents::MenuItem* pageItem = makeMenuItem(make_query(au3cloud::CLOUD_OPEN_PROJECT_PAGE_COMMAND, {
-            { au3cloud::CLOUD_OPEN_PROJECT_PAGE_ID_PARAM, muse::Val(m_cloudProjectId) },
-        }));
+        muse::uicomponents::MenuItem* pageItem
+            = makeMenuItem(au3cloud::OpenProjectPageCommand { .projectId = m_cloudProjectId.toStdString() });
         IF_ASSERT_FAILED(pageItem) {
             return;
         }

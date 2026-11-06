@@ -28,9 +28,7 @@ void CloudAudioFileContextMenuModel::load()
     }
     openItem->setEnabled(openItem->enabled() && !m_audioId.isEmpty());
 
-    muse::uicomponents::MenuItem* viewAudiocom = makeMenuItem(make_query(au3cloud::CLOUD_OPEN_AUDIO_PAGE_COMMAND, {
-        { au3cloud::CLOUD_OPEN_AUDIO_PAGE_SLUG_PARAM, muse::Val(m_slug) },
-    }));
+    muse::uicomponents::MenuItem* viewAudiocom = makeMenuItem(au3cloud::OpenAudioPageCommand { .slug = m_slug.toStdString() });
     IF_ASSERT_FAILED(viewAudiocom) {
         return;
     }

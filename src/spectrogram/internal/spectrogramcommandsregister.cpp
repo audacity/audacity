@@ -3,30 +3,15 @@
  */
 #include "spectrogramcommandsregister.h"
 
-#include "framework/global/types/translatablestring.h"
-
 #include "../spectrogramcommands.h"
 
 namespace au::spectrogram {
 namespace {
-using muse::rcommand::Arg;
 using muse::rcommand::CommandInfo;
-using muse::rcommand::DataType;
-using muse::rcommand::Decoration;
-using muse::rcommand::InputSchema;
+using muse::rcommand::makeCommandInfo;
 
 const std::vector<CommandInfo> s_commandInfos = {
-    CommandInfo{
-        TRACK_SPECTROGRAM_SETTINGS_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        muse::TranslatableString("command", "Spectrogram settings…"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        muse::TranslatableString("command_description", "Spectrogram settings…"),
-        InputSchema({
-                    { TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM, Arg(DataType::Int, u"Id of the track") },
-                }),
-        Decoration()
-    },
+    makeCommandInfo<TrackSpectrogramSettingsCommand>(),
 };
 }
 

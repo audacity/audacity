@@ -296,15 +296,15 @@ void EffectPresetsBarModel::resetPreset()
         return;
     }
 
-    commandDispatcher()->dispatch(EFFECTS_PRESET_APPLY_COMMAND, {
-        { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) },
-        { EFFECTS_PRESET_ID_PARAM, Val(m_currentPreset.toStdString()) },
+    commandDispatcher()->dispatch(ApplyPresetCommand {
+        .instanceId = m_instanceId,
+        .presetId = m_currentPreset.toStdString(),
     });
 }
 
 void EffectPresetsBarModel::savePresetAs()
 {
-    commandDispatcher()->dispatch(EFFECTS_PRESET_SAVE_AS_COMMAND, { { EFFECTS_INSTANCE_ID_PARAM, Val(m_instanceId) } });
+    commandDispatcher()->dispatch(SavePresetAsCommand { .instanceId = m_instanceId });
 }
 
 muse::uicomponents::AbstractMenuModel* EffectPresetsBarModel::saveContextMenu()
@@ -341,9 +341,9 @@ void EffectPresetsBarModel::deletePreset()
         return;
     }
 
-    commandDispatcher()->dispatch(EFFECTS_PRESET_DELETE_COMMAND, {
-        { EFFECTS_EFFECT_ID_PARAM, Val(effectId.toStdString()) },
-        { EFFECTS_PRESET_ID_PARAM, Val(m_currentPreset.toStdString()) },
+    commandDispatcher()->dispatch(DeletePresetCommand {
+        .effectId = effectId.toStdString(),
+        .presetId = m_currentPreset.toStdString(),
     });
 }
 
