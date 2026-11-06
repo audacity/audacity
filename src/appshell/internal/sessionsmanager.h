@@ -52,20 +52,20 @@ public:
         : muse::Contextable(ctx) {}
 
     void init();
-    void deinit();
 
     bool hasProjectsForRestore() override;
+    muse::io::paths_t projectsForRestore() const override;
 
-    void restore() override;
-    void reset() override;
+    void restore(const muse::io::paths_t& projects) override;
+    void discard(const muse::io::paths_t& projects) override;
 
 private:
+    void pruneOutdatedProjects();
     void update();
 
     void removeProjectFromSession(const muse::io::path_t& projectPath);
     void addProjectToSession(const muse::io::path_t& projectPath);
 
-    void removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths);
     void removeUnsavedChanges(const muse::io::path_t& projectPath);
 
     muse::io::path_t m_lastOpenedProjectPath;

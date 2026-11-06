@@ -23,6 +23,7 @@
 #define AU_APPSHELL_ISESSIONSMANAGER_H
 
 #include "modularity/imoduleinterface.h"
+#include "global/io/path.h"
 
 namespace au::appshell {
 class ISessionsManager : MODULE_EXPORT_INTERFACE
@@ -33,9 +34,10 @@ public:
     virtual ~ISessionsManager() = default;
 
     virtual bool hasProjectsForRestore() = 0;
+    virtual muse::io::paths_t projectsForRestore() const = 0;
 
-    virtual void restore() = 0;
-    virtual void reset() = 0;
+    virtual void restore(const muse::io::paths_t& projects) = 0;
+    virtual void discard(const muse::io::paths_t& projects) = 0;
 };
 }
 
