@@ -80,7 +80,8 @@ CommandState RecordCommandsState::commandState(const Command& command) const
 
     if (command == RECORD_START_COMMAND
         || command == RECORD_ON_CURRENT_TRACK_COMMAND
-        || command == RECORD_ON_NEW_TRACK_COMMAND) {
+        || command == RECORD_ON_NEW_TRACK_COMMAND
+        || command == RECORD_SECOND_CHOICE_COMMAND) {
         return CommandState(controller()->isRecordAllowed() && !controller()->isLeadInRecording());
     }
 

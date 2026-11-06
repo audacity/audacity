@@ -86,6 +86,8 @@ private:
     void onProjectChanged();
 
     muse::Ret toggleRecord();
+    muse::Ret toggleRecordSecondChoice();
+    muse::Ret toggleRecord(bool onNewTrack);
     muse::Ret recordOnNewTrack();
     muse::Ret start();
     muse::Ret startWithNewTrack();

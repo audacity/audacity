@@ -9,6 +9,7 @@ namespace au::record {
 inline static const muse::rcommand::Command RECORD_START_COMMAND("command://record/start");
 inline static const muse::rcommand::Command RECORD_ON_CURRENT_TRACK_COMMAND("command://record/on-current-track");
 inline static const muse::rcommand::Command RECORD_ON_NEW_TRACK_COMMAND("command://record/on-new-track");
+inline static const muse::rcommand::Command RECORD_SECOND_CHOICE_COMMAND("command://record/second-choice");
 inline static const muse::rcommand::Command RECORD_PAUSE_COMMAND("command://record/pause");
 inline static const muse::rcommand::Command RECORD_STOP_COMMAND("command://record/stop");
 inline static const muse::rcommand::Command RECORD_LEVEL_COMMAND("command://record/level");

@@ -13,6 +13,7 @@ class TracksInteractionMock : public ITracksInteraction
 public:
     MOCK_METHOD(bool, trimTracksData, (const std::vector<TrackId>&, secs_t, secs_t), (override));
     MOCK_METHOD(bool, silenceTracksData, (const std::vector<TrackId>&, secs_t, secs_t), (override));
+    MOCK_METHOD(bool, tracksDataIsSilent, (const std::vector<TrackId>&, secs_t, secs_t), (const, override));
     MOCK_METHOD(bool, changeTrackTitle, (const TrackId, const muse::String&), (override));
 
     MOCK_METHOD(bool, changeTracksColor, (const TrackIdList&, ClipColorIndex), (override));
@@ -51,6 +52,7 @@ public:
     MOCK_METHOD(bool, splitStereoTracksToCenterMono, (const TrackIdList&), (override));
     MOCK_METHOD(bool, makeStereoTrack, (const TrackId, const TrackId), (override));
     MOCK_METHOD(bool, resampleTracks, (const TrackIdList&, int), (override));
+    MOCK_METHOD(muse::RetVal<TrackId>, mixAndRender, (const TrackIdList&), (override));
 
     MOCK_METHOD(double, nearestZeroCrossing, (double), (const, override));
 

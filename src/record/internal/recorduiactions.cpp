@@ -111,6 +111,16 @@ const UiActionList RecordUiActions::m_mainActions = {
              //: Action description: shown as a tooltip; can be a full sentence
              TranslatableString("action_description", "Set up a timed recording")
              ),
+    UiAction("record-second-choice",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             //: Action title: shown as a menu item or a button label; keep it short.
+             //: Records the other way than Record: on a new track, or on the current track when "Record on a new track" is turned on
+             TranslatableString("action", "Record (second choice)"),
+             //: Action description: shown as a tooltip; can be a full sentence
+             TranslatableString("action_description",
+                                "Record on a new track, or on the current track when “Record on a new track” is turned on in Preferences")
+             ),
 };
 
 RecordUiActions::RecordUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<RecordController> controller)

@@ -1,6 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+#include <algorithm>
 #include <cfloat>
 
 #include <gtest/gtest.h>
@@ -25,6 +26,7 @@
 
 #include "playback/playbackcommands.h"
 
+#include "au3-mixer/AudioIOSequences.h"
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
 
@@ -104,6 +106,8 @@ public:
         .WillByDefault(Return(2.0));
         ON_CALL(*m_recordConfiguration, crossfadeDuration())
         .WillByDefault(Return(0.0));
+        ON_CALL(*m_recordConfiguration, isOverdubOn())
+        .WillByDefault(Return(true));
 
         initTestProject();
     }
@@ -146,14 +150,26 @@ public:
         return *reinterpret_cast<Au3Project*>(m_au3ProjectAccessor->au3ProjectPtr());
     }
 
-    Au3WaveTrack* addSelectedMonoTrack()
+    Au3WaveTrack* addMonoTrack(bool selected)
     {
         auto& trackFactory = Au3WaveTrackFactory::Get(projectRef());
         auto track = trackFactory.Create(sampleFormat::floatSample, TEST_SAMPLE_RATE);
         Au3TrackList::Get(projectRef()).Add(track, ::TrackList::DoAssignId::Yes,
                                             ::TrackList::EventPublicationSynchrony::Synchronous);
-        track->SetSelected(true);
+        track->SetSelected(selected);
         return track.get();
+    }
+
+    Au3WaveTrack* addSelectedMonoTrack()
+    {
+        return addMonoTrack(true);
+    }
+
+    static bool plays(const TransportSequences& sequences, const Au3WaveTrack* track)
+    {
+        return std::any_of(sequences.playbackSequences.begin(), sequences.playbackSequences.end(), [track](const auto& sequence) {
+            return sequence->FindChannelGroup() == track;
+        });
     }
 
     std::shared_ptr<Au3Record> m_record;
@@ -274,5 +290,67 @@ TEST_F(Au3RecordTests, RecordingWithBusyEngineStartsUnpausedAtPlayhead)
 
     //! [THEN] Recording starts at the playhead position
     EXPECT_DOUBLE_EQ(startedAt, 8.0);
+}
+
+TEST_F(Au3RecordTests, RecordingWithOverdubPlaysOnlyTheTracksNotRecordedInto)
+{
+    //! [GIVEN] Overdub is on, a selected track to record into and another track
+    Au3WaveTrack* armedTrack = addSelectedMonoTrack();
+    Au3WaveTrack* otherTrack = addMonoTrack(false);
+
+    TransportSequences sequences;
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<0>(&sequences), Return(1)));
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The other track plays, the one recorded into does not
+    EXPECT_TRUE(plays(sequences, otherTrack));
+    EXPECT_FALSE(plays(sequences, armedTrack));
+}
+
+TEST_F(Au3RecordTests, RecordingWithoutOverdubPlaysNothing)
+{
+    //! [GIVEN] Overdub is off, a selected track to record into and another track
+    ON_CALL(*m_recordConfiguration, isOverdubOn())
+    .WillByDefault(Return(false));
+    addSelectedMonoTrack();
+    addMonoTrack(false);
+
+    TransportSequences sequences;
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<0>(&sequences), Return(1)));
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] Nothing plays while recording
+    EXPECT_TRUE(sequences.playbackSequences.empty());
+}
+
+TEST_F(Au3RecordTests, LeadInRecordingDoesNotPlayTheTrackRecordedInto)
+{
+    //! [GIVEN] Overdub is on, a selected track to record into, another track
+    //! and the playhead at 8s
+    Au3WaveTrack* armedTrack = addSelectedMonoTrack();
+    Au3WaveTrack* otherTrack = addMonoTrack(false);
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(muse::secs_t(8.0)));
+
+    TransportSequences sequences;
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<0>(&sequences), Return(1)));
+
+    //! [WHEN] Lead-in recording is initiated
+    muse::Ret ret = m_record->leadInRecording();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] Only the other track plays, also during the lead-in time
+    EXPECT_TRUE(plays(sequences, otherTrack));
+    EXPECT_FALSE(plays(sequences, armedTrack));
+    EXPECT_TRUE(sequences.leadInTimeSequences.empty());
 }
 }

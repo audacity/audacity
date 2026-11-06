@@ -4,6 +4,7 @@
 
 #include "au3record.h"
 
+#include <algorithm>
 #include <cfloat>
 
 #include "au3-strings/TranslatableString.h"
@@ -11,7 +12,9 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
+#include "au3-audio-io/AudioIO.h"
 #include "au3-audio-io/ProjectAudioIO.h"
+#include "au3-label-track/LabelTrack.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track/Track.h"
 #include "au3-track/PendingTracks.h"
@@ -196,6 +199,26 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
     return result;
 }
 
+//! Overdub plays every track except the ones being recorded into, so the user
+//! never hears the old audio of an armed track; without overdub nothing plays
+TransportSequences MakeRecordingTransportTracks(Au3TrackList& trackList, const WritableSampleTrackArray& recordingTracks,
+                                                bool overdub)
+{
+    TransportSequences result;
+    if (overdub) {
+        result = MakeTransportTracks(trackList, false, true);
+        auto& playback = result.playbackSequences;
+        playback.erase(std::remove_if(playback.begin(), playback.end(), [&recordingTracks](const auto& playbackSequence) {
+            return std::any_of(recordingTracks.begin(), recordingTracks.end(), [&playbackSequence](const auto& recordingTrack) {
+                return playbackSequence->FindChannelGroup() == recordingTrack->FindChannelGroup();
+            });
+        }), playback.end());
+    }
+
+    std::copy(recordingTracks.begin(), recordingTracks.end(), back_inserter(result.captureSequences));
+    return result;
+}
+
 void Au3Record::init()
 {
     m_audioInput = std::make_shared<Au3AudioInput>(iocContext());
@@ -351,21 +374,19 @@ void Au3Record::init()
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.ClearPendingTracks();
 
+        const bool hasDropouts = labelDropouts();
+
         commitRecording();
+
+        if (hasDropouts) {
+            showDropoutsWarning();
+        }
     });
 }
 
 muse::Ret Au3Record::start()
 {
     //! NOTE: copied from ProjectAudioManager::OnRecord
-
-    //! TODO: should be configurable
-    bool altAppearance = false;
-
-    // TODO: should preferNewTrack be an option?
-    // bool bPreferNewTrack = false;
-    // gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
-    const bool appendRecord = true;//(altAppearance == bPreferNewTrack);
 
     if (!audioDriverController() || audioDriverController()->inputDevices().empty()
         || audioDriverController()->inputChannelsAvailable() <= 0) {
@@ -393,48 +414,23 @@ muse::Ret Au3Record::start()
         return make_ret(Err::MismatchedSamplingRatesError);
     }
 
-    if (appendRecord) {
-        const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
 
-        // Try to find wave tracks to record into.  (If any are selected,
-        // try to choose only from them; else if wave tracks exist, may record into any.)
-        existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
-        if (!existingTracks.empty()) {
-            projectRate = rateOfSelected;
-        } else {
-            if (anySelected && rateOfSelected != projectRate) {
-                return make_ret(Err::TooFewCompatibleTracksSelected);
-            }
-
-            existingTracks = ChooseExistingRecordingTracks(project, false, projectRate, recordingChannels);
+    // Try to find wave tracks to record into.  (If any are selected,
+    // try to choose only from them; else if wave tracks exist, may record into any.)
+    existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
+    if (!existingTracks.empty()) {
+        projectRate = rateOfSelected;
+    } else {
+        if (anySelected && rateOfSelected != projectRate) {
+            return make_ret(Err::TooFewCompatibleTracksSelected);
         }
+
+        existingTracks = ChooseExistingRecordingTracks(project, false, projectRate, recordingChannels);
     }
 
-    bool useDuplex = true;
-    // gPrefs->Read(wxT("/AudioIO/Duplex"), &useDuplex, true); // todo
-
-    TransportSequences transportTracks;
-    if (useDuplex) {
-        // Remove recording tracks from the list of tracks for duplex ("overdub")
-        // playback.
-        /* TODO: set up stereo tracks if that is how the user has set up
-          * their preferences, and choose sample format based on prefs */
-        transportTracks = MakeTransportTracks(Au3TrackList::Get(project), false, true);
-        for (const auto& wt : existingTracks) {
-            auto end = transportTracks.playbackSequences.end();
-            auto it = std::find_if(
-                transportTracks.playbackSequences.begin(), end,
-                [&wt](const auto& playbackSequence) {
-                return playbackSequence->FindChannelGroup() == wt->FindChannelGroup();
-            });
-            if (it != end) {
-                transportTracks.playbackSequences.erase(it);
-            }
-        }
-    }
-
-    std::copy(existingTracks.begin(), existingTracks.end(),
-              back_inserter(transportTracks.captureSequences));
+    const TransportSequences transportTracks
+        = MakeRecordingTransportTracks(Au3TrackList::Get(project), existingTracks, recordConfiguration()->isOverdubOn());
 
     if (audioEngine()->isBusy()) {
         if (audioEngine()->isCapturing()) {
@@ -445,7 +441,7 @@ muse::Ret Au3Record::start()
 
     audioEngine()->stopMonitoring();
 
-    return doRecord(project, transportTracks, t0, t1, altAppearance, projectRate);
+    return doRecord(project, transportTracks, t0, t1, false, projectRate);
 }
 
 muse::Ret Au3Record::pause()
@@ -597,15 +593,9 @@ muse::Ret Au3Record::leadInRecording()
         }
     }
 
-    // Set up transport sequences
     // Unlike AU3, we do NOT clear tracks — AU4 uses non-destructive recording
-    // Play all tracks (duplex) so user hears context during lead-in time
-    TransportSequences transportTracks;
-    transportTracks = MakeTransportTracks(Au3TrackList::Get(project), false, true);
-
-    // Recording tracks are also capture targets
-    std::copy(tracks.begin(), tracks.end(),
-              back_inserter(transportTracks.captureSequences));
+    const TransportSequences transportTracks
+        = MakeRecordingTransportTracks(Au3TrackList::Get(project), tracks, recordConfiguration()->isOverdubOn());
 
     selectionController()->resetSelectedClips();
 
@@ -970,6 +960,48 @@ void Au3Record::cancelRecording()
 {
     Au3Project& project = projectRef();
     PendingTracks::Get(project).ClearPendingTracks();
+}
+
+bool Au3Record::labelDropouts()
+{
+    const auto& intervals = AudioIO::Get()->LostCaptureIntervals();
+    if (intervals.empty()) {
+        return false;
+    }
+
+    auto& tracks = Au3TrackList::Get(projectRef());
+    //: Name of the label track marking where recorded audio was lost. Keep it short, about 11 Latin characters at most.
+    //: A dropout is a loss of a short sequence of audio sample data from the recording
+    const wxString name = tracks.MakeUniqueTrackName(wxFromString(muse::mtrc("record", "Dropouts")));
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks, name);
+
+    int number = 1;
+    for (const auto& [start, duration] : intervals) {
+        labelTrack->AddLabel(SelectedRegion { start, start + duration }, wxString::Format(wxT("%d"), number++));
+    }
+
+    globalContext()->currentTrackeditProject()->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
+    return true;
+}
+
+void Au3Record::showDropoutsWarning()
+{
+    constexpr int turnOffButton = int(IInteractive::Button::CustomButton) + 1;
+    const IInteractive::ButtonDatas buttons {
+        IInteractive::ButtonData(turnOffButton, trc("record", "Turn off dropout detection")),
+        interactive()->buttonData(IInteractive::Button::Ok)
+    };
+
+    const std::string text = trc("record", "Recorded audio was lost at the labeled locations. Possible causes:\n\n"
+                                           "• Other applications are competing with Audacity for processor time\n"
+                                           "• You are saving directly to a slow external storage device");
+
+    interactive()->warning(trc("record", "Recorded audio was lost"), text, buttons, int(IInteractive::Button::Ok))
+    .onResolve(this, [this, turnOffButton](const IInteractive::Result& result) {
+        if (result.isButton(turnOffButton)) {
+            recordConfiguration()->setDetectDropouts(false);
+        }
+    });
 }
 
 void Au3Record::commitRecording()
