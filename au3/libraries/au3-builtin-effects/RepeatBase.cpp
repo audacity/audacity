@@ -178,6 +178,8 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
         if (!mIsPreview) {
             for (auto track : mTracks->Selected<LabelTrack>()) {
                 track->Repeat(mT0, t1, repeatCount);
+                // Select the repeats even when no audio was repeated
+                mT1 = std::max(mT1, t1 + (t1 - mT0) * repeatCount);
             }
         }
     }

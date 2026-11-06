@@ -34,6 +34,18 @@ BuiltinEffectBase {
         order: 1
     }
 
+    Connections {
+        target: repeat
+
+        // A preset can load while the field is empty: show its count and allow Apply again
+        function onReloaded() {
+            root.isApplyAllowed = true
+            // Refresh the field even if the count didn't change
+            repeatCountControl.currentValue = 0
+            repeatCountControl.currentValue = Qt.binding(() => repeat.repeatCount)
+        }
+    }
+
     Component.onCompleted: {
         // Focus the count with its value selected, so that typing a number and pressing Enter applies
         Qt.callLater(repeatCountControl.forceActiveFocus)
