@@ -230,6 +230,21 @@ public:
     /// How many frames of zeros were output due to pauses?
     long mNumPauseFrames;
 
+    //! Playback dropouts, to compare the audio engines: written by the callback, read once the stream stopped
+    struct PlaybackDropouts {
+        //! What the callback output
+        unsigned long long frames = 0;
+        //! The device lacked output (paOutputUnderflow)
+        unsigned long deviceUnderruns = 0;
+        //! The ring buffers lacked what the callback needed; counted once they have enough again, so that what they
+        //! lack at the end of play isn't
+        unsigned long starvedCallbacks = 0;
+        unsigned long long starvedFrames = 0;
+        unsigned long pendingStarvedCallbacks = 0;
+        unsigned long long pendingStarvedFrames = 0;
+    };
+    PlaybackDropouts mPlaybackDropouts;
+
     std::thread mAudioThread;
     std::atomic<bool> mFinishAudioThread{ false };
 

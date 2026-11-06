@@ -213,6 +213,13 @@ void SafeIoCallback::stop()
 {
     if (m_device) {
         m_device->stop();
+        // Underruns of the output, and overflows of the input if one is open
+        const int xruns = m_device->getXRunCount();
+        LOGI() << "Playback dropouts (JUCE): " << muse::String::number(m_dropouts.frames / m_sampleRate, 1) << " s played, "
+               << xruns << " device underruns" << (m_capture ? " or input overflows" : "") << ", " << m_dropouts.lateCallbacks
+               << " late callbacks (longest " << muse::String::number(1000.0 * m_dropouts.longestCallback, 1) << " ms for "
+               << muse::String::number(1000.0 * m_dropouts.longestCallbackBlock, 1) << " ms of audio), "
+               << muse::String::number(1000.0 * m_dropouts.unplayedFrames / m_sampleRate, 0) << " ms of silence waiting for rendering";
         m_device->close();
         m_device.reset();
     }
@@ -258,7 +265,8 @@ void SafeIoCallback::audioDeviceIOCallbackWithContext(const float* const* inputC
     // The input of the channels the capture records, if the device gives them
     const auto input = m_capture && numInputChannels >= m_capture->numInputChannels() ? inputChannelData : nullptr;
 
-    const auto dacTime = std::chrono::steady_clock::now()
+    const auto callbackStart = std::chrono::steady_clock::now();
+    const auto dacTime = callbackStart
                          + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
         std::chrono::duration<double>(m_device->getOutputLatencyInSamples() / m_sampleRate));
     int done = 0;
@@ -275,9 +283,22 @@ void SafeIoCallback::audioDeviceIOCallbackWithContext(const float* const* inputC
         }
         done += frames;
     }
+    if (paused) {
+        return;
+    }
     // As AudioIO, only what played advances the transport
-    if (!paused && numSamples > unplayed) {
+    if (numSamples > unplayed) {
         m_callbackInfos.Put({ dacTime, numSamples - unplayed });
+    }
+    const double duration = std::chrono::duration<double>(std::chrono::steady_clock::now() - callbackStart).count();
+    const double block = numSamples / m_sampleRate;
+    m_dropouts.frames += numSamples;
+    if (duration > block) {
+        ++m_dropouts.lateCallbacks;
+    }
+    if (duration > m_dropouts.longestCallback) {
+        m_dropouts.longestCallback = duration;
+        m_dropouts.longestCallbackBlock = block;
     }
 }
 
@@ -287,6 +308,7 @@ int SafeIoCallback::renderChunk(float* const* output, int numOutputChannels, int
     m_queue->Prepare(index);
     // As AudioIO: what the worker hasn't rendered yet is played late, after silence
     const auto frames = static_cast<int>(m_queue->Available(index, static_cast<size_t>(requested)));
+    m_dropouts.unplayedFrames += requested - frames;
     m_queue->GetSamples(m_bufferPointers, index, static_cast<size_t>(frames));
     if (m_meterSink) {
         m_meterSink->forward(*m_meter, index, static_cast<size_t>(frames), dacTime, m_sampleRate);

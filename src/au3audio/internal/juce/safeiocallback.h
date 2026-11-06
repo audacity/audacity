@@ -140,6 +140,20 @@ private:
     std::atomic<bool> m_paused { false };
     std::atomic<bool> m_finished { false };
 
+    //! Playback dropouts, to compare the audio engines: written by the callback, read once the device stopped
+    struct Dropouts {
+        //! What the callback output while playing
+        int64_t frames = 0;
+        //! Callbacks that took longer than the audio they output
+        int lateCallbacks = 0;
+        double longestCallback = 0.0;
+        //! The block size of the longest callback
+        double longestCallbackBlock = 0.0;
+        //! Silence while waiting for the worker
+        int64_t unplayedFrames = 0;
+    };
+    Dropouts m_dropouts;
+
     // Device thread
     std::vector<float> m_buffer[numChannels];
     float* m_bufferPointers[numChannels] {};
