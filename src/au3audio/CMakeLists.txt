@@ -90,8 +90,12 @@ endif()
 
 if (AU_USE_JUCE)
     set(JUCE_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/blockcontext.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/blockcontext.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectslatency.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectslatency.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/endoftracknode.cpp
@@ -101,15 +105,25 @@ if (AU_USE_JUCE)
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/ieffectscontext.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/iendoftrackcontext.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/imutesolocontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudiodevices.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudiodevices.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceincludes.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/mutesolonode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/mutesolonode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playedrange.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/safeiocallback.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/safeiocallback.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/sequentialmixnode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/sequentialmixnode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/stereo.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/track.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/track.h
     )
     set(MODULE_SRC ${MODULE_SRC} ${JUCE_SRC})
     # JUCE headers clash with the `using namespace muse` of other unity-combined sources
@@ -118,6 +132,9 @@ if (AU_USE_JUCE)
         juce
         au3-clip-processing
         au3-mixer
+        au3-project
+        au3-realtime-effects
+        au3-wave-track
     )
     set(MODULE_DEF ${MODULE_DEF} AU_USE_JUCE)
 endif()

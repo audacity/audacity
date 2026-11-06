@@ -94,7 +94,7 @@ AudioDriverController::SettingsKeys::SettingsKeys(const std::string& group)
 {
 }
 
-AudioDriverController::AudioDriverController(std::unique_ptr<IAudioDevices> devices, const std::string& settingsGroup)
+AudioDriverController::AudioDriverController(std::shared_ptr<IAudioDevices> devices, const std::string& settingsGroup)
     : m_devices{std::move(devices)}, m_keys{settingsGroup}
 {
 }

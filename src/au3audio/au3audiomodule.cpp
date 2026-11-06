@@ -12,6 +12,11 @@
 #include "internal/audiodrivercontroller.h"
 #include "internal/portaudiodevices.h"
 
+#ifdef AU_USE_JUCE
+#include "internal/juce/juceaudiodevices.h"
+#include "internal/juce/juceaudioengine.h"
+#endif
+
 #include "au3-audio-devices/AudioIOBase.h"
 
 #if defined(Q_OS_MAC)
@@ -40,6 +45,14 @@ void Au3AudioModule::registerExports()
     m_audioDriverController = std::make_shared<AudioDriverController>(std::make_unique<PortAudioDevices>(), "AudioIO");
     m_audioDriverController->setAudioEngine(m_audioEngine);
 
+#ifdef AU_USE_JUCE
+    const auto juceDevices = std::make_shared<au4juce::JuceAudioDevices>();
+    m_juceAudioEngine = std::make_shared<au4juce::JuceAudioEngine>(juceDevices);
+    m_juceDriverController = std::make_shared<AudioDriverController>(juceDevices, "JuceAudio");
+    m_juceDriverController->setAudioEngine(m_juceAudioEngine);
+    m_juceAudioEngine->setDriverController(m_juceDriverController.get());
+#endif
+
 #if defined(Q_OS_MAC)
     m_systemAudioDevicesListener = std::make_shared<MacosSystemAudioDevicesListener>();
 #elif defined(Q_OS_WIN)
@@ -60,6 +73,9 @@ void Au3AudioModule::resolveImports()
         return;
     }
     backendRegister->registerBackend({ "portaudio", m_audioEngine, m_audioDriverController });
+#ifdef AU_USE_JUCE
+    backendRegister->registerBackend({ "juce", m_juceAudioEngine, m_juceDriverController });
+#endif
 }
 
 void Au3AudioModule::onInit(const muse::IApplication::RunMode&)
@@ -67,6 +83,9 @@ void Au3AudioModule::onInit(const muse::IApplication::RunMode&)
     m_audioEngine->init();
     AudioDriverController::initSharedDefaults(AudioIOBase::GetOptimalSupportedSampleRate());
     m_audioDriverController->init();
+#ifdef AU_USE_JUCE
+    m_juceDriverController->init();
+#endif
     m_systemAudioDevicesListener->startListening();
 }
 
