@@ -30,6 +30,8 @@ public:
         modularity::ioc(m_iocCtx)->registerExport<muse::ui::INavigationController>(MODULE_NAME, m_navigationController);
 
         m_resolver = std::make_unique<ShortcutResolver>(m_iocCtx);
+
+        setProjectPageShown(true);
     }
 
     void TearDown() override
@@ -42,6 +44,11 @@ public:
     {
         ON_CALL(m_section, name()).WillByDefault(Return(name));
         ON_CALL(*m_navigationController, activeSection()).WillByDefault(Return(&m_section));
+    }
+
+    void setProjectPageShown(bool shown)
+    {
+        ON_CALL(*m_uiContextResolver, matchWithCurrent(UiCtxProjectOpened)).WillByDefault(Return(shown));
     }
 
     void setProjectFocused(bool focused)
@@ -203,5 +210,39 @@ TEST_F(ShortcutResolverTests, NavigationWinsWhenNoSectionIsActive)
     setProjectFocused(false);
 
     EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://navigation/trigger-control"));
+}
+
+TEST_F(ShortcutResolverTests, SpaceTriggersControlOnHomePage)
+{
+    setProjectPageShown(false);
+    setProjectFocused(false);
+
+    const ShortcutList list = {
+        make("NAVIGATION", "command://navigation/trigger-control"),
+        make("PLAYBACK", "command://playback/toggle-play-stop"),
+        make("RECORD", "command://record/stop"),
+    };
+
+    EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://navigation/trigger-control"));
+}
+
+TEST_F(ShortcutResolverTests, ProjectPageShortcutsDoNothingOnHomePage)
+{
+    setProjectPageShown(false);
+    setProjectFocused(false);
+
+    for (const std::string scope : { "TRACKEDIT", "PLAYBACK", "RECORD", "PROJECTSCENE", "EFFECTS", "SPECTROGRAM", "TRACK-NAVIGATION" }) {
+        EXPECT_FALSE(m_resolver->selectActive({ make(scope, "command://test/command") }).isValid()) << scope;
+    }
+}
+
+TEST_F(ShortcutResolverTests, ProjectAndAppShortcutsWorkOnHomePage)
+{
+    setProjectPageShown(false);
+    setProjectFocused(false);
+
+    EXPECT_EQ(m_resolver->selectActive({ make("PROJECT", "command://project/new") }).command, rcommand::Command("command://project/new"));
+    EXPECT_EQ(m_resolver->selectActive({ make("APP", "command://app/preferences") }).command,
+              rcommand::Command("command://app/preferences"));
 }
 }

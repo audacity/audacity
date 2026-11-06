@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <map>
+#include <set>
 #include <utility>
 
 #include "framework/global/stringutils.h"
@@ -48,6 +49,13 @@ int ShortcutResolver::scopePriority(const std::string& scope) const
         return 1;
     }
 
+    static const std::set<std::string> PROJECT_PAGE_SCOPES = {
+        TRACKEDIT_SCOPE, PLAYBACK_SCOPE, RECORD_SCOPE, PROJECTSCENE_SCOPE, EFFECTS_SCOPE, SPECTROGRAM_SCOPE, TRACK_NAVIGATION_SCOPE
+    };
+    if (PROJECT_PAGE_SCOPES.contains(scope) && !isProjectPageShown()) {
+        return -1;
+    }
+
     if (scope == PLAYBACK_SCOPE || scope == RECORD_SCOPE) {
         return 2;
     }
@@ -61,6 +69,11 @@ int ShortcutResolver::scopePriority(const std::string& scope) const
     }
 
     return 0;
+}
+
+bool ShortcutResolver::isProjectPageShown() const
+{
+    return uiContextResolver()->matchWithCurrent(UiCtxProjectOpened);
 }
 
 bool ShortcutResolver::isProjectFocused() const
