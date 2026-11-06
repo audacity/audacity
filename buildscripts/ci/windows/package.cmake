@@ -205,5 +205,10 @@ if(PACK_TYPE STREQUAL "msi")
   message(STATUS "Finished MSI packing")
 endif()
 
-# Package file name, for the later CI steps (checksum, release): the MSI when one is built, else the 7z
-file(WRITE "${ARTIFACTS_DIR}/env/artifact_name.env" "${ARTIFACT_NAME}")
+# Package file names, for the later CI steps (checksum, release), one per line:
+# the MSI when one is built, then the 7z; releases ship both.
+if(PACK_TYPE STREQUAL "msi")
+  file(WRITE "${ARTIFACTS_DIR}/env/artifact_name.env" "${ARTIFACT_NAME}\n${ARCHIVE_NAME}")
+else()
+  file(WRITE "${ARTIFACTS_DIR}/env/artifact_name.env" "${ARTIFACT_NAME}")
+endif()

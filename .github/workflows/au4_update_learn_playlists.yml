@@ -7,6 +7,17 @@ on:
         description: 'Mode: stable, testing'
         required: true
         default: 'testing'
+  workflow_call:
+    inputs:
+      mode:
+        description: 'Mode: stable, testing'
+        type: string
+        required: true
+      environment:
+        description: "Environment: 'production' to require approval"
+        type: string
+        required: false
+        default: ''
 
 defaults:
   run:
@@ -15,6 +26,9 @@ defaults:
 jobs:
   au4_update_playlists:
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }} # may be blank, then there is no gate
+      url: https://www.youtube.com/playlist?list=PLt__f9D3T90yZiTOE1QOAF2Uc1MPAK_fv
     steps:
       - name: Clone repository
         uses: actions/checkout@v7
@@ -24,7 +38,7 @@ jobs:
       - name: Update info about the get started playlist in s3
         run: |
           S3_URL="s3://extensions.musescore.org/audacity/4.0/learn/started_playlist.json"
-          if [ ${{ github.event.inputs.mode }} == "testing" ]; then
+          if [ ${{ inputs.mode }} == "testing" ]; then
             S3_URL="s3://extensions.musescore.org/audacity/4.0/learn/started_playlist.test.json"
           fi
 

@@ -1,0 +1,166 @@
+name: '[AU4] Deploy'
+run-name: '[AU4] Deploy: ${{ inputs.release_type }} (tag=${{ inputs.create_tag }})'
+
+# A release in one step, run from the release branch (where version.cmake is
+# bumped): name the tag, build every platform with one build number, collect
+# and verify the packages, then create the tag and a draft GitHub release.
+# MuseScore's deploy.yml is the model; the release scripts are the framework's.
+
+on:
+  workflow_dispatch:
+    inputs:
+      platforms:
+        description: 'Platforms to build: linux macos windows sources'
+        required: true
+        default: 'linux macos windows sources'
+      release_type:
+        description: 'Release type: alpha, beta, rc, stable, or any label with chars A-Za-z0-9._ for testing'
+        required: true
+        default: 'test'
+      create_tag:
+        description: 'Create tag & draft release (the release type must then be alpha, beta, rc or stable)'
+        type: boolean
+        default: false
+
+env:
+  # Audacity's names for the framework's release scripts:
+  # tag 'Audacity-4.0.2' or 'Audacity-4.1.0-beta-2', release 'Audacity 4.0.2' or 'Audacity 4.1.0 Beta 2'
+  TAG_PREFIX: 'Audacity-'
+  TAG_LABEL_SEPARATOR: '-'
+  APP_DISPLAY_NAME: 'Audacity'
+  STABLE_RELEASE_LABEL: ''
+
+jobs:
+  plan:
+    name: 'Plan: ${{ inputs.release_type }} (tag=${{ inputs.create_tag }})'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      tag_name: ${{ steps.make_tag_info.outputs.TAG_NAME }}
+      release_name: ${{ steps.make_tag_info.outputs.RELEASE_NAME }}
+    steps:
+    - name: Clone repository with history
+      uses: actions/checkout@v7
+      with:
+        submodules: recursive
+        fetch-depth: 0 # the tag script numbers a pre-release from the existing tags
+
+    - name: Make tag info
+      id: make_tag_info
+      env:
+        RELEASE_TYPE: ${{ inputs.release_type }}
+        CREATE_TAG: ${{ inputs.create_tag }}
+      run: |
+        git tag --list 'Audacity-*' | tail -n 20
+        echo ==========
+
+        muse/buildscripts/ci/release/make_tag_name.sh | tee -a "${GITHUB_OUTPUT}"
+        echo "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
+        echo ==========
+        if [[ "${CREATE_TAG}" == 'true' ]]; then
+          echo "::notice ::Tag will be created"
+        else
+          echo "::warning ::Tag will NOT be created"
+        fi
+
+  build:
+    name: Build
+    needs: plan
+    uses: ./.github/workflows/au4_build_all.yml
+    secrets: inherit
+    with:
+      platforms: ${{ inputs.platforms }}
+      build_mode: ${{ inputs.release_type == 'stable' && 'stable' || 'testing' }}
+      sentry_project: ${{ (inputs.create_tag && inputs.release_type == 'stable') && 'au4' || 'au4-sandbox' }}
+
+  update_learn_playlists:
+    name: Update learn playlists
+    needs: build
+    if: ${{ github.repository == 'audacity/audacity' && ! failure() && ! cancelled() && inputs.create_tag }}
+    uses: ./.github/workflows/au4_update_learn_playlists.yml
+    secrets: inherit
+    with:
+      mode: ${{ inputs.release_type == 'stable' && 'stable' || 'testing' }}
+      environment: production # the playlist of the release channel goes live with it
+
+  create_release:
+    name: 'Create release: ${{ needs.plan.outputs.tag_name }}'
+    needs:
+      - plan # to access outputs
+      - build
+    if: ${{ ! failure() && ! cancelled() && inputs.create_tag }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # to push the tag and create the release
+    environment:
+      name: production # requires approval
+      url: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ needs.plan.outputs.tag_name }}
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v7
+      with:
+        submodules: recursive
+
+    - name: Download and extract artifacts
+      uses: actions/download-artifact@v8
+      with:
+        path: build.artifacts
+
+    - name: Collate release binaries
+      run: |
+        muse/buildscripts/ci/release/collate_release_binaries.sh
+
+    - name: Write CHECKSUMS.txt # the Name, Length, Hash table of the previous releases, from the verified checksums
+      working-directory: release
+      run: |
+        {
+          printf '%-40s %-10s %-64s\n' 'Name' 'Length' 'Hash'
+          printf '%-40s %-10s %-64s\n' '----' '------' '----'
+          while read -r hash file; do
+            printf '%-40s %-10s %-64s\n' "${file}" "$(stat -c%s "${file}")" "${hash}"
+          done < checksums.sha256.txt
+        } > CHECKSUMS.txt
+        rm checksums.sha256.txt
+        cat CHECKSUMS.txt
+
+    - name: Create tag # as late as possible, so that a failure leaves no useless tag behind
+      env:
+        TAG_NAME: ${{ needs.plan.outputs.tag_name }}
+      run: |
+        int="(0|[1-9][0-9]*)"
+        version="${int}\.${int}\.${int}"
+        label="(alpha|beta|rc)(-${int})?"
+        pattern="^Audacity-${version}(-${label})?$"
+
+        if [[ ! "${TAG_NAME}" =~ ${pattern} ]]; then
+          echo >&2 "Error: TAG_NAME '${TAG_NAME}' doesn't match required regex: ${pattern}"
+          exit 1
+        fi
+
+        git tag "${TAG_NAME}" "${GITHUB_SHA}"
+        git push origin "${TAG_NAME}"
+
+    - name: Create draft release
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+      with: # https://github.com/softprops/action-gh-release?tab=readme-ov-file#inputs
+        draft: true
+        prerelease: ${{ inputs.release_type != 'stable' }}
+        files: release/*
+        name: ${{ needs.plan.outputs.release_name }}
+        tag_name: ${{ needs.plan.outputs.tag_name }}
+        fail_on_unmatched_files: true
+        generate_release_notes: false
+
+  update_release_info:
+    name: Update release info
+    needs:
+      - plan # to access outputs
+      - create_release
+    if: ${{ github.repository == 'audacity/audacity' && ! failure() && ! cancelled() && needs.create_release.result == 'success' }}
+    uses: ./.github/workflows/au4_update_release_info.yml
+    secrets: inherit
+    with:
+      mode: ${{ inputs.release_type == 'stable' && 'stable' || 'testing' }}
+      tag: ${{ needs.plan.outputs.tag_name }}
+      environment: production # approve once the draft release is published: the feed reads the published release
