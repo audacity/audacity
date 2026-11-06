@@ -298,13 +298,14 @@ TEST_F(PlayCursorControllerTests, PositionChangeWhileStopped_BringsViewToCursor)
 }
 
 //! Seek gesture: pressing in the track area must never move the playhead by
-//! itself — the seek is deferred to the release, and dropped entirely when the
-//! press turned into a drag of something other than the play cursor.
+//! itself — the seek is deferred to the release. A plain click seeks to the
+//! pressed time; a drag selection seeks to the selection start, but only when
+//! stopped.
 //!
 //! endSeekGesture()'s return value is the contract the view branches on: true
-//! means "this was a plain click, playback position state may be updated",
-//! false means "this was a drag — leave both the playhead and the next
-//! playback start position alone".
+//! means "the playhead was repositioned, playback position state may be
+//! updated", false means "leave both the playhead and the next playback start
+//! position alone".
 //! Default zoom (1.0) / frame start (0.0) make position and time 1:1.
 
 TEST_F(PlayCursorControllerTests, SeekGesture_Press_DoesNotDispatchSeek)
@@ -328,7 +329,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_PlainClick_SeeksOnRelease)
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
-    EXPECT_TRUE(m_controller->endSeekGesture());
+    EXPECT_TRUE(m_controller->endSeekGesture(20.0));
 
     EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
     EXPECT_FALSE(captured.params.at(playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool());
@@ -345,7 +346,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWithinDragThreshold_StillSeek
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
     m_controller->updateSeekGesture(22.0, 52.0); // < 5px in both axes
-    EXPECT_TRUE(m_controller->endSeekGesture());
+    EXPECT_TRUE(m_controller->endSeekGesture(20.0));
 
     EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
 }
@@ -360,55 +361,109 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickAppliesSnap)
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(10.5, 10.5, 50.0); // within the 4px(=4s at zoom 1) clip-snap tolerance
-    EXPECT_TRUE(m_controller->endSeekGesture());
+    EXPECT_TRUE(m_controller->endSeekGesture(10.5));
 
     EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 10.0);
 }
 
-TEST_F(PlayCursorControllerTests, SeekGesture_HorizontalDrag_DoesNotSeek)
+TEST_F(PlayCursorControllerTests, SeekGesture_Press_ThenDrag_DoesNotSeekDuringDrag)
 {
-    //! CASE Dragging a time selection updates neither the playhead nor the next
-    //! playback start position: no dispatch during the drag, none on release,
-    //! and no seek-time bookkeeping. The false return tells the view to skip
-    //! the playback-region update too.
+    //! CASE The playhead stays put while a selection is being dragged.
     useGridSnapOff({});
 
     EXPECT_CALL(*m_commandDispatcher, dispatch(_))
-    .Times(0);
-    EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(_))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
     m_controller->updateSeekGesture(30.0, 50.0);
-    EXPECT_FALSE(m_controller->endSeekGesture());
+    m_controller->updateSeekGesture(40.0, 50.0);
 }
 
-TEST_F(PlayCursorControllerTests, SeekGesture_VerticalDrag_DoesNotSeek)
+TEST_F(PlayCursorControllerTests, SeekGesture_DragWhenStopped_SeeksToSelectionStartOnRelease)
 {
-    //! CASE A vertical drag (multi-track selection) is a drag too.
+    //! CASE A drag selection made right-to-left moves the playhead to the
+    //! selection start, not to the pressed time.
     useGridSnapOff({});
 
+    muse::rcommand::Request captured;
     EXPECT_CALL(*m_commandDispatcher, dispatch(_))
-    .Times(0);
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
+
+    m_controller->beginSeekGesture(40.0, 40.0, 50.0);
+    m_controller->updateSeekGesture(20.0, 50.0);
+    EXPECT_TRUE(m_controller->endSeekGesture(20.0));
+
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
+    EXPECT_FALSE(captured.params.at(playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool());
+}
+
+TEST_F(PlayCursorControllerTests, SeekGesture_DragWhenStopped_SelectionStartOutsideFrame_LeavesFrame)
+{
+    //! CASE A drag selection that auto-scrolled past the initial frame moves the
+    //! playhead to the selection start without scrolling the view back to it.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    m_context->onResizeFrameWidth(100.0);
+    m_context->moveToFrameTime(200.0); // frame = [200, 300]s at zoom 1, auto-scrolled during the drag
+    const double frameStart = m_context->frameStartTime();
+
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
+
+    m_controller->beginSeekGesture(20.0, 20.0, 50.0);
+    m_controller->updateSeekGesture(300.0, 50.0);
+    EXPECT_TRUE(m_controller->endSeekGesture(20.0));
+    positionChanged.send(20.0);
+
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
+    EXPECT_DOUBLE_EQ(m_context->frameStartTime(), frameStart);
+}
+
+TEST_F(PlayCursorControllerTests, SeekGesture_VerticalDragWhenStopped_SeeksToSelectionStart)
+{
+    //! CASE A vertical drag (zero-width, multi-track selection) still moves the
+    //! playhead, so the input is never lost.
+    useGridSnapOff({});
+
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
     m_controller->updateSeekGesture(20.0, 80.0);
-    EXPECT_FALSE(m_controller->endSeekGesture());
+    EXPECT_TRUE(m_controller->endSeekGesture(20.0));
+
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
 }
 
-TEST_F(PlayCursorControllerTests, SeekGesture_DragReturningToOrigin_StillNoSeek)
+TEST_F(PlayCursorControllerTests, SeekGesture_DragWhilePaused_DoesNotSeek)
 {
-    //! CASE Once the drag threshold is crossed the gesture stays a drag, even
-    //! if the pointer returns to the press position before release.
+    //! CASE Paused counts as not stopped: a drag selection keeps the playhead.
     useGridSnapOff({});
+    ON_CALL(*m_playbackState, playbackStatus())
+    .WillByDefault(Return(playback::PlaybackStatus::Paused));
 
     EXPECT_CALL(*m_commandDispatcher, dispatch(_))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
-    m_controller->updateSeekGesture(40.0, 50.0);
-    m_controller->updateSeekGesture(20.0, 50.0);
-    EXPECT_FALSE(m_controller->endSeekGesture());
+    m_controller->updateSeekGesture(30.0, 50.0);
+    EXPECT_FALSE(m_controller->endSeekGesture(20.0));
+}
+
+TEST_F(PlayCursorControllerTests, SeekGesture_DragWhileRecording_DoesNotSeek)
+{
+    //! CASE A drag selection during recording keeps the playhead.
+    useGridSnapOff({});
+    ON_CALL(*m_globalContext, isRecording())
+    .WillByDefault(Return(true));
+
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    .Times(0);
+
+    m_controller->beginSeekGesture(20.0, 20.0, 50.0);
+    m_controller->updateSeekGesture(30.0, 50.0);
+    EXPECT_FALSE(m_controller->endSeekGesture(20.0));
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_Cancel_DoesNotSeek)
@@ -422,7 +477,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_Cancel_DoesNotSeek)
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
     m_controller->cancelSeekGesture();
-    EXPECT_FALSE(m_controller->endSeekGesture());
+    EXPECT_FALSE(m_controller->endSeekGesture(20.0));
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_EndWithoutBegin_IsNoop)
@@ -434,7 +489,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_EndWithoutBegin_IsNoop)
     EXPECT_CALL(*m_commandDispatcher, dispatch(_))
     .Times(0);
 
-    EXPECT_FALSE(m_controller->endSeekGesture());
+    EXPECT_FALSE(m_controller->endSeekGesture(20.0));
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsSeekTime_DoesNotMovePlayhead)
@@ -451,7 +506,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsSeekTime_
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(muse::secs_t(20.0)));
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
-    EXPECT_TRUE(m_controller->endSeekGesture());
+    EXPECT_TRUE(m_controller->endSeekGesture(20.0));
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsSnappedSeekTime)
@@ -465,7 +520,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsSnappedSe
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(muse::secs_t(10.0)));
 
     m_controller->beginSeekGesture(10.5, 10.5, 50.0); // within the clip-snap tolerance
-    EXPECT_TRUE(m_controller->endSeekGesture());
+    EXPECT_TRUE(m_controller->endSeekGesture(10.5));
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsGridSnappedSeekTime)
@@ -478,7 +533,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsGridSnapp
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(muse::secs_t(7.0)));
 
     m_controller->beginSeekGesture(7.4, 7.4, 50.0);
-    EXPECT_TRUE(m_controller->endSeekGesture());
+    EXPECT_TRUE(m_controller->endSeekGesture(7.4));
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_DragWhilePlaying_DoesNotTouchPlayback)
@@ -496,6 +551,6 @@ TEST_F(PlayCursorControllerTests, SeekGesture_DragWhilePlaying_DoesNotTouchPlayb
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
     m_controller->updateSeekGesture(60.0, 50.0);
-    EXPECT_FALSE(m_controller->endSeekGesture());
+    EXPECT_FALSE(m_controller->endSeekGesture(20.0));
 }
 }
