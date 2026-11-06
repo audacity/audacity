@@ -21,7 +21,7 @@ var testCase = {
     steps: [
         {
             name: "Create new project", func: function () {
-                api.dispatcher.dispatch("file-close")
+                api.dispatcher.dispatch("command://project/close")
                 Home.goToHome()
                 Home.createNewProject()
                 // Querying a navigation panel before the project page exists crashes the app

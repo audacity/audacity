@@ -19,7 +19,7 @@ var u = require("steps/TestUtils.js")
 function chirp(track, dur, freqLo, freqHi) {
     u.selectTrack(track)
     u.select(0, dur)
-    u.effect("Chirp", { StartFreq: freqLo, EndFreq: freqHi, StartAmp: 0.8, EndAmp: 0.1 })
+    u.effect("Effect_Audacity_Audacity_Chirp_Built-in Effect: Chirp", { StartFreq: freqLo, EndFreq: freqHi, StartAmp: 0.8, EndAmp: 0.1 })
 }
 
 // setup state
@@ -62,7 +62,7 @@ var steps = []
 
 // 1. Setup
 steps.push(u.step("Setup: two tracks, 3 clips each", function () {
-    u.run("file-close")
+    u.run("command://project/close")
     Home.goToHome()
     Home.createNewProject()
     // createNewProject is a queued navigation trigger; let it complete
@@ -77,7 +77,7 @@ steps.push(u.step("Setup: two tracks, 3 clips each", function () {
 
     u.selectAllTracks()
     u.select(1.0, 2.0) ; u.sleep(100)
-    u.run("split")      ; u.sleep(200)
+    u.run("command://trackedit/split")      ; u.sleep(200)
 
     u.eq(u.clipCount(0), 3, "track 0 clips after split")
     u.eq(u.clipCount(1), 3, "track 1 clips after split")
@@ -88,7 +88,7 @@ steps.push(u.step("Setup: two tracks, 3 clips each", function () {
 }))
 
 // 2. Leave gap: middle clip removed, third clip stays at 2.0
-var leaveGap = ["cut-leave-gap", "delete-leave-gap"]
+var leaveGap = ["command://trackedit/cut-leave-gap", "command://trackedit/delete-leave-gap"]
 for (var i = 0; i < leaveGap.length; i++) {
     (function (a) {
         steps.push(testAction(a, a,
@@ -118,7 +118,7 @@ for (var i = 0; i < leaveGap.length; i++) {
 }
 
 // 4. Per-clip ripple [0.5, 1.5]: trimmed but NOT shifted
-var perClip = ["cut-per-clip-ripple", "delete-per-clip-ripple"]
+var perClip = ["command://trackedit/cut-per-clip-ripple", "command://trackedit/delete-per-clip-ripple"]
 for (var i = 0; i < perClip.length; i++) {
     (function (a) {
         steps.push(testAction(a + " (cross)", a,
@@ -133,7 +133,7 @@ for (var i = 0; i < perClip.length; i++) {
 }
 
 // 5. Per-track ripple: both tracks shift (both selected)
-var perTrack = ["cut-per-track-ripple", "delete-per-track-ripple"]
+var perTrack = ["command://trackedit/cut-per-track-ripple", "command://trackedit/delete-per-track-ripple"]
 for (var i = 0; i < perTrack.length; i++) {
     (function (a) {
         steps.push(testAction(a, a,
@@ -177,7 +177,7 @@ for (var i = 0; i < perTrack.length; i++) {
 }
 
 // 8. All-tracks ripple, single track selected: BOTH tracks shift
-var allTracks = ["cut-all-tracks-ripple", "delete-all-tracks-ripple"]
+var allTracks = ["command://trackedit/cut-all-tracks-ripple", "command://trackedit/delete-all-tracks-ripple"]
 for (var i = 0; i < allTracks.length; i++) {
     (function (a) {
         steps.push(testAction(a + " (track 0 only)", a,
