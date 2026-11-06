@@ -429,7 +429,12 @@ muse::Ret Au3Record::start()
                 return playbackSequence->FindChannelGroup() == wt->FindChannelGroup();
             });
             if (it != end) {
+                // With its graph
+                const auto index = static_cast<size_t>(std::distance(transportTracks.playbackSequences.begin(), it));
                 transportTracks.playbackSequences.erase(it);
+                if (index < transportTracks.playbackGraphs.size()) {
+                    transportTracks.playbackGraphs.erase(transportTracks.playbackGraphs.begin() + index);
+                }
             }
         }
     }
