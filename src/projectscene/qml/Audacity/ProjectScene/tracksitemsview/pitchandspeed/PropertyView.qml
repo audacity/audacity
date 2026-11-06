@@ -50,7 +50,7 @@ Column {
         navigation.name: root.navigationName + " Spinbox"
         navigation.panel: root.navigationPanel
         navigation.row: root.navigationRowStart + 1
-        navigation.accessible.name: root.title + " " + currentValue
+        navigation.accessible.name: root.title
 
         onValueEditingFinished: function (newValue) {
             root.valueChanged(newValue)
