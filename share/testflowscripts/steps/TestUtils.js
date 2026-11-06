@@ -11,22 +11,26 @@ var EPSILON = 0.001
 // dispatch helpers
 
 function select(start, end) {
-    api.dispatcher.dispatch("action://trackedit/set-selection?start=" + start + "&end=" + end)
+    api.dispatcher.dispatch("command://trackedit/set-selection?start=" + start + "&end=" + end)
 }
 function selectAllTracks() {
-    api.dispatcher.dispatch("select-all-tracks")
+    api.dispatcher.dispatch("command://trackedit/select-all-tracks")
 }
 function selectTrack(t) {
-    api.dispatcher.dispatch("action://trackedit/select-track?trackIndex=" + t)
+    api.dispatcher.dispatch("command://trackedit/select-track?trackIndex=" + t)
 }
 function run(action)   { api.dispatcher.dispatch(action) }
-function undo()        { run("action://undo") }
+function undo()        { run("command://trackedit/undo") }
 function sleep(ms)     { api.testflow.sleep(ms) }
 function fail(msg)     { api.testflow.error(msg) }
 
-function effect(id, params) {
-    var q = "action://effects/apply?effectId=" + id
-    for (var k in params) { q += "&" + k + "=" + params[k] }
+function effect(pluginId, params) {
+    var q = "command://effects/apply/" + encodeURIComponent(pluginId)
+    var separator = "?"
+    for (var k in params) {
+        q += separator + k + "=" + params[k]
+        separator = "&"
+    }
     api.dispatcher.dispatch(q)
 }
 

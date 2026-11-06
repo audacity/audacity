@@ -19,12 +19,12 @@ function performShortRecording(trial) {
     );
 
     // This creates and selects a new track before starting recording.
-    u.run("record-on-new-track");
+    u.run("command://record/on-new-track");
 
     // Keep this below mMinCaptureSecsToCopy, which is 200 ms.
     u.sleep(RECORDING_DURATION_MS);
 
-    u.run("action://record/stop");
+    u.run("command://record/stop");
 
     // Allow recording finalization and project notifications to complete.
     u.sleep(750);
@@ -61,7 +61,7 @@ var testCase = {
         {
             name: "Create a clean project",
             func: function () {
-                u.run("file-close");
+                u.run("command://project/close");
                 u.sleep(300);
 
                 Home.goToHome();
