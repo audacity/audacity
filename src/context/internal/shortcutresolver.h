@@ -27,6 +27,7 @@ public:
 
 private:
     int scopePriority(const std::string& scope) const;
+    bool isProjectPageShown() const;
     bool isProjectFocused() const;
     bool isTrackViewFocused() const;
 };
