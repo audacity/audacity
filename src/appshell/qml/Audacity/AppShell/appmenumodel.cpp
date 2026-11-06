@@ -677,6 +677,8 @@ MenuItemList AppMenuModel::makeToolItems()
     MenuItemList items {
         makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
         makeSeparator(),
+        makeMenuItem(APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND),
+        makeSeparator(),
         // makeMenuItem("manage-macros"),
     };
 

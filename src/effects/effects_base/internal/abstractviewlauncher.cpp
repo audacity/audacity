@@ -12,9 +12,12 @@ constexpr const char16_t* REALTIME_VIEWER_URI
 
 muse::Ret AbstractViewLauncher::doShowEffect(int instanceId, EffectFamily family) const
 {
+    const Effect* effect = effectsProvider()->effect(instancesRegister()->effectIdByInstanceId(instanceId));
+
     muse::UriQuery uri(DESTRUCTIVE_EFFECT_VIEWER_URI);
     uri.addParam("instanceId", muse::Val(instanceId));
     uri.addParam("effectFamily", muse::Val(family));
+    uri.addParam("batchProcessing", muse::Val(effect && effect->IsBatchProcessing()));
     const auto ret = interactive()->openSync(uri);
     return ret.ret;
 }
