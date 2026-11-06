@@ -14,6 +14,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/clipbufferingnode_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/crossfadingsmoother_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/lockfreequeuenode_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/playheadmappingnode_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/resamplingnode_tests.cpp
 )
 
