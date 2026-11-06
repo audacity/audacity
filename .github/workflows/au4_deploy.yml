@@ -74,6 +74,16 @@ jobs:
       build_mode: ${{ inputs.release_type == 'stable' && 'stable' || 'testing' }}
       sentry_project: ${{ (inputs.create_tag && inputs.release_type == 'stable') && 'au4' || 'au4-sandbox' }}
 
+  update_learn_playlists:
+    name: Update learn playlists
+    needs: build
+    if: ${{ github.repository == 'audacity/audacity' && ! failure() && ! cancelled() && inputs.create_tag }}
+    uses: ./.github/workflows/au4_update_learn_playlists.yml
+    secrets: inherit
+    with:
+      mode: ${{ inputs.release_type == 'stable' && 'stable' || 'testing' }}
+      environment: production # the playlist of the release channel goes live with it
+
   create_release:
     name: 'Create release: ${{ needs.plan.outputs.tag_name }}'
     needs:
