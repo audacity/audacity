@@ -42,8 +42,6 @@ public:
     muse::async::Notification defaultAudioTrackNameChanged() const override;
 
 private:
-    void applyDefaultAudioTrackName() const;
-
     muse::async::Notification m_pasteAsNewClipChanged;
     muse::async::Notification m_askBeforeConvertingToMonoOrStereoChanged;
     muse::async::Notification m_deleteBehaviorChanged;

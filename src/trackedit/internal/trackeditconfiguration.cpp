@@ -5,9 +5,7 @@
 
 #include "settings.h"
 
-#include "au3wrap/internal/wxtypes_convert.h"
-
-#include "au3-wave-track/WaveTrack.h"
+#include "translation.h"
 
 namespace au::trackedit {
 static const std::string moduleName("trackedit");
@@ -18,8 +16,7 @@ static const muse::Settings::Key DELETE_BEHAVIOR(moduleName, "trackedit/deleteBe
 static const muse::Settings::Key CLOSE_GAP_BEHAVIOR(moduleName, "trackedit/closeGapBehavior");
 static const muse::Settings::Key PASTE_BEHAVIOR(moduleName, "trackedit/pasteBehavior");
 static const muse::Settings::Key PASTE_INSERT_BEHAVIOR(moduleName, "trackedit/pasteInsertBehavior");
-// Empty means "use the translated default name"
-static const muse::Settings::Key DEFAULT_AUDIO_TRACK_NAME(moduleName, "trackedit/defaultAudioTrackName");
+static const muse::Settings::Key DEFAULT_AUDIO_TRACK_NAME(moduleName, "GUI/TrackNames/DefaultTrackName");
 
 void TrackeditConfiguration::init()
 {
@@ -55,22 +52,14 @@ void TrackeditConfiguration::init()
 
     muse::settings()->setDefaultValue(DEFAULT_AUDIO_TRACK_NAME, muse::Val(std::string()));
     muse::settings()->valueChanged(DEFAULT_AUDIO_TRACK_NAME).onReceive(nullptr, [this](const muse::Val&) {
-        applyDefaultAudioTrackName();
         m_defaultAudioTrackNameChanged.notify();
     });
-    applyDefaultAudioTrackName();
-}
-
-void TrackeditConfiguration::applyDefaultAudioTrackName() const
-{
-    // New tracks are named by au3 code (WaveTrack::GetDefaultAudioTrackNamePreference),
-    // so keep its setting in sync with ours
-    AudioTrackNameSetting.Write(au3::wxFromStdString(muse::settings()->value(DEFAULT_AUDIO_TRACK_NAME).toString()));
 }
 
 std::string TrackeditConfiguration::defaultAudioTrackName() const
 {
-    return au3::wxToStdString(WaveTrack::GetDefaultAudioTrackNamePreference());
+    const std::string name = muse::settings()->value(DEFAULT_AUDIO_TRACK_NAME).toString();
+    return name.empty() ? muse::trc("wave-track", "Audio") : name;
 }
 
 void TrackeditConfiguration::setDefaultAudioTrackName(const std::string& name)

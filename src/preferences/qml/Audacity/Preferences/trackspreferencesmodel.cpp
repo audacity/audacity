@@ -57,8 +57,6 @@ QString TracksPreferencesModel::defaultTrackName() const
 void TracksPreferencesModel::setDefaultTrackName(const QString& name)
 {
     trackeditConfiguration()->setDefaultAudioTrackName(name.toStdString());
-    // An empty name falls back to the default one, so refresh the field either way
-    emit defaultTrackNameChanged();
 }
 
 QVariantList TracksPreferencesModel::trackVisualizations() const

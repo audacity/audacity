@@ -100,8 +100,10 @@ BaseSection {
 
                 onTextEditingFinished: function (newTextValue) {
                     root.tracksPreferencesModel.setDefaultTrackName(newTextValue)
-                    // The model falls back to the default name when the field is emptied
-                    inputField.text = root.tracksPreferencesModel.defaultTrackName
+                    // Typing breaks the text binding, so restore it to follow the model again
+                    inputField.text = Qt.binding(function () {
+                        return trackNameField.currentText
+                    })
                 }
             }
         }
