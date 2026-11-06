@@ -9,6 +9,7 @@
 #include "framework/global/containers.h"
 #include "framework/global/log.h"
 
+#include "au3-preferences/Prefs.h"
 #include "au3-project/Project.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-realtime-effects/RealtimeEffectManager.h"
@@ -19,11 +20,14 @@
 
 #include "juceaudiodevices.h"
 #include "jucemonitoringcallback.h"
+#include "recordingcapture.h"
 #include "safeiocallback.h"
 
 using namespace au::au4juce;
 
 namespace {
+//! Where a stream that plays or records until stopped ends
+constexpr double maxStreamTime = 1e7;
 //! How far right of the loop region the playhead may be for loop play to still capture it (as in DefaultPlaybackPolicy)
 constexpr double loopCaptureAllowance = 0.5;
 
@@ -93,7 +97,8 @@ bool JuceAudioEngine::isBusy() const
 
 bool JuceAudioEngine::isCapturing() const
 {
-    return false;
+    // As AudioIO, once past the lead-in
+    return m_stream && !m_stream->isFinished() && m_stream->capture() && m_stream->capture()->isCapturing(m_stream->position());
 }
 
 bool JuceAudioEngine::isMonitoring() const
@@ -109,7 +114,8 @@ std::optional<au::audio::AudioStreamDescriptor> JuceAudioEngine::currentStream()
     if (!m_stream) {
         return std::nullopt;
     }
-    return audio::AudioStreamDescriptor { audio::AudioStreamKind::Playback, &m_stream->project, m_stream->sampleRate() };
+    const auto kind = m_stream->capture() ? audio::AudioStreamKind::Recording : audio::AudioStreamKind::Playback;
+    return audio::AudioStreamDescriptor { kind, &m_stream->project, m_stream->sampleRate() };
 }
 
 bool JuceAudioEngine::isStreamActive(AudacityProject& project) const
@@ -128,11 +134,8 @@ int JuceAudioEngine::startTransport(const TransportSequences& sequences, double 
     if (m_stream) {
         return 0;
     }
-    if (!sequences.captureSequences.empty()) {
-        m_lastError = u"Recording with the JUCE audio engine is not implemented yet";
-        return 0;
-    }
-    if (sequences.playbackSequences.empty()) {
+    const bool recording = !sequences.captureSequences.empty();
+    if (sequences.playbackSequences.empty() && !recording) {
         m_lastError = u"Nothing to play";
         return 0;
     }
@@ -147,9 +150,40 @@ int JuceAudioEngine::startTransport(const TransportSequences& sequences, double 
     }
     // As AudioIO, playing stops monitoring
     stopMonitoring();
-    auto device = openDevice(0, numChannels, options.sampleRate);
+    const auto configuration = m_driverController->configuration();
+    auto device = openDevice(recording ? configuration.inputChannels : 0, numChannels, options.sampleRate);
     if (!device) {
         return 0;
+    }
+
+    // As AudioIO, recording plays from before where it starts by the lead-in, and to after where it ends by the latency
+    // it compensates
+    std::optional<RecordingCapture::Settings> capture;
+    double rangeStart = startTime;
+    double rangeEnd = endTime;
+    if (recording) {
+        RecordingCapture::Settings settings;
+        settings.sequences = sequences.captureSequences;
+        settings.startTime = startTime;
+        settings.endTime = endTime;
+        settings.leadInTime = std::max(0.0, std::min(startTime, options.leadInTime));
+        const auto rate = device->getCurrentSampleRate();
+        settings.latencyCompensation = configuration.automaticLatencyCompensation
+                                       ? -(device->getInputLatencyInSamples() + device->getOutputLatencyInSamples()) / rate
+                                       : configuration.latencyCompensation / 1000.0;
+        settings.crossfadeData = options.crossfadeData;
+        settings.detectDropouts = gPrefs->Read(WarningDialogKey(wxT("DropoutDetected")), true) != 0;
+        settings.numInputChannels = device->getActiveInputChannels().countNumberOfSetBits();
+        settings.deviceRate = rate;
+        settings.maxFrames = std::max(1, device->getCurrentBufferSizeSamples());
+        if (settings.numInputChannels == 0) {
+            m_lastError = u"The input device has no channels";
+            return 0;
+        }
+        rangeStart = startTime - settings.leadInTime;
+        // Recording until stopped ends very far away
+        rangeEnd = std::min(endTime - settings.latencyCompensation, maxStreamTime);
+        capture = std::move(settings);
     }
 
     // As AudioIO: the default policy plays from the play region start, and loops it if it is active
@@ -158,19 +192,34 @@ int JuceAudioEngine::startTransport(const TransportSequences& sequences, double 
     if (!streamStartTime && options.isDefaultPolicy) {
         streamStartTime = std::max(0.0, playRegion.GetStart());
     }
-    const double playStartTime = streamStartTime.value_or(startTime);
+    const double playStartTime = streamStartTime.value_or(rangeStart);
 
     auto stream = std::make_unique<SafeIoCallback>(project, m_nextStreamToken, std::move(device), options.isDefaultPolicy,
                                                    m_callbackInfoQueue, m_playedRanges, m_playbackVolume);
     stream->trackEndTime = TrackList::Get(project).GetEndTime();
-    stream->build(sequences, muse::value(m_playbackMeters, &project));
+    std::optional<SafeIoCallback::RecordingRange> recordingRange;
+    if (recording) {
+        recordingRange = SafeIoCallback::RecordingRange { startTime, endTime };
+    }
+    stream->build(sequences, muse::value(m_playbackMeters, &project), recordingRange);
+    if (capture) {
+        auto recordingCapture = std::make_unique<RecordingCapture>(project, std::move(*capture), m_listener,
+                                                                   muse::value(m_captureMeters, &project), m_inputVolume,
+                                                                   recordConfiguration()->isInputMonitoringOn(),
+                                                                   [this] { stopTransport(); });
+        if (!recordingCapture->start()) {
+            m_lastError = u"Cannot allocate the recording buffers";
+            return 0;
+        }
+        stream->setCapture(std::move(recordingCapture));
+    }
 
     std::optional<std::pair<double, double> > loopRange;
     if (options.isDefaultPolicy && playRegion.Active() && startTime < endTime
         && playStartTime <= endTime + loopCaptureAllowance) {
         loopRange.emplace(startTime, endTime);
     }
-    stream->setPlayRange(playStartTime, endTime, loopRange);
+    stream->setPlayRange(playStartTime, rangeEnd, loopRange);
 
     m_callbackInfoQueue.Clear();
     m_playedRanges.Clear();
@@ -185,7 +234,7 @@ int JuceAudioEngine::startTransport(const TransportSequences& sequences, double 
     }
     m_stream->start();
 
-    LOGI() << "JUCE engine playing at " << m_lastSampleRate << " Hz";
+    LOGI() << "JUCE engine " << (recording ? "recording" : "playing") << " at " << m_lastSampleRate << " Hz";
     return m_nextStreamToken++;
 }
 

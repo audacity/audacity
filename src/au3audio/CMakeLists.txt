@@ -125,6 +125,8 @@ if (AU_USE_JUCE)
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playedrange.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/recordingcapture.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/recordingcapture.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/safeiocallback.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/safeiocallback.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/sequentialmixnode.cpp

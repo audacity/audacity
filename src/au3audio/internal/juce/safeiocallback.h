@@ -29,6 +29,7 @@ class LockFreeQueueNode;
 namespace au::au4juce {
 class BlockContext;
 class MeterSink;
+class RecordingCapture;
 class MeterTapNode;
 
 //! Plays safe: everything renders ahead of the device on a worker, behind one queue, as AudioIO
@@ -48,8 +49,18 @@ public:
 
     double sampleRate() const { return m_sampleRate; }
 
-    //! The tracks and the master's chain, for `sequences`, sending to `meter`, if any, what they play
-    void build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter);
+    //! Where a recording starts and ends, in the timeline, in seconds
+    struct RecordingRange {
+        double start = 0.0;
+        double end = 0.0;
+    };
+
+    //! The tracks and the master's chain, for `sequences`, sending to `meter`, if any, what they play. If recording, as
+    //! AudioIO, the tracks stop playing where the recording ends, and those recorded into with a lead-in where it starts.
+    void build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter, std::optional<RecordingRange> recording);
+    //! Records the input; call before start()
+    void setCapture(std::unique_ptr<RecordingCapture> capture);
+    const RecordingCapture* capture() const { return m_capture.get(); }
     //! Plays from `startTime` to `endTime`, or loops `loopRange` if given, rolling into it if `startTime` is left of it;
     //! then starts rendering ahead
     void setPlayRange(double startTime, double endTime, std::optional<std::pair<double, double> > loopRange);
@@ -112,6 +123,7 @@ private:
     const std::atomic<float>& m_playbackVolume;
 
     std::unique_ptr<juce::AudioIODevice> m_device;
+    std::unique_ptr<RecordingCapture> m_capture;
     const std::shared_ptr<PlayheadMapper> m_mapper = std::make_shared<PlayheadMapper>();
     std::atomic<int64_t> m_endPosition { 0 };
     std::optional<RealtimeEffects::InitializationScope> m_effectsInitialization;
