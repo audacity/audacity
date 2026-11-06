@@ -15,7 +15,7 @@ Rectangle {
     required property int numNavigationPanels
 
     //! Emit to apply the effect and close the dialog, as if the Apply button was clicked
-    signal applyRequested()
+    signal applyRequested
 
     color: ui.theme.backgroundPrimaryColor
 
