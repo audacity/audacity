@@ -5,6 +5,8 @@
 
 #include "settings.h"
 
+#include "translation.h"
+
 namespace au::trackedit {
 static const std::string moduleName("trackedit");
 
@@ -14,6 +16,7 @@ static const muse::Settings::Key DELETE_BEHAVIOR(moduleName, "trackedit/deleteBe
 static const muse::Settings::Key CLOSE_GAP_BEHAVIOR(moduleName, "trackedit/closeGapBehavior");
 static const muse::Settings::Key PASTE_BEHAVIOR(moduleName, "trackedit/pasteBehavior");
 static const muse::Settings::Key PASTE_INSERT_BEHAVIOR(moduleName, "trackedit/pasteInsertBehavior");
+static const muse::Settings::Key DEFAULT_AUDIO_TRACK_NAME(moduleName, "GUI/TrackNames/DefaultTrackName");
 
 void TrackeditConfiguration::init()
 {
@@ -46,6 +49,31 @@ void TrackeditConfiguration::init()
     muse::settings()->valueChanged(PASTE_INSERT_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
         m_pasteInsertBehaviorChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(DEFAULT_AUDIO_TRACK_NAME, muse::Val(std::string()));
+    muse::settings()->valueChanged(DEFAULT_AUDIO_TRACK_NAME).onReceive(nullptr, [this](const muse::Val&) {
+        m_defaultAudioTrackNameChanged.notify();
+    });
+}
+
+std::string TrackeditConfiguration::defaultAudioTrackName() const
+{
+    const std::string name = muse::settings()->value(DEFAULT_AUDIO_TRACK_NAME).toString();
+    return name.empty() ? muse::trc("wave-track", "Audio") : name;
+}
+
+void TrackeditConfiguration::setDefaultAudioTrackName(const std::string& name)
+{
+    const std::string trimmed = muse::String::fromStdString(name).trimmed().toStdString();
+    if (muse::settings()->value(DEFAULT_AUDIO_TRACK_NAME).toString() == trimmed) {
+        return;
+    }
+    muse::settings()->setSharedValue(DEFAULT_AUDIO_TRACK_NAME, muse::Val(trimmed));
+}
+
+muse::async::Notification TrackeditConfiguration::defaultAudioTrackNameChanged() const
+{
+    return m_defaultAudioTrackNameChanged;
 }
 
 bool TrackeditConfiguration::askBeforeConvertingToMonoOrStereo() const

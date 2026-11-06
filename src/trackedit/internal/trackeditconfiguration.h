@@ -37,6 +37,10 @@ public:
     void setPasteInsertBehavior(PasteInsertBehavior value) override;
     muse::async::Notification pasteInsertBehaviorChanged() const override;
 
+    std::string defaultAudioTrackName() const override;
+    void setDefaultAudioTrackName(const std::string& name) override;
+    muse::async::Notification defaultAudioTrackNameChanged() const override;
+
 private:
     muse::async::Notification m_pasteAsNewClipChanged;
     muse::async::Notification m_askBeforeConvertingToMonoOrStereoChanged;
@@ -44,5 +48,6 @@ private:
     muse::async::Notification m_pasteBehaviorChanged;
     muse::async::Notification m_pasteInsertBehaviorChanged;
     muse::async::Notification m_closeGapBehaviorChanged;
+    muse::async::Notification m_defaultAudioTrackNameChanged;
 };
 }
