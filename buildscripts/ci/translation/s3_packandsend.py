@@ -127,7 +127,7 @@ for lang_code, languageProps in langCodeNameDict.items():
         data[lang_code]["file_size"] = file_size
 
         subprocess.run(
-            ['s3cmd', 'put', '--acl-public', '--guess-mime-type', zipPath, s3Url + zipName], check=True)
+            ['s3cmd', 'put', '--guess-mime-type', zipPath, s3Url + zipName], check=True)
 
 
 json_file = open(outputDir + "details.json", "w")
@@ -136,4 +136,4 @@ json_file.close()
 
 if translationChanged:
     subprocess.run(
-        ['s3cmd', 'put', '--acl-public', '--guess-mime-type', outputDir + 'details.json', s3Url + 'details.json'], check=True)
+        ['s3cmd', 'put', '--guess-mime-type', outputDir + 'details.json', s3Url + 'details.json'], check=True)
