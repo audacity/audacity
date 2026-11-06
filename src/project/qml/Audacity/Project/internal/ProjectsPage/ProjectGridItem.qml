@@ -248,7 +248,6 @@ FocusScope {
 
                 text: root.name
 
-                wrapMode: Text.WrapAnywhere
                 maximumLineCount: 1
                 width: parent.width
 
