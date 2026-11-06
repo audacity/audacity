@@ -7,3 +7,6 @@
 [submodule "thirdparty/JUCE"]
 	path = thirdparty/JUCE
 	url = https://github.com/juce-framework/JUCE.git
+[submodule "thirdparty/tracktion_engine"]
+	path = thirdparty/tracktion_engine
+	url = https://github.com/Tracktion/tracktion_engine.git

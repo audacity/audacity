@@ -116,6 +116,11 @@ option(AU_USE_PORTMIXER "Use PortMixer for audio device management" ON)
 
 # JUCE audio engine (experimental). On by default on this branch, so that CI builds it.
 option(AU_USE_JUCE "Build JUCE for the experimental JUCE audio engine" ON)
+option(AU_USE_TRACKTION "Build tracktion_graph, to mix in parallel in the JUCE audio engine; needs JUCE" ON)
+if (AU_USE_TRACKTION AND NOT AU_USE_JUCE)
+    message(STATUS "AU_USE_TRACKTION needs JUCE: AU_USE_JUCE turned on")
+    set(AU_USE_JUCE ON)
+endif()
 
 set(MUSE_MODULE_ACCESSIBILITY ON)
 set(MUSE_MODULE_ACTIONS ON)
