@@ -9,20 +9,13 @@ Item {
     id: root
 
     property var canvas: null
-    property bool handlesHovered: false
     property bool handlesVisible: false
     property bool altPressed: false
 
     property bool collapsed: false
     property int clipHeight: 114
     property int headerHeight: 20
-    readonly property int handleMinH: 22
-    readonly property int handleMaxH: 32
-    readonly property int handleHeight: Math.min(handleMaxH, Math.max(handleMinH, collapsed ? Math.round(clipHeight / 2) : Math.round((clipHeight - headerHeight) / 2)))
-
-    property int animationDuration: 100
-
-    property bool debugRectsVisible: false
+    readonly property int handleHeight: Math.min(prv.handleMaxH, Math.max(prv.handleMinH, collapsed ? Math.round(clipHeight / 2) : Math.round((clipHeight - headerHeight) / 2)))
 
     // Item that the trim handles should not steal input from
     property Item exclusionItem: null
@@ -47,8 +40,6 @@ Item {
     // so we are handling it manually
     signal clipHandlesMousePositionChanged(real x, real y)
 
-    property var trimStartPos
-
     signal clipStartEditRequested
     signal clipEndEditRequested
     signal cancelClipDragEditRequested
@@ -62,12 +53,36 @@ Item {
     //! NOTE: auto-scroll for trimming is triggered from trackclipslistmodel
     signal stopAutoScroll
 
+    QtObject {
+        id: prv
+
+        readonly property int handleMinH: 22
+        readonly property int handleMaxH: 32
+        readonly property int handleWidth: 30
+        readonly property int handleClipOverlap: 6
+
+        // icons are centred, so that they grow around their centre when hovered
+        readonly property int trimIconMargin: 2
+        readonly property real trimIconCenterOffset: trimIconMargin + leftArrow.iconSize / 2
+
+        readonly property int clockMargin: 4
+        readonly property int clockIconSize: 14
+        readonly property int clockIconHoveredSize: 18
+        readonly property real clockCenterOffset: clockMargin + clockCircleSize(clockIconSize) / 2
+
+        function clockCircleSize(clockIconSize) {
+            return clockIconSize - 2
+        }
+
+        readonly property bool debugRectsVisible: false
+    }
+
     Item {
         id: leftTrimHandle
 
-        x: -24
+        x: prv.handleClipOverlap - prv.handleWidth
         height: root.handleHeight
-        width: 36
+        width: prv.handleWidth
 
         visible: handlesVisible
 
@@ -78,17 +93,17 @@ Item {
             border.width: 1
             border.color: "blue"
 
-            visible: debugRectsVisible
+            visible: prv.debugRectsVisible
         }
 
-        StyledIconLabel {
+        ClipHandleIcon {
             id: leftArrow
             anchors.verticalCenter: leftTrimHandle.verticalCenter
-            anchors.left: leftTrimHandle.left
-            anchors.leftMargin: 2
+            anchors.horizontalCenter: leftTrimHandle.left
+            anchors.horizontalCenterOffset: prv.trimIconCenterOffset
 
+            hovered: leftTrimMa.containsMouse
             iconCode: IconCode.TRIM_HANDLE_LEFT
-            font.pixelSize: 17
             color: ui.theme.extra["black_color"]
             style: Text.Outline
             styleColor: ui.theme.extra["white_color"]
@@ -103,7 +118,7 @@ Item {
                 border.color: "red"
                 border.width: 1
 
-                visible: debugRectsVisible
+                visible: prv.debugRectsVisible
             }
 
             NavigationControl {
@@ -196,16 +211,6 @@ Item {
                 root.clipEndEditRequested()
             }
 
-            onEntered: {
-                handlesHovered = true
-            }
-
-            onExited: {
-                if (!leftTimeMa.containsMouse) {
-                    handlesHovered = false
-                }
-            }
-
             onPositionChanged: function (e) {
                 clipHandlesMousePositionChanged(mouseX + leftTrimHandle.x, mouseY)
 
@@ -223,9 +228,9 @@ Item {
     Item {
         id: rightTrimHandle
 
-        x: parent.width - 12
+        x: parent.width - prv.handleClipOverlap
         height: root.handleHeight
-        width: 36
+        width: prv.handleWidth
 
         visible: handlesVisible
 
@@ -236,17 +241,17 @@ Item {
             border.width: 1
             border.color: "blue"
 
-            visible: debugRectsVisible
+            visible: prv.debugRectsVisible
         }
 
-        StyledIconLabel {
+        ClipHandleIcon {
             id: rightArrow
             anchors.verticalCenter: rightTrimHandle.verticalCenter
-            anchors.right: rightTrimHandle.right
-            anchors.rightMargin: 2
+            anchors.horizontalCenter: rightTrimHandle.right
+            anchors.horizontalCenterOffset: -prv.trimIconCenterOffset
 
+            hovered: rightTrimMa.containsMouse
             iconCode: IconCode.TRIM_HANDLE_RIGHT
-            font.pixelSize: 17
             color: ui.theme.extra["black_color"]
             style: Text.Outline
             styleColor: ui.theme.extra["white_color"]
@@ -261,7 +266,7 @@ Item {
                 border.color: "red"
                 border.width: 1
 
-                visible: debugRectsVisible
+                visible: prv.debugRectsVisible
             }
 
             NavigationControl {
@@ -360,16 +365,6 @@ Item {
                 root.clipEndEditRequested()
             }
 
-            onEntered: {
-                handlesHovered = true
-            }
-
-            onExited: {
-                if (!rightTimeMa.containsMouse) {
-                    handlesHovered = false
-                }
-            }
-
             onPositionChanged: function (e) {
                 clipHandlesMousePositionChanged(mouseX + rightTrimHandle.x, mouseY)
 
@@ -387,10 +382,10 @@ Item {
     Item {
         id: leftTimecode
 
-        x: -24
+        x: prv.handleClipOverlap - prv.handleWidth
         y: leftTrimHandle.height
         height: root.handleHeight
-        width: 36
+        width: prv.handleWidth
 
         visible: handlesVisible
 
@@ -401,28 +396,30 @@ Item {
             border.width: 1
             border.color: "blue"
 
-            visible: debugRectsVisible
+            visible: prv.debugRectsVisible
         }
 
         Rectangle {
             id: leftClock
 
-            width: leftClockIcon.font.pixelSize - 2
-            height: leftClockIcon.font.pixelSize - 2
-            radius: (leftClockIcon.font.pixelSize - 2) / 2
+            width: prv.clockCircleSize(leftClockIcon.font.pixelSize)
+            height: prv.clockCircleSize(leftClockIcon.font.pixelSize)
+            radius: prv.clockCircleSize(leftClockIcon.font.pixelSize) / 2
             anchors.verticalCenter: leftTimecode.verticalCenter
-            anchors.left: leftTimecode.left
-            anchors.leftMargin: 4
+            anchors.horizontalCenter: leftTimecode.left
+            anchors.horizontalCenterOffset: prv.clockCenterOffset
 
             color: ui.theme.extra["black_color"]
 
-            StyledIconLabel {
+            ClipHandleIcon {
                 id: leftClockIcon
 
                 anchors.centerIn: parent
 
+                hovered: leftTimeMa.containsMouse
+                iconSize: prv.clockIconSize
+                hoveredIconSize: prv.clockIconHoveredSize
                 iconCode: IconCode.CLOCK
-                font.pixelSize: 14
                 color: ui.theme.extra["white_color"]
 
                 Rectangle {
@@ -435,7 +432,7 @@ Item {
                     border.color: "red"
                     border.width: 1
 
-                    visible: debugRectsVisible
+                    visible: prv.debugRectsVisible
                 }
             }
 
@@ -524,16 +521,6 @@ Item {
                 root.clipEndEditRequested()
             }
 
-            onEntered: {
-                handlesHovered = true
-            }
-
-            onExited: {
-                if (!leftTrimMa.containsMouse && mouseY > 2) {
-                    handlesHovered = false
-                }
-            }
-
             onPositionChanged: {
                 clipHandlesMousePositionChanged(mouseX + leftTimecode.x, mouseY)
 
@@ -551,10 +538,10 @@ Item {
     Item {
         id: rightTimecode
 
-        x: parent.width - 12
+        x: parent.width - prv.handleClipOverlap
         y: rightTrimHandle.height
         height: root.handleHeight
-        width: 36
+        width: prv.handleWidth
 
         visible: handlesVisible
 
@@ -564,27 +551,29 @@ Item {
             color: "transparent"
             border.width: 1
             border.color: "blue"
-            visible: debugRectsVisible
+            visible: prv.debugRectsVisible
         }
 
         Rectangle {
             id: rightClock
 
-            width: (rightClockIcon.font.pixelSize - 2)
-            height: (rightClockIcon.font.pixelSize - 2)
-            radius: (rightClockIcon.font.pixelSize - 2) / 2
+            width: prv.clockCircleSize(rightClockIcon.font.pixelSize)
+            height: prv.clockCircleSize(rightClockIcon.font.pixelSize)
+            radius: prv.clockCircleSize(rightClockIcon.font.pixelSize) / 2
             anchors.verticalCenter: rightTimecode.verticalCenter
-            anchors.right: rightTimecode.right
-            anchors.rightMargin: 4
+            anchors.horizontalCenter: rightTimecode.right
+            anchors.horizontalCenterOffset: -prv.clockCenterOffset
 
             color: ui.theme.extra["black_color"]
 
-            StyledIconLabel {
+            ClipHandleIcon {
                 id: rightClockIcon
 
                 anchors.centerIn: parent
+                hovered: rightTimeMa.containsMouse
+                iconSize: prv.clockIconSize
+                hoveredIconSize: prv.clockIconHoveredSize
                 iconCode: IconCode.CLOCK
-                font.pixelSize: 14
                 color: ui.theme.extra["white_color"]
 
                 Rectangle {
@@ -596,7 +585,7 @@ Item {
 
                     border.color: "red"
                     border.width: 1
-                    visible: debugRectsVisible
+                    visible: prv.debugRectsVisible
                 }
 
                 NavigationControl {
@@ -685,16 +674,6 @@ Item {
                 root.clipEndEditRequested()
             }
 
-            onEntered: {
-                handlesHovered = true
-            }
-
-            onExited: {
-                if (!rightTrimMa.containsMouse && mouseY > 2) {
-                    handlesHovered = false
-                }
-            }
-
             onPositionChanged: {
                 clipHandlesMousePositionChanged(mouseX + rightTimecode.x, mouseY)
 
@@ -708,117 +687,4 @@ Item {
             }
         }
     }
-
-    state: "NORMAL"
-    states: [
-        State {
-            name: "NORMAL"
-            when: !leftTrimMa.containsMouse && !rightTrimMa.containsMouse && !leftTimeMa.containsMouse && !rightTimeMa.containsMouse
-        },
-        State {
-            name: "LEFT_TRIM_HOVERED"
-            when: leftTrimMa.containsMouse
-            PropertyChanges {
-                target: leftArrow
-                font.pixelSize: 22
-            }
-            PropertyChanges {
-                target: leftArrow
-                anchors.leftMargin: -1
-            }
-        },
-        State {
-            name: "RIGHT_TRIM_HOVERED"
-            when: rightTrimMa.containsMouse
-            PropertyChanges {
-                target: rightArrow
-                font.pixelSize: 22
-            }
-            PropertyChanges {
-                target: rightArrow
-                anchors.rightMargin: -1
-            }
-        },
-        State {
-            name: "LEFT_TIME_HOVERED"
-            when: leftTimeMa.containsMouse
-            PropertyChanges {
-                target: leftClockIcon
-                font.pixelSize: 18
-            }
-            PropertyChanges {
-                target: leftClock
-                anchors.leftMargin: 2
-            }
-        },
-        State {
-            name: "RIGHT_TIME_HOVERED"
-            when: rightTimeMa.containsMouse
-            PropertyChanges {
-                target: rightClockIcon
-                font.pixelSize: 18
-            }
-            PropertyChanges {
-                target: rightClock
-                anchors.rightMargin: 2
-            }
-        }
-    ]
-
-    transitions: [
-        Transition {
-            from: "*"
-            to: "*"
-            reversible: true
-
-            PropertyAnimation {
-                target: leftArrow
-                properties: "font.pixelSize"
-                duration: animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: leftArrow
-                properties: "anchors.leftMargin"
-                duration: animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: rightArrow
-                properties: "font.pixelSize"
-                duration: animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: rightArrow
-                properties: "anchors.rightMargin"
-                duration: animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: leftClockIcon
-                properties: "font.pixelSize"
-                duration: animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: leftClock
-                properties: "anchors.leftMargin"
-                duration: animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: rightClockIcon
-                properties: "font.pixelSize"
-                duration: animationDuration
-                easing.type: Easing.Linear
-            }
-            PropertyAnimation {
-                target: rightClock
-                properties: "anchors.rightMargin"
-                duration: animationDuration
-                easing.type: Easing.Linear
-            }
-        }
-    ]
 }

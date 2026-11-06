@@ -31,6 +31,7 @@
 #include "framework/interactive/iinteractive.h"
 
 #include "audio/driver/iaudiodrivercontroller.h"
+#include "audio/iaudiobackendselector.h"
 #include "ui/iuiconfiguration.h"
 
 namespace au::appshell {
@@ -40,6 +41,9 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     QML_ELEMENT
 
     friend class CommonAudioApiConfigurationModelTests;
+
+    Q_PROPERTY(QStringList audioEngineList READ audioEngineList CONSTANT)
+    Q_PROPERTY(int currentAudioEngineIndex READ currentAudioEngineIndex NOTIFY currentAudioEngineIndexChanged)
 
     Q_PROPERTY(int currentAudioApiIndex READ currentAudioApiIndex WRITE setCurrentAudioApiIndex NOTIFY currentAudioApiIndexChanged)
 
@@ -71,6 +75,7 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+    muse::GlobalInject<audio::IAudioBackendSelector> audioBackendSelector;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
 
@@ -82,6 +87,12 @@ public:
     Q_INVOKABLE bool apply();
 
     int currentAudioApiIndex() const;
+    //! The audio backends, if there is a choice
+    QStringList audioEngineList() const;
+    int currentAudioEngineIndex() const;
+    //! Applies at once, other pending changes discarded: the other settings are the engine's
+    Q_INVOKABLE void audioEngineSelected(int index);
+
     Q_INVOKABLE QStringList audioApiList() const;
     Q_INVOKABLE void setCurrentAudioApiIndex(int index);
 
@@ -131,6 +142,7 @@ public:
     Q_INVOKABLE void showAsioControlPanel();
 
 signals:
+    void currentAudioEngineIndexChanged();
     void currentAudioApiIndexChanged();
 
     void currentOutputDeviceIndexChanged();

@@ -111,6 +111,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/basstreble/basstrebleviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/basstreble/basstrebleviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/cpuload/cpuloadeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cpuload/cpuloadeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/cpuload/cpuloadviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cpuload/cpuloadviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.h
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretchviewmodel.cpp

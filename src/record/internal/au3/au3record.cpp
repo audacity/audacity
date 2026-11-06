@@ -11,13 +11,12 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
-#include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track/Track.h"
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-clip-processing/SequenceProcessingGraphFactory.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-project-rate/ProjectRate.h"
 
@@ -175,8 +174,9 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
         const auto range = trackList.Any<Au3WaveTrack>()
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
-            result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+            result.playbackSequences.push_back(pTrack->SharedPointer<const Au3WaveTrack>());
+            result.playbackGraphs.push_back(
+                SequenceProcessingGraphFactory::CreateGraph(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     if (nonWaveToo) {
@@ -428,7 +428,12 @@ muse::Ret Au3Record::start()
                 return playbackSequence->FindChannelGroup() == wt->FindChannelGroup();
             });
             if (it != end) {
+                // With its graph
+                const auto index = static_cast<size_t>(std::distance(transportTracks.playbackSequences.begin(), it));
                 transportTracks.playbackSequences.erase(it);
+                if (index < transportTracks.playbackGraphs.size()) {
+                    transportTracks.playbackGraphs.erase(transportTracks.playbackGraphs.begin() + index);
+                }
             }
         }
     }
@@ -484,16 +489,7 @@ muse::Ret Au3Record::stop()
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
     Au3Project& project = projectRef();
-    auto& projectAudioIO = ProjectAudioIO::Get(project);
-    auto playbackMeter = projectAudioIO.GetPlaybackMeter();
-    if (playbackMeter) {
-        playbackMeter->stop();
-    }
-
-    auto captureMeter = projectAudioIO.GetCaptureMeter();
-    if (captureMeter) {
-        captureMeter->stop();
-    }
+    audioEngine()->stopMeters(project);
 
     return make_ok();
 }

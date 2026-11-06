@@ -3,10 +3,21 @@
 */
 #include "au3audiomodule.h"
 
+#include "framework/global/log.h"
 #include "framework/global/modularity/ioc.h"
 
+#include "audio/iaudiobackendregister.h"
+
 #include "internal/au3audioengine.h"
-#include "internal/au3audiodrivercontroller.h"
+#include "internal/audiodrivercontroller.h"
+#include "internal/portaudiodevices.h"
+
+#ifdef AU_USE_JUCE
+#include "internal/juce/juceaudiodevices.h"
+#include "internal/juce/juceaudioengine.h"
+#endif
+
+#include "au3-audio-devices/AudioIOBase.h"
 
 #if defined(Q_OS_MAC)
 #include "internal/platform/macos/macossystemaudiodeviceslistener.h"
@@ -31,7 +42,16 @@ std::string Au3AudioModule::moduleName() const
 void Au3AudioModule::registerExports()
 {
     m_audioEngine = std::make_shared<Au3AudioEngine>();
-    m_audioDriverController = std::make_shared<Au3AudioDriverController>();
+    m_audioDriverController = std::make_shared<AudioDriverController>(std::make_unique<PortAudioDevices>(), "AudioIO");
+    m_audioDriverController->setAudioEngine(m_audioEngine);
+
+#ifdef AU_USE_JUCE
+    const auto juceDevices = std::make_shared<au4juce::JuceAudioDevices>();
+    m_juceAudioEngine = std::make_shared<au4juce::JuceAudioEngine>(juceDevices);
+    m_juceDriverController = std::make_shared<AudioDriverController>(juceDevices, "JuceAudio");
+    m_juceDriverController->setAudioEngine(m_juceAudioEngine);
+    m_juceAudioEngine->setDriverController(m_juceDriverController.get());
+#endif
 
 #if defined(Q_OS_MAC)
     m_systemAudioDevicesListener = std::make_shared<MacosSystemAudioDevicesListener>();
@@ -43,15 +63,41 @@ void Au3AudioModule::registerExports()
     m_systemAudioDevicesListener = std::make_shared<StubSystemAudioDevicesListener>();
 #endif
 
-    globalIoc()->registerExport<audio::IAudioEngine>(mname, m_audioEngine);
-    globalIoc()->registerExport<audio::IAudioDriverController>(mname, m_audioDriverController);
     globalIoc()->registerExport<ISystemAudioDevicesListener>(mname, m_systemAudioDevicesListener);
+}
+
+void Au3AudioModule::resolveImports()
+{
+    const auto backendRegister = globalIoc()->resolve<audio::IAudioBackendRegister>(mname);
+    IF_ASSERT_FAILED(backendRegister) {
+        return;
+    }
+    backendRegister->registerBackend({ "portaudio", m_audioEngine, m_audioDriverController,
+                                       [this] { return m_audioDriverController->suspendStream(); }, "PortAudio" });
+#ifdef AU_USE_JUCE
+    // One engine, which plays as the active backend says
+    const auto suspendJuceStream = [this] { return m_juceDriverController->suspendStream(); };
+    backendRegister->registerBackend({ "juce", m_juceAudioEngine, m_juceDriverController, suspendJuceStream, "JUCE (safe)",
+                                       [this] { m_juceAudioEngine->setMode(au4juce::JuceAudioEngine::Mode::Safe); } });
+#ifdef AU_USE_TRACKTION
+    // Mixes with tracktion_graph
+    const std::string fastTitle = "Tracktion (fast)";
+#else
+    const std::string fastTitle = "JUCE (fast)";
+#endif
+    backendRegister->registerBackend({ "juce-fast", m_juceAudioEngine, m_juceDriverController, suspendJuceStream, fastTitle,
+                                       [this] { m_juceAudioEngine->setMode(au4juce::JuceAudioEngine::Mode::Fast); } });
+#endif
 }
 
 void Au3AudioModule::onInit(const muse::IApplication::RunMode&)
 {
     m_audioEngine->init();
+    AudioDriverController::initSharedDefaults(AudioIOBase::GetOptimalSupportedSampleRate());
     m_audioDriverController->init();
+#ifdef AU_USE_JUCE
+    m_juceDriverController->init();
+#endif
     m_systemAudioDevicesListener->startListening();
 }
 

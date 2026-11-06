@@ -643,10 +643,14 @@ bool WaveClipSpectrumCache::GetSpectrogram(
     const auto stretchRatio = clip.GetStretchRatio();
     const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
 
+    const auto fades = ClipFades::Get(clip.GetClip()).snapshot();
+
     //Trim offset comparison failure forces spectrogram cache rebuild
     //and skip copying "unchanged" data after clip border was trimmed.
+    //Same with the fades, which change the samples.
     bool match = mSpecCache && mSpecCache->leftTrim == clip.GetTrimLeft()
                  && mSpecCache->rightTrim == clip.GetTrimRight()
+                 && mSpecCache->fades == fades
                  && mSpecCache->len > 0
                  && mSpecCache->Matches(mDirty, samplesPerPixel, settings);
 
@@ -692,6 +696,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
     mSpecCache->leftTrim = clip.GetTrimLeft();
     mSpecCache->rightTrim = clip.GetTrimRight();
+    mSpecCache->fades = fades;
     auto nBins = settings.NBins();
 
     // Optimization: if the old cache is good and overlaps

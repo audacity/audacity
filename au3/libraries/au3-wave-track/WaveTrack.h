@@ -11,8 +11,8 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
-#include "au3-stretching-sequence/ClipInterface.h"
-#include "au3-stretching-sequence/PlaybackDirection.h"
+#include "au3-clip-processing/ClipInterface.h"
+#include "au3-clip-processing/PlaybackDirection.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-math/SampleCount.h"
 #include "au3-math/SampleFormat.h"
@@ -110,8 +110,6 @@ public:
     double GetEndTime() const override;
     double GetRate() const override;
     bool HasTrivialEnvelope() const override;
-    void GetEnvelopeValues(
-        double* buffer, size_t bufferLen, double t0, bool backwards) const override;
     sampleFormat WidestEffectiveFormat() const override;
 
     ChannelGroup& DoGetChannelGroup() const override;
@@ -533,9 +531,6 @@ public:
 
     bool HasTrivialEnvelope() const override;
 
-    void GetEnvelopeValues(
-        double* buffer, size_t bufferLen, double t0, bool backwards) const override;
-
     //
     // Getting information about the track's internal block sizes
     // and alignment for efficiency
@@ -761,7 +756,7 @@ public:
 
 private:
     // May assume precondition: t0 <= t1
-    void HandleClear(double t0, double t1, bool split, const bool moveClips, bool clearByTrimming = false);
+    void HandleClear(double t0, double t1, bool split, const bool moveClips, bool clearByTrimming = false, bool notifySplits = false);
 
     /*
      * @brief Copy/Paste operations must preserve beat durations, but time

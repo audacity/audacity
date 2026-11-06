@@ -86,6 +86,7 @@ set( SOURCES
 )
 set( LIBRARIES
 PUBLIC
+   au3-clip-processing
    au3-command-parameters
    au3-components
    au3-dynamic-range-processor

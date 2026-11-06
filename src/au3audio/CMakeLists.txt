@@ -15,9 +15,14 @@ set(MODULE_SRC
     # AU3
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioengine.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodrivercontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodrivercontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiodrivercontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiodrivercontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/iaudiodevices.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/portaudiodevices.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/portaudiodevices.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioiolistener.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiometer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiometer.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.h
     )
@@ -81,6 +86,88 @@ elseif (OS_IS_LIN AND LIBUDEV_INCLUDE_DIR AND LIBUDEV_LIBRARY)
     set(MODULE_INCLUDE ${MODULE_INCLUDE} ${LIBUDEV_INCLUDE_DIR})
     set(MODULE_LINK ${MODULE_LINK} ${LIBUDEV_LIBRARY})
     set(MODULE_DEF ${MODULE_DEF} AU_AU3AUDIO_HAS_UDEV)
+endif()
+
+if (AU_USE_JUCE)
+    set(JUCE_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/blockcontext.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/blockcontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/captureinput.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/captureinput.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectslatency.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectslatency.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/endoftracknode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/endoftracknode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/fastiocallback.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/fastiocallback.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/gainpannode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/gainpannode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/ieffectscontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/iendoftrackcontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/imutesolocontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudiodevices.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudiodevices.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceincludes.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceiocallback.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceiocallback.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/jucemonitoringcallback.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/jucemonitoringcallback.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersendnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersendnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersink.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersink.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/monitoredinput.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/monitoredinput.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/mutesolonode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/mutesolonode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playedrange.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/recordingcapture.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/recordingcapture.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/safeiocallback.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/safeiocallback.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/sequentialmixnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/sequentialmixnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/stereo.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/track.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/track.h
+    )
+    set(MODULE_SRC ${MODULE_SRC} ${JUCE_SRC})
+    # JUCE headers clash with the `using namespace muse` of other unity-combined sources
+    set_source_files_properties(${JUCE_SRC} PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
+    set(MODULE_LINK ${MODULE_LINK}
+        juce
+        au3-clip-processing
+        au3-mixer
+        au3-project
+        au3-realtime-effects
+        au3-wave-track
+    )
+    set(MODULE_DEF ${MODULE_DEF} AU_USE_JUCE)
+endif()
+
+if (AU_USE_TRACKTION)
+    set(TRACKTION_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/audacitytotracktionnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/audacitytotracktionnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/tracktiongraphincludes.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/tracktiontoaudacitynode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/tracktiontoaudacitynode.h
+    )
+    set(MODULE_SRC ${MODULE_SRC} ${TRACKTION_SRC})
+    # tracktion_graph's headers include JUCE's
+    set_source_files_properties(${TRACKTION_SRC} PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
+    set(MODULE_LINK ${MODULE_LINK} tracktion_graph)
+    set(MODULE_DEF ${MODULE_DEF} AU_USE_TRACKTION)
 endif()
 
 setup_module()

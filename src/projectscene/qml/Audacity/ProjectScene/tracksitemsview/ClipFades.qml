@@ -1,0 +1,120 @@
+import QtQuick
+
+import Audacity.ProjectScene
+
+Item {
+    id: root
+
+    // Don't draw on the clip header
+    clip: true
+
+    property real fadeInWidth: 0
+    property real fadeOutWidth: 0
+
+    //! This item may only span part of the clip: how much of the clip is on its left, and the clip's whole width
+    property real clipOffset: 0
+    property real clipWidth: width
+    required property int fadeInType
+    required property int fadeOutType
+
+    //! The fades span the whole item, the handles only a band of it, starting at `handlesY`
+    property real handlesY: 0
+    //! Above it, the fades aren't drawn
+    property real drawingTop: 0
+    property bool handlesVisible: false
+
+    signal fadeEditStarted
+    signal fadeInWidthChangeRequested(real width, bool completed)
+    signal fadeOutWidthChangeRequested(real width, bool completed)
+    signal fadeEditCanceled
+
+    // mouse position event is not propagated on overlapping mouse areas
+    // so we are handling it manually
+    signal fadeHandlesMousePositionChanged(real x, real y)
+
+    QtObject {
+        id: prv
+
+        readonly property int handleSize: 32
+
+        //! Where the fades end and start, in this item's coordinates
+        readonly property real fadeInEnd: root.fadeInWidth - root.clipOffset
+        readonly property real fadeOutStart: root.clipWidth - root.clipOffset - root.fadeOutWidth
+
+        readonly property real fadeInLineCenter: fadeInEnd - 0.5
+        readonly property real fadeOutLineCenter: fadeOutStart + 0.5
+
+        // When the handles collide, each is pushed to its side by half the overlap: when the lines are aligned,
+        // the handles are on either side of them.
+        readonly property real collisionPush: Math.max(0, handleSize - (fadeOutLineCenter - fadeInLineCenter)) / 2
+
+        //! Centered on the boundary line, but inside the clip
+        function handleX(lineCenter) {
+            return Math.max(0, Math.min(lineCenter - handleSize / 2, root.width - handleSize))
+        }
+
+        // Where the handles overlap, the dragged one is on top, else the longer fade's: e.g., with no fade-in and
+        // a fade-out spanning the whole clip, both handles are in the left corner, and only the fade-out is hittable.
+        readonly property bool fadeInOnTop: fadeIn.pressed || (!fadeOut.pressed && root.fadeInWidth > root.fadeOutWidth)
+    }
+
+    ClipFade {
+        id: fadeIn
+
+        anchors.fill: parent
+        z: prv.fadeInOnTop ? 1 : 0
+
+        isFadeIn: true
+        fadeWidth: root.fadeInWidth
+        fadeLeft: prv.fadeInEnd - root.fadeInWidth
+        fadeType: root.fadeInType
+        drawingTop: root.drawingTop
+
+        handleX: prv.handleX(prv.fadeInLineCenter - prv.collisionPush)
+        handleY: root.handlesY
+        handleSize: prv.handleSize
+        handleVisible: root.handlesVisible
+
+        onFadeEditStarted: root.fadeEditStarted()
+
+        onFadeWidthChangeRequested: function (width, completed) {
+            root.fadeInWidthChangeRequested(width, completed)
+        }
+
+        onFadeEditCanceled: root.fadeEditCanceled()
+
+        onMousePositionChanged: function (mouseX, mouseY) {
+            root.fadeHandlesMousePositionChanged(mouseX, mouseY)
+        }
+    }
+
+    ClipFade {
+        id: fadeOut
+
+        anchors.fill: parent
+        z: prv.fadeInOnTop ? 0 : 1
+
+        isFadeIn: false
+        fadeWidth: root.fadeOutWidth
+        fadeLeft: prv.fadeOutStart
+        fadeType: root.fadeOutType
+        drawingTop: root.drawingTop
+
+        handleX: prv.handleX(prv.fadeOutLineCenter + prv.collisionPush)
+        handleY: root.handlesY
+        handleSize: prv.handleSize
+        handleVisible: root.handlesVisible
+
+        onFadeEditStarted: root.fadeEditStarted()
+
+        onFadeWidthChangeRequested: function (width, completed) {
+            root.fadeOutWidthChangeRequested(width, completed)
+        }
+
+        onFadeEditCanceled: root.fadeEditCanceled()
+
+        onMousePositionChanged: function (mouseX, mouseY) {
+            root.fadeHandlesMousePositionChanged(mouseX, mouseY)
+        }
+    }
+}

@@ -36,6 +36,10 @@ public:
 
     MOCK_METHOD(void, startMonitoring, (AudacityProject & project), (override));
     MOCK_METHOD(void, stopMonitoring, (), (override));
+    MOCK_METHOD(void, setMonitoredTrack, (std::optional<int64_t>), (override));
+    MOCK_METHOD(void, setPlaybackMeter, (AudacityProject&, const IAudioMeterPtr&), (override));
+    MOCK_METHOD(void, setCaptureMeter, (AudacityProject&, const IAudioMeterPtr&), (override));
+    MOCK_METHOD(void, stopMeters, (AudacityProject&), (override));
     MOCK_METHOD(void, setInputVolume, (float newInputVolume), (override));
     MOCK_METHOD(float, getInputVolume, (), (const, override));
     MOCK_METHOD(void, setPlaybackVolume, (float newPlaybackVolume), (override));
@@ -55,6 +59,8 @@ public:
     MOCK_METHOD(muse::async::Notification, recordingCommitRequested, (), (const, override));
     MOCK_METHOD(muse::async::Notification, recordingFinished, (), (const, override));
     MOCK_METHOD(muse::async::Notification, streamStopped, (), (const, override));
+    MOCK_METHOD(std::optional<DeviceLatency>, deviceLatency, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, deviceLatencyChanged, (), (const, override));
     MOCK_METHOD((muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId>), recordingClipChanged, (), (const, override));
 };
 }

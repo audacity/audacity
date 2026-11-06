@@ -160,7 +160,7 @@ Mixer::Mixer(
             break;
         }
 
-        auto& source = mSources.emplace_back(sequence, BufferSize(), outRate,
+        auto& source = mSources.emplace_back(sequence, input.pSource, outRate,
                                              warpOptions, highQuality, mayThrow, mTimesAndSpeed);
         AudioGraph::Source* pDownstream = &source;
         for (const auto& stage : input.stages) {

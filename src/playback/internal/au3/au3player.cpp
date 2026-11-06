@@ -10,9 +10,9 @@
 #include "au3-time-frequency-selection/SelectedRegion.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
-#include "au3-audio-devices/AudioIOBase.h"
-#include "au3-audio-io/ProjectAudioIO.h"
+#include "au3-clip-processing/SequenceProcessingGraphFactory.h"
+#include "au3-playable-track/PlayableTrack.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-project-rate/ProjectRate.h"
 
@@ -98,7 +98,6 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
     Au3Project& project = projectRef();
 
     const bool newDefault = true; //(mode == PlayMode::loopedPlay);
-    auto options = ProjectAudioIO::GetDefaultOptions(project, newDefault);
     bool backwards = false;
 
     auto& tracks = Au3TrackList::Get(project);
@@ -115,9 +114,10 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
         audioEngine()->stopTransport();
     }
 
-    auto& pStartTime = options.pStartTime;
+    //! NOTE: the default playback policy starts the stream at the play region start
+    const std::optional<double> pStartTime = std::max(0.0, playRegion.GetStart());
 
-    bool nonWaveToo = options.playNonWaveTracks;
+    const bool nonWaveToo = true;
 
     double t0 = selectedRegion.t0();
     double t1 = selectedRegion.t1();
@@ -320,16 +320,7 @@ void Au3Player::stop()
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
     Au3Project& project = projectRef();
-    auto& projectAudioIO = ProjectAudioIO::Get(project);
-    auto playbackMeter = projectAudioIO.GetPlaybackMeter();
-    if (playbackMeter) {
-        playbackMeter->stop();
-    }
-
-    auto captureMeter= projectAudioIO.GetCaptureMeter();
-    if (captureMeter) {
-        captureMeter->stop();
-    }
+    audioEngine()->stopMeters(project);
 }
 
 void Au3Player::pause()
@@ -632,8 +623,9 @@ TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool 
         const auto range = trackList.Any<Au3WaveTrack>()
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
-            result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+            result.playbackSequences.push_back(pTrack->SharedPointer<const Au3WaveTrack>());
+            result.playbackGraphs.push_back(
+                SequenceProcessingGraphFactory::CreateGraph(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     return result;

@@ -24,6 +24,7 @@
 #include "view/common/tracksviewstatemodel.h"
 #include "view/common/trackviewstatemodel.h"
 #include "view/common/customcursor.h"
+#include "view/tracksitemsview/au3/clipfadecurveitem.h"
 
 #include "view/toolbars/audiosetupcontextmenumodel.h"
 #include "view/toolbars/projecttoolbarmodel.h"
@@ -141,6 +142,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterUncreatableType<TrackTypes>("Audacity.ProjectScene", 1, 0, "TrackType", "Not creatable from QML");
     qmlRegisterUncreatableType<ClipKey>("Audacity.ProjectScene", 1, 0, "ClipKey", "Not creatable from QML");
     qmlRegisterUncreatableType<ClipStyles>("Audacity.ProjectScene", 1, 0, "ClipStyle", "Not creatable from QML");
+    qmlRegisterUncreatableType<FadeTypes>("Audacity.ProjectScene", 1, 0, "FadeType", "Not creatable from QML");
     qmlRegisterUncreatableType<StereoHeightsPref>("Audacity.ProjectScene", 1, 0, "AsymmetricStereoHeights", "Not creatable from QML");
     qmlRegisterUncreatableType<ClipBoundary>("Audacity.ProjectScene", 1, 0, "ClipBoundaryAction", "Not creatable from QML");
     qmlRegisterUncreatableType<DirectionType>("Audacity.ProjectScene", 1, 0, "Direction", "Not creatable from QML");
@@ -153,6 +155,7 @@ void ProjectSceneModule::registerUiTypes()
                                                    [](QQmlEngine*, QJSEngine*) -> QObject* {
         return new CustomCursorProvider();
     });
+    qmlRegisterType<ClipFadeCurveItem>("Audacity.ProjectScene", 1, 0, "ClipFadeCurveItem");
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");

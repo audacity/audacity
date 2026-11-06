@@ -44,7 +44,7 @@ set(MODULE_LINK
         au3-numeric-formats
         au3-project
         au3-project-file-io
-        au3-stretching-sequence
+        au3-clip-processing
         au3-strings
         au3-tags
         au3-track

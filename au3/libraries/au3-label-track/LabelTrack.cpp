@@ -43,7 +43,7 @@ for drawing different aspects of the label and its text box.
 
 #include "au3-track/TimeWarper.h"
 #include "au3-basic-ui/BasicUI.h"
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 
 const FileNames::FileType LabelTrack::SubripFiles{ TranslatableString("label-track", "SubRip text file"), { wxT("srt") }, true };
 const FileNames::FileType LabelTrack::WebVTTFiles{ TranslatableString("label-track", "WebVTT file"), { wxT("vtt") }, true };

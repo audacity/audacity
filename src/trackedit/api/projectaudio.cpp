@@ -15,11 +15,11 @@
 #include "au3-audio-graph/AudioGraphSource.h"
 #include "au3-audio-graph/AudioGraphTask.h"
 #include "au3-math/SampleFormat.h"
+#include "au3-mixer/ISequenceProcessingNode.h"
 #include "au3-mixer/Mix.h"
 #include "au3-mixer/WideSampleSource.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-clip-processing/SequenceProcessingGraphFactory.h"
 #include "au3-track/Track.h"
-#include "au3-wave-track/TimeStretching.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveTrackSink.h"
@@ -161,14 +161,14 @@ AudioReaderObject::AudioReaderObject(std::shared_ptr<EditState> state, std::shar
                                      double end, QObject* parent)
     : QObject(parent), m_state(std::move(state)), m_source(std::move(source)), m_format(format)
 {
+    m_graph = SequenceProcessingGraphFactory::CreateGraph(*m_source, m_source->GetClipInterfaces());
     const bool matchingFormat = m_format.channelCount == m_source->NChannels() && m_format.sampleRate == m_source->GetRate();
-    const bool stretched = TimeStretching::HasPitchOrSpeed(*m_source, start, end);
-    if (matchingFormat && !stretched) {
+    if (matchingFormat) {
         m_position = m_source->TimeToLongSamples(start);
         m_end = m_source->TimeToLongSamples(end);
     } else {
         Mixer::Inputs inputs;
-        inputs.emplace_back(StretchingSequence::Create(*m_source, m_source->GetClipInterfaces()), Mixer::Stages {});
+        inputs.emplace_back(m_source, Mixer::Stages {}, m_graph);
         m_mixer = std::make_unique<Mixer>(
             std::move(inputs), std::nullopt, true, Mixer::WarpOptions { m_state->project.get() }, start, end, format.channelCount,
             AUDIO_CHUNK_SAMPLES, false, format.sampleRate, floatSample, true, nullptr, Mixer::ApplyVolume::Mixdown);
@@ -234,11 +234,8 @@ QObject* AudioReaderObject::read(qulonglong requested)
             for (uint32_t channel = 0; channel < m_format.channelCount; ++channel) {
                 buffers[channel] = static_cast<float*>(m_chunk->buffer(channel)->data());
             }
-            if (!m_source->GetFloats(0, m_format.channelCount, buffers, m_position, count)) {
-                m_chunk->release();
-                throwProjectError(this, QStringLiteral("Could not read project audio"));
-                return nullptr;
-            }
+            // The format matches the track's, so there are as many buffers as the track has channels
+            m_graph->GetSamples(buffers, m_position, count);
             m_position += count;
         }
         return m_chunk;

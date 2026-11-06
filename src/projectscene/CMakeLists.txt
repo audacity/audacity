@@ -110,6 +110,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/snaptoolbaritem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/snaptoolbaritem.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audioenginetoolbaritem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audioenginetoolbaritem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/workspacestoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/workspacestoolbarmodel.h
 
@@ -121,6 +123,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/clipfadecurveitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/clipfadecurveitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iminmaxrmspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.h
