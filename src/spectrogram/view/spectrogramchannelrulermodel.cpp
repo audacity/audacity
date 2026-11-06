@@ -6,6 +6,7 @@
 #include "framework/global/types/number.h"
 #include "framework/global/log.h"
 #include "spectrogramtypes.h"
+#include "internal/spectrogramutils.h"
 #include "shared/axis/axislabel.h"
 #include "shared/axis/axisticks.h"
 
@@ -41,7 +42,7 @@ void SpectrogramChannelRulerModel::componentComplete()
 
 void SpectrogramChannelRulerModel::updateTicks()
 {
-    if (m_labelHeight <= 0 || m_channelHeight <= 0) {
+    if (m_trackId == -1 || m_labelHeight <= 0 || m_channelHeight <= 0 || m_trackSampleRate <= 0) {
         m_ticks = SpectrogramRulerTicks {};
         return;
     }
@@ -49,7 +50,8 @@ void SpectrogramChannelRulerModel::updateTicks()
     IF_ASSERT_FAILED(config) {
         return;
     }
-    m_ticks = au::shared::axisTicks(config->minFreq(), config->maxFreq(), config->scale());
+    const auto [minFreq, maxFreq] = spectrogramBounds(*config, m_trackSampleRate);
+    m_ticks = au::shared::axisTicks(minFreq, maxFreq, config->scale());
 }
 
 int SpectrogramChannelRulerModel::trackId() const
@@ -66,6 +68,23 @@ void SpectrogramChannelRulerModel::setTrackId(int trackId)
     updateTicks();
     emit trackIdChanged();
     emit ticksChanged();
+}
+
+double SpectrogramChannelRulerModel::trackSampleRate() const
+{
+    return m_trackSampleRate;
+}
+
+void SpectrogramChannelRulerModel::setTrackSampleRate(double rate)
+{
+    if (muse::is_equal(m_trackSampleRate, rate)) {
+        return;
+    }
+    m_trackSampleRate = rate;
+    updateTicks();
+    emit trackSampleRateChanged();
+    emit ticksChanged();
+    emit zoomStateChanged();
 }
 
 void SpectrogramChannelRulerModel::setLabelHeight(int height)
