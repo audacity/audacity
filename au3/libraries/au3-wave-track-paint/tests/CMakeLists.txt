@@ -1,10 +1,10 @@
 add_unit_test(
    NAME
-      au3-wave-track-paint-test
+      au3-wave-track-paint
    SOURCES
       GraphicsDataCacheTests.cpp
    LIBRARIES
       au3-wave-track-paint
       au3-screen-geometry
-      wxwidgets::base
+      wxBase
 )

@@ -229,11 +229,14 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
     # Disable warnings for AU3 code
     target_no_warning(${au3_target_name} -w)
 
-    # Note: AU3 tests are disabled for now as Catch2 is not set up in AU4
-    # TODO: Add Catch2 support and enable tests
-    # if(MUSE_ENABLE_UNIT_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
-    #     add_subdirectory(tests)
-    # endif()
+    # Code coverage, same flags as muse_create_module, so the scheduled coverage job sees the AU3 libraries too
+    if(MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
+        target_compile_options(${au3_target_name} PRIVATE -fprofile-arcs -ftest-coverage --coverage)
+    endif()
+
+    if(MUSE_ENABLE_UNIT_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
+        add_subdirectory(tests)
+    endif()
 endmacro()
 
 
@@ -263,9 +266,12 @@ endmacro()
 #   SOURCES - List of test source files
 #   LIBRARIES - List of libraries to link against
 #
+# add_unit_test(NAME au3-xxx [MOCK_PREFS] [MOCK_AUDIO] [WAV_FILE_IO] SOURCES ... LIBRARIES ...)
+# Catch2 unit test for an AU3 library. The options add the shared test helpers from au3/tests,
+# as in Audacity 3 (cmake-proxies/cmake-modules/AudacityTesting.cmake).
 macro(add_unit_test)
     # Parse arguments
-    set(options "")
+    set(options MOCK_PREFS MOCK_AUDIO WAV_FILE_IO)
     set(oneValueArgs NAME)
     set(multiValueArgs SOURCES LIBRARIES)
     cmake_parse_arguments(TEST "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -274,18 +280,55 @@ macro(add_unit_test)
         return()
     endif()
 
+    set(au3_tests_dir "${AUDACITY_ROOT}/tests")
+
     # Use the NAME directly (already in au3-* format) and append _tests
     set(test_target_name "${TEST_NAME}_tests")
 
-    # Create the test executable
-    add_executable(${test_target_name} ${TEST_SOURCES})
+    # Create the test executable; Catch2Main.cpp provides main()
+    add_executable(${test_target_name} ${TEST_SOURCES} "${au3_tests_dir}/Catch2Main.cpp")
 
-    # Link against Catch2 and the specified libraries
+    # The library under test is linked whole: its static registrations (e.g. SnapRegistryItemRegistrator)
+    # live in objects nothing references, which a plain static-library link would drop.
+    set(test_libraries ${TEST_LIBRARIES})
+    if(TARGET ${TEST_NAME})
+        list(TRANSFORM test_libraries REPLACE "^${TEST_NAME}$" "$<LINK_LIBRARY:WHOLE_ARCHIVE,${TEST_NAME}>")
+    endif()
+
+    # Link against Catch2 and the specified libraries. wxBase is linked for every test because the AU3
+    # public headers still include wx headers (removing that is tracked in #11804).
     target_link_libraries(${test_target_name}
         PRIVATE
-            ${TEST_LIBRARIES}
+            ${test_libraries}
             Catch2::Catch2
+            wxBase
     )
+
+    if(TEST_MOCK_PREFS)
+        target_compile_definitions(${test_target_name} PRIVATE MOCK_PREFS)
+        target_sources(${test_target_name} PRIVATE "${au3_tests_dir}/MockedPrefs.cpp" "${au3_tests_dir}/MockedPrefs.h")
+        target_include_directories(${test_target_name} PRIVATE "${au3_tests_dir}")
+        target_link_libraries(${test_target_name} PRIVATE au3-preferences)
+    endif()
+    if(TEST_MOCK_AUDIO)
+        target_compile_definitions(${test_target_name} PRIVATE MOCK_AUDIO)
+        target_sources(${test_target_name} PRIVATE "${au3_tests_dir}/MockedAudio.cpp" "${au3_tests_dir}/MockedAudio.h")
+        target_include_directories(${test_target_name} PRIVATE "${au3_tests_dir}")
+        target_link_libraries(${test_target_name} PRIVATE portaudio::portaudio)
+    endif()
+    if(TEST_WAV_FILE_IO)
+        target_sources(${test_target_name} PRIVATE
+            "${au3_tests_dir}/AudioFileInfo.h"
+            "${au3_tests_dir}/AudioFileIO.cpp"
+            "${au3_tests_dir}/AudioFileIO.h"
+            "${au3_tests_dir}/Mp3FileReader.cpp"
+            "${au3_tests_dir}/Mp3FileReader.h"
+            "${au3_tests_dir}/WavFileIO.cpp"
+            "${au3_tests_dir}/WavFileIO.h"
+        )
+        target_include_directories(${test_target_name} PRIVATE "${au3_tests_dir}")
+        target_link_libraries(${test_target_name} PRIVATE SndFile::sndfile mpg123::libmpg123)
+    endif()
 
     # Add include directories
     target_include_directories(${test_target_name}
@@ -296,6 +339,12 @@ macro(add_unit_test)
     # Disable warnings for AU3 test code
     target_no_warning(${test_target_name} -w)
 
-    # Add the test to CTest
-    add_test(NAME ${test_target_name} COMMAND ${test_target_name})
+    if(MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
+        target_compile_options(${test_target_name} PRIVATE -fprofile-arcs -ftest-coverage --coverage)
+        target_link_options(${test_target_name} PRIVATE --coverage)
+    endif()
+
+    # Add the test to CTest (same label family as the GoogleTest executables, run by ctest in CI)
+    add_test(NAME ${test_target_name} COMMAND ${test_target_name} WORKING_DIRECTORY "${AUDACITY_ROOT}")
+    set_tests_properties(${test_target_name} PROPERTIES LABELS "au3")
 endmacro()
