@@ -91,6 +91,11 @@ Item {
             if (menu.menuId === menuId) {
                 menu.subitems = subitems
                 menu.load()
+
+                //! NOTE The submenu became empty, so it has to be recreated as a disabled item
+                if (menu.ownerMenu && (!Boolean(subitems) || subitems.length === 0)) {
+                    menu.ownerMenu.load()
+                }
             }
         })
     }
@@ -99,6 +104,19 @@ Item {
         var menuItem = menuItemComponent.createObject(parentMenu)
 
         setUpMenuItem(menuItem, itemInfo)
+
+        //! NOTE An empty submenu (e.g. "Open recent" without recent files) is created as a disabled item,
+        //! so when it gets populated, the parent menu has to be rebuilt to turn it into a real submenu
+        const isEmptySubmenu = String(itemInfo.id).startsWith("menu-") && itemInfo.subitems.length === 0
+        if (isEmptySubmenu) {
+            const onSubitemsChanged = function (subitems, menuId) {
+                if (Boolean(subitems) && subitems.length > 0) {
+                    itemInfo.subitemsChanged.disconnect(onSubitemsChanged)
+                    parentMenu.load()
+                }
+            }
+            itemInfo.subitemsChanged.connect(onSubitemsChanged)
+        }
 
         return menuItem
     }
@@ -119,6 +137,7 @@ Item {
         PLATFORM.Menu {
             property string menuId: ""
             property var subitems: []
+            property var ownerMenu: null
 
             function load() {
                 clear()
@@ -133,6 +152,7 @@ Item {
 
                     if (isMenu) {
                         let menu = root.makeMenu(item)
+                        menu.ownerMenu = this
                         addMenu(menu)
                         menu.load()
                     } else {
