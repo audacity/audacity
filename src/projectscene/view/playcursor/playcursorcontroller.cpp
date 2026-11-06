@@ -133,7 +133,7 @@ bool PlayCursorController::endSeekGesture(double selectionStartTime)
             return false;
         }
 
-        seekToTime(selectionStartTime);
+        seekToTimeKeepingView(selectionStartTime);
         return true;
     }
 
