@@ -114,6 +114,9 @@ option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
 # Port mixer
 option(AU_USE_PORTMIXER "Use PortMixer for audio device management" ON)
 
+# JUCE audio engine (experimental). On by default on this branch, so that CI builds it.
+option(AU_USE_JUCE "Build JUCE for the experimental JUCE audio engine" ON)
+
 set(MUSE_MODULE_ACCESSIBILITY ON)
 set(MUSE_MODULE_ACTIONS ON)
 set(MUSE_MODULE_AUDIO OFF)
