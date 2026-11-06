@@ -28,6 +28,7 @@ class LockFreeQueueNode;
 
 namespace au::au4juce {
 class BlockContext;
+class MeterSink;
 class MeterTapNode;
 
 //! Plays safe: everything renders ahead of the device on a worker, behind one queue, as AudioIO
@@ -47,8 +48,8 @@ public:
 
     double sampleRate() const { return m_sampleRate; }
 
-    //! The tracks and the master's chain, for `sequences`
-    void build(const TransportSequences& sequences);
+    //! The tracks and the master's chain, for `sequences`, sending to `meter`, if any, what they play
+    void build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter);
     //! Plays from `startTime` to `endTime`, or loops `loopRange` if given, rolling into it if `startTime` is left of it;
     //! then starts rendering ahead
     void setPlayRange(double startTime, double endTime, std::optional<std::pair<double, double> > loopRange);
@@ -91,13 +92,15 @@ private:
 
     //! Device thread: plays `frames` frames from `offset` on, at most the block size. Returns how many, at the end, it
     //! couldn't play, being silent instead: the transport doesn't advance by them.
-    int renderChunk(float* const* output, int numOutputChannels, int offset, int frames);
+    int renderChunk(float* const* output, int numOutputChannels, int offset, int frames, audio::TimePoint dacTime);
     //! `stereo` goes out with the playback volume; a mono device gets the downmix
     void writeOutput(const float* const* stereo, float* const* output, int numOutputChannels, int offset, int frames) const;
     void reportPlayed(int64_t start, int64_t frames);
 
     //! At least a sample long
     PlayheadMapper::Range toLoopRange(const std::pair<double, double>& loopRange) const;
+    //! What was rendered ahead isn't played, nor shown
+    void invalidate();
     //! What of the timeline the device plays from `from` to `end`, segment by segment
     std::vector<std::pair<int64_t, int64_t> > segments(int64_t from, int64_t end) const;
 
@@ -115,6 +118,9 @@ private:
     std::unique_ptr<BlockContext> m_blockContext;
     std::vector<Track> m_tracks;
     std::shared_ptr<MeterTapNode> m_masterTap;
+    audio::IAudioMeterPtr m_meter;
+    //! If there is a meter: what the queue's worker renders for it, which the device callback forwards as it plays
+    std::unique_ptr<MeterSink> m_meterSink;
     std::unique_ptr<LockFreeQueueNode> m_queue;
     //! How far ahead of what it renders the master's chain reads the sequences, at most
     int64_t m_maxLatency = 0;

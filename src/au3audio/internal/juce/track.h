@@ -24,6 +24,10 @@ struct Track {
     std::shared_ptr<ISequenceProcessingNode> output;
     //! Its meter's tap, in the chain
     std::shared_ptr<MeterTapNode> tap;
+    //! Its meter's, if it has one
+    std::optional<int64_t> meterId;
+    //! How many channels its meter shows
+    size_t numMeterChannels = 0;
 };
 
 //! What a track's chain needs besides its sequence

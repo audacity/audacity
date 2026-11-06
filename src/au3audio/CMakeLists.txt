@@ -110,6 +110,10 @@ if (AU_USE_JUCE)
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceincludes.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersendnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersendnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersink.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersink.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/mutesolonode.cpp

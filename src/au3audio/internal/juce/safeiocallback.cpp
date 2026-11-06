@@ -14,6 +14,8 @@
 
 #include "blockcontext.h"
 #include "effectsnode.h"
+#include "metersendnode.h"
+#include "metersink.h"
 #include "metertapnode.h"
 #include "sequentialmixnode.h"
 
@@ -55,8 +57,9 @@ SafeIoCallback::~SafeIoCallback()
     stop();
 }
 
-void SafeIoCallback::build(const TransportSequences& sequences)
+void SafeIoCallback::build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter)
 {
+    m_meter = meter;
     const auto& playbackSequences = sequences.playbackSequences;
     const auto maxFrames = static_cast<size_t>(m_blockSize);
     // At the rate of the stream, not of the sequences
@@ -96,9 +99,22 @@ void SafeIoCallback::build(const TransportSequences& sequences)
     master = std::make_shared<EffectsNode>(std::move(master), numChannels, RealtimeEffectManager::MasterGroup, *m_blockContext,
                                            maxFrames);
     m_masterTap = std::make_shared<MeterTapNode>(std::move(master), numChannels, readAheadChunkSize());
+    std::shared_ptr<ISequenceProcessingNode> top = std::make_shared<BlockContextNode>(m_masterTap, *m_blockContext);
+    if (m_meter) {
+        // The main meter, then the tracks'
+        std::vector<MeterSink::Meter> meters { { std::nullopt, numChannels } };
+        std::vector<MeterSendNode::Tap> taps { { m_masterTap, 0 } };
+        for (const auto& track : m_tracks) {
+            meters.push_back({ track.meterId ? std::optional<audio::IAudioMeter::TrackId> { audio::IAudioMeter::TrackId { *track.meterId } }
+                               : std::nullopt, track.numMeterChannels });
+            taps.push_back({ track.tap, std::max(0, masterLatency) });
+        }
+        // As many blocks as the queue holds, and the one being rendered, and one being read
+        m_meterSink = std::make_unique<MeterSink>(std::move(meters), readAheadChunkSize(), readAheadNumChunks + 2);
+        top = std::make_shared<MeterSendNode>(std::move(top), std::move(taps), *m_meterSink);
+    }
     // The device waits for the worker: after a seek, it resumes where the device is
-    m_queue = std::make_unique<LockFreeQueueNode>(std::make_shared<BlockContextNode>(m_masterTap, *m_blockContext), numChannels,
-                                                  readAheadChunkSize(), readAheadNumChunks, 0);
+    m_queue = std::make_unique<LockFreeQueueNode>(std::move(top), numChannels, readAheadChunkSize(), readAheadNumChunks, 0);
 
     for (int ch = 0; ch < numChannels; ++ch) {
         m_buffer[ch].assign(maxFrames, 0.f);
@@ -121,7 +137,7 @@ void SafeIoCallback::setPlayRange(double startTime, double endTime, std::optiona
 void SafeIoCallback::seek(double time)
 {
     m_mapper->setPosition(toSamples(time));
-    m_queue->Invalidate();
+    invalidate();
 }
 
 void SafeIoCallback::updateLoop(std::optional<std::pair<double, double> > loopRange, double endTime)
@@ -141,7 +157,16 @@ void SafeIoCallback::updateLoop(std::optional<std::pair<double, double> > loopRa
     // sequences are read further ahead by their effects' latency.
     const auto end = std::min<int64_t>(m_queue->ReadEnd().as_long_long() + m_maxLatency, horizon);
     if (cut(segments(from, horizon), from, end) != cut(before, from, end)) {
-        m_queue->Invalidate();
+        invalidate();
+    }
+}
+
+void SafeIoCallback::invalidate()
+{
+    m_queue->Invalidate();
+    // Nor is what was rendered shown
+    if (m_meterSink) {
+        m_meterSink->invalidate();
     }
 }
 
@@ -164,6 +189,9 @@ PlayheadMapper::Range SafeIoCallback::toLoopRange(const std::pair<double, double
 
 void SafeIoCallback::start()
 {
+    if (m_meter) {
+        m_meter->start(m_sampleRate);
+    }
     m_device->start(this);
 }
 
@@ -174,8 +202,12 @@ void SafeIoCallback::stop()
         m_device->close();
         m_device.reset();
     }
+    if (m_meter) {
+        m_meter->stop();
+    }
     // Stops the worker, before what it renders goes
     m_queue.reset();
+    m_meterSink.reset();
     m_masterTap.reset();
     m_tracks.clear();
     m_blockContext.reset();
@@ -207,7 +239,9 @@ void SafeIoCallback::audioDeviceIOCallbackWithContext(const float* const*, int, 
     int unplayed = 0;
     while (done < numSamples && !m_finished) {
         const int frames = std::min(numSamples - done, m_blockSize);
-        unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames);
+        const auto chunkDacTime = dacTime + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+            std::chrono::duration<double>(done / m_sampleRate));
+        unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
         done += frames;
     }
     // As AudioIO, only what played advances the transport
@@ -216,13 +250,16 @@ void SafeIoCallback::audioDeviceIOCallbackWithContext(const float* const*, int, 
     }
 }
 
-int SafeIoCallback::renderChunk(float* const* output, int numOutputChannels, int offset, int requested)
+int SafeIoCallback::renderChunk(float* const* output, int numOutputChannels, int offset, int requested, audio::TimePoint dacTime)
 {
     const auto index = m_mapper->deviceIndex();
     m_queue->Prepare(index);
     // As AudioIO: what the worker hasn't rendered yet is played late, after silence
     const auto frames = static_cast<int>(m_queue->Available(index, static_cast<size_t>(requested)));
     m_queue->GetSamples(m_bufferPointers, index, static_cast<size_t>(frames));
+    if (m_meterSink) {
+        m_meterSink->forward(*m_meter, index, static_cast<size_t>(frames), dacTime, m_sampleRate);
+    }
 
     // What plays now: unless looping, the end of the play range ends it
     bool finished = false;

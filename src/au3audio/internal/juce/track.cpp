@@ -6,16 +6,19 @@
 #include "au3-clip-processing/sequence-graph/PlayheadMappingNode.h"
 #include "au3-clip-processing/sequence-graph/ResamplingNode.h"
 #include "au3-mixer/AudioIOSequences.h"
+#include "au3-wave-track/WaveTrack.h"
 
 #include "effectsnode.h"
 #include "endoftracknode.h"
 #include "gainpannode.h"
 #include "metertapnode.h"
 #include "mutesolonode.h"
+#include "stereo.h"
 
 using namespace au::au4juce;
 
-Track au::au4juce::buildTrack(std::shared_ptr<const PlayableSequence> sequence, std::shared_ptr<ISequenceProcessingNode> graph,
+// au3's ::Track is visible too
+au::au4juce::Track au::au4juce::buildTrack(std::shared_ptr<const PlayableSequence> sequence, std::shared_ptr<ISequenceProcessingNode> graph,
                               const TrackSettings& settings, std::optional<int64_t> stop)
 {
     const auto numSequenceChannels = sequence->NChannels();
@@ -32,5 +35,9 @@ Track au::au4juce::buildTrack(std::shared_ptr<const PlayableSequence> sequence, 
     node = std::make_shared<MuteSoloNode>(std::move(node), sequence, *settings.muteSolo);
     node = std::make_shared<GainPanNode>(std::move(node), sequence);
     auto tap = std::make_shared<MeterTapNode>(std::move(node), numSequenceChannels, settings.meterCapacity);
-    return { tap, tap };
+    std::optional<int64_t> meterId;
+    if (const auto waveTrack = dynamic_cast<const WaveTrack*>(sequence->FindChannelGroup())) {
+        meterId = static_cast<int64_t>(waveTrack->GetId());
+    }
+    return { tap, tap, meterId, std::min<size_t>(numSequenceChannels, numChannels) };
 }

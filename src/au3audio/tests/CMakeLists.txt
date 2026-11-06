@@ -16,6 +16,7 @@ if (AU_USE_JUCE)
     set(MODULE_TEST_SRC ${MODULE_TEST_SRC}
         ${CMAKE_CURRENT_LIST_DIR}/chainnodes_tests.cpp
         ${CMAKE_CURRENT_LIST_DIR}/juceaudiodevices_tests.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/meters_tests.cpp
         ${CMAKE_CURRENT_LIST_DIR}/playheadmapper_tests.cpp
     )
 endif()

@@ -156,7 +156,7 @@ int JuceAudioEngine::startTransport(const TransportSequences& sequences, double 
     auto stream = std::make_unique<SafeIoCallback>(project, m_nextStreamToken, std::move(device), options.isDefaultPolicy,
                                                    m_callbackInfoQueue, m_playedRanges, m_playbackVolume);
     stream->trackEndTime = TrackList::Get(project).GetEndTime();
-    stream->build(sequences);
+    stream->build(sequences, muse::value(m_playbackMeters, &project));
 
     std::optional<std::pair<double, double> > loopRange;
     if (options.isDefaultPolicy && playRegion.Active() && startTime < endTime
