@@ -97,7 +97,7 @@ void JuceIoCallback::build(const TransportSequences& sequences, const audio::IAu
     }
     m_maxLatency = std::max(0, masterLatency) + maxTrackLatency;
 
-    std::shared_ptr<ISequenceProcessingNode> master = std::make_shared<SequentialMixNode>(std::move(outputs), maxFrames);
+    std::shared_ptr<ISequenceProcessingNode> master = makeMix(std::move(outputs), maxFrames);
     master = std::make_shared<EffectsNode>(std::move(master), numChannels, RealtimeEffectManager::MasterGroup, *m_blockContext,
                                            maxFrames);
     m_masterTap = std::make_shared<MeterTapNode>(std::move(master), numChannels, readAheadChunkSize());
@@ -122,6 +122,12 @@ void JuceIoCallback::build(const TransportSequences& sequences, const audio::IAu
         m_buffer[ch].assign(maxFrames, 0.f);
         m_bufferPointers[ch] = m_buffer[ch].data();
     }
+}
+
+std::shared_ptr<ISequenceProcessingNode> JuceIoCallback::makeMix(std::vector<std::shared_ptr<ISequenceProcessingNode> > tracks,
+                                                                 size_t maxFrames)
+{
+    return std::make_shared<SequentialMixNode>(std::move(tracks), maxFrames);
 }
 
 void JuceIoCallback::setCapture(std::unique_ptr<RecordingCapture> capture)

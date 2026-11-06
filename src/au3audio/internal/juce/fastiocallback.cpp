@@ -7,6 +7,10 @@
 
 #include "au3-clip-processing/sequence-graph/LockFreeQueueNode.h"
 
+#ifdef AU_USE_TRACKTION
+#include "../tracktion/tracktiontoaudacitynode.h"
+#endif
+
 using namespace au::au4juce;
 
 FastIoCallback::~FastIoCallback()
@@ -19,6 +23,14 @@ std::optional<TrackReadAhead> FastIoCallback::trackReadAhead() const
     const auto chunkSize = readAheadChunkSize();
     return TrackReadAhead { chunkSize, readAheadNumChunks, maxResyncLeadNumChunks * chunkSize };
 }
+
+#ifdef AU_USE_TRACKTION
+std::shared_ptr<ISequenceProcessingNode> FastIoCallback::makeMix(std::vector<std::shared_ptr<ISequenceProcessingNode> > tracks,
+                                                                 size_t maxFrames)
+{
+    return std::make_shared<au4tracktion::TracktionToAudacityNode>(std::move(tracks), m_sampleRate, maxFrames);
+}
+#endif
 
 void FastIoCallback::startReadingAhead()
 {

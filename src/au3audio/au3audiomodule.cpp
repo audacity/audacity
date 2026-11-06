@@ -79,7 +79,13 @@ void Au3AudioModule::resolveImports()
     const auto suspendJuceStream = [this] { return m_juceDriverController->suspendStream(); };
     backendRegister->registerBackend({ "juce", m_juceAudioEngine, m_juceDriverController, suspendJuceStream, "JUCE (safe)",
                                        [this] { m_juceAudioEngine->setMode(au4juce::JuceAudioEngine::Mode::Safe); } });
-    backendRegister->registerBackend({ "juce-fast", m_juceAudioEngine, m_juceDriverController, suspendJuceStream, "JUCE (fast)",
+#ifdef AU_USE_TRACKTION
+    // Mixes with tracktion_graph
+    const std::string fastTitle = "Tracktion (fast)";
+#else
+    const std::string fastTitle = "JUCE (fast)";
+#endif
+    backendRegister->registerBackend({ "juce-fast", m_juceAudioEngine, m_juceDriverController, suspendJuceStream, fastTitle,
                                        [this] { m_juceAudioEngine->setMode(au4juce::JuceAudioEngine::Mode::Fast); } });
 #endif
 }

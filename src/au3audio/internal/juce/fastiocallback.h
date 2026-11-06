@@ -22,6 +22,11 @@ public:
 private:
     const char* name() const override { return "JUCE, fast"; }
     std::optional<TrackReadAhead> trackReadAhead() const override;
+#ifdef AU_USE_TRACKTION
+    //! In parallel, with tracktion_graph
+    std::shared_ptr<ISequenceProcessingNode> makeMix(std::vector<std::shared_ptr<ISequenceProcessingNode> > tracks,
+                                                     size_t maxFrames) override;
+#endif
     void onBuilt(std::shared_ptr<ISequenceProcessingNode> top) override { m_top = std::move(top); }
     void startReadingAhead() override;
     void invalidateReadAhead() override;

@@ -153,6 +153,21 @@ if (AU_USE_JUCE)
     set(MODULE_DEF ${MODULE_DEF} AU_USE_JUCE)
 endif()
 
+if (AU_USE_TRACKTION)
+    set(TRACKTION_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/audacitytotracktionnode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/audacitytotracktionnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/tracktiongraphincludes.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/tracktiontoaudacitynode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/tracktion/tracktiontoaudacitynode.h
+    )
+    set(MODULE_SRC ${MODULE_SRC} ${TRACKTION_SRC})
+    # tracktion_graph's headers include JUCE's
+    set_source_files_properties(${TRACKTION_SRC} PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
+    set(MODULE_LINK ${MODULE_LINK} tracktion_graph)
+    set(MODULE_DEF ${MODULE_DEF} AU_USE_TRACKTION)
+endif()
+
 setup_module()
 
 if (AU_BUILD_AU3AUDIO_TESTS)

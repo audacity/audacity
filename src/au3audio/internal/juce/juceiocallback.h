@@ -109,6 +109,9 @@ protected:
     virtual const char* name() const = 0;
     //! How the tracks read their sequences ahead, if they do
     virtual std::optional<TrackReadAhead> trackReadAhead() const = 0;
+    //! What sums `tracks`, their chains' outputs, rendering at most `maxFrames` at once: one after the other, by default
+    virtual std::shared_ptr<ISequenceProcessingNode> makeMix(std::vector<std::shared_ptr<ISequenceProcessingNode> > tracks,
+                                                             size_t maxFrames);
     //! Once built: `top` is the master's chain, which renders what plays
     virtual void onBuilt(std::shared_ptr<ISequenceProcessingNode> top) = 0;
     //! Once the playhead is set
