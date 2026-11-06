@@ -1133,6 +1133,16 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
     }
 
     setItemsBoundaries(boundaries);
+
+    auto loopRegion = playbackController()->loopRegion();
+    if (loopRegion.isValid()) {
+        boundaries.insert(loopRegion.start);
+        boundaries.insert(loopRegion.end);
+    }
+
+    boundaries.insert(globalContext()->playbackState()->playbackPosition());
+
+    setItemsBoundaries(boundaries);
 }
 
 void ProjectViewState::setZoomState(const ZoomState& state)
