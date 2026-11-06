@@ -135,6 +135,9 @@ void AudioEngineSwitcher::activate(const AudioBackend& backend)
     m_engine->recordingCommitRequested().onNotify(relay, [this] { m_recordingCommitRequested.notify(); });
     m_engine->recordingFinished().onNotify(relay, [this] { m_recordingFinished.notify(); });
     m_engine->streamStopped().onNotify(relay, [this] { m_streamStopped.notify(); });
+    m_engine->deviceLatencyChanged().onNotify(relay, [this] { m_deviceLatencyChanged.notify(); });
+    // Its engine's device, if it opened one
+    m_deviceLatencyChanged.notify();
 
     m_driver->configurationChanged().onReceive(relay, [this](const AudioConfigurationDelta& delta) {
         m_configurationChanged.send(delta);
@@ -336,6 +339,16 @@ muse::async::Notification AudioEngineSwitcher::recordingFinished() const
 muse::async::Notification AudioEngineSwitcher::streamStopped() const
 {
     return m_streamStopped;
+}
+
+std::optional<DeviceLatency> AudioEngineSwitcher::deviceLatency() const
+{
+    return engine().deviceLatency();
+}
+
+muse::async::Notification AudioEngineSwitcher::deviceLatencyChanged() const
+{
+    return m_deviceLatencyChanged;
 }
 
 muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> AudioEngineSwitcher::recordingClipChanged() const

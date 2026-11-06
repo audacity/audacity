@@ -105,6 +105,8 @@ public:
     muse::async::Notification recordingFinished() const override;
     muse::async::Notification streamStopped() const override;
     muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const override;
+    std::optional<audio::DeviceLatency> deviceLatency() const override;
+    muse::async::Notification deviceLatencyChanged() const override;
 
 private:
     void onPlayRegionChanged();
@@ -145,5 +147,7 @@ private:
     //! Notified of recordings, as AudioIO notifies its listener
     const std::shared_ptr<au3audio::Au3AudioIOListener> m_listener = std::make_shared<au3audio::Au3AudioIOListener>();
     muse::async::Notification m_streamStopped;
+    std::optional<audio::DeviceLatency> m_deviceLatency;
+    muse::async::Notification m_deviceLatencyChanged;
 };
 }

@@ -69,10 +69,17 @@ public:
     muse::async::Notification recordingCommitRequested() const override;
     muse::async::Notification recordingFinished() const override;
     muse::async::Notification streamStopped() const override;
+    std::optional<audio::DeviceLatency> deviceLatency() const override;
+    muse::async::Notification deviceLatencyChanged() const override;
     muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const override;
 
 private:
+    void updateDeviceLatency();
+
     Observer::Subscription m_streamStatusSubscription;
     muse::async::Notification m_streamStopped;
+    //! As AudioIO took it from PortAudio, at the stream's start
+    std::optional<audio::DeviceLatency> m_deviceLatency;
+    muse::async::Notification m_deviceLatencyChanged;
 };
 }

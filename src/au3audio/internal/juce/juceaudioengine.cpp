@@ -442,6 +442,17 @@ std::unique_ptr<juce::AudioIODevice> JuceAudioEngine::openDevice(int numInputCha
         m_lastError = muse::String::fromStdString(error.toStdString());
         return nullptr;
     }
+    audio::DeviceLatency latency;
+    if (!device->getActiveInputChannels().isZero()) {
+        latency.input = device->getInputLatencyInSamples() / device->getCurrentSampleRate();
+    }
+    if (!device->getActiveOutputChannels().isZero()) {
+        latency.output = device->getOutputLatencyInSamples() / device->getCurrentSampleRate();
+    }
+    if (latency != m_deviceLatency) {
+        m_deviceLatency = latency;
+        m_deviceLatencyChanged.notify();
+    }
     return device;
 }
 
@@ -538,6 +549,16 @@ muse::async::Notification JuceAudioEngine::recordingFinished() const
 muse::async::Notification JuceAudioEngine::streamStopped() const
 {
     return m_streamStopped;
+}
+
+std::optional<au::audio::DeviceLatency> JuceAudioEngine::deviceLatency() const
+{
+    return m_deviceLatency;
+}
+
+muse::async::Notification JuceAudioEngine::deviceLatencyChanged() const
+{
+    return m_deviceLatencyChanged;
 }
 
 muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> JuceAudioEngine::recordingClipChanged() const
