@@ -9,12 +9,15 @@
 #include <memory>
 #include <vector>
 
+#include "au3-clip-processing/sequence-graph/IPlayheadMapper.h"
 #include "au3-mixer/AudioIOSequences.h"
 
 #include "../internal/juce/effectscratch.h"
 #include "../internal/juce/effectsnode.h"
+#include "../internal/juce/endoftracknode.h"
 #include "../internal/juce/gainpannode.h"
 #include "../internal/juce/ieffectscontext.h"
+#include "../internal/juce/iendoftrackcontext.h"
 #include "../internal/juce/imutesolocontext.h"
 #include "../internal/juce/metertapnode.h"
 #include "../internal/juce/mutesolonode.h"
@@ -31,6 +34,10 @@ constexpr int64_t TEST_JUMP_INDEX = 10'000;
 constexpr float TEST_LEFT_VOLUME = 0.5f;
 constexpr float TEST_RIGHT_VOLUME = 0.25f;
 constexpr float TEST_LEVEL = 0.75f;
+//! Where the playhead reads from index 0
+constexpr int64_t TEST_PLAYHEAD_START = 1'000;
+constexpr int64_t TEST_PLAY_END = TEST_PLAYHEAD_START + TEST_READ_LEN / 2;
+constexpr int64_t TEST_TRACK_STOP = TEST_PLAYHEAD_START + TEST_READ_LEN / 4;
 
 //! Its samples are their stream index, in the first `numChannels` buffers
 class RampNode final : public ISequenceProcessingNode
@@ -101,6 +108,20 @@ public:
 private:
     const int m_latency;
     std::map<const ChannelGroup*, std::array<std::deque<float>, au::au4juce::numChannels> > m_delays;
+};
+
+//! The playhead reads linearly from TEST_PLAYHEAD_START
+class LinearMapper final : public IPlayheadMapper
+{
+public:
+    Segment Map(sampleCount index, size_t maxLen) const override { return { index + TEST_PLAYHEAD_START, maxLen }; }
+};
+
+class TestEndOfTrackContext final : public IEndOfTrackContext
+{
+public:
+    std::optional<int64_t> playEnd() const override { return end; }
+    std::optional<int64_t> end;
 };
 
 class TestMuteSoloContext final : public IMuteSoloContext
@@ -312,4 +333,52 @@ TEST(SequentialMixNodeTests, SumsItsTracks)
 
     EXPECT_EQ(output.left, std::vector<float>(TEST_READ_LEN, TEST_LEVEL + otherLevel));
     EXPECT_EQ(output.right, std::vector<float>(TEST_READ_LEN, TEST_LEVEL + otherLevel));
+}
+
+namespace {
+//! The ramp of RampNode, silent from `silentFrom` on
+std::vector<float> rampUntil(size_t len, size_t silentFrom)
+{
+    auto values = ramp(0, len);
+    std::fill(values.begin() + static_cast<std::ptrdiff_t>(std::min(silentFrom, len)), values.end(), 0.f);
+    return values;
+}
+}
+
+TEST(EndOfTrackNodeTests, PlaysOnWithoutAnEnd)
+{
+    TestEndOfTrackContext context;
+    EndOfTrackNode node { std::make_shared<RampNode>(), std::make_shared<LinearMapper>(), context };
+
+    EXPECT_EQ(read(node, 0, TEST_READ_LEN).left, ramp(0, TEST_READ_LEN));
+}
+
+TEST(EndOfTrackNodeTests, SilencesPastThePlayEnd)
+{
+    TestEndOfTrackContext context;
+    context.end = TEST_PLAY_END;
+    EndOfTrackNode node { std::make_shared<RampNode>(), std::make_shared<LinearMapper>(), context };
+
+    const auto output = read(node, 0, TEST_READ_LEN);
+
+    const auto audible = static_cast<size_t>(TEST_PLAY_END - TEST_PLAYHEAD_START);
+    EXPECT_EQ(output.left, rampUntil(TEST_READ_LEN, audible));
+    EXPECT_EQ(output.right, rampUntil(TEST_READ_LEN, audible));
+}
+
+TEST(EndOfTrackNodeTests, SilencesWhereTheTrackStopsBeforeThePlayEnd)
+{
+    TestEndOfTrackContext context;
+    context.end = TEST_PLAY_END;
+    EndOfTrackNode node { std::make_shared<RampNode>(), std::make_shared<LinearMapper>(), context, TEST_TRACK_STOP };
+
+    EXPECT_EQ(read(node, 0, TEST_READ_LEN).left, rampUntil(TEST_READ_LEN, static_cast<size_t>(TEST_TRACK_STOP - TEST_PLAYHEAD_START)));
+}
+
+TEST(EndOfTrackNodeTests, StopsTheTrackEvenWhileLooping)
+{
+    TestEndOfTrackContext context;
+    EndOfTrackNode node { std::make_shared<RampNode>(), std::make_shared<LinearMapper>(), context, TEST_TRACK_STOP };
+
+    EXPECT_EQ(read(node, 0, TEST_READ_LEN).left, rampUntil(TEST_READ_LEN, static_cast<size_t>(TEST_TRACK_STOP - TEST_PLAYHEAD_START)));
 }

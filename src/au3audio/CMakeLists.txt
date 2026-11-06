@@ -94,9 +94,12 @@ if (AU_USE_JUCE)
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/endoftracknode.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/endoftracknode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/gainpannode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/gainpannode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/ieffectscontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/iendoftrackcontext.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/imutesolocontext.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metertapnode.h
