@@ -73,7 +73,7 @@ private:
                                          const std::string& params = {});
     muse::Ret doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned int flags, const std::string& params = {});
     muse::Ret performEffectInternal(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
-                                    EffectSettings& settings);
+                                    EffectSettings& settings, bool forceNewTrack = false);
     muse::Ret performGenerator(au3::Au3Project& project, Effect&, const std::shared_ptr<EffectInstanceEx>&, EffectSettings&);
     std::optional<trackedit::ClipId> performEffectOnSingleClip(au3::Au3Project&, Effect&, const std::shared_ptr<EffectInstanceEx>&,
                                                                EffectSettings&, trackedit::TrackId trackId, muse::Ret&);
