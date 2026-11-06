@@ -87,12 +87,12 @@ Item {
             id: controlComp
 
             StyledToolBarItem {
-                width: 28
+                width: ui.theme.defaultButtonSize
                 height: width
 
                 backgroundRadius: 2
 
-                iconFont: ui.theme.iconsFont
+                iconFont: ui.theme.toolbarIconsFont
                 iconColor: Boolean(itemData) ? itemData.iconColor : ui.theme.fontPrimaryColor
                 accentColor: Boolean(itemData) ? itemData.backgroundColor : ui.theme.buttonColor
                 accentButton: Boolean(itemData) ? itemData.selected : false
@@ -103,12 +103,12 @@ Item {
             id: projectControlComp
 
             StyledToolBarItem {
-                width: 28
+                width: ui.theme.defaultButtonSize
                 height: width
 
                 backgroundRadius: 2
 
-                iconFont: ui.theme.iconsFont
+                iconFont: ui.theme.toolbarIconsFont
             }
         }
 
@@ -121,7 +121,7 @@ Item {
                 property var itemData: null
 
                 width: Boolean(itemData) ? Math.max(288, Math.min(itemData.meterSize, view.maximumWidth)) : 288
-                height: 28
+                height: ui.theme.defaultButtonSize
 
                 backgroundRadius: 2
 
@@ -251,7 +251,7 @@ Item {
             RecordLevel {
                 property var itemData: null
 
-                width: 28
+                width: ui.theme.defaultButtonSize
                 height: width
 
                 backgroundRadius: 2
@@ -259,7 +259,7 @@ Item {
                 meterStyle: Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
 
                 icon: Boolean(itemData) ? itemData.icon : IconCode.NONE
-                iconFont: ui.theme.iconsFont
+                iconFont: ui.theme.toolbarIconsFont
 
                 toolTipTitle: Boolean(itemData) ? itemData.title : ""
                 toolTipDescription: Boolean(itemData) ? itemData.description : ""
@@ -308,7 +308,7 @@ Item {
                 property var itemData: null
 
                 width: 143
-                height: 28
+                height: ui.theme.defaultButtonSize
 
                 //: Noun: label of the snapping control in the playback toolbar
                 title: qsTrc("projectscene", "Snap")
@@ -341,11 +341,11 @@ Item {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
 
-        width: 28
+        width: ui.theme.defaultButtonSize
         height: width
 
         icon: IconCode.SETTINGS_COG
-        iconFont: ui.theme.iconsFont
+        iconFont: ui.theme.toolbarIconsFont
         //: Tooltip of the toolbar customization button
         toolTipTitle: qsTrc("projectscene", "Customize toolbar")
         toolTipDescription: qsTrc("projectscene", "Show/hide toolbar buttons")
