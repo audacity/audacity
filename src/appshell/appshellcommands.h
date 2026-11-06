@@ -29,16 +29,6 @@ inline static const muse::rcommand::Command APP_QUIT_COMMAND("command://app/quit
 inline static const std::string INSTALLER_PATH_PARAM("installer_path");
 
 inline static const muse::rcommand::Command APP_RESTART_COMMAND("command://app/restart");
-inline static const muse::rcommand::Command APP_COPY_COMMAND("command://app/copy");
-inline static const muse::rcommand::Command APP_CUT_COMMAND("command://app/cut");
-inline static const muse::rcommand::Command APP_PASTE_COMMAND("command://app/paste");
-inline static const muse::rcommand::Command APP_UNDO_COMMAND("command://app/undo");
-inline static const muse::rcommand::Command APP_REDO_COMMAND("command://app/redo");
-inline static const muse::rcommand::Command APP_DELETE_COMMAND("command://app/delete");
-inline static const muse::rcommand::Command APP_CANCEL_COMMAND("command://app/cancel");
-inline static const muse::rcommand::Command APP_TRIGGER_COMMAND("command://app/trigger");
-inline static const muse::rcommand::Command APP_ENTER_COMMAND("command://app/enter");
-inline static const muse::rcommand::Command APP_SHIFT_ENTER_COMMAND("command://app/shift-enter");
 inline static const muse::rcommand::Command APP_CONTEXT_MENU_COMMAND("command://app/context-menu");
 
 inline static const muse::rcommand::Command APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND("command://app/toggle-transport-toolbar");

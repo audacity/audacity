@@ -26,7 +26,7 @@ var testCase = {
     steps: [
         {
             name: "Close project (if opened) and go to home to start", func: function () {
-                api.dispatcher.dispatch("file-close")
+                api.dispatcher.dispatch("command://project/close")
                 Home.goToHome()
             }
         },
@@ -35,7 +35,7 @@ var testCase = {
                 Home.createNewProject()
                 // Querying a navigation panel before the project page exists crashes the app
                 api.testflow.sleep(2000)
-                api.dispatcher.dispatch("new-mono-track")
+                api.dispatcher.dispatch("command://trackedit/new-mono-track")
                 api.testflow.sleep(500)
             }
         },

@@ -14,7 +14,6 @@
 #include "internal/playbackconfiguration.h"
 #include "internal/playbackcontroller.h"
 #include "internal/playbackmetercontroller.h"
-#include "internal/playbackuiactions.h"
 #include "internal/playbackuistate.h"
 #include "internal/au3/au3playback.h"
 #include "internal/au3/au3trackplaybackcontrol.h"
@@ -30,8 +29,6 @@
 using namespace au::playback;
 using namespace muse;
 using namespace muse::modularity;
-using namespace muse::ui;
-using namespace muse::actions;
 
 static const std::string mname("playback");
 
@@ -113,7 +110,6 @@ IContextSetup* PlaybackModule::newContext(const muse::modularity::ContextPtr& ct
 void PlaybackContext::registerExports()
 {
     m_controller = std::make_shared<PlaybackController>(iocContext());
-    m_uiActions = std::make_shared<PlaybackUiActions>(iocContext(), m_controller);
     m_playback = std::make_shared<Au3Playback>(iocContext());
     m_uiState = std::make_shared<PlaybackUiState>(iocContext());
 
@@ -142,14 +138,8 @@ void PlaybackContext::onInit(const IApplication::RunMode& mode)
         return;
     }
 
-    m_uiActions->init();
     m_controller->init();
     m_uiState->init();
-
-    auto ar = ioc()->resolve<IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void PlaybackContext::onDeinit()

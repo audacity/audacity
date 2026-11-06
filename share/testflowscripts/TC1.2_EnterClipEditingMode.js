@@ -11,7 +11,7 @@ var testCase = {
     steps: [
         {
             name: "Close project (if opened) and go to home to start", func: function () {
-                api.dispatcher.dispatch("file-close")
+                api.dispatcher.dispatch("command://project/close")
                 Home.goToHome()
             }
         },

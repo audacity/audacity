@@ -7,12 +7,10 @@
 
 #include "types/projectscenetypes.h"
 
-#include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/rcommand/icommandsregister.h"
 #include "framework/rcommand/icommandsstate.h"
 
-#include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
 #include "internal/projectscenecommandsregister.h"
 #include "internal/projectscenecommandsstate.h"
@@ -239,7 +237,6 @@ IContextSetup* ProjectSceneModule::newContext(const muse::modularity::ContextPtr
 void ProjectSceneContext::registerExports()
 {
     m_projectSceneActionsController = std::make_shared<ProjectSceneActionsController>(iocContext());
-    m_uiActions = std::make_shared<ProjectSceneUiActions>(iocContext(), m_projectSceneActionsController);
     m_realtimeEffectPanelTrackSelection = std::make_shared<RealtimeEffectPanelTrackSelection>(iocContext());
     m_uiState = std::make_shared<ProjectSceneUiState>(iocContext());
 
@@ -266,15 +263,9 @@ void ProjectSceneContext::onInit(const muse::IApplication::RunMode& mode)
         return;
     }
 
-    m_uiActions->init();
     m_projectSceneActionsController->init();
     m_realtimeEffectPanelTrackSelection->init();
     m_uiState->init();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void ProjectSceneContext::onDeinit()

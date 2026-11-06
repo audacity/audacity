@@ -24,7 +24,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { INSTALLER_PATH_PARAM, Arg(DataType::String, u"Path of an update package to apply after all windows are closed") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_RESTART_COMMAND,
@@ -33,7 +34,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Restart"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_FULLSCREEN_COMMAND,
@@ -42,7 +44,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Full screen"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         APP_ABOUT_COMMAND,
@@ -51,7 +54,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "About Audacity"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_ABOUT_QT_COMMAND,
@@ -60,7 +64,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "About Qt"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_ONLINE_HANDBOOK_COMMAND,
@@ -69,7 +74,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open online handbook"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_ASK_HELP_COMMAND,
@@ -78,7 +84,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Ask for help"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_PREFERENCES_COMMAND,
@@ -87,7 +94,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Preferences…"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_REVERT_FACTORY_COMMAND,
@@ -96,7 +104,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Revert to factory settings"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_AUDIO_SETTINGS_COMMAND,
@@ -105,7 +114,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open audio setup dialog"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_SHORTCUTS_PREFERENCES_COMMAND,
@@ -114,7 +124,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open shortcuts preferences"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_EDITING_PREFERENCES_COMMAND,
@@ -123,7 +134,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open editing preferences"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_SPECTROGRAM_PREFERENCES_COMMAND,
@@ -132,97 +144,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open spectrogram preferences"),
         InputSchema(),
-        Decoration()
-    },
-    CommandInfo{
-        APP_COPY_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Copy"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Copy"),
-        InputSchema(),
-        Decoration(IconCode::Code::COPY)
-    },
-    CommandInfo{
-        APP_CUT_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Cut"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Cut"),
-        InputSchema(),
-        Decoration(IconCode::Code::CUT)
-    },
-    CommandInfo{
-        APP_PASTE_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "&Paste"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Paste"),
-        InputSchema(),
-        Decoration(IconCode::Code::PASTE)
-    },
-    CommandInfo{
-        APP_UNDO_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "&Undo"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Undo"),
-        InputSchema(),
-        Decoration(IconCode::Code::UNDO)
-    },
-    CommandInfo{
-        APP_REDO_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "&Redo"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Redo"),
-        InputSchema(),
-        Decoration(IconCode::Code::REDO)
-    },
-    CommandInfo{
-        APP_DELETE_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "De&lete"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Delete"),
-        InputSchema(),
-        Decoration(IconCode::Code::DELETE_TANK)
-    },
-    CommandInfo{
-        APP_CANCEL_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "&Cancel"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Cancel"),
-        InputSchema(),
-        Decoration(IconCode::Code::DELETE_TANK)
-    },
-    CommandInfo{
-        APP_TRIGGER_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "&Trigger"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Trigger"),
-        InputSchema(),
-        Decoration()
-    },
-    CommandInfo{
-        APP_ENTER_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "&Enter"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Trigger the focused control or select the focused track item"),
-        InputSchema(),
-        Decoration()
-    },
-    CommandInfo{
-        APP_SHIFT_ENTER_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Shift+&Enter"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Trigger the focused control or make a range selection of track items"),
-        InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_CONTEXT_MENU_COMMAND,
@@ -231,7 +154,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open the context menu of the focused item"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND,
@@ -240,7 +164,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show/hide playback controls"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_TRACKS_PANEL_COMMAND,
@@ -249,7 +174,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show/hide tracks"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_HISTORY_PANEL_COMMAND,
@@ -258,7 +184,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show history"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_STATUSBAR_COMMAND,
@@ -267,7 +194,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show/hide status bar"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
 };
 }

@@ -9,7 +9,6 @@
 #include "../trackeditcommands.h"
 
 #include "global/async/async.h"
-#include "framework/actions/tests/mocks/actionsdispatchermock.h"
 #include "framework/ui/navigationcommands.h"
 #include "framework/ui/tests/mocks/navigationmocks.h"
 #include "framework/rcommand/tests/mocks/commanddispatchermock.h"
@@ -39,7 +38,6 @@ class TrackNavigationControllerTests : public ::testing::Test
 public:
     void SetUp() override
     {
-        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
         m_navigationController = std::make_shared<NiceMock<muse::ui::NavigationControllerMock> >();
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
@@ -53,7 +51,6 @@ public:
         m_controller = std::make_shared<TrackNavigationController>(m_testCtx);
 
         //! NOTE Inject mock dependencies directly via friend access
-        m_controller->dispatcher.set(m_dispatcher);
         m_controller->commandDispatcher.set(m_commandDispatcher);
         m_controller->navigationController.set(m_navigationController);
         m_controller->playbackController.set(m_playbackController);
@@ -188,7 +185,6 @@ public:
 
     std::shared_ptr<muse::modularity::Context> m_testCtx;
     std::shared_ptr<TrackNavigationController> m_controller;
-    std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
     std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
     std::shared_ptr<muse::ui::NavigationControllerMock> m_navigationController;
     std::shared_ptr<context::GlobalContextMock> m_globalContext;

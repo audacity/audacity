@@ -16,6 +16,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditinteractionmock.h
 
     ${CMAKE_CURRENT_LIST_DIR}/trackeditactionscontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/trackeditcommandsstate_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/trackeditoperationcontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tracknavigationcontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tracknavigationmodel_tests.cpp

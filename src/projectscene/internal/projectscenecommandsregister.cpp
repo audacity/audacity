@@ -96,7 +96,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM, Arg(DataType::Int, u"Track identifier") },
             }),
-        Decoration(IconCode::Code::WAVEFORM_HALFWAVE, rcommand::Checkable::Yes)
+        Decoration(IconCode::Code::WAVEFORM_HALFWAVE, rcommand::Checkable::Yes),
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND,
@@ -117,7 +118,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM, Arg(DataType::Int, u"Track identifier") },
                 { PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip identifier") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND,
@@ -126,7 +128,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show label editor"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_ZOOM_IN_COMMAND,
@@ -210,7 +213,8 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_ONLY_IF_NOT_VISIBLE_PARAM,
                   Arg(DataType::Bool, u"Skip when the playhead is already visible") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND,
@@ -219,7 +223,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open the timeline context menu"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         PROJECTSCENE_PLAY_POSITION_DECREASE_COMMAND,
@@ -300,7 +305,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show effects panel"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND,
@@ -318,7 +324,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open audio setup context menu"),
         InputSchema(),
-        Decoration(IconCode::Code::CONFIGURE)
+        Decoration(IconCode::Code::CONFIGURE),
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND,
@@ -354,7 +361,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Snapping"),
         InputSchema(),
-        Decoration(IconCode::Code::MAGNET)
+        Decoration(IconCode::Code::MAGNET),
+        Availability::Dispatch
     },
 };
 }

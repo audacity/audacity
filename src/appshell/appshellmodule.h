@@ -32,7 +32,6 @@
 namespace au::appshell {
 class AppShellConfiguration;
 class ApplicationActionController;
-class ApplicationUiActions;
 class SessionsManager;
 
 class AppShellModule : public muse::modularity::IModuleSetup
@@ -68,7 +67,6 @@ public:
 
 private:
     std::shared_ptr<ApplicationActionController> m_applicationActionController;
-    std::shared_ptr<ApplicationUiActions> m_applicationUiActions;
     std::shared_ptr<SessionsManager> m_sessionsManager;
 };
 }

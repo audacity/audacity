@@ -16,7 +16,7 @@
 #include "framework/audioplugins/audiopluginsmodule.h"
 #include "framework/interactive/interactivemodule.h"
 #include "framework/ui/uimodule.h"
-#include "framework/shortcuts/shortcutsmodule.h"
+#include "framework/shortcuts_v2/shortcutsmodule.h"
 #include "framework/accessibility/accessibilitymodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
 #include "framework/dockwindow/dockmodule.h"

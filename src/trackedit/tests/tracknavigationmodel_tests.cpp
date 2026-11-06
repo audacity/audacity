@@ -17,7 +17,6 @@
 #include "ui/qml/Muse/Ui/navigationsection.h"
 #include "ui/qml/Muse/Ui/navigationcontrol.h"
 
-#include "actions/tests/mocks/actionsdispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "ui/tests/mocks/navigationmocks.h"
 #include "mocks/tracknavigationcontrollermock.h"
@@ -43,7 +42,6 @@ public:
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_navigationController = std::make_shared<NiceMock<muse::ui::NavigationControllerMock> >();
         m_tracksNavigationController = std::make_shared<NiceMock<TrackNavigationControllerMock> >();
-        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
         m_trackeditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
 
         //! NOTE The context the model and its panels resolve their dependencies from
@@ -53,7 +51,6 @@ public:
         ioc->registerExportNoDelete<context::IGlobalContext>("utests", m_globalContext.get());
         ioc->registerExportNoDelete<muse::ui::INavigationController>("utests", m_navigationController.get());
         ioc->registerExportNoDelete<ITrackNavigationController>("utests", m_tracksNavigationController.get());
-        ioc->registerExportNoDelete<muse::actions::IActionsDispatcher>("utests", m_dispatcher.get());
 
         //! NOTE Wire the test IoC context into the QML root context, so that objects
         //! created with the QObject constructor resolve their dependencies from it
@@ -125,7 +122,6 @@ public:
         ioc->unregister<context::IGlobalContext>("utests");
         ioc->unregister<muse::ui::INavigationController>("utests");
         ioc->unregister<ITrackNavigationController>("utests");
-        ioc->unregister<muse::actions::IActionsDispatcher>("utests");
 
         muse::modularity::removeIoC(m_testCtx);
     }
@@ -245,7 +241,6 @@ public:
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<muse::ui::NavigationControllerMock> m_navigationController;
     std::shared_ptr<TrackNavigationControllerMock> m_tracksNavigationController;
-    std::shared_ptr<muse::actions::ActionsDispatcherMock> m_dispatcher;
     std::shared_ptr<TrackeditProjectMock> m_trackeditProject;
 
     muse::async::Notification m_projectChanged;

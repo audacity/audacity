@@ -25,11 +25,9 @@
 #include <QAbstractItemModel>
 #include <QtQml/qqmlregistration.h>
 
-#include "actions/iactionsdispatcher.h"
 #include "appshell/iappshellconfiguration.h"
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "modularity/ioc.h"
-#include "ui/iuiactionsregister.h"
 #include "ui/view/iconcodes.h"
 #include "framework/interactive/iinteractive.h"
 #include "preferencepageitem.h"
@@ -43,8 +41,6 @@ class PreferencesModel : public QAbstractItemModel, public muse::Contextable
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::ContextInject<muse::ui::IUiActionsRegister> actionsRegister { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
 
     Q_PROPERTY(QString currentPageId READ currentPageId WRITE setCurrentPageId NOTIFY currentPageIdChanged)

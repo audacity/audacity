@@ -3,16 +3,8 @@
 */
 #include "effectsactionscontroller.h"
 
-#include <algorithm>
-
 #include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/effectstypes.h"
-#include "effects/effects_base/internal/effectsutils.h"
-#include "effectsuiactions.h"
-
-#include "framework/rcommand/actiontocommand.h"
-
-#include "spectrogram/spectrogramtypes.h"
 #include "wx/string.h"
 
 #include "au3-components/EffectAutomationParameters.h"
@@ -21,109 +13,22 @@
 #include "log.h"
 
 using namespace muse;
-using namespace muse::actions;
 using namespace muse::rcommand;
 using namespace au::effects;
 
-static const ActionCode REPEAT_LAST_EFFECT_CODE("repeat-last-effect");
-static const ActionCode PLUGIN_MANAGER_CODE("plugin-manager");
-static const ActionCode GET_EFFECTS_CODE("get-effects");
-static const ActionQuery EFFECT_OPEN_QUERY("action://effects/open");
-static const ActionQuery EFFECT_APPLY_QUERY("action://effects/apply");
-static const ActionQuery TOGGLE_VENDOR_UI_QUERY("action://effects/toggle_vendor_ui");
-static const ActionQuery PRESET_APPLY_QUERY("action://effects/presets/apply");
-static const ActionQuery PRESET_SAVE_QUERY("action://effects/presets/save");
-static const ActionQuery PRESET_SAVE_AS_QUERY("action://effects/presets/save_as");
-static const ActionQuery PRESET_DELETE_QUERY("action://effects/presets/delete");
-static const ActionQuery PRESET_IMPORT_QUERY("action://effects/presets/import");
-static const ActionQuery PRESET_EXPORT_QUERY("action://effects/presets/export");
-
 static const muse::Uri PLUGIN_MANAGER_URI("audacity://effects/plugin_manager");
-
-namespace {
-CommandQuery queryParamsConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.empty()) {
-        return query;
-    }
-
-    const ActionQuery legacy(args.arg<std::string>(0));
-    query.setParams(legacy.params());
-    return query;
-}
-
-CommandQuery effectOpenConv(const Command& command, const ActionData& args)
-{
-    IF_ASSERT_FAILED(!args.empty()) {
-        return CommandQuery(command);
-    }
-
-    const ActionQuery legacy(args.arg<std::string>(0));
-    return CommandQuery(makeEffectOpenCommand(effectIdFromAction(legacy)));
-}
-
-CommandQuery effectApplyConv(const Command& command, const ActionData& args, const EffectMetaList& effects)
-{
-    IF_ASSERT_FAILED(!args.empty()) {
-        return CommandQuery(command);
-    }
-
-    const ActionQuery legacy(args.arg<std::string>(0));
-    const EffectId effectIdOrTitle = effectIdFromAction(legacy);
-    // Search effect by id with a convenience fallback to title for scripting
-    const auto it = std::find_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
-        return meta.id == effectIdOrTitle || meta.title == effectIdOrTitle;
-    });
-    if (it == effects.end()) {
-        LOGE() << "no effect found for symbol: " << effectIdOrTitle;
-        return CommandQuery(command);
-    }
-
-    CommandQuery query(makeEffectApplyCommand(it->id));
-    for (const auto& [key, val] : legacy.params()) {
-        if (key != EFFECTS_EFFECT_ID_PARAM) {
-            query.addParam(key, val);
-        }
-    }
-    return query;
-}
-}
 
 void EffectsActionsController::init()
 {
-    m_uiActions = std::make_shared<EffectsUiActions>(iocContext(), this);
-
     effectsProvider()->effectMetaListChanged().onNotify(this, [this](){
         registerActions();
     });
 
     registerActions();
-
-    effectExecutionScenario()->lastProcessorIsNowAvailable().onNotify(this, [this] {
-        m_canReceiveActionsChanged.send({ REPEAT_LAST_EFFECT_CODE });
-    });
-
-    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](bool complete) {
-        if (complete) {
-            notifyAboutSpectralEffectsAvailability();
-        }
-    });
-}
-
-void EffectsActionsController::notifyAboutSpectralEffectsAvailability()
-{
-    ActionCodeList codes;
-    const auto spectralEffects = spectralEffectsRegister()->spectralEffects();
-    for (const auto& spectralEffect : spectralEffects) {
-        codes.push_back(spectralEffect.action);
-    }
-    m_canReceiveActionsChanged.send(codes);
 }
 
 void EffectsActionsController::registerActions()
 {
-    dispatcher()->unReg(this);
     commandDispatcher()->unreg(this);
 
     auto cd = commandDispatcher();
@@ -147,30 +52,7 @@ void EffectsActionsController::registerActions()
     cd->onRequest(this, EFFECTS_PRESET_IMPORT_COMMAND, [this](const Params& params) { return importPreset(params); });
     cd->onRequest(this, EFFECTS_PRESET_EXPORT_COMMAND, [this](const Params& params) { return exportPreset(params); });
 
-    const Convertor applyConv = [this](const Command& command, const ActionData& args) {
-        return effectApplyConv(command, args, effectsProvider()->effectMetaList());
-    };
-
-    const std::vector<ActionToCommand> actionToCommand = {
-        { EFFECT_OPEN_QUERY.toString(), Command(), effectOpenConv },
-        { REPEAT_LAST_EFFECT_CODE, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, {} },
-        { PLUGIN_MANAGER_CODE, EFFECTS_PLUGIN_MANAGER_COMMAND, {} },
-        { GET_EFFECTS_CODE, EFFECTS_GET_EFFECTS_COMMAND, {} },
-        { EFFECT_APPLY_QUERY.toString(), Command(), applyConv },
-        { TOGGLE_VENDOR_UI_QUERY.toString(), EFFECTS_TOGGLE_VENDOR_UI_COMMAND, queryParamsConv },
-        { PRESET_APPLY_QUERY.toString(), EFFECTS_PRESET_APPLY_COMMAND, queryParamsConv },
-        { PRESET_SAVE_QUERY.toString(), EFFECTS_PRESET_SAVE_COMMAND, queryParamsConv },
-        { PRESET_SAVE_AS_QUERY.toString(), EFFECTS_PRESET_SAVE_AS_COMMAND, queryParamsConv },
-        { PRESET_DELETE_QUERY.toString(), EFFECTS_PRESET_DELETE_COMMAND, queryParamsConv },
-        { PRESET_IMPORT_QUERY.toString(), EFFECTS_PRESET_IMPORT_COMMAND, queryParamsConv },
-        { PRESET_EXPORT_QUERY.toString(), EFFECTS_PRESET_EXPORT_COMMAND, queryParamsConv },
-    };
-    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
-
-    m_uiActions->reload();
-    uiActionsRegister()->unreg(m_uiActions);
-    uiActionsRegister()->reg(m_uiActions);
-    shortcutsRegister()->reload();
+    commandShortcutsRegister()->reload();
 }
 
 muse::Ret EffectsActionsController::openEffect(const EffectId& effectId)
@@ -293,29 +175,6 @@ muse::Ret EffectsActionsController::toggleVendorUI(const Params& params)
     const EffectUIMode newMode = (currentMode == EffectUIMode::VendorUI) ? EffectUIMode::FallbackUI : EffectUIMode::VendorUI;
     configuration()->setEffectUIMode(effectId, newMode);
     return make_ok();
-}
-
-bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
-{
-    if (code == REPEAT_LAST_EFFECT_CODE) {
-        return effectExecutionScenario()->lastProcessorIsAvailable();
-    } else {
-        const auto spectralEffects = spectralEffectsRegister()->spectralEffects();
-        const auto it = std::find_if(spectralEffects.begin(), spectralEffects.end(), [&code](const auto& spectralEffect) {
-            return spectralEffect.action == code;
-        });
-        if (it != spectralEffects.end()) {
-            const spectrogram::FrequencySelection selection = frequencySelectionController()->frequencySelection();
-            return frequencySelectionController()->showsSpectrogram(selection.trackId) && selection.isValid();
-        }
-
-        return true;
-    }
-}
-
-muse::async::Channel<muse::actions::ActionCodeList> EffectsActionsController::canReceiveActionsChanged() const
-{
-    return m_canReceiveActionsChanged;
 }
 
 muse::Ret EffectsActionsController::openPluginManager()

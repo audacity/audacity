@@ -4,7 +4,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "framework/actions/tests/mocks/actionsdispatchermock.h"
 #include "framework/rcommand/tests/mocks/commanddispatchermock.h"
 #include "framework/interactive/tests/mocks/interactivemock.h"
 #include "audio/tests/mocks/audiodrivercontrollermock.h"
@@ -42,9 +41,6 @@ public:
 
         m_globalContext = std::make_shared<context::GlobalContextMock>();
         m_controller->globalContext.set(m_globalContext);
-
-        m_dispatcher = std::make_shared<actions::ActionsDispatcherMock>();
-        m_controller->dispatcher.set(m_dispatcher);
 
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
         m_controller->commandDispatcher.set(m_commandDispatcher);
@@ -239,7 +235,6 @@ public:
     PlaybackController* m_controller = nullptr;
 
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
-    std::shared_ptr<actions::ActionsDispatcherMock> m_dispatcher;
     std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
     std::shared_ptr<InteractiveMock> m_interactive;
     std::shared_ptr<record::RecordControllerMock> m_recordController;
@@ -1356,35 +1351,6 @@ TEST_F(PlaybackControllerTests, PlaySelection_WithoutSelection_DoesNothing)
 }
 
 /**
- * @brief Play selection availability depends on selection and playback state
- */
-TEST_F(PlaybackControllerTests, PlaySelection_CanReceiveAction)
-{
-    const muse::actions::ActionCode code = "action://playback/play-selection";
-
-    //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
-
-    //! [THEN] Without a selection the action is unavailable
-    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillByDefault(Return(true));
-    EXPECT_FALSE(m_controller->canReceiveAction(code));
-
-    //! [THEN] With a selection it is available
-    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillByDefault(Return(false));
-    EXPECT_TRUE(m_controller->canReceiveAction(code));
-
-    //! [THEN] While playing it is available even without a selection (it stops playback)
-    ON_CALL(*m_selectionController, timeSelectionIsEmpty())
-    .WillByDefault(Return(true));
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Running));
-    EXPECT_TRUE(m_controller->canReceiveAction(code));
-}
-
-/**
  * @brief Play selection without a selection stops active playback
  */
 TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_NoSelection_Stops)
@@ -1424,9 +1390,7 @@ TEST_F(PlaybackControllerTests, PlaySelection_WhileRecording_DoesNothing)
     ON_CALL(*m_selectionController, dataSelectedEndTime())
     .WillByDefault(Return(secs_t(20.0)));
 
-    //! [THEN] The action is not available and nothing happens
-    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/play-selection"));
-
+    //! [THEN] Nothing happens
     EXPECT_CALL(*m_player, setPlaybackRegion(_))
     .Times(0);
     EXPECT_CALL(*m_player, stop())
@@ -1625,7 +1589,7 @@ TEST_F(PlaybackControllerTests, ChangeAudioApi_SubmitsACompleteTypedChange)
     EXPECT_FALSE(captured.inputDevice.has_value());
 }
 
-TEST_F(PlaybackControllerTests, ChangeInputDevice_RejectedChangeRestoresMenuStateAndReportsError)
+TEST_F(PlaybackControllerTests, ChangeInputDevice_RejectedChangeReportsError)
 {
     ON_CALL(*m_audioDriverController, inputDevices())
     .WillByDefault(Return(std::vector<std::string> { "Built-in microphone", "USB microphone" }));
@@ -1637,14 +1601,7 @@ TEST_F(PlaybackControllerTests, ChangeInputDevice_RejectedChangeRestoresMenuStat
                          [](const auto& resolve) { return resolve(muse::IInteractive::Result {}); },
                          muse::async::PromiseType::AsyncByBody)));
 
-    std::vector<muse::actions::ActionCode> changedActions;
-    m_controller->actionCheckedChanged().onReceive(nullptr, [&changedActions](const muse::actions::ActionCode& code) {
-        changedActions.push_back(code);
-    });
-
     changeInputDevice(1);
-
-    EXPECT_THAT(changedActions, ::testing::ElementsAre("action://playback/change-recording-device"));
 }
 
 TEST_F(PlaybackControllerTests, RescanAudioDevices_DelegatesToGlobalController)
@@ -1739,27 +1696,5 @@ TEST_F(PlaybackControllerTests, IsPlaying_WhileRecording_ReportsFalse)
     //! [THEN] The controller reports not-playing, matching the normal record path where
     //! the player stays stopped (so the record button etc. are not treated as playback)
     EXPECT_FALSE(m_controller->isPlaying());
-}
-
-TEST_F(PlaybackControllerTests, CanReceiveAction_WhileRecording_BlocksPlayStopButNotPlayPause)
-{
-    //! [GIVEN] Recording is running
-    setRecording(true);
-
-    //! [THEN] Space and X are blocked, the toolbar button is not
-    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
-    EXPECT_FALSE(m_controller->canReceiveAction("action://playback/toggle-play-stop-and-set-cursor"));
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
-}
-
-TEST_F(PlaybackControllerTests, CanReceiveAction_WhileNotRecording_AllowsAllTogglePlayActions)
-{
-    //! [GIVEN] Not recording
-    setRecording(false);
-
-    //! [THEN] All toggle-play actions are available
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop"));
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-stop-and-set-cursor"));
-    EXPECT_TRUE(m_controller->canReceiveAction("action://playback/toggle-play-pause"));
 }
 }
