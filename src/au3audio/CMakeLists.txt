@@ -92,6 +92,8 @@ if (AU_USE_JUCE)
     set(JUCE_SRC
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/blockcontext.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/blockcontext.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/captureinput.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/captureinput.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectscratch.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectslatency.cpp
@@ -110,6 +112,8 @@ if (AU_USE_JUCE)
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceincludes.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/jucemonitoringcallback.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/jucemonitoringcallback.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersendnode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersendnode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersink.cpp

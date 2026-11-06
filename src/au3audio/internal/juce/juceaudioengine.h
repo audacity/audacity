@@ -12,6 +12,7 @@
 
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "audio/iaudioengine.h"
+#include "record/irecordconfiguration.h"
 
 #include "au3-utility/LockFreeQueue.h"
 #include "au3-utility/Observer.h"
@@ -29,11 +30,14 @@ class InitializationScope;
 
 namespace au::au4juce {
 class JuceAudioDevices;
+class JuceMonitoringCallback;
 class SafeIoCallback;
 
 //! An audio engine over JUCE audio devices
 class JuceAudioEngine final : public audio::IAudioEngine
 {
+    muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
+
 public:
     explicit JuceAudioEngine(std::shared_ptr<JuceAudioDevices> devices);
     ~JuceAudioEngine() override;
@@ -100,6 +104,7 @@ private:
     const audio::IAudioDriverController* m_driverController = nullptr;
 
     std::unique_ptr<SafeIoCallback> m_stream;
+    std::unique_ptr<JuceMonitoringCallback> m_monitoring;
     int m_nextStreamToken = 1;
     double m_lastSampleRate = 0.0;
     muse::String m_lastError;
