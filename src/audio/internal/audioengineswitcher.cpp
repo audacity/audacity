@@ -100,6 +100,7 @@ ApplyResult AudioEngineSwitcher::setActiveBackend(const std::string& id)
     muse::settings()->setSharedValue(BACKEND_KEY, muse::Val(id));
     engine().setPlaybackVolume(playbackVolume);
     engine().setInputVolume(inputVolume);
+    engine().setMonitoredTrack(m_monitoredTrack);
 
     // Each backend has its devices and configuration
     m_configurationChanged.send(wholeConfiguration());
@@ -254,6 +255,12 @@ void AudioEngineSwitcher::startMonitoring(AudacityProject& project)
 void AudioEngineSwitcher::stopMonitoring()
 {
     engine().stopMonitoring();
+}
+
+void AudioEngineSwitcher::setMonitoredTrack(std::optional<int64_t> track)
+{
+    m_monitoredTrack = track;
+    engine().setMonitoredTrack(track);
 }
 
 void AudioEngineSwitcher::setInputVolume(float newInputVolume)

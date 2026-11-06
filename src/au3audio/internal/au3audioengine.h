@@ -48,6 +48,8 @@ public:
 
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
+    //! AudioIO monitors the input as it comes
+    void setMonitoredTrack(std::optional<int64_t>) override {}
 
     void setInputVolume(float newInputVolume) override;
     float getInputVolume() const override;

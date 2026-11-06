@@ -29,6 +29,7 @@ class ISequenceProcessingNode;
 namespace au::au4juce {
 class BlockContext;
 class MeterSink;
+class MonitoredInput;
 class RecordingCapture;
 class MeterTapNode;
 
@@ -59,6 +60,9 @@ public:
     //! The tracks and the master's chain, for `sequences`, sending to `meter`, if any, what they play. If recording, as
     //! AudioIO, the tracks stop playing where the recording ends, and those recorded into with a lead-in where it starts.
     void build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter, std::optional<RecordingRange> recording);
+    //! Monitors the input through `track`'s effects, or only the master's if null; call before build(). For subclasses
+    //! that render in the device callback.
+    void monitorThrough(std::shared_ptr<const PlayableSequence> track, int numInputChannels, const std::atomic<float>& inputVolume);
     //! Records the input; call before start()
     void setCapture(std::unique_ptr<RecordingCapture> capture);
     const RecordingCapture* capture() const { return m_capture.get(); }
@@ -156,6 +160,15 @@ private:
 
     std::unique_ptr<juce::AudioIODevice> m_device;
     std::unique_ptr<RecordingCapture> m_capture;
+
+    // If the input is monitored through the effects: what monitorThrough() said, then what the chains read of it
+    struct MonitorSettings {
+        std::shared_ptr<const PlayableSequence> track;
+        int numInputChannels = 0;
+        const std::atomic<float>* inputVolume = nullptr;
+    };
+    std::optional<MonitorSettings> m_monitorSettings;
+    std::shared_ptr<MonitoredInput> m_monitoredInput;
     const std::shared_ptr<PlayheadMapper> m_mapper = std::make_shared<PlayheadMapper>();
     std::atomic<int64_t> m_endPosition { 0 };
     std::optional<RealtimeEffects::InitializationScope> m_effectsInitialization;

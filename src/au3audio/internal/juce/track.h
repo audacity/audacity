@@ -18,6 +18,7 @@ class IEffectsContext;
 class IEndOfTrackContext;
 class IMuteSoloContext;
 class MeterTapNode;
+class MonitoredInput;
 
 //! A track as a callback keeps it: its chain, by its last node, and what the callback needs of it
 struct Track {
@@ -55,11 +56,20 @@ struct TrackSettings {
     size_t meterCapacity = 0;
     //! If it reads its sequence ahead
     std::optional<TrackReadAhead> readAhead;
+    //! If the input is monitored through the chain's effects; then the master effects' latency, by which the master reads
+    //! the chains ahead
+    std::shared_ptr<const MonitoredInput> monitoredInput;
+    int masterLatency = 0;
 };
 
 //! The chain of `sequence`, read from `graph`, its clip processing: where the playhead reads, ahead if it reads ahead,
 //! the end of the track, its effects, mute/solo, volume/pan and meter
 //! @param stop where the track stops, in the timeline, in samples, if it does
+//! If `settings` has a monitored input, the track is monitored: the input joins what it reads, before its effects.
 Track buildTrack(std::shared_ptr<const PlayableSequence> sequence, std::shared_ptr<ISequenceProcessingNode> graph,
                  const TrackSettings& settings, std::optional<int64_t> stop = std::nullopt);
+
+//! The monitored input of `settings`, as the mix sums it, through `track`, which isn't played: its effects, mute/solo and
+//! volume/pan; as it comes if null, the master's effects following
+std::shared_ptr<ISequenceProcessingNode> buildMonitoredInput(std::shared_ptr<const PlayableSequence> track, const TrackSettings& settings);
 }

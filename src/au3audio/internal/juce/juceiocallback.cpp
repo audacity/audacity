@@ -16,6 +16,7 @@
 #include "metersendnode.h"
 #include "metersink.h"
 #include "metertapnode.h"
+#include "monitoredinput.h"
 #include "recordingcapture.h"
 #include "sequentialmixnode.h"
 
@@ -63,6 +64,20 @@ void JuceIoCallback::build(const TransportSequences& sequences, const audio::IAu
             m_effectsInitialization->AddGroup(*group, numChannels, m_sampleRate, m_blockSize);
         }
     }
+    // The monitored track, if any, whether it plays or not
+    const auto& monitoredTrack = m_monitorSettings ? m_monitorSettings->track : nullptr;
+    const auto monitoredGroup = monitoredTrack ? monitoredTrack->FindChannelGroup() : nullptr;
+    const bool monitoredTrackPlays = monitoredGroup
+                                     && std::any_of(playbackSequences.begin(), playbackSequences.end(), [&](const auto& sequence) {
+        return sequence->FindChannelGroup() == monitoredGroup;
+    });
+    if (monitoredGroup && !monitoredTrackPlays) {
+        m_effectsInitialization->AddGroup(*monitoredGroup, numChannels, m_sampleRate, m_blockSize);
+    }
+    if (m_monitorSettings) {
+        m_monitoredInput = std::make_shared<MonitoredInput>(m_monitorSettings->numInputChannels, maxFrames,
+                                                            *m_monitorSettings->inputVolume);
+    }
     m_blockContext = std::make_unique<BlockContext>(m_wProject, *m_effectsInitialization, playbackSequences, *m_mapper,
                                                     m_endPosition, m_sampleRate);
 
@@ -78,6 +93,7 @@ void JuceIoCallback::build(const TransportSequences& sequences, const audio::IAu
     settings.maxFrames = maxFrames;
     // The master reads the tracks ahead by its effects' latency, and as long again where reading jumps
     settings.meterCapacity = readAheadChunkSize() + 2 * static_cast<size_t>(std::max(0, masterLatency));
+    settings.masterLatency = std::max(0, masterLatency);
     int maxTrackLatency = 0;
     std::vector<std::shared_ptr<ISequenceProcessingNode> > outputs;
     for (size_t i = 0; i < playbackSequences.size(); ++i) {
@@ -92,8 +108,18 @@ void JuceIoCallback::build(const TransportSequences& sequences, const audio::IAu
                 stop = std::min(*stop, toSamples(recording->start));
             }
         }
-        m_tracks.push_back(buildTrack(sequence, sequences.playbackGraphs[i], settings, stop));
+        auto trackSettings = settings;
+        if (monitoredTrackPlays && sequence->FindChannelGroup() == monitoredGroup) {
+            trackSettings.monitoredInput = m_monitoredInput;
+        }
+        m_tracks.push_back(buildTrack(sequence, sequences.playbackGraphs[i], trackSettings, stop));
         outputs.push_back(m_tracks.back().output);
+    }
+    if (m_monitoredInput && !monitoredTrackPlays) {
+        // Not metered: the input meters show it
+        auto monitorSettings = settings;
+        monitorSettings.monitoredInput = m_monitoredInput;
+        outputs.push_back(buildMonitoredInput(monitoredTrack, monitorSettings));
     }
     m_maxLatency = std::max(0, masterLatency) + maxTrackLatency;
 
@@ -128,6 +154,12 @@ std::shared_ptr<ISequenceProcessingNode> JuceIoCallback::makeMix(std::vector<std
                                                                  size_t maxFrames)
 {
     return std::make_shared<SequentialMixNode>(std::move(tracks), maxFrames);
+}
+
+void JuceIoCallback::monitorThrough(std::shared_ptr<const PlayableSequence> track, int numInputChannels,
+                                    const std::atomic<float>& inputVolume)
+{
+    m_monitorSettings = MonitorSettings { std::move(track), numInputChannels, &inputVolume };
 }
 
 void JuceIoCallback::setCapture(std::unique_ptr<RecordingCapture> capture)
@@ -233,6 +265,7 @@ void JuceIoCallback::stop()
         m_built = false;
     }
     m_meterSink.reset();
+    m_monitoredInput.reset();
     m_masterTap.reset();
     m_tracks.clear();
     m_blockContext.reset();
@@ -264,6 +297,8 @@ void JuceIoCallback::audioDeviceIOCallbackWithContext(const float* const* inputC
     }
     // The input of the channels the capture records, if the device gives them
     const auto input = m_capture && numInputChannels >= m_capture->numInputChannels() ? inputChannelData : nullptr;
+    // As the capture, the monitored input needs the device to give its channels
+    const auto monitored = m_monitoredInput && numInputChannels >= m_monitoredInput->numInputChannels() ? inputChannelData : nullptr;
 
     const auto callbackStart = std::chrono::steady_clock::now();
     const auto dacTime = callbackStart
@@ -276,6 +311,9 @@ void JuceIoCallback::audioDeviceIOCallbackWithContext(const float* const* inputC
         const auto chunkDacTime = dacTime + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
             std::chrono::duration<double>(done / m_sampleRate));
         if (!paused) {
+            if (m_monitoredInput) {
+                m_monitoredInput->read(monitored, done, frames, m_mapper->deviceIndex());
+            }
             unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
         }
         if (input) {

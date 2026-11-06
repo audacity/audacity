@@ -64,6 +64,7 @@ public:
 
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
+    void setMonitoredTrack(std::optional<int64_t> track) override;
 
     void setInputVolume(float newInputVolume) override;
     float getInputVolume() const override;
@@ -120,6 +121,8 @@ private:
     std::vector<AudioBackend> m_backends;
     std::string m_activeId;
     std::shared_ptr<IAudioEngine> m_engine;
+    //! Given to each engine activated
+    std::optional<int64_t> m_monitoredTrack;
     std::shared_ptr<IAudioDriverController> m_driver;
 
     //! Subscriptions to the active backend; replaced on activation.

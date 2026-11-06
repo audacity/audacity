@@ -22,6 +22,7 @@ const std::string TEST_SECOND = "second";
 const std::string TEST_FIRST_TITLE = "First";
 constexpr float TEST_PLAYBACK_VOLUME = 0.25f;
 constexpr float TEST_INPUT_VOLUME = 0.75f;
+constexpr int64_t TEST_MONITORED_TRACK = 7;
 }
 
 namespace au::audio {
@@ -144,5 +145,19 @@ TEST_F(AudioEngineSwitcherTests, BackendsAreTitledAsRegisteredOrByTheirIds)
     const auto switcher = makeSwitcher();
     EXPECT_EQ(switcher->backendTitle(TEST_FIRST), TEST_FIRST_TITLE);
     EXPECT_EQ(switcher->backendTitle(TEST_SECOND), TEST_SECOND);
+}
+
+TEST_F(AudioEngineSwitcherTests, TheMonitoredTrackIsGivenToTheEngineSwitchedTo)
+{
+    //! [GIVEN] a track is monitored with the first backend
+    const auto switcher = makeSwitcher();
+    EXPECT_CALL(*m_first.engine, setMonitoredTrack(std::optional<int64_t> { TEST_MONITORED_TRACK }));
+    switcher->setMonitoredTrack(TEST_MONITORED_TRACK);
+
+    //! [THEN] the second gets it
+    EXPECT_CALL(*m_second.engine, setMonitoredTrack(std::optional<int64_t> { TEST_MONITORED_TRACK }));
+
+    //! [WHEN] switching to the second
+    switcher->setActiveBackend(TEST_SECOND);
 }
 }

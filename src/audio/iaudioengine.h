@@ -4,6 +4,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -79,6 +80,9 @@ public:
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
+    //! The track whose realtime effects the monitored input goes through, then the master's, if the engine can do that;
+    //! the master's only if none. Engines that can't monitor through the effects monitor the input as it comes.
+    virtual void setMonitoredTrack(std::optional<int64_t> track) = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;
     virtual float getInputVolume() const = 0;
