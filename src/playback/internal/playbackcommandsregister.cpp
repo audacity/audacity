@@ -107,7 +107,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, Arg(DataType::Bool, u"Start playback from the new position") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PLAYBACK_CHANGE_PLAY_REGION_COMMAND,
@@ -120,7 +120,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_CHANGE_PLAY_REGION_END_PARAM, Arg(DataType::Float, u"Region end in seconds") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PLAYBACK_CHANGE_AUDIO_API_COMMAND,
@@ -132,7 +132,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM, Arg(DataType::Int, u"Index in the list of available audio hosts") },
             }),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND,
@@ -145,7 +145,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_CHANGE_PLAYBACK_DEVICE_IS_DEFAULT_PARAM, Arg(DataType::Bool, u"Use the system default device") },
             }),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND,
@@ -158,7 +158,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM, Arg(DataType::Bool, u"Use the system default device") },
             }),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND,
@@ -170,7 +170,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM, Arg(DataType::Int, u"Number of input channels") },
             }),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PLAYBACK_RESCAN_DEVICES_COMMAND,
@@ -261,7 +261,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Mute/unmute focused track"),
         InputSchema(),
         Decoration(IconCode::Code::MUTE),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         PLAYBACK_TOGGLE_SOLO_FOCUSED_TRACK_COMMAND,
@@ -271,7 +271,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Solo/unsolo focused track"),
         InputSchema(),
         Decoration(IconCode::Code::SOLO),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         PLAYBACK_MUTE_ALL_TRACKS_COMMAND,

@@ -33,7 +33,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("action_description", "Plugin manager"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         EFFECTS_TOGGLE_VENDOR_UI_COMMAND,
@@ -159,7 +159,7 @@ void EffectsCommandsRegister::reload()
             TranslatableString::untranslatable(meta.description),
             InputSchema(),
             Decoration(),
-            Availability::Dispatch | Availability::Shortcut
+            Availability::UI
         });
 
         m_commandInfos.push_back(CommandInfo {
