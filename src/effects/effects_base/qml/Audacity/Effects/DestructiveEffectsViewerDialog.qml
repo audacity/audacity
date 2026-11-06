@@ -54,6 +54,14 @@ EffectStyledDialogView {
         property bool isPreviewAllowed: !viewer || viewer.isPreviewAllowed !== false
         property bool shouldRollbackOnClose: true
 
+        function apply() {
+            if (!prv.isApplyAllowed) {
+                return
+            }
+            presetsBar.presetsBarModel.commitSelectedPreset()
+            prv.closeWindow(true)
+        }
+
         function closeWindow(accept) {
             if (prv.viewer) {
                 prv.viewer.stopPreview()
@@ -65,6 +73,14 @@ EffectStyledDialogView {
                 prv.shouldRollbackOnClose = !accept
                 accept ? root.accept() : root.reject()
             })
+        }
+    }
+
+    Connections {
+        target: prv.viewer
+        ignoreUnknownSignals: true
+        function onApplyRequested() {
+            prv.apply()
         }
     }
 
@@ -370,8 +386,7 @@ EffectStyledDialogView {
                             enabled: prv.isApplyAllowed
 
                             onClicked: {
-                                presetsBar.presetsBarModel.commitSelectedPreset()
-                                prv.closeWindow(true)
+                                prv.apply()
                             }
                         }
                     }

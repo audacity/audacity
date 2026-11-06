@@ -39,6 +39,8 @@
 #include "trackedit/trackeditutils.h"
 
 #include "../effecterrors.h"
+
+#include <map>
 using namespace muse;
 using namespace au::effects;
 
@@ -117,7 +119,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     const spectrogram::FrequencySelection frequencySelection = frequencySelectionController()->frequencySelection();
 
     const trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
-    const auto numSelectedClips = selectedClips.size();
+    auto numSelectedClips = selectedClips.size();
+    std::vector<int64_t> clipIdsInTimeRange;
+    std::optional<std::pair<secs_t, secs_t> > clipSpan;
 
     {
         //! NOTE Step 1.2 - get effect
@@ -126,11 +130,28 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             return make_ret(Err::EffectNotFound);
         }
 
+        //! NOTE Step 1.3 - process a clip selection as one time range, if the effect wants that.
+        //! The selection itself is left as it is: the clips' tracks are already selected.
+        if (numSelectedClips != 0 && effect->processClipSelectionAsTimeRange()) {
+            const std::optional<secs_t> start = selectionController()->leftMostSelectedClipStartTime();
+            const std::optional<secs_t> end = selectionController()->rightMostSelectedClipEndTime();
+            if (start && end && *end > *start) {
+                clipSpan = { *start, *end };
+                for (const trackedit::ClipKey& clip : selectedClips) {
+                    clipIdsInTimeRange.push_back(clip.itemId);
+                }
+                numSelectedClips = 0;
+            }
+        }
+
         if (numSelectedClips > 1 && !effectsProvider()->paramsAreInputAgnostic(effectId)) {
             return make_ret(Err::EffectMultipleClipSelectionNotSupported);
         }
 
-        if (numSelectedClips != 0) {
+        if (clipSpan) {
+            t0 = clipSpan->first;
+            t1 = clipSpan->second;
+        } else if (numSelectedClips != 0) {
             // If multiple clips are selected, we have checked that the effect supports it, in which case these global time boundaries shouldn't be relevant.
             // If this is just a single-clip selection, though, that will just be start and end times of the selected clip.
             t0 = selectionController()->selectedClipStartTime().value_or(0.0);
@@ -304,6 +325,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         effect->mProjectRate = tp.projectRate;
         effect->mT0 = tp.t0;
         effect->mT1 = tp.t1;
+        effect->mSelectedClipIds = clipIdsInTimeRange;
 
         effect->SetTracks(&au3::Au3TrackList::Get(project));
         // Update track/group counts
@@ -373,6 +395,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! NOTE Step 7 - cleanup
     //! ============================================================================
 
+    effect->mSelectedClipIds.clear();
     // Don't hold a dangling pointer when done
     effect->SetTracks(nullptr);
     effect->mPresetNames.clear();
@@ -397,6 +420,15 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             const auto shortDesc = effectsProvider()->effectName(effectId.toStdString());
             const auto longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String { shortDesc.c_str() }).toStdString();
             projectHistory()->pushHistoryState(longDesc, shortDesc);
+
+            //! NOTE Like Au3, make the time selection cover the processed range
+            //! if the effect changed its end (e.g. Repeat, Paulstretch).
+            //! Only after the push: a complete selection change saves into the current history state,
+            //! which before the push is the state from before the effect.
+            if (numSelectedClips == 0 && !clipSpan && effect->GetType() != EffectTypeGenerate
+                && effect->mT1 > effect->mT0 && !muse::RealIsEqual(effect->mT1, tp.t1)) {
+                selectionController()->setDataSelectedEndTime(effect->mT1, true);
+            }
         }
 
         //! NOTE Step 8.2 - remember a successful effect
@@ -446,6 +478,21 @@ muse::Ret EffectExecutionScenario::performGenerator(au3::Au3Project& project, Ef
 
     if (ret) {
         const auto clipsAfter = getAllClips(*prj);
+
+        // Effects can also move or remove clips (e.g. Repeat inserts its repeats, moving later clips to the right)
+        for (const auto* clip : trackedit::utils::clipSetDifference(clipsBefore, clipsAfter)) {
+            prj->notifyAboutClipRemoved(*clip);
+        }
+        for (const auto& clip : clipsAfter) {
+            const auto before = std::find_if(clipsBefore.begin(), clipsBefore.end(), [&](const trackedit::Clip& c) {
+                return c.key == clip.key;
+            });
+            if (before != clipsBefore.end()
+                && (!muse::RealIsEqual(before->startTime, clip.startTime) || !muse::RealIsEqual(before->endTime, clip.endTime))) {
+                prj->notifyAboutClipChanged(clip);
+            }
+        }
+
         const std::vector<const au::trackedit::Clip*> newClips = trackedit::utils::clipSetDifference(clipsAfter, clipsBefore);
         if (!newClips.empty()) {
             for (const auto* clip : newClips) {
@@ -601,6 +648,45 @@ void notifyIfTracksWereAdded(au::au3::Au3Project& au3Prj, const std::vector<au::
         trackeditPrj.notifyAboutTrackAdded(track);
     }
 }
+
+std::map<au::trackedit::TrackId, au::trackedit::Labels> getAllLabels(const au::trackedit::ITrackeditProject& prj)
+{
+    std::map<au::trackedit::TrackId, au::trackedit::Labels> labels;
+    for (const au::trackedit::Track& track : prj.trackList()) {
+        if (track.type == au::trackedit::TrackType::Label) {
+            labels.emplace(track.id, prj.labelList(track.id));
+        }
+    }
+    return labels;
+}
+
+//! Effects can change labels (e.g. Repeat): notify about the labels added, moved or removed
+void notifyAboutLabelChanges(au::trackedit::ITrackeditProject& prj,
+                             const std::map<au::trackedit::TrackId, au::trackedit::Labels>& labelsBefore)
+{
+    const auto findLabel = [](const au::trackedit::Labels& labels, const au::trackedit::Label& label) {
+        return std::find_if(labels.begin(), labels.end(), [&](const au::trackedit::Label& l) {
+            return l.key.itemId == label.key.itemId;
+        });
+    };
+
+    for (const auto& [trackId, before] : labelsBefore) {
+        const au::trackedit::Labels after = prj.labelList(trackId);
+        for (const au::trackedit::Label& label : after) {
+            const auto it = findLabel(before, label);
+            if (it == before.end()) {
+                prj.notifyAboutLabelAdded(label);
+            } else if (!muse::RealIsEqual(it->startTime, label.startTime) || !muse::RealIsEqual(it->endTime, label.endTime)) {
+                prj.notifyAboutLabelChanged(label);
+            }
+        }
+        for (const au::trackedit::Label& label : before) {
+            if (findLabel(after, label) == after.end()) {
+                prj.notifyAboutLabelRemoved(label);
+            }
+        }
+    }
+}
 }
 
 muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& project, Effect* effect,
@@ -662,6 +748,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                 // Get tracklist now and compare it with after to see if some tracks were added (such as a label track being added by the beat finder analyzer).
                 const auto prj = globalContext()->currentTrackeditProject();
                 const std::vector<trackedit::Track> tracksBefore = prj->trackList();
+                const auto labelsBefore = getAllLabels(*prj);
                 if (pInstanceEx->Process(settings) == false) {
                     if (progress.Cancelled()) {
                         success = make_ret(Err::EffectProcessCancelled);
@@ -670,6 +757,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                     }
                 }
                 notifyIfTracksWereAdded(project, tracksBefore, *prj);
+                notifyAboutLabelChanges(*prj, labelsBefore);
             } catch (::AudacityException& e) {
                 success = make_ret(Err::EffectProcessFailed);
                 if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {

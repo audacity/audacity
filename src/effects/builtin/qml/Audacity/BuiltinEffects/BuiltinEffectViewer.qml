@@ -19,6 +19,7 @@ Rectangle {
     property int numNavigationPanels: builder.contentItem ? builder.contentItem.numNavigationPanels : 3
 
     signal closeRequested
+    signal applyRequested
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -48,6 +49,14 @@ Rectangle {
     function stopPreview() {
         if (builder.contentItem) {
             builder.contentItem.stopPreview()
+        }
+    }
+
+    Connections {
+        target: builder.contentItem
+        ignoreUnknownSignals: true
+        function onApplyRequested() {
+            root.applyRequested()
         }
     }
 
