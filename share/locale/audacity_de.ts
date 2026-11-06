@@ -4389,7 +4389,7 @@ Diese Aktion löscht keiner Ihrer Projekte.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
         <source>Audacity the free, open source, cross-platform software for recording and editing sounds.</source>
-        <translation>Audacity, die freie, quelloffene und plattformübergreifende Software für die Audioaufnahme und -bearbeitung</translation>
+        <translation>Audacity, die freie, quelloffene und plattformübergreifende Software zum Aufnehmen und Bearbeiten von Tonaufnahmen.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
@@ -5468,12 +5468,12 @@ Diese Aktion löscht keiner Ihrer Projekte.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="276"/>
         <source>Don’t show welcome dialog on startup</source>
-        <translation>Willkommensdialog beim Start nicht mehr anzeigen</translation>
+        <translation>Willkommensdialog beim Start nicht anzeigen</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="47"/>
         <source>Video: find out what’s new in Audacity 4</source>
-        <translation>Video: Was ist neu an Audacity 4?</translation>
+        <translation>Video: Erfahren Sie, was es Neues in Audacity 4 gibt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="50"/>
@@ -5503,7 +5503,7 @@ Diese Aktion löscht keiner Ihrer Projekte.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="89"/>
         <source>Get it on MuseHub</source>
-        <translation>Verfügbar auf MuseHub</translation>
+        <translation>Auf MuseHub erhältlich</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="59"/>
@@ -19701,7 +19701,7 @@ Sie müssen diese Version von Audacity benutzen, um das Projekt wiederherzustell
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml" line="133"/>
         <source>Get it on MuseHub</source>
-        <translation>Verfügbar auf MuseHub</translation>
+        <translation>Auf MuseHub erhältlich</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>

@@ -9113,17 +9113,17 @@ ou, pour LISP, commencez par une parenthèse ouvrante telle que :
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="89"/>
         <source>Regular</source>
-        <translation>Régulier</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="90"/>
         <source>Bouncing Ball</source>
-        <translation>Balle rebondissante</translation>
+        <translation>Bouncing Ball</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="91"/>
         <source>Reverse Bouncing Ball</source>
-        <translation>Balle rebondissante inversée</translation>
+        <translation>Bouncing Ball inversée</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="92"/>
@@ -21511,24 +21511,24 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <source>Added enveloped point</source>
-        <translation>Added enveloped point</translation>
+        <translation>Point d&apos;enveloppe ajouté</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Clip envelope edit</source>
-        <translation>Clip envelope edit</translation>
+        <translation>Édition du clip d&apos;enveloppe</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <source>Removed enveloped point</source>
-        <translation>Removed enveloped point</translation>
+        <translation>Point d&apos;enveloppe supprimé</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Dragged enveloped point</source>
-        <translation>Dragged enveloped point</translation>
+        <translation>Point d&apos;enveloppe déplacé</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="897"/>
