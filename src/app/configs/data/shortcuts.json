@@ -21,7 +21,8 @@
     {
         "scope": "APP",
         "shortcuts": [
-            { "command": "command://app/quit", "sequences": ["Ctrl+Q"] }
+            { "command": "command://app/quit", "sequences": ["Ctrl+Q"] },
+            { "command": "command://app/preferences", "sequences": ["Ctrl+P"] }
         ]
     },
     {
