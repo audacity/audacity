@@ -9,6 +9,11 @@ on:
         type: boolean
         required: false
         default: false
+      publish_coverage_report:
+        description: 'Publish code coverage badge to S3 (main repository only)'
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: "0 3 * * 4" # Every Thursday night at 03:00 for master branch
 
@@ -107,14 +112,21 @@ jobs:
     - name: Code coverage
       if: github.event_name == 'schedule' || inputs.code_coverage == true
       run: |
-        lcov --capture --directory "$(pwd)/build.debug/" --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' '*/tests/*' '*/thirdparty/*' '*/moc_*' '*framework/Headers/*' '*/hb-*' '*/Qt/*' --output-file filtered_coverage.info
+        # Writes filtered_coverage.info, coverage_badge.svg, coverage_report/ and exports COVERAGE, FUNCTIONS_COVERAGE
+        cmake -P ./muse/buildscripts/ci/codecoverage/make_code_coverage.cmake --build_dir build.debug
 
-        COVERAGE=$(lcov --summary filtered_coverage.info --ignore-errors inconsistent,corrupt,unsupported,empty,negative,mismatch,gcov | grep -oP 'lines\.+:\s+\K[0-9.]+')
-        python3 muse/buildscripts/ci/linux/tools/lcov_badger.py "${COVERAGE}" coverage_badge.svg
+    - name: Upload coverage report
+      if: github.event_name == 'schedule' || inputs.code_coverage == true
+      uses: actions/upload-artifact@v7
+      with:
+        name: code_coverage_report
+        path: |
+          filtered_coverage.info
+          coverage_badge.svg
+          coverage_report/
 
     - name: Push to S3
-      if: ( github.event_name == 'schedule' || inputs.code_coverage ) && github.repository == 'audacity/audacity'
+      if: github.repository == 'audacity/audacity' && ( github.event_name == 'schedule' || ( inputs.code_coverage && inputs.publish_coverage_report ) )
       run: |
         S3_URL='s3://extensions.musescore.org/test/code_coverage/au_coverage_badge.svg'
 
