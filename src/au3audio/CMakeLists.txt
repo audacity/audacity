@@ -88,6 +88,21 @@ elseif (OS_IS_LIN AND LIBUDEV_INCLUDE_DIR AND LIBUDEV_LIBRARY)
     set(MODULE_DEF ${MODULE_DEF} AU_AU3AUDIO_HAS_UDEV)
 endif()
 
+if (AU_USE_JUCE)
+    set(JUCE_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/playheadmapper.h
+    )
+    set(MODULE_SRC ${MODULE_SRC} ${JUCE_SRC})
+    # JUCE headers clash with the `using namespace muse` of other unity-combined sources
+    set_source_files_properties(${JUCE_SRC} PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
+    set(MODULE_LINK ${MODULE_LINK}
+        juce
+        au3-clip-processing
+    )
+    set(MODULE_DEF ${MODULE_DEF} AU_USE_JUCE)
+endif()
+
 setup_module()
 
 if (AU_BUILD_AU3AUDIO_TESTS)
