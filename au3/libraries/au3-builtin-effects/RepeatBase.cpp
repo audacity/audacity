@@ -60,19 +60,14 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
     bool bGoodResult = true;
     double maxDestLen = 0.0; // used to change selection to generated bit
 
+    const double t1 = mT1;
+
+    // Au4: the output tracks are wave tracks only; label tracks are repeated below
     outputs.Get().Any().VisitWhile(
         bGoodResult,
-        [&](LabelTrack& track) {
-        if (track.GetSelected()) {
-            if (!track.Repeat(mT0, mT1, repeatCount)) {
-                bGoodResult = false;
-            }
-        }
-    },
-        [&](auto&& fallthrough) {
-        return [&](WaveTrack& track) {
+        [&](WaveTrack& track) {
             if (!track.GetSelected()) {
-                return fallthrough(); // Fall through to next lambda
+                return;
             }
             auto start = track.TimeToLongSamples(mT0);
             auto end = track.TimeToLongSamples(mT1);
@@ -84,35 +79,30 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
                 return;
             }
 
-            auto firstTemp
-                =std::static_pointer_cast<WaveTrack>(track.Copy(mT0, mT1));
-
-            // Au4: leave out unselected clips that lie between selected ones.
-            // The copy's clips get new IDs and start at time 0, so match them to the selected clips by position.
-            if (!mSelectedClipIds.empty()) {
-                std::vector<double> selectedStarts;
-                for (const auto& clip : track.Intervals()) {
+            // Au4: with clips selected, repeat only those: copy from a duplicate (which keeps the clip IDs)
+            // without the unselected clips, and leave tracks without selected clips alone.
+            // Not in preview, which mixes the selection into new clips.
+            std::shared_ptr<WaveTrack> selectedClipsOnly;
+            if (!mSelectedClipIds.empty() && !mIsPreview) {
+                selectedClipsOnly = std::static_pointer_cast<WaveTrack>(track.Duplicate());
+                bool hasSelectedClip = false;
+                const auto intervals = std::vector(
+                    selectedClipsOnly->Intervals().begin(), selectedClipsOnly->Intervals().end());
+                for (const auto& clip : intervals) {
                     if (std::find(mSelectedClipIds.begin(), mSelectedClipIds.end(), clip->GetId())
                         != mSelectedClipIds.end()) {
-                        selectedStarts.push_back(std::max(clip->GetPlayStartTime(), mT0) - mT0);
+                        hasSelectedClip = true;
+                    } else {
+                        selectedClipsOnly->RemoveInterval(clip);
                     }
                 }
-                // None found, e.g. preview mixes the selection into new clips: keep everything
-                if (!selectedStarts.empty()) {
-                    const auto eps = 0.5 / track.GetRate();
-                    const auto intervals = std::vector(
-                        firstTemp->Intervals().begin(), firstTemp->Intervals().end());
-                    for (const auto& clip : intervals) {
-                        const bool isSelected = std::any_of(
-                            selectedStarts.begin(), selectedStarts.end(), [&](double start) {
-                            return std::abs(clip->GetPlayStartTime() - start) < eps;
-                        });
-                        if (!isSelected) {
-                            firstTemp->RemoveInterval(clip);
-                        }
-                    }
+                if (!hasSelectedClip) {
+                    return;
                 }
             }
+
+            auto firstTemp = std::static_pointer_cast<WaveTrack>(
+                (selectedClipsOnly ? *selectedClipsOnly : track).Copy(mT0, mT1));
 
             auto t0 = tc;
             for (size_t j = 0; j < repeatCount; ++j) {
@@ -169,7 +159,6 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
                 break;
             }
             nTrack++;
-        };
     });
 
     if (bGoodResult) {
@@ -179,6 +168,13 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
 
     if (bGoodResult) {
         outputs.Commit();
+
+        // Not in preview, whose tracks aren't the project's
+        if (!mIsPreview) {
+            for (auto track : mTracks->Selected<LabelTrack>()) {
+                track->Repeat(mT0, t1, repeatCount);
+            }
+        }
     }
     return bGoodResult;
 }

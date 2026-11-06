@@ -120,7 +120,11 @@ BuiltinEffectBase {
                 }
 
                 onValueEdited: function (newValue) {
-                    repeat.repeatCount = newValue
+                    // An empty field comes as 0 (the validator rejects a typed 0): keep the count but don't apply
+                    root.isApplyAllowed = newValue >= repeat.repeatCountMin
+                    if (root.isApplyAllowed) {
+                        repeat.repeatCount = newValue
+                    }
                 }
 
                 onAccepted: {

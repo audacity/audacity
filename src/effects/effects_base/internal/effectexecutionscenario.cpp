@@ -631,6 +631,47 @@ void notifyIfTracksWereAdded(au::au3::Au3Project& au3Prj, const std::vector<au::
         trackeditPrj.notifyAboutTrackAdded(track);
     }
 }
+
+std::vector<au::trackedit::Labels> getAllLabels(const au::trackedit::ITrackeditProject& prj)
+{
+    std::vector<au::trackedit::Labels> labels;
+    for (const au::trackedit::Track& track : prj.trackList()) {
+        if (track.type == au::trackedit::TrackType::Label) {
+            labels.push_back(prj.labelList(track.id));
+        }
+    }
+    return labels;
+}
+
+//! Effects can change labels (e.g. Repeat): notify about the labels added, moved or removed
+void notifyAboutLabelChanges(au::trackedit::ITrackeditProject& prj, const std::vector<au::trackedit::Labels>& labelsBefore)
+{
+    const auto findLabel = [](const au::trackedit::Labels& labels, const au::trackedit::Label& label) {
+        return std::find_if(labels.begin(), labels.end(), [&](const au::trackedit::Label& l) {
+            return l.key.itemId == label.key.itemId;
+        });
+    };
+
+    for (const au::trackedit::Labels& before : labelsBefore) {
+        if (before.empty()) {
+            continue;
+        }
+        const au::trackedit::Labels after = prj.labelList(before.front().key.trackId);
+        for (const au::trackedit::Label& label : after) {
+            const auto it = findLabel(before, label);
+            if (it == before.end()) {
+                prj.notifyAboutLabelAdded(label);
+            } else if (!muse::RealIsEqual(it->startTime, label.startTime) || !muse::RealIsEqual(it->endTime, label.endTime)) {
+                prj.notifyAboutLabelChanged(label);
+            }
+        }
+        for (const au::trackedit::Label& label : before) {
+            if (findLabel(after, label) == after.end()) {
+                prj.notifyAboutLabelRemoved(label);
+            }
+        }
+    }
+}
 }
 
 muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& project, Effect* effect,
@@ -692,6 +733,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                 // Get tracklist now and compare it with after to see if some tracks were added (such as a label track being added by the beat finder analyzer).
                 const auto prj = globalContext()->currentTrackeditProject();
                 const std::vector<trackedit::Track> tracksBefore = prj->trackList();
+                const std::vector<trackedit::Labels> labelsBefore = getAllLabels(*prj);
                 if (pInstanceEx->Process(settings) == false) {
                     if (progress.Cancelled()) {
                         success = make_ret(Err::EffectProcessCancelled);
@@ -700,6 +742,7 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
                     }
                 }
                 notifyIfTracksWereAdded(project, tracksBefore, *prj);
+                notifyAboutLabelChanges(*prj, labelsBefore);
             } catch (::AudacityException& e) {
                 success = make_ret(Err::EffectProcessFailed);
                 if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
