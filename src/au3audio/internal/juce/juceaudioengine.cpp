@@ -18,6 +18,7 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "fastiocallback.h"
 #include "juceaudiodevices.h"
 #include "jucemonitoringcallback.h"
 #include "recordingcapture.h"
@@ -84,6 +85,11 @@ JuceAudioEngine::JuceAudioEngine(std::shared_ptr<JuceAudioDevices> devices)
 }
 
 JuceAudioEngine::~JuceAudioEngine() = default;
+
+void JuceAudioEngine::setMode(Mode mode)
+{
+    m_mode = mode;
+}
 
 void JuceAudioEngine::setDriverController(const audio::IAudioDriverController* driverController)
 {
@@ -194,12 +200,18 @@ int JuceAudioEngine::startTransport(const TransportSequences& sequences, double 
     }
     const double playStartTime = streamStartTime.value_or(rangeStart);
 
-    auto stream = std::make_unique<SafeIoCallback>(project, m_nextStreamToken, std::move(device), options.isDefaultPolicy,
-                                                   m_callbackInfoQueue, m_playedRanges, m_playbackVolume);
+    std::unique_ptr<JuceIoCallback> stream;
+    if (m_mode == Mode::Fast) {
+        stream = std::make_unique<FastIoCallback>(project, m_nextStreamToken, std::move(device), options.isDefaultPolicy,
+                                                  m_callbackInfoQueue, m_playedRanges, m_playbackVolume);
+    } else {
+        stream = std::make_unique<SafeIoCallback>(project, m_nextStreamToken, std::move(device), options.isDefaultPolicy,
+                                                  m_callbackInfoQueue, m_playedRanges, m_playbackVolume);
+    }
     stream->trackEndTime = TrackList::Get(project).GetEndTime();
-    std::optional<SafeIoCallback::RecordingRange> recordingRange;
+    std::optional<JuceIoCallback::RecordingRange> recordingRange;
     if (recording) {
-        recordingRange = SafeIoCallback::RecordingRange { startTime, endTime };
+        recordingRange = JuceIoCallback::RecordingRange { startTime, endTime };
     }
     stream->build(sequences, muse::value(m_playbackMeters, &project), recordingRange);
     if (capture) {
@@ -234,7 +246,8 @@ int JuceAudioEngine::startTransport(const TransportSequences& sequences, double 
     }
     m_stream->start();
 
-    LOGI() << "JUCE engine " << (recording ? "recording" : "playing") << " at " << m_lastSampleRate << " Hz";
+    LOGI() << "JUCE engine " << (recording ? "recording" : "playing") << " at " << m_lastSampleRate << " Hz, "
+           << (m_mode == Mode::Fast ? "fast" : "safe");
     return m_nextStreamToken++;
 }
 

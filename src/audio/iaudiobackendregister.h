@@ -24,6 +24,9 @@ struct AudioBackend {
     std::function<AudioStreamRestorer()> suspendStream;
     //! What the user sees it as; the id if empty
     std::string title;
+    //! Called when it becomes the active backend, before the stream it takes over, if any, is restored; may be empty.
+    //! Lets backends share an engine, which plays as the active one says.
+    std::function<void()> activated;
 };
 
 //! Where backend modules declare their audio backend.

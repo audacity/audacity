@@ -102,6 +102,8 @@ if (AU_USE_JUCE)
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/effectsnode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/endoftracknode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/endoftracknode.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/fastiocallback.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/fastiocallback.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/gainpannode.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/gainpannode.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/ieffectscontext.h
@@ -112,6 +114,8 @@ if (AU_USE_JUCE)
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceaudioengine.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceincludes.h
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceiocallback.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/juce/juceiocallback.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/jucemonitoringcallback.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/jucemonitoringcallback.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/juce/metersendnode.cpp

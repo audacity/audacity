@@ -35,10 +35,11 @@ protected:
         AudioStreamRestorer restorer = [this] { ++restorations; return true; };
         int suspensions = 0;
         int restorations = 0;
+        int activations = 0;
 
         AudioBackend backend(const std::string& id, const std::string& title = {})
         {
-            return { id, engine, driver, [this] { ++suspensions; return restorer; }, title };
+            return { id, engine, driver, [this] { ++suspensions; return restorer; }, title, [this] { ++activations; } };
         }
     };
 
@@ -102,6 +103,19 @@ TEST_F(AudioEngineSwitcherTests, SwitchingCarriesTheStreamAndVolumesOver)
     //! ... and the engine is the second's
     EXPECT_CALL(*m_second.engine, isBusy()).WillOnce(Return(true));
     EXPECT_TRUE(switcher->isBusy());
+}
+
+TEST_F(AudioEngineSwitcherTests, ABackendIsToldItIsActiveBeforeTheStreamIsRestored)
+{
+    const auto switcher = makeSwitcher();
+    ON_CALL(*m_first.engine, currentStream()).WillByDefault(Return(AudioStreamDescriptor {}));
+    auto activationsWhenRestored = 0;
+    m_first.restorer = [this, &activationsWhenRestored] { activationsWhenRestored = m_second.activations; return true; };
+
+    switcher->setActiveBackend(TEST_SECOND);
+
+    EXPECT_EQ(m_second.activations, 1);
+    EXPECT_EQ(activationsWhenRestored, 1);
 }
 
 TEST_F(AudioEngineSwitcherTests, ABackendWhoseStreamCantBeSuspendedStaysActive)

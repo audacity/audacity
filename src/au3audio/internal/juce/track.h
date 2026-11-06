@@ -10,6 +10,7 @@
 
 class IPlayheadMapper;
 class ISequenceProcessingNode;
+class LockFreeQueueNode;
 class PlayableSequence;
 
 namespace au::au4juce {
@@ -24,10 +25,20 @@ struct Track {
     std::shared_ptr<ISequenceProcessingNode> output;
     //! Its meter's tap, in the chain
     std::shared_ptr<MeterTapNode> tap;
+    //! What reads its sequence ahead, if anything, in the chain
+    std::shared_ptr<LockFreeQueueNode> queue;
     //! Its meter's, if it has one
     std::optional<int64_t> meterId;
     //! How many channels its meter shows
     size_t numMeterChannels = 0;
+};
+
+//! How a track reads its sequence ahead, on a worker, behind a LockFreeQueueNode
+struct TrackReadAhead {
+    size_t chunkSize = 0;
+    size_t numChunks = 0;
+    //! How far ahead of the reader the worker resumes, after a seek or if it can't keep up
+    size_t resyncLead = 0;
 };
 
 //! What a track's chain needs besides its sequence
@@ -42,10 +53,12 @@ struct TrackSettings {
     size_t maxFrames = 0;
     //! The most its meter's tap keeps: what a block reads of it
     size_t meterCapacity = 0;
+    //! If it reads its sequence ahead
+    std::optional<TrackReadAhead> readAhead;
 };
 
-//! The chain of `sequence`, read from `graph`, its clip processing: where the playhead reads, the end of the track, its
-//! effects, mute/solo, volume/pan and meter
+//! The chain of `sequence`, read from `graph`, its clip processing: where the playhead reads, ahead if it reads ahead,
+//! the end of the track, its effects, mute/solo, volume/pan and meter
 //! @param stop where the track stops, in the timeline, in samples, if it does
 Track buildTrack(std::shared_ptr<const PlayableSequence> sequence, std::shared_ptr<ISequenceProcessingNode> graph,
                  const TrackSettings& settings, std::optional<int64_t> stop = std::nullopt);

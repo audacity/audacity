@@ -30,20 +30,29 @@ class InitializationScope;
 
 namespace au::au4juce {
 class JuceAudioDevices;
+class JuceIoCallback;
 class JuceMonitoringCallback;
-class SafeIoCallback;
 
-//! An audio engine over JUCE audio devices
+//! An audio engine over JUCE audio devices, which plays safe or fast: see SafeIoCallback and FastIoCallback
 class JuceAudioEngine final : public audio::IAudioEngine
 {
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
 
 public:
+    enum class Mode {
+        Safe,
+        Fast,
+    };
+
+    //! Safe until told otherwise
     explicit JuceAudioEngine(std::shared_ptr<JuceAudioDevices> devices);
     ~JuceAudioEngine() override;
 
     //! The controller whose configuration selects the device; must outlive this.
     void setDriverController(const audio::IAudioDriverController* driverController);
+
+    //! How the next streams play: the engine is two backends, which set it when activated
+    void setMode(Mode mode);
 
     bool isBusy() const override;
     bool isCapturing() const override;
@@ -103,7 +112,8 @@ private:
     const std::shared_ptr<JuceAudioDevices> m_devices;
     const audio::IAudioDriverController* m_driverController = nullptr;
 
-    std::unique_ptr<SafeIoCallback> m_stream;
+    Mode m_mode = Mode::Safe;
+    std::unique_ptr<JuceIoCallback> m_stream;
     std::unique_ptr<JuceMonitoringCallback> m_monitoring;
     int m_nextStreamToken = 1;
     double m_lastSampleRate = 0.0;

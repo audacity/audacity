@@ -3,6 +3,7 @@
 */
 #include "track.h"
 
+#include "au3-clip-processing/sequence-graph/LockFreeQueueNode.h"
 #include "au3-clip-processing/sequence-graph/PlayheadMappingNode.h"
 #include "au3-clip-processing/sequence-graph/ResamplingNode.h"
 #include "au3-mixer/AudioIOSequences.h"
@@ -27,6 +28,12 @@ au::au4juce::Track au::au4juce::buildTrack(std::shared_ptr<const PlayableSequenc
         node = std::make_shared<ResamplingNode>(std::move(node), numSequenceChannels, sequence->GetRate(), settings.sampleRate);
     }
     node = std::make_shared<PlayheadMappingNode>(std::move(node), settings.mapper, numSequenceChannels);
+    std::shared_ptr<LockFreeQueueNode> queue;
+    if (const auto& readAhead = settings.readAhead) {
+        queue = std::make_shared<LockFreeQueueNode>(std::move(node), numSequenceChannels, readAhead->chunkSize, readAhead->numChunks,
+                                                    readAhead->resyncLead);
+        node = queue;
+    }
     node = std::make_shared<EndOfTrackNode>(std::move(node), settings.mapper, *settings.endOfTrack, stop);
     // Without a group, it has no effects; a null group would be the master's
     if (const auto group = sequence->FindChannelGroup()) {
@@ -39,5 +46,5 @@ au::au4juce::Track au::au4juce::buildTrack(std::shared_ptr<const PlayableSequenc
     if (const auto waveTrack = dynamic_cast<const WaveTrack*>(sequence->FindChannelGroup())) {
         meterId = static_cast<int64_t>(waveTrack->GetId());
     }
-    return { tap, tap, meterId, std::min<size_t>(numSequenceChannels, numChannels) };
+    return { tap, tap, std::move(queue), meterId, std::min<size_t>(numSequenceChannels, numChannels) };
 }

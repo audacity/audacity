@@ -75,8 +75,12 @@ void Au3AudioModule::resolveImports()
     backendRegister->registerBackend({ "portaudio", m_audioEngine, m_audioDriverController,
                                        [this] { return m_audioDriverController->suspendStream(); }, "PortAudio" });
 #ifdef AU_USE_JUCE
-    backendRegister->registerBackend({ "juce", m_juceAudioEngine, m_juceDriverController,
-                                       [this] { return m_juceDriverController->suspendStream(); }, "JUCE" });
+    // One engine, which plays as the active backend says
+    const auto suspendJuceStream = [this] { return m_juceDriverController->suspendStream(); };
+    backendRegister->registerBackend({ "juce", m_juceAudioEngine, m_juceDriverController, suspendJuceStream, "JUCE (safe)",
+                                       [this] { m_juceAudioEngine->setMode(au4juce::JuceAudioEngine::Mode::Safe); } });
+    backendRegister->registerBackend({ "juce-fast", m_juceAudioEngine, m_juceDriverController, suspendJuceStream, "JUCE (fast)",
+                                       [this] { m_juceAudioEngine->setMode(au4juce::JuceAudioEngine::Mode::Fast); } });
 #endif
 }
 
