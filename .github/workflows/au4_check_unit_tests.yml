@@ -2,6 +2,11 @@ name: '[AU4] Check: Unit Tests (utest)'
 
 on:
   pull_request:
+    paths-ignore:
+    - 'docs/**'
+    - '**.md'
+    - '.github/ISSUE_TEMPLATE/**'
+    - 'LICENSE*'
   workflow_dispatch:
     inputs:
       code_coverage:
