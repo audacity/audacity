@@ -530,6 +530,11 @@ ItemKeys TrackeditInteraction::itemsInGroup(int64_t id) const
     return m_interaction->itemsInGroup(id);
 }
 
+ItemKeys TrackeditInteraction::rangeSelectionMoveItems() const
+{
+    return m_interaction->rangeSelectionMoveItems();
+}
+
 muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

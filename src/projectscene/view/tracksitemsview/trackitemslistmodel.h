@@ -102,6 +102,7 @@ protected:
     };
 
     void updateItemsMetrics();
+    virtual void beforeItemsMetricsUpdate() {}
     virtual void updateItemMetrics(ViewTrackItem* item) = 0;
 
     void setSelectedItems(const QList<ViewTrackItem*>& items);

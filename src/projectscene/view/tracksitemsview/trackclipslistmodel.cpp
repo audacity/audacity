@@ -271,6 +271,13 @@ void TrackClipsListModel::titleEditRequestHandled(const ClipKey& key)
     tracksViewRequestsService()->clipTitleEditRequestHandled(key.key);
 }
 
+void TrackClipsListModel::beforeItemsMetricsUpdate()
+{
+    // Performance: computed once per metrics update instead of per item,
+    // because metrics are updated on every frame and this scans all clips
+    m_clipsMovingWithSelection = trackeditInteraction()->rangeSelectionMoveItems().clips;
+}
+
 void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 {
     TrackClipItem* item = static_cast<TrackClipItem*>(viewItem);
@@ -316,7 +323,7 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         time.selectionStartTime = selectionController()->dataSelectedStartTime();
         time.selectionEndTime = selectionController()->dataSelectedEndTime();
     }
-    item->setIntersectsSelection(muse::contains(selectionController()->clipsIntersectingRangeSelection(), item->key().key));
+    item->setMovesWithSelection(muse::contains(m_clipsMovingWithSelection, item->key().key));
 
     item->setTime(time);
     item->setX(m_context->timeToPosition(time.itemStartTime));

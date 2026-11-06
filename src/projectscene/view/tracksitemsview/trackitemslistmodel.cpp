@@ -99,6 +99,7 @@ void TrackItemsListModel::setMoveController(TrackItemsMoveController* controller
 
 void TrackItemsListModel::updateItemsMetrics()
 {
+    beforeItemsMetricsUpdate();
     for (int i = 0; i < m_items.size(); ++i) {
         updateItemMetrics(m_items[i]);
     }

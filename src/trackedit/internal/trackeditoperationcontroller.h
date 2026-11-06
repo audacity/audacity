@@ -163,6 +163,7 @@ public:
     void groupItems(const TrackItemKeyList& keys) override;
     void ungroupItems(const TrackItemKeyList& keys) override;
     ItemKeys itemsInGroup(int64_t id) const override;
+    ItemKeys rangeSelectionMoveItems() const override;
 
     muse::Progress progress() const override;
 
@@ -171,6 +172,8 @@ private:
     void setItemGroupId(const TrackItemKey& key, int64_t id);
 
     muse::RetVal<ItemKeys> moveItems(const ClipKeyList& clips, const LabelKeyList& labels, secs_t timeOffset, int trackOffset);
+    ItemKeys withWholeGroups(const ItemKeys& items) const;
+    secs_t clampRangeMoveOffset(const ItemKeys& items, secs_t offset) const;
 
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
     void pushProjectHistoryDuplicateState();
