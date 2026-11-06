@@ -17,7 +17,8 @@ void BassTrebleViewModel::doReload()
     const BassTrebleSettings& bs = settings<BassTrebleSettings>();
 
     auto makeItem
-        = [this](const QString& key, const QString& title, const QString& unit, double value, double min, double max, const Setter& s) {
+        = [this](const QString& key, const QString& title, const QString& unit, double value, double min, double max, double step,
+                 const Setter& s) {
         QVariantMap item;
         item["key"] = key;
         item["title"] = title;
@@ -25,6 +26,8 @@ void BassTrebleViewModel::doReload()
         item["unit"] = unit;
         item["min"] = min;
         item["max"] = max;
+        item["step"] = step;
+        item["decimals"] = 1;
 
         m_setters.insert(key, s);
 
@@ -39,6 +42,7 @@ void BassTrebleViewModel::doReload()
                                     bs.mBass,
                                     BassTrebleEffect::Bass.min,
                                     BassTrebleEffect::Bass.max,
+                                    BassTrebleEffect::Bass.step,
                                     [](BassTrebleSettings& settings, double v) { settings.mBass = v; }
                                     );
 
@@ -48,6 +52,7 @@ void BassTrebleViewModel::doReload()
                                       bs.mTreble,
                                       BassTrebleEffect::Treble.min,
                                       BassTrebleEffect::Treble.max,
+                                      BassTrebleEffect::Treble.step,
                                       [](BassTrebleSettings& settings, double v) { settings.mTreble = v; }
                                       );
 
@@ -57,6 +62,7 @@ void BassTrebleViewModel::doReload()
                                     bs.mGain,
                                     BassTrebleEffect::Gain.min,
                                     BassTrebleEffect::Gain.max,
+                                    BassTrebleEffect::Gain.step,
                                     [](BassTrebleSettings& settings, double v) { settings.mGain = v; }
                                     );
 
