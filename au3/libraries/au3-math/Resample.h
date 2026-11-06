@@ -78,6 +78,9 @@ public:
     std::pair<size_t, size_t>
     Process(double factor, const float* inBuffer, size_t inBufferLen, bool lastFlag, float* outBuffer, size_t outBufferLen);
 
+    //! Ready for a fresh signal, with the same configuration
+    void Reset();
+
 protected:
     void SetMethod(const bool useBestMethod);
 

@@ -39,6 +39,8 @@ set( SOURCES
    sequence-graph/CrossFadingSmoother.cpp
    sequence-graph/CrossFadingSmoother.h
    sequence-graph/ISequenceProcessingNode.h
+   sequence-graph/ResamplingNode.cpp
+   sequence-graph/ResamplingNode.h
 
    # The PlayableSequence built from these graphs
    PlayableSequenceFactory.cpp
