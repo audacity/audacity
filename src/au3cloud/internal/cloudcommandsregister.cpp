@@ -20,7 +20,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         muse::TranslatableString("command_description", "Open the audio.com tour page, signing in first if needed"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         CLOUD_OPEN_PROJECT_PAGE_COMMAND,
@@ -54,7 +54,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         muse::TranslatableString("command_description", "Open the signed in user’s audio.com profile page"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         CLOUD_OPEN_URL_COMMAND,

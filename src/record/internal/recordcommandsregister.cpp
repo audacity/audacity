@@ -105,7 +105,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Set up a timed recording"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
 };
 }

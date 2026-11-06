@@ -25,7 +25,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { INSTALLER_PATH_PARAM, Arg(DataType::String, u"Path of an update package to apply after all windows are closed") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         APP_RESTART_COMMAND,
@@ -35,7 +35,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Restart"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_FULLSCREEN_COMMAND,
@@ -45,7 +45,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Full screen"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_ABOUT_COMMAND,
@@ -55,7 +55,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "About Audacity"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_ABOUT_QT_COMMAND,
@@ -65,7 +65,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "About Qt"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_ONLINE_HANDBOOK_COMMAND,
@@ -75,7 +75,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Open online handbook"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_ASK_HELP_COMMAND,
@@ -85,7 +85,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Ask for help"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_PREFERENCES_COMMAND,
@@ -95,7 +95,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Preferences…"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_REVERT_FACTORY_COMMAND,
@@ -105,7 +105,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Revert to factory settings"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         APP_AUDIO_SETTINGS_COMMAND,
@@ -115,7 +115,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Open audio setup dialog"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_SHORTCUTS_PREFERENCES_COMMAND,
@@ -125,7 +125,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Open shortcuts preferences"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_EDITING_PREFERENCES_COMMAND,
@@ -135,7 +135,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Open editing preferences"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_SPECTROGRAM_PREFERENCES_COMMAND,
@@ -145,7 +145,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Open spectrogram preferences"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_CONTEXT_MENU_COMMAND,
@@ -155,7 +155,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Open the context menu of the focused item"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND,
@@ -165,7 +165,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Show/hide playback controls"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_TRACKS_PANEL_COMMAND,
@@ -175,7 +175,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Show/hide tracks"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_HISTORY_PANEL_COMMAND,
@@ -185,7 +185,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Show history"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND,
@@ -204,7 +204,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Show/hide status bar"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
 };
 }

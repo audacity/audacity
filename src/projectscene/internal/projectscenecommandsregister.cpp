@@ -97,7 +97,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM, Arg(DataType::Int, u"Track identifier") },
             }),
         Decoration(IconCode::Code::WAVEFORM_HALFWAVE, rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND,
@@ -129,7 +129,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Show label editor"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_ZOOM_IN_COMMAND,
@@ -214,7 +214,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                   Arg(DataType::Bool, u"Skip when the playhead is already visible") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND,
@@ -306,7 +306,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Show effects panel"),
         InputSchema(),
         Decoration(rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND,
@@ -325,7 +325,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Open audio setup context menu"),
         InputSchema(),
         Decoration(IconCode::Code::CONFIGURE),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND,

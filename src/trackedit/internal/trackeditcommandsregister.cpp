@@ -41,7 +41,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Cancel the current interaction or clear the selection"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_PASTE_INSERT_COMMAND,
@@ -81,7 +81,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::CUT),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_COPY_COMMAND,
@@ -94,7 +94,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::COPY),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_DELETE_COMMAND,
@@ -107,7 +107,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::DELETE_TANK),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_SPLIT_CUT_COMMAND,
@@ -120,7 +120,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::CUT),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_SPLIT_DELETE_COMMAND,
@@ -133,7 +133,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::DELETE_TANK),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_PITCH_SPEED_OPEN_COMMAND,
@@ -143,7 +143,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Open pitch and speed dialog"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_CLIP_RENDER_PITCH_SPEED_COMMAND,
@@ -156,7 +156,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_RESET_PITCH_SPEED_COMMAND,
@@ -169,7 +169,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_STRETCH_CLIP_TO_MATCH_TEMPO_COMMAND,
@@ -182,7 +182,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_SPLIT_AT_COMMAND,
@@ -195,7 +195,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_PIVOTS_PARAM, Arg(DataType::List, u"Split positions in seconds") },
             }),
         Decoration(IconCode::Code::SPLIT_TOOL),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_NEW_MONO_TRACK_COMMAND,
@@ -304,7 +304,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Set a custom track sample rate"),
         InputSchema(),
         Decoration(Checkable::Yes),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_MAKE_STEREO_COMMAND,
@@ -323,7 +323,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Resample track…"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_MIX_AND_RENDER_COMMAND,
@@ -456,7 +456,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Selection end in seconds") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_SELECT_TRACK_COMMAND,
@@ -468,7 +468,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_INDEX_PARAM, Arg(DataType::Int, u"Track index") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_ZERO_CROSS_COMMAND,
@@ -498,7 +498,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Int, u"Color index") },
             }),
         Decoration(IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED, Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND,
@@ -510,7 +510,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Int, u"Color index") },
             }),
         Decoration(IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED, Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND,
@@ -522,7 +522,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_FORMAT_PARAM, Arg(DataType::Int, u"Track format") },
             }),
         Decoration(Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_RATE_COMMAND,
@@ -534,7 +534,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_RATE_PARAM, Arg(DataType::Int, u"Sample rate in Hz") },
             }),
         Decoration(Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_GLOBAL_VIEW_SPECTROGRAM_COMMAND,
@@ -555,7 +555,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::WAVEFORM, Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_SPECTROGRAM_COMMAND,
@@ -567,7 +567,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::SPECTROGRAM, Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_MULTI_COMMAND,
@@ -579,7 +579,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::WAVEFORM_MULTIVIEW, Checkable::Yes),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_LABEL_ADD_COMMAND,
@@ -598,7 +598,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Rename item (clip/label)"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_ITEM_MOVE_LEFT_COMMAND,
@@ -608,7 +608,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Move item left"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_ITEM_MOVE_RIGHT_COMMAND,
@@ -618,7 +618,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Move item right"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_ITEM_MOVE_UP_COMMAND,
@@ -628,7 +628,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Move item up"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_ITEM_MOVE_DOWN_COMMAND,
@@ -638,7 +638,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Move item down"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_LEFT_COMMAND,
@@ -648,7 +648,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Extend item left"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_ITEM_EXTEND_RIGHT_COMMAND,
@@ -658,7 +658,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Extend item right"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_LEFT_COMMAND,
@@ -668,7 +668,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Reduce item left"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_ITEM_REDUCE_RIGHT_COMMAND,
@@ -678,7 +678,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Reduce item right"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACKEDIT_MERGE_SELECTED_ON_TRACKS_COMMAND,
@@ -692,7 +692,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Range end in seconds") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_DUPLICATE_SELECTED_COMMAND,
@@ -706,7 +706,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Range end in seconds") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_DELETE_COMMAND,
@@ -808,7 +808,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::SPLIT_TOOL),
-        Availability::Dispatch | Availability::API | Availability::MCP
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CUT_LEAVE_GAP_COMMAND,
@@ -891,7 +891,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Next panel"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_PREV_PANEL_COMMAND,
@@ -901,7 +901,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Previous panel"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_FIRST_TRACK_COMMAND,
@@ -911,7 +911,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "First track"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_LAST_TRACK_COMMAND,
@@ -921,7 +921,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Last track"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_ABOVE_ITEM_COMMAND,
@@ -931,7 +931,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Above item"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_BELOW_ITEM_COMMAND,
@@ -941,7 +941,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Below item"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND,
@@ -951,7 +951,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Select track/track item"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_TOGGLE_SELECTION_COMMAND,
@@ -961,7 +961,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Add track or track item to selection"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_RANGE_SELECTION_COMMAND,
@@ -971,7 +971,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Track range selection"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_PREV_COMMAND,
@@ -981,7 +981,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Multi track selection previous"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_NEXT_COMMAND,
@@ -991,7 +991,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Multi track selection next"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut
+        Availability::UI
     },
     CommandInfo{
         TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND,
