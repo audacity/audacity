@@ -397,6 +397,28 @@ TEST_F(PlayCursorControllerTests, SeekGesture_DragWhenStopped_SeeksToSelectionSt
     EXPECT_FALSE(captured.params.at(playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool());
 }
 
+TEST_F(PlayCursorControllerTests, SeekGesture_DragWhenStopped_SelectionStartOutsideFrame_LeavesFrame)
+{
+    //! CASE A drag selection that auto-scrolled past the initial frame moves the
+    //! playhead to the selection start without scrolling the view back to it.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    m_context->onResizeFrameWidth(100.0);
+    m_context->moveToFrameTime(200.0); // frame = [200, 300]s at zoom 1, auto-scrolled during the drag
+    const double frameStart = m_context->frameStartTime();
+
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
+
+    m_controller->beginSeekGesture(20.0, 20.0, 50.0);
+    m_controller->updateSeekGesture(300.0, 50.0);
+    EXPECT_TRUE(m_controller->endSeekGesture(20.0));
+    positionChanged.send(20.0);
+
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
+    EXPECT_DOUBLE_EQ(m_context->frameStartTime(), frameStart);
+}
+
 TEST_F(PlayCursorControllerTests, SeekGesture_VerticalDragWhenStopped_SeeksToSelectionStart)
 {
     //! CASE A vertical drag (zero-width, multi-track selection) still moves the

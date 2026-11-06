@@ -67,7 +67,8 @@ public:
     //! dragging a clip or a selection). The target is remembered on press and
     //! the seek is dispatched on release: a plain click seeks to the pressed time,
     //! a drag selection seeks to the selection start when the drag selection
-    //! is stopped. Item drags cancel the gesture and never move the playhead.
+    //! is stopped, without scrolling the view. Item drags cancel the gesture
+    //! and never move the playhead.
     Q_INVOKABLE void beginSeekGesture(double time, double x, double y);
     Q_INVOKABLE void updateSeekGesture(double x, double y);
     Q_INVOKABLE bool endSeekGesture(double selectionStartTime);
