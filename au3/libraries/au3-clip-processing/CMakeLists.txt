@@ -39,6 +39,8 @@ set( SOURCES
    sequence-graph/CrossFadingSmoother.cpp
    sequence-graph/CrossFadingSmoother.h
    sequence-graph/ISequenceProcessingNode.h
+   sequence-graph/LockFreeQueueNode.cpp
+   sequence-graph/LockFreeQueueNode.h
    sequence-graph/ResamplingNode.cpp
    sequence-graph/ResamplingNode.h
 
