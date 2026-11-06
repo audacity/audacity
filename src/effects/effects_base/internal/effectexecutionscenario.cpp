@@ -476,6 +476,21 @@ muse::Ret EffectExecutionScenario::performGenerator(au3::Au3Project& project, Ef
 
     if (ret) {
         const auto clipsAfter = getAllClips(*prj);
+
+        // Effects can also move or remove clips (e.g. Repeat inserts its repeats, moving later clips to the right)
+        for (const auto* clip : trackedit::utils::clipSetDifference(clipsBefore, clipsAfter)) {
+            prj->notifyAboutClipRemoved(*clip);
+        }
+        for (const auto& clip : clipsAfter) {
+            const auto before = std::find_if(clipsBefore.begin(), clipsBefore.end(), [&](const trackedit::Clip& c) {
+                return c.key == clip.key;
+            });
+            if (before != clipsBefore.end()
+                && (!muse::RealIsEqual(before->startTime, clip.startTime) || !muse::RealIsEqual(before->endTime, clip.endTime))) {
+                prj->notifyAboutClipChanged(clip);
+            }
+        }
+
         const std::vector<const au::trackedit::Clip*> newClips = trackedit::utils::clipSetDifference(clipsAfter, clipsBefore);
         if (!newClips.empty()) {
             for (const auto* clip : newClips) {

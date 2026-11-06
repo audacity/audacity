@@ -115,8 +115,9 @@ BuiltinEffectBase {
                 // Reject numbers above the maximum while typing (the default validator lets them through
                 // and only clamps them on commit, so the field could show a count other than the one applied).
                 // 1 to 100: matches RepeatEffect::MaxRepeatCount.
+                // Empty is accepted too, so that clearing the field is reported and disables Apply.
                 validator: RegularExpressionValidator {
-                    regularExpression: /^(100|[1-9]\d?)$/
+                    regularExpression: /^(100|[1-9]\d?)?$/
                 }
 
                 onValueEdited: function (newValue) {

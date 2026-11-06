@@ -79,12 +79,12 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
                 return;
             }
 
-            // Au4: with clips selected, repeat only those: copy from a duplicate (which keeps the clip IDs)
+            // Au4: with clips selected, repeat only those: copy from a duplicate (a backup one keeps the clip IDs)
             // without the unselected clips, and leave tracks without selected clips alone.
             // Not in preview, which mixes the selection into new clips.
             std::shared_ptr<WaveTrack> selectedClipsOnly;
             if (!mSelectedClipIds.empty() && !mIsPreview) {
-                selectedClipsOnly = std::static_pointer_cast<WaveTrack>(track.Duplicate());
+                selectedClipsOnly = std::static_pointer_cast<WaveTrack>(track.Duplicate(Track::DuplicateOptions {}.Backup()));
                 bool hasSelectedClip = false;
                 const auto intervals = std::vector(
                     selectedClipsOnly->Intervals().begin(), selectedClipsOnly->Intervals().end());
@@ -116,7 +116,8 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
                 for (const auto& clip : firstTemp->Intervals()) {
                     clip->SetId(WaveClip::NewID());
                 }
-                const bool moveClips = false; // this need check
+                // Like Au3: insert the repeat, moving what follows to the right
+                const bool moveClips = true;
                 track.Paste(t0, *firstTemp, moveClips);
                 t0 += tLen;
             }
@@ -133,6 +134,10 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
                 =std::vector(track.Intervals().begin(), track.Intervals().end());
             auto sourceIntervals = std::vector(
                 firstTemp->Intervals().begin(), firstTemp->Intervals().end());
+            // A placeholder only keeps the copy's length (silence at the end of the selection): it isn't pasted
+            sourceIntervals.erase(std::remove_if(sourceIntervals.begin(), sourceIntervals.end(),
+                                                 [](const auto& clip) { return clip->GetIsPlaceholder(); }),
+                                  sourceIntervals.end());
             std::sort(
                 sortedIntervals.begin(), sortedIntervals.end(),
                 compareIntervals);
