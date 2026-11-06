@@ -1,0 +1,131 @@
+name: '[AU4] Update: Release Info'
+run-name: "[AU4] Update: Release Info (${{ inputs.mode }}${{ inputs.tag && format(', {0}', inputs.tag) || '' }})"
+
+# Update the in-app updater feed on updates.audacityteam.org from a published
+# GitHub release, with the framework's release scripts (muse/buildscripts/ci/release,
+# shared with MuseScore):
+#   feed/latest.json       the release offered to users, mode stable
+#   feed/latest.test.json  the same for the test channel, mode testing
+#   feed/all.json, feed/all.test.json  the notes of the previous releases
+#
+# The release must be published: the GitHub API returns no draft by tag.
+# au4_deploy.yml calls this after creating the draft release, behind the
+# production gate: publish the release, then approve. Run it by hand to
+# redo a feed.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Mode: stable, or testing (alpha, beta, rc)'
+        required: true
+        default: 'testing'
+      tag:
+        description: 'Release tag, like Audacity-4.0.2 (the latest stable release by default)'
+        required: false
+  workflow_call:
+    inputs:
+      mode:
+        description: 'Mode: stable, or testing (alpha, beta, rc)'
+        type: string
+        required: true
+      tag:
+        description: 'Release tag (the latest stable release by default)'
+        type: string
+        required: false
+      environment:
+        description: "Environment: 'production' to require approval"
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  update_release_info:
+    name: 'Update release info: ${{ inputs.mode }}'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read # to read the release
+    environment:
+      name: ${{ inputs.environment }} # may be blank, then there is no gate
+      url: ${{ github.server_url }}/${{ github.repository }}/releases/${{ inputs.tag && format('tag/{0}', inputs.tag) || 'latest' }}
+    env:
+      MODE: ${{ inputs.mode }}
+      TAG: ${{ inputs.tag }}
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v7
+      with:
+        submodules: recursive
+
+    - name: Check the release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        case "${MODE}" in
+          stable|testing) ;;
+          *) echo "::error ::Mode must be stable or testing, not '${MODE}'"; exit 1 ;;
+        esac
+
+        if [[ -n "${TAG}" ]]; then
+          read -r draft prerelease < <(gh release view "${TAG}" --json isDraft,isPrerelease --jq '"\(.isDraft) \(.isPrerelease)"')
+          if [[ "${draft}" == 'true' ]]; then
+            echo "::error ::${TAG} is a draft: publish the release first"
+            exit 1
+          fi
+          if [[ "${prerelease}" == 'true' && "${MODE}" == 'stable' ]]; then
+            echo "::error ::${TAG} is a pre-release, it cannot go to the stable feed"
+            exit 1
+          fi
+        fi
+
+    - name: Make the release info file
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        muse/buildscripts/ci/release/make_release_info_file.sh \
+          --token "${GH_TOKEN}" \
+          --repo "${GITHUB_REPOSITORY}" \
+          --release_tag "${TAG}"
+
+    - name: Name the version as the updater reads it # v4.0.2, or v4.1.0-beta.2 for the tag Audacity-4.1.0-beta-2
+      run: |
+        file=build.artifacts/release_info.json
+        tag="$(jq -r '.tag_name' "${file}")"
+        version="v${tag#Audacity-}"
+        version="$(sed -E 's/-(alpha|beta|rc)-([0-9]+)$/-\1.\2/' <<<"${version}")"
+        jq --arg version "${version}" '.tag_name = $version' "${file}" > "${file}.tmp"
+        mv "${file}.tmp" "${file}"
+        echo "${tag} -> ${version}"
+
+    - name: Push the release info to S3
+      env:
+        S3_KEY: ${{ secrets.AU_S3_KEY }}
+        S3_SECRET: ${{ secrets.AU_S3_SECRET }}
+      run: |
+        feed='s3://audacity-updates/feed'
+        if [[ "${MODE}" == 'testing' ]]; then
+          latest="${feed}/latest.test.json"
+          all="${feed}/all.test.json"
+        else
+          latest="${feed}/latest.json"
+          all="${feed}/all.json"
+        fi
+
+        # The bucket rejects ACLs (public read comes from its policy); --s3_bucket is the S3 host
+        s3_args=(--s3_key "${S3_KEY}" --s3_secret "${S3_SECRET}" --s3_bucket s3.amazonaws.com)
+        push=(muse/buildscripts/ci/release/push_file_to_s3.sh --no_acl_public "${s3_args[@]}")
+
+        "${push[@]}" --s3_url "${latest}" --file_name release_info.json
+
+        # The notes of the previous releases: seed the file on the first run.
+        if ! s3cmd ls "${all}" | grep -q "${all##*/}"; then
+          echo '{"releases": []}' > build.artifacts/previous_releases_notes.json
+          "${push[@]}" --s3_url "${all}" --file_name previous_releases_notes.json
+        fi
+
+        muse/buildscripts/ci/release/make_previous_releases_notes.sh "${s3_args[@]}" \
+          --s3_url "${all}" \
+          --current_file_name release_info.json \
+          --previous_file_name previous_releases_notes.json
+
+        "${push[@]}" --s3_url "${all}" --file_name previous_releases_notes.json
