@@ -28,8 +28,11 @@ set( SOURCES
    clip-graph/ClipStretchingNode.h
    sequence-graph/CrossFadingSmoother.cpp
    sequence-graph/CrossFadingSmoother.h
+   sequence-graph/IPlayheadMapper.h
    sequence-graph/LockFreeQueueNode.cpp
    sequence-graph/LockFreeQueueNode.h
+   sequence-graph/PlayheadMappingNode.cpp
+   sequence-graph/PlayheadMappingNode.h
    sequence-graph/ResamplingNode.cpp
    sequence-graph/ResamplingNode.h
    PlaybackDirection.h
