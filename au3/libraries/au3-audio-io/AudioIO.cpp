@@ -572,7 +572,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
 
         const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
         bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
-        bool isMME = (hostInfo && hostInfo->type == paMME);
 
       #ifdef __WXMSW__
         // If the host API is WASAPI, the stream is bidirectional and there is no
@@ -588,17 +587,13 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
         }
       #endif
 
-        if (mSoftwarePlaythrough && !isMME) {
-            playbackParameters.suggestedLatency
-                =playbackDeviceInfo->defaultLowOutputLatency;
-        } else {
-            // When using WASAPI, the suggested latency does not affect
-            // the latency of the playback, but the position of playback is given as if
-            // there was the suggested latency. This results in the last "suggested latency"
-            // of a selection not being played. So for WASAPI use 0.0 for the suggested
-            // latency regardless of user setting. See bug 1949.
-            playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration / 1000.0;
-        }
+        // As the user set it, monitoring or not
+        // When using WASAPI, the suggested latency does not affect
+        // the latency of the playback, but the position of playback is given as if
+        // there was the suggested latency. This results in the last "suggested latency"
+        // of a selection not being played. So for WASAPI use 0.0 for the suggested
+        // latency regardless of user setting. See bug 1949.
+        playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration / 1000.0;
 
         mOutputMeter = options.playbackMeter;
     }
@@ -620,7 +615,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
 
         const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(captureDeviceInfo->hostApi);
         bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
-        bool isMME = (hostInfo && hostInfo->type == paMME);
 
         // If the stream is bidirectional and there is no supported sample rate
         // set mRate to the value supported by the capture device.
@@ -634,12 +628,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
         captureParameters.hostApiSpecificStreamInfo = NULL;
         captureParameters.channelCount = mNumCaptureChannels;
 
-        if (mSoftwarePlaythrough && !isMME) {
-            captureParameters.suggestedLatency
-                =captureDeviceInfo->defaultHighInputLatency;
-        } else {
-            captureParameters.suggestedLatency = latencyDuration / 1000.0;
-        }
+        // As the user set it, monitoring or not
+        captureParameters.suggestedLatency = latencyDuration / 1000.0;
 
         SetCaptureMeter(mOwningProject.lock(), options.captureMeter);
     }
