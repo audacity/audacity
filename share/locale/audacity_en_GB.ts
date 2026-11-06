@@ -11185,7 +11185,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
         <source>X11 UI refusing to be externalized</source>
-        <translation type="unfinished"/>
+        <translation>X11 UI refusing to be externalised</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
@@ -21428,7 +21428,7 @@ Please connect an input device and rescan.</translation>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="86"/>
         <source>Track visualization</source>
-        <translation type="unfinished"/>
+        <translation>Track visualisation</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="62"/>
