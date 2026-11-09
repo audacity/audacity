@@ -111,6 +111,7 @@ private:
     int m_nextStreamToken = 1;
     double m_lastSampleRate = 0.0;
     muse::String m_lastError;
+    std::vector<std::pair<double, double> > m_lostCaptureIntervals;
 
     std::atomic<float> m_playbackVolume { 1.f };
     std::atomic<float> m_inputVolume { 1.f };
