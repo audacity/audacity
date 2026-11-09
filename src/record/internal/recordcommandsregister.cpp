@@ -106,6 +106,25 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(),
         Availability::Dispatch | Availability::Shortcut | Availability::MCP
     },
+    CommandInfo{
+        RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Turn on sound activated recording"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Turn on sound activated recording"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes)
+    },
+    CommandInfo{
+        RECORD_SET_SOUND_ACTIVATION_LEVEL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Set sound activation level…"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Set sound activation level"),
+        InputSchema(),
+        Decoration(),
+        Availability::Dispatch | Availability::Shortcut
+    },
 };
 }
 

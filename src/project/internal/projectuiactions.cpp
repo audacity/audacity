@@ -350,24 +350,6 @@ const UiActionList ProjectUiActions::m_actions = {
              Checkable::Yes
              ),
 
-    // record menu
-    UiAction("toggle-sound-activated-recording",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Enable sound activating recording"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Enable sound activating recording")
-             ),
-    UiAction("set-sound-activation-level",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             //: Action title: shown as a menu item or a button label; keep it short
-             TranslatableString("action", "Set sound activation level"),
-             //: Action description: shown as a tooltip; can be a full sentence
-             TranslatableString("action_description", "Set sound activation level")
-             ),
-
     // tracks menu
     UiAction("duplicate-track",
              au::context::UiCtxAny,

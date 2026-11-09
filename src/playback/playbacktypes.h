@@ -137,4 +137,16 @@ public:
 
     Q_ENUM(DbRange)
 };
+
+//! The lowest level a meter of this type and range shows, in dB
+inline double meterLowerBoundDb(PlaybackMeterType::MeterType type, PlaybackMeterDbRange::DbRange range)
+{
+    constexpr double LINEAR_METER_MIN_DB = -60.0;
+
+    if (type == PlaybackMeterType::MeterType::Linear) {
+        return LINEAR_METER_MIN_DB;
+    }
+
+    return PlaybackMeterDbRange::toDouble(range);
+}
 }

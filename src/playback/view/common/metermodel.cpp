@@ -10,10 +10,6 @@
 
 using namespace au::playback;
 
-namespace {
-constexpr float LINEAR_METER_MIN_VOLUME = -60.0f;
-}
-
 MeterModel::MeterModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
@@ -161,11 +157,7 @@ PlaybackMeterDbRange::DbRange MeterModel::meterDbRange() const
 
 float MeterModel::dbRange() const
 {
-    if (meterType() == PlaybackMeterType::MeterType::Linear) {
-        return LINEAR_METER_MIN_VOLUME;
-    }
-
-    return PlaybackMeterDbRange::toDouble(meterDbRange());
+    return static_cast<float>(meterLowerBoundDb(meterType(), meterDbRange()));
 }
 
 std::vector<PlaybackMeterDbRange::DbRange> MeterModel::dbRangeList() const

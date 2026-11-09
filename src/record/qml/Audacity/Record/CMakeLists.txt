@@ -16,10 +16,14 @@ qt_add_qml_module(record_qml
         timedrecordingprogressmodel.h
         playbacktoolbarrecordlevelitem.cpp
         playbacktoolbarrecordlevelitem.h
+        soundactivationlevelmodel.cpp
+        soundactivationlevelmodel.h
     QML_FILES
         RecordLevel.qml
         TimedRecordingDialog.qml
         TimedRecordingProgressDialog.qml
+        SoundActivationLevelControl.qml
+        SoundActivationLevelDialog.qml
         internal/RecordLevelPopup.qml
     IMPORTS
         TARGET muse_ui_qml

@@ -15,6 +15,7 @@
 
 #include "au3wrap/au3types.h"
 #include "audioconfigurationtypes.h"
+#include "audiotypes.h"
 
 struct TransportSequences;
 struct AudioIOStartTransportOptions;
@@ -52,6 +53,8 @@ public:
         std::vector<std::vector<float> >* crossfadeData = nullptr;
         //! Does not change the play region.
         std::optional<double> streamStartTime;
+        bool soundActivatedRecording = false;
+        double soundActivationLevelDb = DEFAULT_SOUND_ACTIVATION_LEVEL_DB;
     };
 
     //! Returns a positive stream token on success, 0 otherwise.

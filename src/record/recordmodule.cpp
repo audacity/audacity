@@ -47,6 +47,7 @@ void RecordModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://record/timedrecording"), "Audacity.Record", "TimedRecordingDialog");
         ir->registerQmlUri(muse::Uri("audacity://record/timedrecording/progress"), "Audacity.Record", "TimedRecordingProgressDialog");
+        ir->registerQmlUri(Uri("audacity://record/sound-activation-level"), "Audacity.Record", "SoundActivationLevelDialog");
     }
 
     auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
