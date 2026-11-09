@@ -30,6 +30,10 @@ Au3AudioOutput::Au3AudioOutput(const muse::modularity::ContextPtr& ctx)
         initMeter();
         notifyAboutSampleRateChanged();
     });
+    // The meter is the backend's
+    audioBackendSelector()->activeBackendChanged().onNotify(this, [this]() {
+        initMeter();
+    });
 }
 
 void Au3AudioOutput::initMeter()

@@ -48,6 +48,7 @@ void AudioModule::registerExports()
     globalIoc()->registerExport<IAudioEngine>(moduleName(), m_audioEngineSwitcher);
     globalIoc()->registerExport<IAudioDriverController>(moduleName(), m_audioEngineSwitcher);
     globalIoc()->registerExport<IAudioBackendRegister>(moduleName(), m_audioEngineSwitcher);
+    globalIoc()->registerExport<IAudioBackendSelector>(moduleName(), m_audioEngineSwitcher);
     globalIoc()->registerExport<ISystemAudioDevicesListener>(moduleName(), m_systemAudioDevicesListener);
 
     // for muse
@@ -61,6 +62,9 @@ void AudioModule::onInit(const muse::IApplication::RunMode&)
     //! NOTE At the moment this is needed for VST plugins
     //! and everything is done in the main thread.
     m_audioThreadSecurer->setupAudioEngineThread();
+
+    // The backends registered when the modules resolved their imports
+    m_audioEngineSwitcher->init();
 
     m_systemAudioDevicesListener->startListening();
 }

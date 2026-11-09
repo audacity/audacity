@@ -3,11 +3,23 @@
 */
 #include "audioengineswitcher.h"
 
+#include <algorithm>
 #include <cstdlib>
 
 #include "framework/global/log.h"
+#include "framework/global/settings.h"
 
 using namespace au::audio;
+
+namespace {
+const muse::Settings::Key BACKEND_KEY("audio", "audio/backend");
+
+//! Every field: what a change of backend changes
+AudioConfigurationDelta wholeConfiguration()
+{
+    return { ~fieldMask(AudioConfigurationField::None) };
+}
+}
 
 AudioEngineSwitcher::AudioEngineSwitcher() = default;
 
@@ -18,17 +30,95 @@ void AudioEngineSwitcher::registerBackend(const AudioBackend& backend)
     }
 
     m_backends.push_back(backend);
-
-    // TODO: replace with a persistent user setting
-    const char* const requested = std::getenv("AU_AUDIO_BACKEND");
-    if (!m_engine || (requested && backend.id == requested)) {
-        LOGI() << "audio backend: " << backend.id;
+    if (!m_engine) {
         activate(backend);
     }
 }
 
+void AudioEngineSwitcher::init()
+{
+    // The environment variable is for testing: it doesn't change the choice
+    const char* const overridden = std::getenv("AU_AUDIO_BACKEND");
+    const auto chosen = overridden ? std::string { overridden } : muse::settings()->value(BACKEND_KEY).toString();
+    const auto backend = std::find_if(m_backends.begin(), m_backends.end(), [&chosen](const auto& b) { return b.id == chosen; });
+    if (backend != m_backends.end()) {
+        activate(*backend);
+    }
+    LOGI() << "audio backend: " << m_activeId;
+}
+
+std::vector<std::string> AudioEngineSwitcher::backends() const
+{
+    std::vector<std::string> ids;
+    for (const auto& backend : m_backends) {
+        ids.push_back(backend.id);
+    }
+    return ids;
+}
+
+std::string AudioEngineSwitcher::backendTitle(const std::string& id) const
+{
+    const auto it = std::find_if(m_backends.begin(), m_backends.end(), [&](const auto& backend) { return backend.id == id; });
+    if (it == m_backends.end() || it->title.empty()) {
+        return id;
+    }
+    return it->title;
+}
+
+std::string AudioEngineSwitcher::activeBackend() const
+{
+    return m_activeId;
+}
+
+ApplyResult AudioEngineSwitcher::setActiveBackend(const std::string& id)
+{
+    const auto next = std::find_if(m_backends.begin(), m_backends.end(), [&id](const auto& backend) { return backend.id == id; });
+    if (next == m_backends.end()) {
+        return { ApplyStatus::InvalidConfiguration };
+    }
+    if (id == m_activeId) {
+        muse::settings()->setSharedValue(BACKEND_KEY, muse::Val(id));
+        return { ApplyStatus::NoChange };
+    }
+
+    // Give up the devices, as a change of audio configuration does
+    const auto current = std::find_if(m_backends.begin(), m_backends.end(), [this](const auto& backend) {
+        return backend.id == m_activeId;
+    });
+    AudioStreamRestorer restoreStream = [] { return true; };
+    if (engine().currentStream()) {
+        restoreStream = current != m_backends.end() && current->suspendStream ? current->suspendStream() : nullptr;
+        if (!restoreStream) {
+            return { ApplyStatus::OwnerUnavailable };
+        }
+    }
+
+    const auto playbackVolume = engine().getPlaybackVolume();
+    const auto inputVolume = engine().getInputVolume();
+    LOGI() << "audio backend: " << id;
+    activate(*next);
+    muse::settings()->setSharedValue(BACKEND_KEY, muse::Val(id));
+    engine().setPlaybackVolume(playbackVolume);
+    engine().setInputVolume(inputVolume);
+    engine().setMonitoredTrack(m_monitoredTrack);
+
+    // Each backend has its devices and configuration
+    m_configurationChanged.send(wholeConfiguration());
+    m_audioDeviceListChanged.notify();
+    m_activeBackendChanged.notify();
+
+    const bool restored = restoreStream();
+    return { ApplyStatus::Applied, !restored };
+}
+
+muse::async::Notification AudioEngineSwitcher::activeBackendChanged() const
+{
+    return m_activeBackendChanged;
+}
+
 void AudioEngineSwitcher::activate(const AudioBackend& backend)
 {
+    m_activeId = backend.id;
     m_engine = backend.engine;
     m_driver = backend.driverController;
     if (backend.activated) {

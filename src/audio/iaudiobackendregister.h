@@ -11,6 +11,7 @@
 
 #include "driver/iaudiodrivercontroller.h"
 #include "iaudioengine.h"
+#include "iaudiostreamsuspender.h"
 
 namespace au::audio {
 //! An IAudioEngine implementation and the IAudioDriverController managing its devices.
@@ -19,7 +20,12 @@ struct AudioBackend {
     std::string id;
     std::shared_ptr<IAudioEngine> engine;
     std::shared_ptr<IAudioDriverController> driverController;
-    //! Called when it becomes the active backend; may be empty. Lets backends share devices, or an engine.
+    //! Stops the backend's stream, if any, so that another backend can be activated; empty if it can't
+    std::function<AudioStreamRestorer()> suspendStream;
+    //! What the user sees it as; the id if empty
+    std::string title;
+    //! Called when it becomes the active backend, before the stream it takes over, if any, is restored; may be empty.
+    //! Lets backends share devices.
     std::function<void()> activated;
 };
 
@@ -32,8 +38,8 @@ class IAudioBackendRegister : MODULE_GLOBAL_INTERFACE
 public:
     virtual ~IAudioBackendRegister() = default;
 
-    //! The first registered backend becomes the active one, unless the AU_AUDIO_BACKEND
-    //! environment variable names another.
+    //! The first registered backend is active, until the module's initialization activates the one chosen last, or the
+    //! one the AU_AUDIO_BACKEND environment variable names, which overrides the choice for this run.
     virtual void registerBackend(const AudioBackend& backend) = 0;
 };
 }

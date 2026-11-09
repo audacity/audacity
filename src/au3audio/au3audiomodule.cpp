@@ -39,6 +39,7 @@ void Au3AudioModule::resolveImports()
     driverController->setAudioEngine(m_audioEngine);
     // AudioIO shares the PortAudio devices with other engines: the driver controller follows the active one
     backendRegister->registerBackend({ "portaudio", m_audioEngine, driverController,
+                                       [driverController] { return driverController->suspendStream(); }, "PortAudio (AudioIO)",
                                        [this, driverController] { driverController->setAudioEngine(m_audioEngine); } });
 }
 

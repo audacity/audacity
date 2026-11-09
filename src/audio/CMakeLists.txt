@@ -15,6 +15,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/audiomodule.h
     ${CMAKE_CURRENT_LIST_DIR}/audiotypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiobackendregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/iaudiobackendselector.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudioengine.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiometer.h
     ${CMAKE_CURRENT_LIST_DIR}/idevice.h
