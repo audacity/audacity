@@ -169,6 +169,20 @@ private:
     //! When what it played last is heard, once rendered
     std::atomic<std::chrono::steady_clock::time_point> m_endHeard { std::chrono::steady_clock::time_point::max() };
 
+    //! Playback dropouts, to compare the audio engines: written by the callback, read once the device stopped
+    struct Dropouts {
+        //! What the callback output while playing
+        int64_t frames = 0;
+        //! Callbacks that took longer than the audio they output
+        int lateCallbacks = 0;
+        double longestCallback = 0.0;
+        //! The block size of the longest callback
+        double longestCallbackBlock = 0.0;
+        //! Silence while waiting for the workers
+        int64_t unplayedFrames = 0;
+    };
+    Dropouts m_dropouts;
+
     // Device thread
     std::vector<float> m_buffer[numChannels];
     float* m_bufferPointers[numChannels] {};

@@ -433,6 +433,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
 
     auto sampleRate = options.rate;
     mNumPauseFrames = 0;
+    mPlaybackDropouts = {};
 
     ResetMeters();
 
@@ -1387,6 +1388,12 @@ void AudioIO::StopTransport()
     // Now there won't be activity on the audio thread until we restart the stream and we can reset those two member variables.
     const auto wasPlaying = mNumPlaybackChannels > 0;
     const auto wasRecording = mNumCaptureChannels > 0;
+    if (wasPlaying) {
+        const auto& dropouts = mPlaybackDropouts;
+        wxLogMessage("Playback dropouts (PortAudio): %.1f s played, %lu device underruns, %lu starved callbacks (%.0f ms of silence)",
+                     dropouts.frames / mRate, dropouts.deviceUnderruns, dropouts.starvedCallbacks,
+                     1000.0 * dropouts.starvedFrames / mRate);
+    }
     mNumCaptureChannels = mNumPlaybackChannels = 0;
     mPauseRec = false;
     mSoundActivationSuspended.store(false, std::memory_order_relaxed);
@@ -2254,6 +2261,18 @@ bool AudioIoCallback::FillOutputBuffers(
 
     mOldPlaybackVolume = playbackVolume;
 
+    auto& dropouts = mPlaybackDropouts;
+    dropouts.frames += framesPerBuffer;
+    if (mMaxFramesOutput < framesPerBuffer) {
+        ++dropouts.pendingStarvedCallbacks;
+        dropouts.pendingStarvedFrames += framesPerBuffer - mMaxFramesOutput;
+    } else if (dropouts.pendingStarvedCallbacks > 0) {
+        dropouts.starvedCallbacks += dropouts.pendingStarvedCallbacks;
+        dropouts.starvedFrames += dropouts.pendingStarvedFrames;
+        dropouts.pendingStarvedCallbacks = 0;
+        dropouts.pendingStarvedFrames = 0;
+    }
+
     // wxASSERT( maxLen == toGet );
 
     mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
@@ -2597,6 +2616,10 @@ int AudioIoCallback::AudioCallback(
     // (User might click mute and solo buttons.)
     mbHasSoloSequences = CountSoloingSequences() > 0;
     mCallbackReturn = paContinue;
+
+    if ((statusFlags & paOutputUnderflow) && mNumPlaybackChannels > 0) {
+        ++mPlaybackDropouts.deviceUnderruns;
+    }
 
     if (IsHalted()
         // PRL:  Why was this added?  Was it only because of the mysterious
