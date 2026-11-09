@@ -617,16 +617,19 @@ MenuItemList AppMenuModel::makeZoomItems()
 
 MenuItemList AppMenuModel::makeMixItems()
 {
-    MenuItemList items {
-        makeMenuItem(muse::rcommand::make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
-            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(false) }
-        })),
-        makeMenuItem(muse::rcommand::make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
-            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(true) }
-        }), TranslatableString("appshell-menu-mix", "Mix and render to new track")),
+    auto makeMixItem = [this](bool toNewTrack, const TranslatableString& title) {
+        const CommandQuery query = make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
+            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(toNewTrack) }
+        });
+        MenuItem* item = makeMenuItem(query, title);
+        item->setCommandQuery(query);
+        return item;
     };
 
-    return items;
+    return MenuItemList {
+        makeMixItem(false, {}),
+        makeMixItem(true, TranslatableString("appshell-menu-mix", "Mix and render to new track")),
+    };
 }
 
 muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)

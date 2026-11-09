@@ -226,9 +226,11 @@ MenuItemList ClipContextMenuModel::makeClipColourItems()
 
     const auto& colorInfos = projectSceneConfiguration()->clipColorInfos();
     for (const auto& info : colorInfos) {
-        MenuItem* item = makeMenuItem(make_query(trackedit::TRACKEDIT_CLIP_CHANGE_COLOR_COMMAND, {
+        const CommandQuery query = make_query(trackedit::TRACKEDIT_CLIP_CHANGE_COLOR_COMMAND, {
             { trackedit::TRACKEDIT_COLOR_INDEX_PARAM, Val(info.index) }
-        }), info.title);
+        });
+        MenuItem* item = makeMenuItem(query, info.title);
+        item->setCommandQuery(query);
         item->setIconColor(QString::fromStdString(projectSceneConfiguration()->clipColor(info.index).toString()));
         items << item;
     }
