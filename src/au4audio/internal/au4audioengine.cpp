@@ -10,6 +10,7 @@
 #include "framework/global/log.h"
 
 #include "au3-project/Project.h"
+#include "au3-project-rate/ProjectRate.h"
 #include "au3-realtime-effects/RealtimeEffectManager.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track/Track.h"
@@ -18,6 +19,7 @@
 
 #include "audio/idevice.h"
 #include "iocallback.h"
+#include "monitoringcallback.h"
 
 using namespace au::au4audio;
 
@@ -50,11 +52,14 @@ bool Au4AudioEngine::isCapturing() const
 
 bool Au4AudioEngine::isMonitoring() const
 {
-    return false;
+    return m_monitoring != nullptr;
 }
 
 std::optional<au::audio::AudioStreamDescriptor> Au4AudioEngine::currentStream() const
 {
+    if (m_monitoring) {
+        return audio::AudioStreamDescriptor { audio::AudioStreamKind::Monitoring, &m_monitoring->project, m_monitoring->sampleRate() };
+    }
     if (!m_stream) {
         return std::nullopt;
     }
@@ -88,6 +93,8 @@ int Au4AudioEngine::startTransport(const TransportSequences& sequences, double s
     IF_ASSERT_FAILED(m_driverController) {
         return 0;
     }
+    // As AudioIO, playing stops monitoring
+    stopMonitoring();
     auto device = openDevice(0, numChannels, options.sampleRate);
     if (!device) {
         return 0;
@@ -217,12 +224,39 @@ void Au4AudioEngine::stopMeters(AudacityProject& project)
     }
 }
 
-void Au4AudioEngine::startMonitoring(AudacityProject&)
+void Au4AudioEngine::startMonitoring(AudacityProject& project)
 {
+    if (m_stream) {
+        return;
+    }
+    const bool playThrough = recordConfiguration()->isInputMonitoringOn();
+    if (m_monitoring) {
+        if (&m_monitoring->project == &project && m_monitoring->playThrough == playThrough) {
+            return;
+        }
+        stopMonitoring();
+    }
+    IF_ASSERT_FAILED(m_driverController) {
+        return;
+    }
+    // As AudioIO, at the rate of the project, with the output if it plays the input through
+    auto device = openDevice(m_driverController->configuration().inputChannels, playThrough ? numChannels : 0,
+                             ProjectRate::Get(project).GetRate());
+    if (!device) {
+        LOGE() << "cannot monitor the input: " << m_lastError;
+        return;
+    }
+    m_monitoring = std::make_unique<MonitoringCallback>(project, std::move(device), playThrough,
+                                                        muse::value(m_captureMeters, &project), m_inputVolume);
+    m_monitoring->start();
 }
 
 void Au4AudioEngine::stopMonitoring()
 {
+    if (m_monitoring) {
+        m_monitoring->stop();
+        m_monitoring.reset();
+    }
 }
 
 std::unique_ptr<au::audio::IDevice> Au4AudioEngine::openDevice(int numInputChannels, int numOutputChannels, double sampleRate)
