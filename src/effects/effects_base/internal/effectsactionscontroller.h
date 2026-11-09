@@ -56,5 +56,7 @@ private:
     muse::Ret exportPreset(const muse::rcommand::Params& params);
     muse::Ret toggleVendorUI(const muse::rcommand::Params& params);
     muse::Ret openPluginManager();
+
+    QObject m_queuedCallContext;
 };
 }
