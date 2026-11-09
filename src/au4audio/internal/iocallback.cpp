@@ -8,6 +8,7 @@
 
 #include "framework/global/containers.h"
 #include "framework/global/log.h"
+#include "framework/global/types/string.h"
 
 #include "au3-clip-processing/sequence-graph/LockFreeQueueNode.h"
 #include "au3-project/Project.h"
@@ -265,6 +266,13 @@ void IoCallback::stop()
 {
     if (m_device) {
         m_device->stop();
+        // Underruns of the output, and overflows of the input if one is open
+        const int xruns = m_device->xrunCount();
+        LOGI() << "Playback dropouts: " << muse::String::number(m_dropouts.frames / m_sampleRate, 1) << " s played, "
+               << xruns << " device underruns" << (m_capture ? " or input overflows" : "") << ", " << m_dropouts.lateCallbacks
+               << " late callbacks (longest " << muse::String::number(1000.0 * m_dropouts.longestCallback, 1) << " ms for "
+               << muse::String::number(1000.0 * m_dropouts.longestCallbackBlock, 1) << " ms of audio), "
+               << muse::String::number(1000.0 * m_dropouts.unplayedFrames / m_sampleRate, 0) << " ms of silence waiting for rendering";
         m_device.reset();
     }
     // Once the device stopped, so that what it captured last is recorded
@@ -336,7 +344,8 @@ void IoCallback::process(const float* const* inputChannelData, int numInputChann
     // As the capture, the monitored input needs the device to give its channels
     const auto monitored = m_monitoredInput && numInputChannels >= m_monitoredInput->numInputChannels() ? inputChannelData : nullptr;
 
-    const auto dacTime = std::chrono::steady_clock::now()
+    const auto callbackStart = std::chrono::steady_clock::now();
+    const auto dacTime = callbackStart
                          + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
         std::chrono::duration<double>(m_device->outputLatency()));
     int done = 0;
@@ -358,9 +367,22 @@ void IoCallback::process(const float* const* inputChannelData, int numInputChann
         }
         done += frames;
     }
+    if (paused) {
+        return;
+    }
     // As AudioIO, only what played advances the transport
-    if (!paused && numSamples > unplayed) {
+    if (numSamples > unplayed) {
         m_callbackInfos.Put({ dacTime, numSamples - unplayed });
+    }
+    const double duration = std::chrono::duration<double>(std::chrono::steady_clock::now() - callbackStart).count();
+    const double block = numSamples / m_sampleRate;
+    m_dropouts.frames += numSamples;
+    if (duration > block) {
+        ++m_dropouts.lateCallbacks;
+    }
+    if (duration > m_dropouts.longestCallback) {
+        m_dropouts.longestCallback = duration;
+        m_dropouts.longestCallbackBlock = block;
     }
 }
 
@@ -372,6 +394,7 @@ size_t IoCallback::render(float* const* stereo, int64_t index, size_t frames)
         track.queue->Prepare(index);
         available = std::min(available, track.queue->Available(index + track.queueLead, frames));
     }
+    m_dropouts.unplayedFrames += static_cast<int64_t>(frames - available);
     if (available > 0) {
         m_top->GetSamples(stereo, index, available);
         // What was played is released at once, so that the workers have until the next block to render it
