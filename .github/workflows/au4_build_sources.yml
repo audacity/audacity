@@ -42,11 +42,11 @@ jobs:
         submodules: recursive
 
     - name: Configure workflow
-      env:
+      env: # inputs are read through the env, so that a value is data for the shell, not code
+        BUILD_MODE: ${{ inputs.build_mode }}
         BUILD_NUMBER: ${{ inputs.build_number }}
       run: |
         ADD_INFO="_${GITHUB_REF#refs/heads/}"
-        BUILD_MODE=${{ inputs.build_mode || github.event.inputs.build_mode }}
 
         cmake -DEVENT=${{ github.event_name }} \
               -DBUILD_MODE=${BUILD_MODE} \
