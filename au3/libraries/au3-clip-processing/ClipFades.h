@@ -8,9 +8,10 @@
 
 #include <atomic>
 
+//! Saved in projects as integers: don't change the values
 enum class FadeType {
-    Linear,
-    Logarithmic,
+    Linear = 0,
+    Logarithmic = 1,
 };
 
 //! Published whenever the fades of a clip change

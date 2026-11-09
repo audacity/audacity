@@ -30,7 +30,7 @@ wxString projectXml()
     return wxString::Format(
         "<project version=\"1.3.0\" audacityversion=\"4.0.0\">"
         "<wavetrack rate=\"%d\" sampleformat=\"262159\" channel=\"0\" linked=\"0\">"
-        "<waveclip offset=\"0\" trimLeft=\"0\" trimRight=\"0\" clipStretchRatio=\"1\" fadeIn=\"%.17g\" fadeOut=\"%.17g\" fadeOutType=\"logarithmic\">"
+        "<waveclip offset=\"0\" trimLeft=\"0\" trimRight=\"0\" clipStretchRatio=\"1\" fadeIn=\"%.17g\" fadeOut=\"%.17g\" fadeOutType=\"1\">"
         "<sequence maxsamples=\"262144\" sampleformat=\"262159\" numsamples=\"%d\">"
         "<waveblock start=\"0\" blockid=\"-%d\"/>"
         "</sequence><envelope numpoints=\"0\"/></waveclip>"
@@ -157,8 +157,8 @@ TEST_F(ClipFadesPersistenceTests, FadesAreSaved)
     onlyClip(firstTrack()).WriteXML(0, writer);
     EXPECT_NE(writer.Find(wxString::Format("fadeIn=\"%.8f\"", TEST_FADE_IN)), wxNOT_FOUND) << writer;
     EXPECT_NE(writer.Find(wxString::Format("fadeOut=\"%.8f\"", TEST_FADE_OUT)), wxNOT_FOUND) << writer;
-    EXPECT_NE(writer.Find("fadeInType=\"linear\""), wxNOT_FOUND) << writer;
-    EXPECT_NE(writer.Find("fadeOutType=\"logarithmic\""), wxNOT_FOUND) << writer;
+    EXPECT_NE(writer.Find("fadeInType=\"0\""), wxNOT_FOUND) << writer;
+    EXPECT_NE(writer.Find("fadeOutType=\"1\""), wxNOT_FOUND) << writer;
 }
 
 TEST_F(ClipFadesPersistenceTests, CopiedClipsKeepTheirFadesAndFollowTheirOwnStretching)

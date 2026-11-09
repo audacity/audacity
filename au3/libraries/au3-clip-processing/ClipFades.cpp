@@ -10,7 +10,6 @@
 #include <cmath>
 #include <numbers>
 #include <optional>
-#include <string>
 
 static constexpr auto FadeIn_attr = "fadeIn";
 static constexpr auto FadeOut_attr = "fadeOut";
@@ -21,23 +20,10 @@ namespace {
 //! 10^(floorDb * (1 - x) / 20) = exp(floorDb * ln(10) / 20 * (1 - x)), `exp` being cheaper than `pow`
 constexpr auto logarithmicFadeExponent = ClipFades::logarithmicFadeFloorDb * std::numbers::ln10 / 20.0;
 
-constexpr const char* fadeTypeName(FadeType type)
-{
-    switch (type) {
-    case FadeType::Logarithmic:
-        return "logarithmic";
-    case FadeType::Linear:
-        return "linear";
-    default:
-        assert(false);
-        return "";
-    }
-}
-
-constexpr std::optional<FadeType> fadeTypeFromName(const std::string& name)
+std::optional<FadeType> fadeTypeFromValue(int value)
 {
     for (const auto type : { FadeType::Linear, FadeType::Logarithmic }) {
-        if (name == fadeTypeName(type)) {
+        if (value == static_cast<int>(type)) {
             return type;
         }
     }
@@ -98,8 +84,8 @@ void ClipFades::WriteXMLAttributes(XMLWriter& writer) const
     // Don't write the raw values, or we'd also have to write the `m_draggingSide` state.
     writer.WriteAttr(FadeIn_attr, fadeIn(), 8);
     writer.WriteAttr(FadeOut_attr, fadeOut(), 8);
-    writer.WriteAttr(FadeInType_attr, wxString { fadeTypeName(fadeInType()) });
-    writer.WriteAttr(FadeOutType_attr, wxString { fadeTypeName(fadeOutType()) });
+    writer.WriteAttr(FadeInType_attr, static_cast<int>(fadeInType()));
+    writer.WriteAttr(FadeOutType_attr, static_cast<int>(fadeOutType()));
 }
 
 bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
@@ -122,7 +108,11 @@ bool ClipFades::HandleXMLAttribute(const std::string_view& attr, const XMLAttrib
         return true;
     }
     if (attr == FadeInType_attr || attr == FadeOutType_attr) {
-        const auto type = fadeTypeFromName(valueView.ToString());
+        int typeValue;
+        if (!valueView.TryGet(typeValue)) {
+            return false;
+        }
+        const auto type = fadeTypeFromValue(typeValue);
         if (!type) {
             return false;
         }
