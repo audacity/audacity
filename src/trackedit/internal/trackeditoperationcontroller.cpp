@@ -447,7 +447,7 @@ ItemKeys TrackeditOperationController::withWholeGroups(const ItemKeys& items) co
     for (const LabelKey& labelKey : items.labels) {
         groupIds.insert(labelsInteraction()->labelGroupId(labelKey));
     }
-    groupIds.erase(-1);
+    groupIds.erase(NO_GROUP_ID);
 
     ItemKeys result = items;
     for (const int64_t groupId : groupIds) {
