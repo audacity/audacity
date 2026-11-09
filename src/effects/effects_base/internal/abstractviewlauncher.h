@@ -3,6 +3,7 @@
 #include "../ieffectviewlauncher.h"
 
 #include "effects/effects_base/ieffectinstancesregister.h"
+#include "effects/effects_base/ieffectsprovider.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
@@ -12,6 +13,7 @@ class AbstractViewLauncher : public IEffectViewLauncher, public muse::Contextabl
 {
 protected:
     muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
 
     muse::ContextInject<muse::IInteractive> interactive{ this };
 
