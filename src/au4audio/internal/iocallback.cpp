@@ -14,6 +14,9 @@
 
 #include "blockcontext.h"
 #include "effectsnode.h"
+#include "metersendnode.h"
+#include "metersink.h"
+#include "metertapnode.h"
 #include "sequentialmixnode.h"
 
 using namespace au::au4audio;
@@ -55,8 +58,9 @@ IoCallback::~IoCallback()
     stop();
 }
 
-void IoCallback::build(const TransportSequences& sequences)
+void IoCallback::build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter)
 {
+    m_meter = meter;
     const auto& playbackSequences = sequences.playbackSequences;
     const auto maxFrames = static_cast<size_t>(m_blockSize);
     // At the rate of the stream, not of the sequences
@@ -83,6 +87,8 @@ void IoCallback::build(const TransportSequences& sequences)
     settings.endOfTrack = m_blockContext.get();
     settings.sampleRate = m_sampleRate;
     settings.maxFrames = maxFrames;
+    // The master reads the tracks ahead by its effects' latency, and as long again where reading jumps
+    settings.meterCapacity = maxFrames + 2 * static_cast<size_t>(std::max(0, masterLatency));
     settings.masterLatency = std::max(0, masterLatency);
     int maxTrackLatency = 0;
     std::vector<std::shared_ptr<ISequenceProcessingNode> > outputs;
@@ -109,7 +115,22 @@ void IoCallback::build(const TransportSequences& sequences)
     std::shared_ptr<ISequenceProcessingNode> master = std::make_shared<SequentialMixNode>(std::move(outputs), maxFrames);
     master = std::make_shared<EffectsNode>(std::move(master), numChannels, RealtimeEffectManager::MasterGroup, *m_blockContext,
                                            maxFrames);
-    m_top = std::make_shared<BlockContextNode>(std::move(master), *m_blockContext);
+    m_masterTap = std::make_shared<MeterTapNode>(std::move(master), numChannels, maxFrames);
+    std::shared_ptr<ISequenceProcessingNode> top = std::make_shared<BlockContextNode>(m_masterTap, *m_blockContext);
+    if (m_meter) {
+        // The main meter, then the tracks'
+        std::vector<MeterSink::Meter> meters { { std::nullopt, numChannels } };
+        std::vector<MeterSendNode::Tap> taps { { m_masterTap, 0 } };
+        for (const auto& track : m_tracks) {
+            meters.push_back({ track.meterId ? std::optional<audio::IAudioMeter::TrackId> { audio::IAudioMeter::TrackId { *track.meterId } }
+                               : std::nullopt, track.numMeterChannels });
+            taps.push_back({ track.tap, std::max(0, masterLatency) });
+        }
+        // Written and forwarded in the same callback: the block being written, and one being read
+        m_meterSink = std::make_unique<MeterSink>(std::move(meters), maxFrames, 2);
+        top = std::make_shared<MeterSendNode>(std::move(top), std::move(taps), *m_meterSink);
+    }
+    m_top = std::move(top);
 
     for (int ch = 0; ch < numChannels; ++ch) {
         m_buffer[ch].assign(maxFrames, 0.f);
@@ -132,7 +153,7 @@ void IoCallback::setPlayRange(double startTime, double endTime, std::optional<st
 void IoCallback::seek(double time)
 {
     m_mapper->setPosition(toSamples(time));
-    invalidateReadAhead();
+    invalidate();
 }
 
 void IoCallback::updateLoop(std::optional<std::pair<double, double> > loopRange, double endTime)
@@ -150,7 +171,16 @@ void IoCallback::updateLoop(std::optional<std::pair<double, double> > loopRange,
     // Only if what was read ahead changes. Loaded after the change, what was read before it is included.
     const auto end = std::min<int64_t>(readAheadEnd(), horizon);
     if (cut(segments(from, horizon), from, end) != cut(before, from, end)) {
-        invalidateReadAhead();
+        invalidate();
+    }
+}
+
+void IoCallback::invalidate()
+{
+    invalidateReadAhead();
+    // Nor is what was rendered shown
+    if (m_meterSink) {
+        m_meterSink->invalidate();
     }
 }
 
@@ -173,6 +203,9 @@ PlayheadMapper::Range IoCallback::toLoopRange(const std::pair<double, double>& l
 
 void IoCallback::start()
 {
+    if (m_meter) {
+        m_meter->start(m_sampleRate);
+    }
     m_device->start(*this);
 }
 
@@ -182,8 +215,13 @@ void IoCallback::stop()
         m_device->stop();
         m_device.reset();
     }
+    if (m_meter) {
+        m_meter->stop();
+    }
     // Stops the workers, before what they render goes
     m_top.reset();
+    m_meterSink.reset();
+    m_masterTap.reset();
     m_tracks.clear();
     m_trackContexts.clear();
     m_blockContext.reset();
@@ -238,7 +276,9 @@ void IoCallback::process(const float* const*, int, float* const* outputChannelDa
     int unplayed = 0;
     while (done < numSamples && !m_finished) {
         const int frames = std::min(numSamples - done, m_blockSize);
-        unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames);
+        const auto chunkDacTime = dacTime + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+            std::chrono::duration<double>(done / m_sampleRate));
+        unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
         done += frames;
     }
     // As AudioIO, only what played advances the transport
@@ -265,10 +305,13 @@ size_t IoCallback::render(float* const* stereo, int64_t index, size_t frames)
     return available;
 }
 
-int IoCallback::renderChunk(float* const* output, int numOutputChannels, int offset, int requested)
+int IoCallback::renderChunk(float* const* output, int numOutputChannels, int offset, int requested, audio::TimePoint dacTime)
 {
     const auto index = m_mapper->deviceIndex();
     const auto frames = static_cast<int>(render(m_bufferPointers, index, static_cast<size_t>(requested)));
+    if (m_meterSink) {
+        m_meterSink->forward(*m_meter, index, static_cast<size_t>(frames), dacTime, m_sampleRate);
+    }
 
     // What plays now: unless looping, the end of the play range ends it
     bool finished = false;

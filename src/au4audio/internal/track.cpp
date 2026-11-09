@@ -7,12 +7,14 @@
 #include "au3-clip-processing/sequence-graph/PlayheadMappingNode.h"
 #include "au3-clip-processing/sequence-graph/ResamplingNode.h"
 #include "au3-mixer/AudioIOSequences.h"
+#include "au3-wave-track/WaveTrack.h"
 
 #include "blockcontext.h"
 #include "effectsnode.h"
 #include "endoftracknode.h"
 #include "gainpannode.h"
 #include "ieffectscontext.h"
+#include "metertapnode.h"
 #include "mutesolonode.h"
 #include "sequentialmixnode.h"
 #include "stereo.h"
@@ -37,7 +39,9 @@ private:
 };
 }
 
-Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSequence> sequence, const TrackSettings& settings, std::optional<int64_t> stop)
+// au3's ::Track is visible too
+au::au4audio::Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSequence> sequence, const TrackSettings& settings,
+                                             std::optional<int64_t> stop)
 {
     const auto numSequenceChannels = sequence->NChannels();
     std::shared_ptr<ISequenceProcessingNode> node = std::make_shared<SequenceReadingNode>(sequence);
@@ -54,14 +58,20 @@ Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSequence> sequence,
     node = std::make_shared<GainPanNode>(std::move(node), sequence);
     std::shared_ptr<LockFreeQueueNode> queue;
     if (const auto& readAhead = settings.readAhead) {
-        // Stereo, as volume/pan outputs. The device waits for the workers: after a seek, they resume where the device is.
+        // The tap is read where the device is: after the queue, which is stereo, as volume/pan outputs. The device waits for
+        // the workers: after a seek, they resume where the device is.
         node = std::make_shared<BlockContextNode>(std::move(node), *settings.chainContext);
         constexpr size_t resyncLead = 0;
         queue = std::make_shared<LockFreeQueueNode>(std::move(node), numChannels, readAhead->chunkSize, readAhead->numChunks,
                                                     resyncLead);
         node = queue;
     }
+    auto tap = std::make_shared<MeterTapNode>(std::move(node), numSequenceChannels, settings.meterCapacity);
+    std::optional<int64_t> meterId;
+    if (const auto waveTrack = dynamic_cast<const WaveTrack*>(sequence->FindChannelGroup())) {
+        meterId = static_cast<int64_t>(waveTrack->GetId());
+    }
     // The master's effects read the tracks ahead by their latency
     const int64_t queueLead = queue ? settings.masterLatency : 0;
-    return { std::move(node), std::move(queue), queueLead };
+    return { tap, tap, std::move(queue), queueLead, meterId, std::min<size_t>(numSequenceChannels, numChannels) };
 }

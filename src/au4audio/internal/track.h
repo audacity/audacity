@@ -18,18 +18,25 @@ class BlockContext;
 class IEffectsContext;
 class IEndOfTrackContext;
 class IMuteSoloContext;
+class MeterTapNode;
 
 //! A track as a callback keeps it: its chain, by its last node, and what the callback needs of it
 struct Track {
     //! What the mix reads; it owns the chain
     std::shared_ptr<ISequenceProcessingNode> output;
+    //! Its meter's tap, in the chain
+    std::shared_ptr<MeterTapNode> tap;
     //! What reads its chain ahead, if anything, in the chain
     std::shared_ptr<LockFreeQueueNode> queue;
     //! How far ahead of what plays the queue is read: by the latency of the effects after it
     int64_t queueLead = 0;
+    //! Its meter's, if it has one
+    std::optional<int64_t> meterId;
+    //! How many channels its meter shows
+    size_t numMeterChannels = 0;
 };
 
-//! How a track renders its chain ahead, on a worker, behind a LockFreeQueueNode
+//! How a track renders its chain ahead, but its meter's tap, on a worker, behind a LockFreeQueueNode
 struct TrackReadAhead {
     size_t chunkSize = 0;
     size_t numChunks = 0;
@@ -45,6 +52,8 @@ struct TrackSettings {
     double sampleRate = 0.0;
     //! The most the chain renders at once, as the effects are initialized for
     size_t maxFrames = 0;
+    //! The most its meter's tap keeps: what a block reads of it
+    size_t meterCapacity = 0;
     //! If it renders its chain ahead
     std::optional<TrackReadAhead> readAhead;
     //! If it renders its chain ahead: what sets the state of its blocks, which must then be its effects, mute/solo and end
@@ -55,7 +64,7 @@ struct TrackSettings {
 };
 
 //! The chain of `sequence`, read as it processes its clips: where the playhead reads, the end of the track, its effects,
-//! mute/solo and volume/pan, ahead if it renders ahead
+//! mute/solo and volume/pan, ahead if it renders ahead, and its meter
 //! @param stop where the track stops, in the timeline, in samples, if it does
 Track buildTrack(std::shared_ptr<const PlayableSequence> sequence, const TrackSettings& settings,
                  std::optional<int64_t> stop = std::nullopt);

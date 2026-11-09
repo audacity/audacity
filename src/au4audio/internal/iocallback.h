@@ -28,11 +28,13 @@ class ISequenceProcessingNode;
 
 namespace au::au4audio {
 class BlockContext;
+class MeterSink;
+class MeterTapNode;
 
 //! A stream on a device: what it plays
 /*!
  * It builds the tracks' chains and the master's, plays them as the playhead says, applies the playback volume, and
- * reports what plays.
+ * reports what plays and what the meters show.
  *
  * Each track's chain renders ahead of the device on a worker of its own, behind its own LockFreeQueueNode: peaks of
  * processing are absorbed, and the tracks' effects render in parallel. The mix and the master's effects render in the
@@ -51,8 +53,8 @@ public:
 
     double sampleRate() const { return m_sampleRate; }
 
-    //! The tracks and the master's chain, for `sequences`
-    void build(const TransportSequences& sequences);
+    //! The tracks and the master's chain, for `sequences`, sending to `meter`, if any, what they play
+    void build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter);
     //! Plays from `startTime` to `endTime`, or loops `loopRange` if given, rolling into it if `startTime` is left of it;
     //! then starts rendering ahead
     void setPlayRange(double startTime, double endTime, std::optional<std::pair<double, double> > loopRange);
@@ -98,13 +100,15 @@ private:
     size_t render(float* const* stereo, int64_t index, size_t frames);
     //! Device thread: plays `frames` frames from `offset` on, at most the block size. Returns how many, at the end, it
     //! couldn't play, being silent instead: the transport doesn't advance by them.
-    int renderChunk(float* const* output, int numOutputChannels, int offset, int frames);
+    int renderChunk(float* const* output, int numOutputChannels, int offset, int frames, audio::TimePoint dacTime);
     //! `stereo` goes out with the playback volume; a mono device gets the downmix
     void writeOutput(const float* const* stereo, float* const* output, int numOutputChannels, int offset, int frames) const;
     void reportPlayed(int64_t start, int64_t frames);
 
     //! At least a sample long
     PlayheadMapper::Range toLoopRange(const std::pair<double, double>& loopRange) const;
+    //! What was rendered ahead isn't played, nor shown
+    void invalidate();
     //! What of the timeline the device plays from `from` to `end`, segment by segment
     std::vector<std::pair<int64_t, int64_t> > segments(int64_t from, int64_t end) const;
 
@@ -129,6 +133,10 @@ private:
     std::vector<Track> m_tracks;
     //! How far ahead of what it renders the master's chain reads the sequences, at most
     int64_t m_maxLatency = 0;
+    std::shared_ptr<MeterTapNode> m_masterTap;
+    audio::IAudioMeterPtr m_meter;
+    //! If there is a meter: what the chains render for it, which the device callback forwards as it plays
+    std::unique_ptr<MeterSink> m_meterSink;
     //! What plays: the master's chain
     std::shared_ptr<ISequenceProcessingNode> m_top;
 
