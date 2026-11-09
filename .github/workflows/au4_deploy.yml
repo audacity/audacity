@@ -22,6 +22,12 @@ on:
         type: boolean
         default: false
 
+concurrency:
+  # A second deploy on the same branch waits: the build workflows it calls would otherwise
+  # cancel the first deploy's builds, their concurrency groups being per workflow name and ref.
+  group: au4_deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
   # Audacity's names for the framework's release scripts:
   # tag 'Audacity-4.0.2' or 'Audacity-4.1.0-beta-2', release 'Audacity 4.0.2' or 'Audacity 4.1.0 Beta 2'
