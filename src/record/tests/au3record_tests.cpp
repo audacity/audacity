@@ -331,7 +331,7 @@ TEST_F(Au3RecordTests, RecordingWithoutOverdubPlaysNothing)
     EXPECT_TRUE(sequences.playbackSequences.empty());
 }
 
-TEST_F(Au3RecordTests, LeadInRecordingDoesNotPlayTheTrackRecordedInto)
+TEST_F(Au3RecordTests, LeadInRecordingWithOverdubPlaysAllTracksAndTheTrackRecordedIntoUntilRecordingStarts)
 {
     //! [GIVEN] Overdub is on, a selected track to record into, another track
     //! and the playhead at 8s
@@ -348,9 +348,37 @@ TEST_F(Au3RecordTests, LeadInRecordingDoesNotPlayTheTrackRecordedInto)
     muse::Ret ret = m_record->leadInRecording();
     EXPECT_TRUE(ret);
 
-    //! [THEN] Only the other track plays, also during the lead-in time
+    //! [THEN] Both tracks play, the one recorded into only during the lead-in time
     EXPECT_TRUE(plays(sequences, otherTrack));
-    EXPECT_FALSE(plays(sequences, armedTrack));
-    EXPECT_TRUE(sequences.leadInTimeSequences.empty());
+    EXPECT_TRUE(plays(sequences, armedTrack));
+    ASSERT_EQ(sequences.leadInTimeSequences.size(), 1u);
+    EXPECT_EQ(sequences.leadInTimeSequences.front()->FindChannelGroup(), armedTrack);
+}
+
+TEST_F(Au3RecordTests, LeadInRecordingWithoutOverdubPlaysTheTrackRecordedIntoUntilRecordingStarts)
+{
+    //! [GIVEN] Overdub is off, a selected track to record into, another track
+    //! and the playhead at 8s
+    ON_CALL(*m_recordConfiguration, isOverdubOn())
+    .WillByDefault(Return(false));
+    Au3WaveTrack* armedTrack = addSelectedMonoTrack();
+    Au3WaveTrack* otherTrack = addMonoTrack(false);
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(muse::secs_t(8.0)));
+
+    TransportSequences sequences;
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<0>(&sequences), Return(1)));
+
+    //! [WHEN] Lead-in recording is initiated
+    muse::Ret ret = m_record->leadInRecording();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] Only the track recorded into plays, and only during the lead-in time
+    EXPECT_TRUE(plays(sequences, armedTrack));
+    EXPECT_FALSE(plays(sequences, otherTrack));
+    ASSERT_EQ(sequences.playbackSequences.size(), 1u);
+    ASSERT_EQ(sequences.leadInTimeSequences.size(), 1u);
+    EXPECT_EQ(sequences.leadInTimeSequences.front(), sequences.playbackSequences.front());
 }
 }

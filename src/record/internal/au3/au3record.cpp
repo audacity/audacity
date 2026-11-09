@@ -200,19 +200,28 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
 }
 
 //! Overdub plays every track except the ones being recorded into, so the user
-//! never hears the old audio of an armed track; without overdub nothing plays
+//! never hears the old audio of an armed track; without overdub nothing plays.
+//! During a lead-in the armed tracks play too, until recording starts
 TransportSequences MakeRecordingTransportTracks(Au3TrackList& trackList, const WritableSampleTrackArray& recordingTracks,
-                                                bool overdub)
+                                                bool overdub, bool leadIn)
 {
     TransportSequences result;
     if (overdub) {
         result = MakeTransportTracks(trackList, false, true);
         auto& playback = result.playbackSequences;
-        playback.erase(std::remove_if(playback.begin(), playback.end(), [&recordingTracks](const auto& playbackSequence) {
-            return std::any_of(recordingTracks.begin(), recordingTracks.end(), [&playbackSequence](const auto& recordingTrack) {
-                return playbackSequence->FindChannelGroup() == recordingTrack->FindChannelGroup();
-            });
-        }), playback.end());
+        if (!leadIn) {
+            playback.erase(std::remove_if(playback.begin(), playback.end(), [&recordingTracks](const auto& playbackSequence) {
+                return std::any_of(recordingTracks.begin(), recordingTracks.end(), [&playbackSequence](const auto& recordingTrack) {
+                    return playbackSequence->FindChannelGroup() == recordingTrack->FindChannelGroup();
+                });
+            }), playback.end());
+        }
+    } else if (leadIn) {
+        for (const auto& recordingTrack : recordingTracks) {
+            if (const auto* waveTrack = dynamic_cast<const Au3WaveTrack*>(recordingTrack.get())) {
+                result.playbackSequences.push_back(PlayableSequenceFactory::Create(*waveTrack, waveTrack->GetClipInterfaces()));
+            }
+        }
     }
 
     std::copy(recordingTracks.begin(), recordingTracks.end(), back_inserter(result.captureSequences));
@@ -430,7 +439,7 @@ muse::Ret Au3Record::start()
     }
 
     const TransportSequences transportTracks
-        = MakeRecordingTransportTracks(Au3TrackList::Get(project), existingTracks, recordConfiguration()->isOverdubOn());
+        = MakeRecordingTransportTracks(Au3TrackList::Get(project), existingTracks, recordConfiguration()->isOverdubOn(), false);
 
     if (audioEngine()->isBusy()) {
         if (audioEngine()->isCapturing()) {
@@ -595,7 +604,7 @@ muse::Ret Au3Record::leadInRecording()
 
     // Unlike AU3, we do NOT clear tracks — AU4 uses non-destructive recording
     const TransportSequences transportTracks
-        = MakeRecordingTransportTracks(Au3TrackList::Get(project), tracks, recordConfiguration()->isOverdubOn());
+        = MakeRecordingTransportTracks(Au3TrackList::Get(project), tracks, recordConfiguration()->isOverdubOn(), true);
 
     selectionController()->resetSelectedClips();
 
@@ -744,17 +753,15 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
 
             // If the track was chosen for recording and playback both,
-            // remember the original in leadInTime tracks, before making the
-            // pending replacement.
-            const auto shared = wt->SharedPointer<Au3WaveTrack>();
+            // its playback stops when recording starts.
             // leadInTimeSequences should be a subset of playbackSequences.
             const auto& range = transportSequences.playbackSequences;
-            bool leadInTimeTrack = any_of(range.begin(), range.end(),
-                                          [&](const auto& pSequence) {
-                return shared.get() == pSequence->FindChannelGroup();
+            const auto leadInTimeSequence = std::find_if(range.begin(), range.end(),
+                                                         [wt](const auto& pSequence) {
+                return pSequence->FindChannelGroup() == wt;
             });
-            if (leadInTimeTrack) {
-                transportSequences.leadInTimeSequences.push_back(shared);
+            if (leadInTimeSequence != range.end()) {
+                transportSequences.leadInTimeSequences.push_back(*leadInTimeSequence);
             }
 
             if (deferClipCreation) {
