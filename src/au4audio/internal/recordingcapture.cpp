@@ -19,10 +19,10 @@ constexpr auto drainPeriod = std::chrono::milliseconds(10);
 }
 
 RecordingCapture::RecordingCapture(AudacityProject& project, Settings settings, std::shared_ptr<AudioIOListener> listener,
-                                   audio::IAudioMeterPtr meter, const std::atomic<float>& inputVolume, bool playThrough,
+                                   audio::IAudioMeterPtr meter, const std::atomic<float>& inputVolume,
                                    std::function<void()> stopTransport)
     : m_project{project}, m_startTime{settings.startTime}, m_deviceRate{settings.deviceRate}, m_listener{std::move(listener)},
-    m_meter{std::move(meter)}, m_inputVolume{inputVolume}, m_playThrough{playThrough}, m_stopTransport{std::move(stopTransport)},
+    m_meter{std::move(meter)}, m_inputVolume{inputVolume}, m_stopTransport{std::move(stopTransport)},
     m_input{settings.numInputChannels, settings.maxFrames}, m_scratch(static_cast<size_t>(settings.maxFrames)),
     m_inputPointers(static_cast<size_t>(settings.numInputChannels))
 {
@@ -109,19 +109,16 @@ void RecordingCapture::drain(bool force, bool streamActive)
     m_sink.Drain(force, streamActive, m_listener.get(), m_stopTransport);
 }
 
-void RecordingCapture::process(const float* const* input, float* const* output, int numOutputChannels, int offset, int frames,
-                               int unplayed, double sequenceTime, audio::TimePoint time, bool paused)
+void RecordingCapture::process(const float* const* input, int offset, int frames, int unplayed, double sequenceTime,
+                               audio::TimePoint time, bool paused)
 {
     for (int ch = 0; ch < m_input.numChannels(); ++ch) {
         m_inputPointers[ch] = input[ch] ? input[ch] + offset : nullptr;
     }
     const auto samples = m_input.read(m_inputPointers.data(), frames, m_inputVolume.load(std::memory_order_relaxed));
-    // As AudioIO, metered and played through even when paused
+    // As AudioIO, metered even when paused
     if (m_meter) {
         m_input.sendToMeter(*m_meter, m_sink.Sequences(), time);
-    }
-    if (m_playThrough) {
-        m_input.playThrough(output, numOutputChannels, offset);
     }
     if (paused) {
         return;

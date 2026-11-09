@@ -19,6 +19,7 @@ class IEffectsContext;
 class IEndOfTrackContext;
 class IMuteSoloContext;
 class MeterTapNode;
+class MonitoredInput;
 
 //! A track as a callback keeps it: its chain, by its last node, and what the callback needs of it
 struct Track {
@@ -26,7 +27,7 @@ struct Track {
     std::shared_ptr<ISequenceProcessingNode> output;
     //! Its meter's tap, in the chain
     std::shared_ptr<MeterTapNode> tap;
-    //! What reads its chain ahead, if anything, in the chain
+    //! What reads its sequence, or its whole chain, ahead, if anything, in the chain
     std::shared_ptr<LockFreeQueueNode> queue;
     //! How far ahead of what plays the queue is read: by the latency of the effects after it
     int64_t queueLead = 0;
@@ -36,10 +37,12 @@ struct Track {
     size_t numMeterChannels = 0;
 };
 
-//! How a track renders its chain ahead, but its meter's tap, on a worker, behind a LockFreeQueueNode
+//! How a track reads its sequence ahead, on a worker, behind a LockFreeQueueNode
 struct TrackReadAhead {
     size_t chunkSize = 0;
     size_t numChunks = 0;
+    //! Whether the worker renders the whole chain but its meter's tap, rather than reading the sequence only
+    bool wholeChain = false;
 };
 
 //! What a track's chain needs besides its sequence
@@ -54,19 +57,25 @@ struct TrackSettings {
     size_t maxFrames = 0;
     //! The most its meter's tap keeps: what a block reads of it
     size_t meterCapacity = 0;
-    //! If it renders its chain ahead
+    //! If it reads its sequence ahead
     std::optional<TrackReadAhead> readAhead;
-    //! If it renders its chain ahead: what sets the state of its blocks, which must then be its effects, mute/solo and end
-    //! of track contexts
+    //! If it reads its whole chain ahead: what sets the state of its blocks, which must then be its effects, mute/solo
+    //! and end of track contexts
     BlockContext* chainContext = nullptr;
-    //! The master effects' latency, by which the master reads the chains ahead
+    //! If the input is monitored through the chain's effects; then the master effects' latency, by which the master reads
+    //! the chains ahead
+    std::shared_ptr<const MonitoredInput> monitoredInput;
     int masterLatency = 0;
 };
 
-//! The chain of `sequence`, read as it processes its clips: where the playhead reads, the end of the track, its effects,
-//! mute/solo and volume/pan, ahead if it renders ahead, and its meter
+//! The chain of `sequence`, read as it processes its clips: where the playhead reads, ahead if it reads ahead,
+//! the end of the track, its effects, mute/solo, volume/pan and meter
 //! @param stop where the track stops, in the timeline, in samples, if it does
+//! If `settings` has a monitored input, the track is monitored: the input joins what it reads, before its effects.
 Track buildTrack(std::shared_ptr<const PlayableSequence> sequence, const TrackSettings& settings,
                  std::optional<int64_t> stop = std::nullopt);
 
+//! The monitored input of `settings`, as the mix sums it, through `track`, which isn't played: its effects, mute/solo and
+//! volume/pan; as it comes if null, the master's effects following
+std::shared_ptr<ISequenceProcessingNode> buildMonitoredInput(std::shared_ptr<const PlayableSequence> track, const TrackSettings& settings);
 }

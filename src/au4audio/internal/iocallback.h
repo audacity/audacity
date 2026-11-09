@@ -29,6 +29,7 @@ class ISequenceProcessingNode;
 namespace au::au4audio {
 class BlockContext;
 class MeterSink;
+class MonitoredInput;
 class RecordingCapture;
 class MeterTapNode;
 
@@ -39,8 +40,8 @@ class MeterTapNode;
  *
  * Each track's chain renders ahead of the device on a worker of its own, behind its own LockFreeQueueNode: peaks of
  * processing are absorbed, and the tracks' effects render in parallel. The mix and the master's effects render in the
- * device callback. The device waits for the workers: if one hasn't rendered in time, everything plays late, after
- * silence.
+ * device callback, as does the chain of the track the input is monitored through, so that the input is heard through its
+ * effects at once. The device waits for the workers: if one hasn't rendered in time, everything plays late, after silence.
  */
 class IoCallback final : public audio::IDeviceCallback
 {
@@ -63,6 +64,8 @@ public:
     //! The tracks and the master's chain, for `sequences`, sending to `meter`, if any, what they play. If recording, as
     //! AudioIO, the tracks stop playing where the recording ends, and those recorded into with a lead-in where it starts.
     void build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter, std::optional<RecordingRange> recording);
+    //! Monitors the input through `track`'s effects, or only the master's if null; call before build()
+    void monitorThrough(std::shared_ptr<const PlayableSequence> track, int numInputChannels, const std::atomic<float>& inputVolume);
     //! Records the input; call before start()
     void setCapture(std::unique_ptr<RecordingCapture> capture);
     const RecordingCapture* capture() const { return m_capture.get(); }
@@ -135,6 +138,14 @@ private:
     std::unique_ptr<audio::IDevice> m_device;
     std::unique_ptr<RecordingCapture> m_capture;
 
+    // If the input is monitored through the effects: what monitorThrough() said, then what the chains read of it
+    struct MonitorSettings {
+        std::shared_ptr<const PlayableSequence> track;
+        int numInputChannels = 0;
+        const std::atomic<float>* inputVolume = nullptr;
+    };
+    std::optional<MonitorSettings> m_monitorSettings;
+    std::shared_ptr<MonitoredInput> m_monitoredInput;
     const std::shared_ptr<PlayheadMapper> m_mapper = std::make_shared<PlayheadMapper>();
     std::atomic<int64_t> m_endPosition { 0 };
     std::optional<RealtimeEffects::InitializationScope> m_effectsInitialization;

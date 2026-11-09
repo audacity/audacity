@@ -17,6 +17,7 @@
 #include "metersendnode.h"
 #include "metersink.h"
 #include "metertapnode.h"
+#include "monitoredinput.h"
 #include "recordingcapture.h"
 #include "sequentialmixnode.h"
 
@@ -72,8 +73,26 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
             m_effectsInitialization->AddGroup(*group, numChannels, m_sampleRate, m_blockSize);
         }
     }
-    // The device callback processes the master's effects; the workers those of the tracks, each in a scope of its own
+    // The monitored track, if any, whether it plays or not
+    const auto& monitoredTrack = m_monitorSettings ? m_monitorSettings->track : nullptr;
+    const auto monitoredGroup = monitoredTrack ? monitoredTrack->FindChannelGroup() : nullptr;
+    const bool monitoredTrackPlays = monitoredGroup
+                                     && std::any_of(playbackSequences.begin(), playbackSequences.end(), [&](const auto& sequence) {
+        return sequence->FindChannelGroup() == monitoredGroup;
+    });
+    if (monitoredGroup && !monitoredTrackPlays) {
+        m_effectsInitialization->AddGroup(*monitoredGroup, numChannels, m_sampleRate, m_blockSize);
+    }
+    if (m_monitorSettings) {
+        m_monitoredInput = std::make_shared<MonitoredInput>(m_monitorSettings->numInputChannels, maxFrames,
+                                                            *m_monitorSettings->inputVolume);
+    }
+    // The device callback processes the effects of the master, and of the track the input is monitored through; the
+    // workers those of the other tracks, each in a scope of its own
     std::vector<const ChannelGroup*> callbackGroups { RealtimeEffectManager::MasterGroup };
+    if (monitoredGroup) {
+        callbackGroups.push_back(monitoredGroup);
+    }
     const auto makeBlockContext = [&](std::vector<const ChannelGroup*> groups) {
         return std::make_unique<BlockContext>(m_wProject, *m_effectsInitialization, playbackSequences, *m_mapper, m_endPosition,
                                               m_sampleRate, std::move(groups));
@@ -107,17 +126,30 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
             }
         }
         auto trackSettings = settings;
-        trackSettings.readAhead = TrackReadAhead { m_readAheadChunkSize, m_readAheadNumChunks };
-        // Its worker processes its effects, in a scope of their own
         const auto group = sequence->FindChannelGroup();
-        m_trackContexts.push_back(makeBlockContext(group ? std::vector<const ChannelGroup*> { group }
-                                                   : std::vector<const ChannelGroup*> {}));
-        trackSettings.chainContext = m_trackContexts.back().get();
-        trackSettings.effects = trackSettings.chainContext;
-        trackSettings.muteSolo = trackSettings.chainContext;
-        trackSettings.endOfTrack = trackSettings.chainContext;
+        const bool monitored = monitoredTrackPlays && group == monitoredGroup;
+        // That the input is monitored through reads only its sequence ahead: its effects render in the device callback
+        trackSettings.readAhead = TrackReadAhead { m_readAheadChunkSize, m_readAheadNumChunks, !monitored };
+        if (!monitored) {
+            // Its worker processes its effects, in a scope of their own
+            m_trackContexts.push_back(makeBlockContext(group ? std::vector<const ChannelGroup*> { group }
+                                                       : std::vector<const ChannelGroup*> {}));
+            trackSettings.chainContext = m_trackContexts.back().get();
+            trackSettings.effects = trackSettings.chainContext;
+            trackSettings.muteSolo = trackSettings.chainContext;
+            trackSettings.endOfTrack = trackSettings.chainContext;
+        }
+        if (monitored) {
+            trackSettings.monitoredInput = m_monitoredInput;
+        }
         m_tracks.push_back(buildTrack(sequence, trackSettings, stop));
         outputs.push_back(m_tracks.back().output);
+    }
+    if (m_monitoredInput && !monitoredTrackPlays) {
+        // Not metered: the input meters show it
+        auto monitorSettings = settings;
+        monitorSettings.monitoredInput = m_monitoredInput;
+        outputs.push_back(buildMonitoredInput(monitoredTrack, monitorSettings));
     }
     m_maxLatency = std::max(0, masterLatency) + maxTrackLatency;
 
@@ -145,6 +177,12 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
         m_buffer[ch].assign(maxFrames, 0.f);
         m_bufferPointers[ch] = m_buffer[ch].data();
     }
+}
+
+void IoCallback::monitorThrough(std::shared_ptr<const PlayableSequence> track, int numInputChannels,
+                                const std::atomic<float>& inputVolume)
+{
+    m_monitorSettings = MonitorSettings { std::move(track), numInputChannels, &inputVolume };
 }
 
 void IoCallback::setCapture(std::unique_ptr<RecordingCapture> capture)
@@ -239,6 +277,7 @@ void IoCallback::stop()
     // Stops the workers, before what they render goes
     m_top.reset();
     m_meterSink.reset();
+    m_monitoredInput.reset();
     m_masterTap.reset();
     m_tracks.clear();
     m_trackContexts.clear();
@@ -287,13 +326,15 @@ void IoCallback::process(const float* const* inputChannelData, int numInputChann
     if (m_finished || !m_top) {
         return;
     }
-    // As AudioIO, a paused recording still meters, and plays through, the input
+    // As AudioIO, a paused recording still meters the input
     const bool paused = m_paused;
     if (paused && !m_capture) {
         return;
     }
     // The input of the channels the capture records, if the device gives them
     const auto input = m_capture && numInputChannels >= m_capture->numInputChannels() ? inputChannelData : nullptr;
+    // As the capture, the monitored input needs the device to give its channels
+    const auto monitored = m_monitoredInput && numInputChannels >= m_monitoredInput->numInputChannels() ? inputChannelData : nullptr;
 
     const auto dacTime = std::chrono::steady_clock::now()
                          + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
@@ -304,11 +345,16 @@ void IoCallback::process(const float* const* inputChannelData, int numInputChann
         const int frames = std::min(numSamples - done, m_blockSize);
         const auto chunkDacTime = dacTime + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
             std::chrono::duration<double>(done / m_sampleRate));
-        const int chunkUnplayed = paused ? 0 : renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
+        int chunkUnplayed = 0;
+        if (!paused) {
+            if (m_monitoredInput) {
+                m_monitoredInput->read(monitored, done, frames, m_mapper->deviceIndex());
+            }
+            chunkUnplayed = renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
+        }
         unplayed += chunkUnplayed;
         if (input) {
-            m_capture->process(input, outputChannelData, numOutputChannels, done, frames, chunkUnplayed, position(), chunkDacTime,
-                               paused);
+            m_capture->process(input, done, frames, chunkUnplayed, position(), chunkDacTime, paused);
         }
         done += frames;
     }

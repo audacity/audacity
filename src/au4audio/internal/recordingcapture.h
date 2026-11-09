@@ -43,7 +43,7 @@ public:
 
     //! @param stopTransport called on the main thread if recording fails, e.g. the disk is full
     RecordingCapture(AudacityProject& project, Settings settings, std::shared_ptr<AudioIOListener> listener, audio::IAudioMeterPtr meter,
-                     const std::atomic<float>& inputVolume, bool playThrough, std::function<void()> stopTransport);
+                     const std::atomic<float>& inputVolume, std::function<void()> stopTransport);
     ~RecordingCapture();
 
     //! Main thread, before the device starts. False if the buffers can't be allocated.
@@ -57,9 +57,9 @@ public:
 
     //! Device thread: `frames` frames of input, one buffer per channel, captured unless `paused`, but for the last
     //! `unplayed`: the transport didn't advance by them, so that the recording stays in step with what played. The input
-    //! is metered and, if monitored, played through to `output` from `offset` on.
-    void process(const float* const* input, float* const* output, int numOutputChannels, int offset, int frames, int unplayed,
-                 double sequenceTime, audio::TimePoint time, bool paused);
+    //! is metered, from `offset` on in `input`.
+    void process(const float* const* input, int offset, int frames, int unplayed, double sequenceTime, audio::TimePoint time,
+                 bool paused);
 
 private:
     void drain(bool force, bool streamActive);
@@ -70,7 +70,6 @@ private:
     const std::shared_ptr<AudioIOListener> m_listener;
     const audio::IAudioMeterPtr m_meter;
     const std::atomic<float>& m_inputVolume;
-    const bool m_playThrough;
     const std::function<void()> m_stopTransport;
 
     CaptureSink m_sink;

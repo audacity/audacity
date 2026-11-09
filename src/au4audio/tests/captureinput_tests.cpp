@@ -36,15 +36,6 @@ public:
 
     std::map<uint8_t, std::vector<float> > main;
 };
-
-std::vector<float> scaled(const std::vector<float>& samples, float factor)
-{
-    std::vector<float> result;
-    for (const auto sample : samples) {
-        result.push_back(sample * factor);
-    }
-    return result;
-}
 }
 
 namespace au::au4audio {
@@ -62,23 +53,6 @@ TEST(CaptureInputTests, ReadsInterleavedWithTheVolumeApplied)
         EXPECT_FLOAT_EQ(samples[i * numChannels], left[i] * TEST_VOLUME);
         EXPECT_FLOAT_EQ(samples[i * numChannels + 1], right[i] * TEST_VOLUME);
     }
-}
-
-TEST(CaptureInputTests, MonoInputIsPlayedThroughToBothChannels)
-{
-    const std::vector<float> mono { 1.f, 2.f, 3.f, 4.f };
-    const float* input[] { mono.data() };
-    CaptureInput capture { 1, TEST_FRAMES };
-    capture.read(input, TEST_FRAMES, TEST_VOLUME);
-
-    constexpr int numOutputChannels = 2;
-    std::vector<float> left(TEST_FRAMES), right(TEST_FRAMES);
-    float* output[] { left.data(), right.data() };
-    constexpr int offset = 0;
-    capture.playThrough(output, numOutputChannels, offset);
-
-    EXPECT_EQ(left, scaled(mono, TEST_VOLUME));
-    EXPECT_EQ(right, scaled(mono, TEST_VOLUME));
 }
 
 TEST(CaptureInputTests, MainMeterShowsTheLoudestChannelsOfInputsOfMoreThanTwo)

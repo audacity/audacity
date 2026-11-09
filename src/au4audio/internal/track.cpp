@@ -15,6 +15,7 @@
 #include "gainpannode.h"
 #include "ieffectscontext.h"
 #include "metertapnode.h"
+#include "monitoredinput.h"
 #include "mutesolonode.h"
 #include "sequentialmixnode.h"
 #include "stereo.h"
@@ -49,19 +50,33 @@ au::au4audio::Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSeque
         node = std::make_shared<ResamplingNode>(std::move(node), numSequenceChannels, sequence->GetRate(), settings.sampleRate);
     }
     node = std::make_shared<PlayheadMappingNode>(std::move(node), settings.mapper, numSequenceChannels);
+    std::shared_ptr<LockFreeQueueNode> queue;
+    const auto& readAhead = settings.readAhead;
+    // The device waits for the workers: after a seek, they resume where the device is
+    constexpr size_t resyncLead = 0;
+    if (readAhead && !readAhead->wholeChain) {
+        queue = std::make_shared<LockFreeQueueNode>(std::move(node), numSequenceChannels, readAhead->chunkSize, readAhead->numChunks,
+                                                    resyncLead);
+        node = queue;
+    }
     node = std::make_shared<EndOfTrackNode>(std::move(node), settings.mapper, *settings.endOfTrack, stop);
+    const auto group = sequence->FindChannelGroup();
+    if (settings.monitoredInput && group) {
+        // Read by the track's effects ahead by their latency, as the master reads the track ahead by its
+        const auto lead = settings.masterLatency + settings.effects->latency(group);
+        auto input = std::make_shared<MonitoredInputNode>(settings.monitoredInput, numSequenceChannels, lead);
+        std::vector<std::shared_ptr<ISequenceProcessingNode> > sources { std::move(node), std::move(input) };
+        node = std::make_shared<SequentialMixNode>(std::move(sources), settings.maxFrames);
+    }
     // Without a group, it has no effects; a null group would be the master's
-    if (const auto group = sequence->FindChannelGroup()) {
+    if (group) {
         node = std::make_shared<EffectsNode>(std::move(node), numSequenceChannels, group, *settings.effects, settings.maxFrames);
     }
     node = std::make_shared<MuteSoloNode>(std::move(node), sequence, *settings.muteSolo);
     node = std::make_shared<GainPanNode>(std::move(node), sequence);
-    std::shared_ptr<LockFreeQueueNode> queue;
-    if (const auto& readAhead = settings.readAhead) {
-        // The tap is read where the device is: after the queue, which is stereo, as volume/pan outputs. The device waits for
-        // the workers: after a seek, they resume where the device is.
+    if (readAhead && readAhead->wholeChain) {
+        // The tap is read where the device is: after the queue, which is stereo, as volume/pan outputs
         node = std::make_shared<BlockContextNode>(std::move(node), *settings.chainContext);
-        constexpr size_t resyncLead = 0;
         queue = std::make_shared<LockFreeQueueNode>(std::move(node), numChannels, readAhead->chunkSize, readAhead->numChunks,
                                                     resyncLead);
         node = queue;
@@ -71,7 +86,25 @@ au::au4audio::Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSeque
     if (const auto waveTrack = dynamic_cast<const WaveTrack*>(sequence->FindChannelGroup())) {
         meterId = static_cast<int64_t>(waveTrack->GetId());
     }
-    // The master's effects read the tracks ahead by their latency
-    const int64_t queueLead = queue ? settings.masterLatency : 0;
+    // The master's effects read the tracks ahead by their latency, and the track's effects their input by theirs
+    int64_t queueLead = 0;
+    if (queue) {
+        queueLead = settings.masterLatency + (readAhead->wholeChain || !group ? 0 : settings.effects->latency(group));
+    }
     return { tap, tap, std::move(queue), queueLead, meterId, std::min<size_t>(numSequenceChannels, numChannels) };
+}
+
+std::shared_ptr<ISequenceProcessingNode> au::au4audio::buildMonitoredInput(std::shared_ptr<const PlayableSequence> track,
+                                                                           const TrackSettings& settings)
+{
+    const auto group = track ? track->FindChannelGroup() : nullptr;
+    if (!group) {
+        return std::make_shared<MonitoredInputNode>(settings.monitoredInput, numChannels, settings.masterLatency);
+    }
+    const auto numTrackChannels = track->NChannels();
+    std::shared_ptr<ISequenceProcessingNode> node = std::make_shared<MonitoredInputNode>(
+        settings.monitoredInput, numTrackChannels, settings.masterLatency + settings.effects->latency(group));
+    node = std::make_shared<EffectsNode>(std::move(node), numTrackChannels, group, *settings.effects, settings.maxFrames);
+    node = std::make_shared<MuteSoloNode>(std::move(node), track, *settings.muteSolo);
+    return std::make_shared<GainPanNode>(std::move(node), track);
 }
