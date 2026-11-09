@@ -117,8 +117,13 @@ jobs:
 
         "${push[@]}" --s3_url "${latest}" --file_name release_info.json
 
-        # The notes of the previous releases: seed the file on the first run.
-        if ! s3cmd ls "${all}" | grep -q "${all##*/}"; then
+        # The notes of the previous releases: seed the file on the first run. s3cmd ls lists
+        # nothing for a missing key; any other outcome than an empty list must not overwrite it.
+        if ! existing="$(s3cmd ls "${all}")"; then
+          echo "::error ::s3cmd ls ${all} failed"
+          exit 1
+        fi
+        if [[ -z "${existing}" ]]; then
           echo '{"releases": []}' > build.artifacts/previous_releases_notes.json
           "${push[@]}" --s3_url "${all}" --file_name previous_releases_notes.json
         fi
