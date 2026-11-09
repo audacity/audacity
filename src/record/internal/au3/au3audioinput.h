@@ -10,6 +10,7 @@
 #include "au3wrap/au3types.h"
 #include "audio/iaudiometer.h"
 #include "audio/driver/iaudiodrivercontroller.h"
+#include "audio/iaudiobackendselector.h"
 #include "audio/iaudioengine.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
@@ -25,6 +26,7 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public 
 {
     muse::GlobalInject<record::IRecordConfiguration> configuration;
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<au::audio::IAudioBackendSelector> audioBackendSelector;
     muse::GlobalInject<record::IRecordMeterController> meterController;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
