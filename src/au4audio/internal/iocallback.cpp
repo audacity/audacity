@@ -17,6 +17,7 @@
 #include "metersendnode.h"
 #include "metersink.h"
 #include "metertapnode.h"
+#include "recordingcapture.h"
 #include "sequentialmixnode.h"
 
 using namespace au::au4audio;
@@ -58,7 +59,8 @@ IoCallback::~IoCallback()
     stop();
 }
 
-void IoCallback::build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter)
+void IoCallback::build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter,
+                       std::optional<RecordingRange> recording)
 {
     m_meter = meter;
     const auto& playbackSequences = sequences.playbackSequences;
@@ -97,6 +99,13 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
         if (const auto group = sequence->FindChannelGroup()) {
             maxTrackLatency = std::max(maxTrackLatency, m_blockContext->latency(group));
         }
+        std::optional<int64_t> stop;
+        if (recording) {
+            stop = toSamples(recording->end);
+            if (muse::contains(sequences.leadInTimeSequences, sequence)) {
+                stop = std::min(*stop, toSamples(recording->start));
+            }
+        }
         auto trackSettings = settings;
         trackSettings.readAhead = TrackReadAhead { m_readAheadChunkSize, m_readAheadNumChunks };
         // Its worker processes its effects, in a scope of their own
@@ -107,7 +116,7 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
         trackSettings.effects = trackSettings.chainContext;
         trackSettings.muteSolo = trackSettings.chainContext;
         trackSettings.endOfTrack = trackSettings.chainContext;
-        m_tracks.push_back(buildTrack(sequence, trackSettings));
+        m_tracks.push_back(buildTrack(sequence, trackSettings, stop));
         outputs.push_back(m_tracks.back().output);
     }
     m_maxLatency = std::max(0, masterLatency) + maxTrackLatency;
@@ -136,6 +145,11 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
         m_buffer[ch].assign(maxFrames, 0.f);
         m_bufferPointers[ch] = m_buffer[ch].data();
     }
+}
+
+void IoCallback::setCapture(std::unique_ptr<RecordingCapture> capture)
+{
+    m_capture = std::move(capture);
 }
 
 void IoCallback::setPlayRange(double startTime, double endTime, std::optional<std::pair<double, double> > loopRange)
@@ -215,6 +229,10 @@ void IoCallback::stop()
         m_device->stop();
         m_device.reset();
     }
+    // Once the device stopped, so that what it captured last is recorded
+    if (m_capture) {
+        m_capture->finish();
+    }
     if (m_meter) {
         m_meter->stop();
     }
@@ -258,16 +276,24 @@ RealtimeEffects::InitializationScope* IoCallback::effectsInitialization()
     return m_effectsInitialization ? &*m_effectsInitialization : nullptr;
 }
 
-void IoCallback::process(const float* const*, int, float* const* outputChannelData, int numOutputChannels, int numSamples)
+void IoCallback::process(const float* const* inputChannelData, int numInputChannels, float* const* outputChannelData,
+                         int numOutputChannels, int numSamples)
 {
     for (int ch = 0; ch < numOutputChannels; ++ch) {
         if (outputChannelData[ch]) {
             std::fill_n(outputChannelData[ch], numSamples, 0.f);
         }
     }
-    if (m_finished || !m_top || m_paused) {
+    if (m_finished || !m_top) {
         return;
     }
+    // As AudioIO, a paused recording still meters, and plays through, the input
+    const bool paused = m_paused;
+    if (paused && !m_capture) {
+        return;
+    }
+    // The input of the channels the capture records, if the device gives them
+    const auto input = m_capture && numInputChannels >= m_capture->numInputChannels() ? inputChannelData : nullptr;
 
     const auto dacTime = std::chrono::steady_clock::now()
                          + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
@@ -278,11 +304,16 @@ void IoCallback::process(const float* const*, int, float* const* outputChannelDa
         const int frames = std::min(numSamples - done, m_blockSize);
         const auto chunkDacTime = dacTime + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
             std::chrono::duration<double>(done / m_sampleRate));
-        unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
+        if (!paused) {
+            unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
+        }
+        if (input) {
+            m_capture->process(input, outputChannelData, numOutputChannels, done, frames, position(), chunkDacTime, paused);
+        }
         done += frames;
     }
     // As AudioIO, only what played advances the transport
-    if (numSamples > unplayed) {
+    if (!paused && numSamples > unplayed) {
         m_callbackInfos.Put({ dacTime, numSamples - unplayed });
     }
 }

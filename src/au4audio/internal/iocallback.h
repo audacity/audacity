@@ -29,12 +29,13 @@ class ISequenceProcessingNode;
 namespace au::au4audio {
 class BlockContext;
 class MeterSink;
+class RecordingCapture;
 class MeterTapNode;
 
-//! A stream on a device: what it plays
+//! A stream on a device: what it plays, and what it records if it does
 /*!
- * It builds the tracks' chains and the master's, plays them as the playhead says, applies the playback volume, and
- * reports what plays and what the meters show.
+ * It builds the tracks' chains and the master's, plays them as the playhead says, records, applies the playback volume,
+ * and reports what plays and what the meters show.
  *
  * Each track's chain renders ahead of the device on a worker of its own, behind its own LockFreeQueueNode: peaks of
  * processing are absorbed, and the tracks' effects render in parallel. The mix and the master's effects render in the
@@ -53,8 +54,18 @@ public:
 
     double sampleRate() const { return m_sampleRate; }
 
-    //! The tracks and the master's chain, for `sequences`, sending to `meter`, if any, what they play
-    void build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter);
+    //! Where a recording starts and ends, in the timeline, in seconds
+    struct RecordingRange {
+        double start = 0.0;
+        double end = 0.0;
+    };
+
+    //! The tracks and the master's chain, for `sequences`, sending to `meter`, if any, what they play. If recording, as
+    //! AudioIO, the tracks stop playing where the recording ends, and those recorded into with a lead-in where it starts.
+    void build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter, std::optional<RecordingRange> recording);
+    //! Records the input; call before start()
+    void setCapture(std::unique_ptr<RecordingCapture> capture);
+    const RecordingCapture* capture() const { return m_capture.get(); }
     //! Plays from `startTime` to `endTime`, or loops `loopRange` if given, rolling into it if `startTime` is left of it;
     //! then starts rendering ahead
     void setPlayRange(double startTime, double endTime, std::optional<std::pair<double, double> > loopRange);
@@ -122,6 +133,7 @@ private:
     const std::atomic<float>& m_playbackVolume;
 
     std::unique_ptr<audio::IDevice> m_device;
+    std::unique_ptr<RecordingCapture> m_capture;
 
     const std::shared_ptr<PlayheadMapper> m_mapper = std::make_shared<PlayheadMapper>();
     std::atomic<int64_t> m_endPosition { 0 };

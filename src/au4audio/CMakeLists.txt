@@ -43,6 +43,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/playedrange.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playheadmapper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playheadmapper.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/recordingcapture.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/recordingcapture.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/sequentialmixnode.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/sequentialmixnode.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/stereo.h
@@ -62,6 +64,7 @@ set(MODULE_LINK
     au3-realtime-effects
     au3-wave-track
     au3-project-rate
+    au3-recording
 )
 
 setup_module()
