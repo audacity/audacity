@@ -82,7 +82,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        muse/buildscripts/ci/release/make_release_info_file.sh \
+        bash muse/buildscripts/ci/release/make_release_info_file.sh \
           --token "${GH_TOKEN}" \
           --repo "${GITHUB_REPOSITORY}" \
           --release_tag "${TAG}"
@@ -113,7 +113,7 @@ jobs:
 
         # The bucket rejects ACLs (public read comes from its policy); --s3_bucket is the S3 host
         s3_args=(--s3_key "${S3_KEY}" --s3_secret "${S3_SECRET}" --s3_bucket s3.amazonaws.com)
-        push=(muse/buildscripts/ci/release/push_file_to_s3.sh --no_acl_public "${s3_args[@]}")
+        push=(bash muse/buildscripts/ci/release/push_file_to_s3.sh --no_acl_public "${s3_args[@]}")
 
         "${push[@]}" --s3_url "${latest}" --file_name release_info.json
 
@@ -123,7 +123,7 @@ jobs:
           "${push[@]}" --s3_url "${all}" --file_name previous_releases_notes.json
         fi
 
-        muse/buildscripts/ci/release/make_previous_releases_notes.sh "${s3_args[@]}" \
+        bash muse/buildscripts/ci/release/make_previous_releases_notes.sh "${s3_args[@]}" \
           --s3_url "${all}" \
           --current_file_name release_info.json \
           --previous_file_name previous_releases_notes.json
