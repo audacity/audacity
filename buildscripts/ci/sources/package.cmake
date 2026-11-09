@@ -60,7 +60,12 @@ execute_process(
     COMMAND git rev-parse HEAD
     OUTPUT_VARIABLE COMMIT
     OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE rc
 )
+string(LENGTH "${COMMIT}" COMMIT_LENGTH)
+if (NOT rc EQUAL 0 OR NOT COMMIT MATCHES "^[0-9a-f]+$" OR NOT COMMIT_LENGTH EQUAL 40) # CMake regexes have no {40}
+    message(FATAL_ERROR "git rev-parse HEAD failed (exit ${rc}): '${COMMIT}'")
+endif()
 string(SUBSTRING "${COMMIT}" 0 12 COMMIT_SHORT)
 set(VERSION "${MUSE_APP_VERSION}")
 if (MUSE_APP_VERSION_LABEL)
