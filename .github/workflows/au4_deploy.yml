@@ -124,10 +124,12 @@ jobs:
       env:
         TAG_NAME: ${{ needs.plan.outputs.tag_name }}
       run: |
+        # The format the plan job's make_tag_name.sh produced, from the same env
         int="(0|[1-9][0-9]*)"
         version="${int}\.${int}\.${int}"
-        label="(alpha|beta|rc)(-${int})?"
-        pattern="^Audacity-${version}(-${label})?$"
+        separator="${TAG_LABEL_SEPARATOR//./\\.}"
+        label="(alpha|beta|rc)(${separator}${int})?"
+        pattern="^${TAG_PREFIX}${version}(-${label})?$"
 
         if [[ ! "${TAG_NAME}" =~ ${pattern} ]]; then
           echo >&2 "Error: TAG_NAME '${TAG_NAME}' doesn't match required regex: ${pattern}"
