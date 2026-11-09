@@ -41,6 +41,7 @@ AudioEngineToolBarItem::AudioEngineToolBarItem(ToolBarItemType::Type type, QObje
 {
     updateEngines();
     audioBackendSelector()->activeBackendChanged().onNotify(this, [this] { updateEngines(); });
+    audioEngine()->deviceLatencyChanged().onNotify(this, [this] { emit latencyChanged(); });
 }
 
 void AudioEngineToolBarItem::selectEngine(const QString& id)
@@ -68,6 +69,22 @@ QVariantList AudioEngineToolBarItem::engines() const
 QString AudioEngineToolBarItem::currentEngine() const
 {
     return QString::fromStdString(audioBackendSelector()->backendTitle(audioBackendSelector()->activeBackend()));
+}
+
+QString AudioEngineToolBarItem::latency() const
+{
+    const auto latency = audioEngine()->deviceLatency();
+    if (!latency) {
+        //: Shown next to the audio engine when no audio device was opened yet
+        return muse::qtrc("projectscene", "Latency: no device opened yet");
+    }
+    const auto ms = [](const std::optional<double>& seconds) {
+        //: A latency of the audio device, in milliseconds
+        return seconds ? muse::qtrc("projectscene", "%1 ms").arg(QString::number(*seconds * 1000.0, 'f', 1)) : QString("–");
+    };
+    const auto roundTrip = latency->input && latency->output ? std::optional { *latency->input + *latency->output } : std::nullopt;
+    //: Latencies of the audio device: input, output and round trip; "–" where the device has no input or output open
+    return muse::qtrc("projectscene", "In %1 · Out %2 · Round trip %3").arg(ms(latency->input), ms(latency->output), ms(roundTrip));
 }
 
 void AudioEngineToolBarItem::updateEngines()

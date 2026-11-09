@@ -27,6 +27,15 @@ struct AudioCallbackInfo {
     int numSamples = 0;
 };
 
+//! As the device reports them, in seconds
+struct DeviceLatency {
+    //! None if the device was opened without inputs, or without outputs
+    std::optional<double> input;
+    std::optional<double> output;
+
+    bool operator==(const DeviceLatency&) const = default;
+};
+
 class IAudioEngine : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IAudioEngine);
@@ -102,6 +111,10 @@ public:
     virtual muse::async::Notification recordingCommitRequested() const = 0;
     virtual muse::async::Notification recordingFinished() const = 0;
     virtual muse::async::Notification streamStopped() const = 0;
+
+    //! Of the device opened last, if any
+    virtual std::optional<DeviceLatency> deviceLatency() const = 0;
+    virtual muse::async::Notification deviceLatencyChanged() const = 0;
     virtual muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const = 0;
 };
 }

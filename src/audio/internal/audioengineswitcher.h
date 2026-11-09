@@ -86,6 +86,8 @@ public:
     muse::async::Notification recordingFinished() const override;
     muse::async::Notification streamStopped() const override;
     muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const override;
+    std::optional<DeviceLatency> deviceLatency() const override;
+    muse::async::Notification deviceLatencyChanged() const override;
 
     // IAudioDriverController
     AudioConfiguration configuration() const override;
@@ -133,6 +135,7 @@ private:
     muse::async::Notification m_recordingCommitRequested;
     muse::async::Notification m_recordingFinished;
     muse::async::Notification m_streamStopped;
+    muse::async::Notification m_deviceLatencyChanged;
     muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> m_recordingClipChanged;
 
     muse::async::Channel<AudioConfigurationDelta> m_configurationChanged;

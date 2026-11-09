@@ -359,6 +359,17 @@ std::unique_ptr<au::audio::IDevice> Au4AudioEngine::openDevice(int numInputChann
         m_lastError = muse::String::fromStdString(error);
         return nullptr;
     }
+    audio::DeviceLatency latency;
+    if (device->numInputChannels() > 0) {
+        latency.input = device->inputLatency();
+    }
+    if (device->numOutputChannels() > 0) {
+        latency.output = device->outputLatency();
+    }
+    if (latency != m_deviceLatency) {
+        m_deviceLatency = latency;
+        m_deviceLatencyChanged.notify();
+    }
     return device;
 }
 
@@ -472,6 +483,16 @@ muse::async::Notification Au4AudioEngine::recordingFinished() const
 muse::async::Notification Au4AudioEngine::streamStopped() const
 {
     return m_streamStopped;
+}
+
+std::optional<au::audio::DeviceLatency> Au4AudioEngine::deviceLatency() const
+{
+    return m_deviceLatency;
+}
+
+muse::async::Notification Au4AudioEngine::deviceLatencyChanged() const
+{
+    return m_deviceLatencyChanged;
 }
 
 muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> Au4AudioEngine::recordingClipChanged() const
