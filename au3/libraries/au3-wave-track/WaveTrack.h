@@ -70,7 +70,9 @@ using ProgressReporter = std::function<void (double)>;
 
 class Envelope;
 class WaveTrack;
-namespace WaveTrackUtilities { struct EmptyCopyAccess; }
+namespace WaveTrackUtilities {
+struct EmptyCopyAccess;
+}
 
 struct WaveTrackMessage {
     WaveClipHolder pClip{};
@@ -761,7 +763,7 @@ public:
 
 private:
     // May assume precondition: t0 <= t1
-    void HandleClear(double t0, double t1, bool split, const bool moveClips, bool clearByTrimming = false, bool notifySplits = false);
+    void HandleClear(double t0, double t1, bool split, const bool moveClips, bool clearByTrimming = false);
 
     /*
      * @brief Copy/Paste operations must preserve beat durations, but time

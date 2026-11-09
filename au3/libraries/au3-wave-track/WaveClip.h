@@ -553,6 +553,11 @@ public:
      */
     bool IntersectsPlayRegion(double t0, double t1) const;
     /*!
+     * @brief [t0, t1] ∩ [...] != ∅
+     * @pre t0 <= t1
+     */
+    bool TouchesPlayRegion(double t0, double t1) const;
+    /*!
      * @brief t0 <= [ and ) <= t1, such that removing [t0, t1) from the track
      * deletes this clip.
      * @pre t0 <= t1

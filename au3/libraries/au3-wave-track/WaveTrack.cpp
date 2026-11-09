@@ -1286,6 +1286,66 @@ struct SplitInfo
     //clip after split
     std::optional<wxString> rightClipName;
 };
+
+//! The fades at the edges of the clips that ClearAndPaste clears, splits or merges,
+//! to give them back to the clips that have edges at the same places afterwards.
+class ClipEdgeFades
+{
+public:
+    //! Remembers the fades of the clips touching [t0, t1], and removes them, so that none ends up elsewhere
+    //! when these clips get copied, split or merged.
+    ClipEdgeFades(WaveTrack& track, double t0, double t1);
+
+    //! Gives the fades back to the clips that end or start where the edges went.
+    //! `newTime` tells where a time before the operation is afterwards.
+    void Restore(WaveTrack& track, const std::function<double(double)>& newTime) const;
+
+private:
+    struct Edge {
+        double time = 0.0;
+        ClipSide side = ClipSide::Left;
+        double length = 0.0;
+        FadeType type = FadeType::Linear;
+    };
+
+    std::vector<Edge> m_edges;
+};
+
+ClipEdgeFades::ClipEdgeFades(WaveTrack& track, double t0, double t1)
+{
+    for (const auto& clip : track.Intervals()) {
+        if (!clip->TouchesPlayRegion(t0, t1)) {
+            continue;
+        }
+        auto& fades = ClipFades::Get(*clip);
+        if (fades.fadeIn() > 0) {
+            m_edges.push_back({ clip->GetPlayStartTime(), ClipSide::Left, fades.fadeIn(), fades.fadeInType() });
+            fades.setFadeIn(0);
+        }
+        if (fades.fadeOut() > 0) {
+            m_edges.push_back({ clip->GetPlayEndTime(), ClipSide::Right, fades.fadeOut(), fades.fadeOutType() });
+            fades.setFadeOut(0);
+        }
+    }
+}
+
+void ClipEdgeFades::Restore(WaveTrack& track, const std::function<double(double)>& newTime) const
+{
+    for (const auto& edge : m_edges) {
+        // Clip times are on samples, and so must be the edge's new time
+        const auto t = track.SnapToSample(newTime(edge.time));
+        for (const auto& clip : track.Intervals()) {
+            auto& fades = ClipFades::Get(*clip);
+            if (edge.side == ClipSide::Left && clip->GetPlayStartTime() == t) {
+                fades.setFadeInType(edge.type);
+                fades.setFadeIn(edge.length);
+            } else if (edge.side == ClipSide::Right && clip->GetPlayEndTime() == t) {
+                fades.setFadeOutType(edge.type);
+                fades.setFadeOut(edge.length);
+            }
+        }
+    }
+}
 }
 
 //
@@ -1431,6 +1491,9 @@ void WaveTrack::ClearAndPasteAtSameTempo(
 
     const auto tolerance = 2.0 / track.GetRate();
 
+    // Removes the fades from the track until the end
+    const ClipEdgeFades edgeFades { track, t0, t1 };
+
     constexpr auto split = true; // Do not move the remaining right part of the clip back to the left.
     constexpr auto moveClips = false;
 
@@ -1438,9 +1501,14 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     track.HandleClear(t0, t1, split, moveClips, clearByTrimming);
 
     const auto pasteDelta = srcEndTime - (t1 - t0);
-    if (std::abs(pasteDelta) >= LongSamplesToTime(1)) {
-        track.ShiftBy(t1, pasteDelta);
+    const auto shift = std::abs(pasteDelta) >= LongSamplesToTime(1) ? pasteDelta : 0.0;
+    if (shift != 0.0) {
+        track.ShiftBy(t1, shift);
     }
+    // Where the times of before the operation are afterwards
+    const auto newTime = [t0, t1, shift, warper](double t) {
+        return t <= t0 ? t : t >= t1 ? t + shift : warper->Warp(t);
+    };
 
     // And paste in the new data
     track.PasteWaveTrackAtSameTempo(t0, src, merge, moveClips);
@@ -1602,6 +1670,8 @@ void WaveTrack::ClearAndPasteAtSameTempo(
         track.Join(t0 - delta, t0 + delta, {}, false /* evenIfPitchOrSpeedMismatch */);
         track.Join(t1 - delta, t1 + delta, {}, false /* evenIfPitchOrSpeedMismatch */);
     }
+
+    edgeFades.Restore(track, newTime);
 }
 
 /*! @excsafety{Strong} */
@@ -1610,8 +1680,7 @@ void WaveTrack::SplitDelete(double t0, double t1)
     constexpr bool split = true;
     constexpr bool moveClips = false;
     constexpr bool clearByTrimming = false;
-    constexpr bool notifySplits = true;
-    HandleClear(t0, t1, split, moveClips, clearByTrimming, notifySplits);
+    HandleClear(t0, t1, split, moveClips, clearByTrimming);
 }
 
 std::ptrdiff_t WaveTrack::FindClip(const Interval& clip)
@@ -1632,8 +1701,7 @@ void WaveTrack::RemoveClip(std::ptrdiff_t distance)
 }
 
 /*! @excsafety{Strong} */
-void WaveTrack::HandleClear(double t0, double t1,
-                            const bool split, const bool moveClips, const bool clearByTrimming, const bool notifySplits)
+void WaveTrack::HandleClear(double t0, double t1, const bool split, const bool moveClips, const bool clearByTrimming)
 {
     // For debugging, use an ASSERT so that we stop
     // closer to the problem.
@@ -1665,9 +1733,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                     clipsToDelete.push_back(clip);
                     auto newClip = CopyClip(*clip, true);
                     newClip->TrimLeft(t1 - clip->GetPlayStartTime());
-                    if (notifySplits) {
-                        newClip->OnSplit(ClipSide::Left);
-                    }
+                    newClip->OnSplit(ClipSide::Left);
                     if (!split) {
                         // If this is not a split-cut, where things are left in
                         // place, we need to reposition the clip.
@@ -1682,9 +1748,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                     clipsToDelete.push_back(clip);
                     auto newClip = CopyClip(*clip, true);
                     newClip->TrimRight(clip->GetPlayEndTime() - t0);
-                    if (notifySplits) {
-                        newClip->OnSplit(ClipSide::Right);
-                    }
+                    newClip->OnSplit(ClipSide::Right);
 
                     clipsToAdd.push_back(move(newClip));
                 } else {
@@ -1693,16 +1757,12 @@ void WaveTrack::HandleClear(double t0, double t1,
 
                     auto leftClip = CopyClip(*clip, true);
                     leftClip->TrimRight(clip->GetPlayEndTime() - t0);
-                    if (notifySplits) {
-                        leftClip->OnSplit(ClipSide::Right);
-                    }
+                    leftClip->OnSplit(ClipSide::Right);
                     clipsToAdd.push_back(move(leftClip));
 
                     auto rightClip = CopyClip(*clip, true);
                     rightClip->TrimLeft(t1 - clip->GetPlayStartTime());
-                    if (notifySplits) {
-                        rightClip->OnSplit(ClipSide::Left);
-                    }
+                    rightClip->OnSplit(ClipSide::Left);
                     if (!split) {
                         // If this is not a split-cut, where things are left in
                         // place, we need to reposition the clip.

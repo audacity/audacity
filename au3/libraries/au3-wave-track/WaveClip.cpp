@@ -1910,6 +1910,12 @@ bool WaveClip::IntersectsPlayRegion(double t0, double t1) const
     return !muse::RealIsEqualOrMore(t0, GetPlayEndTime()) && !muse::RealIsEqualOrMore(GetPlayStartTime(), t1);
 }
 
+bool WaveClip::TouchesPlayRegion(double t0, double t1) const
+{
+    assert(t0 <= t1);
+    return !(GetPlayEndTime() < t0 || GetPlayStartTime() > t1);
+}
+
 bool WaveClip::CoversEntirePlayRegion(double t0, double t1) const
 {
     assert(t0 <= t1);
