@@ -13,6 +13,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au4audioengine.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/blockcontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/blockcontext.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/captureinput.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/captureinput.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectscratch.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectscratch.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectslatency.cpp
@@ -34,6 +36,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/metersink.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/metertapnode.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/metertapnode.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/monitoringcallback.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/monitoringcallback.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/mutesolonode.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/mutesolonode.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playedrange.h
@@ -57,6 +61,7 @@ set(MODULE_LINK
     au3-project
     au3-realtime-effects
     au3-wave-track
+    au3-project-rate
 )
 
 setup_module()

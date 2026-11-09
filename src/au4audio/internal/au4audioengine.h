@@ -12,6 +12,7 @@
 
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "audio/iaudioengine.h"
+#include "record/irecordconfiguration.h"
 
 #include "au3-utility/LockFreeQueue.h"
 #include "au3-utility/Observer.h"
@@ -31,11 +32,14 @@ class IDeviceOpener;
 
 namespace au::au4audio {
 class IoCallback;
+class MonitoringCallback;
 
 //! An audio engine whose tracks and master are graphs of nodes: see IoCallback. Its devices are those its IDeviceOpener
 //! opens.
 class Au4AudioEngine final : public audio::IAudioEngine
 {
+    muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
+
 public:
     explicit Au4AudioEngine(std::shared_ptr<audio::IDeviceOpener> deviceOpener);
     ~Au4AudioEngine() override;
@@ -102,6 +106,7 @@ private:
     const audio::IAudioDriverController* m_driverController = nullptr;
 
     std::unique_ptr<IoCallback> m_stream;
+    std::unique_ptr<MonitoringCallback> m_monitoring;
     int m_nextStreamToken = 1;
     double m_lastSampleRate = 0.0;
     muse::String m_lastError;
