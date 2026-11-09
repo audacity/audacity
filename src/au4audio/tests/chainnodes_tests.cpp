@@ -19,6 +19,7 @@
 #include "../internal/ieffectscontext.h"
 #include "../internal/iendoftrackcontext.h"
 #include "../internal/imutesolocontext.h"
+#include "../internal/metertapnode.h"
 #include "../internal/mutesolonode.h"
 #include "../internal/sequentialmixnode.h"
 #include "../internal/stereo.h"
@@ -278,6 +279,50 @@ TEST(GainPanNodeTests, AppliesEachChannelsVolumeToAStereoTrack)
 
     EXPECT_EQ(output.left, std::vector<float>(TEST_MAX_FRAMES, TEST_LEVEL * TEST_LEFT_VOLUME));
     EXPECT_EQ(output.right, std::vector<float>(TEST_MAX_FRAMES, TEST_LEVEL * TEST_RIGHT_VOLUME));
+}
+
+TEST(MeterTapNodeTests, PassesItsInputAndKeepsContiguousReads)
+{
+    MeterTapNode node { std::make_shared<RampNode>(), au::au4audio::numChannels, TEST_READ_LEN };
+
+    const auto first = read(node, 0, TEST_MAX_FRAMES);
+    read(node, TEST_MAX_FRAMES, TEST_MAX_FRAMES);
+
+    EXPECT_EQ(first.left, ramp(0, TEST_MAX_FRAMES));
+    const auto capture = node.capture();
+    EXPECT_EQ(capture.index, 0);
+    ASSERT_EQ(capture.frames, 2 * TEST_MAX_FRAMES);
+    EXPECT_EQ(std::vector<float>(capture.channels[1], capture.channels[1] + capture.frames), ramp(0, 2 * TEST_MAX_FRAMES));
+}
+
+TEST(MeterTapNodeTests, StartsOverWhereReadingJumpsOrOnceReset)
+{
+    MeterTapNode node { std::make_shared<RampNode>(), au::au4audio::numChannels, TEST_READ_LEN };
+    read(node, 0, TEST_MAX_FRAMES);
+
+    read(node, TEST_JUMP_INDEX, TEST_MAX_FRAMES);
+    EXPECT_EQ(node.capture().index, TEST_JUMP_INDEX);
+    EXPECT_EQ(node.capture().frames, TEST_MAX_FRAMES);
+
+    node.reset();
+    read(node, TEST_JUMP_INDEX + static_cast<int64_t>(TEST_MAX_FRAMES), TEST_MAX_FRAMES);
+    EXPECT_EQ(node.capture().index, TEST_JUMP_INDEX + static_cast<int64_t>(TEST_MAX_FRAMES));
+}
+
+TEST(MeterTapNodeTests, KeepsTheLouderSideOfAPannedMonoTrack)
+{
+    const auto track = std::make_shared<TestTrack>(1);
+    track->leftVolume = TEST_RIGHT_VOLUME;
+    track->rightVolume = TEST_LEFT_VOLUME;
+    MeterTapNode node { std::make_shared<GainPanNode>(std::make_shared<RampNode>(1), track), 1, TEST_READ_LEN };
+
+    read(node, 0, TEST_MAX_FRAMES);
+
+    const auto capture = node.capture();
+    ASSERT_EQ(capture.numChannels, 1u);
+    for (size_t i = 0; i < capture.frames; ++i) {
+        EXPECT_FLOAT_EQ(capture.channels[0][i], i * TEST_LEFT_VOLUME);
+    }
 }
 
 TEST(SequentialMixNodeTests, SumsItsTracks)

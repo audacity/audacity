@@ -14,6 +14,8 @@
 
 #include "blockcontext.h"
 #include "effectsnode.h"
+#include "metersender.h"
+#include "metertapnode.h"
 #include "sequentialmixnode.h"
 
 using namespace au::au4audio;
@@ -64,8 +66,9 @@ IoCallback::~IoCallback()
     stop();
 }
 
-void IoCallback::build(const TransportSequences& sequences)
+void IoCallback::build(const TransportSequences& sequences, const audio::IAudioMeterPtr& meter)
 {
+    m_meter = meter;
     const auto& playbackSequences = sequences.playbackSequences;
     const auto maxFrames = static_cast<size_t>(m_blockSize);
     // At the rate of the stream, not of the sequences
@@ -92,6 +95,8 @@ void IoCallback::build(const TransportSequences& sequences)
     settings.endOfTrack = m_blockContext.get();
     settings.sampleRate = m_sampleRate;
     settings.maxFrames = maxFrames;
+    // The master reads the tracks ahead by its effects' latency, and as long again where reading jumps
+    settings.meterCapacity = maxFrames + 2 * static_cast<size_t>(std::max(0, masterLatency));
     settings.masterLatency = std::max(0, masterLatency);
     int maxTrackLatency = 0;
     std::vector<std::shared_ptr<ISequenceProcessingNode> > outputs;
@@ -118,7 +123,20 @@ void IoCallback::build(const TransportSequences& sequences)
     std::shared_ptr<ISequenceProcessingNode> master = std::make_shared<SequentialMixNode>(std::move(outputs), maxFrames);
     master = std::make_shared<EffectsNode>(std::move(master), numChannels, RealtimeEffectManager::MasterGroup, *m_blockContext,
                                            maxFrames);
-    m_top = std::make_shared<BlockContextNode>(std::move(master), *m_blockContext);
+    m_masterTap = std::make_shared<MeterTapNode>(std::move(master), numChannels, maxFrames);
+    m_top = std::make_shared<BlockContextNode>(m_masterTap, *m_blockContext);
+    if (m_meter) {
+        // The main meter, then the tracks'
+        std::vector<MeterSender::Tap> taps { { m_masterTap, std::nullopt, 0 } };
+        for (const auto& track : m_tracks) {
+            std::optional<audio::IAudioMeter::TrackId> trackId;
+            if (track.meterId) {
+                trackId = audio::IAudioMeter::TrackId { *track.meterId };
+            }
+            taps.push_back({ track.tap, trackId, std::max(0, masterLatency) });
+        }
+        m_meterSender = std::make_unique<MeterSender>(std::move(taps));
+    }
 
     for (int ch = 0; ch < numChannels; ++ch) {
         m_buffer[ch].assign(maxFrames, 0.f);
@@ -182,6 +200,9 @@ PlayheadMapper::Range IoCallback::toLoopRange(const std::pair<double, double>& l
 
 void IoCallback::start()
 {
+    if (m_meter) {
+        m_meter->start(m_sampleRate);
+    }
     m_device->start(*this);
 }
 
@@ -191,8 +212,13 @@ void IoCallback::stop()
         m_device->stop();
         m_device.reset();
     }
+    if (m_meter) {
+        m_meter->stop();
+    }
     // Stops the workers, before what they render goes
     m_top.reset();
+    m_meterSender.reset();
+    m_masterTap.reset();
     m_tracks.clear();
     m_trackContexts.clear();
     m_blockContext.reset();
@@ -252,7 +278,9 @@ void IoCallback::process(const float* const*, int, float* const* outputChannelDa
     int unplayed = 0;
     while (done < numSamples && !m_finished) {
         const int frames = std::min(numSamples - done, m_blockSize);
-        unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames);
+        const auto chunkDacTime = dacTime + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+            std::chrono::duration<double>(done / m_sampleRate));
+        unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
         done += frames;
     }
     if (m_finished) {
@@ -284,10 +312,13 @@ size_t IoCallback::render(float* const* stereo, int64_t index, size_t frames)
     return available;
 }
 
-int IoCallback::renderChunk(float* const* output, int numOutputChannels, int offset, int requested)
+int IoCallback::renderChunk(float* const* output, int numOutputChannels, int offset, int requested, audio::TimePoint dacTime)
 {
     const auto index = m_mapper->deviceIndex();
     const auto frames = static_cast<int>(render(m_bufferPointers, index, static_cast<size_t>(requested)));
+    if (m_meterSender && frames > 0) {
+        m_meterSender->send(*m_meter, index, static_cast<size_t>(frames), dacTime);
+    }
 
     // What plays now: unless looping, the end of the play range ends it
     bool finished = false;
