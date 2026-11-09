@@ -167,6 +167,12 @@ void AudioEngineSwitcher::stopMonitoring()
     engine().stopMonitoring();
 }
 
+void AudioEngineSwitcher::setMonitoredTrack(std::optional<int64_t> track)
+{
+    m_monitoredTrack = track;
+    engine().setMonitoredTrack(track);
+}
+
 void AudioEngineSwitcher::setInputVolume(float newInputVolume)
 {
     engine().setInputVolume(newInputVolume);

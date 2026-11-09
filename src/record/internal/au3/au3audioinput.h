@@ -50,6 +50,8 @@ private:
     void initMeter();
     bool isTrackMeterMonitoring() const;
     int getFocusedTrackChannels() const;
+    //! The track the mic meter shows on, if any, is the one whose effects the input is monitored through
+    void updateMonitoredTrack() const;
 
     void updateAudioEngineMonitoring() const;
     void startAudioEngineMonitoring() const;

@@ -10,7 +10,7 @@
 #include "au3-mixer/AudioIOSequences.h"
 
 namespace au::au4audio {
-//! The input of a device, as captured: with the input volume applied, metered, and played through, as AudioIO does
+//! The input of a device, as captured: with the input volume applied, and metered, as AudioIO does
 class CaptureInput
 {
 public:
@@ -25,10 +25,6 @@ public:
 
     //! Device thread: sends what was last read to `meter`, for each of `sequences` it is recorded into, and as a whole
     void sendToMeter(audio::IAudioMeter& meter, const RecordableSequences& sequences, audio::TimePoint time);
-
-    //! Device thread: adds what was last read to `output`, from `offset` on; a mono input goes to the first two
-    //! channels
-    void playThrough(float* const* output, int numOutputChannels, int offset) const;
 
 private:
     const int m_numChannels;

@@ -67,17 +67,3 @@ void CaptureInput::sendToMeter(audio::IAudioMeter& meter, const RecordableSequen
         meter.push(static_cast<uint8_t>(ch), { m_mainMeter.data() + ch * frames, frames, 1, time });
     }
 }
-
-void CaptureInput::playThrough(float* const* output, int numOutputChannels, int offset) const
-{
-    constexpr int maxPlayThroughChannels = 2;
-    for (int ch = 0; ch < std::min(numOutputChannels, maxPlayThroughChannels); ++ch) {
-        const auto source = m_numChannels == 1 ? 0 : ch;
-        if (!output[ch] || source >= m_numChannels) {
-            continue;
-        }
-        for (int i = 0; i < m_frames; ++i) {
-            output[ch][offset + i] += m_interleaved[i * m_numChannels + source];
-        }
-    }
-}
