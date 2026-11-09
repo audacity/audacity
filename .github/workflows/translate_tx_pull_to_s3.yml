@@ -123,6 +123,18 @@ jobs:
           S3_UPLOAD_URL: s3://audacity-updates/languages/4.0/
         run: bash ./buildscripts/ci/translation/s3_packandsend.sh
 
+      - name: Check that the upload is publicly readable # the bucket policy, not an ACL, must grant it
+        if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        env:
+          S3_UPLOAD_URL: s3://audacity-updates/languages/4.0/
+        run: |
+          bucket_path="${S3_UPLOAD_URL#s3://}"
+          url="https://${bucket_path%%/*}.s3.amazonaws.com/${bucket_path#*/}details.json"
+          if ! curl --fail --silent --show-error --head --location "${url}" > /dev/null; then
+            echo "::error ::${url} is not readable: the bucket policy must grant public read on ${bucket_path#*/}"
+            exit 1
+          fi
+
       - name: Upload artifacts on GitHub
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
         uses: actions/upload-artifact@v7
