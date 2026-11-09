@@ -7,6 +7,7 @@ set(MODULE_TEST au4audio_tests)
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
 
+    ${CMAKE_CURRENT_LIST_DIR}/chainnodes_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playheadmapper_tests.cpp
     )
 
