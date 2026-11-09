@@ -337,22 +337,37 @@ Item {
         Component {
             id: audioEngineComp
 
-            DropdownWithTitle {
+            Row {
+                id: audioEngineRow
+
                 property var itemData: null
 
-                width: 240
+                width: implicitWidth
                 height: 28
 
-                title: qsTrc("projectscene", "Audio engine")
-                dropdownAccessibleName: qsTrc("projectscene", "Audio engine")
+                spacing: 8
 
-                current: Boolean(itemData) ? itemData.currentEngine : ""
-                model: Boolean(itemData) ? itemData.engines : null
+                DropdownWithTitle {
+                    width: 240
+                    height: parent.height
 
-                allowOptionToggle: false
+                    title: qsTrc("projectscene", "Audio engine")
+                    dropdownAccessibleName: qsTrc("projectscene", "Audio engine")
 
-                onHandleMenuItem: function (itemId) {
-                    Qt.callLater(itemData.selectEngine, itemId)
+                    current: Boolean(audioEngineRow.itemData) ? audioEngineRow.itemData.currentEngine : ""
+                    model: Boolean(audioEngineRow.itemData) ? audioEngineRow.itemData.engines : null
+
+                    allowOptionToggle: false
+
+                    onHandleMenuItem: function (itemId) {
+                        Qt.callLater(audioEngineRow.itemData.selectEngine, itemId)
+                    }
+                }
+
+                StyledTextLabel {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: Boolean(audioEngineRow.itemData) ? audioEngineRow.itemData.latency : ""
                 }
             }
         }
