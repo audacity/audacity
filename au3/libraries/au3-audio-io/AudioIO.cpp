@@ -1138,7 +1138,7 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     mPlaybackSchedule.GetPolicy().Initialize(mPlaybackSchedule, mRate);
 
     mCaptureClockDiscardFrames = static_cast<unsigned long long>(
-        std::max(0.0, -mRecordingSchedule.TotalCorrection()) * mRate);
+        std::max(0.0, -mRecordingSchedule.mLatencyCompensation) * mRate);
 
     auto range = Extensions();
     successAudio = successAudio
