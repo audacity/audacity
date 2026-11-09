@@ -309,15 +309,6 @@ const std::vector<CommandInfo> s_commandInfos = {
         Availability::UI
     },
     CommandInfo{
-        PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Add track effects"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Add track effects"),
-        InputSchema(),
-        Decoration()
-    },
-    CommandInfo{
         PROJECTSCENE_AUDIO_SETUP_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Audio setup"),

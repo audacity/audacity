@@ -129,7 +129,7 @@
     {
         "scope": "PROJECTSCENE",
         "shortcuts": [
-            { "command": "command://projectscene/add-realtime-effects", "sequences": ["E"] },
+            { "command": "command://projectscene/toggle-effects-panel", "sequences": ["E"] },
             { "command": "command://app/toggle-macro-manager-panel", "sequences": ["M"] },
             { "command": "command://projectscene/selection-extend-left", "sequences": ["Shift+Left"] },
             { "command": "command://projectscene/selection-extend-right", "sequences": ["Shift+Right"] },

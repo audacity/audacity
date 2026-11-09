@@ -646,7 +646,8 @@ MenuItemList AppMenuModel::makeEffectsItems()
 {
     MenuItemList items {
         makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
-        makeMenuItem(projectscene::PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND,
+                     TranslatableString("appshell-menu-effect", "Add track effects")),
         makeSeparator(),
         makeMenuItem(effects::EFFECTS_REPEAT_LAST_EFFECT_COMMAND),
     };

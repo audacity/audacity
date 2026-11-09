@@ -58,7 +58,6 @@ void ProjectSceneActionsController::init()
                         &IPlayPositionViewController::cursorToSelectionEnd);
 
     cd->onRequest(this, PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND, [this]() { return toggleEffectsPanel(); });
-    cd->onRequest(this, PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND, [this]() { return toggleEffectsPanel(); });
     cd->onRequest(this, PROJECTSCENE_AUDIO_SETUP_COMMAND, [this]() { return requestAudioSetupContextMenu(); });
     cd->onRequest(this, PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, [this]() {
         m_splitToolToggleRequested.notify();
