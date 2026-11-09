@@ -18,20 +18,11 @@ const std::vector<CommandInfo> s_commandInfos = {
     CommandInfo{
         RECORD_START_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Record"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Record"),
-        InputSchema(),
-        Decoration(IconCode::Code::RECORD_FILL)
-    },
-    CommandInfo{
-        RECORD_ON_CURRENT_TRACK_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Record on current track"),
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Record on current track"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::RECORD_FILL)
     },
     CommandInfo{
         RECORD_ON_NEW_TRACK_COMMAND,

@@ -16,7 +16,6 @@ void RecordController::init()
 {
     auto cd = commandDispatcher();
     cd->onRequest(this, RECORD_START_COMMAND, [this]() { return toggleRecord(); });
-    cd->onRequest(this, RECORD_ON_CURRENT_TRACK_COMMAND, [this]() { return toggleRecord(); });
     cd->onRequest(this, RECORD_ON_NEW_TRACK_COMMAND, [this]() { return recordOnNewTrack(); });
     cd->onRequest(this, RECORD_PAUSE_COMMAND, [this]() { return pause(); });
     cd->onRequest(this, RECORD_STOP_COMMAND, [this]() { return stop(); });

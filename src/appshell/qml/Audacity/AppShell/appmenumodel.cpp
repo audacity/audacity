@@ -357,7 +357,7 @@ MenuItem* AppMenuModel::makeViewMenu()
 MenuItem* AppMenuModel::makeRecordMenu()
 {
     MenuItemList recordItems {
-        makeMenuItem(record::RECORD_ON_CURRENT_TRACK_COMMAND),
+        makeMenuItem(record::RECORD_START_COMMAND),
         makeMenuItem(record::RECORD_ON_NEW_TRACK_COMMAND),
         makeMenuItem(record::RECORD_LEAD_IN_RECORDING_COMMAND),
         makeMenuItem(record::RECORD_TIMED_RECORDING_COMMAND),
